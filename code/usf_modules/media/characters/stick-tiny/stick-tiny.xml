@@ -1,0 +1,548 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<character
+    name="Stick"
+    image="stick-portrait.png"
+    hardshape="1 2 16 57"
+    creator="Samoht"
+    weight="1"
+    auto-reverse="False"
+    age="Not Disclosed"
+    Description="A mysterious character based on sticks, with some awsome powers.">
+
+    <movement name="static"
+    duration="1"
+    repeat="-1"
+    >
+        <frame
+        time="0"
+        image="stick-static1.png"
+        > </frame>
+    </movement>
+    <movement name="take"
+    duration="100"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="stick-take1.png"
+        > </frame>
+        <frame
+        time="30"
+        image="stick-take2.png"
+        > </frame>
+        <frame
+        time="80"
+        image="stick-take3.png"
+        > </frame>
+    </movement>
+    <movement name="walk"
+    duration="1000"
+    repeat="-1"
+    >
+        <frame
+        time="0"
+        image="stick-static1.png"
+        > </frame>
+        <frame
+        time="150"
+        image="stick-walk1.png"
+        > </frame>
+        <frame
+        time="300"
+        image="stick-walk2.png"
+        > </frame>
+        <frame
+        time="450"
+        image="stick-walk3.png"
+        > </frame>
+        <frame
+        time="600"
+        image="stick-walk4.png"
+        > </frame>
+        <frame
+        time="750"
+        image="stick-walk5.png"
+        > </frame>
+    </movement>
+    <movement name="jump"
+    duration="0"
+    repeat="0"
+    >
+        <event
+        period="350,0"
+        action="PlayerStaticOnGround"
+        ></event>
+        <vector
+        time="200"
+        vector="0,1500"
+        ></vector>
+        <frame
+        time="0"
+        image="stick-jump1.png"
+        > </frame>
+        <frame
+        time="100"
+        image="stick-jump2.png"
+        vector="0,110"
+        > </frame>
+        <frame
+        time="400"
+        image="stick-jump2.png"
+        vector="0,50"
+        > </frame>
+        <frame
+        time="900"
+        image="stick-jump3.png"
+        > </frame>
+        <frame
+        time="1200"
+        image="stick-jump4.png"
+        > </frame>
+        <frame
+        time="1400"
+        image="stick-jump5.png"
+        > </frame>
+    </movement>
+    <movement name="scnd-jump"
+    duration="0"
+    repeat="0"
+    >
+        <event
+        period="150,0"
+        action="PlayerStaticOnGround"
+        > </event>
+        <vector
+        time="100"
+        vector="0,1200"
+        ></vector>
+        <frame
+        time="0"
+        image="stick-roll1.png"
+        > </frame>
+        <frame
+        time="100"
+        image="stick-roll2.png"
+        > </frame>
+        <frame
+        time="500"
+        image="stick-roll2.png"
+        > </frame>
+        <frame
+        time="700"
+        image="stick-jump2.png"
+        > </frame>
+        <frame
+        time="1000"
+        image="stick-jump2.png"
+        > </frame>
+        <frame
+        time="1500"
+        image="stick-jump5.png"
+        > </frame>
+    </movement>
+    <movement name="smash-straight"
+    duration="1000"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="stick-smash-straight1.png"
+        > </frame>
+        <frame
+        time="200"
+        image="stick-smash-straight2.png"
+        > </frame>
+        <frame
+        time="300"
+        image="stick-smash-straight3.png"
+        > </frame>
+        <frame
+        time="400"
+        image="stick-smash-straight4.png"
+        >
+            <agressiv-point
+            coords="48,20"
+            vector="500,-300"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="500"
+        image="stick-smash-straight5.png"
+        > </frame>
+        <frame
+        time="700"
+        image="stick-smash-straight6.png"
+        > </frame>
+    </movement>
+    <movement name="hit"
+    duration="500"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="stick-hit1.png"
+        hardshape="1 9 16 67"
+        > </frame>
+        <frame
+        time="200"
+        image="stick-hit2.png"
+        > </frame>
+        <frame
+        time="300"
+        image="stick-hit3.png"
+        >
+            <agressiv-point
+            coords="60,16"
+            vector="300,-30"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="400"
+        image="stick-hit4.png"
+        > </frame>
+    </movement>
+    <movement name="smash-up-jumping"
+    duration="0"
+    repeat="0"
+    >
+        <event
+        period="150,0"
+        action="PlayerStaticOnGround"
+        > </event>
+        <vector
+        time="100"
+        vector="0,1500"
+        ></vector>
+        <frame
+        time="0"
+        image="stick-smash-up1.png"
+        vector="0,70"
+        > </frame>
+        <frame
+        time="300"
+        image="stick-smash-up2.png"
+        vector="0,70"
+        > <agressiv-point
+            coords="48,20"
+            vector="100,-800"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="700"
+        image="stick-smash-up1.png"
+        > </frame>
+    </movement>
+    <movement name="smash-up"
+    duration="1000"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="stick-smash-up1.png"
+        > </frame>
+        <frame
+        time="300"
+        image="stick-smash-up2.png"
+        > <agressiv-point
+            coords="48,20"
+            vector="100,-800"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="700"
+        image="stick-smash-up1.png"
+        > </frame>
+    </movement>
+    <movement name="smash-down"
+    duration="1000"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="stick-smash-down1.png"
+        > </frame>
+        <frame
+        time="100"
+        image="stick-smash-down2.png"
+        > </frame>
+        <frame
+        time="200"
+        image="stick-smash-down3.png"
+        > </frame>
+        <frame
+        time="300"
+        image="stick-smash-down4.png"
+        > </frame>
+        <frame
+        time="400"
+        image="stick-smash-down5.png"
+        vector="0,-50"
+        hardshape= "8 0 22 48"
+        > <agressiv-point
+            coords="28,41"
+            vector="300,-10"
+            ></agressiv-point>
+        </frame>
+    </movement>
+    <movement name="specialhit"
+    duration="1000"
+    repeat="0"
+    hardshape="0 0 157 40"
+    >
+        <frame
+        time="0"
+        image="stick-specialhit1.png"
+        vector="10,0"
+        > </frame>
+        <frame
+        time="200"
+        image="stick-specialhit2.png"
+        vector="50,0"
+        hardshape="0 0 157 40"
+        >
+            <agressiv-point
+            coords="86,9"
+            vector="150,-30"
+            ></agressiv-point>
+            <agressiv-point
+            coords="51,9"
+            vector="150,-30"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="300"
+        image="stick-specialhit3.png"
+        vector="10,0"
+        hardshape="0 0 157 40"
+        >
+            <agressiv-point
+            coords="131,6"
+            vector="150,-30"
+            ></agressiv-point>
+            <agressiv-point
+            coords="84,9"
+            vector="150,-60"
+            ></agressiv-point>
+            <agressiv-point
+            coords="44,18"
+            vector="250,-30"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="400"
+        image="stick-specialhit4.png"
+        vector="50,0"
+        hardshape="0 0 157 40"
+        >
+            <agressiv-point
+            coords="144,4"
+            vector="250,-30"
+            ></agressiv-point>
+            <agressiv-point
+            coords="116,4"
+            vector="150,-30"
+            ></agressiv-point>
+            <agressiv-point
+            coords="87,4"
+            vector="150,-30"
+            ></agressiv-point>
+            <agressiv-point
+            coords="51,4"
+            vector="150,-30"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="500"
+        image="stick-specialhit5.png"
+        vector="50,0"
+        hardshape="0 0 157 40"
+        > </frame>
+        <frame
+        time="700"
+        image="stick-specialhit6.png"
+        vector="50,0"
+        hardshape="0 0 157 40"
+        > </frame>
+        <frame
+        time="800"
+        image="stick-specialhit7.png"
+        vector="50,0"
+        hardshape="0 0 157 40"
+        > </frame>
+        <frame
+        time="900"
+        image="stick-specialhit8.png"
+        vector="50,0"
+        > </frame>
+    </movement>
+    <movement name="pick"
+    duration="700"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="stick-roll1.png"
+        > </frame>
+        <frame
+        time="100"
+        image="stick-roll2.png"
+        > </frame>
+        <frame
+        time="450"
+        image="stick-roll1.png"
+        > </frame>
+    </movement>
+    <movement name="roll"
+    duration="500"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="stick-roll1.png"
+        > </frame>
+        <frame
+        time="100"
+        image="stick-roll2.png"
+        > </frame>
+        <frame
+        time="150"
+        image="stick-roll3.png"
+        vector="50,0"
+        > </frame>
+        <frame
+        time="200"
+        image="stick-roll4.png"
+        vector="70,0"
+        > </frame>
+        <frame
+        time="250"
+        image="stick-roll5.png"
+        vector="70,0"
+        > </frame>
+        <frame
+        time="300"
+        image="stick-roll6.png"
+        vector="50,0"
+        > </frame>
+        <frame
+        time="350"
+        image="stick-roll7.png"
+        > </frame>
+        <frame
+        time="400"
+        image="stick-roll2.png"
+        > </frame>
+    </movement>
+    <movement name="special2"
+    duration="500"
+    repeat="0"
+    >
+        <event
+        period = "500,0"
+        action = "ThrowBomb"
+        > </event>
+        <frame
+        time="0"
+        image="stick-take1.png"
+        > </frame>
+        <frame
+        time="200"
+        image="stick-roll1.png"
+        > </frame>
+        <frame
+        time="300"
+        image="stick-static1.png"
+        > </frame>
+    </movement>
+    <movement name="kick"
+    duration="500"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="stick-kick1.png"
+        hardshape="1 9 16 67"
+        > </frame>
+        <frame
+        time="200"
+        image="stick-kick2.png"
+        > </frame>
+        <frame
+        time="300"
+        image="stick-kick3.png"
+        >
+            <agressiv-point
+            coords="24,31"
+            vector="30,-20"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,42"
+            vector="30,-10"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="400"
+        image="stick-kick4.png"
+        >
+            <agressiv-point
+            coords="27,30"
+            vector="30,-30"
+            ></agressiv-point>
+            <agressiv-point
+            coords="40,33"
+            vector="30,-20"
+            ></agressiv-point>
+        </frame>
+    </movement>
+    <movement name="kick-jumping"
+    duration="500"
+    repeat="0"
+    >
+        <event
+        period="150,0"
+        action="PlayerStaticOnGround"
+        ></event>
+        <vector
+        time="100"
+        vector="0,1000"
+        ></vector>
+        <frame
+        time="0"
+        image="stick-kick1.png"
+        hardshape="1 9 16 67"
+        > </frame>
+        <frame
+        time="200"
+        image="stick-kick2.png"
+        vector="50,60"
+        > </frame>
+        <frame
+        time="300"
+        image="stick-kick3.png"
+        vector="100,60"
+        >
+            <agressiv-point
+            coords="24,31"
+            vector="30,-20"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,42"
+            vector="30,-10"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="400"
+        image="stick-kick4.png"
+        vector="50,60"
+        >
+            <agressiv-point
+            coords="27,30"
+            vector="30,-30"
+            ></agressiv-point>
+            <agressiv-point
+            coords="40,33"
+            vector="30,-20"
+            ></agressiv-point>
+        </frame>
+    </movement>
+</character>

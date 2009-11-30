@@ -1,0 +1,46 @@
+                                NETWORK API
+_______________________________________________________________________________
+
+Server                                      CLIENT
+
+Wait for connexions                         Try to connect
+     _________________________________________/
+    /
+Accept Connection
+    \_________________________________________
+                                              \
+                                            Send player informations
+     _________________________________________/
+    /
+Lauch game
+   |
+Send Game information to player
+    \__________________________________________
+                                               \
+                                            Launch Game
+                                                |
+                                            Send control updates to server
+  _____________________________________________/ ^
+ /                                               |
+Calculate effects                                |
+|                                                |
+Send up to date game informations                |
+  \_____________________________________________/
+
+
+Game ends
+    \___________________________________________
+                                                \
+                                            Client ends game too.
+
+
+-----------------------------------------------------------
+
+            stream format reference:
+'' is the stream message termination character.
+
+new game (level): L:levelname
+new entity; N:number,skin,x,y
+entity update: U:number, position, percents, animation_reference, x, y
+entity delete: D:number
+end of game: EOF

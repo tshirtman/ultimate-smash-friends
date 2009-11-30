@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map 
+	name="Big level"
+	background="biglevel-background.png"
+	foreground="biglevel-foreground.png"
+	middle="biglevel-middle.png"
+	>
+	<block coords="141 342 123 30" ></block>
+	<block coords="516 321 207 36" ></block>
+	<block coords="219 741 123 114" ></block>
+	<block coords="320 722 66 37" ></block>
+	<block coords="300 738 397 70" ></block>
+	<block coords="650 798 205 51" ></block>
+	<block coords="1032 675 123 33" ></block>
+	<block coords="744 496 249 51" ></block>
+	<block coords="949 455 42 70" ></block>
+	<block coords="378 507 65 89" ></block>
+	<block coords="339 710 39 38" ></block>
+</map>

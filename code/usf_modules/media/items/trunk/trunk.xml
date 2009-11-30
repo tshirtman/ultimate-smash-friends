@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<item
+    name="trunk"
+    image="trunk.png"
+    creator="Tshirtman"
+    weight=""
+    hardshape="0 0 46 30"
+    auto-reverse="True"
+    Description="a trunk allowing the player to upgrade to a more powerfull
+    form">
+
+    <movement name="static"
+    duration="5000"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="trunk.png"
+        > </frame>
+    </movement>
+    <movement name="triger"
+    duration="500"
+    repeat="0"
+    >
+        <event
+        action="UpgradePlayer"
+        period="0,0"
+        ></event>
+        <event
+        action="DelItemEvent"
+        period="0,500"
+        ></event>
+        <frame
+        time="0"
+        image="trunk-open.png"
+        > </frame>
+    </movement>
+</item>

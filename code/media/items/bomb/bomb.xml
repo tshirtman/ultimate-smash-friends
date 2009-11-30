@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<item
+    name="bomb"
+    image="bomb1.png"
+    creator="Samoht"
+    weight=""
+    hardshape="0 0 30 30"
+    auto-reverse="True"
+    Description="a simple bombing item, explode doing damage around">
+
+    <movement name="static"
+    duration="5000"
+    repeat="0"
+    >
+        <event
+        action="BombExplode"
+        period="5000,0"
+        ></event>
+        <event
+        action="DelItemEvent"
+        period="0,5500"
+        ></event>
+        <frame
+        time="0"
+        image="bomb1.png"
+        > </frame>
+        <frame
+        time="300"
+        image="bomb2.png"
+        > </frame>
+        <frame
+        time="600"
+        image="bomb3.png"
+        > </frame>
+        <frame
+        time="900"
+        image="bomb4.png"
+        > </frame>
+        <frame
+        time="1200"
+        image="bomb5.png"
+        > </frame>
+        <frame
+        time="1500"
+        image="bomb6.png"
+        > </frame>
+        <frame
+        time="1800"
+        image="bomb7.png"
+        > </frame>
+        <frame
+        time="2100"
+        image="bomb8.png"
+        > </frame>
+        <frame
+        time="2400"
+        image="bomb9.png"
+        > </frame>
+        <frame
+        time="2700"
+        image="bomb10.png"
+        > </frame>
+        <frame
+        time="3000"
+        image="bomb11.png"
+        > </frame>
+        <frame
+        time="3300"
+        image="bomb12.png"
+        > </frame>
+        <frame
+        time="3600"
+        image="bomb13.png"
+        > </frame>
+        <frame
+        time="3900"
+        image="bomb14.png"
+        > </frame>
+    </movement>
+    <movement name="explode"
+    duration="500"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="bomb-expl1.png"
+        hardshape="0 0 30 30"
+        >
+            <agressiv-point
+            coords="19,26"
+            vector="-500,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="24,21"
+            vector="0,-300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="32,26"
+            vector="100,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="18,32"
+            vector="500,-300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,36"
+            vector="500,-300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="25,31"
+            vector="0,-500"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="100"
+        image="bomb-expl2.png"
+        hardshape="0 0 30 30"
+        >
+            <agressiv-point
+            coords="19,26"
+            vector="-500,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="24,21"
+            vector="-500,-300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="32,26"
+            vector="-500,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="18,32"
+            vector="-500,-300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,36"
+            vector="500,-300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="25,31"
+            vector="0,-500"
+            ></agressiv-point>
+            <!-- points out of image
+            <agressiv-point
+            coords="-30,31"
+            vector="-100,-100"
+            ></agressiv-point>
+            <agressiv-point
+            coords="90,31"
+            vector="100,-100"
+            ></agressiv-point>
+            <agressiv-point
+            coords="32,-30"
+            vector="0,-200"
+            ></agressiv-point>-->
+        </frame>
+        <frame
+        time="200"
+        image="bomb-expl3.png"
+        hardshape="0 0 30 30"
+        >
+            <agressiv-point
+            coords="19,26"
+            vector="-500,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="24,21"
+            vector="-500,-300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="32,26"
+            vector="-500,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="18,32"
+            vector="-500,-300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,36"
+            vector="500,-300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="25,31"
+            vector="0,-500"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="300"
+        image="bomb-expl4.png"
+        hardshape="0 0 30 30"
+        > </frame>
+        <frame
+        time="400"
+        image="bomb-expl5.png"
+        hardshape="0 0 30 30"
+        > </frame>
+    </movement>
+    <movement name="take"
+    duration="500"
+    repeat="0"
+    >
+        <event
+        action="DelItemEvent"
+        period="0,500"
+        ></event>
+        <event
+        action="BombExplode"
+        period="0,0"
+        ></event>
+        <frame
+        time="0"
+        image="bomb1.png"
+        > </frame>
+    </movement>
+</item>

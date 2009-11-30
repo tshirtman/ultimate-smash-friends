@@ -1,0 +1,85 @@
+<?xml version="2.0" encoding="UTF-8"?>
+<map
+    name="maryoland"
+    background="maryoland-background.png"
+    foreground="maryoland-foreground.png"
+    middle="maryoland-middle.png"
+    >
+    <entry-point
+        coords="750 50">
+    </entry-point>
+    <entry-point
+        coords="150 50">
+    </entry-point>
+    <entry-point
+        coords="1350 350">
+    </entry-point>
+    <block
+    coords="213 250 132 31"
+    ></block>
+    <block
+    coords="114 384 128 36"
+    ></block>
+    <block
+    coords="36 489 1143 44"
+    ></block>
+    <block
+    coords="452 405 384 120"
+    ></block>
+    <block
+    coords="548 332 27 73"
+    ></block>
+    <block
+    coords="730 327 30 101"
+    ></block>
+    <moving-block
+    texture="pod.png"
+    >
+        <rect
+        coords="0 0 176 69"
+        ></rect>
+        <pattern
+        position="482 148"
+        time="1"
+        ></pattern>
+        <pattern
+        position="1026 148"
+        time="20000"
+        ></pattern>
+        <pattern
+        position="1026 348"
+        time="28000"
+        ></pattern>
+        <pattern
+        position="1026 148"
+        time="36000"
+        ></pattern>
+        <pattern
+        position="482 148"
+        time="56000"
+        ></pattern>
+    </moving-block>
+    <vector-block
+    texture="pod.png"
+    vector="0 -1000"
+    relative="0"
+    position="1220 380"
+    >
+        <rect
+        coords="0 0 176 69"
+        >
+        </rect>
+    </vector-block>
+    <vector-block
+    texture="puddle.png"
+    vector="50 0"
+    relative="1"
+    position="1010 476"
+    >
+        <rect
+        coords="0 0 166 25"
+        >
+        </rect>
+    </vector-block>
+</map>
+
