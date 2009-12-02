@@ -35,10 +35,12 @@ from usf_modules import music
 
 def usage():
     print """
-    usage: ultimate-smash-friends [-h] [-l level-name] [-p player1,player2...] [-s num] [-C address]
+    usage: ultimate-smash-friends [-h] [-a][-l level-name] [-p player1,player2...] [-s num] [-C address]
 
     -h --help : this help
 
+    -a --author : See all the authors of this game
+    
     -l --level levelname : select level by name
 
     -p --players player1,player2... : select up tu 4 players, by name.
@@ -58,6 +60,7 @@ def author():
       Gabriel Pettier (most of codebase)
       Toineo (AI)
       Kaoron (patch to a nasty bug, code review and other help)
+      Alaxa27 (Code Optimization)
 
     Character design
       Thomas Pettier
@@ -75,7 +78,6 @@ def author():
     Testing
       A lot of people! thanks! :D
 
-    
     """
 class main (object):
     """
@@ -95,8 +97,9 @@ class main (object):
         # analyse of command line parameters.
         try:
             opts, args = getopt.getopt(
-                    params, "hl:p:s:C:", [
+                    params, "hl:au:p:s:C:", [
                     'help',
+                    'author',
                     'level=',
                     'players=',
                     'server=',
@@ -111,7 +114,7 @@ class main (object):
             if option in ["-h","--help"]:
                 usage()
                 sys.exit(2)
-            if option in ["-A","--author"]:
+            if option in ["-a","--author"]:
                 author()
                 sys.exit(2)
             if option in ["-l","--level"]:
