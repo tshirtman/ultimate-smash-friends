@@ -112,7 +112,7 @@ class main (object):
                 usage()
                 sys.exit(2)
             if option in ["-A","--author"]:
-                athor()
+                author()
                 sys.exit(2)
             if option in ["-l","--level"]:
                 level = argument
