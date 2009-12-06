@@ -18,6 +18,7 @@
 ################################################################################
 
 # standards import
+import os
 import time
 import pygame
 from pygame.locals import (
@@ -29,7 +30,7 @@ from pygame.locals import (
         USEREVENT,
         )
 # my imports
-import config
+from usf_modules.config  import config, keyboard_config, sound_config
 from debug_utils import LOG
 import game
 
@@ -65,10 +66,13 @@ class Controls (object):
     """
     def __init__(self):
         #loaders.load_keys()
-        self.keys = config.keyboard_config
+        self.keys = keyboard_config
         self.sequences = []
         self.player_sequences = [[],[],[],[]]
-        sequences_file = open('sequences.cfg', 'r')
+        sequences_file = open(os.path.join(
+                config['SHARE_DIRECTORY'],
+                'sequences'+os.extsep+'cfg')
+                              , 'r')
         sequence_tmpl = []
         condition = ""
         for i in sequences_file.readlines():
@@ -90,7 +94,7 @@ class Controls (object):
 
     def getKeyByAction(self, action):
         if action in self.keys.values():
-            return config.reverse_keymap[
+            return reverse_keymap[
                 self.keys.keys()[
                         self.keys.values().index(action)
                         ]
@@ -126,7 +130,7 @@ class Controls (object):
                     """
         conf = []
         for key in self.keys.keys():
-            conf.append("%s : %s\n" % ( self.keys[key], config.reverse_keymap[key]))
+            conf.append("%s : %s\n" % ( self.keys[key], reverse_keymap[key]))
 
         # we sort the keys configuration by player so the file is easier to read.
         conf.sort()
@@ -136,7 +140,7 @@ class Controls (object):
         file.close()
 
     def reload(self):
-        self.keys = config.load_key_config()
+        self.keys = load_key_config()
 
     def handle_menu_key( self, state, key, game):
         ret = "menu"
@@ -146,7 +150,7 @@ class Controls (object):
                 if self.keys[key] == "MENU_TOGGLE":
                     ret = "game"
                 elif self.keys[key] == "QUIT":
-                    if config.config['CONFIRM_EXIT']:
+                    if config['CONFIRM_EXIT']:
                         pygame.event.post(
                                 pygame.event.Event(
                                     USEREVENT,
@@ -204,11 +208,11 @@ class Controls (object):
                         the_key = self.keys[key]
                         if pl not in the_key: continue
                         if "_LEFT" in the_key:
-                            player.walking_vector[0] = config.config['WALKSPEED']
+                            player.walking_vector[0] = config['WALKSPEED']
                             player.reversed = True
 
                         elif "_RIGHT" in the_key:
-                            player.walking_vector[0] = config.config['WALKSPEED']
+                            player.walking_vector[0] = config['WALKSPEED']
                             player.reversed = False
 
                     #test sequences
