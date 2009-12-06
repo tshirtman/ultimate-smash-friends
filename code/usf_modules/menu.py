@@ -33,7 +33,9 @@ from usf_modules.config import (
         config,
         sound_config,
         save_sound_conf,
-        save_keys_conf
+        load_sound_config,
+        save_keys_conf,
+        load_key_config
         )
 import usf_modules.controls
 import entity_skin
@@ -622,7 +624,7 @@ class Menu:
                         self.cursor = 0
 
                     elif self.entries['sound'][self.cursor] == 'reset':
-                        config.load_sound_config()
+                        load_sound_config()
 
                     else:
                         controls.assignKey(
@@ -635,7 +637,7 @@ class Menu:
                         self.cursor = 0
 
                     elif self.entries['keyboard'][self.cursor] == 'reset':
-                        config.load_key_config()
+                        load_key_config()
 
                     else:
                         controls.assignKey(

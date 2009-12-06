@@ -106,6 +106,8 @@ str_conf = """
 """
 
 reverse_keymap = {
+    # FIXME: Maybe this is the source of bugs other plateforms! try to do this
+    # dynamicaly!
     # reversed map of keys, based on pygame/sdl documentation
     1 : "KMOD_LSHIFT",
     2 : "KMOD_RSHIFT",
