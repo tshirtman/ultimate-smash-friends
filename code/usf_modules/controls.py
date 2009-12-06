@@ -30,7 +30,12 @@ from pygame.locals import (
         USEREVENT,
         )
 # my imports
-from usf_modules.config  import config, keyboard_config, sound_config
+from usf_modules.config  import (
+    config,
+    keyboard_config,
+    sound_config,
+    reverse_keymap
+    )
 from debug_utils import LOG
 import game
 
