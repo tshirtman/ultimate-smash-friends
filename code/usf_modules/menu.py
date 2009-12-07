@@ -27,18 +27,19 @@ from time import time
 import os
 import pygame
 
-from loaders import image
-from config import (
+#Our modules
+from usf_modules.loaders import image
+from usf_modules.config import (
         config,
         sound_config,
         save_sound_conf,
         save_keys_conf
         )
-import controls
+import usf_modules.controls
 import entity_skin
 from debug_utils import LOG
-from game import Game
-from config import xdg_config_home
+from usf_modules.game import Game
+from usf_modules.config import xdg_config_home
 
 class Menu:
     def __init__(self, surface):
@@ -153,7 +154,7 @@ class Menu:
                     'Credits',
                     'Quit'
                     ),
-            'quit':('yes', 'no'),
+            'quit':('no', 'yes'),
             'configure': ('Keyboard','Sound',),
             'sound': ('music','sounds','save','reset'),
             'keyboard': ['QUIT','TOGGLE_FULLSCREEN','VALIDATE']+
@@ -621,7 +622,7 @@ class Menu:
                         self.cursor = 0
 
                     elif self.entries['sound'][self.cursor] == 'reset':
-                        load_sound_config()
+                        config.load_sound_config()
 
                     else:
                         controls.assignKey(
@@ -634,7 +635,7 @@ class Menu:
                         self.cursor = 0
 
                     elif self.entries['keyboard'][self.cursor] == 'reset':
-                        load_key_config()
+                        config.load_key_config()
 
                     else:
                         controls.assignKey(
