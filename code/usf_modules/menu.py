@@ -27,21 +27,18 @@ from time import time
 import os
 import pygame
 
-#Our modules
-from usf_modules.loaders import image
-from usf_modules.config import (
+from loaders import image
+from config import (
         config,
         sound_config,
         save_sound_conf,
-        load_sound_config,
-        save_keys_conf,
-        load_key_config
+        save_keys_conf
         )
-import usf_modules.controls
+import controls
 import entity_skin
 from debug_utils import LOG
-from usf_modules.game import Game
-from usf_modules.config import xdg_config_home
+from game import Game
+from config import xdg_config_home
 
 class Menu:
     def __init__(self, surface):
@@ -156,7 +153,7 @@ class Menu:
                     'Credits',
                     'Quit'
                     ),
-            'quit':('no', 'yes'),
+            'quit':('yes', 'no'),
             'configure': ('Keyboard','Sound',),
             'sound': ('music','sounds','save','reset'),
             'keyboard': ['QUIT','TOGGLE_FULLSCREEN','VALIDATE']+
