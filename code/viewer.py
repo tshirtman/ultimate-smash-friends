@@ -18,7 +18,6 @@
 # along with ultimate-smash-friends.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-#from pygame.locals import *
 import pygame
 import os, sys
 import getopt
@@ -39,16 +38,15 @@ except:
     sys.exit(1)
 
 # our modules
-sys.path.append('modules') # our modules are here
-from config import config
+from usf_modules.config import config
 
-from animations import EmptyAnimationException
-from game import Game, NetworkServerGame, NetworkClientGame
-from menu import Menu
-from entity import Entity
-from debug_utils import draw_rect, LOG
-import entity_skin
-import loaders
+from usf_modules.animations import EmptyAnimationException
+from usf_modules.game import Game, NetworkServerGame, NetworkClientGame
+from usf_modules.menu import Menu
+from usf_modules.entity import Entity
+from usf_modules.debug_utils import draw_rect, LOG
+from usf_modules import entity_skin
+from usf_modules import loaders
 
 # thanks to Samuel Abels
 # http://csourcesearch.net/python/fidC15F2CB91333517E23E41191CFCDA6155BDC8B7B.aspx?s=cdef%3Atree+mdef%3Ainsert
@@ -147,10 +145,6 @@ class NotGame(Game):
                     (
                      self.entity.vector[0] * dt,
                      self.entity.vector[1] * dt
-                    ), 'vector'
-                    )
-            #self.entity.place[0] += self.entity.vector[0] * dt
-            #self.entity.place[1] += self.entity.vector[1] * dt
             self.entity.vector[0] -= (
                     config['AIR_FRICTION'] * self.entity.vector[0] * dt
                     )
@@ -269,7 +263,7 @@ class usf_character_creator(object):
                             'combobox_animations'
                             ).get_model().append([i])
                 for i in os.listdir(
-                        os.path.join(
+                        os.sep.join(
                             self.character_filename.split(os.sep)[:-1]
                             )
                         ):
