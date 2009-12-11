@@ -26,7 +26,7 @@ if platform in ('linux2', 'bsd'):
 else:
 #xgd is not implemented on windows (how surprising ^^) so this is a trivial
 #hack to make it work.
-    xdg_config_home = '.'
+    xdg_config_home = '~/.config'
 
 import pygame.locals
 

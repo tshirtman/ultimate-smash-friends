@@ -55,30 +55,15 @@ def usage():
     """
 
 def author():
-    print """
-    Programers
-      Gabriel Pettier (most of codebase)
-      Toineo (AI)
-      Kaoron (patch to a nasty bug, code review and other help)
-      Alaxa27 (Code Optimization)
+    
+    if 'CREDITS' not in os.listdir(os.path.join(config['SHARE_DIRECTORY'])):
+        LOG().log(config['SHARE_DIRECTORY']+'/CREDITS file not found')
+        sys.exit(0)
+    else:
+        author_file = open(os.path.join(config['SHARE_DIRECTORY'],'CREDITS'),'r')
+        print (author_file.read())
+        author_file.close()
 
-    Character design
-      Thomas Pettier
-      Gabriel Pettier
-      Herberts
-      Necroluckyboy
-
-    Levels design
-      Gabriel Pettier
-      Necroluckyboy
-
-    Musics
-      Mourad Achir
-
-    Testing
-      A lot of people! thanks! :D
-
-    """
 class main (object):
     """
     The main class, load some parameters, set initial states and take care of
@@ -97,7 +82,7 @@ class main (object):
         # analyse of command line parameters.
         try:
             opts, args = getopt.getopt(
-                    params, "hl:au:p:s:C:", [
+                params, "hl:au:p:s:C:", [
                     'help',
                     'author',
                     'level=',
@@ -105,9 +90,10 @@ class main (object):
                     'server=',
                     'client='
                     ]
-                    )
+                )
         except getopt.GetoptError:
             usage()
+            author()
             sys.exit(2)
         game_type = 'local'
         for option, argument in opts:
@@ -161,15 +147,15 @@ class main (object):
 
             else:
                 self.screen.blit(
-                        self.game_font.render(
-                            "menus...",
-                            True,
-                            pygame.color.Color(
-                                "white"
-                                )
-                            ),
-                        (30, 4*config['SIZE'][1]/5)
-                        )
+                    self.game_font.render(
+                        "menus...",
+                        True,
+                        pygame.color.Color(
+                            "white"
+                            )
+                        ),
+                    (30, 4*config['SIZE'][1]/5)
+                    )
 
                 pygame.display.update()
                 self.menu = Menu(self.screen)
@@ -187,12 +173,12 @@ class main (object):
             pygame.display.toggle_fullscreen()
         # following operation can be quite long, so a loading screen is good
         image = loaders.image(
-                config['MEDIA_DIRECTORY']+
-                os.sep+
-                'misc'+
-                os.sep+
-                'loading.png'
-                )[0]
+            config['MEDIA_DIRECTORY']+
+            os.sep+
+            'misc'+
+            os.sep+
+            'loading.png'
+            )[0]
 
         self.game_font = pygame.font.Font(None, 50)
         self.screen.blit(image,(0,0))
@@ -219,10 +205,10 @@ class main (object):
                 # return of the menu update function may contain a new game
                 # instance to switch to.
                 newgame, game_ = self.menu.update(
-                        self.state,
-                        self.game,
-                        self.controls
-                        )
+                    self.state,
+                    self.game,
+                    self.controls
+                    )
                 if newgame:
                     if game_ is not self.game:
                         #LOG().log('new game')
@@ -233,11 +219,11 @@ class main (object):
                 self.state = self.game.update()
                 if self.state == 'game':
                     self.game.draw(
-                            debug_params={
+                        debug_params={
                             #'controls': self.controls,
                             #'action':None,
                             }
-                            )
+                        )
 
             pygame.display.update()
             # verify there is not a QUIT event waiting for us, in case of we
@@ -255,6 +241,6 @@ if __name__ == '__main__':
 
     """
     # remove argv[0] as it's the program name and we don't care of it.
-    #LOG().log(sys.argv)
+   #LOG().log(sys.argv)
     main(sys.argv[1:]).go()
 
