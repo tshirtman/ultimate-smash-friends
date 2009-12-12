@@ -40,7 +40,7 @@ def usage():
     -h --help : this help
 
     -a --author : See all the authors of this game
-    
+
     -l --level levelname : select level by name
 
     -p --players player1,player2... : select up tu 4 players, by name.
@@ -60,7 +60,7 @@ def author():
       Gabriel Pettier (most of codebase)
       Toineo (AI)
       Kaoron (patch to a nasty bug, code review and other help)
-      Alaxa27 (Code Optimization)
+      Alaxa27 (bugfixes, normalisation)
 
     Character design
       Thomas Pettier
