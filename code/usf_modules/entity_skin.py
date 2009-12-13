@@ -43,7 +43,7 @@ class Entity_skin (object):
     importants information as the character/item name and such details.
 
     """
-    def __init__( self, dir_name="characters"+os.sep+"stick-tiny",
+    def __init__( self, dir_name="characters"+os.sep+"stick",
     server=False, xml_from_str=None):
         """
         The dir_name is the relative path of the directory where the item/player
@@ -193,7 +193,7 @@ class Entity_skin (object):
 
         """
         #LOG().log(params,1)
-        if ( anim_name in self.animations
+        if (anim_name in self.animations
                 and ( anim_name == "static"
                     or anim_name != self.current_animation )):
             if 'entity' in params and params['entity'].upgraded:

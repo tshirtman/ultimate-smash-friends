@@ -19,6 +19,7 @@
 
 import os, sys
 import pygame
+import Image
 
 import loaders
 import time
@@ -239,7 +240,8 @@ class Level ( object ):
                         attribs['foreground']
                         )
 
-            self.rect = loaders.image(self.level)[1]
+            tmp = Image.open(self.level)
+            self.rect = pygame.Rect(0,0, *tmp.size)
 
             if 'margins' in attribs:
                 margins = [int(i) for i in attribs['margins'].split(',')]
@@ -371,6 +373,13 @@ class Level ( object ):
 
     def __del__(self):
         LOG().log('deleting level')
+
+    def __str__(self):
+        return ','.join((
+                    self.background,
+                    self.foreground,
+                    self.middle
+        )+[str(block) for block in self.moving_blocs+self.vector_blocs])
 
     def draw_background(self, surface, coords=(0,0)):
         surface.blit( loaders.image(self.background)[0], coords )

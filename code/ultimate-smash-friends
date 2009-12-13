@@ -40,7 +40,7 @@ def usage():
     -h --help : this help
 
     -a --author : See all the authors of this game
-    
+
     -l --level levelname : select level by name
 
     -p --players player1,player2... : select up tu 4 players, by name.
