@@ -156,7 +156,7 @@ class Menu:
                     'Credits',
                     'Quit'
                     ),
-            'quit':('no', 'yes'),
+            'quit':('yes', 'no'),
             'configure': ('Keyboard','Sound',),
             'sound': ('music','sounds','save','reset'),
             'keyboard': ['QUIT','TOGGLE_FULLSCREEN','VALIDATE']+
@@ -275,7 +275,7 @@ class Menu:
                 )
 
     def draw_credits(self):
-        credits = open('CREDITS').readlines()
+        credits = open(os.path.join(config['SHARE_DIRECTORY'],'CREDITS')).readlines()
         for index,line in enumerate(credits):
             if line[:4] == ' '*4:
                 # name of a contributor
@@ -298,7 +298,7 @@ class Menu:
                             )
                         ,(config['SIZE'][0]/10, 25*index)
                         )
-
+ 
     def draw_conf_sound(self):
         self.surface.blit(
                 image(self.menu_elements['main_background'])[0],
@@ -664,7 +664,7 @@ class Menu:
                     elif self.entries[self.state][self.cursor] == 'Quit':
                         if config['CONFIRM_EXIT']:
                             self.state = "quit"
-                            self.cursor = 0
+                            self.cursor = 1
                         else:
                             pygame.event.post( pygame.event.Event(QUIT) )
 

@@ -60,7 +60,7 @@ def author():
         LOG().log(config['SHARE_DIRECTORY']+'/CREDITS file not found')
         sys.exit(0)
     else:
-        author_file = open(os.path.join(config['SHARE_DIRECTORY'],'CREDITS'),'r')
+        author_file = open(os.path.join(config['SHARE_DIRECTORY'],'CREDITS'))
         print (author_file.read())
         author_file.close()
 
@@ -93,7 +93,6 @@ class main (object):
                 )
         except getopt.GetoptError:
             usage()
-            author()
             sys.exit(2)
         game_type = 'local'
         for option, argument in opts:
