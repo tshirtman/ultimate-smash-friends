@@ -57,7 +57,7 @@ class Entity (object):
     # this counter will allow us to correctly update entities.
     counter = 0
 
-    def __init__( self, num, game, entity_skinname='stick-tiny', place=(550,1),
+    def __init__( self, num, game, entity_skinname='characters'+os.sep+'stick-tiny', place=(550,1),
                   lives=3, carried_by=None, vector=[0,0], reversed=False,
                   server=False, number=None ):
         if number is None:
@@ -85,7 +85,8 @@ class Entity (object):
         self.onGround = False
         if entity_skinname is not None:
             self.name = entity_skinname.split(os.sep)[-1]
-            self.entity_skin = entity_skin.Entity_skin(entity_skinname, server)
+            self.entity_skin = entity_skin.Entity_skin(entity_skinname,
+            game.screen == None)
             try:
                 self.entity_skin.change_animation(
                         'static',
@@ -106,6 +107,21 @@ class Entity (object):
                     )
             self.rect[2:] = self.entity_skin.animation.rect[2:]
             self.entity_skin.update(0)
+
+    def __str__(self):
+        return ','.join((
+                    str(self.num),
+                    self.upgraded and  '1' or'0',
+                    self.lighten and  '1' or'0',
+                    str(self.place),
+                    str(self.vector),
+                    str(self.walking_vector),
+                    self.reversed and  '1' or'0',
+                    str(self.lives),
+                    self.invincible and '1' or '0',
+                    self.entity_skin.animation.image
+                    ))
+
 
     def dist(self, entity):
         """

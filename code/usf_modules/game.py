@@ -72,49 +72,53 @@ class Game (object):
 
         self.gametime = 0
 
-        # time for a loading screen ain't it?
-        # loading level
-        self.level_place = [0, 0]
-        self.game_font = pygame.font.Font(None, 50)
-        image_src = os.path.join(
-                    config['MEDIA_DIRECTORY'],
-                    'misc',
-                    'loading.png'
-                    )
-
-        self.heart = os.path.join(
-                    config['MEDIA_DIRECTORY'],
-                    'misc',
-                    'heart.png'
-                    )
-
-        self.screen.blit(image(image_src)[0],(0,0))
-        self.screen.blit(
-                self.game_font.render(
-                    "level...",
-                    True,
-                    pygame.color.Color("white")
-                    ),
-                ( 30, 4*config['SIZE'][1]/5 )
-                )
-
-        pygame.display.flip()
-
         self.level = Level(level)
-        self.tmp_surface = self.screen.copy()
+        if screen is not None:
+            self.font = pygame.font.Font(None, 20)
+            self.zoom = 1
+            #self.testimage=load_image(os.path.join(MEDIA_DIRECTORY,'items','item-heal'+os.extsep+'png')[0]
+            # time for a loading screen ain't it?
+            # loading level
+            self.level_place = [0, 0]
+            self.game_font = pygame.font.Font(None, 50)
+            image_src = os.path.join(
+                        config['MEDIA_DIRECTORY'],
+                        'misc',
+                        'loading.png'
+                        )
 
-        # loading players
-        self.screen.blit(image(image_src)[0],(0,0))
-        self.screen.blit(
-                self.game_font.render(
-                    "players...",
-                    True,
-                    pygame.color.Color("white")
-                    ),
-                ( 30, 4*config['SIZE'][1]/5 )
-                )
+            self.heart = os.path.join(
+                        config['MEDIA_DIRECTORY'],
+                        'misc',
+                        'heart.png'
+                        )
 
-        pygame.display.flip()
+            self.screen.blit(image(image_src)[0],(0,0))
+            self.screen.blit(
+                    self.game_font.render(
+                        "level...",
+                        True,
+                        pygame.color.Color("white")
+                        ),
+                    ( 30, 4*config['SIZE'][1]/5 )
+                    )
+
+            pygame.display.flip()
+
+            self.tmp_surface = self.screen.copy()
+
+            # loading players
+            self.screen.blit(image(image_src)[0],(0,0))
+            self.screen.blit(
+                    self.game_font.render(
+                        "players...",
+                        True,
+                        pygame.color.Color("white")
+                        ),
+                    ( 30, 4*config['SIZE'][1]/5 )
+                    )
+
+            pygame.display.flip()
 
         self.players = []
         LOG().log('loading players')
@@ -142,13 +146,11 @@ class Game (object):
                                 ((i+1)*config['SIZE'][0]/5,100)
                                 )
                             )
+        if screen is not None:
+            self.icon_space = config['SIZE'][0]/len(players_)
 
         # various other initialisations
         self.last_clock = time.time()
-        self.icon_space = config['SIZE'][0]/len(self.players)
-        self.font = pygame.font.Font(None, 20)
-        self.zoom = 1
-        #self.testimage=load_image(os.path.join(MEDIA_DIRECTORY,'items','item-heal'+os.extsep+'png')[0]
 
         self.items = []
 
@@ -566,13 +568,13 @@ class NetworkServerGame(Game):
     send new postions of every entities, to every network players.
 
     """
-    def __init__(self, players_=2):
+    def __init__(self, level="biglevel", players=(None, None, None, None)):
         """
         Initialize a game with a list of player and a level,
         level is the basename of the level in media/levels/
 
         """
-        pass
+        Game.__init__(self, None, level, players)
 
     def begin(self, level, players_):
         """
@@ -586,22 +588,12 @@ class NetworkServerGame(Game):
         As we are in server mode, there will be no drawing.
 
         """
+        print self.gamestring
         pass
 
-    def update_game_state_string(self):
-        """
-        create a string describing the update world to send to every clients.
-
-        """
-        pass
-
-    def update(self):
-        """
-        sync everything to current time. Return "game" if we are still in game
-        mode, return "menu" otherwise. send updates to clients.
-
-        """
-        pass
+    def update(self, debug_params={}):
+        Game.update(self, debug_params)
+        self.gamestring = ";".join(str(self.players+self.items))+'|'+str(self.level)
 
 class NetworkClientGame(Game):
     """
