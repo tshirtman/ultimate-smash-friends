@@ -104,13 +104,13 @@ str_conf = """
 # please also see online documentation of keybindings here:
 # http://code.google.com/p/ultimate-smash-friends/wiki/KeysConfiguration
 """
-conf = ""
-config = {}
-for key in ('SIZE', 'FULLSCREEN', 'ZOOM_SHARPNESS', 'MAX_FPS', 'GRAVITY', 'JUMPHEIGHT', 'WLAKSPEED', 'AIR_FRICTION', 'INVICIBLE_TIME'):
-    conf += str(key)+" = "+str(config[key])+"\n"
-    file=open_conf('config')#(os.path.join(xdg_config_home,'usf','.cfg'),'w')
-    file.write(conf)
-    file.close()
+# conf = ""
+# config = {}
+# for key in ('SIZE', 'FULLSCREEN', 'ZOOM_SHARPNESS', 'MAX_FPS', 'GRAVITY', 'JUMPHEIGHT', 'WLAKSPEED', 'AIR_FRICTION', 'INVICIBLE_TIME'):
+#     conf += str(key)+" = "+str(config[key])+"\n"
+#     file=open_conf('config')#(os.path.join(xdg_config_home,'usf','.cfg'),'w')
+#     file.write(conf)
+#     file.close()
 
     reverse_keymap = {
         # FIXME: Maybe this is the source of bugs other plateforms! try to do this
