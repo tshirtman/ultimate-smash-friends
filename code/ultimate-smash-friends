@@ -47,12 +47,12 @@ def usage():
 
     -p --players player1,player2... : select up tu 4 players, by name.
 
-    -s --server num : will launch a game server accepting "num" before launching the game.
+    -s --server num, same as --server num: will launch a game server accepting "num" before launching the game.
 
-    -C --client address : will attempt to connect to a game server at address "address".
-
-    if a level and at least two players are selected the game start directly,
-    without menu, with this level and those players.
+    -C --client address, same as --client num: will attempt to connect to a game server at address "address".
+  
+    if a level and at least two players are selected the game is launch
+    directly, without menu, with this level and thoose players.
 
     """
 
