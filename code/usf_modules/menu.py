@@ -32,6 +32,8 @@ from usf_modules.loaders import image
 from usf_modules.config import (
         config,
         sound_config,
+        save_conf,
+        load_config,
         save_sound_conf,
         load_sound_config,
         save_keys_conf,
@@ -157,7 +159,8 @@ class Menu:
                     'Quit'
                     ),
             'quit':('yes', 'no'),
-            'configure': ('Keyboard','Sound',),
+            'configure': ('Global','Keyboard','Sound',),
+            'global' : ('fullscreen','save','reset'),
             'sound': ('music','sounds','save','reset'),
             'keyboard': ['QUIT','TOGGLE_FULLSCREEN','VALIDATE']+
             [
@@ -299,11 +302,57 @@ class Menu:
                         ,(config['SIZE'][0]/10, 25*index)
                         )
  
+    def draw_conf_global(self):
+        self.surface.blit(
+            image(self.menu_elements['main_background'])[0],
+            (0, 0)
+            )
+        for index,key in enumerate(self.entries['global']):
+            if key == 'save':
+                if  self.cursor == index:
+                    self.surface.blit(
+                        self.font.render(
+                            key,
+                            True,
+                            pygame.color.Color('#'+self.R+self.V+self.B)
+                            )
+                        ,
+                        (300, 300)
+                        )
+                else:
+                    self.surface.blit(
+                        self.font.render(
+                            key,
+                            True,
+                            pygame.color.Color('white')
+                            )
+                        ,(300, 300)
+                        )
+            elif key == 'fullscreen':
+                if self.cursor == index:
+                    self.surface.blit(
+                        self.font.render(
+                            ' '.join((key,str(config['FULLSCREEN']))),
+                            True,
+                            pygame.color.Color('#'+self.R+self.V+self.B)
+                            )
+                        ,(300, 200)
+                        )
+                else:
+                    self.surface.blit(
+                        self.font.render(
+                            ' '.join((key,str(config['FULLSCREEN']),'5')),
+                            True,
+                            pygame.color.Color('white')
+                            )
+                        ,(300, 200)
+                        )
+
     def draw_conf_sound(self):
         self.surface.blit(
-                image(self.menu_elements['main_background'])[0],
-                (0, 0)
-                )
+            image(self.menu_elements['main_background'])[0],
+            (0, 0)
+            )
         for index,key in enumerate(self.entries['sound']):
             if key == "save":
                 if self.cursor == index:
@@ -542,6 +591,8 @@ class Menu:
             self.draw_conf_keyboard(controls)
         elif self.state == 'sound':
             self.draw_conf_sound()
+        elif self.state == 'global':
+            self.draw_conf_global()
 
         for event in pygame.event.get( USEREVENT ):
             try:
@@ -566,6 +617,7 @@ class Menu:
                                 'configure',
                                 'keyboard',
                                 'sound',
+                                'global',
                                 'quit'
                              ):
                 if event.key == 'DOWN':
@@ -581,7 +633,10 @@ class Menu:
                         self.cursor = 0
 
                 elif event.key == 'LEFT':
-                    if self.state == 'keyboard':
+                    if self.state == 'global':
+                        if self.entries['global'][self.cursor] == 'fullscreen':
+                            config['FULLSCREEN'] = False
+                    elif self.state == 'keyboard':
                         if self.cursor - 10 < 0:
                             self.cursor += (
                                     10 * (len(self.entries['keyboard']) // 10)
@@ -600,23 +655,39 @@ class Menu:
                                     sound_config['SOUND_VOLUME']-5
                                     )
                 elif event.key == 'RIGHT':
-                    if self.state == 'keyboard':
+                    if self.state == 'global':
+                        if self.entries['global'][self.cursor] == 'fullscreen':
+                            config['FULLSCREEN'] = True
+                    elif self.state == 'keyboard':
                         if self.cursor + 10 > len(self.entries['keyboard']):
                             self.cursor = self.cursor % 10
                         else:
                             self.cursor += 10
                     elif self.state == 'sound':
-                        if self.entries['sound'][self.cursor] == "music":
+                        if self.entries['sound'][self.cursor] == 'music':
                             sound_config['MUSIC_VOLUME'] = min(
                                     100,
                                     sound_config['MUSIC_VOLUME']+5
                                     )
-                        elif self.entries['sound'][self.cursor] == "sounds":
+                        elif self.entries['sound'][self.cursor] == 'sounds':
                             sound_config['SOUND_VOLUME'] = min(
                                     100,
                                     sound_config['SOUND_VOLUME']+5
+                      
                                     )
- 
+                elif event.key in ('VALIDATE', 'A')and self.state == 'global':
+                    if self.entries['global'][self.cursor] == 'save':
+                        save_conf()
+                        self.state = 'configure'
+                        self.cursor = 0
+                    
+                    elif self.entries['global'][self.cursor] == 'reset':
+                        load_config()
+                    
+                    else:
+                        controls.assignKey(
+                            self.entries['keyboard'][self.cursor]
+                                         )
                 elif event.key in ('VALIDATE','A') and self.state == 'sound':
                     if self.entries['sound'][self.cursor] == 'save':
                         save_sound_conf()
@@ -667,6 +738,11 @@ class Menu:
                             self.cursor = 1
                         else:
                             pygame.event.post( pygame.event.Event(QUIT) )
+                            
+                    elif self.entries[self.state][self.cursor] == 'Global':
+                                
+                            self.state='global'
+                            self.cursor = 0
 
                     elif self.entries[self.state][self.cursor] == 'Keyboard':
                         self.state='keyboard'
