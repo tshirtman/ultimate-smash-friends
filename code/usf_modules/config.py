@@ -56,7 +56,7 @@ def load_config():
             line = line.split('#')[0].split(';')[0].split('//')[0]
             # yeah eval is evil, but I guess it exists for such situations
             config[line.split('=')[0].replace(' ','')] = eval(line.split('=')[1])
-            return config
+    return config
         
 def load_sound_config():
     config = {}
@@ -112,7 +112,7 @@ str_conf = """
 #     file.write(conf)
 #     file.close()
 
-    reverse_keymap = {
+reverse_keymap = {
         # FIXME: Maybe this is the source of bugs other plateforms! try to do this
         # dynamicaly!
         # reversed map of keys, based on pygame/sdl documentation
