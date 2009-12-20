@@ -19,6 +19,10 @@
 from usf_modules.widget import *
 import pygame
 class WidgetIcon(Widget):
+    """
+    A simple button widget.
+    XML : <button sizex="" sizey="" posx="" posy="" action="" value="" id=""/>
+    """
     text = ""
     state = "norm"
     def draw(self):
@@ -69,12 +73,16 @@ class WidgetIcon(Widget):
             os.sep+
             'gui'+
             os.sep+
+            config['THEME']+
+            os.sep+
             'back_button.png').convert_alpha()
         self.background  = pygame.transform.scale(self.background, (self.sizex, self.sizey))
         #self.background.set_colorkey((255,255,255))
         self.background_hover = pygame.image.load(config['MEDIA_DIRECTORY']+
             os.sep+
             'gui'+
+            os.sep+
+            config['THEME']+
             os.sep+
             'back_button_hover.png').convert_alpha()
         self.background_hover  = pygame.transform.scale(self.background_hover, (self.sizex, self.sizey))
