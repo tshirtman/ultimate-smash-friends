@@ -1,5 +1,6 @@
 <gui>
 <menu>main.usfgui</menu>
 <menu>configure.usfgui</menu>
+<menu>credits.usfgui</menu>
 <menu>quit.usfgui</menu>
 </gui>

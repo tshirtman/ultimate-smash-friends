@@ -46,6 +46,7 @@ from usf_modules.config import xdg_config_home
 from usf_modules.widget import Widget
 from usf_modules.widget_label import WidgetLabel
 from usf_modules.widget_icon import WidgetIcon
+from usf_modules.widget_credits import WidgetCredits
 from usf_modules.gui_event import (
         level,
         exec_event
@@ -132,7 +133,7 @@ class Gui:
             #draw items at once
             self.widget_list[self.screen_current][i].draw()
         return False, None
-    def __init__(self, surface):
+    def __init__(self, surface): 
         self.characters = []
         self.players = [None, None, None, None]
         self.state = 'menu'
@@ -158,6 +159,8 @@ class Gui:
             os.sep+
             'gui'+
             os.sep+
+            config['THEME']+
+            os.sep+
             'background.png').convert()
         self.image = pygame.transform.scale(self.image, (self.sizex, self.sizey))
         
@@ -182,6 +185,14 @@ class Gui:
                     self.widget_list[filename].append(WidgetLabel(self.screen))
                     self.widget_list[filename][len(self.widget_list[filename])-1].name =xml_file.childNodes[i].getAttribute("id")
                     self.widget_list[filename][len(self.widget_list[filename])-1].text =xml_file.childNodes[i].getAttribute("value")
+                    self.widget_list[filename][len(self.widget_list[filename])-1].posx =self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("posx"))/100
+                    self.widget_list[filename][len(self.widget_list[filename])-1].posy =self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("posy"))/100
+                if(xml_file.childNodes[i].tagName == "credits"):
+                    self.widget_list[filename].append(WidgetCredits(self.screen))
+                    self.widget_list[filename][len(self.widget_list[filename])-1].name =xml_file.childNodes[i].getAttribute("id")
+                    self.widget_list[filename][len(self.widget_list[filename])-1].text =xml_file.childNodes[i].getAttribute("value")
+                    self.widget_list[filename][len(self.widget_list[filename])-1].set_sizex(self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("sizex"))/100)
+                    self.widget_list[filename][len(self.widget_list[filename])-1].set_sizey(self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("sizey"))/100)
                     self.widget_list[filename][len(self.widget_list[filename])-1].posx =self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("posx"))/100
                     self.widget_list[filename][len(self.widget_list[filename])-1].posy =self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("posy"))/100
                 if(xml_file.childNodes[i].tagName == "button"):
