@@ -28,6 +28,7 @@ from usf_modules.config import config, sound_config
 
 from usf_modules.game import Game, NetworkServerGame, NetworkClientGame
 from usf_modules.menu import Menu
+from usf_modules.gui import Gui
 from usf_modules.controls import Controls
 from usf_modules.debug_utils import LOG
 from usf_modules import loaders
@@ -88,20 +89,22 @@ class main (object):
         # analyse of command line parameters.
         try:
             opts, args = getopt.getopt(
-                params, "hl:au:ch:p:s:C:", [
+                params, "hl:au:ch:p:s:C:nG", [
                     'help',
                     'author',
                     'character_creator',
                     'level=',
                     'players=',
                     'server=',
-                    'client='
+                    'client=',
+                    'gui'
                     ]
                 )
         except getopt.GetoptError:
             usage()
             sys.exit(2)
         game_type = 'local'
+        newGui = False
         for option, argument in opts:
             if option in ["-h","--help"]:
                 usage()
@@ -116,6 +119,8 @@ class main (object):
                 level = argument
             if option in ["-p","--players"]:
                 p = argument
+            if option in ["-nG","--gui"]:
+                newGui =True
             if option in ["-s","--server"]:
                 game_type = 'server'
             if option in ['-C','--client']:
@@ -140,7 +145,10 @@ class main (object):
             self.game = NetworkClientGame(players, level)
             self.state = "game"
             self.controls = Controls()
-            self.menu = Menu()
+            if(newGui == True):
+                self.menu = Gui()
+            else:
+                self.menu = Menu()
 
         else:
             self.init_screen()
@@ -167,7 +175,10 @@ class main (object):
                     )
 
                 pygame.display.update()
-                self.menu = Menu(self.screen)
+                if(newGui == True):
+                    self.menu = Gui(self.screen)
+                else:
+                    self.menu = Menu(self.screen)
                 self.state = "menu"
                 self.controls = Controls()
 
@@ -178,6 +189,7 @@ class main (object):
 
     def init_screen(self):
         self.screen = pygame.display.set_mode(config['SIZE'])
+        pygame.display.set_caption('Ultimate Smash Friends')
         if config['FULLSCREEN'] == 1:
             pygame.display.toggle_fullscreen()
         # following operation can be quite long, so a loading screen is good
