@@ -104,7 +104,7 @@ class main (object):
             usage()
             sys.exit(2)
         game_type = 'local'
-        newGui = False
+        self.newGui = False
         for option, argument in opts:
             if option in ["-h","--help"]:
                 usage()
@@ -120,7 +120,7 @@ class main (object):
             if option in ["-p","--players"]:
                 p = argument
             if option in ["-nG","--gui"]:
-                newGui =True
+                self.newGui =True
             if option in ["-s","--server"]:
                 game_type = 'server'
             if option in ['-C','--client']:
@@ -145,7 +145,7 @@ class main (object):
             self.game = NetworkClientGame(players, level)
             self.state = "game"
             self.controls = Controls()
-            if(newGui == True):
+            if(self.newGui == True):
                 self.menu = Gui()
             else:
                 self.menu = Menu()
@@ -175,7 +175,7 @@ class main (object):
                     )
 
                 pygame.display.update()
-                if(newGui == True):
+                if(self.newGui == True):
                     self.menu = Gui(self.screen)
                 else:
                     self.menu = Menu(self.screen)
@@ -193,13 +193,24 @@ class main (object):
         if config['FULLSCREEN'] == 1:
             pygame.display.toggle_fullscreen()
         # following operation can be quite long, so a loading screen is good
-        image = loaders.image(
-            config['MEDIA_DIRECTORY']+
-            os.sep+
-            'misc'+
-            os.sep+
-            'loading.png'
-            )[0]
+        if(self.newGui == True):
+            image = loaders.image(
+                config['MEDIA_DIRECTORY']+
+                os.sep+
+                'gui'+
+                os.sep+
+                config['THEME']+
+                os.sep+
+                'loading.png'
+                )[0]
+        else:
+            image = loaders.image(
+                config['MEDIA_DIRECTORY']+
+                os.sep+
+                'misc'+
+                os.sep+
+                'loading.png'
+                )[0]
 
         self.game_font = pygame.font.Font(None, 50)
         self.screen.blit(image,(0,0))
