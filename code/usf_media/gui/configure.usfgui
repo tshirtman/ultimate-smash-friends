@@ -1,0 +1,4 @@
+<gui>
+<label value="Ultimate Smash Friends" posx="30" posy="30" id="label" />
+<parent>main.usfgui</parent>
+</gui>

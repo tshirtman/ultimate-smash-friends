@@ -1,0 +1,5 @@
+<gui>
+<menu>main.usfgui</menu>
+<menu>configure.usfgui</menu>
+<menu>quit.usfgui</menu>
+</gui>
