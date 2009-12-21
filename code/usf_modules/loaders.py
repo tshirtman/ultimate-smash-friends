@@ -74,6 +74,18 @@ def image(name, *args, **kwargs):
                 BLEND_MAX
                 )
 
+    elif 'scale' in kwargs and kwargs['scale'] is not None:
+        if len(kwargs['scale']) is not 2:
+            raise Exception.ValueError(
+                "scale parameter should be a tuple of two integers"
+                )
+        scale = kwargs['scale']
+        kwargs['scale'] = None
+        image = pygame.transform.scale(
+                loaders.image(name, *args, **kwargs)[0],
+                scale
+                )
+
     elif 'zoom' in kwargs and kwargs['zoom'] not in (None, 1):
         zoom = kwargs['zoom']
         kwargs['zoom'] = None

@@ -2,5 +2,6 @@
 <menu>main.usfgui</menu>
 <menu>configure.usfgui</menu>
 <menu>credits.usfgui</menu>
+<menu>set_game.usfgui</menu>
 <menu>quit.usfgui</menu>
 </gui>
