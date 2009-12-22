@@ -23,5 +23,5 @@ for file in os.listdir(PATH):
 f = open('strings.py', 'w')
 for s in strings:
     if ".png" not in s:
-        f.write(s+'\n')
+        f.write(s.replace('value','print ').replace('=','_(')+')\n')
 f.close()
