@@ -349,7 +349,7 @@ class Game (object):
                                         [
                                          player for player in self.players if
                                          player.lives > 0
-                                        ][0].name.capitalize()+" WON!",
+                                        ][0].name.capitalize()+_(" WON!"),
                                         True,
                                         pygame.color.Color("#"+
                                             str(math.sin(self.ending/10)) [3:5]+
@@ -364,7 +364,7 @@ class Game (object):
         if len([player for player in self.players if player.lives > 0]) == 0:
             # there is no more player in games, the game is tailed.
             self.screen.blit(self.game_font.render(
-                                        "OOPS... DRAW!!!",
+                                        _("OOPS... DRAW!!!"),
                                         True,
                                         pygame.color.Color("#"+
                                             str(math.sin(self.ending/10)) [3:5]+
@@ -539,7 +539,7 @@ class Game (object):
                          self.level_place,
                          self.zoom
                         )
-            if item.rect.collidelist([self.level.rect,]) == -1:
+            if item.rect.collidelist([self.level.border,]) == -1:
                 item.lives = 0
             if item.lives <= 0:
                 del(self.items[self.items.index(item)])
