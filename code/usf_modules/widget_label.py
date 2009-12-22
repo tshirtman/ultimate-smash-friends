@@ -17,7 +17,7 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 from usf_modules.widget import *
-from translation import _
+import translation
 import pygame
 class WidgetLabel(Widget):
     text = ""
