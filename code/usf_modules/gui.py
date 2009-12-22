@@ -51,6 +51,9 @@ from usf_modules.widget_credits import WidgetCredits
 from usf_modules.widget_image import WidgetImage
 from usf_modules.widget_image_button import WidgetImageButton
 
+
+#translation
+import translation
 class Gui(object):
     """
     Main class of the GUI
@@ -272,7 +275,7 @@ class Gui(object):
                     self.parent_screen[filename] = xml_file.childNodes[i].childNodes[0].nodeValue
                 if(xml_file.childNodes[i].tagName == "label" or xml_file.childNodes[i].tagName == "credits" or xml_file.childNodes[i].tagName == "button" or xml_file.childNodes[i].tagName == "image" or xml_file.childNodes[i].tagName == "imagebutton"):
                     self.widget_list[filename][len(self.widget_list[filename])-1].name =xml_file.childNodes[i].getAttribute("id")
-                    self.widget_list[filename][len(self.widget_list[filename])-1].text =xml_file.childNodes[i].getAttribute("value")
+                    self.widget_list[filename][len(self.widget_list[filename])-1].text =_(xml_file.childNodes[i].getAttribute("value"))
                     self.widget_list[filename][len(self.widget_list[filename])-1].posx =self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("posx"))/100
                     self.widget_list[filename][len(self.widget_list[filename])-1].posy =self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("posy"))/100
             except AttributeError:
