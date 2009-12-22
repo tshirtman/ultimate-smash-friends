@@ -17,13 +17,14 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 from usf_modules.widget import *
+from translation import _
 import pygame
 class WidgetLabel(Widget):
     text = ""
     def drawSimple(self):
         self.screen.blit(
             self.game_font.render(
-            self.text,
+            _(self.text),
             True,
             pygame.color.Color(
                 "white"

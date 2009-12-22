@@ -24,7 +24,7 @@ import pygame
 import time
 import xml.dom.minidom
 
-#Our modules
+# Our modules
 from usf_modules.loaders import image
 from usf_modules.config import (
         config,
@@ -36,20 +36,22 @@ from usf_modules.config import (
         save_keys_conf,
         load_key_config
         )
+
 import usf_modules.controls
 import entity_skin
 from debug_utils import LOG
 from usf_modules.game import Game
 from usf_modules.config import xdg_config_home
 
-#Gui modules
+# Gui modules
 from usf_modules.widget import Widget
 from usf_modules.widget_label import WidgetLabel
 from usf_modules.widget_icon import WidgetIcon
 from usf_modules.widget_credits import WidgetCredits
 from usf_modules.widget_image import WidgetImage
 from usf_modules.widget_image_button import WidgetImageButton
-class Gui:
+
+class Gui(object):
     """
     Main class of the GUI
     In this class, there are the function update which is called everytime
@@ -66,6 +68,7 @@ class Gui:
     game_data = {}
     level_current=0
     # function which is called everytime
+
     def update(self, state, game, controls):
         #wait for an event (mouse or keyboard)
         eventcurrent = pygame.event.wait()
@@ -137,6 +140,7 @@ class Gui:
             #draw items at once
             self.widget_list[self.screen_current][i].draw()
         return False, None
+
     def __init__(self, surface):
         self.characters = []
         self.players = [None, None, None, None]
@@ -222,7 +226,7 @@ class Gui:
             'background.png').convert()
         self.image = pygame.transform.scale(self.image, (self.sizex, self.sizey))
         print self.game_data['level_name']
-        
+
     #function to launch the game
     def launch_game(self, game):
         game = Game(
@@ -232,6 +236,7 @@ class Gui:
         )
         self.state="game"
         return game
+
     def load_from_xml(self, filename):
         self.widget_list[filename] = []
         xml_file = xml.dom.minidom.parse(config['MEDIA_DIRECTORY']+
@@ -272,6 +277,7 @@ class Gui:
                     self.widget_list[filename][len(self.widget_list[filename])-1].posy =self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("posy"))/100
             except AttributeError:
                 continue
+
     def goto_screen(self,screen):
         self.screen_current = screen
         self.button_active = 0
@@ -282,6 +288,7 @@ class Gui:
         for i in range (0, len(self.widget_list[self.screen_current])):
             #draw items at once
             self.widget_list[self.screen_current][i].draw()
+
     def exec_event(self, id_widget):
         print id_widget
         if(id_widget=="nextlevel"):
@@ -308,4 +315,4 @@ class Gui:
                 while(self.widget_list[self.screen_current][i].name != "level"):
                     i+=1
                 self.widget_list[self.screen_current][i].setText(self.game_data['level_name'][self.level_current] + ".png")
-            
+
