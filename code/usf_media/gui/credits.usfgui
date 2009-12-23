@@ -1,27 +1,4 @@
 <gui>
-<credits value="
-Programers\n
-    Gabriel Pettier (most of codebase)\n
-    Toineo (AI)\n
-    Kaoron (patch to a nasty bug, code review and other help)\n
-    Alaxa27 (bugfixes, code normalisation)\n
-\n
-Character design\n
-    Thomas Pettier\n
-    Gabriel Pettier\n
-    Herberts\n
-    Necroluckyboy\n
-\n
-Levels design\n
-    Gabriel Pettier\n
-    Necroluckyboy\n
-\n
-Musics\n
-    Mourad Achir\n
- \n
-Testing\n
-    A lot of people! thanks! :D\n
-\n
-" sizex="70" sizey="110" posx="30" posy="50" id="label" action="" />
+<credits value="" posx="30" posy="50" id="label" action="" />
 <parent>main.usfgui</parent>
 </gui>

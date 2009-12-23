@@ -252,8 +252,6 @@ class Gui(object):
                     self.widget_list[filename].append(WidgetLabel(self.screen))
                 elif(xml_file.childNodes[i].tagName == "credits"):
                     self.widget_list[filename].append(WidgetCredits(self.screen))
-                    self.widget_list[filename][len(self.widget_list[filename])-1].set_sizex(self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("sizex"))/100)
-                    self.widget_list[filename][len(self.widget_list[filename])-1].set_sizey(self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("sizey"))/100)
                 elif(xml_file.childNodes[i].tagName == "imagebutton"):
                     self.widget_list[filename].append(WidgetImageButton(self.screen))
                     self.widget_list[filename][len(self.widget_list[filename])-1].set_sizex(self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("sizex"))/100)

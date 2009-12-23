@@ -20,18 +20,20 @@ from usf_modules.widget import *
 import pygame
 import time
 from usf_modules import loaders
+import os
 class WidgetCredits(Widget):
     """
     Widget which is called in credits screen
     it is animated.
     """
     text = ""
+    state="norm"
     action = "self.widget_list[self.screen_current][i].click()"
     def drawSimple(self):
-        for i in range(0, len(self.text.split("\\n"))):
+        for i in range(0, len(self.credits.split("\n"))):
             self.screen.blit(
                 self.game_font.render(
-                self.text.split("\\n")[i],
+                self.credits.split("\n")[i],
                 True,
                 pygame.color.Color(
                     "white"
@@ -62,3 +64,11 @@ class WidgetCredits(Widget):
                 pygame.display.update()
                 self.posy -= self.screen.get_height()/20
             self.screen.blit(image,(0,0))
+    def load(self):
+        print config['MEDIA_DIRECTORY']+os.sep+"../" + "CREDITS"
+        credits_file = open("CREDITS", 'r').readlines()
+        self.credits = ""
+        for i in range(0, len(credits_file)):
+            self.credits += credits_file[i]
+        self.sizey = len(credits_file)*self.screen.get_height()/20
+        self.sizex = self.screen.get_height()/2
