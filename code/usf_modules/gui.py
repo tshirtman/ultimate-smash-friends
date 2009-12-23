@@ -80,65 +80,63 @@ class Gui(object):
         #    print eventcurrent.dict['key']
         self.screen.blit(self.image,(0,0))
         #if it is a mouse event, reset the active button
-        if(eventcurrent.type== pygame.MOUSEBUTTONUP or eventcurrent.type== pygame.MOUSEMOTION):
-            self.widget_list[self.screen_current][self.button_active].state = "norm"
+        if(eventcurrent.type== pygame.MOUSEBUTTONUP or eventcurrent.type==pygame.MOUSEMOTION):
+            self.widget_list[self.screen_current][self.button_active].state="norm"
             mousex = eventcurrent.dict['pos'][0]
             mousey = eventcurrent.dict['pos'][1]
-        if(eventcurrent.type== pygame.KEYDOWN and (eventcurrent.dict['key'] == 274 or eventcurrent.dict['key'] == 273 or eventcurrent.dict['key'] == 13 or eventcurrent.dict['key'] == 27)):
+        if(eventcurrent.type== pygame.KEYDOWN and (eventcurrent.dict['key'] ==274 or eventcurrent.dict['key'] == 273 or eventcurrent.dict['key'] == 13 or eventcurrent.dict['key'] == 27)):
             # idem
-            self.widget_list[self.screen_current][self.button_active].state = "norm"
+            self.widget_list[self.screen_current][self.button_active].state ="norm"
             #to up and down items
             if(eventcurrent.dict['key'] == 274):
-                if(self.button_active <len(self.widget_list[self.screen_current])-1):
+                if(self.button_active<len(self.widget_list[self.screen_current])-1):
                     self.button_active += 1
                 else:
                     self.button_active = 0
-                self.widget_list[self.screen_current][self.button_active].state = "hover"
+                self.widget_list[self.screen_current][self.button_active].state= "hover"
             elif(eventcurrent.dict['key'] == 273):
                 if(self.button_active > 0):
                     self.button_active-=1
                 else:
-                    self.button_active = len(self.widget_list[self.screen_current])-1
-                self.widget_list[self.screen_current][self.button_active].state = "hover"
+                    self.button_active =len(self.widget_list[self.screen_current])-1
+                self.widget_list[self.screen_current][self.button_active].state= "hover"
             # to valid item current
             if(eventcurrent.dict['key'] == 27):
-                print "parent"
                 self.goto_screen(self.parent_screen[self.screen_current])
                 return False, None
             if(eventcurrent.dict['key'] == 13):
-                widget_action = self.widget_list[self.screen_current][self.button_active].action
+                widget_action =self.widget_list[self.screen_current][self.button_active].action
                 if(widget_action.split(":")[0] == "goto"):
                     self.goto_screen(widget_action.split(":")[1])
                     return False, None
                 exec widget_action
                 if(widget_action == ""):
-                    self.exec_event(self.widget_list[self.screen_current][i].name)
+                   self.exec_event(self.widget_list[self.screen_current][i].name)
                 #if the game start
                 if(widget_action=="game = self.launch_game(game)"):
                     self.state = "game"
                     return True, game
         #if it is a mouse event, define which is the active item
         for i in range (0, len(self.widget_list[self.screen_current])):
-            if(eventcurrent.type== pygame.MOUSEBUTTONUP or eventcurrent.type== pygame.MOUSEMOTION):
+            if(eventcurrent.type== pygame.MOUSEBUTTONUP or eventcurrent.type==pygame.MOUSEMOTION):
                 widgetx = self.widget_list[self.screen_current][i].posx
                 widgety = self.widget_list[self.screen_current][i].posy
                 if(mousex>=widgetx and mousex<=self.widget_list[self.screen_current][i].sizex + widgetx):
                     if(mousey>=widgety and mousey<=self.widget_list[self.screen_current][i].sizey + widgety):
                         if(eventcurrent.type== pygame.MOUSEBUTTONUP):
-                            print "click on "+self.widget_list[self.screen_current][i].name
-                            widget_action = self.widget_list[self.screen_current][self.button_active].action
+                            widget_action =self.widget_list[self.screen_current][self.button_active].action
                             if(widget_action.split(":")[0] == "goto"):
                                 self.goto_screen(widget_action.split(":")[1])
                                 return False, None
                             exec widget_action
                             if(widget_action == ""):
-                                self.exec_event(self.widget_list[self.screen_current][i].name)
+                               self.exec_event(self.widget_list[self.screen_current][i].name)
                             #if the game start
                             if(widget_action=="game = self.launch_game(game)"):
                                 self.state = "game"
                                 return True, game
                         elif(eventcurrent.type== pygame.MOUSEMOTION):
-                            self.widget_list[self.screen_current][i].state = "hover"
+                            self.widget_list[self.screen_current][i].state ="hover"
                             self.button_active = i
             #draw items at once
             self.widget_list[self.screen_current][i].draw()
@@ -195,11 +193,10 @@ class Gui(object):
                     )
                 )
         files.sort()
-        print files
         for file in files:
             try:
                 if '.xml' in file :
-                    self.game_data['level_name'].append(file.replace(".xml", ""))
+                    self.game_data['level_name'].append(file.replace(".xml",""))
             except :
                 #LOG()(file+" is not a valid level.")
                 raise
@@ -216,7 +213,7 @@ class Gui(object):
         for i in range (0, len(xml_file.childNodes)):
             try:
                 if(xml_file.childNodes[i].tagName == "menu"):
-                    self.load_from_xml(xml_file.childNodes[i].childNodes[0].nodeValue)
+                   self.load_from_xml(xml_file.childNodes[i].childNodes[0].nodeValue)
             except:
                 continue
         #load background image
@@ -227,8 +224,7 @@ class Gui(object):
             config['THEME']+
             os.sep+
             'background.png').convert()
-        self.image = pygame.transform.scale(self.image, (self.sizex, self.sizey))
-        print self.game_data['level_name']
+        self.image = pygame.transform.scale(self.image, (self.sizex,self.sizey))
 
     #function to launch the game
     def launch_game(self, game):
@@ -251,31 +247,30 @@ class Gui(object):
                 if(xml_file.childNodes[i].tagName == "label"):
                     self.widget_list[filename].append(WidgetLabel(self.screen))
                 elif(xml_file.childNodes[i].tagName == "credits"):
-                    self.widget_list[filename].append(WidgetCredits(self.screen))
+                   self.widget_list[filename].append(WidgetCredits(self.screen))
                 elif(xml_file.childNodes[i].tagName == "imagebutton"):
-                    self.widget_list[filename].append(WidgetImageButton(self.screen))
-                    self.widget_list[filename][len(self.widget_list[filename])-1].set_sizex(self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("sizex"))/100)
-                    self.widget_list[filename][len(self.widget_list[filename])-1].set_sizey(self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("sizey"))/100)
-                    self.widget_list[filename][len(self.widget_list[filename])-1].action =xml_file.childNodes[i].getAttribute("action")
-                    self.widget_list[filename][len(self.widget_list[filename])-1].setText(xml_file.childNodes[i].getAttribute("value"))
+                   self.widget_list[filename].append(WidgetImageButton(self.screen))
+                   self.widget_list[filename][len(self.widget_list[filename])-1].set_sizex(self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("sizex"))/100)
+                   self.widget_list[filename][len(self.widget_list[filename])-1].set_sizey(self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("sizey"))/100)
+                   self.widget_list[filename][len(self.widget_list[filename])-1].action=xml_file.childNodes[i].getAttribute("action")
+                   self.widget_list[filename][len(self.widget_list[filename])-1].setText(xml_file.childNodes[i].getAttribute("value"))
                 elif(xml_file.childNodes[i].tagName == "button"):
-                    self.widget_list[filename].append(WidgetIcon(self.screen))
-                    self.widget_list[filename][len(self.widget_list[filename])-1].set_sizex(self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("sizex"))/100)
-                    self.widget_list[filename][len(self.widget_list[filename])-1].set_sizey(self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("sizey"))/100)
-                    self.widget_list[filename][len(self.widget_list[filename])-1].action =xml_file.childNodes[i].getAttribute("action")
+                   self.widget_list[filename].append(WidgetIcon(self.screen))
+                   self.widget_list[filename][len(self.widget_list[filename])-1].set_sizex(self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("sizex"))/100)
+                   self.widget_list[filename][len(self.widget_list[filename])-1].set_sizey(self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("sizey"))/100)
+                   self.widget_list[filename][len(self.widget_list[filename])-1].action=xml_file.childNodes[i].getAttribute("action")
                 elif(xml_file.childNodes[i].tagName == "image"):
-                    print "image"
-                    self.widget_list[filename].append(WidgetImage(self.screen))
-                    self.widget_list[filename][len(self.widget_list[filename])-1].set_sizex(self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("sizex"))/100)
-                    self.widget_list[filename][len(self.widget_list[filename])-1].set_sizey(self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("sizey"))/100)
-                    self.widget_list[filename][len(self.widget_list[filename])-1].setText(xml_file.childNodes[i].getAttribute("value"))
+                   self.widget_list[filename].append(WidgetImage(self.screen))
+                   self.widget_list[filename][len(self.widget_list[filename])-1].set_sizex(self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("sizex"))/100)
+                   self.widget_list[filename][len(self.widget_list[filename])-1].set_sizey(self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("sizey"))/100)
+                   self.widget_list[filename][len(self.widget_list[filename])-1].setText(xml_file.childNodes[i].getAttribute("value"))
                 elif(xml_file.childNodes[i].tagName == "parent"):
-                    self.parent_screen[filename] = xml_file.childNodes[i].childNodes[0].nodeValue
-                if(xml_file.childNodes[i].tagName == "label" or xml_file.childNodes[i].tagName == "credits" or xml_file.childNodes[i].tagName == "button" or xml_file.childNodes[i].tagName == "image" or xml_file.childNodes[i].tagName == "imagebutton"):
-                    self.widget_list[filename][len(self.widget_list[filename])-1].name =xml_file.childNodes[i].getAttribute("id")
-                    self.widget_list[filename][len(self.widget_list[filename])-1].text =_(xml_file.childNodes[i].getAttribute("value"))
-                    self.widget_list[filename][len(self.widget_list[filename])-1].posx =self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("posx"))/100
-                    self.widget_list[filename][len(self.widget_list[filename])-1].posy =self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("posy"))/100
+                    self.parent_screen[filename] =xml_file.childNodes[i].childNodes[0].nodeValue
+                if(xml_file.childNodes[i].tagName == "label" or xml_file.childNodes[i].tagName == "credits" or xml_file.childNodes[i].tagName =="button" or xml_file.childNodes[i].tagName == "image" or xml_file.childNodes[i].tagName == "imagebutton"):
+                   self.widget_list[filename][len(self.widget_list[filename])-1].name=xml_file.childNodes[i].getAttribute("id")
+                   self.widget_list[filename][len(self.widget_list[filename])-1].text=_(xml_file.childNodes[i].getAttribute("value"))
+                   self.widget_list[filename][len(self.widget_list[filename])-1].posx=self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("posx"))/100
+                   self.widget_list[filename][len(self.widget_list[filename])-1].posy=self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("posy"))/100
             except AttributeError:
                 continue
 
@@ -301,17 +296,17 @@ class Gui(object):
                 #change level preview
                 self.widget_list[self.screen_current][i].setText(self.game_data['level_name'][self.level_current] + ".png")
                 i=0
-                while(self.widget_list[self.screen_current][i].name != "level_name"):
+                while(self.widget_list[self.screen_current][i].name !="level_name"):
                     i+=1
                 #change level name
-                self.widget_list[self.screen_current][i].text = self.game_data['level_name'][self.level_current]
+                self.widget_list[self.screen_current][i].text =self.game_data['level_name'][self.level_current]
         if(id_widget=="prevlevel"):
             if(self.level_current>0):
                 self.level_current -= 1
                 i=0
-                while(self.widget_list[self.screen_current][i].name != "level_name"):
+                while(self.widget_list[self.screen_current][i].name !="level_name"):
                     i+=1
-                self.widget_list[self.screen_current][i].text = self.game_data['level_name'][self.level_current]
+                self.widget_list[self.screen_current][i].text =self.game_data['level_name'][self.level_current]
                 i=0
                 while(self.widget_list[self.screen_current][i].name != "level"):
                     i+=1

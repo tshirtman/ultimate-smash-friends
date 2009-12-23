@@ -53,8 +53,8 @@ class WidgetCredits(Widget):
             os.sep+
             'loading.png'
             )[0]
-        image = pygame.transform.scale(image, (self.screen.get_width(), self.screen.get_height()))
-        print self.posy + self.sizey
+        image = pygame.transform.scale(image, (self.screen.get_width(),
+self.screen.get_height()))
         if(self.posy + self.sizey >self.screen.get_height()):
             oldposy = self.posy
             while(oldposy-self.posy< self.screen.get_height()/2):
@@ -65,7 +65,6 @@ class WidgetCredits(Widget):
                 self.posy -= self.screen.get_height()/20
             self.screen.blit(image,(0,0))
     def load(self):
-        print config['MEDIA_DIRECTORY']+os.sep+"../" + "CREDITS"
         credits_file = open("CREDITS", 'r').readlines()
         self.credits = ""
         for i in range(0, len(credits_file)):
