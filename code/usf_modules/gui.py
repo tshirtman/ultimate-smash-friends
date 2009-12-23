@@ -144,7 +144,7 @@ class Gui(object):
 
     def __init__(self, surface):
         self.characters = []
-        self.players = [None, None, None, None]
+        self.players = [-1, -1, -1, -1]
         self.state = 'menu'
         self.levels = []
         self.level = 0
@@ -161,13 +161,11 @@ class Gui(object):
         files.sort()
         for file in files:
             try:
-                self.game_data['character_file'].append(entity_skin.Entity_skin(
-                            os.path.join(
+                self.game_data['character_file'].append(os.path.join(
                                 'characters',
                                 file
-                                )
-                            ).filename)
-                self.game_data['character_file'].append(entity_skin.Entity_skin(
+                                ))
+                self.game_data['character_name'].append(entity_skin.Entity_skin(
                             os.path.join(
                                 'characters',
                                 file
@@ -184,7 +182,6 @@ class Gui(object):
                 #raise
                 #LOG().log(e)
                 pass
-
         #create a level image for every directory in the level directory.
         files = os.listdir(
                 os.path.join(
@@ -228,10 +225,15 @@ class Gui(object):
 
     #function to launch the game
     def launch_game(self, game):
+        players = [None, None, None, None]
+        for i in range (0, len(self.players)):
+            if(self.players[i] != -1):
+                players[i] = self.game_data['character_file'][i]
+        print players
         game = Game(
             self.screen,
             self.game_data['level_name'][self.level_current],
-            ["characters/boogy-t", "characters/boogy-t", None, None]
+            players
         )
         self.state="game"
         return game
@@ -261,9 +263,12 @@ class Gui(object):
                    self.widget_list[filename][len(self.widget_list[filename])-1].action=xml_file.childNodes[i].getAttribute("action")
                 elif(xml_file.childNodes[i].tagName == "image"):
                    self.widget_list[filename].append(WidgetImage(self.screen))
-                   self.widget_list[filename][len(self.widget_list[filename])-1].set_sizex(self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("sizex"))/100)
+                   if(int(xml_file.childNodes[i].getAttribute("sizex")) != 0):
+                       self.widget_list[filename][len(self.widget_list[filename])-1].set_sizex(self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("sizex"))/100)
+                   else:
+                       self.widget_list[filename][len(self.widget_list[filename])-1].set_sizex(self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("sizey"))/100)
                    self.widget_list[filename][len(self.widget_list[filename])-1].set_sizey(self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("sizey"))/100)
-                   self.widget_list[filename][len(self.widget_list[filename])-1].setText(xml_file.childNodes[i].getAttribute("value"))
+                   self.widget_list[filename][len(self.widget_list[filename])-1].setText(xml_file.childNodes[i].getAttribute("value").replace("/", os.sep))
                 elif(xml_file.childNodes[i].tagName == "parent"):
                     self.parent_screen[filename] =xml_file.childNodes[i].childNodes[0].nodeValue
                 if(xml_file.childNodes[i].tagName == "label" or xml_file.childNodes[i].tagName == "credits" or xml_file.childNodes[i].tagName =="button" or xml_file.childNodes[i].tagName == "image" or xml_file.childNodes[i].tagName == "imagebutton"):
@@ -284,7 +289,7 @@ class Gui(object):
         for i in range (0, len(self.widget_list[self.screen_current])):
             #draw items at once
             self.widget_list[self.screen_current][i].draw()
-
+    #function for special event (if action =="")
     def exec_event(self, id_widget):
         print id_widget
         if(id_widget=="nextlevel"):
@@ -294,21 +299,40 @@ class Gui(object):
                 while(self.widget_list[self.screen_current][i].name != "level"):
                     i+=1
                 #change level preview
-                self.widget_list[self.screen_current][i].setText(self.game_data['level_name'][self.level_current] + ".png")
+                self.widget_list[self.screen_current][i].setText("gui" +os.sep + "image" + os.sep + self.game_data['level_name'][self.level_current] + ".png")
                 i=0
                 while(self.widget_list[self.screen_current][i].name !="level_name"):
                     i+=1
                 #change level name
                 self.widget_list[self.screen_current][i].text =self.game_data['level_name'][self.level_current]
-        if(id_widget=="prevlevel"):
+        elif(id_widget=="prevlevel"):
             if(self.level_current>0):
                 self.level_current -= 1
                 i=0
+                #dirty ?
                 while(self.widget_list[self.screen_current][i].name !="level_name"):
                     i+=1
                 self.widget_list[self.screen_current][i].text =self.game_data['level_name'][self.level_current]
                 i=0
+                #dirty ?
                 while(self.widget_list[self.screen_current][i].name != "level"):
                     i+=1
-                self.widget_list[self.screen_current][i].setText(self.game_data['level_name'][self.level_current] + ".png")
+                self.widget_list[self.screen_current][i].setText("gui" +os.sep + "image" + os.sep + self.game_data['level_name'][self.level_current] + ".png")
+        elif("prev" in id_widget or "next" in id_widget):
+            if("prev" in id_widget):
+                player = id_widget.replace("prev", "")
+                if(self.players[int(player)] != -1):
+                    self.players[int(player)] -= 1
+            else:
+                player = id_widget.replace("next", "")
+                if(self.players[int(player)] < len(self.game_data['character_name'])-1):
+                    self.players[int(player)] += 1
+            #dirty ?
+            i=0
+            while(self.widget_list[self.screen_current][i].name != "player" + player):
+                i+=1
+            if(self.players[int(player)]==-1):
+                self.widget_list[self.screen_current][i].setText("gui" + os.sep +"image" + os.sep +"none.png")
+            else:
+                self.widget_list[self.screen_current][i].setText(self.game_data['character_file'][self.players[int(player)]] + os.sep+self.game_data['character_file'][self.players[int(player)]].replace("characters"+os.sep, "") + "-portrait.png")
 

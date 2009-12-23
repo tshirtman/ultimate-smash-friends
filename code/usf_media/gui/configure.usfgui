@@ -1,5 +1,5 @@
 <gui>
 <label value="Ultimate Smash Friends" posx="30" posy="30" id="label" />
-<image id="image1" value="BiX_level.png" posx="40" posy="40" sizex="20" sizey="20" />
+<image id="image1" value="gui/image/BiX_level.png" posx="40" posy="40" sizex="20" sizey="20" />
 <parent>main.usfgui</parent>
 </gui>
