@@ -70,7 +70,7 @@ class PreciseTimedAnimation(Sprite):
             self.image = timedFrames[0].image
         except IndexError:
             raise EmptyAnimationException
-        self.rect = loaders.image(self.image)[0].get_rect()
+        self.rect = loaders.image(self.image, nodisplay=server)[1]
         self._start_time = 0
         self.playing = 0
 
@@ -79,7 +79,7 @@ class PreciseTimedAnimation(Sprite):
         self.hardshape = ('hardshape' in attribs) and\
                         pygame.Rect([int(i) for i in attribs['hardshape'].split(' ')])\
                         or 0
-        self.update(0)
+        self.update(0, server=server)
 
     def __del__(self):
         del(self)
@@ -88,7 +88,7 @@ class PreciseTimedAnimation(Sprite):
         self._start_time = gametime
         self.playing = 1
 
-    def update(self, gametime, reversed=False):
+    def update(self, gametime, reversed=False, server=False):
        if self.playing:
            if self.duration != 0 and gametime - self._start_time > self.duration/1000.0:
                self.playing = 0
@@ -110,5 +110,5 @@ class PreciseTimedAnimation(Sprite):
                else:
                    self.agressivpoints = frame.agressivpoints
                self.hardshape = frame.hardshape
-       self.rect = loaders.image(self.image)[1]
+       self.rect = loaders.image(self.image, nodisplay=server)[1]
 

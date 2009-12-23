@@ -161,7 +161,7 @@ class Entity_skin (object):
                             frame.attrib['time'],
                             ('hardshape' in frame.attrib
                              and frame.attrib ['hardshape']
-                             or loaders.image(image)[1]),
+                             or loaders.image(image, nodisplay=server)[1]),
                             name=frame.attrib['image']
                             )
                         )
@@ -208,7 +208,7 @@ version of '+anim_name+' falling back to normal version')
 
             self.animation_change = 1
             params['world'] = game
-            params['gametime'] = game.gametime
+            params['gametime'] = game is not None and game.gametime or 0
             for event in self.action_events[anim_name]:
                 if event[1][0] is 0:
                     p1 = None
@@ -254,7 +254,7 @@ version of '+anim_name+' falling back to normal version')
 #animation.")
             pass
 
-    def update(self, t, reversed=False):
+    def update(self, t, reversed=False, server=False):
         """
         Update the skin's animation if necessary.
 
@@ -266,5 +266,5 @@ version of '+anim_name+' falling back to normal version')
             self.animation = self.animations[self.current_animation]
             self.animation_change = False
             self.animation.start(t)
-        self.animation.update(t, reversed)
+        self.animation.update(t, reversed, server)
 

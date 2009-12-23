@@ -86,7 +86,7 @@ class Entity (object):
         if entity_skinname is not None:
             self.name = entity_skinname.split(os.sep)[-1]
             self.entity_skin = entity_skin.Entity_skin(entity_skinname,
-            game.screen == None)
+            game == None or game.screen == None)
             try:
                 self.entity_skin.change_animation(
                         'static',
@@ -106,7 +106,7 @@ class Entity (object):
                     self.place[1] - self.rect[3]
                     )
             self.rect[2:] = self.entity_skin.animation.rect[2:]
-            self.entity_skin.update(0)
+            self.entity_skin.update(0, server=(game is None or game.screen is None))
 
     def __str__(self):
         return ','.join((

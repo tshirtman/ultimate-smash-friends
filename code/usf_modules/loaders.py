@@ -21,7 +21,7 @@
 # standards imports
 import os, sys
 import pygame
-
+import Image
 # my imports
 import loaders
 import music
@@ -55,6 +55,9 @@ def image(name, *args, **kwargs):
     """
     # FIXME: should not have to load the image in server mode, we just want
     # it's size!
+    if 'nodisplay' in kwargs and kwargs['nodisplay'] == True:
+        return None, pygame.Rect((0,0), Image.open(name).size)
+
     if 'reversed' in kwargs and kwargs['reversed'] == True:
         kwargs['reversed'] = False
         #LOG().log("reverse "+name)
