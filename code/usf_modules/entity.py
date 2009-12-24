@@ -139,33 +139,32 @@ class Entity (object):
         Return an ascii representation of the object current state.
 
         """
-        r = ','.join(
+        return (
                 str(self.number),
+                self.name,
                 self in game.players and 'C' or 'I',
-                self.entity_skinname,
                 str(self.place),
-                self.entity_skin.current_animation,
-                self.entity_skin.animation.__start__time
-                )
+                self.entity_skin.animation.image.split(os.sep)[1:]
+               )
 
-        return r
 
-    def unserialize(self, string):
-        """
-        Set the entity to the state described by the string.
-
-        """
-        number, entity_type, name, place, animation, starttime = string.split(',')
-
-        if self.number != int(number):
-            raise WrongEntityException
-
-        self.entity_skinname = name
-        self.entity_type = entity_type
-        self.place = place[1:-1].split('*')
-        self.place = [int(self.place[0]), self.place[1]]
-        self.entity_skin.current_animation = animation
-        self.entity_skin.animation.__start__time = starttime
+# should Not be useful
+#    def unserialize(self, string):
+#        """
+#        Set the entity to the state described by the string.
+#
+#        """
+#        number, entity_type, name, place, animation, starttime = string.split(',')
+#
+#        if self.number != int(number):
+#            raise WrongEntityException
+#
+#        self.entity_skinname = name
+#        self.entity_type = entity_type
+#        self.place = place[1:-1].split('*')
+#        self.place = [int(self.place[0]), self.place[1]]
+#        self.entity_skin.current_animation = animation
+#        self.entity_skin.animation.__start__time = starttime
 
     def move(self,(x,y), _from=''):
         """

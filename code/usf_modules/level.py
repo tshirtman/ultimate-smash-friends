@@ -374,12 +374,18 @@ class Level ( object ):
     def __del__(self):
         LOG().log('deleting level')
 
-    def __str__(self):
-        return ','.join((
+    def serialize(self):
+        return (
+                (
                     self.background,
                     self.foreground,
                     self.middle
-        )+[str(block) for block in self.moving_blocs+self.vector_blocs])
+                ),
+                [
+                    serialize(block) for block in
+                        self.moving_blocs+self.vector_blocs
+                ]
+            )
 
     def draw_background(self, surface, coords=(0,0)):
         surface.blit( loaders.image(self.background)[0], coords )

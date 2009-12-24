@@ -593,7 +593,10 @@ class NetworkServerGame(Game):
 
     def update(self, debug_params={}):
         Game.update(self, debug_params)
-        self.gamestring = ";".join(str(self.players+self.items))+'|'+str(self.level)
+        self.gamestring = ";".join(
+            [ x.serialize() for x in self.players+self.items]
+        )+'|'+serialize(self.level)
+
 
 class NetworkClientGame(Game):
     """
