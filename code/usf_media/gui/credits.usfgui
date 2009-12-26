@@ -1,4 +1,4 @@
 <gui>
-<credits value="" posx="30" posy="50" id="label" action="" />
+<credits value="" posx="30" posy="49" id="label" action="" />
 <parent>main.usfgui</parent>
 </gui>

@@ -31,17 +31,34 @@ class WidgetCredits(Widget):
     action = "self.widget_list[self.screen_current][i].click()"
     def drawSimple(self):
         for i in range(0, len(self.credits.split("\n"))):
-            self.screen.blit(
-                self.game_font.render(
-                self.credits.split("\n")[i],
-                True,
-                pygame.color.Color(
-                    "white"
+            try:
+                if(self.falseposy + self.screen.get_height()/20*i >= self.posy and self.falseposy + self.screen.get_height()/20*i <= self.posy+self.sizey):
+                    self.screen.blit(
+                        self.game_font.render(
+                        self.credits.split("\n")[i],
+                        True,
+                        pygame.color.Color(
+                            "white"
+                            )
+                        ),
+                        (self.posx, self.falseposy + self.screen.get_height()/20*i)
+                        )
+            except:
+                self.screen.blit(
+                    self.game_font.render(
+                    self.credits.split("\n")[i],
+                    True,
+                    pygame.color.Color(
+                        "white"
+                        )
+                    ),
+                    (self.posx, self.falseposy + self.screen.get_height()/20*i)
                     )
-                ),
-                (self.posx, self.posy + self.screen.get_height()/20*i)
-                )
     def draw(self):
+        try:
+            self.falseposy
+        except:
+            self.falseposy = self.posy
         self.drawSimple()
     def click(self):
         image = loaders.image(
@@ -51,23 +68,23 @@ class WidgetCredits(Widget):
             os.sep+
             config['THEME']+
             os.sep+
-            'loading.png'
+            'background.png'
             )[0]
         image = pygame.transform.scale(image, (self.screen.get_width(),
 self.screen.get_height()))
-        if(self.posy + self.sizey >self.screen.get_height()):
-            oldposy = self.posy
-            while(oldposy-self.posy< self.screen.get_height()/2):
-                self.screen.blit(image,(0,0))
-                self.draw()
-                time.sleep(0.04)
-                pygame.display.update()
-                self.posy -= self.screen.get_height()/20
+        print "click"
+        old_new_y =0
+        while(old_new_y < self.sizey -self.screen.get_height()/20):
+            old_new_y += self.screen.get_height()/20
+            self.falseposy -= self.screen.get_height()/20
             self.screen.blit(image,(0,0))
+            self.draw()
+            time.sleep(0.04)
+            pygame.display.update()
     def load(self):
         credits_file = open("CREDITS", 'r').readlines()
         self.credits = ""
         for i in range(0, len(credits_file)):
             self.credits += credits_file[i]
-        self.sizey = len(credits_file)*self.screen.get_height()/20
+        self.sizey = 150
         self.sizex = self.screen.get_height()/2

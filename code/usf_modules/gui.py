@@ -72,9 +72,10 @@ class Gui(object):
     level_current=0
     # function which is called everytime
 
-    def update(self, state, game, controls):
-        #wait for an event (mouse or keyboard)
-        eventcurrent = pygame.event.wait()
+    def update(self, state, game, controls, eventcurrent=None):
+        if(eventcurrent == None):
+            #wait for an event (mouse or keyboard)
+            eventcurrent = pygame.event.wait()
         #draw background
         #if(eventcurrent.type== pygame.KEYDOWN):
         #    print eventcurrent.dict['key']
@@ -229,9 +230,7 @@ class Gui(object):
         for i in range (0, len(self.players)):
             if(self.players[i] != -1):
                 players[i] = self.game_data['character_file'][self.players[i]]
-        print "players are"
         print players
-        print "!"
         game = Game(
             self.screen,
             self.game_data['level_name'][self.level_current],
