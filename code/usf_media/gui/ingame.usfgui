@@ -1,0 +1,5 @@
+<gui>
+<button value="Resume game" posx="40" posy="45" sizey="8" sizex="20" id="configure" action="self.screenshot=None" />
+<button value="New game" posx="40" posy="55" sizey="8" sizex="20" id="local" action="goto:characters.usfgui" />
+<parent>main.usfgui</parent>
+</gui>

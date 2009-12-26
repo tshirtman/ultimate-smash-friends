@@ -76,14 +76,17 @@ class Gui(object):
     def update(self, state, game, controls, eventcurrent=None):
         if(game !=None):
             if(self.screenshot == None):
+                #take a screenshot of the current game before draw
                 self.screenshot = self.screen.copy()
-                print "copy"
         if(eventcurrent == None):
             #wait for an event (mouse or keyboard)
             eventcurrent = pygame.event.wait()
         #draw background
         #if(eventcurrent.type== pygame.KEYDOWN):
         #    print eventcurrent.dict['key']
+        if(self.screenshot != None):
+            self.screen.blit(self.screenshot,(0,0))
+            self.image.set_alpha(200)
         self.screen.blit(self.image,(0,0))
         #if it is a mouse event, reset the active button
         if(eventcurrent.type== pygame.MOUSEBUTTONUP or eventcurrent.type==pygame.MOUSEMOTION):
@@ -123,7 +126,8 @@ class Gui(object):
                    self.exec_event(self.widget_list[self.screen_current][i].name)
                 #if the game start
                 if(widget_action=="game = self.launch_game(game)"):
-                    self.state = "game"
+                    return True, game
+                if(widget_action=="self.screenshot=None"):
                     return True, game
         #if it is a mouse event, define which is the active item
         for i in range (0, len(self.widget_list[self.screen_current])):
@@ -145,15 +149,15 @@ class Gui(object):
                                self.exec_event(self.widget_list[self.screen_current][i].name)
                             #if the game start
                             if(widget_action=="game = self.launch_game(game)"):
-                                self.state = "game"
+                                return True, game
+                            #if it is resume
+                            if(widget_action=="self.screenshot=None"):
                                 return True, game
                         elif(eventcurrent.type== pygame.MOUSEMOTION):
                             self.widget_list[self.screen_current][i].state ="hover"
                             self.button_active = i
             #draw items at once
             self.widget_list[self.screen_current][i].draw()
-        if(self.screenshot != None):
-            self.screen.blit(self.screenshot,(0,0))
         return False, None
 
     def __init__(self, surface):
@@ -239,6 +243,8 @@ class Gui(object):
 
     #function to launch the game
     def launch_game(self, game):
+        self.goto_screen("ingame.usfgui")
+        self.screenshot = None
         players = [None, None, None, None]
         for i in range (0, len(self.players)):
             if(self.players[i] != -1):
@@ -297,7 +303,9 @@ class Gui(object):
         self.screen_current = screen
         self.button_active = 0
         #draw new screen
-        alpha = 0
+        if(self.screenshot != None):
+            self.screen.blit(self.screenshot,(0,0))
+            self.image.set_alpha(200)
         self.screen.blit(self.image,(0,0))
         pygame.display.update()
         for i in range (0, len(self.widget_list[self.screen_current])):

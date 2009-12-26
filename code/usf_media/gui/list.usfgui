@@ -5,4 +5,5 @@
 <menu>level.usfgui</menu>
 <menu>characters.usfgui</menu>
 <menu>quit.usfgui</menu>
+<menu>ingame.usfgui</menu>
 </gui>
