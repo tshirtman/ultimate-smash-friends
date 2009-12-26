@@ -228,8 +228,10 @@ class Gui(object):
         players = [None, None, None, None]
         for i in range (0, len(self.players)):
             if(self.players[i] != -1):
-                players[i] = self.game_data['character_file'][i]
+                players[i] = self.game_data['character_file'][self.players[i]]
+        print "players are"
         print players
+        print "!"
         game = Game(
             self.screen,
             self.game_data['level_name'][self.level_current],
