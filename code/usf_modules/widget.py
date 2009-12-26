@@ -30,7 +30,7 @@ from usf_modules.config import (
 import os
 class Widget (object):
     """
-    This class is tthe base of all other widget.
+    This class is the base of all other widget.
     """
     sizex = 0
     sizey = 0
@@ -44,9 +44,9 @@ class Widget (object):
         self.screen = screen
         self.load()
     def load(self):
-        print "loading..."
+        pass
     def drawSimple(self):
-        print "drawing..."
+        pass
     def drawHover(self):
         self.drawSimple()
     def set_sizex(self, size):

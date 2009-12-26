@@ -1,4 +1,6 @@
 <gui>
-<credits value="" posx="30" posy="49" id="label" action="" />
+<button value="Up" posx="30" posy="90" sizey="8" sizex="10" id="up" action="anim:credits:0" />
+<credits value="" posx="30" posy="49" id="credits" action="" />
+<button value="Down" posx="60" posy="90" sizey="8" sizex="10" id="down" action="anim:credits:1" />
 <parent>main.usfgui</parent>
 </gui>

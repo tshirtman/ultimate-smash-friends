@@ -28,7 +28,8 @@ class WidgetCredits(Widget):
     """
     text = ""
     state="norm"
-    action = "self.widget_list[self.screen_current][i].click()"
+    action = ""
+    diff_false_truey = 0
     def drawSimple(self):
         for i in range(0, len(self.credits.split("\n"))):
             try:
@@ -60,27 +61,22 @@ class WidgetCredits(Widget):
         except:
             self.falseposy = self.posy
         self.drawSimple()
-    def click(self):
-        image = loaders.image(
-            config['MEDIA_DIRECTORY']+
-            os.sep+
-            'gui'+
-            os.sep+
-            config['THEME']+
-            os.sep+
-            'background.png'
-            )[0]
-        image = pygame.transform.scale(image, (self.screen.get_width(),
-self.screen.get_height()))
-        print "click"
-        old_new_y =0
-        while(old_new_y < self.sizey -self.screen.get_height()/20):
-            old_new_y += self.screen.get_height()/20
+    def click(self, sens):
+        if(self.diff_false_truey == self.screen.get_height()/20*5):
+            self.diff_false_truey = 0
+            return False
+        if(self.falseposy + self.screen.get_height()/20*(len(self.credits.split("\n"))-10) < self.posy and sens == "1"):
+            print "bottom !"
+            return False
+        if(self.falseposy >= self.posy and sens == "0"):
+            print "top !"
+            return False
+        if(sens == "1"):
             self.falseposy -= self.screen.get_height()/20
-            self.screen.blit(image,(0,0))
-            self.draw()
-            time.sleep(0.04)
-            pygame.display.update()
+        else:
+            self.falseposy += self.screen.get_height()/20
+        self.diff_false_truey += self.screen.get_height()/20
+        return True
     def load(self):
         credits_file = open("CREDITS", 'r').readlines()
         self.credits = ""

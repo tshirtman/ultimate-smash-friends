@@ -43,9 +43,7 @@ class WidgetImage(Widget):
     def draw(self):
         self.drawSimple()
     def setText(self, text):
-        print self.sizex, self.sizey
         self.text = text
-        print text
         self.image = loaders.image(
             config['MEDIA_DIRECTORY']+
             os.sep+

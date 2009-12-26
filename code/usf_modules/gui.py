@@ -70,9 +70,14 @@ class Gui(object):
     character = []
     game_data = {}
     level_current=0
+    screenshot = None
     # function which is called everytime
 
     def update(self, state, game, controls, eventcurrent=None):
+        if(game !=None):
+            if(self.screenshot == None):
+                self.screenshot = self.screen.copy()
+                print "copy"
         if(eventcurrent == None):
             #wait for an event (mouse or keyboard)
             eventcurrent = pygame.event.wait()
@@ -110,6 +115,9 @@ class Gui(object):
                 if(widget_action.split(":")[0] == "goto"):
                     self.goto_screen(widget_action.split(":")[1])
                     return False, None
+                if(widget_action.split(":")[0] == "anim"):
+                    self.anim(widget_action.split(":")[1], widget_action.split(":")[2])
+                    return False, None
                 exec widget_action
                 if(widget_action == ""):
                    self.exec_event(self.widget_list[self.screen_current][i].name)
@@ -129,6 +137,9 @@ class Gui(object):
                             if(widget_action.split(":")[0] == "goto"):
                                 self.goto_screen(widget_action.split(":")[1])
                                 return False, None
+                            if(widget_action.split(":")[0] == "anim"):
+                                self.anim(widget_action.split(":")[1], widget_action.split(":")[2])
+                                return False, None
                             exec widget_action
                             if(widget_action == ""):
                                self.exec_event(self.widget_list[self.screen_current][i].name)
@@ -141,6 +152,8 @@ class Gui(object):
                             self.button_active = i
             #draw items at once
             self.widget_list[self.screen_current][i].draw()
+        if(self.screenshot != None):
+            self.screen.blit(self.screenshot,(0,0))
         return False, None
 
     def __init__(self, surface):
@@ -336,4 +349,16 @@ class Gui(object):
                 self.widget_list[self.screen_current][i].setText("gui" + os.sep +"image" + os.sep +"none.png")
             else:
                 self.widget_list[self.screen_current][i].setText(self.game_data['character_file'][self.players[int(player)]] + os.sep+self.game_data['character_file'][self.players[int(player)]].replace("characters"+os.sep, "") + "-portrait.png")
-
+    def anim(self, widget_name, argument = None):
+        i=0
+        #dirty ?
+        while(self.widget_list[self.screen_current][i].name !=widget_name):
+            i+=1
+        while(True):
+            time.sleep(0.04)
+            self.screen.blit(self.image,(0,0))
+            for j in range (0, len(self.widget_list[self.screen_current])):
+                #draw items at once
+                self.widget_list[self.screen_current][j].draw()
+            pygame.display.update()
+            if not self.widget_list[self.screen_current][i].click(argument): break
