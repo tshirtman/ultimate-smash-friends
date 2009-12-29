@@ -279,14 +279,14 @@ def save_sound_conf():
     file.write(conf)
     file.close()
 
-def save_keys_conf():
+def save_keys_conf(controls):
     """
     save the configuration of controls.
     """
     conf = ""
-    for key in sorted(keyboard_config.keys()):
+    for key in sorted(controls.keys()):
         #conf += "%s : %s\n" % ( self.keys[key], self.reverse_keymap[key])
-        conf += str(keyboard_config[key])+" : "+str(reverse_keymap[key])+"\n"
+        conf += str(controls[key])+" : "+str(reverse_keymap[key])+"\n"
 
     # we sort the keys configuration by player so the file is easier to read.
     file=open(os.path.join(xdg_config_home,'usf','keys.cfg'),'w')

@@ -1,7 +1,7 @@
 ################################################################################
 # copyright 2009 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
 #                                                                              #
-# This file is part of Ultimate Smash Friends.                                 #
+# This file is part of Ultimate Smash Friends                                  #
 #                                                                              #
 # Ultimate Smash Friends is free software: you can redistribute it and/or      #
 # modify it under the terms of the GNU General Public License as published by  #
@@ -16,15 +16,32 @@
 # You should have received a copy of the GNU General Public License along with #
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
-from usf_modules.widget import *
+from usf_modules.widget import Widget
+from usf_modules import loaders
+from usf_modules.config import (
+        config,
+        sound_config,
+        save_conf,
+        load_config,
+        save_sound_conf,
+        load_sound_config,
+        save_keys_conf,
+        load_key_config,
+        keyboard_config,
+        reverse_keymap
+        )
 import pygame
-class WidgetIcon(Widget):
+import os
+import usf_modules.translation
+import pygame
+class WidgetTextarea(Widget):
     """
     A simple button widget.
     XML : <button sizex="" sizey="" posx="" posy="" action="" value="" id=""/>
     """
     text = ""
     state = "norm"
+    str_len = 0
     def draw(self):
         if (self.state == "norm"):
             self.drawSimple()
@@ -87,3 +104,11 @@ class WidgetIcon(Widget):
             'back_button_hover.png').convert_alpha()
         self.background_hover  = pygame.transform.scale(self.background_hover, (self.sizex, self.sizey))
         #self.background_hover.set_colorkey((255,255,255))
+    def setText(self, value):
+        if(value.split(':')[0] == "config"):
+            if(value.split(':')[1] == "keyboard"):
+                numcle=0
+                while(keyboard_config.values()[numcle] != value.split(':')[2]):
+                    numcle += 1
+                self.text = reverse_keymap[keyboard_config.keys()[numcle]]
+                print self.text

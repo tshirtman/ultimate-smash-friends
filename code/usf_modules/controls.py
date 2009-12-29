@@ -34,7 +34,8 @@ from usf_modules.config  import (
     config,
     keyboard_config,
     sound_config,
-    reverse_keymap
+    reverse_keymap,
+    save_keys_conf
     )
 from debug_utils import LOG
 import game
@@ -117,32 +118,7 @@ class Controls (object):
                 break
 
     def save(self):
-        str_conf = """
-# this file contain keybindings of players and of the general game
-# everything on a line after a # is a comment and is ignored
-# you can start a comment with a ; too.
-
-# The syntax of a binding is simple. the first part is the player concerned.
-# to bind for the player one, start with "PL1" then a '_' and the action concerned.
-# a complete list of actions will be inserted here later (#TODO).
-
-# The second part of the line is the code of the key associated with the action.
-# Theses are pygame names, and you can find a list at pygame website:
-# http://www.pygame.org/docs/ref/key.html
-
-# please also see online documentation of keybindings here:
-# http://code.google.com/p/ultimate-smash-friends/wiki/KeysConfiguration
-                    """
-        conf = []
-        for key in self.keys.keys():
-            conf.append("%s : %s\n" % ( self.keys[key], reverse_keymap[key]))
-
-        # we sort the keys configuration by player so the file is easier to read.
-        conf.sort()
-        str_conf += ''.join(conf)
-        file=open('UltimateSmashFriends.cfg','w')
-        file.write(str_conf)
-        file.close()
+        save_keys_conf(self.keys)
 
     def reload(self):
         self.keys = load_key_config()
