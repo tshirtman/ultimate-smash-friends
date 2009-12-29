@@ -208,6 +208,23 @@ class ThrowBomb(TimedEvent):
     def condition(self):
         return True
 
+class ThrowFireBall(TimedEvent):
+    """
+    Launch a fireball (bouncing) in front of the player.
+
+    """
+    def execute(self, deltatime):
+        self.done = True
+        self.params['world'].addItem(
+                'fireball',
+                place=(self.params['entity'].rect[0:2]),
+                reversed=self.params['entity'].reversed,
+                vector=(100, -1000)
+                )
+
+    def condition(self):
+        return True
+
 class Gost(TimedEvent):
     """
     Chasing 'AI' for a little chasing gost.
@@ -425,20 +442,36 @@ class PlayerStaticOnGround(TimedEvent):
                 self.params['world']
                 )
 
+class Bounce(TimedEvent):
+    """
+    This event will make the entity bounce when touching the ground
+
+    """
+    def execute(self, deltatime):
+        if self.params['entity'].onGround:
+            self.params['entity'].vector[1] *= -1
+
+    def condition(self):
+        return True
+
+    def __del__(self):
+        pass
 
 # This list is used to cast an event by name. This is usefull since events are
 # configured in players/items xml files.
 
 event_names = {
-                'HealEvent' : HealEvent,
-                'BombExplode' : BombExplode,
-                'DelItemEvent' : DelItemEvent,
-                'DropRandomItem' : DropRandomItem,
-                'ItemShower': ItemShower,
-                'InvinciblePlayer' : InvinciblePlayer,
-                'ThrowBomb' : ThrowBomb,
-                'ThrowMiniGost' : ThrowMiniGost,
-                'Gost' : Gost,
-                'PlayerStaticOnGround' : PlayerStaticOnGround,
-                'UpgradePlayer' : UpgradePlayer,
-              }
+    'HealEvent' : HealEvent,
+    'BombExplode' : BombExplode,
+    'DelItemEvent' : DelItemEvent,
+    'DropRandomItem' : DropRandomItem,
+    'ItemShower': ItemShower,
+    'InvinciblePlayer' : InvinciblePlayer,
+    'ThrowBomb' : ThrowBomb,
+    'ThrowMiniGost' : ThrowMiniGost,
+    'Gost' : Gost,
+    'PlayerStaticOnGround' : PlayerStaticOnGround,
+    'UpgradePlayer' : UpgradePlayer,
+    'ThrowFireBall' : ThrowFireBall,
+    'Bounce' : Bounce,
+}

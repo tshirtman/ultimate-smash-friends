@@ -19,23 +19,6 @@
         hardshape="16 4 34 55"
         > </frame>
     </movement>
-    <!--movement name="take"
-    duration="100"
-    repeat="0"
-    >
-        <frame
-        time="0"
-        image="stick-take1.png"
-        > </frame>
-        <frame
-        time="30"
-        image="stick-take2.png"
-        > </frame>
-        <frame
-        time="80"
-        image="stick-take3.png"
-        > </frame>
-    </movement-->
     <movement name="walk"
     duration="300"
     repeat="-1"
@@ -70,7 +53,7 @@
         action="PlayerStaticOnGround"
         ></event>
         <vector
-        time="0"
+        time="100"
         vector="0,1200"
         ></vector>
         <frame
@@ -139,19 +122,19 @@
     >
         <frame
         time="0"
-        image="stick-smash-straight1.png"
+        image="smash-straight1.png"
         > </frame>
         <frame
         time="200"
-        image="stick-smash-straight2.png"
+        image="smash-straight2.png"
         > </frame>
         <frame
         time="300"
-        image="stick-smash-straight3.png"
+        image="smash-straight3.png"
         > </frame>
         <frame
         time="400"
-        image="stick-smash-straight4.png"
+        image="smash-straight4.png"
         >
             <agressiv-point
             coords="48,20"
@@ -160,11 +143,11 @@
         </frame>
         <frame
         time="500"
-        image="stick-smash-straight5.png"
+        image="smash-straight5.png"
         > </frame>
         <frame
         time="700"
-        image="stick-smash-straight6.png"
+        image="smash-straight6.png"
         > </frame>
     </movement>
     <movement name="hit"
@@ -173,16 +156,16 @@
     >
         <frame
         time="0"
-        image="stick-hit1.png"
+        image="hit1.png"
         hardshape="1 9 16 67"
         > </frame>
         <frame
         time="200"
-        image="stick-hit2.png"
+        image="hit2.png"
         > </frame>
         <frame
         time="300"
-        image="stick-hit3.png"
+        image="hit3.png"
         >
             <agressiv-point
             coords="60,16"
@@ -191,9 +174,9 @@
         </frame>
         <frame
         time="400"
-        image="stick-hit4.png"
+        image="hit4.png"
         > </frame>
-    </movement>
+    </movement-->
     <movement name="smash-up-jumping"
     duration="0"
     repeat="0"
@@ -208,23 +191,72 @@
         ></vector>
         <frame
         time="0"
-        image="stick-smash-up1.png"
-        vector="0,70"
-        > </frame>
-        <frame
-        time="300"
-        image="stick-smash-up2.png"
-        vector="0,70"
-        > <agressiv-point
-            coords="48,20"
-            vector="100,-800"
+        image="kick_1.png"
+        hardshape="1 9 16 67"
+        >
+            <agressiv-point
+            coords="41,58"
+            vector="70,-40"
+            ></agressiv-point>
+            <agressiv-point
+            coords="42,45"
+            vector="70,-30"
             ></agressiv-point>
         </frame>
         <frame
-        time="700"
-        image="stick-smash-up1.png"
+        time="50"
+        image="kick_2.png"
+        >
+            <agressiv-point
+            coords="55,42"
+            vector="70,-40"
+            ></agressiv-point>
+            <agressiv-point
+            coords="46,53"
+            vector="70,-30"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="100"
+        image="kick_3.png"
         > </frame>
-    </movement-->
+        <frame
+        time="200"
+        image="kick_4.png"
+        > </frame>
+        <frame
+        time="300"
+        image="kick_5.png"
+        > </frame>
+        <frame
+        time="400"
+        image="kick_6.png"
+        > </frame>
+        <frame
+        time="500"
+        image="kick_7.png"
+        > </frame>
+        <frame
+        time="600"
+        image="kick_8.png"
+        > </frame>
+        <frame
+        time="700"
+        image="kick_9.png"
+        > </frame>
+        <frame
+        time="800"
+        image="kick_10.png"
+        > </frame>
+        <frame
+        time="900"
+        image="kick_11.png"
+        > </frame>
+        <frame
+        time="950"
+        image="kick_12.png"
+        > </frame>
+    </movement>
     <movement name="smash-up"
     duration="1000"
     repeat="0"
@@ -304,12 +336,12 @@
     >
         <frame
         time="0"
-        image="stick-specialhit1.png"
+        image="-specialhit1.png"
         vector="10,0"
         > </frame>
         <frame
         time="200"
-        image="stick-specialhit2.png"
+        image="-specialhit2.png"
         vector="50,0"
         hardshape="0 0 157 40"
         >
@@ -324,7 +356,7 @@
         </frame>
         <frame
         time="300"
-        image="stick-specialhit3.png"
+        image="-specialhit3.png"
         vector="10,0"
         hardshape="0 0 157 40"
         >
@@ -343,7 +375,7 @@
         </frame>
         <frame
         time="400"
-        image="stick-specialhit4.png"
+        image="-specialhit4.png"
         vector="50,0"
         hardshape="0 0 157 40"
         >
@@ -366,25 +398,25 @@
         </frame>
         <frame
         time="500"
-        image="stick-specialhit5.png"
+        image="-specialhit5.png"
         vector="50,0"
         hardshape="0 0 157 40"
         > </frame>
         <frame
         time="700"
-        image="stick-specialhit6.png"
+        image="-specialhit6.png"
         vector="50,0"
         hardshape="0 0 157 40"
         > </frame>
         <frame
         time="800"
-        image="stick-specialhit7.png"
+        image="-specialhit7.png"
         vector="50,0"
         hardshape="0 0 157 40"
         > </frame>
         <frame
         time="900"
-        image="stick-specialhit8.png"
+        image="-specialhit8.png"
         vector="50,0"
         > </frame>
     </movement-->
@@ -456,19 +488,19 @@
     >
         <event
         period = "500,0"
-        action = "ThrowBomb"
+        action = "ThrowFireBall"
         > </event>
         <frame
         time="0"
-        image="stick-take1.png"
+        image="-take1.png"
         > </frame>
         <frame
         time="200"
-        image="stick-roll1.png"
+        image="-roll1.png"
         > </frame>
         <frame
         time="300"
-        image="stick-static1.png"
+        image="-static1.png"
         > </frame>
     </movement-->
     <movement name="kick"
@@ -526,17 +558,17 @@
         ></vector>
         <frame
         time="0"
-        image="stick-kick1.png"
+        image="-kick1.png"
         hardshape="1 9 16 67"
         > </frame>
         <frame
         time="200"
-        image="stick-kick2.png"
+        image="-kick2.png"
         vector="50,60"
         > </frame>
         <frame
         time="300"
-        image="stick-kick3.png"
+        image="-kick3.png"
         vector="100,60"
         >
             <agressiv-point
@@ -550,7 +582,7 @@
         </frame>
         <frame
         time="400"
-        image="stick-kick4.png"
+        image="-kick4.png"
         vector="50,60"
         >
             <agressiv-point
