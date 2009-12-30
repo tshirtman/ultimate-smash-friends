@@ -1,5 +1,5 @@
 ################################################################################
-# copyright 2009 xapantu <xapantu@gmail.com>                                   #
+# copyright 2009 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
 #                                                                              #
 # This file is part of Ultimate Smash Friends                                  #
 #                                                                              #
@@ -34,7 +34,8 @@ from usf_modules.config import (
         save_sound_conf,
         load_sound_config,
         save_keys_conf,
-        load_key_config
+        load_key_config,
+        reverse_keymap
         )
 
 import usf_modules.controls
@@ -42,6 +43,7 @@ import entity_skin
 from debug_utils import LOG
 from usf_modules.game import Game
 from usf_modules.config import xdg_config_home
+import usf_modules.controls
 
 # Gui modules
 from usf_modules.widget import Widget
@@ -50,6 +52,7 @@ from usf_modules.widget_icon import WidgetIcon
 from usf_modules.widget_credits import WidgetCredits
 from usf_modules.widget_image import WidgetImage
 from usf_modules.widget_image_button import WidgetImageButton
+from usf_modules.widget_textarea import WidgetTextarea
 
 
 #translation
@@ -72,7 +75,6 @@ class Gui(object):
     level_current=0
     screenshot = None
     # function which is called everytime
-
     def update(self, state, game, controls, eventcurrent=None):
         if(game !=None):
             if(self.screenshot == None):
@@ -81,6 +83,8 @@ class Gui(object):
         if(eventcurrent == None):
             #wait for an event (mouse or keyboard)
             eventcurrent = pygame.event.wait()
+        else:
+            print "event send"
         #draw background
         #if(eventcurrent.type== pygame.KEYDOWN):
         #    print eventcurrent.dict['key']
@@ -119,7 +123,7 @@ class Gui(object):
                     self.goto_screen(widget_action.split(":")[1])
                     return False, None
                 if(widget_action.split(":")[0] == "anim"):
-                    self.anim(widget_action.split(":")[1], widget_action.split(":")[2])
+                    self.anim(widget_action.split(":")[1], widget_action.split(":")[2], controls)
                     return False, None
                 exec widget_action
                 if(widget_action == ""):
@@ -142,7 +146,7 @@ class Gui(object):
                                 self.goto_screen(widget_action.split(":")[1])
                                 return False, None
                             if(widget_action.split(":")[0] == "anim"):
-                                self.anim(widget_action.split(":")[1], widget_action.split(":")[2])
+                                self.anim(widget_action.split(":")[1], widget_action.split(":")[2], controls)
                                 return False, None
                             exec widget_action
                             if(widget_action == ""):
@@ -268,6 +272,7 @@ class Gui(object):
             try:
                 if(xml_file.childNodes[i].tagName == "label"):
                     self.widget_list[filename].append(WidgetLabel(self.screen))
+                    self.widget_list[filename][len(self.widget_list[filename])-1].text=_(xml_file.childNodes[i].getAttribute("value"))
                 elif(xml_file.childNodes[i].tagName == "credits"):
                    self.widget_list[filename].append(WidgetCredits(self.screen))
                 elif(xml_file.childNodes[i].tagName == "imagebutton"):
@@ -276,11 +281,19 @@ class Gui(object):
                    self.widget_list[filename][len(self.widget_list[filename])-1].set_sizey(self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("sizey"))/100)
                    self.widget_list[filename][len(self.widget_list[filename])-1].action=xml_file.childNodes[i].getAttribute("action")
                    self.widget_list[filename][len(self.widget_list[filename])-1].setText(xml_file.childNodes[i].getAttribute("value"))
+                elif(xml_file.childNodes[i].tagName == "textarea"):
+                   self.widget_list[filename].append(WidgetTextarea(self.screen))
+                   self.widget_list[filename][len(self.widget_list[filename])-1].set_sizex(self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("sizex"))/100)
+                   self.widget_list[filename][len(self.widget_list[filename])-1].set_sizey(self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("sizey"))/100)
+                   self.widget_list[filename][len(self.widget_list[filename])-1].str_len =int(xml_file.childNodes[i].getAttribute("nb"))
+                   self.widget_list[filename][len(self.widget_list[filename])-1].action=xml_file.childNodes[i].getAttribute("action")
+                   self.widget_list[filename][len(self.widget_list[filename])-1].setText(_(xml_file.childNodes[i].getAttribute("value")))
                 elif(xml_file.childNodes[i].tagName == "button"):
                    self.widget_list[filename].append(WidgetIcon(self.screen))
                    self.widget_list[filename][len(self.widget_list[filename])-1].set_sizex(self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("sizex"))/100)
                    self.widget_list[filename][len(self.widget_list[filename])-1].set_sizey(self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("sizey"))/100)
                    self.widget_list[filename][len(self.widget_list[filename])-1].action=xml_file.childNodes[i].getAttribute("action")
+                   self.widget_list[filename][len(self.widget_list[filename])-1].text=_(xml_file.childNodes[i].getAttribute("value"))
                 elif(xml_file.childNodes[i].tagName == "image"):
                    self.widget_list[filename].append(WidgetImage(self.screen))
                    if(int(xml_file.childNodes[i].getAttribute("sizex")) != 0):
@@ -291,9 +304,8 @@ class Gui(object):
                    self.widget_list[filename][len(self.widget_list[filename])-1].setText(xml_file.childNodes[i].getAttribute("value").replace("/", os.sep))
                 elif(xml_file.childNodes[i].tagName == "parent"):
                     self.parent_screen[filename] =xml_file.childNodes[i].childNodes[0].nodeValue
-                if(xml_file.childNodes[i].tagName == "label" or xml_file.childNodes[i].tagName == "credits" or xml_file.childNodes[i].tagName =="button" or xml_file.childNodes[i].tagName == "image" or xml_file.childNodes[i].tagName == "imagebutton"):
+                if(xml_file.childNodes[i].tagName == "label" or xml_file.childNodes[i].tagName == "credits" or xml_file.childNodes[i].tagName =="button" or xml_file.childNodes[i].tagName == "image" or xml_file.childNodes[i].tagName == "imagebutton" or xml_file.childNodes[i].tagName == "textarea"):
                    self.widget_list[filename][len(self.widget_list[filename])-1].name=xml_file.childNodes[i].getAttribute("id")
-                   self.widget_list[filename][len(self.widget_list[filename])-1].text=_(xml_file.childNodes[i].getAttribute("value"))
                    self.widget_list[filename][len(self.widget_list[filename])-1].posx=self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("posx"))/100
                    self.widget_list[filename][len(self.widget_list[filename])-1].posy=self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("posy"))/100
             except AttributeError:
@@ -357,16 +369,41 @@ class Gui(object):
                 self.widget_list[self.screen_current][i].setText("gui" + os.sep +"image" + os.sep +"none.png")
             else:
                 self.widget_list[self.screen_current][i].setText(self.game_data['character_file'][self.players[int(player)]] + os.sep+self.game_data['character_file'][self.players[int(player)]].replace("characters"+os.sep, "") + "-portrait.png")
-    def anim(self, widget_name, argument = None):
+    def anim(self, widget_name, argument, controls):
         i=0
+        print widget_name
         #dirty ?
         while(self.widget_list[self.screen_current][i].name !=widget_name):
             i+=1
-        while(True):
-            time.sleep(0.04)
-            self.screen.blit(self.image,(0,0))
-            for j in range (0, len(self.widget_list[self.screen_current])):
-                #draw items at once
-                self.widget_list[self.screen_current][j].draw()
+        if("txt" in widget_name):
+            self.widget_list[self.screen_current][i].text = _("Press key")
+            #update screen
+            self.update("",None,"",pygame.event.Event(pygame.USEREVENT, {}))
             pygame.display.update()
-            if not self.widget_list[self.screen_current][i].click(argument): break
+            for len_str in range(0,self.widget_list[self.screen_current][i].str_len):
+                event_current = pygame.event.wait()
+                while(event_current.type != pygame.KEYDOWN):
+                    print "send event to update()"
+                    self.update("",None,"",event_current)
+                    event_current = pygame.event.wait()
+                    pygame.display.update()
+                if(self.widget_list[self.screen_current][i].text==_("Press key")):
+                    self.widget_list[self.screen_current][i].text = ""
+                self.widget_list[self.screen_current][i].text += reverse_keymap[event_current.dict['key']]
+                numcle = 0
+                while(controls.keys.values()[numcle] != widget_name.replace('txtconfig', '')):
+                    numcle += 1
+                del controls.keys[controls.keys.keys()[numcle]]
+                controls.keys[event_current.dict['key']] = widget_name.replace('txtconfig', '')
+                controls.save()
+                
+                print controls.keys
+        else:
+            while(True):
+                time.sleep(0.04)
+                self.screen.blit(self.image,(0,0))
+                for j in range (0, len(self.widget_list[self.screen_current])):
+                    #draw items at once
+                    self.widget_list[self.screen_current][j].draw()
+                pygame.display.update()
+                if not self.widget_list[self.screen_current][i].click(argument): break
