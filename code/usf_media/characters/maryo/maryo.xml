@@ -149,7 +149,7 @@
         time="700"
         image="smash-straight6.png"
         > </frame>
-    </movement>
+    </movement-->
     <movement name="hit"
     duration="500"
     repeat="0"
@@ -157,26 +157,31 @@
         <frame
         time="0"
         image="hit1.png"
-        hardshape="1 9 16 67"
+        hardshape="14 7 41 60"
         > </frame>
         <frame
         time="200"
         image="hit2.png"
-        > </frame>
+        >
+            <agressiv-point
+            coords="53,30"
+            vector="300,-30"
+            ></agressiv-point>
+        </frame>
         <frame
         time="300"
         image="hit3.png"
         >
             <agressiv-point
-            coords="60,16"
+            coords="57,31"
             vector="300,-30"
             ></agressiv-point>
         </frame>
         <frame
         time="400"
-        image="hit4.png"
+        image="hit2.png"
         > </frame>
-    </movement-->
+    </movement>
     <movement name="smash-up-jumping"
     duration="0"
     repeat="0"
