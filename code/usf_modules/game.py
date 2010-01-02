@@ -575,6 +575,11 @@ class NetworkServerGame(Game):
 
         """
         Game.__init__(self, None, level, players)
+        # wait fot clients to connect
+        #TODO
+
+        # choose level
+        self.begin(caracters, level)
 
     def begin(self, level, players_):
         """
@@ -595,7 +600,7 @@ class NetworkServerGame(Game):
         Game.update(self, debug_params)
         self.gamestring = ";".join(
             [ x.serialize() for x in self.players+self.items]
-        )+'|'+serialize(self.level)
+        )+'|'+self.level.serialize()
 
 
 class NetworkClientGame(Game):
@@ -626,3 +631,4 @@ class NetworkClientGame(Game):
 
     def update(self, time):
         pass
+

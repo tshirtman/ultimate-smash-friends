@@ -116,40 +116,36 @@
         image="jump_right.png"
         > </frame>
     </movement>
-    <!--movement name="smash-straight"
-    duration="1000"
+    <movement name="smash-straight"
+    duration="700"
     repeat="0"
     >
+        <vector
+        time="100"
+        vector="200,500"
+        ></vector>
         <frame
         time="0"
-        image="smash-straight1.png"
+        image="fall_right.png"
         > </frame>
         <frame
         time="200"
-        image="smash-straight2.png"
-        > </frame>
-        <frame
-        time="300"
-        image="smash-straight3.png"
-        > </frame>
-        <frame
-        time="400"
-        image="smash-straight4.png"
+        image="kick_5.png"
         >
             <agressiv-point
-            coords="48,20"
-            vector="500,-300"
+            coords="50,36"
+            vector="200,-300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="35,36"
+            vector="400,-300"
             ></agressiv-point>
         </frame>
         <frame
         time="500"
-        image="smash-straight5.png"
+        image="kick_4.png"
         > </frame>
-        <frame
-        time="700"
-        image="smash-straight6.png"
-        > </frame>
-    </movement-->
+    </movement>
     <movement name="hit"
     duration="500"
     repeat="0"
@@ -435,7 +431,7 @@
         > </frame>
     </movement>
     <movement name="roll"
-    duration="500"
+    duration="400"
     repeat="0"
     >
         <frame
@@ -481,10 +477,6 @@
         time="300"
         image="duck_right_rot9.png"
         vector="30,0"
-        > </frame>
-        <frame
-        time="300"
-        image="duck_right_rot10.png"
         > </frame>
     </movement>
     <!--movement name="special2"

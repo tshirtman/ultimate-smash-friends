@@ -58,7 +58,7 @@ def usage():
     """
 
 def author():
-    
+
     if 'CREDITS' not in os.listdir(os.path.join(config['SHARE_DIRECTORY'])):
         LOG().log(config['SHARE_DIRECTORY']+'/CREDITS file not found')
         sys.exit(0)
@@ -66,9 +66,8 @@ def author():
         author_file = open(os.path.join(config['SHARE_DIRECTORY'],'CREDITS'))
         print (author_file.read())
         author_file.close()
-        
+
 def launch_character_creator():
-            
     os.popen(os.path.join(config['BIN_DIRECTORY'],'viewer'))
 
 class main (object):
