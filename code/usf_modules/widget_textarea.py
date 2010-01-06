@@ -109,6 +109,7 @@ class WidgetTextarea(Widget):
             if(value.split(':')[1] == "keyboard"):
                 numcle=0
                 while(keyboard_config.values()[numcle] != value.split(':')[2]):
-                    numcle += 1
-                self.text = reverse_keymap[keyboard_config.keys()[numcle]]
-                print self.text
+                    numcle += 1;
+                print reverse_keymap[keyboard_config.keys()[numcle]];
+                exec("self.text = pygame.key.name(pygame." + reverse_keymap[keyboard_config.keys()[numcle]] + ")");
+                #self.text = exec "pygame.key.name(pygame." + reverse_keymap[keyboard_config.keys()[numcle]] );

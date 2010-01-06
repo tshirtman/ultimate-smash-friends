@@ -6,4 +6,7 @@
 <menu>characters.usfgui</menu>
 <menu>quit.usfgui</menu>
 <menu>ingame.usfgui</menu>
+<menu>keyboard.usfgui</menu>
+<menu>sounds.usfgui</menu>
+<menu>screen.usfgui</menu>
 </gui>

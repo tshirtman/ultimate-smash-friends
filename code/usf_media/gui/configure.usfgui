@@ -1,16 +1,6 @@
 <gui>
-<label value="Player 1" posx="20" posy="5"/>
-<label value="Left" posx="10" posy="10"/>
-<textarea sizex="10" sizey="10" posy="10" posx="20" value="config:keyboard:PL1_LEFT" action="anim:txtconfigPL1_LEFT:0" id="txtconfigPL1_LEFT" nb="1"/>
-<label value="Right" posx="10" posy="25"/>
-<textarea sizex="10" sizey="10" posy="25" posx="20" value="config:keyboard:PL1_RIGHT" action="anim:txtconfigPL1_RIGHT:0" id="txtconfigPL1_RIGHT" nb="1"/>
-<label value="Up" posx="10" posy="40"/>
-<textarea sizex="10" sizey="10" posy="40" posx="20" value="config:keyboard:PL1_UP" action="anim:txtconfigPL1_UP:0" id="txtconfigPL1_UP" nb="1"/>
-<label value="Down" posx="10" posy="55"/>
-<textarea sizex="10" sizey="10" posy="55" posx="20" value="config:keyboard:PL1_DOWN" action="anim:txtconfigPL1_DOWN:0" id="txtconfigPL1_DOWN" nb="1"/>
-<label value="A" posx="10" posy="70"/>
-<textarea sizex="10" sizey="10" posy="70" posx="20" value="config:keyboard:PL1_A" action="anim:txtconfigPL1_A:0" id="txtconfigPL1_A" nb="1"/>
-<label value="B" posx="10" posy="85"/>
-<textarea sizex="10" sizey="10" posy="85" posx="20" value="config:keyboard:PL1_B" action="anim:txtconfigPL1_B:0" id="txtconfigPL1_B" nb="1"/>
+<button value="Keyboard" posx="40" posy="45" sizey="8" sizex="20" id="keyboard" action="goto:keyboard.usfgui" />
+<button value="Sounds" posx="40" posy="55" sizey="8" sizex="20" id="sounds" action="goto:sounds.usfgui" />
+<button value="Screen" posx="40" posy="65" sizey="8" sizex="20" id="screen" action="goto:screen.usfgui" />
 <parent>main.usfgui</parent>
 </gui>
