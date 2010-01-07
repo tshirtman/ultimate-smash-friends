@@ -1,0 +1,61 @@
+<gui>
+<!-- Player 1 -->
+<label value="Player 1" posx="20" posy="5"/>
+<label value="Left" posx="10" posy="25"/>
+<textarea sizex="10" sizey="7" posy="25" posx="20" value="config:keyboard:PL1_LEFT" action="anim:txtconfigPL1_LEFT:0" id="txtconfigPL1_LEFT" nb="1"/>
+<label value="Right" posx="10" posy="35"/>
+<textarea sizex="10" sizey="7" posy="35" posx="20" value="config:keyboard:PL1_RIGHT" action="anim:txtconfigPL1_RIGHT:0" id="txtconfigPL1_RIGHT" nb="1"/>
+<label value="Up" posx="10" posy="45"/>
+<textarea sizex="10" sizey="7" posy="45" posx="20" value="config:keyboard:PL1_UP" action="anim:txtconfigPL1_UP:0" id="txtconfigPL1_UP" nb="1"/>
+<label value="Down" posx="10" posy="55"/>
+<textarea sizex="10" sizey="7" posy="55" posx="20" value="config:keyboard:PL1_DOWN" action="anim:txtconfigPL1_DOWN:0" id="txtconfigPL1_DOWN" nb="1"/>
+<label value="A" posx="10" posy="65"/>
+<textarea sizex="10" sizey="7" posy="65" posx="20" value="config:keyboard:PL1_A" action="anim:txtconfigPL1_A:0" id="txtconfigPL1_A" nb="1"/>
+<label value="B" posx="10" posy="75"/>
+<textarea sizex="10" sizey="7" posy="75" posx="20" value="config:keyboard:PL1_B" action="anim:txtconfigPL1_B:0" id="txtconfigPL1_B" nb="1"/>
+
+<!-- Player 2 -->
+<label value="Player 2" posx="35" posy="5"/>
+<textarea sizex="10" sizey="7" posy="25" posx="35" value="config:keyboard:PL2_LEFT" action="anim:txtconfigPL2_LEFT:0" id="txtconfigPL2_LEFT" nb="1"/>
+
+<textarea sizex="10" sizey="7" posy="35" posx="35" value="config:keyboard:PL2_RIGHT" action="anim:txtconfigPL2_RIGHT:0" id="txtconfigPL2_RIGHT" nb="1"/>
+
+<textarea sizex="10" sizey="7" posy="45" posx="35" value="config:keyboard:PL2_UP" action="anim:txtconfigPL2_UP:0" id="txtconfigPL2_UP" nb="1"/>
+
+<textarea sizex="10" sizey="7" posy="55" posx="35" value="config:keyboard:PL2_DOWN" action="anim:txtconfigPL2_DOWN:0" id="txtconfigPL2_DOWN" nb="1"/>
+
+<textarea sizex="10" sizey="7" posy="65" posx="35" value="config:keyboard:PL2_A" action="anim:txtconfigPL2_A:0" id="txtconfigPL2_A" nb="1"/>
+
+<textarea sizex="10" sizey="7" posy="75" posx="35" value="config:keyboard:PL2_B" action="anim:txtconfigPL2_B:0" id="txtconfigPL2_B" nb="1"/>
+
+<!-- Player 3 -->
+<label value="Player 3" posx="50" posy="5"/>
+
+<textarea sizex="10" sizey="7" posy="25" posx="50" value="config:keyboard:PL3_LEFT" action="anim:txtconfigPL3_LEFT:0" id="txtconfigPL3_LEFT" nb="1"/>
+
+<textarea sizex="10" sizey="7" posy="35" posx="50" value="config:keyboard:PL3_RIGHT" action="anim:txtconfigPL3_RIGHT:0" id="txtconfigPL3_RIGHT" nb="1"/>
+
+<textarea sizex="10" sizey="7" posy="45" posx="50" value="config:keyboard:PL3_UP" action="anim:txtconfigPL3_UP:0" id="txtconfigPL3_UP" nb="1"/>
+
+<textarea sizex="10" sizey="7" posy="55" posx="50" value="config:keyboard:PL3_DOWN" action="anim:txtconfigPL3_DOWN:0" id="txtconfigPL3_DOWN" nb="1"/>
+
+<textarea sizex="10" sizey="7" posy="65" posx="50" value="config:keyboard:PL3_A" action="anim:txtconfigPL3_A:0" id="txtconfigPL3_A" nb="1"/>
+
+<textarea sizex="10" sizey="7" posy="75" posx="50" value="config:keyboard:PL3_B" action="anim:txtconfigPL3_B:0" id="txtconfigPL3_B" nb="1"/>
+
+<!-- Player 4 -->
+<label value="Player 4" posx="65" posy="5"/>
+<label value="Left" posx="55" posy="25"/>
+<textarea sizex="10" sizey="7" posy="25" posx="65" value="config:keyboard:PL4_LEFT" action="anim:txtconfigPL4_LEFT:0" id="txtconfigPL4_LEFT" nb="1"/>
+
+<textarea sizex="10" sizey="7" posy="35" posx="65" value="config:keyboard:PL4_RIGHT" action="anim:txtconfigPL4_RIGHT:0" id="txtconfigPL4_RIGHT" nb="1"/>
+
+<textarea sizex="10" sizey="7" posy="45" posx="65" value="config:keyboard:PL4_UP" action="anim:txtconfigPL4_UP:0" id="txtconfigPL4_UP" nb="1"/>
+
+<textarea sizex="10" sizey="7" posy="55" posx="65" value="config:keyboard:PL4_DOWN" action="anim:txtconfigPL4_DOWN:0" id="txtconfigPL4_DOWN" nb="1"/>
+
+<textarea sizex="10" sizey="7" posy="65" posx="65" value="config:keyboard:PL4_A" action="anim:txtconfigPL4_A:0" id="txtconfigPL4_A" nb="1"/>
+
+<textarea sizex="10" sizey="7" posy="75" posx="65" value="config:keyboard:PL4_B" action="anim:txtconfigPL4_B:0" id="txtconfigPL4_B" nb="1"/>
+<parent>configure.usfgui</parent>
+</gui>

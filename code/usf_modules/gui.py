@@ -114,8 +114,14 @@ class Gui(object):
                     self.button_active =len(self.widget_list[self.screen_current])-1
                 self.widget_list[self.screen_current][self.button_active].state= "hover"
             # to valid item current
-            if(eventcurrent.dict['key'] == 27):
-                self.goto_screen(self.parent_screen[self.screen_current])
+            if(eventcurrent.dict['key'] == pygame.K_ESCAPE):
+                try:
+                    self.widget_list[self.parent_screen[self.screen_current]]
+                    self.goto_screen(self.parent_screen[self.screen_current])
+                except:
+                    exec self.parent_screen[self.screen_current]
+                    if(self.parent_screen[self.screen_current] == "self.screenshot=None"):
+                            return True, game
                 return False, None
             if(eventcurrent.dict['key'] == 13):
                 widget_action =self.widget_list[self.screen_current][self.button_active].action
