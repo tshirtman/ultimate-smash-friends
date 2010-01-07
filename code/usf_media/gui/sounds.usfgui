@@ -1,3 +1,4 @@
 <gui>
+<label value="Sounds configuration" posx="30" posy="30" id="label" />
 <parent>configure.usfgui</parent>
 </gui>

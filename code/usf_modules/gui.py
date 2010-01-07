@@ -299,7 +299,7 @@ class Gui(object):
                    self.widget_list[filename][len(self.widget_list[filename])-1].set_sizex(self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("sizex"))/100)
                    self.widget_list[filename][len(self.widget_list[filename])-1].set_sizey(self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("sizey"))/100)
                    self.widget_list[filename][len(self.widget_list[filename])-1].action=xml_file.childNodes[i].getAttribute("action")
-                   self.widget_list[filename][len(self.widget_list[filename])-1].text=_(xml_file.childNodes[i].getAttribute("value"))
+                   self.widget_list[filename][len(self.widget_list[filename])-1].setText(_(xml_file.childNodes[i].getAttribute("value")))
                 elif(xml_file.childNodes[i].tagName == "image"):
                    self.widget_list[filename].append(WidgetImage(self.screen))
                    if(int(xml_file.childNodes[i].getAttribute("sizex")) != 0):
@@ -375,6 +375,20 @@ class Gui(object):
                 self.widget_list[self.screen_current][i].setText("gui" + os.sep +"image" + os.sep +"none.png")
             else:
                 self.widget_list[self.screen_current][i].setText(self.game_data['character_file'][self.players[int(player)]] + os.sep+self.game_data['character_file'][self.players[int(player)]].replace("characters"+os.sep, "") + "-portrait.png")
+        elif(id_widget=="quitgame"):
+            self.screenshot=None
+            self.goto_screen("main.usfgui")
+        elif(id_widget=="fullscreen"):
+            i=0
+            while(self.widget_list[self.screen_current][i].name !="fullscreen"):
+                i+=1
+            if(config['FULLSCREEN']):
+                config['FULLSCREEN'] = False
+                self.widget_list[self.screen_current][i].text = "False"
+            else:
+                config['FULLSCREEN'] = True
+                self.widget_list[self.screen_current][i].text = "True"
+            save_conf()
     def anim(self, widget_name, argument, controls):
         i=0
         print widget_name
@@ -395,7 +409,7 @@ class Gui(object):
                     pygame.display.update()
                 if(self.widget_list[self.screen_current][i].text==_("Press key")):
                     self.widget_list[self.screen_current][i].text = ""
-                self.widget_list[self.screen_current][i].text += reverse_keymap[event_current.dict['key']]
+                exec "self.widget_list[self.screen_current][i].text += pygame.key.name(pygame." + reverse_keymap[event_current.dict['key']] + ")"
                 numcle = 0
                 while(controls.keys.values()[numcle] != widget_name.replace('txtconfig', '')):
                     numcle += 1

@@ -86,6 +86,17 @@ def save_conf():
     """
     save the general configuration options.
     """
+    file=open(os.path.join(xdg_config_home,'usf','config.cfg'),'wb')
+    for key in config.keys():
+        conf= key +" = "
+        #if value is a string, adding "
+        if(type(config[key]) == type("")):
+            conf += "\"" + str(config[key]) + "\""
+        else:
+            conf +=str(config[key])
+        conf+="\n"
+        file.write(conf)
+    file.close()
     pass
 
 str_conf = """

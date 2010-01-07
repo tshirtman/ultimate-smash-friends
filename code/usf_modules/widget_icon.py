@@ -23,7 +23,6 @@ class WidgetIcon(Widget):
     A simple button widget.
     XML : <button sizex="" sizey="" posx="" posy="" action="" value="" id=""/>
     """
-    text = ""
     state = "norm"
     def draw(self):
         if (self.state == "norm"):

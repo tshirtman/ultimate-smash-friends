@@ -45,7 +45,7 @@
 
 <!-- Player 4 -->
 <label value="Player 4" posx="65" posy="5"/>
-<label value="Left" posx="55" posy="25"/>
+
 <textarea sizex="10" sizey="7" posy="25" posx="65" value="config:keyboard:PL4_LEFT" action="anim:txtconfigPL4_LEFT:0" id="txtconfigPL4_LEFT" nb="1"/>
 
 <textarea sizex="10" sizey="7" posy="35" posx="65" value="config:keyboard:PL4_RIGHT" action="anim:txtconfigPL4_RIGHT:0" id="txtconfigPL4_RIGHT" nb="1"/>

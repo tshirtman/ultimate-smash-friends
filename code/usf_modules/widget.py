@@ -25,7 +25,9 @@ from usf_modules.config import (
         save_sound_conf,
         load_sound_config,
         save_keys_conf,
-        load_key_config
+        load_key_config,
+        keyboard_config,
+        reverse_keymap
         )
 import os
 class Widget (object):
@@ -39,6 +41,7 @@ class Widget (object):
     name = "name"
     action = "print 'click'"
     selectable = False
+    text = ""
     def __init__(self, screen):
         self.game_font = pygame.font.Font(None, screen.get_height()/20)
         self.screen = screen
@@ -55,3 +58,18 @@ class Widget (object):
     def set_sizey(self, size):
         self.sizey =size
         self.load()
+    def setText(self, value):
+        if(value.split(':')[0] == "config"):
+            if(value.split(':')[1] == "keyboard"):
+                numcle=0
+                while(keyboard_config.values()[numcle] != value.split(':')[2]):
+                    numcle += 1
+                exec("self.text = pygame.key.name(pygame." + reverse_keymap[keyboard_config.keys()[numcle]] + ")")
+            else:
+                print config[value.split(':')[1]]
+                if(config[value.split(':')[1]] == 0):
+                    self.text = "False"
+                else:
+                    self.text = str(config[value.split(':')[1]])
+        else:
+            self.text = value

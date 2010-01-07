@@ -104,12 +104,3 @@ class WidgetTextarea(Widget):
             'back_button_hover.png').convert_alpha()
         self.background_hover  = pygame.transform.scale(self.background_hover, (self.sizex, self.sizey))
         #self.background_hover.set_colorkey((255,255,255))
-    def setText(self, value):
-        if(value.split(':')[0] == "config"):
-            if(value.split(':')[1] == "keyboard"):
-                numcle=0
-                while(keyboard_config.values()[numcle] != value.split(':')[2]):
-                    numcle += 1;
-                print reverse_keymap[keyboard_config.keys()[numcle]];
-                exec("self.text = pygame.key.name(pygame." + reverse_keymap[keyboard_config.keys()[numcle]] + ")");
-                #self.text = exec "pygame.key.name(pygame." + reverse_keymap[keyboard_config.keys()[numcle]] );
