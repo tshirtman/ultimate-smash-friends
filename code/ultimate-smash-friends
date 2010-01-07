@@ -83,7 +83,7 @@ class main (object):
         on parameters.
 
         """
-        p = '' # commented for uglyness, find another solution when it fails.
+        p = ''
 
         # analyse of command line parameters.
         try:
