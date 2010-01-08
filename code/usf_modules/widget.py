@@ -65,6 +65,8 @@ class Widget (object):
                 while(keyboard_config.values()[numcle] != value.split(':')[2]):
                     numcle += 1
                 exec("self.text = pygame.key.name(pygame." + reverse_keymap[keyboard_config.keys()[numcle]] + ")")
+            elif(value.split(':')[1] == "sounds"):
+                self.text = str(sound_config[value.split(':')[2]])
             else:
                 print config[value.split(':')[1]]
                 if(config[value.split(':')[1]] == 0):

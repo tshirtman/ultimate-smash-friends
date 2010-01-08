@@ -278,7 +278,7 @@ class Gui(object):
             try:
                 if(xml_file.childNodes[i].tagName == "label"):
                     self.widget_list[filename].append(WidgetLabel(self.screen))
-                    self.widget_list[filename][len(self.widget_list[filename])-1].text=_(xml_file.childNodes[i].getAttribute("value"))
+                    self.widget_list[filename][len(self.widget_list[filename])-1].setText(_(xml_file.childNodes[i].getAttribute("value")))
                 elif(xml_file.childNodes[i].tagName == "credits"):
                    self.widget_list[filename].append(WidgetCredits(self.screen))
                 elif(xml_file.childNodes[i].tagName == "imagebutton"):
@@ -389,6 +389,34 @@ class Gui(object):
                 config['FULLSCREEN'] = True
                 self.widget_list[self.screen_current][i].text = "True"
             save_conf()
+        elif(id_widget=="musicp"):
+            i=0
+            while(self.widget_list[self.screen_current][i].name !="music"):
+                i+=1
+            sound_config['MUSIC_VOLUME'] += 5
+            save_sound_conf()
+            self.widget_list[self.screen_current][i].text = str(int(self.widget_list[self.screen_current][i].text) +5)
+        elif(id_widget=="musicm"):
+            i=0
+            while(self.widget_list[self.screen_current][i].name !="music"):
+                i+=1
+            sound_config['MUSIC_VOLUME'] -= 5
+            save_sound_conf()
+            self.widget_list[self.screen_current][i].text = str(int(self.widget_list[self.screen_current][i].text) -5)
+        elif(id_widget=="soundp"):
+            i=0
+            while(self.widget_list[self.screen_current][i].name !="sounds"):
+                i+=1
+            sound_config['SOUND_VOLUME'] += 5
+            save_sound_conf()
+            self.widget_list[self.screen_current][i].text = str(int(self.widget_list[self.screen_current][i].text) +5)
+        elif(id_widget=="soundm"):
+            i=0
+            while(self.widget_list[self.screen_current][i].name !="sounds"):
+                i+=1
+            sound_config['SOUND_VOLUME'] -= 5
+            save_sound_conf()
+            self.widget_list[self.screen_current][i].text = str(int(self.widget_list[self.screen_current][i].text) -5)
     def anim(self, widget_name, argument, controls):
         i=0
         print widget_name
