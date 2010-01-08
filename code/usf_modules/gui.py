@@ -439,9 +439,12 @@ class Gui(object):
                     self.widget_list[self.screen_current][i].text = ""
                 exec "self.widget_list[self.screen_current][i].text += pygame.key.name(pygame." + reverse_keymap[event_current.dict['key']] + ")"
                 numcle = 0
-                while(controls.keys.values()[numcle] != widget_name.replace('txtconfig', '')):
-                    numcle += 1
-                del controls.keys[controls.keys.keys()[numcle]]
+                try:
+                    while(controls.keys.values()[numcle] != widget_name.replace('txtconfig', '')):
+                        numcle += 1
+                    del controls.keys[controls.keys.keys()[numcle]]
+                except:
+                    pass
                 controls.keys[event_current.dict['key']] = widget_name.replace('txtconfig', '')
                 controls.save()
                 
