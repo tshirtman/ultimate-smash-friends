@@ -271,7 +271,7 @@ class Gui(object):
 
     def exec_event(self, eventcurrent):
         """
-        function for special event (if action =="")
+        function whiwh processes event
 
         """
         str_return = ""
@@ -303,7 +303,7 @@ class Gui(object):
 
     def select(self,sens):
         """
-        /!\ documentation #TODO
+        function which select a widget
 
         """
         if(type(sens) == bool):

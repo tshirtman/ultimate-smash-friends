@@ -103,7 +103,7 @@ class main (object):
             usage()
             sys.exit(2)
         game_type = 'local'
-        self.newGui = False
+        self.newGui = True
         for option, argument in opts:
             if option in ["-h","--help"]:
                 usage()
@@ -119,7 +119,7 @@ class main (object):
             if option in ["-p","--players"]:
                 p = argument
             if option in ["-nG","--gui"]:
-                self.newGui =True
+                self.newGui =False
             if option in ["-s","--server"]:
                 game_type = 'server'
             if option in ['-C','--client']:
@@ -189,6 +189,14 @@ class main (object):
     def init_screen(self):
         self.screen = pygame.display.set_mode(config['SIZE'])
         pygame.display.set_caption('Ultimate Smash Friends')
+        icon = loaders.image(
+            config['MEDIA_DIRECTORY']+
+            os.sep+
+            'gui'+
+            os.sep+
+            'icon.png'
+            )[0]
+        pygame.display.set_icon(icon)
         if config['FULLSCREEN'] == 1:
             pygame.display.toggle_fullscreen()
         # following operation can be quite long, so a loading screen is good
