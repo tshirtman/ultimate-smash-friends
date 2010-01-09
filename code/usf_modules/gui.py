@@ -440,7 +440,7 @@ class Gui(object):
                     #draw items at once
                     self.widget_list[self.screen_current].values()[j].draw()
                 pygame.display.update()
-                if not self.widget_list[self.screen_current].values()[i].click(argument): break
+                if not self.widget_list[self.screen_current][widget_name].click(argument): break
     def draw_screen(self,update = False):
         """
         Draw the menu to the screen, use a screenshot of the game to display
