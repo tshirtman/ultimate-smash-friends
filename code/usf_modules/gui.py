@@ -302,6 +302,10 @@ class Gui(object):
         return str_return
 
     def select(self,sens):
+        """
+        /!\ documentation #TODO
+
+        """
         if(type(sens) == bool):
             if sens:
                 if(self.widgetselect < len(self.widget_list_order[self.screen_current])-1):
@@ -318,13 +322,16 @@ class Gui(object):
             self.widgetselect = sens
             self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][self.widgetselect]].state = "hover"
         return ""
+
     def valid(self,i):
+        """
+        /!\ documentation #TODO
+
+        """
         str_return = ""
         id_widget = self.widget_list_order[self.screen_current][i]
         self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][self.widgetselect]].state = "norm"
         widget_action =self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][i]].action
-
-
 
         ############################## CUSTOM ACTION ###########################
         if(id_widget=="nextlevel"):
@@ -400,6 +407,10 @@ class Gui(object):
         #to exec an action in update()
         return str_return
     def anim(self, widget_name, argument, controls):
+        """
+        /!\ documentation #TODO
+
+        """
         if("txt" in widget_name):
             self.widget_list[self.screen_current][widget_name].text = _("Press a key")
             #update screen
@@ -431,9 +442,15 @@ class Gui(object):
                 pygame.display.update()
                 if not self.widget_list[self.screen_current].values()[i].click(argument): break
     def draw_screen(self,update = False):
+        """
+        Draw the menu to the screen, use a screenshot of the game to display
+        the menu "ingame".
+
+        """
         if(self.state == "game"):
             self.screen.blit(self.screen_shot,(0,0))
         self.screen.blit(self.image,(0,0))
+
         for widget in self.widget_list[self.screen_current].values():
             #draw items at once
             widget.draw()
