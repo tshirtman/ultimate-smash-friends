@@ -176,7 +176,7 @@ class Gui(object):
             os.sep+
             'background.png').convert()
         self.image = pygame.transform.scale(self.image, (self.sizex,self.sizey))
-
+        self.draw_screen(True)
     #function to launch the game
     def launch_game(self, game):
         self.goto_screen("ingame.usfgui")
