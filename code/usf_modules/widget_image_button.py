@@ -64,5 +64,7 @@ class WidgetImageButton(Widget):
             os.sep+
             self.text
             )[0]
+        if(self.sizex == 0):
+            self.sizex = self.sizey
         self.image = pygame.transform.scale(self.image, (self.sizex, self.sizey))
         
