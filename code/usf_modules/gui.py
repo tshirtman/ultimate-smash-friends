@@ -101,6 +101,11 @@ class Gui(object):
         return False, None
 
     def __init__(self, surface):
+        """
+        Initialize menues from xml files, loading every characters and levels
+        to get their previews, initializing menu state.
+
+        """
         self.characters = []
         self.players = [-1, -1, -1, -1]
         self.state = 'menu'
@@ -184,19 +189,23 @@ class Gui(object):
 
     def launch_game(self, game):
         """
-        function to launch the game
+        Function to launch the game, use precedant user choices to initiate the
+        game with level and characters selected.
 
         """
         self.goto_screen("ingame.usfgui")
-        players = [None, None, None, None]
-        for i in range (0, len(self.players)):
-            if(self.players[i] != -1):
-                players[i] = self.game_data['character_file'][self.players[i]]
+
+        players = [
+        self.game_data['character_file'][p]
+        for p in self.players if p != -1
+        ]
+
         game = Game(
             self.screen,
             self.game_data['level_name'][self.level_current],
             players
         )
+
         self.state="game"
         return game
 
