@@ -59,8 +59,8 @@ from usf_modules.widget_textarea import WidgetTextarea
 import translation
 class Gui(object):
     """
-    Main class of the GUI
-    In this class, there are the function update which is called everytime
+    Main class of the GUI. Init and maintain all menus and widgets.
+
     """
     # entries from list.usf.gui will be in file_gui
     file_gui = []
@@ -77,8 +77,12 @@ class Gui(object):
     screen_shot = None
     game = None
     widget_list_order = {}
-    # function which is called everytime
+
     def update(self, state, game, controls, eventcurrent=None):
+        """
+        Update the screen state based on user inputs.
+
+        """
         self.controls = controls
         if self.screen_shot == None and self.state == "game":
             self.screen_shot = self.screen.copy()
@@ -177,8 +181,12 @@ class Gui(object):
             'background.png').convert()
         self.image = pygame.transform.scale(self.image, (self.sizex,self.sizey))
         self.draw_screen(True)
-    #function to launch the game
+
     def launch_game(self, game):
+        """
+        function to launch the game
+
+        """
         self.goto_screen("ingame.usfgui")
         players = [None, None, None, None]
         for i in range (0, len(self.players)):
@@ -193,7 +201,10 @@ class Gui(object):
         return game
 
     def load_from_xml(self, filename):
-        #init all widget of a menu
+        """
+        init all widget of a menu using the xml file.
+
+        """
         self.widget_list[filename] = {}
         self.widget_list_order[filename] = []
         xml_file = xml.dom.minidom.parse(config['MEDIA_DIRECTORY']+
@@ -239,13 +250,21 @@ class Gui(object):
                 continue
 
     def goto_screen(self,screen):
+        """
+        menu goes to the specified screen.
+
+        """
         self.screen_current = screen
         self.button_active = 0
         self.widgetselect = -1
         self.draw_screen(True)
         #draw new screen
-    #function for special event (if action =="")
+
     def exec_event(self, eventcurrent):
+        """
+        function for special event (if action =="")
+
+        """
         str_return = ""
         if(eventcurrent.type is pygame.KEYUP):
             if(eventcurrent.dict['key'] == pygame.K_DOWN):
@@ -272,6 +291,7 @@ class Gui(object):
                             str_return = self.valid(i)
                         break
         return str_return
+
     def select(self,sens):
         if(type(sens) == bool):
             if sens:
@@ -294,10 +314,10 @@ class Gui(object):
         id_widget = self.widget_list_order[self.screen_current][i]
         self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][self.widgetselect]].state = "norm"
         widget_action =self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][i]].action
-        
-        
-        
-        ####################################CUSTOM ACTION #############################""
+
+
+
+        ############################## CUSTOM ACTION ###########################
         if(id_widget=="nextlevel"):
             if(self.level_current< len(self.game_data['level_name'])-1):
                 self.level_current += 1
