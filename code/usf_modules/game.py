@@ -254,7 +254,9 @@ class Game (object):
             block.draw( self.tmp_surface, self.level_place, self.zoom)
 
         for entity in self.players+self.items:
-            entity.draw( self.level_place, self.zoom, self.tmp_surface )
+            entity.present and entity.draw(
+                self.level_place, self.zoom, self.tmp_surface
+                )
 
         self.level.draw_foreground(self.tmp_surface,self.level_place, self.zoom)
         self.screen.blit(self.tmp_surface,(0,0) )
@@ -419,7 +421,7 @@ class Game (object):
                 rightwing = max( 1, ordered[-1] )
                 L = max( config['SIZE'][0], rightwing - leftist )
 
-                ordered = [ i.rect[1] for i in self.players ]
+                ordered = [ i.rect[1] for i in present_players ]
                 ordered.sort()
                 upper,lower = ordered[0], ordered[-1]
                 H = max( config['SIZE'][1], lower - upper)
@@ -439,8 +441,8 @@ class Game (object):
                 )
 
                 players_barycenter = (
-                    sum( i.rect[0] for i in self.players ) / len(self.players),
-                    sum( i.rect[1] for i in self.players ) / len(self.players)
+                    sum( i.rect[0] for i in present_players ) / len(present_players),
+                    sum( i.rect[1] for i in present_players ) / len(present_players)
                     )
 
             #LOG().log(( self.zoom, lower - upper, rightwing - leftist))
