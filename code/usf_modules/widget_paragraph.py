@@ -21,7 +21,7 @@ import pygame
 import time
 from usf_modules import loaders
 import os
-class WidgetCredits(Widget):
+class WidgetParagraph(Widget):
     """
     Widget which is called in credits screen
     it is animated.
@@ -61,7 +61,7 @@ class WidgetCredits(Widget):
         except:
             self.falseposy = self.posy
         self.drawSimple()
-    def click(self, sens):
+    def click(self, event):
         if(self.diff_false_truey == self.screen.get_height()/20*5):
             self.diff_false_truey = 0
             return False
@@ -77,10 +77,13 @@ class WidgetCredits(Widget):
             self.falseposy += self.screen.get_height()/20
         self.diff_false_truey += self.screen.get_height()/20
         return True
-    def load(self):
-        credits_file = open("CREDITS", 'r').readlines()
-        self.credits = ""
-        for i in range(0, len(credits_file)):
-            self.credits += credits_file[i]
-        self.sizey = 150
-        self.sizex = self.screen.get_height()/2
+    def setParagraph(self, text):
+        if(text.split(":")[0] == "file"):
+            credits_file = open(text.split(":")[1], 'r').readlines()
+            self.credits = ""
+            for i in range(0, len(credits_file)):
+                self.credits += credits_file[i]
+            self.sizey = 150
+            self.sizex = self.screen.get_height()/2
+        else:
+            self.credits = text

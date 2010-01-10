@@ -49,7 +49,7 @@ import usf_modules.controls
 from usf_modules.widget import Widget
 from usf_modules.widget_label import WidgetLabel
 from usf_modules.widget_icon import WidgetIcon
-from usf_modules.widget_credits import WidgetCredits
+from usf_modules.widget_paragraph import WidgetParagraph
 from usf_modules.widget_image import WidgetImage
 from usf_modules.widget_image_button import WidgetImageButton
 from usf_modules.widget_textarea import WidgetTextarea
@@ -226,8 +226,10 @@ class Gui(object):
                     id_current = xml_file.childNodes[i].getAttribute("id")
                     if(xml_file.childNodes[i].tagName == "label"):
                         self.widget_list[filename][id_current] = WidgetLabel(self.screen)
-                    elif(xml_file.childNodes[i].tagName == "credits"):
-                        self.widget_list[filename][id_current] = WidgetCredits(self.screen)
+                    elif(xml_file.childNodes[i].tagName == "p"):
+                        self.widget_list[filename][id_current] = WidgetParagraph(self.screen)
+                        self.widget_list[filename][id_current].setParagraph(xml_file.childNodes[i].childNodes[0].nodeValue)
+                        print xml_file.childNodes[i].childNodes[0].nodeValue
                     elif(xml_file.childNodes[i].tagName == "imagebutton"):
                         self.widget_list[filename][id_current] = WidgetImageButton(self.screen)
                         self.widget_list[filename][id_current].action=xml_file.childNodes[i].getAttribute("action")
