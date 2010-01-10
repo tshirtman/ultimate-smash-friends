@@ -42,6 +42,7 @@ class Widget (object):
     action = "print 'click'"
     selectable = False
     text = ""
+    anim = False
     def __init__(self, screen):
         self.game_font = pygame.font.Font(None, screen.get_height()/20)
         self.screen = screen

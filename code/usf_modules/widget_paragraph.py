@@ -31,9 +31,20 @@ class WidgetParagraph(Widget):
     action = ""
     diff_false_truey = 0
     def drawSimple(self):
-        for i in range(0, len(self.credits.split("\n"))):
-            try:
-                if(self.falseposy + self.screen.get_height()/20*i >= self.posy and self.falseposy + self.screen.get_height()/20*i <= self.posy+self.sizey):
+        for i in range(0,len(self.credits.split("\n"))):
+            if(self.falseposy + self.screen.get_height()/20*i >= self.posy and self.falseposy + self.screen.get_height()/20*i <= self.posy+self.sizey):
+                if self.credits.split("\n")[i].strip("==") != self.credits.split("\n")[i]:
+                    self.screen.blit(
+                        self.game_font.render(
+                        self.credits.split("\n")[i].strip("=="),
+                        True,
+                        pygame.color.Color(
+                            "brown"
+                            )
+                        ),
+                        (self.posx, self.falseposy + self.screen.get_height()/20*i)
+                        )
+                else:
                     self.screen.blit(
                         self.game_font.render(
                         self.credits.split("\n")[i],
@@ -44,24 +55,13 @@ class WidgetParagraph(Widget):
                         ),
                         (self.posx, self.falseposy + self.screen.get_height()/20*i)
                         )
-            except:
-                self.screen.blit(
-                    self.game_font.render(
-                    self.credits.split("\n")[i],
-                    True,
-                    pygame.color.Color(
-                        "white"
-                        )
-                    ),
-                    (self.posx, self.falseposy + self.screen.get_height()/20*i)
-                    )
     def draw(self):
         try:
             self.falseposy
         except:
             self.falseposy = self.posy
         self.drawSimple()
-    def click(self, event):
+    def click(self, sens):
         if(self.diff_false_truey == self.screen.get_height()/20*5):
             self.diff_false_truey = 0
             return False

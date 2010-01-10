@@ -77,7 +77,7 @@ class Gui(object):
     screen_shot = None
     game = None
     widget_list_order = {}
-
+    widget_anim = []
     def update(self, state, game, controls, eventcurrent=None):
         """
         Update the screen state based on user inputs.
@@ -88,7 +88,7 @@ class Gui(object):
             self.screen_shot = self.screen.copy()
             self.image.set_alpha(200)
         self.game = game
-        if(eventcurrent == None):
+        if(eventcurrent == None and len(self.widget_anim) == 0):
             #wait for an event (mouse or keyboard)
             eventcurrent = pygame.event.wait()
         result =  self.exec_event(eventcurrent)
@@ -268,6 +268,10 @@ class Gui(object):
         self.screen_current = screen
         self.button_active = 0
         self.widgetselect = -1
+        self.widget_anim=[]
+        for widget in self.widget_list[screen].keys():
+            if self.widget_list[screen][widget].anim:
+                self.widget_anim.append(widget)
         self.draw_screen(True)
         #draw new screen
 
