@@ -29,7 +29,9 @@ class WidgetParagraph(Widget):
     text = ""
     state="norm"
     action = ""
-    diff_false_truey = 0
+    anim = True
+    last_event = 0
+    speed = 0.03
     def drawSimple(self):
         for i in range(0,len(self.credits.split("\n"))):
             if(self.falseposy + self.screen.get_height()/20*i >= self.posy and self.falseposy + self.screen.get_height()/20*i <= self.posy+self.sizey):
@@ -62,20 +64,16 @@ class WidgetParagraph(Widget):
             self.falseposy = self.posy
         self.drawSimple()
     def click(self, sens):
-        if(self.diff_false_truey == self.screen.get_height()/20*5):
-            self.diff_false_truey = 0
-            return False
-        if(self.falseposy + self.screen.get_height()/20*(len(self.credits.split("\n"))-10) < self.posy and sens == "1"):
-            print "bottom !"
-            return False
-        if(self.falseposy >= self.posy and sens == "0"):
-            print "top !"
-            return False
-        if(sens == "1"):
-            self.falseposy -= self.screen.get_height()/20
-        else:
-            self.falseposy += self.screen.get_height()/20
-        self.diff_false_truey += self.screen.get_height()/20
+        if(time.time() - self.last_event > self.speed):
+            if(self.falseposy + self.screen.get_height()/20*(len(self.credits.split("\n"))) < self.posy and sens == "1"):
+                print "bas !"
+                self.falseposy = self.posy
+                return False
+            if(self.falseposy >= self.posy and sens == "0"):
+                print "top !"
+                return False
+            self.falseposy -= self.screen.get_height()/400
+            self.last_event = time.time()
         return True
     def setParagraph(self, text):
         if(text.split(":")[0] == "file"):

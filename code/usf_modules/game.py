@@ -131,9 +131,7 @@ class Game (object):
                             AI(
                                 i+1,
                                 self,
-                                player.split('/')[0]\
-                                +'/'\
-                                +player.split('/')[1][2:],
+                                "characters" + os.sep + "stick-tiny",
                                 ((i+1)*config['SIZE'][0]/5,100)
                               )
                             )

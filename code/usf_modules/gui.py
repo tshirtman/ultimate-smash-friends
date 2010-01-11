@@ -88,16 +88,34 @@ class Gui(object):
             self.screen_shot = self.screen.copy()
             self.image.set_alpha(200)
         self.game = game
+        #for performance problem if no widget are animated wait for an event
         if(eventcurrent == None and len(self.widget_anim) == 0):
             #wait for an event (mouse or keyboard)
             eventcurrent = pygame.event.wait()
-        result =  self.exec_event(eventcurrent)
-        if(result == "return True, self.game"):
-            return True, self.game
-        elif(result == "return False, None"):
-            return False, None
-        self.draw_screen()
-        exec result
+        if(eventcurrent != None):
+            result =  self.exec_event(eventcurrent)
+            if(result == "return True, self.game"):
+                return True, self.game
+            elif(result == "return False, None"):
+                return False, None
+            self.draw_screen()
+            exec result
+        if len(self.widget_anim) != 0:
+            time.sleep(1.00/float(config['MAX_FPS']))
+            for widget in self.widget_anim:
+                self.widget_list[self.screen_current][widget].click("1")
+            while(True):
+                eventcurrent = pygame.event.poll()
+                if eventcurrent.type != pygame.NOEVENT:
+                    result =  self.exec_event(eventcurrent)
+                    if(result == "return True, self.game"):
+                        return True, self.game
+                    elif(result == "return False, None"):
+                        return False, None
+                    exec result
+                else:
+                    break
+            self.draw_screen()
         return False, None
 
     def __init__(self, surface):
