@@ -39,7 +39,7 @@ from usf_modules.config  import (
     )
 from debug_utils import LOG
 import game
-
+from usf_modules.ai import AI
 class Sequence (object):
     """
     Used to bind an animation of a player to a sequence of key.
@@ -70,6 +70,7 @@ class Controls (object):
     sequences.cfg. This class can update and save configuration.
 
     """
+    ai_true = False
     def __init__(self):
         #loaders.load_keys()
         self.keys = keyboard_config
@@ -97,7 +98,7 @@ class Controls (object):
                 self.sequences.append(Sequence(player-1, tab, act, condition))
 
             for i in range(4): self.player_sequences.append([])
-
+        self.ai = AI()
     def getKeyByAction(self, action):
         if action in self.keys.values():
             return reverse_keymap[
@@ -281,6 +282,12 @@ class Controls (object):
                 # clean the entire sequence if the last key is outdated.
                 if sequence != [] and sequence[-1][1] < limit_time:
                     self.player_sequences[index] = []
-
+        i=0
+        for player in game_instance.players:
+            if(player.ai):
+                self.ai.update(game_instance, i)
+                for sequence_ai in self.ai.sequences_ai:
+                    self.player_sequences[i].append(sequence_ai)
+            i+=1
         return state
 
