@@ -49,7 +49,7 @@ import usf_modules.controls
 from usf_modules.widget import Widget
 from usf_modules.widget_label import WidgetLabel
 from usf_modules.widget_icon import WidgetIcon
-from usf_modules.widget_credits import WidgetCredits
+from usf_modules.widget_paragraph import WidgetParagraph
 from usf_modules.widget_image import WidgetImage
 from usf_modules.widget_image_button import WidgetImageButton
 from usf_modules.widget_textarea import WidgetTextarea
@@ -77,7 +77,7 @@ class Gui(object):
     screen_shot = None
     game = None
     widget_list_order = {}
-
+    widget_anim = []
     def update(self, state, game, controls, eventcurrent=None):
         """
         Update the screen state based on user inputs.
@@ -88,16 +88,34 @@ class Gui(object):
             self.screen_shot = self.screen.copy()
             self.image.set_alpha(200)
         self.game = game
-        if(eventcurrent == None):
+        #for performance problem if no widget are animated wait for an event
+        if(eventcurrent == None and len(self.widget_anim) == 0):
             #wait for an event (mouse or keyboard)
             eventcurrent = pygame.event.wait()
-        result =  self.exec_event(eventcurrent)
-        if(result == "return True, self.game"):
-            return True, self.game
-        elif(result == "return False, None"):
-            return False, None
-        self.draw_screen()
-        exec result
+        if(eventcurrent != None):
+            result =  self.exec_event(eventcurrent)
+            if(result == "return True, self.game"):
+                return True, self.game
+            elif(result == "return False, None"):
+                return False, None
+            self.draw_screen()
+            exec result
+        if len(self.widget_anim) != 0:
+            time.sleep(1.00/float(config['MAX_FPS']))
+            for widget in self.widget_anim:
+                self.widget_list[self.screen_current][widget].click("1")
+            while(True):
+                eventcurrent = pygame.event.poll()
+                if eventcurrent.type != pygame.NOEVENT:
+                    result =  self.exec_event(eventcurrent)
+                    if(result == "return True, self.game"):
+                        return True, self.game
+                    elif(result == "return False, None"):
+                        return False, None
+                    exec result
+                else:
+                    break
+            self.draw_screen()
         return False, None
 
     def __init__(self, surface):
@@ -226,8 +244,10 @@ class Gui(object):
                     id_current = xml_file.childNodes[i].getAttribute("id")
                     if(xml_file.childNodes[i].tagName == "label"):
                         self.widget_list[filename][id_current] = WidgetLabel(self.screen)
-                    elif(xml_file.childNodes[i].tagName == "credits"):
-                        self.widget_list[filename][id_current] = WidgetCredits(self.screen)
+                    elif(xml_file.childNodes[i].tagName == "p"):
+                        self.widget_list[filename][id_current] = WidgetParagraph(self.screen)
+                        self.widget_list[filename][id_current].setParagraph(xml_file.childNodes[i].childNodes[0].nodeValue)
+                        print xml_file.childNodes[i].childNodes[0].nodeValue
                     elif(xml_file.childNodes[i].tagName == "imagebutton"):
                         self.widget_list[filename][id_current] = WidgetImageButton(self.screen)
                         self.widget_list[filename][id_current].action=xml_file.childNodes[i].getAttribute("action")
@@ -266,6 +286,10 @@ class Gui(object):
         self.screen_current = screen
         self.button_active = 0
         self.widgetselect = -1
+        self.widget_anim=[]
+        for widget in self.widget_list[screen].keys():
+            if self.widget_list[screen][widget].anim:
+                self.widget_anim.append(widget)
         self.draw_screen(True)
         #draw new screen
 

@@ -21,7 +21,7 @@ import pygame
 import time
 from usf_modules import loaders
 import os
-class WidgetCredits(Widget):
+class WidgetParagraph(Widget):
     """
     Widget which is called in credits screen
     it is animated.
@@ -29,11 +29,24 @@ class WidgetCredits(Widget):
     text = ""
     state="norm"
     action = ""
-    diff_false_truey = 0
+    anim = True
+    last_event = 0
+    speed = 0.03
     def drawSimple(self):
-        for i in range(0, len(self.credits.split("\n"))):
-            try:
-                if(self.falseposy + self.screen.get_height()/20*i >= self.posy and self.falseposy + self.screen.get_height()/20*i <= self.posy+self.sizey):
+        for i in range(0,len(self.credits.split("\n"))):
+            if(self.falseposy + self.screen.get_height()/20*i >= self.posy and self.falseposy + self.screen.get_height()/20*i <= self.posy+self.sizey):
+                if self.credits.split("\n")[i].strip("==") != self.credits.split("\n")[i]:
+                    self.screen.blit(
+                        self.game_font.render(
+                        self.credits.split("\n")[i].strip("=="),
+                        True,
+                        pygame.color.Color(
+                            "brown"
+                            )
+                        ),
+                        (self.posx, self.falseposy + self.screen.get_height()/20*i)
+                        )
+                else:
                     self.screen.blit(
                         self.game_font.render(
                         self.credits.split("\n")[i],
@@ -44,17 +57,6 @@ class WidgetCredits(Widget):
                         ),
                         (self.posx, self.falseposy + self.screen.get_height()/20*i)
                         )
-            except:
-                self.screen.blit(
-                    self.game_font.render(
-                    self.credits.split("\n")[i],
-                    True,
-                    pygame.color.Color(
-                        "white"
-                        )
-                    ),
-                    (self.posx, self.falseposy + self.screen.get_height()/20*i)
-                    )
     def draw(self):
         try:
             self.falseposy
@@ -62,25 +64,24 @@ class WidgetCredits(Widget):
             self.falseposy = self.posy
         self.drawSimple()
     def click(self, sens):
-        if(self.diff_false_truey == self.screen.get_height()/20*5):
-            self.diff_false_truey = 0
-            return False
-        if(self.falseposy + self.screen.get_height()/20*(len(self.credits.split("\n"))-10) < self.posy and sens == "1"):
-            print "bottom !"
-            return False
-        if(self.falseposy >= self.posy and sens == "0"):
-            print "top !"
-            return False
-        if(sens == "1"):
-            self.falseposy -= self.screen.get_height()/20
-        else:
-            self.falseposy += self.screen.get_height()/20
-        self.diff_false_truey += self.screen.get_height()/20
+        if(time.time() - self.last_event > self.speed):
+            if(self.falseposy + self.screen.get_height()/20*(len(self.credits.split("\n"))) < self.posy and sens == "1"):
+                print "bas !"
+                self.falseposy = self.posy
+                return False
+            if(self.falseposy >= self.posy and sens == "0"):
+                print "top !"
+                return False
+            self.falseposy -= self.screen.get_height()/400
+            self.last_event = time.time()
         return True
-    def load(self):
-        credits_file = open("CREDITS", 'r').readlines()
-        self.credits = ""
-        for i in range(0, len(credits_file)):
-            self.credits += credits_file[i]
-        self.sizey = 150
-        self.sizex = self.screen.get_height()/2
+    def setParagraph(self, text):
+        if(text.split(":")[0] == "file"):
+            credits_file = open(text.split(":")[1], 'r').readlines()
+            self.credits = ""
+            for i in range(0, len(credits_file)):
+                self.credits += credits_file[i]
+            self.sizey = 150
+            self.sizex = self.screen.get_height()/2
+        else:
+            self.credits = text

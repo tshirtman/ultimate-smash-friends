@@ -6,56 +6,132 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: Ultimate-Smash-Friends\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-22 12:42+0100\n"
+"POT-Creation-Date: 2010-01-09 17:03+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language-Team: English\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: strings.py:1 strings.py:5
-msgid "Ultimate Smash Friends"
+#: strings.py:1
+msgid "Choose the level :"
 msgstr ""
 
 #: strings.py:2
-msgid "Quit ?"
-msgstr ""
-
-#: strings.py:3
-msgid "yes"
-msgstr ""
-
-#: strings.py:4
-msgid "no"
-msgstr ""
-
-#: strings.py:6
-msgid "configure"
-msgstr ""
-
-#: strings.py:7
-msgid "local game"
-msgstr ""
-
-#: strings.py:8
-msgid "credits"
-msgstr ""
-
-#: strings.py:9
-msgid "quit"
-msgstr ""
-
-#: strings.py:10
-msgid "Configure the game"
-msgstr ""
-
-#: strings.py:11
 msgid "Go !"
 msgstr ""
 
+#: strings.py:4
+msgid "Choose characters : "
+msgstr ""
+
+#: strings.py:5
+msgid "Next"
+msgstr ""
+
+#: strings.py:6
+msgid "Up"
+msgstr ""
+
+#: strings.py:7
+msgid "Down"
+msgstr ""
+
+#: strings.py:8
+msgid "Left"
+msgstr ""
+
+#: strings.py:9
+msgid "Right"
+msgstr ""
+
+#: strings.py:10
+msgid "Resume game"
+msgstr ""
+
+#: strings.py:11
+msgid "Quit game"
+msgstr ""
+
 #: strings.py:12
-msgid "BiX_level"
+msgid "Ultimate Smash Friends"
+msgstr ""
+
+#: strings.py:13
+msgid "Configure"
+msgstr ""
+
+#: strings.py:14
+msgid "Local game"
+msgstr ""
+
+#: strings.py:15
+msgid "Credits"
+msgstr ""
+
+#: strings.py:16
+msgid "Quit"
+msgstr ""
+
+#: strings.py:17
+msgid "Sounds configuration"
+msgstr ""
+
+#: strings.py:18
+msgid "Sounds"
+msgstr ""
+
+#: strings.py:19
+msgid "+"
+msgstr ""
+
+#: strings.py:20
+msgid "-"
+msgstr ""
+
+#: strings.py:21
+msgid "Music"
+msgstr ""
+
+#: strings.py:22
+msgid "Screen configuration (requires restart)"
+msgstr ""
+
+#: strings.py:23
+msgid "Quit ?"
+msgstr ""
+
+#: strings.py:24
+msgid "Yes"
+msgstr ""
+
+#: strings.py:25
+msgid "No"
+msgstr ""
+
+#: strings.py:26
+msgid "Player 1"
+msgstr ""
+
+#: strings.py:27
+msgid "Player 2"
+msgstr ""
+
+#: strings.py:28
+msgid "Player 3"
+msgstr ""
+
+#: strings.py:29
+msgid "Player 4"
+msgstr ""
+
+#: strings.py:30
+msgid "Keyboard"
+msgstr ""
+
+#: strings.py:31
+msgid "Screen"
 msgstr ""
