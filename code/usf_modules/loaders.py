@@ -26,7 +26,12 @@ import Image
 import loaders
 import music
 import animations
-from pygame.locals import BLEND_MAX
+try:
+    from pygame.locals import BLEND_MAX
+except:
+    Log().log("old version of pygame no BLEND_MAX")
+    BLEND_MAX = None
+
 import config
 from debug_utils import LOG
 
@@ -71,11 +76,14 @@ def image(name, *args, **kwargs):
         #LOG().log('lightened: '+name)
         kwargs['lighten'] = False
         image = loaders.image(name, *args, **kwargs)[0].copy()
-        image.fill(
-                pygame.Color('lightgrey'),
-                None,
-                BLEND_MAX
-                )
+        if BLEND_MAX is not None:
+            image.fill(
+                    pygame.Color('lightgrey'),
+                    None,
+                    BLEND_MAX
+                    )
+        else:
+           pass #nothing for the moment 
 
     elif 'scale' in kwargs and kwargs['scale'] is not None:
         if len(kwargs['scale']) is not 2:
