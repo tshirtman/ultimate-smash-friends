@@ -45,6 +45,7 @@ class Entity (object):
     # number of points cannot be changed currently due to not adaptative
     # collision method FIXME someday.
     nb_points = 8
+    ai = False
     list_sin_cos = [
                     [
                      math.sin(i * math.pi / (nb_points/2) + math.pi / nb_points)
