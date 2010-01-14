@@ -282,12 +282,13 @@ class Controls (object):
                 # clean the entire sequence if the last key is outdated.
                 if sequence != [] and sequence[-1][1] < limit_time:
                     self.player_sequences[index] = []
-        i=0
-        for player in game_instance.players:
-            if(player.ai):
-                self.ai.update(game_instance, i)
-                for sequence_ai in self.ai.sequences_ai:
-                    self.player_sequences[i].append(sequence_ai)
-            i+=1
+        if game_instance != None :
+            i=0
+            for player in game_instance.players:
+                if(player.ai):
+                    self.ai.update(game_instance, i)
+                    for sequence_ai in self.ai.sequences_ai:
+                        self.player_sequences[i].append(sequence_ai)
+                i+=1
         return state
 

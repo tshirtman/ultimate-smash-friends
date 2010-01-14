@@ -72,7 +72,6 @@ class Widget (object):
             elif(value.split(':')[1] == "sounds"):
                 self.text = str(sound_config[value.split(':')[2]])
             else:
-                print config[value.split(':')[1]]
                 if(config[value.split(':')[1]] == 0):
                     self.text = "False"
                 else:
