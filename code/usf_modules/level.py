@@ -388,7 +388,8 @@ class Level ( object ):
             )
 
     def draw_background(self, surface, coords=(0,0)):
-        surface.blit( loaders.image(self.background)[0], coords )
+        surface.blit( loaders.image(self.background,
+            scale=config['SIZE'])[0], coords )
 
     def draw_level(self, surface, coords=(0,0), zoom=1):
         surface.blit( loaders.image(self.level, zoom=zoom)[0], coords)

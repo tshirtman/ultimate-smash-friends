@@ -183,12 +183,10 @@ class Game (object):
 
     def __del__(self):
         """
-        destructor method of game, free as much resources as possible.
+        destructor method of game, just useful for loging.
 
         """
         LOG().log('game deleted')
-        del(self.__dict__)
-        del(self)
 
     def addItem(self, item='heal', place=(550,50), reversed=False,vector=(0,0)):
         """
@@ -285,10 +283,10 @@ class Game (object):
             self.screen.blit(
                      self.font.render(str(player.percents*10)[:3]+"%",
                      True,
-                     pygame.color.Color("white")),
+                     pygame.color.Color("red")),
                         (
                         -0.5*self.icon_space+player.num*self.icon_space,
-                        420
+                        config['SIZE'][1]*.9
                         )
                     )
             # draw player's lives.
