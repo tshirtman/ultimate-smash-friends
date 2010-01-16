@@ -411,25 +411,24 @@ class Game (object):
                             1.0 )
             # center the level around the barycenter of present players.
             else:
-                ordered = [ i.rect[0] for i in present_players ]
-                ordered.sort()
-                leftist = max( 1, ordered[0] )
-                rightwing = max( 1, ordered[-1] )
-                L = max( config['SIZE'][0], rightwing - leftist )
+                ordered = sorted([ i.rect[0] for i in present_players ])
+                L = max(
+                    config['SIZE'][0],
+                    max(1, ordered[-1])- max(1, ordered[0])
+                    )
 
-                ordered = [ i.rect[1] for i in present_players ]
-                ordered.sort()
-                upper,lower = ordered[0], ordered[-1]
-                H = max( config['SIZE'][1], lower - upper)
+                ordered = sorted([ i.rect[1] for i in present_players ])
+
+                H = max( config['SIZE'][1], ordered[-1], ordered[0])
 
                 precise_zoom = min (
-                        1.0*config['SIZE'][1] / H,
-                        1.0*config['SIZE'][0] / L
+                        1.0*config['SIZE'][0] / L,
+                        1.0*config['SIZE'][1] / H
                         )
 
                 # there is a trade between zoom sharpness and speed so we force
                 # the zoom level to be a limited precision value here, so the
-                # cache in level drawing is more useful.
+                # image cache is more useful.
 
                 self.zoom = (
                     int( precise_zoom * 0.70 * config['ZOOM_SHARPNESS'] )/
@@ -448,8 +447,6 @@ class Game (object):
                  -(players_barycenter[0])*self.zoom+config['SIZE'][0]/2 ,
                  -(players_barycenter[1])*self.zoom+config['SIZE'][1]/2 
                  ]
-
-        #sounds.playqueu()
 
         self.update_events( deltatime )
 

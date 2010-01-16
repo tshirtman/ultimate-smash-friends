@@ -47,7 +47,7 @@ def memoize(function):
             return val
     return decorated_function
 
-@memoize
+@memoize #the memoize is critical for performances!
 def image(name, *args, **kwargs):
     """
     A function to load an image, shamelessly picked from pygame
@@ -105,9 +105,9 @@ def image(name, *args, **kwargs):
                 loaders.image(name, **kwargs)[0],
                 (
                  int(loaders.image(name, *args, **kwargs)[1][2]*zoom*
-                     config.config['SIZE'][0]/800),
+                     config.config['SIZE'][0]/800.0),
                  int(loaders.image(name, *args, **kwargs)[1][3]*zoom*
-                     config.config['SIZE'][1]/480)
+                     config.config['SIZE'][1]/480.0)
                 )
                 )
     else:
