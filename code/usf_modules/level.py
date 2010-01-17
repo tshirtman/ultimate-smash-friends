@@ -156,34 +156,37 @@ class MovingPart (Block):
 
         # get the next position of pattern we will get by.
         next = filter(
-                        lambda(x): x['time'] >= level_time * 10000 %
-                                    self.patterns[-1]['time'],
-                        self.patterns
-                     )[0]
+                lambda(x): x['time'] >= level_time * 10000 %
+                self.patterns[-1]['time'],
+                self.patterns
+                )[0]
         #LOG().log((level_time, last,next))
         # get the proportion of travel between last and next we should have
         # done.
         percent_bettween = (
-                            level_time*10000 % self.patterns[-1]['time']
-                                                          - last['time']
-                           ) / (next['time'] - last['time'])
+                level_time*10000 % self.patterns[-1]['time'] - last['time']
+                ) / (next['time'] - last['time'])
 
-        self.position[0] = int(last['position'][0] * (1 - percent_bettween)\
-                               +next['position'][0] * (percent_bettween))
-        self.position[1] = int(last['position'][1] * (1 - percent_bettween)\
-                               +next['position'][1] * (percent_bettween))
+        self.position[0] = (
+            int(last['position'][0] * (1 - percent_bettween) +
+            next['position'][0] * (percent_bettween))
+            )
+        self.position[1] = (
+            int(last['position'][1] * (1 - percent_bettween)
+            +next['position'][1] * (percent_bettween))
+            )
 
         # maybe usefull to cache thoose result too.
         self.collide_rects = map(
-                                    lambda(rect):
-                                        pygame.Rect(
-                                                    rect[0]+self.position[0],
-                                                    rect[1]+self.position[1],
-                                                    rect[2],
-                                                    rect[3]
-                                            ),
-                                     self.rects
-                                 )
+            lambda(rect):
+                pygame.Rect(
+                    rect[0]+self.position[0],
+                    rect[1]+self.position[1],
+                    rect[2],
+                    rect[3]
+                    ),
+             self.rects
+         )
 
 class Level ( object ):
     """
