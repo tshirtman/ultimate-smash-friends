@@ -8,11 +8,11 @@ msgstr ""
 "Project-Id-Version: Ultimate-Smash-Friends\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-01-09 17:03+0100\n"
-"PO-Revision-Date: 2010-01-09 17:17+0100\n"
+"PO-Revision-Date: 2010-01-13 15:50+0100\n"
 "Last-Translator: xapantu <xapantu@users.sourceforge.net>\n"
 "Language-Team: English\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8559-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: strings.py:1
@@ -97,7 +97,7 @@ msgstr "Musique"
 
 #: strings.py:22
 msgid "Screen configuration (requires restart)"
-msgstr "Configuration de l'affichage (nécessite un redémarrage)"
+msgstr "Configuration de l'affichage (nÃ©cessite un redÃ©marrage)"
 
 #: strings.py:23
 msgid "Quit ?"

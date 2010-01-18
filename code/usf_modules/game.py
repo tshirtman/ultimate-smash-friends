@@ -128,13 +128,14 @@ class Game (object):
                 #LOG().log(player)
                 if player.split(os.sep)[1][:2] == "AI":
                     self.players.append(
-                            AI(
+                            entity.Entity(
                                 i+1,
                                 self,
                                 "characters" + os.sep + "stick-tiny",
                                 ((i+1)*config['SIZE'][0]/5,100)
-                              )
+                                )
                             )
+                    self.players[len(self.players)-1].ai = True
                 else:
                     self.players.append(
                             entity.Entity(

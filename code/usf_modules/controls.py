@@ -39,7 +39,7 @@ from usf_modules.config  import (
     )
 from debug_utils import LOG
 import game
-
+from usf_modules.ai import AI
 class Sequence (object):
     """
     Used to bind an animation of a player to a sequence of key.
@@ -70,6 +70,7 @@ class Controls (object):
     sequences.cfg. This class can update and save configuration.
 
     """
+    ai_true = False
     def __init__(self):
         #loaders.load_keys()
         self.keys = keyboard_config
@@ -97,7 +98,7 @@ class Controls (object):
                 self.sequences.append(Sequence(player-1, tab, act, condition))
 
             for i in range(4): self.player_sequences.append([])
-
+        self.ai = AI()
     def getKeyByAction(self, action):
         if action in self.keys.values():
             return reverse_keymap[
@@ -167,8 +168,10 @@ class Controls (object):
             if key in self.keys:
                 #FIXME: test if the player is not an AI.
                 try:
-                    self.player_sequences[int(self.keys[key].split('_')\
-                                [0][-1])].append((self.keys[key],time.time()))
+                    numplayer = int(self.keys[key].split('_')\
+                                [0][-1])-1
+                    if(not game_instance.players[numplayer].ai):
+                        self.player_sequences[numplayer].append((self.keys[key],time.time()))
                 except:
                     pass # fail when the key not associated to a player eg:
                          # toggle_menu
@@ -183,31 +186,32 @@ class Controls (object):
                         #pygame.event.set_grab(False)
                     elif self.keys[key] == "TOGGLE_FULLSCREEN":
                         pygame.display.toggle_fullscreen()
+                    
+                    if(not game_instance.players[numplayer].ai):
+                        for player in game_instance.players:
+                            pl = "PL"+str(player.num)
+                            the_key = self.keys[key]
+                            if pl not in the_key: continue
+                            if "_LEFT" in the_key:
+                                player.walking_vector[0] = config['WALKSPEED']
+                                player.reversed = True
 
-                    for player in game_instance.players:
-                        pl = "PL"+str(player.num)
-                        the_key = self.keys[key]
-                        if pl not in the_key: continue
-                        if "_LEFT" in the_key:
-                            player.walking_vector[0] = config['WALKSPEED']
-                            player.reversed = True
+                            elif "_RIGHT" in the_key:
+                                player.walking_vector[0] = config['WALKSPEED']
+                                player.reversed = False
 
-                        elif "_RIGHT" in the_key:
-                            player.walking_vector[0] = config['WALKSPEED']
-                            player.reversed = False
-
-                    #test sequences
-                    for sequence in self.player_sequences:
-                        for i in self.sequences:
-                            if i.compare( sequence, game_instance ):
-                                game_instance.players[i.player].entity_skin.change_animation\
-                                        (
-                                          i.action,
-                                          game_instance,
-                                          params={
-                                                    'entity':game_instance.players[i.player]
-                                                 }
-                                        )
+                        #test sequences
+                        for sequence in self.player_sequences:
+                            for i in self.sequences:
+                                if i.compare( sequence, game_instance ):
+                                    game_instance.players[i.player].entity_skin.change_animation\
+                                            (
+                                              i.action,
+                                              game_instance,
+                                              params={
+                                                        'entity':game_instance.players[i.player]
+                                                     }
+                                            )
 
         elif state is KEYUP:
             if isinstance(game_instance,  game.NetworkClientGame):
@@ -216,27 +220,33 @@ class Controls (object):
             elif isinstance(game_instance, game.NetworkServerGame):
                 pass
             else:
-                for player in game_instance.players:
-                    if key not in self.keys : break
-                    pl = "PL"+str(player.num)
-                    if pl not in self.keys[key]: continue
-                    if key in self.keys :
-                        if "_LEFT" in self.keys[key]:
-                            player.walking_vector[0] = 0
-                            if player.entity_skin.current_animation == "walk":
-                                player.entity_skin.change_animation(
-                                        "static",
-                                        game_instance,
-                                        params={'entity': player}
-                                        )
-                        elif "_RIGHT" in self.keys[key]:
-                            player.walking_vector[0] = 0
-                            if player.entity_skin.current_animation == "walk":
-                                player.entity_skin.change_animation(
-                                        "static",
-                                        game_instance,
-                                        params={'entity': player}
-                                        )
+                try:
+                    numplayer = int(self.keys[key].split('_')\
+                                [0][-1])-1
+                    if(not game_instance.players[numplayer].ai):
+                        for player in game_instance.players:
+                            if key not in self.keys : break
+                            pl = "PL"+str(player.num)
+                            if pl not in self.keys[key]: continue
+                            if key in self.keys :
+                                if "_LEFT" in self.keys[key]:
+                                    player.walking_vector[0] = 0
+                                    if player.entity_skin.current_animation == "walk":
+                                        player.entity_skin.change_animation(
+                                                "static",
+                                                game_instance,
+                                                params={'entity': player}
+                                                )
+                                elif "_RIGHT" in self.keys[key]:
+                                    player.walking_vector[0] = 0
+                                    if player.entity_skin.current_animation == "walk":
+                                        player.entity_skin.change_animation(
+                                                "static",
+                                                game_instance,
+                                                params={'entity': player}
+                                                )
+                except:
+                    pass
         return ret
 
     def poll(self, game_instance, menu, state):
@@ -272,6 +282,13 @@ class Controls (object):
                 # clean the entire sequence if the last key is outdated.
                 if sequence != [] and sequence[-1][1] < limit_time:
                     self.player_sequences[index] = []
-
+        if game_instance != None :
+            i=0
+            for player in game_instance.players:
+                if(player.ai):
+                    self.ai.update(game_instance, i)
+                    for sequence_ai in self.ai.sequences_ai:
+                        self.player_sequences[i].append(sequence_ai)
+                i+=1
         return state
 

@@ -232,6 +232,7 @@ class Gui(object):
         init all widget of a menu using the xml file.
 
         """
+
         self.widget_list[filename] = {}
         self.widget_list_order[filename] = []
         xml_file = xml.dom.minidom.parse(config['MEDIA_DIRECTORY']+
@@ -247,7 +248,6 @@ class Gui(object):
                     elif(xml_file.childNodes[i].tagName == "p"):
                         self.widget_list[filename][id_current] = WidgetParagraph(self.screen)
                         self.widget_list[filename][id_current].setParagraph(xml_file.childNodes[i].childNodes[0].nodeValue)
-                        print xml_file.childNodes[i].childNodes[0].nodeValue
                     elif(xml_file.childNodes[i].tagName == "imagebutton"):
                         self.widget_list[filename][id_current] = WidgetImageButton(self.screen)
                         self.widget_list[filename][id_current].action=xml_file.childNodes[i].getAttribute("action")
@@ -277,7 +277,6 @@ class Gui(object):
                     self.parent_screen[filename] =xml_file.childNodes[i].childNodes[0].nodeValue
             except AttributeError:
                 continue
-
     def goto_screen(self,screen):
         """
         menu goes to the specified screen.
