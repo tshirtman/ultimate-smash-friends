@@ -19,7 +19,6 @@
 
 import os, sys
 import pygame
-import Image
 
 import loaders
 import time
@@ -243,8 +242,8 @@ class Level ( object ):
                         attribs['foreground']
                         )
 
-            tmp = Image.open(self.level)
-            self.rect = pygame.Rect(0,0, *tmp.size)
+            tmp = pygame.image.load(self.level)
+            self.rect = pygame.Rect(0,0, *tmp.get_size())
 
             if 'margins' in attribs:
                 margins = [int(i) for i in attribs['margins'].split(',')]

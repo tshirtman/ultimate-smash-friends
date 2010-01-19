@@ -22,7 +22,7 @@ from sys import platform
 from debug_utils import LOG
 # xdg
 if platform in ('linux2', 'bsd'):
-    from xdg.BaseDirectory import xdg_config_home
+    xdg_config_home = os.environ['XDG_CONFIG_HOME'] 
 else:
 #xgd is not implemented on windows (how surprising ^^) so this is a trivial
 #hack to make it work.
