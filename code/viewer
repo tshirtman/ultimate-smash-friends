@@ -26,7 +26,7 @@ from xml.parsers.expat import ExpatError
 
 try:
     import pygtk
-    pygtk.require("2.0")
+    #pygtk.require("2.0")
 except:
     pass
 try:
