@@ -25,6 +25,7 @@ import pygame
 import loaders
 import music
 import animations
+from debug_utils import LOG
 try:
     from pygame.locals import BLEND_MAX
 except:
