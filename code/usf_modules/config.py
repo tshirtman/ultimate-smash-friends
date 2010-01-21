@@ -22,7 +22,17 @@ from sys import platform
 from debug_utils import LOG
 # xdg
 if platform in ('linux2', 'bsd'):
-    xdg_config_home = os.environ['XDG_CONFIG_HOME'] 
+    try:
+        xdg_config_home = os.environ['XDG_CONFIG_HOME'] 
+    except:
+        # if the variable is not declared, maybe the xdg python package is
+        # there?
+        try:
+            from xdg import xdg_config_home
+        except:
+            LOG().log('error, XDG_CONFIG_HOME is not declared, and xdg module
+            not present,')
+            xdg_config_home = '~/.config'
 else:
 #xgd is not implemented on windows (how surprising ^^) so this is a trivial
 #hack to make it work.
