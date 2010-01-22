@@ -592,7 +592,7 @@ class NetworkServerGame(Game):
         pass
 
     def update(self, debug_params={}):
-        Game.update(self, debug_params)
+        super(debug_params)
         self.gamestring = ";".join(
             [ x.serialize() for x in self.players+self.items]
         )+'|'+self.level.serialize()

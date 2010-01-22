@@ -238,7 +238,7 @@ class Entity (object):
         entity_rect = self.foot_collision_rect()
         vector = [0,0]
         for part in level_moving_parts:
-            if self.foot_collision_rect().collidelist(part.collide_rects)!= -1:
+            if entity_rect.collidelist(part.collide_rects)!= -1:
                 vector = [
                 vector[0]+part.get_movement()[0],
                 vector[1]+part.get_movement()[1]
