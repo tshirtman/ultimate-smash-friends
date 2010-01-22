@@ -21,11 +21,13 @@
 # standards imports
 import os, sys
 import pygame
-import Image
+import logging
+
 # my imports
 import loaders
 import music
 import animations
+
 try:
     from pygame.locals import BLEND_MAX
 except:
@@ -33,7 +35,6 @@ except:
     BLEND_MAX = None
 
 import config
-from debug_utils import LOG
 
 def memoize(function):
     cache = {}
@@ -47,7 +48,7 @@ def memoize(function):
             return val
     return decorated_function
 
-@memoize
+@memoize #the memoize is critical for performances!
 def image(name, *args, **kwargs):
     """
     A function to load an image, shamelessly picked from pygame
@@ -61,11 +62,11 @@ def image(name, *args, **kwargs):
     # FIXME: should not have to load the image in server mode, we just want
     # it's size!
     if 'nodisplay' in kwargs and kwargs['nodisplay'] == True:
-        return None, pygame.Rect((0,0), Image.open(name).size)
+        return None, pygame.Rect((0, 0), pygame.image.load(name).get_size())
 
     if 'reversed' in kwargs and kwargs['reversed'] == True:
         kwargs['reversed'] = False
-        #LOG().log("reverse "+name)
+        #logging.debug("reverse "+name)
         image = pygame.transform.flip(
             loaders.image(name,*args, **kwargs)[0],
             True, #flip horizontaly
@@ -73,7 +74,7 @@ def image(name, *args, **kwargs):
             )
 
     elif 'lighten' in kwargs and kwargs['lighten'] == True:
-        #LOG().log('lightened: '+name)
+        #logging.debug('lightened: '+name)
         kwargs['lighten'] = False
         image = loaders.image(name, *args, **kwargs)[0].copy()
         if BLEND_MAX is not None:
@@ -100,21 +101,21 @@ def image(name, *args, **kwargs):
     elif 'zoom' in kwargs and kwargs['zoom'] not in (None, 1):
         zoom = kwargs['zoom']
         kwargs['zoom'] = None
-        #LOG().log('scaling image '+name+' :'+str(zoom))
+        #logging.debug('scaling image '+name+' :'+str(zoom))
         image = pygame.transform.scale(
                 loaders.image(name, **kwargs)[0],
                 (
                  int(loaders.image(name, *args, **kwargs)[1][2]*zoom*
-                     config.config['SIZE'][0]/800),
+                     config.config['SIZE'][0]/800.0),
                  int(loaders.image(name, *args, **kwargs)[1][3]*zoom*
-                     config.config['SIZE'][1]/480)
+                     config.config['SIZE'][1]/480.0)
                 )
                 )
     else:
         try:
             image = pygame.image.load(name)
         except pygame.error, message:
-            LOG().log('Cannot load image:'+str(name), 2)
+            logging.debug('Cannot load image:'+str(name), 2)
             raise# SystemExit, message
         if 'colorkey' not in kwargs or kwargs['colorkey'] is None:
             image = image.convert_alpha()

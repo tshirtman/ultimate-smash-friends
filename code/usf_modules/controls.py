@@ -20,6 +20,7 @@
 # standards import
 import os
 import time
+import logging
 import pygame
 from pygame.locals import (
         KEYDOWN,
@@ -37,7 +38,7 @@ from usf_modules.config  import (
     reverse_keymap,
     save_keys_conf
     )
-from debug_utils import LOG
+
 import game
 from usf_modules.ai import AI
 class Sequence (object):
@@ -128,7 +129,7 @@ class Controls (object):
         ret = "menu"
         if state is KEYDOWN:
             if key in self.keys :
-                #LOG().log(self.keys[key])
+                #logging.debug(self.keys[key])
                 if self.keys[key] == "MENU_TOGGLE":
                     ret = "game"
                 elif self.keys[key] == "QUIT":

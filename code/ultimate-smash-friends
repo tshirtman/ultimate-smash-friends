@@ -20,8 +20,10 @@
 
 from pygame.locals import QUIT
 import pygame
-import os, sys
-import getopt
+import os
+import sys
+from optparse import OptionParser
+import logging
 
 # our modules
 from usf_modules.config import config, sound_config
@@ -30,103 +32,97 @@ from usf_modules.game import Game, NetworkServerGame, NetworkClientGame
 from usf_modules.menu import Menu
 from usf_modules.gui import Gui
 from usf_modules.controls import Controls
-from usf_modules.debug_utils import LOG
 from usf_modules import loaders
 from usf_modules import music
 
-def usage():
-    print """
-    usage: ultimate-smash-friends [-h] [-a][-l level-name] [-p player1,player2...] [-s num] [-C address]
-
-    -h --help : this help
-
-    -a --author : See  authors of this game
-
-    -c --character_creator : create new characters
-
-    -l --level levelname : select level by name
-
-    -p --players player1,player2... : select up tu 4 players, by name.
-
-    -s --server num, same as --server num: will launch a game server accepting "num" before launching the game.
-
-    -C --client address, same as --client num: will attempt to connect to a game server at address "address".
-  
-    if a level and at least two players are selected the game is launch
-    directly, without menu, with this level and thoose players.
-
-    """
+logging.basicConfig(filename=config['LOG_FILENAME'],level=logging.DEBUG)
 
 def author():
-
     if 'CREDITS' not in os.listdir(os.path.join(config['SHARE_DIRECTORY'])):
-        LOG().log(config['SHARE_DIRECTORY']+'/CREDITS file not found')
+        logging.debug(config['SHARE_DIRECTORY']+'/CREDITS file not found')
         sys.exit(0)
     else:
         author_file = open(os.path.join(config['SHARE_DIRECTORY'],'CREDITS'))
         print (author_file.read())
         author_file.close()
+        sys.exit(2)
 
 def launch_character_creator():
     os.popen(os.path.join(config['BIN_DIRECTORY'],'viewer'))
+    sys.exit(2)
 
-class main (object):
+class Main(object):
     """
     The main class, load some parameters, set initial states and take care of
     the game main loop.
 
     """
-    def __init__(self, params):
+    def __init__(self):
         """
         The constructor, create the render surface, set the menu initial state,
         parse command line params if any, launch the menu or the game depending
         on parameters.
 
         """
-        p = ''
 
-        # analyse of command line parameters.
-        try:
-            opts, args = getopt.getopt(
-                params, "hl:au:ch:p:s:C:nG", [
-                    'help',
-                    'author',
-                    'character_creator',
-                    'level=',
-                    'players=',
-                    'server=',
-                    'client=',
-                    'gui'
-                    ]
-                )
-        except getopt.GetoptError:
-            usage()
-            sys.exit(2)
-        game_type = 'local'
+        game_type = ''
         self.newGui = True
-        for option, argument in opts:
-            if option in ["-h","--help"]:
-                usage()
-                sys.exit(2)
-            if option in ["-a","--author"]:
-                author()
-                sys.exit(2)
-            if option in ["-c","--character_creator"]:
-                launch_character_creator()
-                sys.exit(2)
-            if option in ["-l","--level"]:
-                level = argument
-            if option in ["-p","--players"]:
-                p = argument
-            if option in ["-nG","--gui"]:
-                self.newGui =False
-            if option in ["-s","--server"]:
-                game_type = 'server'
-            if option in ['-C','--client']:
-                game_type = 'client'
-                address = argument
 
-        players = ['characters'+os.sep+np for np in p.split(',')]
+        # set up the comand line parser and its options
+        usage = 'ultimate-smash-friends [-h] [-a][-l level-name] ' \
+                '[-p player1,player2...] [-s num] [-C address]\n' \
+                'If a level and at least two players are selected, a match is ' \
+                'launched immediately.'
+
+        version = '%prog 2010-1-19'
+
+        parser = OptionParser(usage=usage, version=version)
+        parser.add_option('-a', '--authors', 
+                          action='store_true', dest='author',
+                          help='See authors of this game.')
+        parser.add_option('-c', '--character_creator',
+                          action='store_true', dest='character_creator',
+                          help='create new character')
+        parser.add_option('-l', '--level',
+                          action='store', dest='level', metavar='levelname',
+                          help='select level by name')
+        parser.add_option('-p', '--players',
+                          action='store', dest='players', nargs=4,
+                          metavar='player1,player2..',
+                          help='select up to 4 players by name')
+        parser.add_option('-s', '--server',
+                          action='store', dest='server', metavar='num',
+                          help="will launch a game server accepting 'num' " \
+                               "before launching the bame.")
+        parser.add_option('-C', '--client',
+                          action='store', dest='client', metavar='address',
+                          help="will attempt to connect to a game server at " \
+                               "'address'")
+
+        (options, args) = parser.parse_args()
+
+        # actually parse the command line options
+        if options.author:
+            author()
+
+        if options.character_creator:
+            launch_character_creator()
+
+        if options.level:
+            level = option.level
+
+        if options.players:
+            players = ['characters'+os.sep+np for np in options.players]
+
+        else:
+            players = []
+
+        if options.server:
+            game_type = 'server'
+
+        if options.client:
+            game_type = 'client'
+            address = option.client
 
         pygame.init()
 
@@ -144,15 +140,11 @@ class main (object):
             self.game = NetworkClientGame(players, level)
             self.state = "game"
             self.controls = Controls()
-            if(self.newGui == True):
-                self.menu = Gui()
-            else:
-                self.menu = Menu()
+            self.menu = Gui() if self.newGui else Menu()
 
         else:
             self.init_screen()
             self.init_sound()
-            self.LOG = LOG()
 
             if len(players) > 1 and level is not None:
                 self.game = Game( self.screen, level, players )
@@ -174,17 +166,19 @@ class main (object):
                     )
 
                 pygame.display.update()
-                if(self.newGui == True):
+
+                if self.newGui:
                     self.menu = Gui(self.screen)
                 else:
                     self.menu = Menu(self.screen)
+
                 self.state = "menu"
                 self.controls = Controls()
 
                 self.clock = pygame.time.Clock()
                 self.game = None
                 level = None
-                p = ""
+                self.go()
 
     def init_screen(self):
         self.screen = pygame.display.set_mode(config['SIZE'])
@@ -199,8 +193,9 @@ class main (object):
         pygame.display.set_icon(icon)
         if config['FULLSCREEN'] == 1:
             pygame.display.toggle_fullscreen()
+
         # following operation can be quite long, so a loading screen is good
-        if(self.newGui == True):
+        if self.newGui:
             image = loaders.image(
                 config['MEDIA_DIRECTORY']+
                 os.sep+
@@ -223,9 +218,13 @@ class main (object):
         self.screen.blit(image,(0,0))
 
     def init_sound(self):
-        # TODO: timeout and error handling if sound is not initiasable.
-        if sound_config['MUSIC'] == True:
-            self.music = music.Music()
+        if sound_config['MUSIC']:
+            try:
+                self.music = music.Music()
+            except:
+                #TODO: add more useful error handling
+                exit(0)
+                
 
     def go(self):
         """
@@ -250,7 +249,7 @@ class main (object):
                     )
                 if newgame:
                     if game_ is not self.game:
-                        #LOG().log('new game')
+                        #logging.debug('new game')
                         del(self.game)
                         self.game = game_
                     self.state = 'game'
@@ -269,7 +268,7 @@ class main (object):
             # have to quit.
             self.ended = pygame.event.get(QUIT)
             if self.ended :
-                self.LOG.log('fps = '+str(self.clock.get_fps()))
+                logging.debug('fps = '+str(self.clock.get_fps()))
                 pygame.quit()
                 break
 
@@ -279,7 +278,5 @@ if __name__ == '__main__':
     main class with parameters (appart from program self name) if any.
 
     """
-    # remove argv[0] as it's the program name and we don't care of it.
-   #LOG().log(sys.argv)
-    main(sys.argv[1:]).go()
 
+    Main()

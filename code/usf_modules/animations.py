@@ -21,7 +21,7 @@ import pygame
 from pygame.sprite import Sprite
 
 import loaders
-from debug_utils import LOG
+import logging
 
 class Frame (object):
     """
@@ -52,7 +52,6 @@ class Frame (object):
             self.hardshape = hardshape
         self.agressivpoints = []
         self.agressivpoints_reverse = []
-        self.LOG = LOG()
 
     def addAgressivPoint(self, (x,y),(v,j)):
         self.agressivpoints.append(((x,y),(v,j)))

@@ -19,13 +19,13 @@
 
 import os, sys
 import pygame
-import Image
+import logging
 
 import loaders
 import time
 from config import config
 
-from debug_utils import LOG, draw_rect
+from debug_utils import draw_rect
 
 # different in python 2.4 and 2.5
 if sys.version_info[0] == 2 and sys.version_info[1] >= 5:
@@ -113,7 +113,7 @@ class MovingPart (Block):
     """
     def __init__(self, rects, texture, patterns, server=False):
         Block.__init__(self)
-        #LOG().log('moving block created')
+        #logging.debug('moving block created')
         self.rects = rects
         self.texture = os.path.join(
                 config['MEDIA_DIRECTORY'],
@@ -156,34 +156,37 @@ class MovingPart (Block):
 
         # get the next position of pattern we will get by.
         next = filter(
-                        lambda(x): x['time'] >= level_time * 10000 %
-                                    self.patterns[-1]['time'],
-                        self.patterns
-                     )[0]
-        #LOG().log((level_time, last,next))
+                lambda(x): x['time'] >= level_time * 10000 %
+                self.patterns[-1]['time'],
+                self.patterns
+                )[0]
+        #logging.debug((level_time, last,next))
         # get the proportion of travel between last and next we should have
         # done.
         percent_bettween = (
-                            level_time*10000 % self.patterns[-1]['time']
-                                                          - last['time']
-                           ) / (next['time'] - last['time'])
+                level_time*10000 % self.patterns[-1]['time'] - last['time']
+                ) / (next['time'] - last['time'])
 
-        self.position[0] = int(last['position'][0] * (1 - percent_bettween)\
-                               +next['position'][0] * (percent_bettween))
-        self.position[1] = int(last['position'][1] * (1 - percent_bettween)\
-                               +next['position'][1] * (percent_bettween))
+        self.position[0] = (
+            int(last['position'][0] * (1 - percent_bettween) +
+            next['position'][0] * (percent_bettween))
+            )
+        self.position[1] = (
+            int(last['position'][1] * (1 - percent_bettween)
+            +next['position'][1] * (percent_bettween))
+            )
 
         # maybe usefull to cache thoose result too.
         self.collide_rects = map(
-                                    lambda(rect):
-                                        pygame.Rect(
-                                                    rect[0]+self.position[0],
-                                                    rect[1]+self.position[1],
-                                                    rect[2],
-                                                    rect[3]
-                                            ),
-                                     self.rects
-                                 )
+            lambda(rect):
+                pygame.Rect(
+                    rect[0]+self.position[0],
+                    rect[1]+self.position[1],
+                    rect[2],
+                    rect[3]
+                    ),
+             self.rects
+         )
 
 class Level ( object ):
     """
@@ -240,8 +243,8 @@ class Level ( object ):
                         attribs['foreground']
                         )
 
-            tmp = Image.open(self.level)
-            self.rect = pygame.Rect(0,0, *tmp.size)
+            tmp = pygame.image.load(self.level)
+            self.rect = pygame.Rect(0,0, *tmp.get_size())
 
             if 'margins' in attribs:
                 margins = [int(i) for i in attribs['margins'].split(',')]
@@ -260,7 +263,7 @@ class Level ( object ):
                 x,y = point.attrib['coords'].split(' ')
                 self.entrypoints.append([ int(x), int(y) ])
 
-            #LOG().log(self.entrypoints)
+            #logging.debug(self.entrypoints)
 
             for block in xml.findall('block'):
                 nums = block.attrib['coords'].split(' ')
@@ -364,7 +367,7 @@ class Level ( object ):
                 for i in range(len(nums)): nums[i]=int(nums[i])
                 self.map.append(pygame.Rect(nums))
 
-        LOG().log(self.rect)
+        logging.debug(self.rect)
         self.entrypoints = [
             [self.rect[2]/2, 50],
             [self.rect[2]/4, 50],
@@ -372,7 +375,7 @@ class Level ( object ):
         ]
 
     def __del__(self):
-        LOG().log('deleting level')
+        logging.debug('deleting level')
 
     def serialize(self):
         return (
@@ -388,7 +391,8 @@ class Level ( object ):
             )
 
     def draw_background(self, surface, coords=(0,0)):
-        surface.blit( loaders.image(self.background)[0], coords )
+        surface.blit( loaders.image(self.background,
+            scale=config['SIZE'])[0], coords )
 
     def draw_level(self, surface, coords=(0,0), zoom=1):
         surface.blit( loaders.image(self.level, zoom=zoom)[0], coords)

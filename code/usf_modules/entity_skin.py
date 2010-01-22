@@ -19,12 +19,12 @@
 
 import sys
 import pygame
+import logging
 
 from animations import Frame, PreciseTimedAnimation
 import loaders
 import game
 import timed_event
-from debug_utils import LOG
 from config import config
 
 # different in python 2.4 and 2.5
@@ -51,7 +51,7 @@ class Entity_skin (object):
         directory there.
 
         """
-        #LOG().log(dir_name)
+        #logging.debug(dir_name)
         self.animations = {}
         if xml_from_str is not None:
             a = ElementTree.ElementTree()
@@ -68,7 +68,7 @@ class Entity_skin (object):
                         dir_name.split(os.sep)[-1]
                         +os.extsep+'xml'
                         )
-            #LOG().log(file)
+            #logging.debug(file)
             a = ElementTree.ElementTree(
                     None,
                     file
@@ -111,7 +111,7 @@ class Entity_skin (object):
             vectors = []
 
             for event in movement.findall('vector'):
-                #LOG().log('vector found')
+                #logging.debug('vector found')
                 x,y = [int(n) for n in event.attrib['vector'].split(',')]
                 vectors.append(
                         (
@@ -192,7 +192,7 @@ class Entity_skin (object):
         points. Add associated events to game.
 
         """
-        #LOG().log(params,1)
+        #logging.debug(params,1)
         if (anim_name in self.animations
                 and ( anim_name == "static"
                     or anim_name != self.current_animation )):
@@ -200,7 +200,7 @@ class Entity_skin (object):
                 if anim_name+'_upgraded' in self.animations:
                     self.current_animation = anim_name+'_upgraded'
                 else:
-                    LOG().log(self.name+' character has no upgraded \
+                    logging.debug(self.name+' character has no upgraded \
 version of '+anim_name+' falling back to normal version')
                     self.current_animation = anim_name
             else:
@@ -230,12 +230,12 @@ version of '+anim_name+' falling back to normal version')
                             )
 
                 except AttributeError:
-                    LOG().log((self.name, game), 3)
+                    logging.debug((self.name, game), 3)
                     raise
 
-            #LOG().log(self.vectors[anim_name])
+            #logging.debug(self.vectors[anim_name])
             for vector in self.vectors[anim_name]:
-                #LOG().log('vector added')
+                #logging.debug('vector added')
                 params2 = params.copy() # because we want to change some of
                                         # them for this time.
                 params2['vector'] = vector[0]
@@ -250,7 +250,7 @@ version of '+anim_name+' falling back to normal version')
             if self.sounds[anim_name] != []:
                 random.choice(self.sounds[anim_name]).play()
         else:
-            #LOG().log( "entity_skin "+self.name+" has no "+anim_name+"\
+            #logging.debug( "entity_skin "+self.name+" has no "+anim_name+"\
 #animation.")
             pass
 

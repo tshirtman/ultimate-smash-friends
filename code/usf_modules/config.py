@@ -19,10 +19,15 @@
 
 import os
 from sys import platform
-from debug_utils import LOG
+import logging
+
 # xdg
 if platform in ('linux2', 'bsd'):
-    from xdg.BaseDirectory import xdg_config_home
+    try:
+        xdg_config_home = os.environ['XDG_CONFIG_HOME'] 
+    except:
+        logging.debug('error, XDG_CONFIG_HOME is not declared.')
+        xdg_config_home = os.environ['HOME'] + '/.config'
 else:
 #xgd is not implemented on windows (how surprising ^^) so this is a trivial
 #hack to make it work.
@@ -32,11 +37,11 @@ import pygame.locals
 
 def open_conf(confname):
     if 'usf' not in os.listdir(os.path.join(xdg_config_home)):
-        LOG().log('creating new config directory')
+        logging.debug('creating new config directory')
         os.mkdir(os.path.join(xdg_config_home,'usf'))
 
     if confname+'.cfg' not in os.listdir(os.path.join(xdg_config_home,'usf')):
-        LOG().log('creating '+confname+' config')
+        logging.debug('creating '+confname+' config')
         conf = open('default_'+confname+'.cfg')
         config_file = open(os.path.join(xdg_config_home,'usf',confname+'.cfg'),'w')
         config_file.write(conf.read())
@@ -80,7 +85,7 @@ def load_key_config():
             keyboard_config[pygame.locals.__dict__[b]] = a
     return keyboard_config
 
-#LOG().log("keyboard_config ",keyboard_config)
+#logging.debug("keyboard_config ",keyboard_config)
 
 def save_conf():
     """

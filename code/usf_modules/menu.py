@@ -26,6 +26,7 @@ from math import sin, cos
 from time import time
 import os
 import pygame
+import logging
 
 #Our modules
 from usf_modules.loaders import image
@@ -41,7 +42,6 @@ from usf_modules.config import (
         )
 import usf_modules.controls
 import entity_skin
-from debug_utils import LOG
 from usf_modules.game import Game
 from usf_modules.config import xdg_config_home
 
@@ -84,16 +84,16 @@ class Menu:
                                 )
                             )
                         )
-                #LOG().log( "character "+file+" created.")
+                #logging.debug( "character "+file+" created.")
             except OSError, e:
                 if e.errno is 20:
                     pass
                 else:
                     raise
             except IOError, e:
-                LOG().log(file+" is not a valid character directory.", 3)
+                logging.debug(file+" is not a valid character directory.", 3)
                 #raise
-                #LOG().log(e)
+                #logging.debug(e)
                 pass
 
         #create a level image for every directory in the level directory.
@@ -106,7 +106,7 @@ class Menu:
         files.sort()
         for file in files:
             if 'middle' not in file :
-                #LOG().log('NOT '+file)
+                #logging.debug('NOT '+file)
                 continue
             try:
                 img = os.path.join(
@@ -117,9 +117,9 @@ class Menu:
 
                 #img = pygame.transform.scale(img, config['SIZE'])
                 self.levels.append((''.join(file.split('-middle')[0]),img))
-                #LOG()("level "+file+" miniature created.")
+                #logging.debug("level "+file+" miniature created.")
             except :
-                #LOG()(file+" is not a valid level.")
+                #logging.debug(file+" is not a valid level.")
                 raise
                 pass
 
@@ -141,7 +141,7 @@ class Menu:
                                               file
                                               )
             except:
-                #LOG().log(file+" is not a valid image file.")
+                #logging.debug(file+" is not a valid image file.")
                 pass
 
         self.entries={
@@ -260,7 +260,7 @@ class Menu:
             config['SIZE'][0]/(image(level)[1][2]*1.0),
             config['SIZE'][1]/(image(level)[1][3]*1.0),
             )
-        #LOG().log(zoom)
+        #logging.debug(zoom)
         self.surface.blit(
                 image(level,
                     zoom=zoom,
@@ -789,7 +789,7 @@ class Menu:
                 if event.key == "A":
                     if player is not None:
                         player['validated'] = 1
-                        #LOG().log(self.players)
+                        #logging.debug(self.players)
                         if len([pls for pls in self.players\
                                     if pls is not None and pls['validated']])>1\
                         and len([pls for pls in self.players\

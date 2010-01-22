@@ -21,10 +21,10 @@
 import socket
 from threading import Thread, Semaphore
 from time import sleep, time
+import logging
 
 # my imports
 from config import config
-from debug_utils import LOG
 
 def test_client():
     a=Client()
@@ -65,8 +65,8 @@ def server_thread(client_socket, server, num, game_instance):
         while len(msg) < MSGLEN:
             chunk = client_socket.recv(MSGLEN - len(msg))
             if chunk == '':
-                LOG().log('error client, link broken')
-                LOG().log(msg)
+                logging.debug('error client, link broken')
+                logging.debug(msg)
                 server.quit = True
                 raise NetworkError
             else:
@@ -76,8 +76,8 @@ def server_thread(client_socket, server, num, game_instance):
             while True:
                 chunk = client_socket.recv(5)
                 if chunk == '':
-                    LOG().log('error client, link broken')
-                    LOG().log(msg)
+                    logging.debug('error client, link broken')
+                    logging.debug(msg)
                     raise NetworkError
                 else:
                     msg += chunk
@@ -118,7 +118,7 @@ class Client(object):
         self.messages = ''
         if sock is None:
             self.socket = socket.socket( socket.AF_INET, socket.SOCK_STREAM )
-            LOG().log('client socket created')
+            logging.debug('client socket created')
         else:
             self.socket = sock
 
@@ -137,12 +137,12 @@ class Client(object):
 
 
         """
-        LOG().log('connecting to game server')
+        logging.debug('connecting to game server')
         try:
             self.socket.connect((host,port))
         except:
             raise
-        LOG().log('success')
+        logging.debug('success')
         pass
 
         msg = ('AU'+'N'+(nick or character)+','+
@@ -160,7 +160,7 @@ class Client(object):
 
         """
         self.lock.acquire()
-        LOG().log('sent key '+key+' to game server')
+        logging.debug('sent key '+key+' to game server')
         self.messages += key
         self.lock.release()
 
@@ -186,11 +186,11 @@ class Client(object):
         Recieve all the data from the server necessary to update our display.
 
         """
-        LOG().log('recieve new data from server')
+        logging.debug('recieve new data from server')
         while True:
             chunk = self.socket.recv(5)
             if chunk == '':
-                LOG().log('error server, link broken')
+                logging.debug('error server, link broken')
                 raise NetworkError
             else:
                 msg += chunk
@@ -290,18 +290,18 @@ class Server(object):
         self.votemap = []
         while num < self.game_instance.num_players:
             (clientsocket, address) = self.serversocket.accept()
-            LOG().log('new client accepted :D')
+            logging.debug('new client accepted :D')
             self.players.append([])
             self.votemap.append([])
             Thread(target=server_thread, args=(clientsocket, self, num, game_instance)).start()
             num += 1
-            LOG().log('client threaded away ;)')
+            logging.debug('client threaded away ;)')
 
         sleep(.5) # FIXME: need to be sure that all informations are recieved
-        LOG().log("enougth players, launching game")
+        logging.debug("enougth players, launching game")
         list_level = [(self.votemap.count(a), a) for a in set(self.votemap)]
         list_level.sort(reverse=True)
-        LOG().log(self.players)
+        logging.debug(self.players)
         self.game_instance.begin(players_=self.players, level=list_level[0][1])
 
     def fetch(self):

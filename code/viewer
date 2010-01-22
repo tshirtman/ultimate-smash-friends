@@ -23,10 +23,11 @@ import os, sys
 import getopt
 import time
 from xml.parsers.expat import ExpatError
+import logging
 
 try:
     import pygtk
-    pygtk.require("2.0")
+    #pygtk.require("2.0")
 except:
     pass
 try:
@@ -44,7 +45,7 @@ from usf_modules.animations import EmptyAnimationException
 from usf_modules.game import Game, NetworkServerGame, NetworkClientGame
 from usf_modules.menu import Menu
 from usf_modules.entity import Entity
-from usf_modules.debug_utils import draw_rect, LOG
+from usf_modules.debug_utils import draw_rect
 from usf_modules import entity_skin
 from usf_modules import loaders
 
@@ -109,7 +110,7 @@ def update_pygame_widget(widget, game=None):
             (time.time()*100%200,0)
             )
     else:
-        #LOG().log((game.entity.place, game.entity.entity_skin.animation.rect))
+        #logging.debug((game.entity.place, game.entity.entity_skin.animation.rect))
         screen.blit(
             loaders.image(game.entity.entity_skin.animation.image)[0], (
                 game.entity.place[0] - game.entity.entity_skin.animation.rect[2]/2,
@@ -138,7 +139,7 @@ class NotGame(Game):
                 self.events.remove(event)
 
         if self.entity is not None:
-            #LOG().log(dt)
+            logging.debug(dt)
             self.entity.entity_skin.update(time.time(), self.entity.reversed)
             
             self.entity.move(
@@ -208,7 +209,7 @@ class usf_character_creator(object):
         self.game = NotGame(time.time())
 
         self.character_dir = None
-        
+
         self.wTree.get_widget("scrolledwindow_source").add(view)
         view.show()
         #self.wTree.get_widget("xml_text").set_auto_indent(True)
@@ -230,7 +231,7 @@ class usf_character_creator(object):
             self.wTree.get_widget('label_source').set_text(e.message)
 
     def pygame_update_animation(self, *args, **kwargs):
-        LOG().log('change animation '+self.wTree.get_widget(
+        logging.debug('change animation '+self.wTree.get_widget(
                 'combobox_animations').get_active_text())
         self.game.entity.entity_skin.change_animation(
             self.wTree.get_widget('combobox_animations').get_active_text(),

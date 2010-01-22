@@ -21,9 +21,9 @@ from pygame import mixer
 import os
 import time
 import random
+import logging
 
 from config import sound_config, config
-from debug_utils import LOG
 import loaders
 
 class Music (object):
@@ -80,7 +80,7 @@ class Music (object):
         This change the currently played music. With an optional fading.
 
         """
-        #LOG().log('launching music: '+str(music.get_length()))
+        #logging.debug('launching music: '+str(music.get_length()))
         self.time_begin = time.time()
         if fading == True:
             if self.playing != None:

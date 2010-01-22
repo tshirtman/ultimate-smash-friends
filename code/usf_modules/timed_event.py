@@ -20,9 +20,10 @@
 import exceptions
 import os
 import random
+import logging
+
 from config import config, sound_config, keyboard_config
 
-from debug_utils import LOG
 class TimedEvent (object):
     """
     An event allow to define a function to be executed later and/or during a
@@ -46,7 +47,7 @@ class TimedEvent (object):
         second is None, the event will happen until dying.
 
         """
-        #LOG().log(str(self)+str(params))
+        #logging.debug(str(self)+str(params))
         self.params = params
         self.period = period
         self.done = False
@@ -304,7 +305,7 @@ class VectorEvent(TimedEvent):
 
     """
     def initiate(self):
-        #LOG().log("vector Event created "+ str(self.period))
+        #logging.debug("vector Event created "+ str(self.period))
         pass
 
     def execute(self, deltatime):
@@ -326,7 +327,7 @@ class VectorEvent(TimedEvent):
         if self.params['entity'].entity_skin.current_animation:
             self.params['entity'].vector[0] = self.params['vector'][0]
             self.params['entity'].vector[1] = -self.params['vector'][1]
-        #LOG().log("vector Event applied")
+        #logging.debug("vector Event applied")
 
 class UpgradePlayer(TimedEvent):
     """
@@ -349,7 +350,7 @@ class DropPlayer(TimedEvent):
 
     """
     def initiate(self):
-        #LOG().log("inserting player in game")
+        #logging.debug("inserting player in game")
         self.params['entity'].vector = [0, 0]
         self.params['entity'].walking_vector = [0, 0]
         self.params['entity'].percents = 0
@@ -361,7 +362,7 @@ class DropPlayer(TimedEvent):
             )[0]
 
         else:
-            #LOG().log('no entry point defined for this level')
+            #logging.debug('no entry point defined for this level')
             self.params['entity'].place = (
                 self.params['world'].level.rect[2]/2, 50
             )

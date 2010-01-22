@@ -39,10 +39,10 @@ from level import Level
 from controls import Controls
 from config import config
 
-from debug_utils import LOG, draw_rect
+from debug_utils import draw_rect
 
-if not pygame.font: LOG().log('Warning, fonts disabled')
-if not pygame.mixer: LOG().log('Warning, sound disabled')
+if not pygame.font: logging.debug('Warning, fonts disabled')
+if not pygame.mixer: logging.debug('Warning, sound disabled')
 
 class BadPlayersNetworkParamError(Exception):
     """
@@ -67,7 +67,6 @@ class Game (object):
         self.type = 'local'
         self.screen = screen
 
-        self.LOG = LOG()
         self.events = []
 
         self.gametime = 0
@@ -121,11 +120,11 @@ class Game (object):
             pygame.display.flip()
 
         self.players = []
-        LOG().log('loading players')
+        logging.debug('loading players')
         for i,player in enumerate(players_):
-            LOG().log('player '+str(i)+' loaded')
+            logging.debug('player '+str(i)+' loaded')
             if player is not None:
-                #LOG().log(player)
+                #logging.debug(player)
                 if player.split(os.sep)[1][:2] == "AI":
                     self.players.append(
                             entity.Entity(
@@ -165,7 +164,7 @@ class Game (object):
             )
 
         # insert players in game
-        #LOG().log('players insertion in game')
+        #logging.debug('players insertion in game')
         for pl in self.players:
             self.events.append(
                 timed_event.DropPlayer(
@@ -180,16 +179,14 @@ class Game (object):
 
         # a countdown to the game end
         self.ending = 5.0
-        #LOG().log('DONE')
+        #logging.debug('DONE')
 
     def __del__(self):
         """
-        destructor method of game, free as much resources as possible.
+        destructor method of game, just useful for loging.
 
         """
-        LOG().log('game deleted')
-        del(self.__dict__)
-        del(self)
+        logging.debug('game deleted')
 
     def addItem(self, item='heal', place=(550,50), reversed=False,vector=(0,0)):
         """
@@ -219,12 +216,12 @@ class Game (object):
 
         except OSError, e:
             if e.errno is 22:
-                self.LOG.log(item+' is not a valid item.')
+                logging.debug(item+' is not a valid item.')
             else:
                 raise
         except IOError, e:
             if e.errno is 2:
-                self.LOG.log(item+' is not a valid item directory.')
+                logging.debug(item+' is not a valid item directory.')
                 raise
 
     def update_events(self, dt):
@@ -245,7 +242,7 @@ class Game (object):
         """
         self.level.draw_background( self.tmp_surface, (0,0))
         self.level.draw_level( self.tmp_surface ,self.level_place, self.zoom )
-        #LOG().log(self.level.moving_blocs)
+        #logging.debug(self.level.moving_blocs)
         for block in self.level.moving_blocs:
             block.draw( self.tmp_surface, self.level_place, self.zoom)
 
@@ -286,10 +283,10 @@ class Game (object):
             self.screen.blit(
                      self.font.render(str(player.percents*10)[:3]+"%",
                      True,
-                     pygame.color.Color("white")),
+                     pygame.color.Color("red")),
                         (
                         -0.5*self.icon_space+player.num*self.icon_space,
-                        420
+                        config['SIZE'][1]*.9
                         )
                     )
             # draw player's lives.
@@ -401,7 +398,7 @@ class Game (object):
         if deltatime > .25:
             # if true we are lagging, prevent anything from happening until next
             # frame (and forget about passed time).
-            LOG().log("too slow, forget this frame!")
+            logging.debug("too slow, forget this frame!")
             return "game"
 
         present_players = [ i for i in self.players if i.present ]
@@ -414,25 +411,24 @@ class Game (object):
                             1.0 )
             # center the level around the barycenter of present players.
             else:
-                ordered = [ i.rect[0] for i in present_players ]
-                ordered.sort()
-                leftist = max( 1, ordered[0] )
-                rightwing = max( 1, ordered[-1] )
-                L = max( config['SIZE'][0], rightwing - leftist )
+                ordered = sorted([ i.rect[0] for i in present_players ])
+                L = max(
+                    config['SIZE'][0],
+                    max(1, ordered[-1])- max(1, ordered[0])
+                    )
 
-                ordered = [ i.rect[1] for i in present_players ]
-                ordered.sort()
-                upper,lower = ordered[0], ordered[-1]
-                H = max( config['SIZE'][1], lower - upper)
+                ordered = sorted([ i.rect[1] for i in present_players ])
+
+                H = max( config['SIZE'][1], ordered[-1], ordered[0])
 
                 precise_zoom = min (
-                        1.0*config['SIZE'][1] / H,
-                        1.0*config['SIZE'][0] / L
+                        1.0*config['SIZE'][0] / L,
+                        1.0*config['SIZE'][1] / H
                         )
 
                 # there is a trade between zoom sharpness and speed so we force
                 # the zoom level to be a limited precision value here, so the
-                # cache in level drawing is more useful.
+                # image cache is more useful.
 
                 self.zoom = (
                     int( precise_zoom * 0.70 * config['ZOOM_SHARPNESS'] )/
@@ -444,15 +440,13 @@ class Game (object):
                     sum( i.rect[1] for i in present_players ) / len(present_players)
                     )
 
-            #LOG().log(( self.zoom, lower - upper, rightwing - leftist))
+            #logging.debug(( self.zoom, lower - upper, rightwing - leftist))
             # calculate coordinates of top left corner of level
             # rect the barycenter of players at the center of the screen
             self.level_place = [
                  -(players_barycenter[0])*self.zoom+config['SIZE'][0]/2 ,
                  -(players_barycenter[1])*self.zoom+config['SIZE'][1]/2 
                  ]
-
-        #sounds.playqueu()
 
         self.update_events( deltatime )
 
@@ -483,7 +477,7 @@ class Game (object):
                             )
                         )
             if player.lives <= 0:
-                #LOG().log("player's DEAD")
+                #logging.debug("player's DEAD")
                 player.present = False
 
         # FIXME: would be good to relocate this in an entity method, and

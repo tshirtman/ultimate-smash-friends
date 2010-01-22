@@ -23,6 +23,7 @@ import os
 import pygame
 import time
 import xml.dom.minidom
+import logging
 
 # Our modules
 from usf_modules.loaders import image
@@ -40,7 +41,6 @@ from usf_modules.config import (
 
 import usf_modules.controls
 import entity_skin
-from debug_utils import LOG
 from usf_modules.game import Game
 from usf_modules.config import xdg_config_home
 import usf_modules.controls
@@ -152,16 +152,16 @@ class Gui(object):
                                 file
                                 )
                             ).name)
-                #LOG().log( "character "+file+" created.")
+                #logging.debug( "character "+file+" created.")
             except OSError, e:
                 if e.errno is 20:
                     pass
                 else:
                     raise
             except IOError, e:
-                LOG().log(file+" is not a valid character directory.", 3)
+                logging.debug(file+" is not a valid character directory.", 3)
                 #raise
-                #LOG().log(e)
+                #logging.debug(e)
                 pass
         #create a level image for every directory in the level directory.
         files = os.listdir(
@@ -176,7 +176,7 @@ class Gui(object):
                 if '.xml' in file :
                     self.game_data['level_name'].append(file.replace(".xml",""))
             except :
-                #LOG()(file+" is not a valid level.")
+                #logging.debug(file+" is not a valid level.")
                 raise
                 pass
         self.screen = surface

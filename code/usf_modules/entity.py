@@ -21,17 +21,18 @@
 import pygame
 import math
 import os
+import logging
 
 # my modules imports.
 import entity_skin
 import loaders
 from config import config
 
-from debug_utils import LOG, draw_rect
+from debug_utils import draw_rect
 
 class WrongEntityException(Exception):
     def __init__(self):
-        LOG().log("The entity you wanted to unserialize is not this entity:\
+        logging.debug("The entity you wanted to unserialize is not this entity:\
 Check number.")
 
 class Entity (object):
@@ -41,9 +42,9 @@ class Entity (object):
 
     """
 
-    # recalculation of some sin-cos list to speed up collision detection.
+    # Precalculation of some sin-cos list to speed up collision detection.
     # number of points cannot be changed currently due to not adaptative
-    # collision method FIXME someday.
+    # collision method: FIXME someday.
     nb_points = 8
     ai = False
     list_sin_cos = [
@@ -58,9 +59,11 @@ class Entity (object):
     # this counter will allow us to correctly update entities.
     counter = 0
 
-    def __init__( self, num, game, entity_skinname='characters'+os.sep+'stick-tiny', place=(550,1),
-                  lives=3, carried_by=None, vector=[0,0], reversed=False,
-                  server=False, number=None ):
+    def __init__( self, num, game,
+            entity_skinname='characters'+os.sep+'stick-tiny', place=(550,1),
+            lives=3, carried_by=None, vector=[0,0], reversed=False,
+            server=False, number=None
+            ):
         if number is None:
             self.number = Entity.counter
             Entity.counter += 1
@@ -76,7 +79,8 @@ class Entity (object):
         # so this is the point that move the least beetwen two frames.
         self.vector = [vector[0], vector[1]]
         self.walking_vector = [0.0, 0.0]
-        self.reversed = reversed #the entity is reversed when looking at left
+        # the entity is reversed when looking at left.
+        self.reversed = reversed
         self.percents = 0
         self.lives = lives
         self.gravity = True
@@ -98,7 +102,7 @@ class Entity (object):
                         }
                         )
             except:
-                #LOG().log((self.name, game))
+                #logging.debug((self.name, game))
                 raise
             self.armor = self.entity_skin.armor
             self.rect = pygame.Rect(0,0,0,0)
@@ -112,12 +116,12 @@ class Entity (object):
     def __str__(self):
         return ','.join((
                     str(self.num),
-                    self.upgraded and  '1' or'0',
-                    self.lighten and  '1' or'0',
+                    self.upgraded and '1' or '0',
+                    self.lighten and '1' or '0',
                     str(self.place),
                     str(self.vector),
                     str(self.walking_vector),
-                    self.reversed and  '1' or'0',
+                    self.reversed and '1' or '0',
                     str(self.lives),
                     self.invincible and '1' or '0',
                     self.entity_skin.animation.image
@@ -130,8 +134,10 @@ class Entity (object):
 
         """
         if entity is not None:
-            return ((self.place[0] - entity.place[0]) ** 2 +\
-                    (self.place[1] - entity.place[1]) ** 2) ** .5
+            return (
+                (self.place[0] - entity.place[0]) ** 2 +
+                (self.place[1] - entity.place[1]) ** 2
+                ) ** .5
         else:
             return None
 
@@ -232,11 +238,11 @@ class Entity (object):
         entity_rect = self.foot_collision_rect()
         vector = [0,0]
         for part in level_moving_parts:
-            if entity_rect.collidelist(part.collide_rects) != -1:
+            if self.foot_collision_rect().collidelist(part.collide_rects)!= -1:
                 vector = [
-                            vector[0]+part.get_movement()[0],
-                            vector[1]+part.get_movement()[1]
-                         ]
+                vector[0]+part.get_movement()[0],
+                vector[1]+part.get_movement()[1]
+                ]
 
         return vector
 
@@ -255,10 +261,10 @@ class Entity (object):
         #center = pygame.Rect(x+shape.)
         for i in range(Entity.nb_points):
             points.append((
-                    Entity.list_sin_cos[i][0] * shape[2]\
+                    Entity.list_sin_cos[i][0] * shape[2]
                     + shape[2]/2 + self.place[0] + x,
                             #don't divide width by 2
-                    Entity.list_sin_cos[i][1] * shape[3] / 2\
+                    Entity.list_sin_cos[i][1] * shape[3] / 2
                     + shape[3]/2 + self.place[1] + y
                     ))
 
