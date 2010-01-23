@@ -239,7 +239,7 @@ class Main(object):
 
             # poll controls and update informations on current state of the UI
             self.state = self.controls.poll(self.game, self.menu, self.state)
-            if self.state is "menu":
+            if self.state =="menu":
                 # return of the menu update function may contain a new game
                 # instance to switch to.
                 newgame, game_ = self.menu.update(

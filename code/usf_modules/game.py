@@ -57,6 +57,7 @@ class Game (object):
     menu).
 
     """
+    ingame = True
     def __init__(self, screen, level="biglevel", players_=(None, None, None, None)):
         """
         Initialize a game with a list of player and a level,
@@ -68,7 +69,6 @@ class Game (object):
         self.screen = screen
 
         self.events = []
-
         self.gametime = 0
 
         self.level = Level(level)
@@ -552,6 +552,7 @@ class Game (object):
             del(self.level)
             del(self.players)
             del(self.events)
+            self.ingame=False
             return 'menu'
 
         return "game"

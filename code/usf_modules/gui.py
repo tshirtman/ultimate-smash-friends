@@ -83,6 +83,10 @@ class Gui(object):
         Update the screen state based on user inputs.
 
         """
+        if game != None and game.ingame == False and self.screen_current=="ingame.usfgui":
+            self.state = "menu"
+            self.goto_screen("main.usfgui")
+            self.image.set_alpha(255)
         self.controls = controls
         if self.screen_shot == None and self.state == "game":
             self.screen_shot = self.screen.copy()
