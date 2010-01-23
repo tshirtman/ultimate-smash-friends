@@ -165,6 +165,7 @@ class Controls (object):
 
     def handle_game_key( self, state, key, game_instance ):
         ret = "game"
+        numplayer = 0
         if state is KEYDOWN:
             if key in self.keys:
                 #FIXME: test if the player is not an AI.
