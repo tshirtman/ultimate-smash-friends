@@ -21,6 +21,8 @@ import os
 from sys import platform
 import logging
 
+import pygame.locals
+
 # xdg
 if platform in ('linux2', 'bsd'):
     try:
@@ -29,11 +31,8 @@ if platform in ('linux2', 'bsd'):
         logging.debug('error, XDG_CONFIG_HOME is not declared.')
         xdg_config_home = os.environ['HOME'] + '/.config'
 else:
-#xgd is not implemented on windows (how surprising ^^) so this is a trivial
-#hack to make it work.
-    xdg_config_home = '~/.config'
+    xdg_config_home = os.path.dirname(abspath(path.join(__file__, '..')))
 
-import pygame.locals
 
 def open_conf(confname):
     if 'usf' not in os.listdir(os.path.join(xdg_config_home)):
@@ -53,6 +52,7 @@ def open_conf(confname):
         # config file
 
 def load_config():
+    #TODO: add options from DEFAULT_CONFIG to config if missing
     config = {}
     config_file = open_conf('config')
     for line in config_file.readlines():
