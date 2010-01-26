@@ -29,7 +29,7 @@ import loaders
 from config import config
 
 from debug_utils import draw_rect
-from enums import (TOP_LEFT, UPPER_RIGHT, LOWER_RIGHT, BOTTOM_RIGHT,
+from enums import (TOP_RIGHT, UPPER_RIGHT, LOWER_RIGHT, BOTTOM_RIGHT,
                    BOTTOM_LEFT, LOWER_LEFT, UPPER_LEFT, TOP_LEFT)
 
 class WrongEntityException(Exception):
