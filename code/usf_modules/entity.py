@@ -29,6 +29,8 @@ import loaders
 from config import config
 
 from debug_utils import draw_rect
+from enums import (TOP_LEFT, UPPER_RIGHT, LOWER_RIGHT, BOTTOM_RIGHT,
+                   BOTTOM_LEFT, LOWER_LEFT, UPPER_LEFT, TOP_LEFT)
 
 class WrongEntityException(Exception):
     def __init__(self):
@@ -291,55 +293,55 @@ class Entity (object):
 
             #first test if the entity hit fast enought that the middle points
             #touched
-            if (game.level.collide_point(points[6])
-                and game.level.collide_point(points[1]))\
-            or (game.level.collide_point(points[5])
-                and game.level.collide_point(points[2])):
+            if (game.level.collide_point(points[UPPER_LEFT])
+                and game.level.collide_point(points[UPPER_RIGHT]))\
+            or (game.level.collide_point(points[LOWER_LEFT])
+                and game.level.collide_point(points[LOWER_RIGHT])):
                 #self.vector[1] = math.fabs(self.vector[1])
-                while game.level.collide_point(points[6])\
-                or game.level.collide_point(points[1]):
+                while game.level.collide_point(points[UPPER_LEFT])\
+                or game.level.collide_point(points[UPPER_RIGHT]):
                     self.move(( 0, -(abs(self.vector[1])/self.vector[1])))
                     points = self.update_points()
 
 
             # if one of the two lowers points collide, the entity bounce up and
             # it's horizontal speed is lowered
-            if (game.level.collide_point(points[7])
-            or game.level.collide_point(points[0])):
+            if (game.level.collide_point(points[TOP_LEFT])
+            or game.level.collide_point(points[TOP_RIGHT])):
                 self.vector[1] = -math.fabs(self.vector[1]/2)
                 self.onGround = True
                 self.vector[0] /= 2
-                while (game.level.collide_point(points[7])
-                or game.level.collide_point(points[0])):
+                while (game.level.collide_point(points[TOP_LEFT])
+                or game.level.collide_point(points[TOP_RIGHT])):
                     self.move(( 0, -1))
                     points = self.update_points()
 
             # test of points and consequences on vectors if one of the two
             # uppers points collide, the entity bounce down.
-            if (game.level.collide_point(points[3])
-            or game.level.collide_point(points[4])):
+            if (game.level.collide_point(points[BOTTOM_RIGHT])
+            or game.level.collide_point(points[BOTTOM_LEFT])):
                 self.vector[1] = int(-self.vector[1] / 2)
                 self.vector[0] /= 2
-                while (game.level.collide_point(points[3])
-                or game.level.collide_point(points[4])):
+                while (game.level.collide_point(points[BOTTOM_RIGHT])
+                or game.level.collide_point(points[BOTTOM_LEFT])):
                     self.move(( 0, 1))
                     points = self.update_points()
 
             # if one of the two left points collide and the entity is not
             # reversed or one of the two right points collide and the entity is
             # reversed and the player is pushed forward.
-            if ( game.level.collide_point(points[1])
-                or game.level.collide_point(points[2]) )\
+            if ( game.level.collide_point(points[UPPER_RIGHT])
+                or game.level.collide_point(points[LOWER_RIGHT]) )\
                 and self.reversed\
-            or ( game.level.collide_point(points[5])\
-                or game.level.collide_point(points[6]) )\
+            or ( game.level.collide_point(points[LOWER_LEFT])\
+                or game.level.collide_point(points[UPPER_LEFT]) )\
                 and not self.reversed:
                 self.vector[0] = math.fabs(self.vector[0])/2
-                while ( game.level.collide_point(points[1])\
-                    or game.level.collide_point(points[2]) )\
+                while ( game.level.collide_point(points[UPPER_RIGHT])\
+                    or game.level.collide_point(points[LOWER_RIGHT]) )\
                     and self.reversed\
-                or ( game.level.collide_point(points[5])\
-                    or game.level.collide_point(points[6]) )\
+                or ( game.level.collide_point(points[LOWER_LEFT])\
+                    or game.level.collide_point(points[UPPER_RIGHT]) )\
                     and not self.reversed:
                     self.move(( 1, 0))
                     points = self.update_points()
@@ -348,18 +350,18 @@ class Entity (object):
             # one of the two right points collide and the entity is not reversed and
             # the player bounce back.
 
-            if ((( game.level.collide_point(points[1])
-                or game.level.collide_point(points[2]) )
+            if ((( game.level.collide_point(points[UPPER_RIGHT])
+                or game.level.collide_point(points[LOWER_RIGHT]) )
                 and not self.reversed)
-            or (( game.level.collide_point(points[6])
-                or game.level.collide_point(points[5]) )
+            or (( game.level.collide_point(points[UPPER_LEFT])
+                or game.level.collide_point(points[LOWER_LEFT]) )
                 and self.reversed)):
                 self.vector[0] = -math.fabs(self.vector[0])/2
-                while ((( game.level.collide_point(points[1])
-                    or game.level.collide_point(points[2]) )
+                while ((( game.level.collide_point(points[UPPER_RIGHT])
+                    or game.level.collide_point(points[LOWER_RIGHT]) )
                     and not self.reversed)
-                or ( game.level.collide_point(points[6])
-                    or game.level.collide_point(points[5]) )
+                or ( game.level.collide_point(points[UPPER_LEFT])
+                    or game.level.collide_point(points[LOWER_LEFT]) )
                     and self.reversed):
                     self.move(( -1, 0), "wall, pushed back")
                     points = self.update_points()
