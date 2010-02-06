@@ -170,8 +170,7 @@ class Controls (object):
             if key in self.keys:
                 #FIXME: test if the player is not an AI.
                 try:
-                    numplayer = int(self.keys[key].split('_')\
-                                [0][-1])-1
+                    numplayer = int(self.keys[key].split('_')[0][-1])-1
                     if(not game_instance.players[numplayer].ai):
                         self.player_sequences[numplayer].append((self.keys[key],time.time()))
                 except:
