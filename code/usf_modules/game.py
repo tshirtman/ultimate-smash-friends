@@ -27,6 +27,10 @@ import os
 import logging
 import sys
 
+import socket
+import threading
+import SocketServer
+
 # my modules import
 from loaders import image
 import music
@@ -571,6 +575,32 @@ class NetworkServerGame(Game):
 
         """
         Game.__init__(self, None, level, players)
+
+        server = ThreadedTCPServer((HOST, PORT), ThreadedTCPRequestHandler)
+        ip, port = server.server_address
+
+        # Start a thread with the server -- that thread will then start one
+        # more thread for each request
+        server_thread = threading.Thread(target=server.serve_forever)
+        # Exit the server thread when the main thread terminates
+        server_thread.setDaemon(True)
+        server_thread.start()
+        print "Server loop running in thread:", server_thread.getName()
+
+        clients = [ 
+        threading.Thread(target=client, args=(ip, port, "Hello World 1")),
+        threading.Thread(target=client, args=(ip, port, "Hello World 2")),
+        threading.Thread(target=client, args=(ip, port, "Hello World 3"))
+        ]
+
+        for c in clients:
+            c.start()
+
+        time.sleep(11)
+        server.shutdown()
+
+
+
         # wait fot clients to connect
         #TODO
 
