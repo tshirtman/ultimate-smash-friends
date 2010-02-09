@@ -42,6 +42,7 @@ import network
 from level import Level
 from controls import Controls
 from config import config
+from singletonmixin import Singleton
 
 from debug_utils import draw_rect
 
@@ -561,6 +562,66 @@ class Game (object):
 
         return "game"
 
+class ThreadedTCPRequestHandler(SocketServer.BaseRequestHandler):
+
+    def handle(self):
+        try:
+            self.sharedMemory.lock.acquire()
+            self.id = sharedMemory.get('current_client_id')
+            clients = self.sharedMemory.get('clients')
+            clients.append({})
+            self.sharedMemory.release()
+            while True:
+                data = self.request.recv(1024)
+                if NetworkServerGame().started:
+                    pass
+                else:
+                    if data[:len("<character>")] == "<character>":
+                        clients = self.sharedMemory.get('clients')
+                        clients[self.id].name = data[len('<character>'):]
+                        self.sharedMemory.set('clients', clients)
+
+                    if data[:len("<name>")] == "<name>":
+                        clients = self.sharedMemory.get('clients')
+                        clients[self.id].name = data[len('<name>'):]
+                        self.sharedMemory.set('clients', clients)
+
+                    if data[:len("<level>")] == "<level>":
+                        clients = self.sharedMemory.get('level')
+                        clients[self.id].name = data[len('<name>'):]
+                        self.sharedMemory.set('clients', clients)
+
+                    if data[:len("<message>")] == "<message>":
+                        pass
+                self.request.send(response)
+        except:
+           print "client quit"
+
+class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
+    pass
+
+class sharedMemory(Singleton):
+    """
+    Useful to share information between threads, this is a singleton with thread safe access
+
+    """
+    lock = threading.RLock()
+    def __init__(self):
+        self.dict = {}
+
+    def set(self, key, value):
+        if key in self.dict:
+            self.dict[key]['lock'].acquire()
+            self.dict[key]['value'] = value
+            self.dict[key]['lock'].release()
+        else:
+            self.lock.acquire()
+            self.dict[key] = {'lock': threading.RLock(), 'value': value}
+            self.lock.release()
+
+    def get(self, key):
+        return self.dict[key]['value']
+
 class NetworkServerGame(Game):
     """
     This particular version of the game class will accept connection of client,
@@ -574,8 +635,11 @@ class NetworkServerGame(Game):
         level is the basename of the level in media/levels/
 
         """
-        Game.__init__(self, None, level, players)
+        self.sharedMemory = sharedMemory.getInstance()
+        self.sharedMemory.set('clients', [])
 
+        Game.__init__(self, None, level, players)
+        self.current_client_id = 0
         server = ThreadedTCPServer((HOST, PORT), ThreadedTCPRequestHandler)
         ip, port = server.server_address
 
@@ -587,24 +651,10 @@ class NetworkServerGame(Game):
         server_thread.start()
         print "Server loop running in thread:", server_thread.getName()
 
-        clients = [ 
-        threading.Thread(target=client, args=(ip, port, "Hello World 1")),
-        threading.Thread(target=client, args=(ip, port, "Hello World 2")),
-        threading.Thread(target=client, args=(ip, port, "Hello World 3"))
-        ]
-
-        for c in clients:
-            c.start()
-
-        time.sleep(11)
-        server.shutdown()
-
-
-
-        # wait fot clients to connect
-        #TODO
-
         # choose level
+        while len(self.sharedMemory.get(clients)) < 4:
+            time.sleep(1)
+
         self.begin(caracters, level)
 
     def begin(self, level, players_):
@@ -628,6 +678,8 @@ class NetworkServerGame(Game):
             [ x.serialize() for x in self.players+self.items]
         )+'|'+self.level.serialize()
 
+    def __del__(self):
+        server.shutdown()
 
 class NetworkClientGame(Game):
     """
@@ -643,7 +695,17 @@ class NetworkClientGame(Game):
         We connect to the server and send information about our players.
 
         """
-        pass
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.connect((ip, port))
+
+        for i in range(10):
+            sock.send(message+" "+str(i))
+            response = sock.recv(1024)
+            print "Received: %s" % response
+            time.sleep(1)
+
+        sock.close()
+
 
     def begin( self, players=[], level='' ):
         """
