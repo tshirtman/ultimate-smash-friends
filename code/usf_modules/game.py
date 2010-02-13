@@ -592,7 +592,11 @@ class ThreadedTCPRequestHandler(SocketServer.BaseRequestHandler):
                         self.sharedMemory.set('clients', clients)
 
                     if data[:len("<message>")] == "<message>":
-                        pass
+                        self.sharedMemory.append(
+                            'messages',
+                            self.sharedMemory.get('clients')[self.id]+
+                                ': '+data[len("<message>"):]
+                            )
                 self.request.send(response)
         except:
            print "client quit"
@@ -616,7 +620,20 @@ class sharedMemory(Singleton):
             self.dict[key]['lock'].release()
         else:
             self.lock.acquire()
-            self.dict[key] = {'lock': threading.RLock(), 'value': value}
+            self.dict[key] = {'lock': threading.rlock(), 'value': value}
+            self.lock.release()
+
+    def append(self, key, value):
+        """
+        append the value to the dict referenced by the key.
+        """
+        if key in self.dict:
+            self.dict[key]['lock'].acquire()
+            self.dict[key]['value'].append(value)
+            self.dict[key]['lock'].release()
+        else:
+            self.lock.acquire()
+            self.dict[key] = {'lock': threading.rlock(), 'value': [value,]}
             self.lock.release()
 
     def get(self, key):
@@ -652,6 +669,7 @@ class NetworkServerGame(Game):
         print "Server loop running in thread:", server_thread.getName()
 
         # choose level
+
         while len(self.sharedMemory.get(clients)) < 4:
             time.sleep(1)
 
