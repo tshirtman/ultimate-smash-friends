@@ -406,7 +406,7 @@ class Gui(object):
         elif(id_widget=="musicm"):
             sound_config['MUSIC_VOLUME'] -= 5
             save_sound_conf()
-            self.widget_list[self.screen_current]['sounds'].text = str(sound_config['MUSIC_VOLUME'])
+            self.widget_list[self.screen_current]['music'].text = str(sound_config['MUSIC_VOLUME'])
         elif(id_widget=="soundp"):
             sound_config['SOUND_VOLUME'] += 5
             save_sound_conf()
