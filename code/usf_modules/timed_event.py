@@ -101,6 +101,23 @@ class HealEvent(TimedEvent):
     def condition(self):
         return self.params['player'].percents > 0
 
+class shieldUpdateEvent(TimedEvent):
+    """
+    This event, launched for one character, update the energy of it's shield at
+    every loop, depending on if it's on or off.
+
+    """
+    def execute(self, dt):
+        if self.params['player'].shield['on']:
+            self.params['player'].shield['power'] -= dt/10
+        else:
+            self.params['player'].shield['power'] += dt/10
+        if self.params['player'].shield['power'] <= 0:
+            self.params['player'].shield['on'] = False
+
+    def condition(self):
+        return True
+
 class DelItemEvent(TimedEvent):
     """
     Event used to timely delete an item, because it was used, or because it got
