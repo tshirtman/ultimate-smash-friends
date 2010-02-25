@@ -93,7 +93,7 @@ class Main(object):
         parser.add_option('-s', '--server',
                           action='store', dest='server', metavar='num',
                           help="will launch a game server accepting 'num' " \
-                               "before launching the bame.")
+                               "players before launching the bame.")
         parser.add_option('-C', '--client',
                           action='store', dest='client', metavar='address',
                           help="will attempt to connect to a game server at " \
@@ -119,6 +119,7 @@ class Main(object):
 
         if options.server:
             game_type = 'server'
+            num = options.server
 
         if options.client:
             game_type = 'client'
@@ -127,7 +128,7 @@ class Main(object):
         pygame.init()
 
         if game_type == "server":
-            self.game = NetworkServeupdate(p)
+            self.game = NetworkServerGame(num)
             self.clock = pygame.time.Clock()
             self.state = ""
             self.controls = Controls()

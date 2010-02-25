@@ -620,7 +620,7 @@ class sharedMemory(Singleton):
             self.dict[key]['lock'].release()
         else:
             self.lock.acquire()
-            self.dict[key] = {'lock': threading.rlock(), 'value': value}
+            self.dict[key] = {'lock': threading.RLock(), 'value': value}
             self.lock.release()
 
     def append(self, key, value):
@@ -633,7 +633,7 @@ class sharedMemory(Singleton):
             self.dict[key]['lock'].release()
         else:
             self.lock.acquire()
-            self.dict[key] = {'lock': threading.rlock(), 'value': [value,]}
+            self.dict[key] = {'lock': threading.RLock(), 'value': [value,]}
             self.lock.release()
 
     def get(self, key):
@@ -728,9 +728,7 @@ class NetworkClientGame(Game):
     def begin( self, players=[], level='' ):
         """
         Initiation of the game itself, we load the level, and the skins of the
-        player we know of, we create a pool of entities skin on demand, to be
-        able to display any required entity skin without dubble loading the
-        same artworks.
+        player we know of
 
         """
         pass
