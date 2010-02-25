@@ -26,6 +26,7 @@ import logging
 # my modules imports.
 import entity_skin
 import loaders
+import timed_event
 from config import config
 
 from debug_utils import draw_rect
@@ -75,6 +76,7 @@ class Entity (object):
         self.num = num
         self.upgraded = False
         self.lighten = False
+        self.shield = { 'on': False, 'power': 1.0 }
         self.place = place
         self.carried_by = carried_by
         # the 'center' of the entity is at the bottom middle.
@@ -114,6 +116,12 @@ class Entity (object):
                     )
             self.rect[2:] = self.entity_skin.animation.rect[2:]
             self.entity_skin.update(0, server=(game is None or game.screen is None))
+            game.events.append(
+                timed_event.ShieldUpdateEvent(
+                    (None, None),
+                    {'world': game, 'player': self}
+                )
+            )
 
     def __str__(self):
         return ','.join((
@@ -393,6 +401,16 @@ class Entity (object):
                           )[0],
                   real_coords
                   )
+
+            if self.shield['on']:
+                surface.blit(
+                        loaders.image(
+                            os.path.sep.join('misc','shield.png'),
+                                zoom=zoom*self.shield['power']
+                            )[0],
+                        real_coords
+                        )
+
 
     def update_physics(self, dt, game):
         """

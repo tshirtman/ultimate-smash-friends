@@ -364,13 +364,29 @@ class Gui(object):
         if(id_widget=="nextlevel"):
             if(self.level_current< len(self.game_data['level_name'])-1):
                 self.level_current += 1
-                self.widget_list[self.screen_current]["level_name"].setText(self.game_data['level_name'][self.level_current])
-                self.widget_list[self.screen_current]['level'].setText("gui" +os.sep + "image" + os.sep + self.game_data['level_name'][self.level_current] + ".png")
+                self.widget_list[self.screen_current]["level_name"].setText(
+                    self.game_data['level_name'][self.level_current]
+                    )
+                self.widget_list[self.screen_current]['level'].setText(
+                    os.sep.join(
+                        "gui",
+                        "image",
+                        self.game_data['level_name'][self.level_current]+".png"
+                        )
+                    )
         elif(id_widget=="prevlevel"):
             if(self.level_current>0):
                 self.level_current -= 1
-                self.widget_list[self.screen_current]["level_name"].setText(self.game_data['level_name'][self.level_current])
-                self.widget_list[self.screen_current]['level'].setText("gui" +os.sep + "image" + os.sep + self.game_data['level_name'][self.level_current] + ".png")
+                self.widget_list[self.screen_current]["level_name"].setText(
+                    self.game_data['level_name'][self.level_current]
+                )
+                self.widget_list[self.screen_current]['level'].setText(
+                os.sep.join(
+                    "gui",
+                    "image",
+                    self.game_data['level_name'][self.level_current]+".png"
+                    )
+                )
         elif("prev" in id_widget or "next" in id_widget):
             if("prev" in id_widget):
                 player = id_widget.replace("prev", "")
