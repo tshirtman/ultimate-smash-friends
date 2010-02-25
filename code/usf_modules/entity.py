@@ -402,6 +402,16 @@ class Entity (object):
                   real_coords
                   )
 
+            if self.shield['on']:
+                surface.blit(
+                        loaders.image(
+                            os.path.sep.join('misc','shield.png'),
+                                zoom=zoom*self.shield['power']
+                            )[0],
+                        real_coords
+                        )
+
+
     def update_physics(self, dt, game):
         """
         This function apply current movemements and various environemental
