@@ -26,6 +26,7 @@ import logging
 # my modules imports.
 import entity_skin
 import loaders
+import timed_event
 from config import config
 
 from debug_utils import draw_rect
@@ -115,6 +116,12 @@ class Entity (object):
                     )
             self.rect[2:] = self.entity_skin.animation.rect[2:]
             self.entity_skin.update(0, server=(game is None or game.screen is None))
+            game.events.append(
+                timed_event.ShieldUpdateEvent(
+                    (None, None),
+                    {'world': game, 'player': self}
+                )
+            )
 
     def __str__(self):
         return ','.join((

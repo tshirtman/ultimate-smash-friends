@@ -101,7 +101,7 @@ class HealEvent(TimedEvent):
     def condition(self):
         return self.params['player'].percents > 0
 
-class shieldUpdateEvent(TimedEvent):
+class ShieldUpdateEvent(TimedEvent):
     """
     This event, launched for one character, update the energy of it's shield at
     every loop, depending on if it's on or off.
