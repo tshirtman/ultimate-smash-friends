@@ -131,3 +131,4 @@ def image(name, *args, **kwargs):
 @memoize
 def track(name):
     return pygame.mixer.Sound(name)
+

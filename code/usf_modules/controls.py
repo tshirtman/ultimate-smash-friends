@@ -66,7 +66,7 @@ class Sequence (object):
 
 class Controls (object):
     """
-    Catch pygame keyboard events and decides of the interraction with the game,
+    Catch pygame keyboard events and decides of the interaction with the game,
     game menu and entity instances. Key configuration are taken from
     sequences.cfg. This class can update and save configuration.
 
@@ -100,6 +100,7 @@ class Controls (object):
 
             for i in range(4): self.player_sequences.append([])
         self.ai = AI()
+
     def getKeyByAction(self, action):
         if action in self.keys.values():
             return reverse_keymap[
@@ -187,13 +188,16 @@ class Controls (object):
                         #pygame.event.set_grab(False)
                     elif self.keys[key] == "TOGGLE_FULLSCREEN":
                         pygame.display.toggle_fullscreen()
-                    
+
                     if(not game_instance.players[numplayer].ai):
                         for player in game_instance.players:
                             pl = "PL"+str(player.num)
                             the_key = self.keys[key]
                             if pl not in the_key: continue
-                            if "_LEFT" in the_key:
+                            if "_SHIELD" in the_key:
+                                player.shield['on'] = True
+
+                            elif "_LEFT" in the_key:
                                 player.walking_vector[0] = config['WALKSPEED']
                                 player.reversed = True
 
@@ -230,7 +234,10 @@ class Controls (object):
                             pl = "PL"+str(player.num)
                             if pl not in self.keys[key]: continue
                             if key in self.keys :
-                                if "_LEFT" in self.keys[key]:
+                                if "_SHIELD" in self.keys[key]:
+                                    player.shield['on'] = False
+
+                                elif "_LEFT" in self.keys[key]:
                                     player.walking_vector[0] = 0
                                     if player.entity_skin.current_animation == "walk":
                                         player.entity_skin.change_animation(

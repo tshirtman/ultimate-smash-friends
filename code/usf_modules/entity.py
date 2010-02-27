@@ -76,7 +76,7 @@ class Entity (object):
         self.num = num
         self.upgraded = False
         self.lighten = False
-        self.shield = { 'on': False, 'power': 1.0 }
+        self.shield = { 'on': True, 'power': 1.0 }
         self.place = place
         self.carried_by = carried_by
         # the 'center' of the entity is at the bottom middle.
@@ -405,8 +405,10 @@ class Entity (object):
             if self.shield['on']:
                 surface.blit(
                         loaders.image(
-                            os.path.sep.join('misc','shield.png'),
-                                zoom=zoom*self.shield['power']
+                            os.path.sep.join(
+                                (config['MEDIA_DIRECTORY'],'misc','shield.png')
+                                ),
+                                zoom=zoom*self.shield['power']*3
                             )[0],
                         real_coords
                         )
