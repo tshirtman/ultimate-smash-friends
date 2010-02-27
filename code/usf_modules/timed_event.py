@@ -110,7 +110,7 @@ class ShieldUpdateEvent(TimedEvent):
     def execute(self, dt):
         if self.params['player'].shield['on']:
             self.params['player'].shield['power'] -= dt/10
-        else:
+        elif self.params['player'].shield['power'] < 1:
             self.params['player'].shield['power'] += dt/10
         if self.params['player'].shield['power'] <= 0:
             self.params['player'].shield['on'] = False
