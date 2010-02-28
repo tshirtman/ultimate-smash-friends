@@ -178,8 +178,16 @@ class Controls (object):
                             pl = "PL"+str(player.num)
                             the_key = self.keys[key]
                             if pl not in the_key: continue
-                            if "_SHIELD" in the_key:
+                            # the player can't do anything if the shield is on
+                            if player.shield['on']: break
+                            if ("_SHIELD" in the_key and
+                                player.entity_skin.current_animation in (
+                                'static', 'walk'
+                                )
+                            ):
                                 player.shield['on'] = True
+                                #player.entity_skin.change_animation('static')
+                                player.walking_vector[0] = 0
 
                             elif "_LEFT" in the_key:
                                 player.walking_vector[0] = general['WALKSPEED']
@@ -188,7 +196,6 @@ class Controls (object):
                             elif "_RIGHT" in the_key:
                                 player.walking_vector[0] = general['WALKSPEED']
                                 player.reversed = False
-
                         #test sequences
                         for sequence in self.player_sequences:
                             for i in self.sequences:
