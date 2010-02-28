@@ -403,21 +403,22 @@ class Entity (object):
                   )
 
             if self.shield['on']:
-                shield_coords = (
-                    int(self.place[0]*zoom)*(config['SIZE'][0]/800.0)+coords[0]
-                    ,
-                    int(self.place[1]*zoom)*(config['SIZE'][1]/480.0)+coords[1]
-                    )
-
-                surface.blit(
-                        loaders.image(
+                image = loaders.image(
                             os.path.sep.join(
                                 (config['MEDIA_DIRECTORY'],'misc','shield.png')
                                 ),
                                 zoom=zoom*self.shield['power']*3
-                            )[0],
-                        shield_coords
-                        )
+                            )
+
+                shield_coords = (
+                    int(self.place[0]*zoom)*(config['SIZE'][0]/800.0)+coords[0]+\
+                    .5*(self.rect[2]-image[1][2])
+                    ,
+                    int(self.place[1]*zoom)*(config['SIZE'][1]/480.0)+coords[1]+\
+                    .5*(self.rect[3]-image[1][3]) - .25*self.rect[3]
+                    )
+
+                surface.blit(image[0], shield_coords)
 
 
     def update_physics(self, dt, game):
