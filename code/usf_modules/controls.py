@@ -22,6 +22,7 @@ import os
 import time
 import logging
 import pygame
+from pygame import locals
 from pygame.locals import (
         KEYDOWN,
         KEYUP,
@@ -31,13 +32,12 @@ from pygame.locals import (
         USEREVENT,
         )
 # my imports
-from usf_modules.config  import (
-    config,
-    keyboard_config,
-    sound_config,
-    reverse_keymap,
-    save_keys_conf
-    )
+from usf_modules.new_config import Config
+config = Config()
+general = config.general
+SHARE_DIRECTORY = config.config_dir
+keyboard_config = dict([[locals.__dict__[config.keys[key]], key] 
+                        for key in config.keys])
 
 import game
 from usf_modules.ai import AI
@@ -78,7 +78,7 @@ class Controls (object):
         self.sequences = []
         self.player_sequences = [[],[],[],[]]
         sequences_file = open(os.path.join(
-                config['SHARE_DIRECTORY'],
+                SHARE_DIRECTORY,
                 'sequences'+os.extsep+'cfg')
                               , 'r')
         sequence_tmpl = []
@@ -101,30 +101,14 @@ class Controls (object):
             for i in range(4): self.player_sequences.append([])
         self.ai = AI()
 
-    def getKeyByAction(self, action):
-        if action in self.keys.values():
-            return reverse_keymap[
-                self.keys.keys()[
-                        self.keys.values().index(action)
-                        ]
-            ]
-
-    def assignKey(self, action):
-        while True:
-            event = pygame.event.wait()
-            if event.type == KEYDOWN:
-                try:
-                    self.keys.pop(eval(self.getKeyByAction(action)))
-                except TypeError:
-                    pass
-                self.keys[event.key] = action
-                break
-
     def save(self):
-        save_keys_conf(self.keys)
+        config.save
 
     def reload(self):
-        self.keys = load_key_config()
+        config = Config()
+        keyboard_config = dict([[locals.__dict__[config.keys[key]], key] 
+                                for key in config.keys])
+        self.keys = keyboard_config
 
     def handle_menu_key( self, state, key, game):
         ret = "menu"
@@ -134,7 +118,7 @@ class Controls (object):
                 if self.keys[key] == "MENU_TOGGLE":
                     ret = "game"
                 elif self.keys[key] == "QUIT":
-                    if config['CONFIRM_EXIT']:
+                    if general['CONFIRM_EXIT']:
                         pygame.event.post(
                                 pygame.event.Event(
                                     USEREVENT,
@@ -198,11 +182,11 @@ class Controls (object):
                                 player.shield['on'] = True
 
                             elif "_LEFT" in the_key:
-                                player.walking_vector[0] = config['WALKSPEED']
+                                player.walking_vector[0] = general['WALKSPEED']
                                 player.reversed = True
 
                             elif "_RIGHT" in the_key:
-                                player.walking_vector[0] = config['WALKSPEED']
+                                player.walking_vector[0] = general['WALKSPEED']
                                 player.reversed = False
 
                         #test sequences
@@ -266,8 +250,10 @@ class Controls (object):
         if isinstance(game_instance, game.NetworkServerGame):
             while True:
                 k = game_instance.server.fetch()
-                if k == None: break
-                else: self.handle_game_key( "game", k, game_instance )
+                if k == None: 
+                    break
+                else: 
+                    self.handle_game_key( "game", k, game_instance )
 
         else:
             pygame.event.pump()

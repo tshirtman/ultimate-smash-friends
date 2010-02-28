@@ -67,6 +67,16 @@ class Option(dict):
         with open(self.__config, 'wb') as config_file:
             self.__parser.write(config_file)
 
+    def __getitem__(self, key):
+        item = dict.__getitem__(self, key)
+        try:
+            return int(item)
+        except ValueError:
+            try:
+                return float(item)
+            except ValueError:
+                return item
+        
 
 class Config(object):
     """ Object that implements automatic saving.
@@ -132,7 +142,7 @@ class Config(object):
         try:
             logging.debug('creating new config directory')
             makedirs(config_dir)
-        except OSError as (code, message):
+        except OSError:
            pass
 
         return config_dir, sys_config_file, user_config_file, data_dir
@@ -154,11 +164,3 @@ class Config(object):
                     parser=self.__parser,
                     config=self.user_config_file,
                     name=section))
-            """
-            setattr(self, section, 
-                    Option(([[str(item) for item in tuple]
-                            for tuple in self.__parser.items(section)]),
-                            parser=self.__parser,
-                            config=self.user_config_file,
-                            name=section))
-            """

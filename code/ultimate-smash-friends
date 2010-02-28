@@ -33,8 +33,8 @@ general = config.general
 sound_config = config.audio
 SHARE_DIRECTORY = config.config_dir
 MEDIA_DIRECTORY = config.data_dir
-SIZE = (int(general['WIDTH']), 
-        int(general['HEIGHT']))
+SIZE = (general['WIDTH'], 
+        general['HEIGHT'])
 
 
 from usf_modules.game import Game, NetworkServerGame, NetworkClientGame
