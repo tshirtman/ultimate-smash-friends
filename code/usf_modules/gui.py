@@ -369,7 +369,7 @@ class Gui(object):
                     self.game_data['level_name'][self.level_current]
                     )
                 self.widget_list[self.screen_current]['level'].setText(
-                    os.sep.join(
+                    os.path.join(
                         "gui",
                         "image",
                         self.game_data['level_name'][self.level_current]+".png"
