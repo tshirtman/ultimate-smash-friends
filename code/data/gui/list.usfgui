@@ -1,0 +1,12 @@
+<gui>
+<menu>main.usfgui</menu>
+<menu>configure.usfgui</menu>
+<menu>credits.usfgui</menu>
+<menu>level.usfgui</menu>
+<menu>characters.usfgui</menu>
+<menu>quit.usfgui</menu>
+<menu>ingame.usfgui</menu>
+<menu>keyboard.usfgui</menu>
+<menu>sounds.usfgui</menu>
+<menu>screen.usfgui</menu>
+</gui>

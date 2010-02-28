@@ -1,0 +1,5 @@
+<gui>
+<label value="Screen configuration (requires restart)" posx="30" posy="30" id="label" />
+<button value="config:FULLSCREEN" posx="40" posy="45" sizey="8" sizex="20" id="fullscreen" action="" />
+<parent>configure.usfgui</parent>
+</gui>

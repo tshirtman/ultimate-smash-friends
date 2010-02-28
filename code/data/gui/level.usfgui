@@ -1,0 +1,9 @@
+<gui>
+<label value="Choose the level :" posx="30" posy="30" id="label" />
+<imagebutton value="prev.png" posx="40" posy="35" sizey="7" sizex="7" id="prevlevel" action="" />
+<imagebutton value="next.png" posx="53" posy="35" sizey="7" sizex="7" id="nextlevel" action="" />
+<button value="Go !" posx="60" posy="80" sizey="8" sizex="20" id="launch_game" action="" />
+<image value="gui/image/BiX_level.png" posx="40" posy="55" sizey="20" sizex="20" id="level" action="" />
+<label value="BiX_level" posx="40" posy="76" id="level_name" />
+<parent>main.usfgui</parent>
+</gui>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map
+        name="Mansion"
+        background="mansion-background.png"
+        foreground="mansion-foreground.png"
+        middle="mansion-middle.png"
+        margins="0,500,0,0"
+        >
+        <block coords="222 526 86 186" ></block>
+        <block coords="222 870 44 56" ></block>
+        <block coords="216 920 92 284" ></block>
+        <block coords="304 1022 720 36" ></block>
+        <block coords="138 684 80 18" ></block>
+        <block coords="134 948 86 20" ></block>
+        <block coords="1200 996 180 46" ></block>
+        <block coords="470 832 284 78" ></block>
+        <block coords="624 628 416 42" ></block>
+        <block coords="1374 774 56 430" ></block>
+        <block coords="1426 794 120 38" ></block>
+        <block coords="950 368 446 40" ></block>
+        <block coords="1370 340 46 262" ></block>
+        <block coords="204 362 44 34" ></block>
+        <block coords="230 342 58 26" ></block>
+        <block coords="266 322 66 28" ></block>
+        <block coords="302 304 92 24" ></block>
+        <block coords="342 278 80 30" ></block>
+        <block coords="384 254 82 32" ></block>
+        <block coords="425 227 81 32" ></block>
+        <block coords="494 190 84 32" ></block>
+        <block coords="568 160 84 30" ></block>
+        <block coords="625 124 83 37" ></block>
+        <block coords="693 93 84 32" ></block>
+        <block coords="730 69 84 32" ></block>
+        <block coords="781 38 123 32" ></block>
+        <block coords="827 19 40 22" ></block>
+        <block coords="884 69 72 35" ></block>
+        <block coords="915 106 104 31" ></block>
+        <block coords="972 134 88 54" ></block>
+        <block coords="1163 217 61 61" ></block>
+        <block coords="1200 255 89 45" ></block>
+        <block coords="1287 289 90 43" ></block>
+        <block coords="1283 325 149 59" ></block>
+        <block coords="1144 74 22 138" ></block>
+        <block coords="1050 70 19 72" ></block>
+</map>

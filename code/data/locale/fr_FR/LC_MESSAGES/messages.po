@@ -1,0 +1,137 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Ultimate-Smash-Friends\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-01-09 17:03+0100\n"
+"PO-Revision-Date: 2010-01-13 15:50+0100\n"
+"Last-Translator: xapantu <xapantu@users.sourceforge.net>\n"
+"Language-Team: English\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: strings.py:1
+msgid "Choose the level :"
+msgstr "Choisis un niveau :"
+
+#: strings.py:2
+msgid "Go !"
+msgstr "Jouer !"
+
+#: strings.py:4
+msgid "Choose characters : "
+msgstr "Choisis les personnages :"
+
+#: strings.py:5
+msgid "Next"
+msgstr "Suivant"
+
+#: strings.py:6
+msgid "Up"
+msgstr "Haut"
+
+#: strings.py:7
+msgid "Down"
+msgstr "Bas"
+
+#: strings.py:8
+msgid "Left"
+msgstr "Gauche"
+
+#: strings.py:9
+msgid "Right"
+msgstr "Droite"
+
+#: strings.py:10
+msgid "Resume game"
+msgstr "Reprendre le jeu"
+
+#: strings.py:11
+msgid "Quit game"
+msgstr "Quitter le jeu"
+
+#: strings.py:12
+msgid "Ultimate Smash Friends"
+msgstr "Ultimate Smash Friends"
+
+#: strings.py:13
+msgid "Configure"
+msgstr "Options"
+
+#: strings.py:14
+msgid "Local game"
+msgstr "Jeu local "
+
+#: strings.py:15
+msgid "Credits"
+msgstr "A propos"
+
+#: strings.py:16
+msgid "Quit"
+msgstr "Quitter"
+
+#: strings.py:17
+msgid "Sounds configuration"
+msgstr "Configuration du son"
+
+#: strings.py:18
+msgid "Sounds"
+msgstr "Sons"
+
+#: strings.py:19
+msgid "+"
+msgstr "+"
+
+#: strings.py:20
+msgid "-"
+msgstr "-"
+
+#: strings.py:21
+msgid "Music"
+msgstr "Musique"
+
+#: strings.py:22
+msgid "Screen configuration (requires restart)"
+msgstr "Configuration de l'affichage (nécessite un redémarrage)"
+
+#: strings.py:23
+msgid "Quit ?"
+msgstr "Quitter ?"
+
+#: strings.py:24
+msgid "Yes"
+msgstr "Oui"
+
+#: strings.py:25
+msgid "No"
+msgstr "Non"
+
+#: strings.py:26
+msgid "Player 1"
+msgstr "Joueur 1"
+
+#: strings.py:27
+msgid "Player 2"
+msgstr "Joueur 2"
+
+#: strings.py:28
+msgid "Player 3"
+msgstr "Joueur 3"
+
+#: strings.py:29
+msgid "Player 4"
+msgstr "Joueur 4"
+
+#: strings.py:30
+msgid "Keyboard"
+msgstr "Clavier"
+
+#: strings.py:31
+msgid "Screen"
+msgstr "Affichage"
+
