@@ -27,22 +27,17 @@ import logging
 
 # Our modules
 from usf_modules.loaders import image
-from usf_modules.config import (
-        config,
-        sound_config,
-        save_conf,
-        load_config,
-        save_sound_conf,
-        load_sound_config,
-        save_keys_conf,
-        load_key_config,
-        reverse_keymap
-        )
+
+from usf_modules.new_config import Config
+config = Config()
+general = config.general
+sound_config = config.audio
+MEDIA_DIRECTORY = config.data_dir
+
 
 import usf_modules.controls
 import entity_skin
 from usf_modules.game import Game
-from usf_modules.config import xdg_config_home
 import usf_modules.controls
 
 # Gui modules
@@ -105,7 +100,7 @@ class Gui(object):
             self.draw_screen()
             exec result
         if len(self.widget_anim) != 0:
-            time.sleep(1.00/float(config['MAX_FPS']))
+            time.sleep(1.00/float(general['MAX_FPS']))
             for widget in self.widget_anim:
                 self.widget_list[self.screen_current][widget].click("1")
             while(True):
@@ -137,10 +132,9 @@ class Gui(object):
         self.game_data['character_name'] = []
         self.game_data['level_name'] = []
         #create a character for every directory in the characters directory.
-        print config['MEDIA_DIRECTORY'] #FIND
         files = os.listdir(
                 os.path.join(
-                    config['MEDIA_DIRECTORY'],
+                    MEDIA_DIRECTORY,
                     'characters'
                     )
                 )
@@ -171,7 +165,7 @@ class Gui(object):
         #create a level image for every directory in the level directory.
         files = os.listdir(
                 os.path.join(
-                    config['MEDIA_DIRECTORY'],
+                    MEDIA_DIRECTORY,
                     'levels'
                     )
                 )
@@ -188,7 +182,7 @@ class Gui(object):
         self.sizex = self.screen.get_width()
         self.sizey = self.screen.get_height()
         self.key_list={}
-        xml_file = xml.dom.minidom.parse(config['MEDIA_DIRECTORY']+
+        xml_file = xml.dom.minidom.parse(MEDIA_DIRECTORY+
             os.sep+
             'gui'+
             os.sep+
@@ -200,11 +194,11 @@ class Gui(object):
             except:
                 continue
         #load background image
-        self.image = pygame.image.load(config['MEDIA_DIRECTORY']+
+        self.image = pygame.image.load(MEDIA_DIRECTORY+
             os.sep+
             'gui'+
             os.sep+
-            config['THEME']+
+            general['THEME']+
             os.sep+
             'background.png').convert()
         self.image = pygame.transform.scale(self.image, (self.sizex,self.sizey))
@@ -240,7 +234,7 @@ class Gui(object):
 
         self.widget_list[filename] = {}
         self.widget_list_order[filename] = []
-        xml_file = xml.dom.minidom.parse(config['MEDIA_DIRECTORY']+
+        xml_file = xml.dom.minidom.parse(MEDIA_DIRECTORY+
             os.sep+
             'gui'+
             os.sep+ filename).getElementsByTagName("gui")[0]
@@ -409,28 +403,23 @@ class Gui(object):
             self.image.set_alpha(255)
             str_return  = "return False, None"
         elif(id_widget=="fullscreen"):
-            if(config['FULLSCREEN']):
-                config['FULLSCREEN'] = False
+            if(general['FULLSCREEN']):
+                general['FULLSCREEN'] = False
                 self.widget_list[self.screen_current]['fullscreen'].text = "False"
             else:
-                config['FULLSCREEN'] = True
+                general['FULLSCREEN'] = True
                 self.widget_list[self.screen_current]['fullscreen'].text = "True"
-            save_conf()
         elif(id_widget=="musicp"):
             sound_config['MUSIC_VOLUME'] += 5
-            save_sound_conf()
             self.widget_list[self.screen_current]['music'].text = str(sound_config['MUSIC_VOLUME'])
         elif(id_widget=="musicm"):
             sound_config['MUSIC_VOLUME'] -= 5
-            save_sound_conf()
             self.widget_list[self.screen_current]['music'].text = str(sound_config['MUSIC_VOLUME'])
         elif(id_widget=="soundp"):
             sound_config['SOUND_VOLUME'] += 5
-            save_sound_conf()
             self.widget_list[self.screen_current]["sounds"].text = str(sound_config['SOUND_VOLUME'])
         elif(id_widget=="soundm"):
             sound_config['SOUND_VOLUME'] -= 5
-            save_sound_conf()
             self.widget_list[self.screen_current]["sounds"].text = str(sound_config['SOUND_VOLUME'])
         elif(id_widget=="launch_game"):
             self.game = self.launch_game(self.game)
@@ -466,16 +455,20 @@ class Gui(object):
                     self.update("",None,"",event_current)
                     event_current = pygame.event.wait()
                     pygame.display.update()
+                """
                 if(self.widget_list[self.screen_current][widget_name].text==_("Press a key")):
                     self.widget_list[self.screen_current][widget_name].text = ""
-                exec "self.widget_list[self.screen_current][widget_name].text += pygame.key.name(pygame." + reverse_keymap[event_current.dict['key']] + ")"
+                """
+                self.widget_list[self.screen_current][widget_name].text  = \
+                  pygame.key.name(event_current.dict['key'])
+
                 numcle = 0
                 #dirty ?
                 for numcle in range(0,len(controls.keys.values())):
                     if(controls.keys.values()[numcle] == widget_name.replace('txtconfig', '')):
                         break
                 controls.keys[event_current.dict['key']] = widget_name.replace('txtconfig', '')
-                controls.save()
+                config.save()
         else:
             while(True):
                 time.sleep(0.04)

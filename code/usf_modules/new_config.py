@@ -62,7 +62,7 @@ class Option(dict):
         dict.__init__(self, args, **kwargs)
 
     def __setitem__(self, option, value):
-        self.__parser.set(self.name, option, value)
+        self.__parser.set(self.name, option, str(value))
         dict.__setitem__(self, option, value)
         with open(self.__config, 'wb') as config_file:
             self.__parser.write(config_file)
