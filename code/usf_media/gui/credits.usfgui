@@ -1,4 +1,0 @@
-<gui>
-<p posx="30" posy="49" sizey="30" sizex="30" id="credits">file:CREDITS</p>
-<parent>main.usfgui</parent>
-</gui>

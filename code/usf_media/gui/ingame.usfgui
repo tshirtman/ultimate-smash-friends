@@ -1,5 +1,0 @@
-<gui>
-<button value="Resume game" posx="40" posy="45" sizey="8" sizex="20" id="resume_game" action="" />
-<button value="Quit game" posx="40" posy="55" sizey="8" sizex="20" id="quitgame" action="" />
-<parent>self.screenshot=None</parent>
-</gui>

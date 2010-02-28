@@ -27,7 +27,15 @@ from optparse import OptionParser
 import logging
 
 # our modules
-from usf_modules.config import config, sound_config
+from usf_modules.new_config import Config
+config = Config()
+general = config.general
+sound_config = config.audio
+SHARE_DIRECTORY = config.config_dir
+MEDIA_DIRECTORY = config.data_dir
+SIZE = (int(general['WIDTH']), 
+        int(general['HEIGHT']))
+
 
 from usf_modules.game import Game, NetworkServerGame, NetworkClientGame
 from usf_modules.menu import Menu
@@ -36,21 +44,25 @@ from usf_modules.controls import Controls
 from usf_modules import loaders
 from usf_modules import music
 
-logging.basicConfig(filename=config['LOG_FILENAME'],level=logging.DEBUG)
+#logging.basicConfig(filename=config['LOG_FILENAME'],level=logging.DEBUG)
+
 
 def author():
-    if 'CREDITS' not in os.listdir(os.path.join(config['SHARE_DIRECTORY'])):
-        logging.debug(config['SHARE_DIRECTORY']+'/CREDITS file not found')
-        sys.exit(0)
+    if 'CREDITS' not in os.listdir(os.path.join(SHARE_DIRECTORY)):
+        logging.debug(SHARE_DIRECTORY+'/CREDITS file not found')
+        #sys.exit(0)
     else:
-        author_file = open(os.path.join(config['SHARE_DIRECTORY'],'CREDITS'))
+        author_file = open(os.path.join(SHARE_DIRECTORY,'CREDITS'))
         print (author_file.read())
         author_file.close()
-        sys.exit(2)
+        #sys.exit(2)
 
+""" TODO: Rather than having a BIN_DIRECTORY variable, programmatically determine
+    binary location
 def launch_character_creator():
     os.popen(os.path.join(config['BIN_DIRECTORY'],'viewer'))
     sys.exit(2)
+"""
 
 class Main(object):
     """
@@ -106,8 +118,10 @@ class Main(object):
         if options.author:
             author()
 
+        """
         if options.character_creator:
             launch_character_creator()
+        """
 
         if options.level:
             level = option.level
@@ -164,7 +178,7 @@ class Main(object):
                             "white"
                             )
                         ),
-                    (30, 4*config['SIZE'][1]/5)
+                    (30, 4*SIZE[1]/5)
                     )
 
                 pygame.display.update()
@@ -183,33 +197,33 @@ class Main(object):
                 self.go()
 
     def init_screen(self):
-        self.screen = pygame.display.set_mode(config['SIZE'])
+        self.screen = pygame.display.set_mode(SIZE)
         pygame.display.set_caption('Ultimate Smash Friends')
         icon = loaders.image(
-            config['MEDIA_DIRECTORY']+
+            MEDIA_DIRECTORY+
             os.sep+
             'gui'+
             os.sep+
             'icon.png'
             )[0]
         pygame.display.set_icon(icon)
-        if config['FULLSCREEN'] == 1:
+        if general['FULLSCREEN'] == 1:
             pygame.display.toggle_fullscreen()
 
         # following operation can be quite long, so a loading screen is good
         if self.newGui:
             image = loaders.image(
-                config['MEDIA_DIRECTORY']+
+                MEDIA_DIRECTORY+
                 os.sep+
                 'gui'+
                 os.sep+
-                config['THEME']+
+                general['THEME']+
                 os.sep+
                 'loading.png'
                 )[0]
         else:
             image = loaders.image(
-                config['MEDIA_DIRECTORY']+
+                MEDIA_DIRECTORY+
                 os.sep+
                 'misc'+
                 os.sep+
@@ -224,8 +238,9 @@ class Main(object):
             try:
                 self.music = music.Music()
             except:
+                pass
                 #TODO: add more useful error handling
-                exit(0)
+                #exit(0)
 
     def go(self):
         """
@@ -235,7 +250,7 @@ class Main(object):
         while (True):
             # update the fps counter
             self.clock.tick()
-            if sound_config['MUSIC'] == True:
+            if sound_config['MUSIC']:
                 self.music.update(self.state)
 
             # poll controls and update informations on current state of the UI

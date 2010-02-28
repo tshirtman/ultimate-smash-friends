@@ -137,6 +137,7 @@ class Gui(object):
         self.game_data['character_name'] = []
         self.game_data['level_name'] = []
         #create a character for every directory in the characters directory.
+        print config['MEDIA_DIRECTORY'] #FIND
         files = os.listdir(
                 os.path.join(
                     config['MEDIA_DIRECTORY'],

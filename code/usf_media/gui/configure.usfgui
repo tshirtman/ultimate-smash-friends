@@ -1,6 +1,0 @@
-<gui>
-<button value="Keyboard" posx="40" posy="45" sizey="8" sizex="20" id="keyboard" action="goto:keyboard.usfgui" />
-<button value="Sounds" posx="40" posy="55" sizey="8" sizex="20" id="sounds" action="goto:sounds.usfgui" />
-<button value="Screen" posx="40" posy="65" sizey="8" sizex="20" id="screen" action="goto:screen.usfgui" />
-<parent>main.usfgui</parent>
-</gui>
