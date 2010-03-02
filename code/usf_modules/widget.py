@@ -17,6 +17,7 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 import pygame
+from pygame.locals import *
 from usf_modules.config import (
         config,
         save_conf,
@@ -26,7 +27,6 @@ from usf_modules.config import (
         save_keys_conf,
         load_key_config,
         keyboard_config,
-        reverse_keymap
         )
 from usf_modules.new_config import Config
 config_ = Config()
@@ -73,9 +73,10 @@ class Widget (object):
             if(value.split(':')[1] == "keyboard"):
                 numcle=0
                 try:
-                    while(keyboard_config.values()[numcle] != value.split(':')[2]):
+                    while keyboard.keys()[numcle] != value.split(':')[2]:
                         numcle += 1
-                    exec("self.text = pygame.key.name(pygame." + reverse_keymap[keyboard_config.keys()[numcle]] + ")")
+
+                    self.text = pygame.key.name(eval(keyboard.values()[numcle]))
                 except:
                     self.text ="not defined"
             elif(value.split(':')[1] == "sounds"):
