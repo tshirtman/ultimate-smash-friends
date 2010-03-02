@@ -32,6 +32,7 @@ from usf_modules.new_config import Config
 config_ = Config()
 general = config_.general
 sound_config = config_.audio
+keyboard = config_.keys
 MEDIA_DIRECTORY = config_.data_dir
 import os
 class Widget (object):
@@ -48,7 +49,11 @@ class Widget (object):
     text = ""
     anim = False
     def __init__(self, screen):
-        self.game_font = pygame.font.Font(None, screen.get_height()/20)
+        self.game_font = pygame.font.Font(
+            MEDIA_DIRECTORY +
+            os.sep +
+            "gui" +os.sep + general['THEME'] + os.sep +
+            "font.otf", screen.get_height()/20)
         self.screen = screen
         self.load()
     def load(self):
@@ -76,9 +81,9 @@ class Widget (object):
             elif(value.split(':')[1] == "sounds"):
                 self.text = str(sound_config[value.split(':')[2]])
             else:
-                if(config[value.split(':')[1]] == 0):
+                if(general[value.split(':')[1]] == 0):
                     self.text = "False"
                 else:
-                    self.text = str(config[value.split(':')[1]])
+                    self.text = str(general[value.split(':')[1]])
         else:
             self.text = value

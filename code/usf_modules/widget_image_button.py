@@ -28,6 +28,11 @@ from usf_modules.config import (
         save_keys_conf,
         load_key_config
         )
+from usf_modules.new_config import Config
+config_ = Config()
+general = config_.general
+sound_config = config_.audio
+MEDIA_DIRECTORY = config_.data_dir
 import pygame
 import os
 class WidgetImageButton(Widget):
@@ -56,7 +61,7 @@ class WidgetImageButton(Widget):
     def setText(self, text):
         self.text = text
         self.image = loaders.image(
-            config['MEDIA_DIRECTORY']+
+            MEDIA_DIRECTORY+
             os.sep+
             'gui'+
             os.sep+

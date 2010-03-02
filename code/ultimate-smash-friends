@@ -207,7 +207,7 @@ class Main(object):
             'icon.png'
             )[0]
         pygame.display.set_icon(icon)
-        if general['FULLSCREEN'] == 1:
+        if general['FULLSCREEN'] == "True":
             pygame.display.toggle_fullscreen()
 
         # following operation can be quite long, so a loading screen is good
@@ -235,7 +235,6 @@ class Main(object):
 
     def init_sound(self):
         if sound_config['MUSIC']:
-            print "load music"
             try:
                 self.music = music.Music()
             except:
@@ -255,7 +254,8 @@ class Main(object):
                 self.music.update(self.state)
 
             # poll controls and update informations on current state of the UI
-            self.state = self.controls.poll(self.game, self.menu, self.state)
+            if self.state!="menu" :
+                self.state = self.controls.poll(self.game, self.menu, self.state)
             if self.state =="menu":
                 # return of the menu update function may contain a new game
                 # instance to switch to.
