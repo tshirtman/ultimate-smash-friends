@@ -254,6 +254,29 @@ class Controls (object):
         by clients in the case of a networkk game.
 
         """
+        if game_instance != None :
+            try:
+                i=0
+                for player in game_instance.players:
+                    if(player.ai):
+                        self.ai.update( game_instance, i)
+                        for sequence_ai in self.ai.sequences_ai:
+                            self.player_sequences[i].append(sequence_ai)
+                    i+=1
+            except:
+                pass
+        #update sequence after AI
+        for sequence in self.player_sequences:
+            for i in self.sequences:
+                if i.compare( sequence, game_instance ):
+                    game_instance.players[i.player].entity_skin.change_animation\
+                            (
+                              i.action,
+                              game_instance,
+                              params={
+                                        'entity':game_instance.players[i.player]
+                                     }
+                        )
         if isinstance(game_instance, game.NetworkServerGame):
             while True:
                 k = game_instance.server.fetch()
@@ -283,16 +306,5 @@ class Controls (object):
                 # clean the entire sequence if the last key is outdated.
                 if sequence != [] and sequence[-1][1] < limit_time:
                     self.player_sequences[index] = []
-        if game_instance != None :
-            try:
-                i=0
-                for player in game_instance.players:
-                    if(player.ai):
-                        self.ai.update(game_instance, i)
-                        for sequence_ai in self.ai.sequences_ai:
-                            self.player_sequences[i].append(sequence_ai)
-                    i+=1
-            except:
-                pass
         return state
 

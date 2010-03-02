@@ -36,11 +36,13 @@ class AI(object):
         self.enemy_number = []
         self.enemy_position = []
         self.enemy_distance = []
+        self.enemy_distanceh = []
 
         for pl in [pl for pl in self.game.players if pl is not self.iam] :
             self.enemy_number.append (pl.num)
             self.enemy_position.append (pl.place)
             self.enemy_distance.append (self.iam.dist (pl))
+            self.enemy_distanceh.append (pl.place[1]- self.iam.place[1])
     def update(self, game, iam):
         self.sequences_ai = []
         self.num = iam
@@ -57,8 +59,12 @@ class AI(object):
             self.sequences_ai.append(("PL"+ str(self.num) + "_LEFT",time.time()))
             self.iam.walking_vector[0] = config['WALKSPEED']
             self.iam.reversed = True"""
+        self.iam.walking_vector[0] = 0
         if self.enemy_position[0][0] < self.iam.place[0] :
-            print "droite"
+            self.iam.reversed = True
         else :
-            print "gauche"
-        
+            self.iam.reversed = False
+        if self.enemy_distanceh[0] < 10 and self.enemy_distanceh[0] > -10 and self.enemy_distance[0] > 100:
+            self.iam.walking_vector[0] = config['WALKSPEED']
+        if self.enemy_distance[0] < 100 :
+            self.sequences_ai.append(("PL"+ str(self.num+1) + "_B",time.time()))
