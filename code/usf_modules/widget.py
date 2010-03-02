@@ -32,7 +32,7 @@ from usf_modules.new_config import Config
 config_ = Config()
 general = config_.general
 sound_config = config_.audio
-keyboard = config_.keys
+keyboard = config_.keyboard
 MEDIA_DIRECTORY = config_.data_dir
 import os
 class Widget (object):

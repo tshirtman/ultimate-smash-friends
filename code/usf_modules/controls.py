@@ -36,8 +36,8 @@ from usf_modules.new_config import Config
 config = Config()
 general = config.general
 SHARE_DIRECTORY = config.config_dir
-keyboard_config = dict([[locals.__dict__[config.keys[key]], key] 
-                        for key in config.keys])
+keyboard_config = dict([[locals.__dict__[config.keyboard[key]], key] 
+                        for key in config.keyboard])
 
 import game
 from usf_modules.ai import AI

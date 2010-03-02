@@ -18,26 +18,16 @@
 # If not, see <http://www.gnu.org/licenses/>.                                 #
 ###############################################################################
 
-""" As of right now, non of the interface is abstracted, so the API mimicks
-    SafeConfigParser's exactly:
 
-    config.get(section, option) to fetch an option
-    config.set(section, option, value) to set an option
-    config.write(config_file) to save all options
-    config.items(section) to list all options in a section
+""" It should be noted that unlike the old config, key/value pairs are loaded
+    exactly as they are represented in the config file. This is important
+    particularly for keyboard configuration, because the old  config converted
+    key names to key codes, and used them as the dicitonary's keys, using the
+    keys pressed as the values. Conversely, in new_config.py, no conversion is
+    done, so the key names are used as values where the action to perform is
+    used as the keys in the dictionary.
 
-    I'm contemplating wrapping ConfigParser so that the following can be done:
-    section.option to fetch an option
-    section.option = value to set an option
-    config.save() to save all options
-    section.options to list all options in a section
-
-    The primary benefit of wrapping ConfigParser is that less typing would be
-    required. Compare:
-    config.set('GENERAL', 'WALKSPEED', 200)
-    GENERAL.WALKSPEED = 200
 """
-
 from __future__ import with_statement
 
 from os import environ, makedirs, path, stat
