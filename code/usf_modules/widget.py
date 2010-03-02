@@ -16,25 +16,18 @@
 # You should have received a copy of the GNU General Public License along with #
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
+import os
+
 import pygame
 from pygame.locals import *
-from usf_modules.config import (
-        config,
-        save_conf,
-        load_config,
-        save_sound_conf,
-        load_sound_config,
-        save_keys_conf,
-        load_key_config,
-        keyboard_config,
-        )
+from usf_modules.config import config
 from usf_modules.new_config import Config
 config_ = Config()
 general = config_.general
 sound_config = config_.audio
-keyboard = config_.keyboard
+keyboard_config = config_.keyboard
 MEDIA_DIRECTORY = config_.data_dir
-import os
+
 class Widget (object):
     """
     This class is the base of all other widget.
@@ -73,10 +66,10 @@ class Widget (object):
             if(value.split(':')[1] == "keyboard"):
                 numcle=0
                 try:
-                    while keyboard.keys()[numcle] != value.split(':')[2]:
+                    while keyboard_config.keys()[numcle] != value.split(':')[2]:
                         numcle += 1
 
-                    self.text = pygame.key.name(eval(keyboard.values()[numcle]))
+                    self.text = pygame.key.name(eval(keyboard_config.values()[numcle]))
                 except:
                     self.text ="not defined"
             elif(value.split(':')[1] == "sounds"):
