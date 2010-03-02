@@ -41,8 +41,6 @@ class AI(object):
             self.enemy_number.append (pl.num)
             self.enemy_position.append (pl.place)
             self.enemy_distance.append (self.iam.dist (pl))
-        print self.enemy_position
-        print self.iam.place
     def update(self, game, iam):
         self.sequences_ai = []
         self.num = iam
@@ -50,13 +48,17 @@ class AI(object):
         self.game = game
         self.update_enemy()
         self.choose_strategy()
-        print "I am clever today !"
     def choose_strategy(self):
-        if(self.iam.place[0] <self.enemy_position[0][0]):
+        """if(self.iam.place[0] <self.enemy_position[0][0]):
             self.sequences_ai.append(("PL"+ str(self.num) + "_RIGHT",time.time()))
             self.iam.walking_vector[0] = config['WALKSPEED']
             self.iam.reversed = False
         if(self.iam.place[0] >self.enemy_position[0][0]):
             self.sequences_ai.append(("PL"+ str(self.num) + "_LEFT",time.time()))
             self.iam.walking_vector[0] = config['WALKSPEED']
-            self.iam.reversed = True
+            self.iam.reversed = True"""
+        if self.enemy_position[0][0] < self.iam.place[0] :
+            print "droite"
+        else :
+            print "gauche"
+        

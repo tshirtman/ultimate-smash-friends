@@ -100,7 +100,7 @@ class Main(object):
                           action='store', dest='level', metavar='levelname',
                           help='select level by name')
         parser.add_option('-p', '--players',
-                          action='store', dest='players', nargs=4,
+                          action='store', dest='players', nargs=1,
                           metavar='player1,player2..',
                           help='select up to 4 players by name')
         parser.add_option('-s', '--server',
@@ -124,10 +124,10 @@ class Main(object):
         """
 
         if options.level:
-            level = option.level
+            level = options.level
 
         if options.players:
-            players = ['characters'+os.sep+np for np in options.players]
+            players = ['characters'+os.sep+np for np in options.players.split(',')]
 
         else:
             players = []
@@ -168,6 +168,7 @@ class Main(object):
                 self.state = "game"
                 self.clock = pygame.time.Clock()
                 self.controls = Controls()
+                self.go()
 
             else:
                 self.screen.blit(
