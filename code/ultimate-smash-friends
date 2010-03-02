@@ -235,6 +235,7 @@ class Main(object):
 
     def init_sound(self):
         if sound_config['MUSIC']:
+            print "load music"
             try:
                 self.music = music.Music()
             except:

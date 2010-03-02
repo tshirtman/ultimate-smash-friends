@@ -23,9 +23,13 @@ import time
 import random
 import logging
 
-from config import sound_config, config
+#from config import sound_config, config
 import loaders
-
+from usf_modules.new_config import Config
+config = Config()
+general = config.general
+sound_config = config.audio
+MEDIA_DIRECTORY = config.data_dir
 class Music (object):
     """
     This class take care of the background music in menus and games, it load the
@@ -44,12 +48,12 @@ class Music (object):
         for plist in ['menu','game','credits','victory']:
             self.playlists[plist] = [
                                     os.path.join(
-                                    config['MEDIA_DIRECTORY'],
+                                    MEDIA_DIRECTORY,
                                     'musics',
                                     'ogg',file)
                                 for file
                                 in os.listdir(os.path.join(
-                                    config['MEDIA_DIRECTORY'],
+                                    MEDIA_DIRECTORY,
                                     'musics',
                                     'ogg'))\
                                 if plist in file

@@ -19,7 +19,6 @@
 import pygame
 from usf_modules.config import (
         config,
-        sound_config,
         save_conf,
         load_config,
         save_sound_conf,
@@ -29,6 +28,11 @@ from usf_modules.config import (
         keyboard_config,
         reverse_keymap
         )
+from usf_modules.new_config import Config
+config_ = Config()
+general = config_.general
+sound_config = config_.audio
+MEDIA_DIRECTORY = config_.data_dir
 import os
 class Widget (object):
     """
