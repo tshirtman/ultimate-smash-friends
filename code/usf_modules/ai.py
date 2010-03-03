@@ -79,7 +79,7 @@ class AI(object):
             self.iam.reversed = True
         else :
             self.iam.reversed = False
-        if self.wait_for.split(":")[1] == "mesure2" :
+        """if self.wait_for.split(":")[1] == "mesure2" :
             if self.iam.place[1] - self.start_event  > self.max_height :
                 self.max_height = self.iam.place[1] - self.start_event
             elif self.max_height_verif is 0:
@@ -92,7 +92,7 @@ class AI(object):
             if self.wait_for.split(":")[1] == "mesure" :
                 self.sequences_ai.append(("PL"+ str(self.num+1) + "_UP",time.time()))
                 self.start_event = self.iam.place[1]
-                self.wait_for = "static:mesure2"
+                self.wait_for = "static:mesure2"""
         if self.enemy_distance[0] < 100 :
             self.sequences_ai.append(("PL"+ str(self.num+1) + "_B",time.time()))
         elif self.enemy_distanceh[0] < 20 and self.enemy_distanceh[0] > -20:
