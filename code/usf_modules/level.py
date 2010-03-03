@@ -23,8 +23,14 @@ import logging
 
 import loaders
 import time
-from config import config
+#from config import config
+from usf_modules.new_config import Config
+config_ = Config()
+config = config_.general
+MEDIA_DIRECTORY = config_.data_dir
 
+SIZE = (config['WIDTH'], 
+        config['HEIGHT'])
 from debug_utils import draw_rect
 
 # different in python 2.4 and 2.5
@@ -54,8 +60,8 @@ class Block (object):
 
         """
         real_coords = (
-                int(self.position[0]*zoom)*(config['SIZE'][0]/800.0)+coords[0],
-                int(self.position[1]*zoom)*(config['SIZE'][1]/480.0)+coords[1]
+                int(self.position[0]*zoom)*(SIZE[0]/800.0)+coords[0],
+                int(self.position[1]*zoom)*(SIZE[1]/480.0)+coords[1]
                 )
 
         surface.blit(loaders.image(self.texture, zoom=zoom)[0], real_coords)
@@ -77,7 +83,7 @@ class VectorBloc (Block):
         self.rects = rects
         self.relative = relative
         self.texture = os.path.join(
-                config['MEDIA_DIRECTORY'],
+                MEDIA_DIRECTORY,
                 "levels",
                 texture
                 )
@@ -116,7 +122,7 @@ class MovingPart (Block):
         #logging.debug('moving block created')
         self.rects = rects
         self.texture = os.path.join(
-                config['MEDIA_DIRECTORY'],
+                MEDIA_DIRECTORY,
                 "levels",
                 texture
                 )
@@ -206,7 +212,7 @@ class Level ( object ):
         self.map = []
         if os.access(
                 os.path.join(
-                    config['MEDIA_DIRECTORY'],
+                    MEDIA_DIRECTORY,
                     'levels',
                     levelname+os.extsep+'xml'
                     ),
@@ -215,7 +221,7 @@ class Level ( object ):
             xml = ElementTree.ElementTree(
                     None,
                     os.path.join(
-                        config['MEDIA_DIRECTORY'],
+                        MEDIA_DIRECTORY,
                         'levels',
                         levelname+os.extsep+'xml'
                         )
@@ -226,19 +232,19 @@ class Level ( object ):
             self.name = attribs['name']
 
             self.background = os.path.join(
-                        config['MEDIA_DIRECTORY'],
+                        MEDIA_DIRECTORY,
                         'levels',
                         attribs['background']
                         )
 
             self.level = os.path.join(
-                        config['MEDIA_DIRECTORY'],
+                        MEDIA_DIRECTORY,
                         'levels',
                         attribs['middle']
                         )
 
             self.foreground = os.path.join(
-                        config['MEDIA_DIRECTORY'],
+                        MEDIA_DIRECTORY,
                         'levels',
                         attribs['foreground']
                         )
@@ -337,13 +343,13 @@ class Level ( object ):
             # else we use old loading method.
             if not server:
                 self.background = os.path.join(
-                            config['MEDIA_DIRECTORY'],
+                            MEDIA_DIRECTORY,
                             'levels',
                             levelname+'-background'+os.extsep+'png'
                             )
 
                 self.level = os.path.join(
-                            config['MEDIA_DIRECTORY'],
+                            MEDIA_DIRECTORY,
                             'levels',
                             levelname+'-middle'+os.extsep+'png'
                             )
@@ -351,14 +357,14 @@ class Level ( object ):
                 self.border = self.rect.inflate(self.rect[2]/2, self.rect[3]/2)
 
                 self.foreground = os.path.join(
-                            config['MEDIA_DIRECTORY'],
+                            MEDIA_DIRECTORY,
                             'levels',
                             levelname+'-foreground'+os.extsep+'png'
                             )
 
             for line in open(
                 os.path.join(
-                    config['MEDIA_DIRECTORY'],
+                    MEDIA_DIRECTORY,
                     'levels',
                     levelname+os.extsep+'map'
                 )
@@ -392,7 +398,7 @@ class Level ( object ):
 
     def draw_background(self, surface, coords=(0,0)):
         surface.blit( loaders.image(self.background,
-            scale=config['SIZE'])[0], coords )
+            scale=SIZE)[0], coords )
 
     def draw_level(self, surface, coords=(0,0), zoom=1):
         surface.blit( loaders.image(self.level, zoom=zoom)[0], coords)

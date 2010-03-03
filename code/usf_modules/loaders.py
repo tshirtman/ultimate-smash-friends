@@ -34,7 +34,16 @@ except:
     Log().log("old version of pygame no BLEND_MAX")
     BLEND_MAX = None
 
-import config
+
+#from config import config
+from usf_modules.new_config import Config
+config_ = Config()
+config = config_.general
+MEDIA_DIRECTORY = config_.data_dir
+
+SIZE = (config['WIDTH'], 
+        config['HEIGHT'])
+from debug_utils import draw_rect
 
 def memoize(function):
     cache = {}
@@ -108,9 +117,9 @@ def image(name, *args, **kwargs):
                 loaders.image(name, **kwargs)[0],
                 (
                  int(loaders.image(name, *args, **kwargs)[1][2]*zoom*
-                     config.config['SIZE'][0]/800.0),
+                     SIZE[0]/800.0),
                  int(loaders.image(name, *args, **kwargs)[1][3]*zoom*
-                     config.config['SIZE'][1]/480.0)
+                     SIZE[1]/480.0)
                 )
                 )
     else:

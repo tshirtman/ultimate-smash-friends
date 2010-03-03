@@ -27,8 +27,16 @@ import logging
 import entity_skin
 import loaders
 import timed_event
-from config import config
+#from config import config
 
+from usf_modules.new_config import Config
+from usf_modules.new_config import Config
+config_ = Config()
+config = config_.general
+MEDIA_DIRECTORY = config_.data_dir
+
+SIZE = (config['WIDTH'], 
+        config['HEIGHT'])
 from debug_utils import draw_rect
 from enums import (TOP_RIGHT, UPPER_RIGHT, LOWER_RIGHT, BOTTOM_RIGHT,
                    BOTTOM_LEFT, LOWER_LEFT, UPPER_LEFT, TOP_LEFT)
@@ -379,7 +387,7 @@ class Entity (object):
         """
         Draw the entity on the surface(i.e: the screen), applying coordinates
         offsets and zoom scaling as necessary, implementation depends on the
-        definition of the global "config['SIZE']", as a 2 elements list of in integers,
+        definition of the global "SIZE", as a 2 elements list of in integers,
         containing respective height and width of the screen.
 
         coords is a tuple containing the current position of the camera, zoom is
@@ -388,9 +396,9 @@ class Entity (object):
         """
         if self.visible == True:
             real_coords = (
-                    int(self.place[0]*zoom)*(config['SIZE'][0]/800.0)+coords[0]
+                    int(self.place[0]*zoom)*(SIZE[0]/800.0)+coords[0]
                     ,
-                    int(self.place[1]*zoom)*(config['SIZE'][1]/480.0)+coords[1]
+                    int(self.place[1]*zoom)*(SIZE[1]/480.0)+coords[1]
                     )
             surface.blit(
                       loaders.image(
@@ -405,16 +413,16 @@ class Entity (object):
             if self.shield['on']:
                 image = loaders.image(
                             os.path.sep.join(
-                                (config['MEDIA_DIRECTORY'],'misc','shield.png')
+                                (MEDIA_DIRECTORY,'misc','shield.png')
                                 ),
                                 zoom=zoom*self.shield['power']*3
                             )
 
                 shield_coords = (
-                    int(self.place[0]*zoom)*(config['SIZE'][0]/800.0)+coords[0]+\
+                    int(self.place[0]*zoom)*(SIZE[0]/800.0)+coords[0]+\
                     .5*(self.rect[2]-image[1][2])
                     ,
-                    int(self.place[1]*zoom)*(config['SIZE'][1]/480.0)+coords[1]+\
+                    int(self.place[1]*zoom)*(SIZE[1]/480.0)+coords[1]+\
                     .5*(self.rect[3]-image[1][3]) - .25*self.rect[3]
                     )
 
@@ -456,7 +464,7 @@ class Entity (object):
 
         # Gravity
         if self.gravity :#and not self.onGround:
-            self.vector[1] += (config['GRAVITY']) * dt
+            self.vector[1] += float(config['GRAVITY']) * dt
 
         # Application of air friction.
         self.vector[0] -= config['AIR_FRICTION'] * self.vector[0] * dt

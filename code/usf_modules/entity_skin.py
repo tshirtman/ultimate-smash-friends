@@ -25,8 +25,15 @@ from animations import Frame, PreciseTimedAnimation
 import loaders
 import game
 import timed_event
-from config import config
+#from config import config
 
+from usf_modules.new_config import Config
+config_ = Config()
+config = config_.general
+MEDIA_DIRECTORY = config_.data_dir
+
+SIZE = (config['WIDTH'], 
+        config['HEIGHT'])
 # different in python 2.4 and 2.5
 if sys.version_info[0] == 2 and sys.version_info[1] >= 5:
     from xml.etree import ElementTree
@@ -63,7 +70,7 @@ class Entity_skin (object):
 
         else:
             file = os.path.join(
-                        config['MEDIA_DIRECTORY'],
+                        MEDIA_DIRECTORY,
                         dir_name,
                         dir_name.split(os.sep)[-1]
                         +os.extsep+'xml'
@@ -82,7 +89,7 @@ class Entity_skin (object):
         if not server:
             self.image = loaders.image(
                     os.path.join(
-                        config['MEDIA_DIRECTORY'],
+                        MEDIA_DIRECTORY,
                         dir_name,
                         attribs['image']
                         )
@@ -139,7 +146,7 @@ class Entity_skin (object):
                 sounds.append(
                         pygame.mixer.Sound(
                             os.path.join(
-                                config['MEDIA_DIRECTORY'],
+                                MEDIA_DIRECTORY,
                                 dir_name,
                                 sound.attrib['filename']
                                 )
@@ -150,7 +157,7 @@ class Entity_skin (object):
 
             for frame in movement.findall('frame'):
                 image = os.path.join(
-                            config['MEDIA_DIRECTORY'],
+                            MEDIA_DIRECTORY,
                             dir_name,
                             frame.attrib['image']
                             )

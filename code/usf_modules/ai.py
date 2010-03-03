@@ -29,6 +29,11 @@ SIZE = (general['WIDTH'],
 import pygame
 class AI(object):
     sequences_ai = []
+    last_vector =0
+    wait_for= "static:mesure"
+    walk = False
+    max_height = 0
+    max_height_verif = 0
     def update_enemy (self) :
         """
         This function update the information about different enemys
@@ -64,15 +69,43 @@ class AI(object):
         aiy = self.iam.place[1]/8
         enx = self.enemy_position[0][0]/8
         eny = self.enemy_position[0][1]/8
+        for block in self.game.level.map:
+            pygame.draw.line(self.game.screen, pygame.Color("green"), (block.left/8,block.top/8), (block.right/8,block.top/8))
+            pygame.draw.line(self.game.screen, pygame.Color("green"), (block.left/8,block.bottom/8), (block.right/8,block.bottom/8))
         pygame.draw.line(self.game.screen, pygame.Color("red"), (aix,aiy), (enx,eny))
+        pygame.draw.line(self.game.screen, pygame.Color("red"), (aix,aiy), (aix,aiy-self.max_height_verif/8))
         pygame.display.update()
-        self.iam.walking_vector[0] = 0
         if self.enemy_position[0][0] < self.iam.place[0] :
             self.iam.reversed = True
         else :
             self.iam.reversed = False
-        if self.enemy_distanceh[0] < 20 and self.enemy_distanceh[0] > -20:
-            self.iam.walking_vector[0] = general['WALKSPEED']
-            self.sequences_ai.append(("PL"+ str(self.num+1) + "_LEFT",time.time()))
+        if self.wait_for.split(":")[1] == "mesure2" :
+            if self.iam.place[1] - self.start_event  > self.max_height :
+                self.max_height = self.iam.place[1] - self.start_event
+            elif self.max_height_verif is 0:
+                print "max_height ="
+                self.max_height_verif = self.max_height
+                print self.max_height_verif
+        anim = self.iam.entity_skin.current_animation
+        #print anim
+        if anim == self.wait_for.split(":")[0] :
+            if self.wait_for.split(":")[1] == "mesure" :
+                self.sequences_ai.append(("PL"+ str(self.num+1) + "_UP",time.time()))
+                self.start_event = self.iam.place[1]
+                self.wait_for = "static:mesure2"
         if self.enemy_distance[0] < 100 :
             self.sequences_ai.append(("PL"+ str(self.num+1) + "_B",time.time()))
+        elif self.enemy_distanceh[0] < 20 and self.enemy_distanceh[0] > -20:
+            self.iam.walking_vector[0] = general['WALKSPEED']
+            self.sequences_ai.append(("PL"+ str(self.num+1) + "_LEFT",time.time()))
+            self.walk = True
+        elif self.walk == True :
+            self.iam.walking_vector[0] = 0
+            if self.iam.entity_skin.current_animation == "walk":
+                self.iam.entity_skin.change_animation(
+                        "static",
+                        self.game,
+                        params={'entity': self.iam}
+                        )
+        
+            

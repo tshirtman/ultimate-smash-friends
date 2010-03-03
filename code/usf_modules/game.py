@@ -41,7 +41,15 @@ import timed_event
 import network
 from level import Level
 from controls import Controls
-from config import config
+#from config import config
+from usf_modules.new_config import Config
+config_ = Config()
+config = config_.general
+MEDIA_DIRECTORY = config_.data_dir
+
+SIZE = (config['WIDTH'], 
+        config['HEIGHT'])
+from debug_utils import draw_rect
 from singletonmixin import Singleton
 
 from debug_utils import draw_rect
@@ -86,13 +94,13 @@ class Game (object):
             self.level_place = [0, 0]
             self.game_font = pygame.font.Font(None, 50)
             image_src = os.path.join(
-                        config['MEDIA_DIRECTORY'],
+                        MEDIA_DIRECTORY,
                         'misc',
                         'loading.png'
                         )
 
             self.heart = os.path.join(
-                        config['MEDIA_DIRECTORY'],
+                        MEDIA_DIRECTORY,
                         'misc',
                         'heart.png'
                         )
@@ -104,7 +112,7 @@ class Game (object):
                         True,
                         pygame.color.Color("white")
                         ),
-                    ( 30, 4*config['SIZE'][1]/5 )
+                    ( 30, 4*SIZE[1]/5 )
                     )
 
             pygame.display.flip()
@@ -119,7 +127,7 @@ class Game (object):
                         True,
                         pygame.color.Color("white")
                         ),
-                    ( 30, 4*config['SIZE'][1]/5 )
+                    ( 30, 4*SIZE[1]/5 )
                     )
 
             pygame.display.flip()
@@ -136,7 +144,7 @@ class Game (object):
                                 i+1,
                                 self,
                                 player.replace("AI", ""),
-                                ((i+1)*config['SIZE'][0]/5,100)
+                                ((i+1)*SIZE[0]/5,100)
                                 )
                             )
                     self.players[len(self.players)-1].ai = True
@@ -146,11 +154,11 @@ class Game (object):
                                 i+1,
                                 self,
                                 player,
-                                ((i+1)*config['SIZE'][0]/5,100)
+                                ((i+1)*SIZE[0]/5,100)
                                 )
                             )
         if screen is not None:
-            self.icon_space = config['SIZE'][0]/len(players_)
+            self.icon_space = SIZE[0]/len(players_)
 
         # various other initialisations
         self.last_clock = time.time()
@@ -201,7 +209,7 @@ class Game (object):
         try:
             os.listdir(
                     os.path.join(
-                        config['MEDIA_DIRECTORY'],
+                        MEDIA_DIRECTORY,
                         'items',
                         item
                         )
@@ -281,7 +289,7 @@ class Game (object):
                      player.entity_skin.image,
                         (
                         -0.5*self.icon_space+player.num*self.icon_space,
-                        config['SIZE'][1]*.9
+                        SIZE[1]*.9
                         )
                     )
 
@@ -291,7 +299,7 @@ class Game (object):
                      pygame.color.Color("red")),
                         (
                         -0.5*self.icon_space+player.num*self.icon_space,
-                        config['SIZE'][1]*.9
+                        SIZE[1]*.9
                         )
                     )
             # draw player's lives.
@@ -301,7 +309,7 @@ class Game (object):
                                     (
                                     -0.5*self.icon_space+player.num*\
                                     self.icon_space+i*self.icon_space/40,
-                                    config['SIZE'][1]*.95
+                                    SIZE[1]*.95
                                     )
                                 )
 
@@ -316,8 +324,8 @@ class Game (object):
                             pygame.color.Color('red')
                             ),
                         (
-                         config['SIZE'][0] * 3 / 4,
-                         num*config['SIZE'][1] / 4
+                         SIZE[0] * 3 / 4,
+                         num*SIZE[1] / 4
                         )
                         )
             if 'action' in debug_params:
@@ -330,7 +338,7 @@ class Game (object):
                             ),
                         (
                          0,
-                         num*config['SIZE'][1] / 4
+                         num*SIZE[1] / 4
                         )
                         )
             if 'controls' in debug_params:
@@ -343,7 +351,7 @@ class Game (object):
                             ),
                         (
                          0,
-                         num*config['SIZE'][1] / 4
+                         num*SIZE[1] / 4
                         )
                         )
 
@@ -360,8 +368,8 @@ class Game (object):
                                             str(math.sin(self.ending/10)) [3:5]+
                                             "30"
                                         )), (
-                                              config['SIZE'][0]/2,
-                                              config['SIZE'][1]/2)
+                                              SIZE[0]/2,
+                                              SIZE[1]/2)
                                             )
 
         if len([player for player in self.players if player.lives > 0]) == 0:
@@ -376,8 +384,8 @@ class Game (object):
                                             "30"
                                         )),
                                             (
-                                              config['SIZE'][0]/2,
-                                              config['SIZE'][1]/2
+                                              SIZE[0]/2,
+                                              SIZE[1]/2
                                             )
                                         )
 
@@ -418,17 +426,17 @@ class Game (object):
             else:
                 ordered = sorted([ i.rect[0] for i in present_players ])
                 L = max(
-                    config['SIZE'][0],
+                    SIZE[0],
                     max(1, ordered[-1])- max(1, ordered[0])
                     )
 
                 ordered = sorted([ i.rect[1] for i in present_players ])
 
-                H = max( config['SIZE'][1], ordered[-1], ordered[0])
+                H = max( SIZE[1], ordered[-1], ordered[0])
 
                 precise_zoom = min (
-                        1.0*config['SIZE'][0] / L,
-                        1.0*config['SIZE'][1] / H
+                        1.0*SIZE[0] / L,
+                        1.0*SIZE[1] / H
                         )
 
                 # there is a trade between zoom sharpness and speed so we force
@@ -449,8 +457,8 @@ class Game (object):
             # calculate coordinates of top left corner of level
             # rect the barycenter of players at the center of the screen
             self.level_place = [
-                 -(players_barycenter[0])*self.zoom+config['SIZE'][0]/2 ,
-                 -(players_barycenter[1])*self.zoom+config['SIZE'][1]/2 
+                 -(players_barycenter[0])*self.zoom+SIZE[0]/2 ,
+                 -(players_barycenter[1])*self.zoom+SIZE[1]/2 
                  ]
 
         self.update_events( deltatime )
