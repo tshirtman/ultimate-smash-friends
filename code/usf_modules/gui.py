@@ -32,8 +32,9 @@ from usf_modules.new_config import Config
 config = Config()
 general = config.general
 sound_config = config.audio
+keyboard = config.keyboard
 MEDIA_DIRECTORY = config.data_dir
-
+from usf_modules.config import reverse_keymap
 
 import usf_modules.controls
 import entity_skin
@@ -476,14 +477,8 @@ class Gui(object):
                 self.widget_list[self.screen_current][widget_name].text  = \
                   pygame.key.name(event_current.dict['key'])
 
-                numcle = 0
-                #dirty ?
-                for numcle in range(0,len(controls.keys.values())):
-                    if(controls.keys.values()[numcle] == widget_name.replace('txtconfig', '')):
-                        break
-                controls.keys[event_current.dict['key']] = widget_name.replace('txtconfig', '')
-                config.save()
-        else:
+                keyboard[widget_name.replace('txtconfig', '')] = reverse_keymap[event_current.dict['key']]
+        else :
             while(True):
                 time.sleep(0.04)
                 self.screen.blit(self.image,(0,0))
