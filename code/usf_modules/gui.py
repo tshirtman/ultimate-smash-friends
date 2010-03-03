@@ -48,6 +48,7 @@ from usf_modules.widget_paragraph import WidgetParagraph
 from usf_modules.widget_image import WidgetImage
 from usf_modules.widget_image_button import WidgetImageButton
 from usf_modules.widget_textarea import WidgetTextarea
+from usf_modules.widget_checkbox import WidgetCheckbox
 
 
 #translation
@@ -251,6 +252,10 @@ class Gui(object):
                         self.widget_list[filename][id_current] = WidgetImageButton(self.screen)
                         self.widget_list[filename][id_current].action=xml_file.childNodes[i].getAttribute("action")
                         self.widget_list_order[filename].append(id_current)
+                    elif(xml_file.childNodes[i].tagName == "checkbox"):
+                        self.widget_list[filename][id_current] = WidgetCheckbox(self.screen)
+                        self.widget_list[filename][id_current].action=xml_file.childNodes[i].getAttribute("action")
+                        self.widget_list_order[filename].append(id_current)
                     elif(xml_file.childNodes[i].tagName == "textarea"):
                         self.widget_list[filename][id_current] = WidgetTextarea(self.screen)
                         self.widget_list[filename][id_current].str_len =int(xml_file.childNodes[i].getAttribute("nb"))
@@ -403,11 +408,11 @@ class Gui(object):
             self.image.set_alpha(255)
             str_return  = "return False, None"
         elif(id_widget=="fullscreen"):
-            if(general['FULLSCREEN']):
-                general['FULLSCREEN'] = False
+            if(general['FULLSCREEN'] == "True"):
+                general['FULLSCREEN'] = "False"
                 self.widget_list[self.screen_current]['fullscreen'].text = "False"
             else:
-                general['FULLSCREEN'] = True
+                general['FULLSCREEN'] = "True"
                 self.widget_list[self.screen_current]['fullscreen'].text = "True"
         elif(id_widget=="musicp"):
             sound_config['MUSIC_VOLUME'] += 5
@@ -428,6 +433,15 @@ class Gui(object):
             self.image.set_alpha(255)
             self.screen_shot = None
             str_return  = "return True, self.game"
+        elif(id_widget=="full_check"):
+            if self.widget_list[self.screen_current][id_widget].text == "True" :
+                general['FULLSCREEN'] = "False"
+                pygame.display.toggle_fullscreen()
+                self.widget_list[self.screen_current][id_widget].setText("")
+            else:
+                general['FULLSCREEN'] = "True"
+                pygame.display.toggle_fullscreen()
+                self.widget_list[self.screen_current][id_widget].setText("True")
         else:
             if(widget_action.split(":")[0] == "goto"):
                 self.goto_screen(widget_action.split(":")[1])

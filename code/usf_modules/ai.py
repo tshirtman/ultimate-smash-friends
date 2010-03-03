@@ -18,14 +18,15 @@
 ################################################################################
 import time
 
-from usf_modules.config  import (
-    config,
-    keyboard_config,
-    sound_config,
-    reverse_keymap,
-    save_keys_conf
-    )
-    
+from usf_modules.new_config import Config
+config = Config()
+general = config.general
+sound_config = config.audio
+SHARE_DIRECTORY = config.config_dir
+MEDIA_DIRECTORY = config.data_dir
+SIZE = (general['WIDTH'], 
+        general['HEIGHT'])
+import pygame
 class AI(object):
     sequences_ai = []
     def update_enemy (self) :
@@ -59,6 +60,13 @@ class AI(object):
             self.sequences_ai.append(("PL"+ str(self.num) + "_LEFT",time.time()))
             self.iam.walking_vector[0] = config['WALKSPEED']
             self.iam.reversed = True"""
+        aix = self.iam.place[0]/8
+        aiy = self.iam.place[1]/8
+        enx = self.enemy_position[0][0]/8
+        eny = self.enemy_position[0][1]/8
+        print self.game.level_place
+        pygame.draw.line(self.game.screen, pygame.Color("red"), (aix,aiy), (enx,eny))
+        pygame.display.update()
         self.iam.walking_vector[0] = 0
         if self.enemy_position[0][0] < self.iam.place[0] :
             self.iam.reversed = True
