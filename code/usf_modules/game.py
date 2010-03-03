@@ -130,12 +130,12 @@ class Game (object):
             logging.debug('player '+str(i)+' loaded')
             if player is not None:
                 #logging.debug(player)
-                if player.split(os.sep)[1][:2] == "AI":
+                if "AI" in player.split(os.sep)[1][:2]:
                     self.players.append(
                             entity.Entity(
                                 i+1,
                                 self,
-                                "characters" + os.sep + "stick-tiny",
+                                player.replace("AI", ""),
                                 ((i+1)*config['SIZE'][0]/5,100)
                                 )
                             )

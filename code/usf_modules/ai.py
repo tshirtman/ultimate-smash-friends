@@ -64,7 +64,6 @@ class AI(object):
         aiy = self.iam.place[1]/8
         enx = self.enemy_position[0][0]/8
         eny = self.enemy_position[0][1]/8
-        print self.game.level_place
         pygame.draw.line(self.game.screen, pygame.Color("red"), (aix,aiy), (enx,eny))
         pygame.display.update()
         self.iam.walking_vector[0] = 0
@@ -72,7 +71,8 @@ class AI(object):
             self.iam.reversed = True
         else :
             self.iam.reversed = False
-        if self.enemy_distanceh[0] < 10 and self.enemy_distanceh[0] > -10 and self.enemy_distance[0] > 100:
-            self.iam.walking_vector[0] = config['WALKSPEED']
+        if self.enemy_distanceh[0] < 20 and self.enemy_distanceh[0] > -20:
+            self.iam.walking_vector[0] = general['WALKSPEED']
+            self.sequences_ai.append(("PL"+ str(self.num+1) + "_LEFT",time.time()))
         if self.enemy_distance[0] < 100 :
             self.sequences_ai.append(("PL"+ str(self.num+1) + "_B",time.time()))
