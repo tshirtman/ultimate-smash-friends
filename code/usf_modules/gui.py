@@ -212,19 +212,21 @@ class Gui(object):
         game with level and characters selected.
 
         """
-        self.goto_screen("ingame.usfgui")
 
         players = [
         self.game_data['character_file'][p]
         for p in self.players if p != -1
         ]
-
+        for i in range(0,3):
+            if self.widget_list['characters.usfgui']["ai" + str(i)].text == "True":
+                players[i] = players[i].replace("characters/", "characters/AI")
         game = Game(
             self.screen,
             self.game_data['level_name'][self.level_current],
             players
         )
 
+        self.goto_screen("ingame.usfgui")
         self.state="game"
         return game
 
@@ -442,6 +444,11 @@ class Gui(object):
             else:
                 general['FULLSCREEN'] = "True"
                 pygame.display.toggle_fullscreen()
+                self.widget_list[self.screen_current][id_widget].setText("True")
+        elif "ai" in id_widget :
+            if self.widget_list[self.screen_current][id_widget].text == "True" :
+                self.widget_list[self.screen_current][id_widget].setText("")
+            else:
                 self.widget_list[self.screen_current][id_widget].setText("True")
         else:
             if(widget_action.split(":")[0] == "goto"):
