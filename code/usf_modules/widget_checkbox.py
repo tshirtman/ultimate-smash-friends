@@ -69,6 +69,8 @@ class WidgetCheckbox(Widget):
                     self.text = str(general[value.split(':')[1]])
         else:
             self.text = value
+        if(self.sizex == 0):
+            self.sizex = self.sizey
         if self.text == "True" :
             self.image = loaders.image(
                 MEDIA_DIRECTORY+
@@ -77,7 +79,7 @@ class WidgetCheckbox(Widget):
                 os.sep+
                 general['THEME']+
                 os.sep+
-                "checkbox_full.png"
+                "checkbox_full.png", scale=(self.sizex, self.sizey)
                 )[0]
         else :
             self.image = loaders.image(
@@ -87,9 +89,6 @@ class WidgetCheckbox(Widget):
                 os.sep+
                 general['THEME']+
                 os.sep+
-                "checkbox_empty.png"
+                "checkbox_empty.png", scale=(self.sizex, self.sizey)
                 )[0]
-        if(self.sizex == 0):
-            self.sizex = self.sizey
-        self.image = pygame.transform.scale(self.image, (self.sizex, self.sizey))
         

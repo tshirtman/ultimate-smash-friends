@@ -59,7 +59,7 @@ class WidgetImageButton(Widget):
         elif (self.state == "hover"):
             self.drawHover()
     def setText(self, text):
-        self.text = text
+        self.text = text.replace("theme/", MEDIA_DIRECTORY + os.sep)
         self.image = loaders.image(
             MEDIA_DIRECTORY+
             os.sep+

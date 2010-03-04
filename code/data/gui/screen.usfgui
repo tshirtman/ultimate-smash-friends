@@ -1,6 +1,6 @@
 <gui>
 
 <label value="Fullscreen" posx="25" posy="45" id="full_label" />
-<checkbox value="config:FULLSCREEN" posx="45" posy="45" sizey="8" sizex="0" id="full_check" action="" />
+<checkbox value="config:FULLSCREEN" posx="45" posy="45" sizey="7" sizex="0" id="full_check" action="" />
 <parent>configure.usfgui</parent>
 </gui>

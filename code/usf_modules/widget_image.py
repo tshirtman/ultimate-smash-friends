@@ -43,13 +43,12 @@ class WidgetImage(Widget):
     def draw(self):
         self.drawSimple()
     def setText(self, text):
+        if(self.sizex == 0):
+            self.sizex = self.sizey
         self.text = text.replace("/", os.sep)
         self.image = loaders.image(
             config['MEDIA_DIRECTORY']+
             os.sep+
-            self.text
+            self.text, scale=(self.sizex, self.sizey)
             )[0]
-        if(self.sizex == 0):
-            self.sizex = self.sizey
-        self.image = pygame.transform.scale(self.image, (self.sizex, self.sizey))
         

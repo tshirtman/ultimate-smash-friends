@@ -104,7 +104,10 @@ def image(name, *args, **kwargs):
                 )
         scale = kwargs['scale']
         kwargs['scale'] = None
-        image = pygame.transform.scale(
+        try:
+            image = loaders.image(name.replace(".png", str(config['WIDTH']) + ".png"), *args, **kwargs)[0]
+        except:
+            image = pygame.transform.scale(
                 loaders.image(name, *args, **kwargs)[0],
                 scale
                 )

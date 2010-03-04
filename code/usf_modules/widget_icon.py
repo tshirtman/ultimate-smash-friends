@@ -18,6 +18,7 @@
 ################################################################################
 from usf_modules.widget import *
 import pygame
+from usf_modules import loaders
 class WidgetIcon(Widget):
     """
     A simple button widget.
@@ -37,9 +38,7 @@ class WidgetIcon(Widget):
             self.game_font.render(
             self.text,
             True,
-            pygame.color.Color(
-                "white"
-                )
+            self.color
             ),
         (self.posx + self.sizex/10, self.posy+self.sizey/2-self.screen.get_height()/50)
         )
@@ -49,9 +48,7 @@ class WidgetIcon(Widget):
             self.game_font.render(
             self.text,
             True,
-            pygame.color.Color(
-                "white"
-                )
+            self.color
             ),
         (self.posx + self.sizex/10, self.posy + self.sizey/2-self.screen.get_height()/50)
         )
@@ -61,28 +58,23 @@ class WidgetIcon(Widget):
             self.game_font.render(
             self.text,
             True,
-            pygame.color.Color(
-                "white"
-                )
+            self.color
             ),
         (self.posx + self.sizex/10, self.posy+self.sizey/2-self.screen.get_height()/50)
         )
     def load(self):
-        self.background = pygame.image.load(MEDIA_DIRECTORY+
+        path = (MEDIA_DIRECTORY+
             os.sep+
             'gui'+
             os.sep+
             general['THEME']+
             os.sep+
-            'back_button.png').convert_alpha()
-        self.background  = pygame.transform.scale(self.background, (self.sizex, self.sizey))
-        #self.background.set_colorkey((255,255,255))
-        self.background_hover = pygame.image.load(MEDIA_DIRECTORY+
+            'back_button.png')
+        self.background = loaders.image(path, scale=(self.sizex, self.sizey))[0]
+        self.background_hover = loaders.image(MEDIA_DIRECTORY+
             os.sep+
             'gui'+
             os.sep+
             general['THEME']+
             os.sep+
-            'back_button_hover.png').convert_alpha()
-        self.background_hover  = pygame.transform.scale(self.background_hover, (self.sizex, self.sizey))
-        #self.background_hover.set_colorkey((255,255,255))
+            'back_button_hover.png', scale=(self.sizex, self.sizey))[0]

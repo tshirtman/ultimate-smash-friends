@@ -27,6 +27,7 @@ general = config_.general
 sound_config = config_.audio
 keyboard_config = config_.keyboard
 MEDIA_DIRECTORY = config_.data_dir
+import xml.dom.minidom
 
 class Widget (object):
     """
@@ -41,6 +42,7 @@ class Widget (object):
     selectable = False
     text = ""
     anim = False
+    color="white"
     def __init__(self, screen):
         self.game_font = pygame.font.Font(
             MEDIA_DIRECTORY +
@@ -48,6 +50,17 @@ class Widget (object):
             "gui" +os.sep + general['THEME'] + os.sep +
             "font.otf", screen.get_height()/20)
         self.screen = screen
+        xml_file = xml.dom.minidom.parse(MEDIA_DIRECTORY+
+            os.sep+
+            'gui'+
+            os.sep+ general['THEME'] + os.sep + "theme.xml").getElementsByTagName("theme")[0]
+        self.color = pygame.color.Color("white")
+        for i in range (0, len(xml_file.childNodes)):
+            try:
+                if xml_file.childNodes[i].tagName == "color":
+                    self.color = pygame.color.Color(str(xml_file.childNodes[i].getAttribute("value")))
+            except:
+                pass
         self.load()
     def load(self):
         pass

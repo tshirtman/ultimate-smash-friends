@@ -26,9 +26,7 @@ class WidgetLabel(Widget):
             self.game_font.render(
             _(self.text),
             True,
-            pygame.color.Color(
-                "white"
-                )
+            self.color
             ),
         (self.posx, self.posy)
         )
