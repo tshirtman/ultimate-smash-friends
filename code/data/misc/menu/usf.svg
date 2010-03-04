@@ -433,6 +433,27 @@
        x2="-1311.699"
        y2="360.48067"
        gradientUnits="userSpaceOnUse" />
+    <inkscape:perspective
+       id="perspective3012"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective3812"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective3834"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -444,18 +465,18 @@
      objecttolerance="10"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.56729519"
-     inkscape:cx="379.84997"
-     inkscape:cy="659.67259"
+     inkscape:zoom="2.2691808"
+     inkscape:cx="860.85888"
+     inkscape:cy="157.62028"
      inkscape:document-units="px"
      inkscape:current-layer="g3207"
      showgrid="false"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:window-width="1440"
-     inkscape:window-height="875"
+     inkscape:window-width="1920"
+     inkscape:window-height="1124"
      inkscape:window-x="0"
-     inkscape:window-y="1"
+     inkscape:window-y="25"
      inkscape:window-maximized="1">
     <inkscape:grid
        type="xygrid"
@@ -473,6 +494,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -942,6 +964,46 @@
          id="path3039"
          d="m 999.7684,91.031514 c -2.06037,-6.619951 -3.36687,-13.418295 -3.66632,-20.34132 -0.0167,-11.833231 11.45162,-32.148037 26.84532,-21.039987 10.0883,12.825363 14.5305,29.292093 19.07,44.679248 4.4211,16.940905 7.12,34.251835 8.2497,51.720235 0.44,6.80424 0.8762,13.62664 0.7097,20.44306 -0.4397,17.9948 -2.6525,29.35566 -5.2492,47.16616 -5.1298,27.67084 -13.2417,54.97163 -26.6907,79.81384 -7.104,13.12192 -9.6436,15.7319 -18.3081,27.45538 -8.06621,8.80046 -10.51787,12.40732 -20.1022,19.34264 -9.76816,7.06833 -39.12482,21.29387 -42.93823,22.90259 -7.03859,2.9693 -16.94665,2.39676 -24.27474,2.50615 -4.14979,-0.58555 -8.35256,-0.8736 -12.44937,-1.75667 -16.01152,-3.45128 -32.3441,-11.11105 -43.58031,-23.29901 -2.69397,-2.92216 -4.77638,-6.35391 -7.16457,-9.53086 -1.7139,-3.7677 -3.83902,-7.37423 -5.14172,-11.3031 -6.83959,-20.62784 -3.7024,-43.56083 1.20405,-64.20152 1.51876,-6.38919 3.56536,-12.64126 5.34804,-18.9619 2.28891,-6.29353 4.57783,-12.58707 6.86675,-18.88061 0,0 20.76864,-9.68082 20.76864,-9.68082 l 0,0 c -2.29039,6.23021 -4.58079,12.46042 -6.87118,18.69064 -1.7574,6.23376 -3.78851,12.39678 -5.2722,18.70129 -4.72228,20.0659 -7.61898,42.38345 -0.88594,62.38492 1.26377,3.75424 3.29927,7.20281 4.94891,10.80421 2.29442,3.04357 4.2916,6.3359 6.88324,9.13072 10.98953,11.85107 27.01208,19.13845 42.69066,22.14741 4.04228,0.77577 8.17764,0.94534 12.26646,1.41801 4.01732,-0.17873 8.06609,-0.004 12.05196,-0.5362 3.96946,-0.53038 10.05257,-6.28107 11.72053,-2.64021 1.67654,3.65958 -12.79664,5.04996 -9.53552,7.40971 3.43568,2.48606 7.53709,-3.93192 11.04167,-6.31985 9.87967,-6.73174 12.36682,-10.27149 20.71661,-18.97915 8.95145,-11.63894 11.53141,-14.17903 18.93218,-27.26045 13.93938,-24.63883 22.55828,-51.84292 27.83328,-79.55679 2.8087,-19.3262 4.5882,-27.06802 4.8675,-46.51475 0.3444,-23.9829 -3.4956,-47.96008 -9.7756,-71.03438 -3.9922,-12.382582 -9.3017,-29.894274 -17.8948,-40.116106 -0.5151,-0.612706 -1.187,-1.074197 -1.7805,-1.611296 -8.75072,2.661382 -3.63814,1.190439 20.2814,-12.798779 0.3933,-0.23004 -0.5431,0.73474 -0.7668,1.131708 -1.1089,1.967731 -1.323,4.148305 -1.564,6.36069 0.022,6.652541 1.0517,13.228476 3.4513,19.468019 0,0 -22.8359,12.687128 -22.8359,12.687128 z"
          transform="translate(7.0510024,-1.7627508)" />
+      <rect
+         ry="15.864746"
+         y="846.77417"
+         x="957.03705"
+         height="106.22027"
+         width="107.80095"
+         id="rect2385-1"
+         style="opacity:0.85106387;fill:#ff3b00;fill-opacity:1;stroke:none"
+         inkscape:export-filename="/home/xapantu/Documents/ultimate-smash-friends/code/data/gui/friend/checkbox_empty.png"
+         inkscape:export-xdpi="23.782238"
+         inkscape:export-ydpi="23.782238"
+         rx="14.10199" />
+      <rect
+         style="fill:#ffffff;fill-opacity:1;stroke:none"
+         id="rect3802"
+         width="21.153009"
+         height="86.374779"
+         x="99.74395"
+         y="1303.2109"
+         transform="matrix(0.72372347,-0.6900901,0.6900901,0.72372347,0,0)" />
+      <rect
+         style="fill:#ffffff;fill-opacity:1;stroke:none"
+         id="rect3802-7"
+         width="21.153009"
+         height="88.137535"
+         x="-1357.9774"
+         y="66.554527"
+         transform="matrix(-0.6900901,-0.72372347,0.72372347,-0.6900901,0,0)" />
+      <rect
+         ry="15.864746"
+         y="915.96204"
+         x="766.2193"
+         height="106.22027"
+         width="403.06171"
+         id="rect2385-1-1"
+         style="opacity:0.5035461;fill:#ff3b00;fill-opacity:1;stroke:none"
+         inkscape:export-filename="/home/xapantu/Documents/ultimate-smash-friends/code/data/gui/friend/back_button_hover.png"
+         inkscape:export-xdpi="31.725134"
+         inkscape:export-ydpi="31.725134"
+         rx="17.912235" />
     </g>
     <text
        xml:space="preserve"
