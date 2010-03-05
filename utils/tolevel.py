@@ -24,28 +24,30 @@ import sys
 """
 Syntax : ./tolevel.py .map .xml nameoflevel
 """
-print sys.argv[1]
-filin = open(sys.argv[1],'r').readlines()
-content = ""
-for i in filin :
-    if "<img" not in i:
-        content += i
-xml_file = xml.dom.minidom.parseString(content).getElementsByTagName("map")[0]
-filout = open(sys.argv[2],'w')
-filout.write('<?xml version="1.0" encoding="UTF-8"?>\n'
-    '<map \n'
-    '	name="'+ sys.argv[3]+'"\n'
-    '	background="'+ sys.argv[3]+'-background.png"\n'
-    '	foreground="'+ sys.argv[3]+'-foreground.png"\n'
-    '	middle="'+ sys.argv[3]+'-middle.png"\n'
-    '	>\n')
-for node in xml_file.childNodes :
-    try:
-        if node.tagName == "area" :
-            coords = str(node.getAttribute("coords")).split(',')
-            coords = str(coords[0]) + " " + coords[1] + " " + str(int(coords[2])-int(coords[0])) + " " + str(int(coords[3])-int(coords[1]))
-            filout.write('\t<block coords="' + coords + '" ></block>\n')
-    except:
-        pass
-filout.write('</map>')
+if sys.argv[1] == "--help" :
+    print "Syntax : ./tolevel.py .map .xml nameoflevel"
+else:
+    filin = open(sys.argv[1],'r').readlines()
+    content = ""
+    for i in filin :
+        if "<img" not in i:
+            content += i
+    xml_file = xml.dom.minidom.parseString(content).getElementsByTagName("map")[0]
+    filout = open(sys.argv[2],'w')
+    filout.write('<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<map \n'
+        '	name="'+ sys.argv[3]+'"\n'
+        '	background="'+ sys.argv[3]+'-background.png"\n'
+        '	foreground="'+ sys.argv[3]+'-foreground.png"\n'
+        '	middle="'+ sys.argv[3]+'-middle.png"\n'
+        '	>\n')
+    for node in xml_file.childNodes :
+        try:
+            if node.tagName == "area" :
+                coords = str(node.getAttribute("coords")).split(',')
+                coords = str(coords[0]) + " " + coords[1] + " " + str(int(coords[2])-int(coords[0])) + " " + str(int(coords[3])-int(coords[1]))
+                filout.write('\t<block coords="' + coords + '" ></block>\n')
+        except:
+            pass
+    filout.write('</map>')
 
