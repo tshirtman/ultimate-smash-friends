@@ -59,13 +59,19 @@ class Option(dict):
 
     def __getitem__(self, key):
         item = dict.__getitem__(self, key)
-        try:
-            return int(item)
-        except ValueError:
+        # detect whether the item is a bool, int, float, or string
+        if item.upper() == "True":
+            return True
+        elif item.upper() == "False":
+            return False
+        else:
             try:
-                return float(item)
+                return int(item)
             except ValueError:
-                return item
+                try:
+                    return float(item)
+                except ValueError:
+                    return item
         
 
 class Config(object):
