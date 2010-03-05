@@ -16,20 +16,15 @@
 # You should have received a copy of the GNU General Public License along with #
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
+import os
+import pygame
+
 from usf_modules.widget import Widget
 from usf_modules import loaders
-from usf_modules.config import (
-        config,
-        sound_config,
-        save_conf,
-        load_config,
-        save_sound_conf,
-        load_sound_config,
-        save_keys_conf,
-        load_key_config
-        )
-import pygame
-import os
+from new_config import Config
+config = Config()
+MEDIA_DIRECTORY = config.data_dir
+
 class WidgetImage(Widget):
     """
     A simple widget image.
@@ -47,7 +42,7 @@ class WidgetImage(Widget):
             self.sizex = self.sizey
         self.text = text.replace("/", os.sep)
         self.image = loaders.image(
-            config['MEDIA_DIRECTORY']+
+            MEDIA_DIRECTORY+
             os.sep+
             self.text, scale=(self.sizex, self.sizey)
             )[0]
