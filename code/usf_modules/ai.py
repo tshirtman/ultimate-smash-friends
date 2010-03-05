@@ -17,6 +17,7 @@
 # UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.           #
 ################################################################################
 import time
+import os
 
 from usf_modules.new_config import Config
 config = Config()
@@ -34,6 +35,12 @@ class AI(object):
     walk = False
     max_height = 0
     max_height_verif = 0
+    def __init__(self):
+        self.game_font = pygame.font.Font(
+            MEDIA_DIRECTORY +
+            os.sep +
+            "gui" +os.sep + general['THEME'] + os.sep +
+            "font.otf", 40)
     def update_enemy (self) :
         """
         This function update the information about different enemys
@@ -74,6 +81,27 @@ class AI(object):
             pygame.draw.line(self.game.screen, pygame.Color("green"), (block.left/8,block.bottom/8), (block.right/8,block.bottom/8))
         pygame.draw.line(self.game.screen, pygame.Color("red"), (aix,aiy), (enx,eny))
         pygame.draw.line(self.game.screen, pygame.Color("red"), (aix,aiy), (aix,aiy-self.max_height_verif/8))
+        
+        try:
+            self.game.screen.blit(
+                self.game_font.render(
+                    "Height : " + str(general['HEIGHT']-self.iam.place[1]),
+                    True,
+                    pygame.color.Color("red")
+                    ),
+                (int(general['WIDTH']-200), 50)
+            )
+            self.game.screen.blit(
+                self.game_font.render(
+                    "Left : " + str(self.iam.place[0]),
+                    True,
+                    pygame.color.Color("red")
+                    ),
+                (int(general['WIDTH']-200), 100)
+            )
+        except:
+            print "error"
+            pass
         pygame.display.update()
         if self.enemy_position[0][0] < self.iam.place[0] :
             self.iam.reversed = True
@@ -107,5 +135,4 @@ class AI(object):
                         self.game,
                         params={'entity': self.iam}
                         )
-        
             

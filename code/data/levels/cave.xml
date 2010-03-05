@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map
-    name="Cave"
-    background="cave-background.png"
-    foreground="cave-foreground.png"
-    middle="cave-middle.png"
-    margins="250,250,250,250"
-    >
-    <block coords="176 54 124 57" ></block>
-    <block coords="158 546 142 44" ></block>
-    <block coords="488 450 89 63" ></block>
-    <block coords="314 271 233 60" ></block>
-    <block coords="314 271 63 207" ></block>
-    <block coords="521 13 132 60" ></block>
-    <block coords="732 270 85 41" ></block>
-    <block coords="655 426 162 106" ></block>
-    <block coords="813 158 172 45" ></block>
-    <block coords="255 324 91 33" ></block>
-    <block coords="15 281 90 69" ></block>
+<map 
+	name="cave"
+	background="cave-background.png"
+	foreground="cave-foreground.png"
+	middle="cave-middle.png"
+	>
+	<block coords="174 46 124 79" ></block>
+	<block coords="514 6 134 77" ></block>
+	<block coords="10 275 102 82" ></block>
+	<block coords="315 271 54 197" ></block>
+	<block coords="689 262 94 36" ></block>
+	<block coords="656 427 151 107" ></block>
+	<block coords="154 546 144 46" ></block>
+	<block coords="486 453 90 56" ></block>
+	<block coords="810 153 176 53" ></block>
+	<block coords="316 265 214 58" ></block>
+	<block coords="248 319 98 41" ></block>
 </map>
