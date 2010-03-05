@@ -1,3 +1,0 @@
-#!/usr/bin/env sh
-cd /usr/share/games/ultimate-smash-friends/
-python ultimate-smash-friends
