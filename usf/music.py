@@ -50,12 +50,12 @@ class Music (object):
             self.playlists[plist] = [
                                     os.path.join(
                                     MEDIA_DIRECTORY,
-                                    'musics',
+                                    'music',
                                     'ogg',file)
                                 for file
                                 in os.listdir(os.path.join(
                                     MEDIA_DIRECTORY,
-                                    'musics',
+                                    'music',
                                     'ogg'))\
                                 if plist in file
                             ]
