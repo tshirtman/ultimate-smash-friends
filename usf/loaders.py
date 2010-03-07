@@ -104,9 +104,12 @@ def image(name, *args, **kwargs):
                 )
         scale = kwargs['scale']
         kwargs['scale'] = None
-        try:
-            image = loaders.image(name.replace(".png", str(config['WIDTH']) + ".png"), *args, **kwargs)[0]
-        except:
+        if config['SMOOTHSCALE'] == "True":
+            image = pygame.transform.smoothscale(
+                loaders.image(name, *args, **kwargs)[0],
+                scale
+                )
+        else:
             image = pygame.transform.scale(
                 loaders.image(name, *args, **kwargs)[0],
                 scale
@@ -116,15 +119,26 @@ def image(name, *args, **kwargs):
         zoom = kwargs['zoom']
         kwargs['zoom'] = None
         #logging.debug('scaling image '+name+' :'+str(zoom))
-        image = pygame.transform.scale(
-                loaders.image(name, **kwargs)[0],
-                (
-                 int(loaders.image(name, *args, **kwargs)[1][2]*zoom*
-                     SIZE[0]/800.0),
-                 int(loaders.image(name, *args, **kwargs)[1][3]*zoom*
-                     SIZE[1]/480.0)
-                )
-                )
+        if config['SMOOTHSCALE'] == "True":
+            image = pygame.transform.smoothscale(
+                    loaders.image(name, **kwargs)[0],
+                    (
+                     int(loaders.image(name, *args, **kwargs)[1][2]*zoom*
+                         SIZE[0]/800.0),
+                     int(loaders.image(name, *args, **kwargs)[1][3]*zoom*
+                         SIZE[1]/480.0)
+                    )
+                    )
+        else:
+            image = pygame.transform.scale(
+                    loaders.image(name, **kwargs)[0],
+                    (
+                     int(loaders.image(name, *args, **kwargs)[1][2]*zoom*
+                         SIZE[0]/800.0),
+                     int(loaders.image(name, *args, **kwargs)[1][3]*zoom*
+                         SIZE[1]/480.0)
+                    )
+                    )
     else:
         try:
             image = pygame.image.load(name)

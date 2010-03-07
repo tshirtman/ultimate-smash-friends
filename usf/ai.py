@@ -76,6 +76,7 @@ class AI(object):
             pygame.draw.line(self.game.screen, pygame.Color("green"), (block.left/8,block.bottom/8), (block.right/8,block.bottom/8))
         pygame.draw.line(self.game.screen, pygame.Color("red"), (aix,aiy), (enx,eny))
         pygame.draw.line(self.game.screen, pygame.Color("red"), (aix,aiy), (aix,aiy-self.max_height_verif/8))
+        pygame.draw.line(self.game.screen, pygame.Color("red"), (aix,aiy), (aix,aiy-225/8))
         pygame.display.update()
         if self.enemy_position[0][0] < self.iam.place[0] :
             self.iam.reversed = True
