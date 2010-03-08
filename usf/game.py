@@ -42,7 +42,7 @@ import network
 from level import Level
 from controls import Controls
 from new_config import Config
-
+from widgets import game_font
 config_ = Config()
 config = config_.general
 MEDIA_DIRECTORY = config_.data_dir
@@ -356,7 +356,7 @@ class Game (object):
                         )
 
         if len([player for player in self.players if player.lives > 0]) == 1:
-            self.screen.blit(self.game_font.render(
+            self.screen.blit(game_font.render(
                                         [
                                          player for player in self.players if
                                          player.lives > 0
@@ -374,7 +374,7 @@ class Game (object):
 
         if len([player for player in self.players if player.lives > 0]) == 0:
             # there is no more player in games, the game is tailed.
-            self.screen.blit(self.game_font.render(
+            self.screen.blit(game_font.render(
                                         _("OOPS... DRAW!!!"),
                                         True,
                                         pygame.color.Color("#"+

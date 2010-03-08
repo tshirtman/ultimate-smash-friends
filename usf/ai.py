@@ -36,6 +36,8 @@ class AI(object):
     walk = False
     max_height = 0
     max_height_verif = 0
+    global_height = True
+    position = []
     def update_enemy (self) :
         """
         This function update the information about different enemys
@@ -51,11 +53,21 @@ class AI(object):
             self.enemy_position.append (pl.place)
             self.enemy_distance.append (self.iam.dist (pl))
             self.enemy_distanceh.append (pl.place[1]- self.iam.place[1])
+    def calculate_height(self):
+        self.global_height = False
+        #FIXME : a real function to calculate height
+        self.jump_height = self.iam.entity_skin.vectors['jump'][0][0][1]/10000*1500
+        print
+        print self.jump_height
+        print
     def update(self, game, iam):
         self.sequences_ai = []
         self.num = iam
         self.iam = game.players[iam]
         self.game = game
+        self.position.append(game.players[iam-1].place)
+        if self.global_height ==True:
+            self.calculate_height()
         self.update_enemy()
         self.choose_strategy()
     def choose_strategy(self):
@@ -77,6 +89,8 @@ class AI(object):
         pygame.draw.line(self.game.screen, pygame.Color("red"), (aix,aiy), (enx,eny))
         pygame.draw.line(self.game.screen, pygame.Color("red"), (aix,aiy), (aix,aiy-self.max_height_verif/8))
         pygame.draw.line(self.game.screen, pygame.Color("red"), (aix,aiy), (aix,aiy-225/8))
+        for pos in self.position:
+            pygame.draw.line(self.game.screen, pygame.Color("orange"), (pos[0]/8,pos[1]/8), (pos[0]/8,pos[1]/8))
         pygame.display.update()
         if self.enemy_position[0][0] < self.iam.place[0] :
             self.iam.reversed = True

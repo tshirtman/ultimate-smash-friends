@@ -440,3 +440,9 @@ class WidgetTextarea(Widget):
             'back_button_hover.png').convert_alpha()
         self.background_hover  = pygame.transform.scale(self.background_hover, (self.sizex, self.sizey))
         #self.background_hover.set_colorkey((255,255,255))
+pygame.font.init()
+game_font = pygame.font.Font(
+            MEDIA_DIRECTORY +
+            os.sep +
+            "gui" +os.sep + general['THEME'] + os.sep +
+            "font.otf", general['HEIGHT']/20)

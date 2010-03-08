@@ -137,8 +137,8 @@
        id="linearGradient3650"
        x1="330.31989"
        y1="223.73912"
-       x2="444.33548"
-       y2="330.10312"
+       x2="326.80685"
+       y2="441.07507"
        gradientUnits="userSpaceOnUse"
        gradientTransform="matrix(1.0612383,-0.05472132,0.06076999,1.1785433,-44.57427,-25.733562)" />
     <linearGradient
@@ -219,13 +219,13 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.7"
-     inkscape:cx="183.84644"
+     inkscape:cx="300.27501"
      inkscape:cy="652.75179"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1280"
-     inkscape:window-height="951"
+     inkscape:window-width="1920"
+     inkscape:window-height="1124"
      inkscape:window-x="0"
      inkscape:window-y="25"
      inkscape:window-maximized="1" />
@@ -237,7 +237,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -281,3 +281,4 @@
        id="path3733"
        sodipodi:nodetypes="csscc" />
   </g>
+</svg>
