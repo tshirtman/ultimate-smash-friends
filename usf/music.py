@@ -69,6 +69,7 @@ class Music (object):
         necessary.
 
         """
+        global config_, sound_config
         if state == "menu":
             config_ = Config()
             sound_config = config_.audio
