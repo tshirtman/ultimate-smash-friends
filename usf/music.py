@@ -69,6 +69,8 @@ class Music (object):
         necessary.
 
         """
+        config_ = Config()
+        sound_config = config_.audio
         if sound_config['MUSIC_VOLUME'] != self.music_volume:
             self.playing.set_volume(sound_config['MUSIC_VOLUME']/100.0)
         if state != self.precedent_state:
