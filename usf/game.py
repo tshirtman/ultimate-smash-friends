@@ -70,6 +70,7 @@ class Game (object):
     menu).
 
     """
+    notif = [[time.time(), "Notif"]]
     ingame = True
     def __init__(self, screen, level="biglevel", players_=(None, None, None, None)):
         """
@@ -388,7 +389,16 @@ class Game (object):
                                               SIZE[1]/2
                                             )
                                         )
+        self.update_notif()
 
+    def update_notif(self):
+        for notif in self.notif:
+            if(notif[0] +4 > time.time()):
+                self.screen.blit(game_font.render(
+                                        str(notif[1]),
+                                        True,
+                                        pygame.color.Color("black")), (100,0)
+                                            )
     def update(self, debug_params={}):
         """
         sync everything to current time. Return "game" if we are still in game

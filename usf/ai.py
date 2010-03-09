@@ -38,6 +38,7 @@ class AI(object):
     max_height_verif = 0
     global_height = True
     position = []
+    block = None
     def update_enemy (self) :
         """
         This function update the information about different enemys
@@ -56,7 +57,7 @@ class AI(object):
     def calculate_height(self):
         self.global_height = False
         #FIXME : a real function to calculate height
-        self.jump_height = self.iam.entity_skin.vectors['jump'][0][0][1]/10000*1500
+        self.jump_height = float(self.iam.entity_skin.vectors['jump'][0][0][1])/float(10000)*1500
         print
         print self.jump_height
         print
@@ -65,7 +66,7 @@ class AI(object):
         self.num = iam
         self.iam = game.players[iam]
         self.game = game
-        self.position.append(game.players[iam-1].place)
+        #self.position.append(game.players[iam-1].place)
         if self.global_height ==True:
             self.calculate_height()
         self.update_enemy()
@@ -83,14 +84,25 @@ class AI(object):
         aiy = self.iam.place[1]/8
         enx = self.enemy_position[0][0]/8
         eny = self.enemy_position[0][1]/8
+        self.block = None
         for block in self.game.level.map:
-            pygame.draw.line(self.game.screen, pygame.Color("green"), (block.left/8,block.top/8), (block.right/8,block.top/8))
-            pygame.draw.line(self.game.screen, pygame.Color("green"), (block.left/8,block.bottom/8), (block.right/8,block.bottom/8))
+            if (block.right+80 > self.enemy_position[0][0] and
+                block.left-80 < self.enemy_position[0][0] and
+                block.top-80 < self.enemy_position[0][1] and
+                block.top+80 > self.enemy_position[0][1]):
+                pygame.draw.line(self.game.screen, pygame.Color("red"), (block.left/8,block.top/8), (block.right/8,block.top/8))
+                self.block = block
+                break
+            else:
+                pygame.draw.line(self.game.screen, pygame.Color("green"), (block.left/8,block.top/8), (block.right/8,block.top/8))
+        if self.block is not None:
+            self.goto()
         pygame.draw.line(self.game.screen, pygame.Color("red"), (aix,aiy), (enx,eny))
-        pygame.draw.line(self.game.screen, pygame.Color("red"), (aix,aiy), (aix,aiy-self.max_height_verif/8))
-        pygame.draw.line(self.game.screen, pygame.Color("red"), (aix,aiy), (aix,aiy-225/8))
-        for pos in self.position:
-            pygame.draw.line(self.game.screen, pygame.Color("orange"), (pos[0]/8,pos[1]/8), (pos[0]/8,pos[1]/8))
+        pygame.draw.line(self.game.screen, pygame.Color("red"), (aix,aiy), (aix,aiy-self.jump_height/8))
+        pygame.draw.line(self.game.screen, pygame.Color("red"), (aix,aiy), (aix+general['WALKSPEED']/8,aiy))
+
+        #for pos in self.position:
+        #    pygame.draw.line(self.game.screen, pygame.Color("orange"), (pos[0]/8,pos[1]/8), (pos[0]/8,pos[1]/8))
         pygame.display.update()
         if self.enemy_position[0][0] < self.iam.place[0] :
             self.iam.reversed = True
@@ -112,17 +124,24 @@ class AI(object):
                 self.wait_for = "static:mesure2"""
         if self.enemy_distance[0] < 100 :
             self.sequences_ai.append(("PL"+ str(self.num+1) + "_B",time.time()))
-        elif self.enemy_distanceh[0] < 20 and self.enemy_distanceh[0] > -20:
+    def goto(self):
+        #if i am on the same block :
+        if (self.block.right+80 > self.iam.place[0] and
+            self.block.left-80 < self.iam.place[0] and
+            self.block.top-80 < self.iam.place[1] and
+            self.block.top+80 > self.iam.place[1]):
+            pygame.draw.line(self.game.screen, pygame.Color("brown"), (block.left/8,block.top/8), (block.right/8,block.top/8))
             self.iam.walking_vector[0] = general['WALKSPEED']
-            self.sequences_ai.append(("PL"+ str(self.num+1) + "_LEFT",time.time()))
             self.walk = True
-        elif self.walk == True :
-            self.iam.walking_vector[0] = 0
-            if self.iam.entity_skin.current_animation == "walk":
-                self.iam.entity_skin.change_animation(
-                        "static",
-                        self.game,
-                        params={'entity': self.iam}
-                        )
-        
-            
+            if self.enemy_position[0][0] < self.iam.place[0]:
+                self.sequences_ai.append(("PL"+ str(self.num+1) + "_LEFT",time.time()))
+            else :
+                self.sequences_ai.append(("PL"+ str(self.num+1) + "_RIGHT",time.time()))
+            if self.walk == True :
+                self.iam.walking_vector[0] = 0
+                if self.iam.entity_skin.current_animation == "walk":
+                    self.iam.entity_skin.change_animation(
+                            "static",
+                            self.game,
+                            params={'entity': self.iam}
+                            )
