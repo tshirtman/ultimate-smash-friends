@@ -397,8 +397,10 @@ class Game (object):
                 self.screen.blit(game_font.render(
                                         str(notif[1]),
                                         True,
-                                        pygame.color.Color("black")), (100,0)
+                                        pygame.color.Color("black")), (SIZE[0]/4, self.notif.index(notif)*SIZE[1]/20)
                                             )
+            else:
+                self.notif.remove(notif)
     def update(self, debug_params={}):
         """
         sync everything to current time. Return "game" if we are still in game

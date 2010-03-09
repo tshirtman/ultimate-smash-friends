@@ -130,12 +130,14 @@ class AI(object):
             self.block.left-80 < self.iam.place[0] and
             self.block.top-80 < self.iam.place[1] and
             self.block.top+80 > self.iam.place[1]):
-            pygame.draw.line(self.game.screen, pygame.Color("brown"), (block.left/8,block.top/8), (block.right/8,block.top/8))
+            self.game.notif.append([time.time(), "I am on your block"])
             self.iam.walking_vector[0] = general['WALKSPEED']
             self.walk = True
             if self.enemy_position[0][0] < self.iam.place[0]:
+                self.game.notif.append([time.time(), "I am on your right"])
                 self.sequences_ai.append(("PL"+ str(self.num+1) + "_LEFT",time.time()))
             else :
+                self.game.notif.append([time.time(), "I am on your left"])
                 self.sequences_ai.append(("PL"+ str(self.num+1) + "_RIGHT",time.time()))
             if self.walk == True :
                 self.iam.walking_vector[0] = 0
