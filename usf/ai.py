@@ -39,6 +39,7 @@ class AI(object):
     global_height = True
     position = []
     block = None
+    wait_time = 0
     def update_enemy (self) :
         """
         This function update the information about different enemys
@@ -130,20 +131,31 @@ class AI(object):
             self.block.left-80 < self.iam.place[0] and
             self.block.top-80 < self.iam.place[1] and
             self.block.top+80 > self.iam.place[1]):
-            self.game.notif.append([time.time(), "I am on your block"])
+            #self.game.notif.append([time.time(), "I am on your block"])
             self.iam.walking_vector[0] = general['WALKSPEED']
             self.walk = True
             if self.enemy_position[0][0] < self.iam.place[0]:
-                self.game.notif.append([time.time(), "I am on your right"])
+                #self.game.notif.append([time.time(), "I am on your right"])
                 self.sequences_ai.append(("PL"+ str(self.num+1) + "_LEFT",time.time()))
             else :
-                self.game.notif.append([time.time(), "I am on your left"])
+                #self.game.notif.append([time.time(), "I am on your left"])
                 self.sequences_ai.append(("PL"+ str(self.num+1) + "_RIGHT",time.time()))
-            if self.walk == True :
-                self.iam.walking_vector[0] = 0
-                if self.iam.entity_skin.current_animation == "walk":
-                    self.iam.entity_skin.change_animation(
-                            "static",
-                            self.game,
-                            params={'entity': self.iam}
-                            )
+            #to jump over another block
+            for block in self.game.level.map:
+                if ( ((block.right < self.iam.place[0] and
+                       block.right >self.enemy_position[0][0]) or
+                      (block.left < self.iam.place[0] and
+                       block.left >self.enemy_position[0][0])
+                     ) and
+                     ((block.top < self.iam.place[1] and
+                       block.bottom > self.iam.place[1]) or
+                      (block.bottom-80 < self.iam.place[1] and
+                       block.top-80 > self.iam.place[1])
+                     )
+                   ):
+                   self.game.notif.append([time.time(), "I jump"])
+                   self.sequences_ai.append(("PL"+ str(self.num+1) + "_UP",time.time()))
+                   self.wait_time = time.time()
+        elif self.wait_time +1.5 < time.time():
+            self.walk = False
+            self.iam.walking_vector[0] = 0
