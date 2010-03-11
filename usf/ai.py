@@ -87,6 +87,7 @@ class AI(object):
         eny = self.enemy_position[0][1]/8
         self.block = None
         for block in self.game.level.map:
+            #FIXME : Improve this code using hardshape
             if (block.right+80 > self.enemy_position[0][0] and
                 block.left-80 < self.enemy_position[0][0] and
                 block.top-80 < self.enemy_position[0][1] and
@@ -131,7 +132,7 @@ class AI(object):
             self.block.left-80 < self.iam.place[0] and
             self.block.top-80 < self.iam.place[1] and
             self.block.top+80 > self.iam.place[1]):
-            #self.game.notif.append([time.time(), "I am on your block"])
+            self.game.notif.append([time.time(), "I am on your block"])
             self.iam.walking_vector[0] = general['WALKSPEED']
             self.walk = True
             if self.enemy_position[0][0] < self.iam.place[0]:
@@ -149,8 +150,8 @@ class AI(object):
                      ) and
                      ((block.top < self.iam.place[1] and
                        block.bottom > self.iam.place[1]) or
-                      (block.bottom-80 < self.iam.place[1] and
-                       block.top-80 > self.iam.place[1])
+                      (block.bottom-100 < self.iam.place[1] and
+                       block.top-100 > self.iam.place[1])
                      )
                    ):
                    self.game.notif.append([time.time(), "I jump"])
