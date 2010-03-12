@@ -1,3 +1,4 @@
 <theme>
 <color value="white" />
+<dialog sizex="50" sizey="50" posx="25" posy="25" />
 </theme>
