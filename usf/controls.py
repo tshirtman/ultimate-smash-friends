@@ -167,7 +167,7 @@ class Controls (object):
                     elif self.keys[key] == "TOGGLE_FULLSCREEN":
                         pygame.display.toggle_fullscreen()
 
-                    if(not game_instance.players[numplayer].ai):
+                    if( len(game_instance.players) > numplayer and not game_instance.players[numplayer].ai):
                         for player in game_instance.players:
                             pl = "PL"+str(player.num)
                             the_key = self.keys[key]
