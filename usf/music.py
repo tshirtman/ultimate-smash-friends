@@ -69,12 +69,6 @@ class Music (object):
         necessary.
 
         """
-        global config_, sound_config
-        """
-        if state == "menu":
-            config_ = Config.getInstance()
-            sound_config = config_.audio
-        """
         if sound_config['MUSIC_VOLUME'] != self.music_volume:
             self.playing.set_volume(sound_config['MUSIC_VOLUME']/100.0)
         if state != self.precedent_state:
