@@ -42,7 +42,7 @@ import usf.controls
 import entity_skin
 from usf.game import Game
 import usf.controls
-
+from usf import loaders
 # Gui modules
 from widgets import (Widget, WidgetLabel, WidgetIcon, WidgetParagraph,
                     WidgetImage, WidgetImageButton, WidgetTextarea,
@@ -71,6 +71,7 @@ class Gui(object):
     game = None
     widget_list_order = {}
     widget_anim = []
+    dialog = []
     def update(self, state, game, controls, eventcurrent=None):
         """
         Update the screen state based on user inputs.
@@ -189,6 +190,8 @@ class Gui(object):
             try:
                 if(xml_file.childNodes[i].tagName == "menu"):
                    self.load_from_xml(xml_file.childNodes[i].childNodes[0].nodeValue)
+                if(xml_file.childNodes[i].tagName == "dialog"):
+                   self.dialog.append(Dialog(self.screen,xml_file.childNodes[i].childNodes[0].nodeValue))
             except:
                 continue
         #load background image
@@ -503,4 +506,47 @@ class Gui(object):
         for widget in self.widget_list[self.screen_current].values():
             #draw items at once
             widget.draw()
+        for dialog in self.dialog:
+            #draw items at once
+            dialog.draw()
         if update : pygame.display.update()
+
+class Skin (object):
+    dialog = {}
+    color = None
+    def __init__(self):
+        xml_file = xml.dom.minidom.parse(MEDIA_DIRECTORY+
+            os.sep+
+            'gui'+
+            os.sep+ general['THEME'] + os.sep + "theme.xml").getElementsByTagName("theme")[0]
+        self.color = pygame.color.Color("white")
+        for node in xml_file.childNodes:
+            try:
+                if node.tagName == "color":
+                    self.color = pygame.color.Color(str(node.getAttribute("value")))
+                if node.tagName == "dialog":
+                    self.dialog['sizex'] = int(node.getAttribute("sizex"))*general['HEIGHT']/100
+                    self.dialog['sizey'] = int(node.getAttribute("sizey"))*general['HEIGHT']/100
+                    self.dialog['posx'] = int(node.getAttribute("posx"))*general['WIDTH']/100
+                    self.dialog['posy'] = int(node.getAttribute("posy"))*general['WIDTH']/100
+            except:
+                pass
+skin = Skin()
+class Dialog(object):
+    state = False
+    image = None
+    def __init__(self, screen, name):
+        global skin
+        self.background = loaders.image(
+            MEDIA_DIRECTORY+
+            os.sep+
+            'gui'+
+            os.sep+
+            general['THEME']+
+            os.sep+
+            "background-dialog.png", scale=(skin.dialog['sizex'], skin.dialog['sizey'])
+            )[0]
+        self.screen = screen
+    def draw(self):
+        self.screen.blit(self.background, (skin.dialog['posx'], skin.dialog['posy']))
+        pass

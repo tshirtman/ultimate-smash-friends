@@ -393,14 +393,30 @@ class Game (object):
 
     def update_notif(self):
         for notif in self.notif:
-            if(notif[0] +4 > time.time()):
-                self.screen.blit(game_font.render(
-                                        str(notif[1]),
-                                        True,
-                                        pygame.color.Color("black")), (SIZE[0]/4, self.notif.index(notif)*SIZE[1]/20)
-                                            )
+            if config['NOTIF_EFFECT'] == "True":
+                if(len(notif) <3):
+                    notif.append(notif[1][0])
+                elif len(notif[2]) is not len(notif[1]):
+                    notif[2] = notif[2] + notif[1][len(notif[2])]
+                if(notif[0] +4 > time.time()):
+                    self.screen.blit(game_font.render(
+                                            str(notif[2]),
+                                            True,
+                                            pygame.color.Color("black")),
+                                            (SIZE[0]/4, self.notif.index(notif)*SIZE[1]/20)
+                                                )
+                else:
+                    self.notif.remove(notif)
             else:
-                self.notif.remove(notif)
+                if(notif[0] +4 > time.time()):
+                    self.screen.blit(game_font.render(
+                                            str(notif[1]),
+                                            True,
+                                            pygame.color.Color("black")),
+                                            (SIZE[0]/4, self.notif.index(notif)*SIZE[1]/20)
+                                                )
+                else:
+                    self.notif.remove(notif)
     def update(self, debug_params={}):
         """
         sync everything to current time. Return "game" if we are still in game
