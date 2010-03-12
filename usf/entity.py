@@ -31,7 +31,7 @@ import timed_event
 
 from new_config import Config
 
-config_ = Config()
+config_ = Config.getInstance()
 config = config_.general
 MEDIA_DIRECTORY = config_.data_dir
 

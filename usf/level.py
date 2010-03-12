@@ -25,7 +25,7 @@ import loaders
 import time
 from new_config import Config
 
-config_ = Config()
+config_ = Config.getInstance()
 config = config_.general
 MEDIA_DIRECTORY = config_.data_dir
 SIZE = (config['WIDTH'], 

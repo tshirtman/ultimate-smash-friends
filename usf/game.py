@@ -43,7 +43,7 @@ from level import Level
 from controls import Controls
 from new_config import Config
 from widgets import game_font
-config_ = Config()
+config_ = Config.getInstance()
 config = config_.general
 MEDIA_DIRECTORY = config_.data_dir
 SIZE = (config['WIDTH'], 

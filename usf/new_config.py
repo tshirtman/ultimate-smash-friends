@@ -36,6 +36,8 @@ from ConfigParser import SafeConfigParser
 import platform
 import logging
 
+from singletonmixin import Singleton
+
 OS = platform.system().lower()
 
 class Option(dict):
@@ -74,7 +76,7 @@ class Option(dict):
                     return item
         
 
-class Config(object):
+class Config(Singleton):
     """ Object that implements automatic saving.
         
         Config first loads default settings from the system config file, then

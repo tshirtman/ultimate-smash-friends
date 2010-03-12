@@ -20,7 +20,7 @@ import time
 
 from new_config import Config
 
-config = Config()
+config = Config.getInstance()
 general = config.general
 sound_config = config.audio
 SHARE_DIRECTORY = config.config_dir

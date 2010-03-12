@@ -30,7 +30,7 @@ from loaders import image
 
 from new_config import Config
 
-config = Config()
+config = Config.getInstance()
 general = config.general
 sound_config = config.audio
 keyboard = config.keyboard

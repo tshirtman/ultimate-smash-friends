@@ -27,7 +27,7 @@ from config import config
 import loaders
 from new_config import Config
 
-config_ = Config()
+config_ = Config.getInstance()
 general = config_.general
 sound_config = config_.audio
 MEDIA_DIRECTORY = config_.data_dir
@@ -70,9 +70,11 @@ class Music (object):
 
         """
         global config_, sound_config
+        """
         if state == "menu":
-            config_ = Config()
+            config_ = Config.getInstance()
             sound_config = config_.audio
+        """
         if sound_config['MUSIC_VOLUME'] != self.music_volume:
             self.playing.set_volume(sound_config['MUSIC_VOLUME']/100.0)
         if state != self.precedent_state:
