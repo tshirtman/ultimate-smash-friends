@@ -25,7 +25,7 @@ from pygame.locals import *
 import loaders
 from config import config
 from new_config import Config
-
+import time
 config_ = Config()
 general = config_.general
 sound_config = config_.audio
