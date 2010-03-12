@@ -71,7 +71,7 @@ class Gui(object):
     game = None
     widget_list_order = {}
     widget_anim = []
-    dialog = []
+    #dialog = []
     def update(self, state, game, controls, eventcurrent=None):
         """
         Update the screen state based on user inputs.
@@ -190,8 +190,8 @@ class Gui(object):
             try:
                 if(xml_file.childNodes[i].tagName == "menu"):
                    self.load_from_xml(xml_file.childNodes[i].childNodes[0].nodeValue)
-                if(xml_file.childNodes[i].tagName == "dialog"):
-                   self.dialog.append(Dialog(self.screen,xml_file.childNodes[i].childNodes[0].nodeValue))
+                #if(xml_file.childNodes[i].tagName == "dialog"):
+                #   self.dialog.append(Dialog(self.screen,xml_file.childNodes[i].childNodes[0].nodeValue))
             except:
                 continue
         #load background image
@@ -506,11 +506,12 @@ class Gui(object):
         for widget in self.widget_list[self.screen_current].values():
             #draw items at once
             widget.draw()
-        for dialog in self.dialog:
+        #for dialog in self.dialog:
             #draw items at once
-            dialog.draw()
+        #    dialog.draw()
         if update : pygame.display.update()
 
+"""
 class Skin (object):
     dialog = {}
     color = None
@@ -550,3 +551,4 @@ class Dialog(object):
     def draw(self):
         self.screen.blit(self.background, (skin.dialog['posx'], skin.dialog['posy']))
         pass
+"""

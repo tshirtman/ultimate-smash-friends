@@ -17,7 +17,7 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
-import os
+import os, time
 import xml.dom.minidom
 import pygame
 from pygame.locals import *
@@ -25,13 +25,8 @@ from pygame.locals import *
 import loaders
 from config import config
 from new_config import Config
-<<<<<<< TREE
 
 config_ = Config.getInstance()
-=======
-import time
-config_ = Config()
->>>>>>> MERGE-SOURCE
 general = config_.general
 sound_config = config_.audio
 keyboard_config = config_.keyboard
