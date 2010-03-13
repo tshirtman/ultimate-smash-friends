@@ -297,7 +297,18 @@ class Gui(object):
         """
         if(self.dialog.has_key(self.screen_current)):
             self.dialog[self.screen_current].show()
-        self.screen_current = screen
+        if( not self.dialog.has_key(self.screen_current)):
+            for i in range(0,5):
+                start = time.time()
+                self.draw_screen(True,i*50)
+                time.sleep(1.00/float(general['MAX_FPS']))
+            self.screen_current = screen
+            for i in range(0,5):
+                start = time.time()
+                self.draw_screen(True,(i*-1+5)*50)
+                time.sleep(1.00/float(general['MAX_FPS']))
+        else:
+            self.screen_current = screen
         self.button_active = 0
         self.widgetselect = -1
         self.widget_anim=[]
@@ -505,7 +516,7 @@ class Gui(object):
                     self.widget_list[self.screen_current].values()[j].draw()
                 pygame.display.update()
                 if not self.widget_list[self.screen_current][widget_name].click(argument): break
-    def draw_screen(self,update = False):
+    def draw_screen(self,update = False, opacity = None):
         """
         Draw the menu to the screen, use a screenshot of the game to display
         the menu "ingame".
@@ -522,6 +533,10 @@ class Gui(object):
         for widget in self.widget_list[self.screen_current].values():
             #draw items at once
             widget.draw()
+        if opacity is not None:
+            self.image.set_alpha(opacity)
+            self.screen.blit(self.image,(0,0))
+            self.image.set_alpha(250)
         if update : pygame.display.update()
 
 class Skin (object):
