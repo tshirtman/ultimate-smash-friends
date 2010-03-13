@@ -71,7 +71,7 @@ class Gui(object):
     game = None
     widget_list_order = {}
     widget_anim = []
-    #dialog = []
+    dialog = {}
     def update(self, state, game, controls, eventcurrent=None):
         """
         Update the screen state based on user inputs.
@@ -190,8 +190,10 @@ class Gui(object):
             try:
                 if(xml_file.childNodes[i].tagName == "menu"):
                    self.load_from_xml(xml_file.childNodes[i].childNodes[0].nodeValue)
-                #if(xml_file.childNodes[i].tagName == "dialog"):
-                #   self.dialog.append(Dialog(self.screen,xml_file.childNodes[i].childNodes[0].nodeValue))
+                if(xml_file.childNodes[i].tagName == "dialog"):
+                   self.dialog[xml_file.childNodes[i].childNodes[0].nodeValue] = Dialog(
+                    self.screen,xml_file.childNodes[i].childNodes[0].nodeValue)
+                   self.load_from_xml(xml_file.childNodes[i].childNodes[0].nodeValue)
             except:
                 continue
         #load background image
@@ -454,6 +456,9 @@ class Gui(object):
                 self.goto_screen(widget_action.split(":")[1])
             elif(widget_action.split(":")[0] == "anim"):
                 self.anim(widget_action.split(":")[1], widget_action.split(":")[2], self.controls)
+            elif(widget_action.split(":")[0] == "dialog"):
+                self.dialog[widget_action.split(":")[1]].show()
+                self.goto_screen(widget_action.split(":")[1])
             elif(widget_action == ""):
                 self.exec_event(self.widget_list[self.screen_current].values()[i].name)
             else:
@@ -501,17 +506,17 @@ class Gui(object):
         """
         if(self.state == "game"):
             self.screen.blit(self.screen_shot,(0,0))
-        self.screen.blit(self.image,(0,0))
+        if not self.dialog.has_key(self.screen_current):
+            self.screen.blit(self.image,(0,0))
 
+        for dialog in [dialog for dialog in self.dialog.values() if dialog.state is True]:
+        #    draw items at once
+            dialog.draw()
         for widget in self.widget_list[self.screen_current].values():
             #draw items at once
             widget.draw()
-        #for dialog in self.dialog:
-            #draw items at once
-        #    dialog.draw()
         if update : pygame.display.update()
 
-"""
 class Skin (object):
     dialog = {}
     color = None
@@ -526,10 +531,10 @@ class Skin (object):
                 if node.tagName == "color":
                     self.color = pygame.color.Color(str(node.getAttribute("value")))
                 if node.tagName == "dialog":
-                    self.dialog['sizex'] = int(node.getAttribute("sizex"))*general['HEIGHT']/100
+                    self.dialog['sizex'] = int(node.getAttribute("sizex"))*general['WIDTH']/100
                     self.dialog['sizey'] = int(node.getAttribute("sizey"))*general['HEIGHT']/100
                     self.dialog['posx'] = int(node.getAttribute("posx"))*general['WIDTH']/100
-                    self.dialog['posy'] = int(node.getAttribute("posy"))*general['WIDTH']/100
+                    self.dialog['posy'] = int(node.getAttribute("posy"))*general['HEIGHT']/100
             except:
                 pass
 skin = Skin()
@@ -547,8 +552,15 @@ class Dialog(object):
             os.sep+
             "background-dialog.png", scale=(skin.dialog['sizex'], skin.dialog['sizey'])
             )[0]
+        self.background.set_alpha(150)
         self.screen = screen
     def draw(self):
         self.screen.blit(self.background, (skin.dialog['posx'], skin.dialog['posy']))
         pass
-"""
+    def show(self):
+        if self.state == False:
+            self.state = True
+            self.tmp_screen = self.screen.copy()
+        else:
+            self.state = False
+            self.tmp_screen = None

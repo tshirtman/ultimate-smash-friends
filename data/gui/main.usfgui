@@ -4,5 +4,6 @@
 <button value="Local game" posx="40" posy="55" sizey="8" sizex="20" id="local" action="goto:characters.usfgui" />
 <button value="Credits" posx="40" posy="65" sizey="8" sizex="20" id="credits" action="goto:credits.usfgui" />
 <button value="Quit" posx="40" posy="75" sizey="8" sizex="20" id="exit" action="goto:quit.usfgui" />
+<button value="Dialog" posx="40" posy="85" sizey="8" sizex="20" id="dialog" action="dialog:dialog.usfgui" />
 <parent>quit.usfgui</parent>
 </gui>
