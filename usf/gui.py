@@ -236,7 +236,7 @@ class Gui(object):
         init all widget of a menu using the xml file.
 
         """
-
+        global skin
         self.widget_list[filename] = {}
         self.widget_list_order[filename] = []
         xml_file = xml.dom.minidom.parse(MEDIA_DIRECTORY+
@@ -273,13 +273,18 @@ class Gui(object):
                     elif(xml_file.childNodes[i].tagName == "image"):
                         self.widget_list[filename][id_current] = WidgetImage(self.screen)
                     try:
+                        percent = 100
                         self.widget_list[filename][id_current].set_sizex(self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("sizex"))/100)
                         self.widget_list[filename][id_current].set_sizey(self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("sizey"))/100)
                     except:
                         self.widget_list[filename][id_current].set_sizex(0)
                         self.widget_list[filename][id_current].set_sizey(0)
-                    self.widget_list[filename][id_current].posx=self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("posx"))/100
-                    self.widget_list[filename][id_current].posy=self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("posy"))/100
+                    if(self.dialog.has_key(filename)):
+                        self.widget_list[filename][id_current].posx = skin.dialog['posx'] + skin.dialog['sizex']*int(xml_file.childNodes[i].getAttribute("posx"))/100
+                        self.widget_list[filename][id_current].posy = skin.dialog['posy'] + skin.dialog['sizey']*int(xml_file.childNodes[i].getAttribute("posy"))/100
+                    else:
+                        self.widget_list[filename][id_current].posx=self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("posx"))/100
+                        self.widget_list[filename][id_current].posy=self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("posy"))/100
                     self.widget_list[filename][id_current].setText(_(xml_file.childNodes[i].getAttribute("value")))
                 elif(xml_file.childNodes[i].tagName == "parent"):
                     self.parent_screen[filename] =xml_file.childNodes[i].childNodes[0].nodeValue
@@ -290,6 +295,8 @@ class Gui(object):
         menu goes to the specified screen.
 
         """
+        if(self.dialog.has_key(self.screen_current)):
+            self.dialog[self.screen_current].show()
         self.screen_current = screen
         self.button_active = 0
         self.widgetselect = -1

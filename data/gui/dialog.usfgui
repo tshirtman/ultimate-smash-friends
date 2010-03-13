@@ -1,6 +1,6 @@
 <gui>
-<label value="Sure ?" posx="30" posy="30" sizey="0" sizex="0" id="label" />
+<label value="Sure ?" posx="0" posy="0" sizey="0" sizex="0" id="label" />
 <button value="Yes" posx="40" posy="55" sizey="8" sizex="20" id="local" action="pygame.event.post( pygame.event.Event(QUIT) )" />
-<button value="No" posx="40" posy="65" sizey="8" sizex="20" id="credits" action="goto:main.usfgui" />
+<button value="Ok" posx="40" posy="65" sizey="8" sizex="20" id="credits" action="goto:main.usfgui" />
 <parent>main.usfgui</parent>
 </gui>
