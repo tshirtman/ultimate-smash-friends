@@ -280,8 +280,8 @@ class Gui(object):
                         self.widget_list[filename][id_current].set_sizex(0)
                         self.widget_list[filename][id_current].set_sizey(0)
                     if(self.dialog.has_key(filename)):
-                        self.widget_list[filename][id_current].posx = skin.dialog['posx'] + skin.dialog['sizex']*int(xml_file.childNodes[i].getAttribute("posx"))/100
-                        self.widget_list[filename][id_current].posy = skin.dialog['posy'] + skin.dialog['sizey']*int(xml_file.childNodes[i].getAttribute("posy"))/100
+                        self.widget_list[filename][id_current].posx = skin.dialog['posx']+general['WIDTH']/40 + skin.dialog['sizex']*int(xml_file.childNodes[i].getAttribute("posx"))/100
+                        self.widget_list[filename][id_current].posy = skin.dialog['posy'] +general['HEIGHT']/20 + skin.dialog['sizey']*int(xml_file.childNodes[i].getAttribute("posy"))/100
                     else:
                         self.widget_list[filename][id_current].posx=self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("posx"))/100
                         self.widget_list[filename][id_current].posy=self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("posy"))/100
@@ -562,12 +562,16 @@ class Dialog(object):
         self.background.set_alpha(150)
         self.screen = screen
     def draw(self):
+        self.screen.blit(self.tmp_screen, (0,0))
         self.screen.blit(self.background, (skin.dialog['posx'], skin.dialog['posy']))
-        pass
     def show(self):
         if self.state == False:
             self.state = True
             self.tmp_screen = self.screen.copy()
+            cache = pygame.Surface((general['WIDTH'], general['HEIGHT']))
+            cache.fill(pygame.color.Color("black"))
+            cache.set_alpha(100)
+            self.tmp_screen.blit(cache, (0,0))
         else:
             self.state = False
             self.tmp_screen = None
