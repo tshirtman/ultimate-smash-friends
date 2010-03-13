@@ -285,7 +285,10 @@ class Gui(object):
                     else:
                         self.widget_list[filename][id_current].posx=self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("posx"))/100
                         self.widget_list[filename][id_current].posy=self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("posy"))/100
-                    self.widget_list[filename][id_current].setText(_(xml_file.childNodes[i].getAttribute("value")))
+                    if xml_file.childNodes[i].hasAttribute("value"):
+                        self.widget_list[filename][id_current].setText(_(xml_file.childNodes[i].getAttribute("value")))
+                    else:
+                        self.widget_list[filename][id_current].setText(_(xml_file.childNodes[i].childNodes[0].nodeValue))
                 elif(xml_file.childNodes[i].tagName == "parent"):
                     self.parent_screen[filename] =xml_file.childNodes[i].childNodes[0].nodeValue
             except AttributeError:

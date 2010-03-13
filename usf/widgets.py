@@ -64,6 +64,7 @@ class Widget (object):
                     self.color = pygame.color.Color(str(xml_file.childNodes[i].getAttribute("value")))
             except:
                 pass
+        self.font_size = screen.get_height()/20
         self.load()
     def load(self):
         pass
@@ -292,14 +293,15 @@ class WidgetImage(Widget):
 class WidgetLabel(Widget):
     text = ""
     def drawSimple(self):
-        self.screen.blit(
-            self.game_font.render(
-            _(self.text),
-            True,
-            self.color
-            ),
-        (self.posx, self.posy)
-        )
+        for text in self.text.split("\n"):
+            self.screen.blit(
+                self.game_font.render(
+                _(text),
+                True,
+                self.color
+                ),
+            (self.posx, self.posy+self.font_size*self.text.split("\n").index(text))
+            )
     def draw(self):
         self.drawSimple()
 
