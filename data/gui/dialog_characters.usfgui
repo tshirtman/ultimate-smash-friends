@@ -1,0 +1,5 @@
+<gui>
+<label value="You need to select more than 1 character" posx="0" posy="0" sizey="0" sizex="0" id="label" />
+<button value="Ok" posx="40" posy="65" sizey="8" sizex="20" id="credits" action="goto:characters.usfgui" />
+<parent>main.usfgui</parent>
+</gui>

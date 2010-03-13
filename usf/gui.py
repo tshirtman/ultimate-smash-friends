@@ -297,7 +297,10 @@ class Gui(object):
         """
         if(self.dialog.has_key(self.screen_current)):
             self.dialog[self.screen_current].show()
-        if( not self.dialog.has_key(self.screen_current)):
+        if(self.dialog.has_key(screen)):
+            self.screen_current = screen
+            self.dialog[self.screen_current].show()
+        else:
             for i in range(0,5):
                 start = time.time()
                 self.draw_screen(True,i*50)
@@ -307,8 +310,6 @@ class Gui(object):
                 start = time.time()
                 self.draw_screen(True,(i*-1+5)*50)
                 time.sleep(1.00/float(general['MAX_FPS']))
-        else:
-            self.screen_current = screen
         self.button_active = 0
         self.widgetselect = -1
         self.widget_anim=[]
@@ -436,6 +437,14 @@ class Gui(object):
             else:
                 general['FULLSCREEN'] = "True"
                 self.widget_list[self.screen_current]['fullscreen'].text = "True"
+        elif(id_widget=="gotolevel"):
+            nb_player = 0
+            for p in [p for p in self.players if p is not -1]:
+                nb_player += 1
+            if nb_player > 1:
+                self.goto_screen("level.usfgui")
+            else:
+                self.goto_screen("dialog_characters.usfgui")
         elif(id_widget=="musicp"):
             sound_config['MUSIC_VOLUME'] += 5
             self.widget_list[self.screen_current]['music'].text = str(sound_config['MUSIC_VOLUME'])
@@ -474,9 +483,6 @@ class Gui(object):
                 self.goto_screen(widget_action.split(":")[1])
             elif(widget_action.split(":")[0] == "anim"):
                 self.anim(widget_action.split(":")[1], widget_action.split(":")[2], self.controls)
-            elif(widget_action.split(":")[0] == "dialog"):
-                self.dialog[widget_action.split(":")[1]].show()
-                self.goto_screen(widget_action.split(":")[1])
             elif(widget_action == ""):
                 self.exec_event(self.widget_list[self.screen_current].values()[i].name)
             else:
@@ -580,7 +586,7 @@ class Dialog(object):
         self.screen.blit(self.tmp_screen, (0,0))
         self.screen.blit(self.background, (skin.dialog['posx'], skin.dialog['posy']))
     def show(self):
-        if self.state == False:
+        if self.state is False:
             self.state = True
             self.tmp_screen = self.screen.copy()
             cache = pygame.Surface((general['WIDTH'], general['HEIGHT']))

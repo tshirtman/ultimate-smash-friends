@@ -20,6 +20,6 @@
 <image value="gui/image/none.png" posx="55" posy="65" sizey="10" sizex="0" id="player3" action="" />
 <checkbox value="" posx="65" posy="65" sizey="7" sizex="0" id="ai3" action="" />
 
-<button value="Next" posx="60" posy="80" sizey="8" sizex="20" id="local" action="goto:level.usfgui" />
+<button value="Next" posx="60" posy="80" sizey="8" sizex="20" id="gotolevel" action="" />
 <parent>main.usfgui</parent>
 </gui>
