@@ -124,6 +124,15 @@
     duration="500"
     repeat="0"
     >
+        <sound
+        filename="attack1.wav"
+        ></sound>
+        <sound
+        filename="attack2.wav"
+        ></sound>
+        <sound
+        filename="attack3.wav"
+        ></sound>
         <frame
         time="0"
         image="blob_hit1.png"

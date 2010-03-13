@@ -237,8 +237,6 @@ os.sep+
         while (True):
             # update the fps counter
             self.clock.tick()
-            if sound_config['MUSIC']:
-                self.music.update(self.state)
 
             # poll controls and update informations on current state of the UI
             if self.state!="menu" :
@@ -268,6 +266,8 @@ os.sep+
                         )
 
             pygame.display.update()
+            if sound_config['MUSIC']:
+                self.music.update(self.state)
             # verify there is not a QUIT event waiting for us, in case of we
             # have to quit.
             self.ended = pygame.event.get(QUIT)
