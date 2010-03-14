@@ -59,9 +59,6 @@ class AI(object):
         self.global_height = False
         #FIXME : a real function to calculate height
         self.jump_height = float(self.iam.entity_skin.vectors['jump'][0][0][1])/float(10000)*1500
-        print
-        print self.jump_height
-        print
     def update(self, game, iam):
         self.sequences_ai = []
         self.num = iam
@@ -132,7 +129,7 @@ class AI(object):
             self.block.left-80 < self.iam.place[0] and
             self.block.top-80 < self.iam.place[1] and
             self.block.top+80 > self.iam.place[1]):
-            self.game.notif.append([time.time(), "I am on your block"])
+            #self.game.notif.append([time.time(), "I am on your block"])
             self.iam.walking_vector[0] = general['WALKSPEED']
             self.walk = True
             if self.enemy_position[0][0] < self.iam.place[0]:
@@ -154,7 +151,7 @@ class AI(object):
                        block.top-100 > self.iam.place[1])
                      )
                    ):
-                   self.game.notif.append([time.time(), "I jump"])
+                   #self.game.notif.append([time.time(), "I jump"])
                    self.sequences_ai.append(("PL"+ str(self.num+1) + "_UP",time.time()))
                    self.wait_time = time.time()
         elif self.wait_time +1.5 < time.time():
