@@ -89,19 +89,20 @@ class AI(object):
                 block.left-80 < self.enemy_position[0][0] and
                 block.top-80 < self.enemy_position[0][1] and
                 block.top+80 > self.enemy_position[0][1]):
-                pygame.draw.line(self.game.screen, pygame.Color("red"), (block.left/8,block.top/8), (block.right/8,block.top/8))
+                #pygame.draw.line(self.game.screen, pygame.Color("red"), (block.left/8,block.top/8), (block.right/8,block.top/8))
                 self.block = block
                 break
             else:
                 pygame.draw.line(self.game.screen, pygame.Color("green"), (block.left/8,block.top/8), (block.right/8,block.top/8))
         if self.block is not None:
             self.goto()
+        """
         pygame.draw.line(self.game.screen, pygame.Color("red"), (aix,aiy), (enx,eny))
         pygame.draw.line(self.game.screen, pygame.Color("red"), (aix,aiy), (aix,aiy-self.jump_height/8))
         pygame.draw.line(self.game.screen, pygame.Color("red"), (aix,aiy), (aix+general['WALKSPEED']/8,aiy))
 
         #for pos in self.position:
-        #    pygame.draw.line(self.game.screen, pygame.Color("orange"), (pos[0]/8,pos[1]/8), (pos[0]/8,pos[1]/8))
+        #    pygame.draw.line(self.game.screen, pygame.Color("orange"), (pos[0]/8,pos[1]/8), (pos[0]/8,pos[1]/8))"""
         pygame.display.update()
         if self.enemy_position[0][0] < self.iam.place[0] :
             self.iam.reversed = True
