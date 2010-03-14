@@ -31,7 +31,7 @@ if platform in ('linux2', 'bsd'):
         logging.debug('error, XDG_CONFIG_HOME is not declared.')
         xdg_config_home = os.environ['HOME'] + '/.config'
 else:
-    xdg_config_home = os.path.dirname(abspath(path.join(__file__, '..')))
+    xdg_config_home = os.path.dirname(os.path.abspath(os.path.join(__file__, '..')))
 
 
 def open_conf(confname):

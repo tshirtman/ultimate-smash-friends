@@ -144,17 +144,20 @@ class Entity_skin (object):
 
             self.action_events[movement.attrib['name']] = events
 
-            for sound in movement.findall('sound'):
-                sounds.append(
-                        pygame.mixer.Sound(
-                            os.path.join(
-                                MEDIA_DIRECTORY,
-                                dir_name,
-                                sound.attrib['filename']
+            try:
+                for sound in movement.findall('sound'):
+                    sounds.append(
+                            pygame.mixer.Sound(
+                                os.path.join(
+                                    MEDIA_DIRECTORY,
+                                    dir_name,
+                                    sound.attrib['filename']
+                                    )
                                 )
                             )
-                        )
-
+            except (pygame.error), e:
+                # bad but simple, no sound loaded if mixer not initialised
+                pass
             self.sounds[movement.attrib['name']] = sounds
 
             for frame in movement.findall('frame'):

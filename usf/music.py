@@ -90,8 +90,9 @@ class Music (object):
             if self.playing != None:
                 self.playing.fadeout(3000)
             self.playing = loaders.track(random.choice(music))
-            self.playing.set_volume(sound_config['MUSIC_VOLUME']/100.0)
-            self.playing.play(fade_ms=3000)
+            if self.playing is not None:
+                self.playing.set_volume(sound_config['MUSIC_VOLUME']/100.0)
+                self.playing.play(fade_ms=3000)
         else:
             self.playing = music
             self.playing.play()

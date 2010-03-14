@@ -156,5 +156,9 @@ def image(name, *args, **kwargs):
 
 @memoize
 def track(name):
-    return pygame.mixer.Sound(name)
+    try:
+        return pygame.mixer.Sound(name)
+    except (pygame.error):
+        # no sound
+        pass
 
