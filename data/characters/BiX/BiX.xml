@@ -99,7 +99,7 @@
     </movement>-->
     
 <movement name="hit"
-    duration="500"
+    duration="400"
     repeat="0">
 
 	<frame
@@ -112,7 +112,7 @@
         vector="(0,110)"
         > </frame>
         <frame
-        time="400"
+        time="200"
         image="BiX_hit3.png"
         vector="(0,50)"
         >
@@ -125,11 +125,36 @@
             vector="300,-30"
             ></agressiv-point> </frame>
         <frame
-        time="900"
+        time="500"
         image="BiX_hit1.png"
         ></frame>
 	</movement>	
 
+    <movement name="pick"
+    duration="750"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="BiX_roll1.png"
+        > </frame>
+        <frame
+        time="100"
+        image="BiX_roll2.png"
+        > </frame>
+        <frame
+        time="300"
+        image="BiX_roll3.png"
+        > </frame>
+        <frame
+        time="400"
+        image="BiX_roll2.png"
+        > </frame>
+        <frame
+        time="500"
+        image="BiX_roll1.png"
+        > </frame>
+    </movement>
 
     <movement name="take"
     duration="100"
@@ -171,7 +196,7 @@
         > </frame>
     </movement>
     <movement name="smash-straight"
-    duration="1000"
+    duration="800"
     repeat="0"
     >
         <frame
@@ -198,10 +223,6 @@
         <frame
         time="500"
         image="BiX_smashstraight5.png"
-        > </frame>
-        <frame
-        time="700"
-        image="BiX_smashstraight4.png"
         > </frame>
     </movement>
     <movement name="smash-down"
