@@ -5,3 +5,4 @@ code/usf_media/gui/image/next (copie).png
 code/usf_media/gui/image/prev (copie).png
 code/usf_media/gui/set_game.usfgui
 *.pyc
+rc.config
