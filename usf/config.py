@@ -62,7 +62,7 @@ def load_config():
             # yeah eval is evil, but I guess it exists for such situations
             config[line.split('=')[0].replace(' ','')] = eval(line.split('=')[1])
     return config
-        
+
 def load_sound_config():
     config = {}
     config_file = open_conf('sound')
