@@ -41,7 +41,7 @@ def open_conf(confname):
 
     if confname+'.cfg' not in os.listdir(os.path.join(xdg_config_home,'usf')):
         logging.debug('creating '+confname+' config')
-        conf = open('default_'+confname+'.cfg')
+        conf = open('..' + os.sep + 'default_'+confname+'.cfg')
         config_file = open(os.path.join(xdg_config_home,'usf',confname+'.cfg'),'w')
         config_file.write(conf.read())
         config_file.close()

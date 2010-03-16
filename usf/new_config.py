@@ -32,6 +32,8 @@ from __future__ import with_statement
 
 from os import environ, makedirs, path, stat, access, W_OK
 from sys import prefix
+import os
+import shutil
 from ConfigParser import SafeConfigParser
 import platform
 import logging
@@ -164,7 +166,12 @@ class Config(Singleton):
             makedirs(config_dir)
         except OSError:
            pass
-
+           if path.isfile(sys_config_file) == False or path.isfile(config_dir + os.sep + "sequences.cfg") == False:
+                shutil.copyfile(path.dirname(path.abspath(path.join(__file__, '..'))) + os.sep + "rc.config", sys_config_file)
+                shutil.copyfile(path.dirname(path.abspath(path.join(__file__, '..'))) + os.sep + "sequences.cfg", config_dir + os.sep + "sequences.cfg")
+                shutil.copyfile(path.dirname(path.abspath(path.join(__file__, '..'))) + os.sep + "default_config.cfg", config_dir + os.sep + "config.cfg")
+                shutil.copyfile(path.dirname(path.abspath(path.join(__file__, '..'))) + os.sep + "default_keys.cfg", config_dir + os.sep + "keys.cfg")
+                shutil.copyfile(path.dirname(path.abspath(path.join(__file__, '..'))) + os.sep + "default_sound.cfg", config_dir + os.sep + "sound.cfg")
         return config_dir, sys_config_file, user_config_file, data_dir
 
     def save(self):
