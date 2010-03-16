@@ -116,10 +116,14 @@ class Config(Singleton):
         elif 'XDG_CONFIG_HOME' in environ.keys():
             config_dir = path.join(environ['XDG_CONFIG_HOME'], 'usf')
             user_config_file = path.join(config_dir, 'rc.config')
+            sys_config_file = path.join(config_dir, 'rc.config')
+            data_dir = path.join(path.dirname(path.abspath(path.join(__file__, '..'))), 'data')
 
         else:
             config_dir = path.join(environ['HOME'], '.config', 'usf')
             user_config_file = path.join(config_dir, 'rc.config')
+            sys_config_file = path.join(config_dir, 'rc.config')
+            data_dir = path.join(path.dirname(path.abspath(path.join(__file__, '..'))), 'data')
 
         ## may need to expand once other platforms are tested
         #if OS == 'windows':
