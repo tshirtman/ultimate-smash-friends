@@ -72,19 +72,28 @@ class Gui(object):
     widget_list_order = {}
     widget_anim = []
     dialog = {}
+    last_event = 0
+    background_alpha = 0
     def update(self, state, game, controls, eventcurrent=None):
         """
         Update the screen state based on user inputs.
 
         """
+        global skin
+        if time.time() > self.last_event +1 and self.image-1<len(skin.background):
+            #self.image +=1
+            self.last_event = time.time()
+        elif time.time() > self.last_event +1:
+            self.image = 0
+            self.last_event = time.time()
         if game != None and game.ingame == False and self.screen_current=="ingame.usfgui":
             self.state = "menu"
             self.goto_screen("main.usfgui")
-            self.image.set_alpha(255)
+            self.background_alpha = 255
         self.controls = controls
         if self.screen_shot == None and self.state == "game":
             self.screen_shot = self.screen.copy()
-            self.image.set_alpha(200)
+            self.background_alpha = 255
         self.game = game
         #for performance problem if no widget are animated wait for an event
         if(eventcurrent == None and len(self.widget_anim) == 0):
@@ -122,6 +131,7 @@ class Gui(object):
         to get their previews, initializing menu state.
 
         """
+        global skin
         self.characters = []
         self.players = [-1, -1, -1, -1]
         self.state = 'menu'
@@ -197,14 +207,8 @@ class Gui(object):
             except:
                 continue
         #load background image
-        self.image = pygame.image.load(MEDIA_DIRECTORY+
-            os.sep+
-            'gui'+
-            os.sep+
-            general['THEME']+
-            os.sep+
-            'background.png').convert()
-        self.image = pygame.transform.scale(self.image, (self.sizex,self.sizey))
+        
+        self.image =0
         self.draw_screen(True)
 
     def launch_game(self, game):
@@ -532,10 +536,21 @@ class Gui(object):
         the menu "ingame".
 
         """
+        global skin
+        print self.image
+        back = loaders.image(
+            MEDIA_DIRECTORY+
+            os.sep+
+            "gui"+
+            os.sep +
+            general['THEME']+
+            os.sep+
+            skin.background[self.image]
+            )[0]
         if(self.state == "game"):
             self.screen.blit(self.screen_shot,(0,0))
         if not self.dialog.has_key(self.screen_current):
-            self.screen.blit(self.image,(0,0))
+            self.screen.blit(back,(0,0))
 
         for dialog in [dialog for dialog in self.dialog.values() if dialog.state is True]:
         #    draw items at once
@@ -544,14 +559,17 @@ class Gui(object):
             #draw items at once
             widget.draw()
         if opacity is not None:
-            self.image.set_alpha(opacity)
-            self.screen.blit(self.image,(0,0))
-            self.image.set_alpha(250)
+            self.background_alpha = opacity
+            back.set_alpha(opacity)
+            self.screen.blit(back,(0,0))
+            self.background_alpha = 255
+            back.set_alpha(opacity)
         if update : pygame.display.update()
 
 class Skin (object):
     dialog = {}
     color = None
+    background = []
     def __init__(self):
         xml_file = xml.dom.minidom.parse(MEDIA_DIRECTORY+
             os.sep+
@@ -562,11 +580,18 @@ class Skin (object):
             try:
                 if node.tagName == "color":
                     self.color = pygame.color.Color(str(node.getAttribute("value")))
-                if node.tagName == "dialog":
+                elif node.tagName == "dialog":
                     self.dialog['sizex'] = int(node.getAttribute("sizex"))*general['WIDTH']/100
                     self.dialog['sizey'] = int(node.getAttribute("sizey"))*general['HEIGHT']/100
                     self.dialog['posx'] = int(node.getAttribute("posx"))*general['WIDTH']/100
                     self.dialog['posy'] = int(node.getAttribute("posy"))*general['HEIGHT']/100
+                elif node.tagName == "background":
+                    for child_node in node.childNodes:
+                        try:
+                            if child_node.tagName == "img":
+                                self.background.append(child_node.getAttribute("src"))
+                        except:
+                            pass
             except:
                 pass
 skin = Skin()
