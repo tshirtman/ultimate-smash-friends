@@ -327,32 +327,33 @@ class Gui(object):
 
         """
         str_return = ""
-        if(eventcurrent.type is pygame.KEYUP):
-            if(eventcurrent.dict['key'] == pygame.K_DOWN):
-                self.select(True)
-            if(eventcurrent.dict['key'] == pygame.K_UP):
-                self.select(False)
-            if(eventcurrent.dict['key'] == pygame.K_ESCAPE):
-                try:
-                    self.widget_list[self.parent_screen[self.screen_current]]
-                    self.goto_screen(self.parent_screen[self.screen_current])
-                except:
-                    exec self.parent_screen[self.screen_current]
-        if(eventcurrent.type==pygame.MOUSEMOTION or eventcurrent.type==pygame.MOUSEBUTTONUP):
-            mousex = eventcurrent.dict['pos'][0]
-            mousey = eventcurrent.dict['pos'][1]
-            for widget in self.widget_list[self.screen_current].values():
-                widgetx = widget.posx
-                widgety = widget.posy
-                if(mousex>=widgetx and mousex<=widget.sizex + widgetx):
-                    if(mousey>=widgety and mousey<=widget.sizey + widgety):
-                        if(eventcurrent.type==pygame.MOUSEMOTION):
-                            str_return = self.select(self.widget_list_order[self.screen_current].index(self.widget_list[self.screen_current].keys()[self.widget_list[self.screen_current].values().index(widget)]))
-                        else:
-                            str_return = self.valid(self.widget_list_order[self.screen_current].index(self.widget_list[self.screen_current].keys()[self.widget_list[self.screen_current].values().index(widget)]))
-                        widget.click(eventcurrent)
-                        break
-        return str_return
+        if type(eventcurrent) is not str:
+            if(eventcurrent.type is pygame.KEYUP):
+                if(eventcurrent.dict['key'] == pygame.K_DOWN):
+                    self.select(True)
+                if(eventcurrent.dict['key'] == pygame.K_UP):
+                    self.select(False)
+                if(eventcurrent.dict['key'] == pygame.K_ESCAPE):
+                    try:
+                        self.widget_list[self.parent_screen[self.screen_current]]
+                        self.goto_screen(self.parent_screen[self.screen_current])
+                    except:
+                        exec self.parent_screen[self.screen_current]
+            if(eventcurrent.type==pygame.MOUSEMOTION or eventcurrent.type==pygame.MOUSEBUTTONUP or eventcurrent.type==pygame.MOUSEBUTTONDOWN):
+                mousex = eventcurrent.dict['pos'][0]
+                mousey = eventcurrent.dict['pos'][1]
+                for widget in self.widget_list[self.screen_current].values():
+                    widgetx = widget.posx
+                    widgety = widget.posy
+                    if(mousex>=widgetx and mousex<=widget.sizex + widgetx):
+                        if(mousey>=widgety and mousey<=widget.sizey + widgety):
+                            if(eventcurrent.type==pygame.MOUSEMOTION):
+                                str_return = self.select(self.widget_list_order[self.screen_current].index(self.widget_list[self.screen_current].keys()[self.widget_list[self.screen_current].values().index(widget)]))
+                            elif(eventcurrent.type==pygame.MOUSEBUTTONUP):
+                                str_return = self.valid(self.widget_list_order[self.screen_current].index(self.widget_list[self.screen_current].keys()[self.widget_list[self.screen_current].values().index(widget)]))
+                            widget.click(eventcurrent)
+                            break
+            return str_return
 
     def select(self,sens):
         """

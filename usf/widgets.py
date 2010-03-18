@@ -321,6 +321,7 @@ class WidgetParagraph(Widget):
     last_event = 0
     speed = 0.03
     defil = 0
+    stop = False
     def drawSimple(self):
         self.surface.fill(pygame.color.Color("black"))
         for i in range(0,len(self.credits.split("\n"))):
@@ -346,7 +347,13 @@ class WidgetParagraph(Widget):
             self.falseposy = self.posy
         self.drawSimple()
     def click(self, event, sens=True):
-        if(time.time() - self.last_event > self.speed):
+        if(type(event) is not type('') and event.type == pygame.MOUSEBUTTONDOWN):
+            self.stop = True
+            pass
+        elif(type(event) is not type('') and event.type == pygame.MOUSEBUTTONUP):
+            self.stop = False
+            pass
+        elif(time.time() - self.last_event > self.speed and not self.stop):
             if(self.falseposy + self.screen.get_height()/20*(len(self.credits.split("\n"))) < self.posy and sens == "1"):
                 self.falseposy = self.posy
                 return False
