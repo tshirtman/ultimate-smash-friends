@@ -247,33 +247,32 @@ class Gui(object):
             try:
                 if xml_file.childNodes[i].tagName != "parent":
                     id_current = xml_file.childNodes[i].getAttribute("id")
+                    self.widget_list_order[filename].append(id_current)
                     if(xml_file.childNodes[i].tagName == "label"):
                         self.widget_list[filename][id_current] = WidgetLabel(self.screen)
                     elif(xml_file.childNodes[i].tagName == "p"):
                         self.widget_list[filename][id_current] = WidgetParagraph(self.screen)
+                        #FIXME : remove these two line
+                        self.widget_list[filename][id_current].set_sizex(self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("sizex"))/100)
+                        self.widget_list[filename][id_current].set_sizey(self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("sizey"))/100)
                         self.widget_list[filename][id_current].setParagraph(xml_file.childNodes[i].childNodes[0].nodeValue)
                     elif(xml_file.childNodes[i].tagName == "imagebutton"):
                         self.widget_list[filename][id_current] = WidgetImageButton(self.screen)
                         self.widget_list[filename][id_current].action=xml_file.childNodes[i].getAttribute("action")
-                        self.widget_list_order[filename].append(id_current)
                     elif(xml_file.childNodes[i].tagName == "checkbox"):
                         self.widget_list[filename][id_current] = WidgetCheckbox(self.screen)
                         self.widget_list[filename][id_current].action=xml_file.childNodes[i].getAttribute("action")
-                        self.widget_list_order[filename].append(id_current)
                     elif(xml_file.childNodes[i].tagName == "textarea"):
                         self.widget_list[filename][id_current] = WidgetTextarea(self.screen)
                         self.widget_list[filename][id_current].str_len =int(xml_file.childNodes[i].getAttribute("nb"))
                         #it is for label and image couldn't be select
-                        self.widget_list_order[filename].append(id_current)
                         self.widget_list[filename][id_current].action=xml_file.childNodes[i].getAttribute("action")
                     elif(xml_file.childNodes[i].tagName == "button"):
                         self.widget_list[filename][id_current] = WidgetIcon(self.screen)
-                        self.widget_list_order[filename].append(id_current)
                         self.widget_list[filename][id_current].action=xml_file.childNodes[i].getAttribute("action")
                     elif(xml_file.childNodes[i].tagName == "image"):
                         self.widget_list[filename][id_current] = WidgetImage(self.screen)
                     try:
-                        percent = 100
                         self.widget_list[filename][id_current].set_sizex(self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("sizex"))/100)
                         self.widget_list[filename][id_current].set_sizey(self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("sizey"))/100)
                     except:
@@ -342,15 +341,16 @@ class Gui(object):
         if(eventcurrent.type==pygame.MOUSEMOTION or eventcurrent.type==pygame.MOUSEBUTTONUP):
             mousex = eventcurrent.dict['pos'][0]
             mousey = eventcurrent.dict['pos'][1]
-            for i in range(len(self.widget_list_order[self.screen_current])):
-                widgetx = self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][i]].posx
-                widgety = self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][i]].posy
-                if(mousex>=widgetx and mousex<=self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][i]].sizex + widgetx):
-                    if(mousey>=widgety and mousey<=self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][i]].sizey + widgety):
+            for widget in self.widget_list[self.screen_current].values():
+                widgetx = widget.posx
+                widgety = widget.posy
+                if(mousex>=widgetx and mousex<=widget.sizex + widgetx):
+                    if(mousey>=widgety and mousey<=widget.sizey + widgety):
                         if(eventcurrent.type==pygame.MOUSEMOTION):
-                            str_return = self.select(i)
+                            str_return = self.select(self.widget_list_order[self.screen_current].index(self.widget_list[self.screen_current].keys()[self.widget_list[self.screen_current].values().index(widget)]))
                         else:
-                            str_return = self.valid(i)
+                            str_return = self.valid(self.widget_list_order[self.screen_current].index(self.widget_list[self.screen_current].keys()[self.widget_list[self.screen_current].values().index(widget)]))
+                        widget.click(eventcurrent)
                         break
         return str_return
 
@@ -362,18 +362,18 @@ class Gui(object):
         if(type(sens) == bool):
             if sens:
                 if(self.widgetselect < len(self.widget_list_order[self.screen_current])-1):
-                    self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][self.widgetselect]].state = "norm"
+                    self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][self.widgetselect]].state("norm")
                     self.widgetselect += 1
-                    self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][self.widgetselect]].state = "hover"
+                    self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][self.widgetselect]].state("hover")
             else:
                 if(self.widgetselect > 0):
-                    self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][self.widgetselect]].state = "norm"
+                    self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][self.widgetselect]].state("norm")
                     self.widgetselect -= 1
-                    self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][self.widgetselect]].state = "hover"
+                    self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][self.widgetselect]].state("hover")
         else:
-            self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][self.widgetselect]].state = "norm"
+            self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][self.widgetselect]].state("norm")
             self.widgetselect = sens
-            self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][self.widgetselect]].state = "hover"
+            self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][self.widgetselect]].state("hover")
         return ""
 
     def valid(self,i):
@@ -383,7 +383,7 @@ class Gui(object):
         """
         str_return = ""
         id_widget = self.widget_list_order[self.screen_current][i]
-        self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][self.widgetselect]].state = "norm"
+        self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][self.widgetselect]].state("norm")
         widget_action =self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][i]].action
 
         ############################## CUSTOM ACTION ###########################

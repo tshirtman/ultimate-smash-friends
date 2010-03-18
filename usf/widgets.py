@@ -98,14 +98,17 @@ class Widget (object):
                     self.text = str(general[value.split(':')[1]])
         else:
             self.text = value
-
+    def state(self,state_str):
+        self.state_str = state_str
+    def click(self,event):
+        pass
 
 class WidgetCheckbox(Widget):
     """
     A simple button image.
     """
     text = ""
-    state = "norm"
+    state_str = "norm"
     def drawSimple(self):
         self.screen.blit(
             self.image,
@@ -117,11 +120,11 @@ class WidgetCheckbox(Widget):
         (self.posx, self.posy)
         )
     def draw(self):
-        if (self.state == "norm"):
+        if (self.state_str == "norm"):
             self.drawSimple()
-        elif (self.state == "click"):
+        elif (self.state_str == "click"):
             self.drawClick()
-        elif (self.state == "hover"):
+        elif (self.state_str == "hover"):
             self.drawHover()
     def setText(self, value):
         if(value.split(':')[0] == "config"):
@@ -172,13 +175,13 @@ class WidgetIcon(Widget):
     A simple button widget.
     XML : <button sizex="" sizey="" posx="" posy="" action="" value="" id=""/>
     """
-    state = "norm"
+    state_str = "norm"
     def draw(self):
-        if (self.state == "norm"):
+        if (self.state_str == "norm"):
             self.drawSimple()
-        elif (self.state == "click"):
+        elif (self.state_str == "click"):
             self.drawClick()
-        elif (self.state == "hover"):
+        elif (self.state_str == "hover"):
             self.drawHover()
     def drawSimple(self):
         self.screen.blit(self.background,(self.posx,self.posy))
@@ -233,7 +236,7 @@ class WidgetImageButton(Widget):
     A simple button image.
     """
     text = ""
-    state = "norm"
+    state_str = "norm"
     def drawSimple(self):
         self.screen.blit(
             self.image,
@@ -245,11 +248,11 @@ class WidgetImageButton(Widget):
         (self.posx, self.posy)
         )
     def draw(self):
-        if (self.state == "norm"):
+        if (self.state_str == "norm"):
             self.drawSimple()
-        elif (self.state == "click"):
+        elif (self.state_str == "click"):
             self.drawClick()
-        elif (self.state == "hover"):
+        elif (self.state_str == "hover"):
             self.drawHover()
     def setText(self, text):
         self.text = text.replace("theme/", MEDIA_DIRECTORY + os.sep)
@@ -312,52 +315,45 @@ class WidgetParagraph(Widget):
     it is animated.
     """
     text = ""
-    state="norm"
+    state_str="norm"
     action = ""
     anim = True
     last_event = 0
     speed = 0.03
+    defil = 0
     def drawSimple(self):
+        self.surface.fill(pygame.color.Color("black"))
         for i in range(0,len(self.credits.split("\n"))):
-            if(self.falseposy + self.screen.get_height()/20*i >= self.posy and self.falseposy + self.screen.get_height()/20*i <= self.posy+self.sizey):
-                if self.credits.split("\n")[i].strip("==") != self.credits.split("\n")[i]:
-                    self.screen.blit(
-                        self.game_font.render(
-                        self.credits.split("\n")[i].strip("=="),
-                        True,
-                        pygame.color.Color(
-                            "brown"
-                            )
-                        ),
-                        (self.posx, self.falseposy + self.screen.get_height()/20*i)
-                        )
-                else:
-                    self.screen.blit(
-                        self.game_font.render(
-                        self.credits.split("\n")[i],
-                        True,
-                        pygame.color.Color(
-                            "white"
-                            )
-                        ),
-                        (self.posx, self.falseposy + self.screen.get_height()/20*i)
-                        )
+            if "==" in self.credits.split("\n")[i]:
+                color = "brown"
+            else:
+                color = "white"
+            self.surface.blit(
+                self.game_font.render(
+                self.credits.split("\n")[i].strip("=="),
+                True,
+                pygame.color.Color(
+                    color
+                    )
+                ),
+                (0, self.screen.get_height()/20*i-self.defil)
+                )
+        self.screen.blit(self.surface,(self.posx,self.posy))
     def draw(self):
         try:
             self.falseposy
         except:
             self.falseposy = self.posy
         self.drawSimple()
-    def click(self, sens):
+    def click(self, event, sens=True):
         if(time.time() - self.last_event > self.speed):
             if(self.falseposy + self.screen.get_height()/20*(len(self.credits.split("\n"))) < self.posy and sens == "1"):
-                print "bas !"
                 self.falseposy = self.posy
                 return False
             if(self.falseposy >= self.posy and sens == "0"):
-                print "top !"
                 return False
             self.falseposy -= self.screen.get_height()/400
+            self.defil += self.screen.get_height()/400
             self.last_event = time.time()
         return True
     def setParagraph(self, text):
@@ -366,10 +362,9 @@ class WidgetParagraph(Widget):
             self.credits = ""
             for i in range(0, len(credits_file)):
                 self.credits += credits_file[i]
-            self.sizey = 150
-            self.sizex = self.screen.get_height()/2
         else:
             self.credits = text
+        self.surface = pygame.Surface((self.sizex,self.sizey))
 
 
 class WidgetTextarea(Widget):
@@ -378,14 +373,14 @@ class WidgetTextarea(Widget):
     XML : <button sizex="" sizey="" posx="" posy="" action="" value="" id=""/>
     """
     text = ""
-    state = "norm"
+    state_str = "norm"
     str_len = 0
     def draw(self):
-        if (self.state == "norm"):
+        if (self.state_str == "norm"):
             self.drawSimple()
-        elif (self.state == "click"):
+        elif (self.state_str == "click"):
             self.drawClick()
-        elif (self.state == "hover"):
+        elif (self.state_str == "hover"):
             self.drawHover()
     def drawSimple(self):
         self.screen.blit(self.background,(self.posx,self.posy))
