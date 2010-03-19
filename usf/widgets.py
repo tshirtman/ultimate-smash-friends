@@ -426,20 +426,20 @@ class WidgetTextarea(Widget):
         (self.posx + self.sizex/10, self.posy+self.sizey/2-self.screen.get_height()/50)
         )
     def load(self):
-        self.background = pygame.image.load(config['MEDIA_DIRECTORY']+
+        self.background = pygame.image.load(MEDIA_DIRECTORY+
             os.sep+
             'gui'+
             os.sep+
-            config['THEME']+
+            general['THEME']+
             os.sep+
             'back_button.png').convert_alpha()
         self.background  = pygame.transform.scale(self.background, (self.sizex, self.sizey))
         #self.background.set_colorkey((255,255,255))
-        self.background_hover = pygame.image.load(config['MEDIA_DIRECTORY']+
+        self.background_hover = pygame.image.load(MEDIA_DIRECTORY+
             os.sep+
             'gui'+
             os.sep+
-            config['THEME']+
+            general['THEME']+
             os.sep+
             'back_button_hover.png').convert_alpha()
         self.background_hover  = pygame.transform.scale(self.background_hover, (self.sizex, self.sizey))
