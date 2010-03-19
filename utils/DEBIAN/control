@@ -1,8 +1,0 @@
-Package: ultimate-smash-friends
-Version: 0.0.3
-Section: games
-Priority: optional
-Architecture: all
-Depends: python, python-pygame, python-xdg, python-imaging
-Maintainer: Gabriel Pettier <gabriel.pettier@gmail.com> 
-Description: Ultimate Smash Friends is a 2d arcade fight game, inspired by the super smash bros nintendo series.
