@@ -34,7 +34,6 @@ else:
     xdg_config_home = os.path.dirname(os.path.abspath(os.path.join(__file__, '..')))
 
 
-"""
 def open_conf(confname):
     if 'usf' not in os.listdir(os.path.join(xdg_config_home)):
         logging.debug('creating new config directory')
@@ -52,7 +51,6 @@ def open_conf(confname):
         # looks like it's the first launch of the game, we need to create the
         # config file
 
-"""
 def load_config():
     #TODO: add options from DEFAULT_CONFIG to config if missing
     config = {}
