@@ -107,6 +107,7 @@ class Config(Singleton):
             config file, user config file, and datadirectories according to the
             user's platform
         """
+        """
         if access(
                 path.dirname(path.abspath(path.join(__file__, '..'))), W_OK
                 ):
@@ -127,38 +128,40 @@ class Config(Singleton):
             sys_config_file = path.join(config_dir, 'rc.config')
             data_dir = path.join(path.dirname(path.abspath(path.join(__file__, '..'))), 'data')
 
-        ## may need to expand once other platforms are tested
-        #if OS == 'windows':
-            ## set the config directory to the parent directory of this script
-            #config_dir = path.dirname(path.abspath(path.join(__file__, '..')))
-            #sys_config_file = path.join(config_dir, 'rc.config')
-            #user_config_file = sys_config_file
-            #data_dir = path.join(config_dir, 'data')
-        #else:
-            #try:
-                ## determine if usf has been installed. If not, use config_dir as the data
-                ## dir, similar to windows
-                #data_dir = path.join(
-                    #prefix, 'share', 'ultimate-smash-friends', 'data'
-                #)
-                #stat(data_dir)
-                #sys_config_file = path.join(
-                    #prefix, 'etc', 'ultimate-smash-friends', 'rc.config'
-                    #)
-                #
-                #if 'XDG_CONFIG_HOME' in environ.keys():
-                    #config_dir = path.join(environ['XDG_CONFIG_HOME'], 'usf')
-                    #user_config_file = path.join(config_dir, 'rc.config')
-                #
-                #else:
-                    #config_dir = path.join(environ['HOME'], '.config', 'usf')
-                    #user_config_file = path.join(config_dir, 'rc.config')
-            #
-            #except OSError:
-                #config_dir = path.dirname(path.abspath(path.join(__file__, '..')))
-                #sys_config_file = path.join(config_dir, 'rc.config')
-                #user_config_file = sys_config_file
-                #data_dir = path.join(config_dir, 'data')
+"""
+
+        # may need to expand once other platforms are tested
+        if OS == 'windows':
+            # set the config directory to the parent directory of this script
+            config_dir = path.dirname(path.abspath(path.join(__file__, '..')))
+            sys_config_file = path.join(config_dir, 'rc.config')
+            user_config_file = sys_config_file
+            data_dir = path.join(config_dir, 'data')
+        else:
+            try:
+                # determine if usf has been installed. If not, use config_dir as the data
+                # dir, similar to windows
+                data_dir = path.join(
+                    prefix, 'share', 'ultimate-smash-friends', 'data'
+                )
+                stat(data_dir)
+                sys_config_file = path.join(
+                    prefix, 'etc', 'ultimate-smash-friends', 'rc.config'
+                    )
+                
+                if 'XDG_CONFIG_HOME' in environ.keys():
+                    config_dir = path.join(environ['XDG_CONFIG_HOME'], 'usf')
+                    user_config_file = path.join(config_dir, 'rc.config')
+                
+                else:
+                    config_dir = path.join(environ['HOME'], '.config', 'usf')
+                    user_config_file = path.join(config_dir, 'rc.config')
+            
+            except OSError:
+                config_dir = path.dirname(path.abspath(path.join(__file__, '..')))
+                sys_config_file = path.join(config_dir, 'rc.config')
+                user_config_file = sys_config_file
+                data_dir = path.join(config_dir, 'data')
 
         # create config directory and user config file
         try:

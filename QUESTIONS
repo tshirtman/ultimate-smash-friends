@@ -1,5 +1,0 @@
-loaders.py
-	In "zoom" block, what is the point of dividing by the default width and heights? They will always return 1. If 	       the point is that width and height could possibly be set greater, then using fixed values may have some
-	nasty side effects due to aspect ratio. With smaller screens, I can't imagine this would produce a good result.
-	Then again, it is entirely (and most assuredly) possible that I am missing the point of this block of code 
-	entirely :-)

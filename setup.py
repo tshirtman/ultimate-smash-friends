@@ -43,11 +43,13 @@ else:
             item[0].replace('doc', ''), item[1]) 
             for item in files('doc')]
     doc[-1][-1].append('COPYING.txt')
-    doc[-1][-1].append('CREDITS.txt')
+    doc[-1][-1].append('CREDITS')
     doc[-1][-1].append('README.txt')
     doc[-1][-1].append('README.fr.txt')
 
-    etc = [('etc/ultimate-smash-friends/', ['config'])]
+    etc = [('/etc/ultimate-smash-friends/', 
+            ['default_keys.cfg', 'default_sound.cfg', 'default_config.cfg', 
+             'rc.config', 'sequences.cfg'])]
 
 setup(name='ultimate-smash-friends',
       version='0.0.3',
@@ -67,8 +69,8 @@ setup(name='ultimate-smash-friends',
                    'Topic :: Games/Entertainment :: Arcade'
                   ],
       packages=['usf'],
-      scripts=['ultimate-smash-friends', 'viewer'],
+      scripts=['ultimate-smash-friends', 'utils/viewer', 'utils/togimpmap', 
+               'utils/tolevel', 'utils/xml_text_extractor'],
       requires=['pygame (>=1.6)'],
-      data_files=data if OS == 'windows' else data + doc + etc
+      data_files = data if OS == 'windows' else data + doc + etc
      )
-
