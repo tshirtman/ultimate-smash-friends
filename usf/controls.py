@@ -35,7 +35,7 @@ from pygame.locals import (
 from new_config import Config
 config = Config.getInstance()
 general = config.general
-SHARE_DIRECTORY = config.config_dir
+SHARE_DIRECTORY = config.data_dir
 keyboard_config = dict([[locals.__dict__[config.keyboard[key]], key] 
                         for key in config.keyboard])
 

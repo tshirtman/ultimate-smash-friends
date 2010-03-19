@@ -49,7 +49,7 @@ else:
 
     etc = [('/etc/ultimate-smash-friends/', 
             ['default_keys.cfg', 'default_sound.cfg', 'default_config.cfg', 
-             'rc.config', 'sequences.cfg'])]
+             'rc.config'])]
 
 setup(name='ultimate-smash-friends',
       version='0.0.3',

@@ -14,7 +14,7 @@
 # GNU General Public License for more details.                                #
 #                                                                             #
 # You should have received a copy of the GNU General Public License           #
-# along with UltimateSmashFriends.                                            #
+# along with UltimateSmashFriends.                                            # 
 # If not, see <http://www.gnu.org/licenses/>.                                 #
 ###############################################################################
 
@@ -30,10 +30,8 @@
 """
 from __future__ import with_statement
 
-from os import environ, makedirs, path, stat, access, W_OK
+from os import environ, makedirs, path, stat
 from sys import prefix
-import os
-import shutil
 from ConfigParser import SafeConfigParser
 import platform
 import logging
@@ -76,21 +74,21 @@ class Option(dict):
                     return False
                 else:
                     return item
-
+        
 
 class Config(Singleton):
     """ Object that implements automatic saving.
-
+        
         Config first loads default settings from the system config file, then
         overwrites those with the ones found in the user config file. 
-
+        
         Different config sections can be accessed as
         attributes (eg. Config().section), which would then return an Option 
         object, which acts virtually identical to the builtin dict type. As
         such, specific options can be accesed as keys
         (Config().section[option]).
     """
-
+        
     def __init__(self):
         self.__parser = SafeConfigParser()
         self.__parser.optionxform=str
@@ -107,74 +105,44 @@ class Config(Singleton):
             config file, user config file, and datadirectories according to the
             user's platform
         """
-        """
-        if access(
-                path.dirname(path.abspath(path.join(__file__, '..'))), W_OK
-                ):
-            config_dir = path.dirname(path.abspath(path.join(__file__, '..')))
-            sys_config_file = path.join(config_dir, 'rc.config')
-            user_config_file = sys_config_file
-            data_dir = path.join(config_dir, 'data')
-
-        elif 'XDG_CONFIG_HOME' in environ.keys():
-            config_dir = path.join(environ['XDG_CONFIG_HOME'], 'usf')
-            user_config_file = path.join(config_dir, 'rc.config')
-            sys_config_file = path.join(config_dir, 'rc.config')
-            data_dir = path.join(path.dirname(path.abspath(path.join(__file__, '..'))), 'data')
-
-        else:
-            config_dir = path.join(environ['HOME'], '.config', 'usf')
-            user_config_file = path.join(config_dir, 'rc.config')
-            sys_config_file = path.join(config_dir, 'rc.config')
-            data_dir = path.join(path.dirname(path.abspath(path.join(__file__, '..'))), 'data')
-
-"""
 
         # may need to expand once other platforms are tested
         if OS == 'windows':
             # set the config directory to the parent directory of this script
             config_dir = path.dirname(path.abspath(path.join(__file__, '..')))
             sys_config_file = path.join(config_dir, 'rc.config')
+            print sys_config_file
             user_config_file = sys_config_file
             data_dir = path.join(config_dir, 'data')
         else:
-            try:
+            try: 
                 # determine if usf has been installed. If not, use config_dir as the data
                 # dir, similar to windows
-                data_dir = path.join(
-                    prefix, 'share', 'ultimate-smash-friends', 'data'
-                )
+                data_dir = path.join(prefix, 'share', 
+                                     'ultimate-smash-friends', 'data')
                 stat(data_dir)
-                sys_config_file = path.join(
-                    prefix, 'etc', 'ultimate-smash-friends', 'rc.config'
-                    )
-                
+                sys_config_file = path.join('/etc', 'ultimate-smash-friends', 
+                                            'rc.config')
+
                 if 'XDG_CONFIG_HOME' in environ.keys():
                     config_dir = path.join(environ['XDG_CONFIG_HOME'], 'usf')
                     user_config_file = path.join(config_dir, 'rc.config')
-                
                 else:
                     config_dir = path.join(environ['HOME'], '.config', 'usf')
                     user_config_file = path.join(config_dir, 'rc.config')
-            
             except OSError:
                 config_dir = path.dirname(path.abspath(path.join(__file__, '..')))
                 sys_config_file = path.join(config_dir, 'rc.config')
                 user_config_file = sys_config_file
                 data_dir = path.join(config_dir, 'data')
-
+        
         # create config directory and user config file
         try:
             logging.debug('creating new config directory')
             makedirs(config_dir)
         except OSError:
            pass
-           if path.isfile(sys_config_file) == False or path.isfile(config_dir + os.sep + "sequences.cfg") == False:
-                shutil.copyfile(path.dirname(path.abspath(path.join(__file__, '..'))) + os.sep + "rc.config", sys_config_file)
-                shutil.copyfile(path.dirname(path.abspath(path.join(__file__, '..'))) + os.sep + "sequences.cfg", config_dir + os.sep + "sequences.cfg")
-                shutil.copyfile(path.dirname(path.abspath(path.join(__file__, '..'))) + os.sep + "default_config.cfg", config_dir + os.sep + "config.cfg")
-                shutil.copyfile(path.dirname(path.abspath(path.join(__file__, '..'))) + os.sep + "default_keys.cfg", config_dir + os.sep + "keys.cfg")
-                shutil.copyfile(path.dirname(path.abspath(path.join(__file__, '..'))) + os.sep + "default_sound.cfg", config_dir + os.sep + "sound.cfg")
+
         return config_dir, sys_config_file, user_config_file, data_dir
 
     def save(self):
