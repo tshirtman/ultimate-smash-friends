@@ -52,7 +52,7 @@ else:
              'rc.config'])]
 
 setup(name='ultimate-smash-friends',
-      version='0.0.3',
+      version='0.0.5',
       description=('A 2d arcade fight game, based on the gameplay of super '
                    'smash bros, from nintendo.'),
       author='Gabirel Pettier',

@@ -85,7 +85,6 @@ def reload(self):
 def save(self):
 keys
 player_sequences
-reverse_keymap
 sequences
 
 class LOG (object):
