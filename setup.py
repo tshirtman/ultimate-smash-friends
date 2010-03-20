@@ -5,7 +5,7 @@
     http://wiki.python.org/moin/Distutils/Cookbook/AutoDataDiscovery
 
 """
-import os
+import os from sys import exit
 import platform
 import imp
 from distutils.core import setup
@@ -33,8 +33,13 @@ def files(path):
 
 if OS == 'windows':
     # TODO: change to sane install locations for windows
-    data = [('c:/Program Files/Ultimate Smash Friends' + item[0], item[1])
-            for item in files('data')]
+    print "Sorry, setup.py is currently unable to build a proper windows" 
+          " executable."
+    exit(1)
+    """
+    data = [('Ultimate Smash Friends' + item[0], item[1])
+            for item in files('.')]
+    """
 else:
     data = [('share/ultimate-smash-friends/' + item[0], item[1]) 
             for item in files('data')]
@@ -49,7 +54,7 @@ else:
 
     etc = [('/etc/ultimate-smash-friends/', 
             ['default_keys.cfg', 'default_sound.cfg', 'default_config.cfg', 
-             'rc.config'])]
+             'system.cfg'])]
 
 setup(name='ultimate-smash-friends',
       version='0.0.5',
@@ -72,5 +77,5 @@ setup(name='ultimate-smash-friends',
       scripts=['ultimate-smash-friends', 'utils/viewer', 'utils/togimpmap', 
                'utils/tolevel', 'utils/xml_text_extractor'],
       requires=['pygame (>=1.6)'],
-      data_files = data if OS == 'windows' else data + doc + etc
+      data_files = [] if OS == 'windows' else data + doc + etc
      )
