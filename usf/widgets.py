@@ -457,7 +457,10 @@ class WidgetCoverflow(Widget):
     """
     text = ""
     state_str = "norm"
+    elements = {}
+    hover =''
     def drawSimple(self):
+        self.surface = pygame.Surface((self.sizex,self.sizey/2))
         """self.screen.blit(
             self.image,
         (self.posx, self.posy)
@@ -520,6 +523,11 @@ class WidgetCoverflow(Widget):
             os.sep+
             "cover-foreground.png", scale=(self.sizex, self.sizey/2)
             )[0]
+        self.elements['frameright'] = {}
+        self.elements['frameright']['posx'] = self.posx
+        self.elements['frameright']['posy'] = self.posy
+        self.elements['frameright']['width'] = self.sizex/3
+        self.elements['frameright']['height'] = self.sizey/3
         self.frameright = loaders.image(
             MEDIA_DIRECTORY+
             os.sep+
@@ -529,6 +537,11 @@ class WidgetCoverflow(Widget):
             os.sep+
             "cover-frame-small.png", scale=(self.sizex/3, self.sizey/3)
             )[0]
+        self.elements['frame'] = {}
+        self.elements['frame']['posx'] = self.posx + self.sizex/2-self.sizex/2/2
+        self.elements['frame']['posy'] = self.posy
+        self.elements['frame']['width'] = self.sizex/2
+        self.elements['frame']['height'] = self.sizey/2
         self.frame = loaders.image(
             MEDIA_DIRECTORY+
             os.sep+
@@ -538,9 +551,43 @@ class WidgetCoverflow(Widget):
             os.sep+
             "cover-frame-big.png", scale=(self.sizex/2, self.sizey/2)
             )[0]
+        self.elements['frameleft'] = {}
+        self.elements['frameleft']['posx'] = self.posx + self.sizex-self.sizex/3
+        self.elements['frameleft']['posy'] = self.posy
+        self.elements['frameleft']['width'] = self.sizex/3
+        self.elements['frameleft']['height'] = self.sizey/3
         self.frameleft = pygame.transform.flip(self.frameright, True, False)
     def click(self,event):
         try:
+            mousex = event.dict['pos'][0]
+            mousey = event.dict['pos'][1]
+            if(mousex in range(self.elements['frameright']['posx'],
+                                 self.elements['frameright']['posx']+self.elements['frameright']['width']) and
+               mousey in range(self.elements['frameright']['posy'],
+                                 self.elements['frameright']['posy']+self.elements['frameright']['height'])):
+                if self.hover != 'frameright':
+                    self.hover = 'frameright'
+                    self.frameright = self.frameright.copy()
+                    self.frameright.blit(loaders.image(
+                                            MEDIA_DIRECTORY+
+                                            os.sep+
+                                            'gui'+
+                                            os.sep+
+                                            general['THEME']+
+                                            os.sep+
+                                            "light.png", scale=(self.elements['frameright']['width'], self.elements['frameright']['height'])
+                                            )[0], (0,0))
+            elif self.hover == 'frameright':
+                self.frameright = loaders.image(
+                    MEDIA_DIRECTORY+
+                    os.sep+
+                    'gui'+
+                    os.sep+
+                    general['THEME']+
+                    os.sep+
+                    "cover-frame-small.png", scale=(self.sizex/3, self.sizey/3)
+                    )[0]
+                self.hover = ''
             if event.type == pygame.MOUSEBUTTONUP:
                 self.frameright = loaders.image(
                     MEDIA_DIRECTORY+

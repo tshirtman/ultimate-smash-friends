@@ -280,18 +280,18 @@ class Gui(object):
                         self.widget_list[filename][id_current].action=xml_file.childNodes[i].getAttribute("action")
                     elif(xml_file.childNodes[i].tagName == "image"):
                         self.widget_list[filename][id_current] = WidgetImage(self.screen)
-                    try:
-                        self.widget_list[filename][id_current].set_sizex(self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("sizex"))/100)
-                        self.widget_list[filename][id_current].set_sizey(self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("sizey"))/100)
-                    except:
-                        self.widget_list[filename][id_current].set_sizex(0)
-                        self.widget_list[filename][id_current].set_sizey(0)
                     if(self.dialog.has_key(filename)):
                         self.widget_list[filename][id_current].posx = skin.dialog['posx']+general['WIDTH']/40 + skin.dialog['sizex']*int(xml_file.childNodes[i].getAttribute("posx"))/100
                         self.widget_list[filename][id_current].posy = skin.dialog['posy'] +general['HEIGHT']/20 + skin.dialog['sizey']*int(xml_file.childNodes[i].getAttribute("posy"))/100
                     else:
                         self.widget_list[filename][id_current].posx=self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("posx"))/100
                         self.widget_list[filename][id_current].posy=self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("posy"))/100
+                    try:
+                        self.widget_list[filename][id_current].set_sizex(self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("sizex"))/100)
+                        self.widget_list[filename][id_current].set_sizey(self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("sizey"))/100)
+                    except:
+                        self.widget_list[filename][id_current].set_sizex(0)
+                        self.widget_list[filename][id_current].set_sizey(0)
                     if xml_file.childNodes[i].hasAttribute("value"):
                         self.widget_list[filename][id_current].setText(_(xml_file.childNodes[i].getAttribute("value")))
                     else:
