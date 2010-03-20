@@ -33,7 +33,7 @@ def files(path):
 
 if OS == 'windows':
     # TODO: change to sane install locations for windows
-    data = [('Program Files/Ultimate Smash Friends' + item[0], item[1])
+    data = [('c:/Program Files/Ultimate Smash Friends' + item[0], item[1])
             for item in files('data')]
 else:
     data = [('share/ultimate-smash-friends/' + item[0], item[1]) 

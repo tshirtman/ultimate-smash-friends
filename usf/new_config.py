@@ -110,9 +110,8 @@ class Config(Singleton):
         if OS == 'windows':
             # set the config directory to the parent directory of this script
             config_dir = path.dirname(path.abspath(path.join(__file__, '..')))
-            sys_config_file = path.join(config_dir, 'rc.config')
-            print sys_config_file
-            user_config_file = sys_config_file
+            sys_config_file = path.join(config_dir, 'system.cfg')
+            user_config_file = path.join(config_dir, 'user.cfg')
             data_dir = path.join(config_dir, 'data')
         else:
             try: 
@@ -122,18 +121,18 @@ class Config(Singleton):
                                      'ultimate-smash-friends', 'data')
                 stat(data_dir)
                 sys_config_file = path.join('/etc', 'ultimate-smash-friends', 
-                                            'rc.config')
+                                            'system.cfg')
 
                 if 'XDG_CONFIG_HOME' in environ.keys():
                     config_dir = path.join(environ['XDG_CONFIG_HOME'], 'usf')
-                    user_config_file = path.join(config_dir, 'rc.config')
                 else:
                     config_dir = path.join(environ['HOME'], '.config', 'usf')
-                    user_config_file = path.join(config_dir, 'rc.config')
+
+                user_config_file = path.join(config_dir, 'user.cfg')
             except OSError:
                 config_dir = path.dirname(path.abspath(path.join(__file__, '..')))
-                sys_config_file = path.join(config_dir, 'rc.config')
-                user_config_file = sys_config_file
+                sys_config_file = path.join(config_dir, 'system.cfg')
+                user_config_file = path.join(config_dir, 'user.cfg')
                 data_dir = path.join(config_dir, 'data')
         
         # create config directory and user config file
