@@ -80,8 +80,8 @@ class Gui(object):
 
         """
         global skin
-        if time.time() > self.last_event +1 and self.image-1<len(skin.background):
-            #self.image +=1
+        if time.time() > self.last_event +1 and self.image+1<len(skin.background):
+            self.image +=1
             self.last_event = time.time()
         elif time.time() > self.last_event +1:
             self.image = 0
@@ -96,7 +96,7 @@ class Gui(object):
             self.background_alpha = 255
         self.game = game
         #for performance problem if no widget are animated wait for an event
-        if(eventcurrent == None and len(self.widget_anim) == 0):
+        """if(eventcurrent == None and len(self.widget_anim) == 0):
             #wait for an event (mouse or keyboard)
             eventcurrent = pygame.event.wait()
         if(eventcurrent != None):
@@ -106,23 +106,25 @@ class Gui(object):
             elif(result == "return False, None"):
                 return False, None
             self.draw_screen()
-            exec result
-        if len(self.widget_anim) != 0:
-            time.sleep(1.00/float(general['MAX_FPS']))
-            for widget in self.widget_anim:
-                self.widget_list[self.screen_current][widget].click("1")
-            while(True):
-                eventcurrent = pygame.event.poll()
-                if eventcurrent.type != pygame.NOEVENT:
-                    result =  self.exec_event(eventcurrent)
-                    if(result == "return True, self.game"):
-                        return True, self.game
-                    elif(result == "return False, None"):
-                        return False, None
-                    exec result
-                else:
-                    break
-            self.draw_screen()
+            exec result"""
+        time.sleep(1.00/float(general['MAX_FPS']))
+        for widget in self.widget_anim:
+            self.widget_list[self.screen_current][widget].click("1")
+        while(True):
+            eventcurrent = pygame.event.poll()
+            if eventcurrent.type == pygame.QUIT:
+                pygame.event.post( pygame.event.Event(QUIT) )
+                break
+            elif eventcurrent.type != pygame.NOEVENT:
+                result =  self.exec_event(eventcurrent)
+                if(result == "return True, self.game"):
+                    return True, self.game
+                elif(result == "return False, None"):
+                    return False, None
+                exec result
+            else:
+                break
+        self.draw_screen()
         return False, None
 
     def __init__(self, surface):
@@ -432,6 +434,8 @@ class Gui(object):
             else:
                 dir_player = self.game_data['character_file'][self.players[int(player)]]
                 self.widget_list[self.screen_current]['player' + player].setText( dir_player + os.sep+self.game_data['character_file'][self.players[int(player)]].replace("characters"+os.sep, "") + "-portrait.png")
+        elif(id_widget=="quit"):
+            pygame.event.post( pygame.event.Event(QUIT) )
         elif(id_widget=="quitgame"):
             self.game = None
             self.state = "menu"
@@ -537,7 +541,6 @@ class Gui(object):
 
         """
         global skin
-        print self.image
         back = loaders.image(
             MEDIA_DIRECTORY+
             os.sep+
@@ -545,8 +548,9 @@ class Gui(object):
             os.sep +
             general['THEME']+
             os.sep+
-            skin.background[self.image]
-            )[0]
+            skin.background[self.image], scale=(general['WIDTH'], general['HEIGHT'])
+            )[0].convert()
+        back.set_alpha(250)
         if(self.state == "game"):
             self.screen.blit(self.screen_shot,(0,0))
         if not self.dialog.has_key(self.screen_current):
@@ -562,8 +566,6 @@ class Gui(object):
             self.background_alpha = opacity
             back.set_alpha(opacity)
             self.screen.blit(back,(0,0))
-            self.background_alpha = 255
-            back.set_alpha(opacity)
         if update : pygame.display.update()
 
 class Skin (object):
