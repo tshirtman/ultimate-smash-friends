@@ -80,10 +80,10 @@ class Gui(object):
 
         """
         global skin
-        if time.time() > self.last_event +1 and self.image+1<len(skin.background):
+        if time.time() > self.last_event +skin.background_duration[self.image] and self.image+1<len(skin.background):
             self.image +=1
             self.last_event = time.time()
-        elif time.time() > self.last_event +1:
+        elif time.time() > self.last_event +skin.background_duration[self.image]:
             self.image = 0
             self.last_event = time.time()
         if game != None and game.ingame == False and self.screen_current=="ingame.usfgui":
@@ -572,6 +572,7 @@ class Skin (object):
     dialog = {}
     color = None
     background = []
+    background_duration = []
     def __init__(self):
         xml_file = xml.dom.minidom.parse(MEDIA_DIRECTORY+
             os.sep+
@@ -592,6 +593,7 @@ class Skin (object):
                         try:
                             if child_node.tagName == "img":
                                 self.background.append(child_node.getAttribute("src"))
+                                self.background_duration.append(float(child_node.getAttribute("time")))
                         except:
                             pass
             except:

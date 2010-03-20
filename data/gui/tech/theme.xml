@@ -2,7 +2,7 @@
 <color value="white" />
 <dialog sizex="50" sizey="50" posx="25" posy="25" />
 <background>
-<img src="background.png" />
-<img src="background2.png" />
+<img src="background.png" time="0.3"/>
+<img src="background2.png" time="0.3"/>
 </background>
 </theme>
