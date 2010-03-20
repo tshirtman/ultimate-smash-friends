@@ -1,3 +1,5 @@
+include rc.config
 include *.txt
+include *.cfg
 recursive-include data *
 recursive-include doc *
