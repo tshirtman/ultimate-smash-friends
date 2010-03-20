@@ -9,5 +9,6 @@
 <menu>keyboard.usfgui</menu>
 <menu>sounds.usfgui</menu>
 <menu>screen.usfgui</menu>
+<menu>demo.usfgui</menu>
 <dialog>dialog_characters.usfgui</dialog>
 </gui>

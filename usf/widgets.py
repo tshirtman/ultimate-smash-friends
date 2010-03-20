@@ -450,3 +450,107 @@ game_font = pygame.font.Font(
             os.sep +
             "gui" +os.sep + general['THEME'] + os.sep +
             "font.otf", general['HEIGHT']/20)
+            
+class WidgetCoverflow(Widget):
+    """
+    A simple button image.
+    """
+    text = ""
+    state_str = "norm"
+    def drawSimple(self):
+        """self.screen.blit(
+            self.image,
+        (self.posx, self.posy)
+        )"""
+        self.surface.blit(
+            self.frameleft,
+        (self.sizex-self.frameleft.get_width(), 0)
+        )
+        self.surface.blit(
+            self.frameright,
+        (0,0)
+        )
+        self.surface.blit(
+            self.frame,
+        (self.sizex/2-self.frame.get_width()/2, 0)
+        )
+        
+        self.screen.blit(
+            self.surface,
+        (self.posx, self.posy)
+        )
+        self.surface_ = pygame.transform.flip(self.surface, False, True)
+        self.surface_.blit(self.foreground, (0,0))
+        self.screen.blit(
+           self.surface_,
+        (self.posx, self.posy+self.sizey-self.surface.get_height())
+        )
+        
+    def drawHover(self):
+        self.drawSimple()
+    def draw(self):
+        if (self.state_str == "norm"):
+            self.drawSimple()
+        elif (self.state_str == "click"):
+            self.drawClick()
+        elif (self.state_str == "hover"):
+            self.drawHover()
+    def setText(self, text):
+        self.text = text.replace("theme/", MEDIA_DIRECTORY + os.sep)
+        self.image = loaders.image(
+            MEDIA_DIRECTORY+
+            os.sep+
+            'gui'+
+            os.sep+
+            "image"+
+            os.sep+
+            self.text
+            )[0]
+        if(self.sizex == 0):
+            self.sizex = self.sizey
+        self.image = pygame.transform.scale(self.image, (self.sizex, self.sizey))
+    def load(self):
+        self.surface = pygame.Surface((self.sizex,self.sizey/2))
+        self.foreground = loaders.image(
+            MEDIA_DIRECTORY+
+            os.sep+
+            'gui'+
+            os.sep+
+            general['THEME']+
+            os.sep+
+            "cover-foreground.png", scale=(self.sizex, self.sizey/2)
+            )[0]
+        self.frameright = loaders.image(
+            MEDIA_DIRECTORY+
+            os.sep+
+            'gui'+
+            os.sep+
+            general['THEME']+
+            os.sep+
+            "cover-frame-small.png", scale=(self.sizex/3, self.sizey/3)
+            )[0]
+        self.frame = loaders.image(
+            MEDIA_DIRECTORY+
+            os.sep+
+            'gui'+
+            os.sep+
+            general['THEME']+
+            os.sep+
+            "cover-frame-big.png", scale=(self.sizex/2, self.sizey/2)
+            )[0]
+        self.frameleft = pygame.transform.flip(self.frameright, True, False)
+    def click(self,event):
+        try:
+            if event.type == pygame.MOUSEBUTTONUP:
+                self.frameright = loaders.image(
+                    MEDIA_DIRECTORY+
+                    os.sep+
+                    'gui'+
+                    os.sep+
+                    general['THEME']+
+                    os.sep+
+                    "cover-frame-small.png", scale=(self.sizex/2, self.sizey/2)
+                    )[0]
+        except:
+            print "it is a str"
+        pass

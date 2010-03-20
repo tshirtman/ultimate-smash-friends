@@ -1,0 +1,4 @@
+<gui>
+<coverflow value="prev.png" posx="30" posy="50" sizey="25" sizex="25" id="cover_test" action="" />
+<parent>main.usfgui</parent>
+</gui>

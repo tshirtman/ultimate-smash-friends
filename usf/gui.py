@@ -46,7 +46,7 @@ from usf import loaders
 # Gui modules
 from widgets import (Widget, WidgetLabel, WidgetIcon, WidgetParagraph,
                     WidgetImage, WidgetImageButton, WidgetTextarea,
-                    WidgetCheckbox)
+                    WidgetCheckbox, WidgetCoverflow)
 
 #translation
 import translation
@@ -265,6 +265,8 @@ class Gui(object):
                     elif(xml_file.childNodes[i].tagName == "imagebutton"):
                         self.widget_list[filename][id_current] = WidgetImageButton(self.screen)
                         self.widget_list[filename][id_current].action=xml_file.childNodes[i].getAttribute("action")
+                    elif(xml_file.childNodes[i].tagName == "coverflow"):
+                        self.widget_list[filename][id_current] = WidgetCoverflow(self.screen)
                     elif(xml_file.childNodes[i].tagName == "checkbox"):
                         self.widget_list[filename][id_current] = WidgetCheckbox(self.screen)
                         self.widget_list[filename][id_current].action=xml_file.childNodes[i].getAttribute("action")
