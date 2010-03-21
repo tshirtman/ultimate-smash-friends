@@ -16,11 +16,12 @@
 # You should have received a copy of the GNU General Public License along with #
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
+
+import pygame
 from pygame.locals import USEREVENT, QUIT
 from math import sin, cos
 from time import time
 import os
-import pygame
 import time
 import xml.dom.minidom
 import logging
@@ -36,8 +37,6 @@ sound_config = config.audio
 keyboard = config.keyboard
 MEDIA_DIRECTORY = config.data_dir
 
-from config import reverse_keymap
-
 import usf.controls
 import entity_skin
 from usf.game import Game
@@ -50,6 +49,8 @@ from widgets import (Widget, WidgetLabel, WidgetIcon, WidgetParagraph,
 
 #translation
 import translation
+
+
 class Gui(object):
     """
     Main class of the GUI. Init and maintain all menus and widgets.
@@ -74,6 +75,12 @@ class Gui(object):
     dialog = {}
     last_event = 0
     background_alpha = 0
+
+    reverse_keymap = {}
+    for key in dir(pygame):
+        if key[:2] in ('K_', 'KM'):
+            reverse_keymap[pygame.__dict__[key]] = key
+
     def update(self, state, game, controls, eventcurrent=None):
         """
         Update the screen state based on user inputs.
@@ -503,6 +510,7 @@ class Gui(object):
                 exec widget_action
         #to exec an action in update()
         return str_return
+
     def anim(self, widget_name, argument, controls):
         """
         /!\ documentation #TODO
@@ -526,7 +534,7 @@ class Gui(object):
                 self.widget_list[self.screen_current][widget_name].text  = \
                   pygame.key.name(event_current.dict['key'])
 
-                keyboard[widget_name.replace('txtconfig', '')] = reverse_keymap[event_current.dict['key']]
+                keyboard[widget_name.replace('txtconfig', '')] = self.reverse_keymap[event_current.dict['key']]
         else :
             while(True):
                 time.sleep(0.04)
@@ -536,6 +544,7 @@ class Gui(object):
                     self.widget_list[self.screen_current].values()[j].draw()
                 pygame.display.update()
                 if not self.widget_list[self.screen_current][widget_name].click(argument): break
+
     def draw_screen(self,update = False, opacity = None):
         """
         Draw the menu to the screen, use a screenshot of the game to display
