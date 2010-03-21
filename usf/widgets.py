@@ -23,7 +23,6 @@ import pygame
 from pygame.locals import *
 
 import loaders
-from config import config
 from config import Config
 
 config_ = Config.getInstance()

@@ -1,11 +1,12 @@
 import gettext
 from usf.config import (
-        config
+        Config
         )
 import os
 # Set up message catalog access
 #t = gettext.translation('ultimate_smash_friends', 'locale', fallback=True)
 #_ = t.ugettext
-localdir = config['MEDIA_DIRECTORY'] + os.sep + "locale"
+config = Config.getInstance()
+localdir = config.data_dir + os.sep + "locale"
 gettext.install("messages", localdir)
 

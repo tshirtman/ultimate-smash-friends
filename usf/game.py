@@ -37,7 +37,6 @@ import animations
 import entity
 #from AI import AI
 import timed_event
-import network
 from level import Level
 from controls import Controls
 from config import Config
