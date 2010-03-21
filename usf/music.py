@@ -23,9 +23,8 @@ import time
 import random
 import logging
 
-from config import config
-import loaders
 from config import Config
+import loaders
 
 config_ = Config.getInstance()
 general = config_.general
