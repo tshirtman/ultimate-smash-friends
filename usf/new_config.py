@@ -74,27 +74,29 @@ class Option(dict):
                     return False
                 else:
                     return item
-        
+
 
 class Config(Singleton):
     """ Object that implements automatic saving.
-        
+
         Config first loads default settings from the system config file, then
         overwrites those with the ones found in the user config file. 
-        
+
         Different config sections can be accessed as
         attributes (eg. Config().section), which would then return an Option 
         object, which acts virtually identical to the builtin dict type. As
         such, specific options can be accesed as keys
         (Config().section[option]).
     """
-        
+
     def __init__(self):
         self.__parser = SafeConfigParser()
         self.__parser.optionxform=str
 
-        (self.config_dir, self.sys_config_file, 
+        (self.config_dir, self.sys_config_file,
          self.user_config_file, self.data_dir) = self.__get_locations()
+        print dir(self)
+        print self.sys_config_file, self.user_config_file
 
         # load sys config options and replace with defined user config options
         self.read([self.sys_config_file, self.user_config_file])
@@ -114,7 +116,7 @@ class Config(Singleton):
             user_config_file = path.join(config_dir, 'user.cfg')
             data_dir = path.join(config_dir, 'data')
         else:
-            try: 
+            try:
                 # determine if usf has been installed. If not, use config_dir as the data
                 # dir, similar to windows
                 data_dir = path.join(prefix, 'share', 
@@ -134,7 +136,7 @@ class Config(Singleton):
                 sys_config_file = path.join(config_dir, 'system.cfg')
                 user_config_file = path.join(config_dir, 'user.cfg')
                 data_dir = path.join(config_dir, 'data')
-        
+
         # create config directory and user config file
         try:
             logging.debug('creating new config directory')
@@ -161,3 +163,4 @@ class Config(Singleton):
                     parser=self.__parser,
                     config=self.user_config_file,
                     name=section))
+

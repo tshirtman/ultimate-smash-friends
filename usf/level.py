@@ -210,175 +210,139 @@ class Level ( object ):
         self.moving_blocs = []
         self.vector_blocs = []
         self.map = []
-        if os.access(
+        xml = ElementTree.ElementTree(
+                None,
                 os.path.join(
                     MEDIA_DIRECTORY,
                     'levels',
                     levelname+os.extsep+'xml'
-                    ),
-                os.F_OK
-                ):
-            xml = ElementTree.ElementTree(
-                    None,
+                    )
+                )
+
+        attribs = xml.getroot().attrib
+
+        self.name = attribs['name']
+
+        self.background = os.path.join(
+                    MEDIA_DIRECTORY,
+                    'levels',
+                    attribs['background']
+                    )
+
+        self.level = os.path.join(
+                    MEDIA_DIRECTORY,
+                    'levels',
+                    attribs['middle']
+                    )
+
+        self.foreground = os.path.join(
+                    MEDIA_DIRECTORY,
+                    'levels',
+                    attribs['foreground']
+                    )
+
+        tmp = pygame.image.load(self.level)
+        self.rect = pygame.Rect(0,0, *tmp.get_size())
+
+        if 'margins' in attribs:
+            margins = [int(i) for i in attribs['margins'].split(',')]
+            self.border = pygame.Rect(
+                self.rect[0] - margins[0],
+                self.rect[1] - margins[1],
+                self.rect[2] + margins[0] + margins[2],
+                self.rect[3] + margins[1] + margins[3]
+                )
+        else:
+            self.border = self.rect.inflate(self.rect[2]/2, self.rect[3]/2)
+
+
+        self.entrypoints = []
+        for point in xml.findall('entry-point'):
+            x,y = point.attrib['coords'].split(' ')
+            self.entrypoints.append([ int(x), int(y) ])
+
+        #logging.debug(self.entrypoints)
+
+        self.layers = []
+        for layer in xml.findall('layer'):
+            self.layers.append(
+                (
                     os.path.join(
                         MEDIA_DIRECTORY,
                         'levels',
-                        levelname+os.extsep+'xml'
+                        layer.attrib['image']
+                        ),
+                    layer.attrib['depth']
+                    )
+                )
+
+        for block in xml.findall('block'):
+            nums = block.attrib['coords'].split(' ')
+            nums = [ int(i) for i in nums ]
+            self.map.append(pygame.Rect(nums))
+
+        for block in xml.findall('moving-block'):
+            texture = block.attrib['texture']
+
+            rects = []
+
+            for rect in block.findall('rect'):
+                rects.append(
+                        pygame.Rect(
+                            [
+                            int(i) for i in rect.attrib['coords'].split(' ')
+                            ]
+                            )
+                        )
+
+            patterns = []
+            for pattern in block.findall('pattern'):
+                patterns.append(
+                        {
+                        'time': int(pattern.attrib['time']),
+                        'position': [ int(i) for i in
+                        pattern.attrib['position'].split(' ')]
+                        }
+                        )
+
+            self.moving_blocs.append(
+                    MovingPart(
+                        rects,
+                        texture,
+                        patterns,
+                        server
                         )
                     )
 
-            attribs = xml.getroot().attrib
+        for block in xml.findall('vector-block'):
+            texture = block.attrib['texture']
+            position = [int(i) for i in block.attrib['position'].split(' ')]
+            vector = [int(i) for i in block.attrib['vector'].split(' ')]
 
-            self.name = attribs['name']
+            relative = int(block.attrib['relative']) and True or False
 
-            self.background = os.path.join(
-                        MEDIA_DIRECTORY,
-                        'levels',
-                        attribs['background']
-                        )
-
-            self.level = os.path.join(
-                        MEDIA_DIRECTORY,
-                        'levels',
-                        attribs['middle']
-                        )
-
-            self.foreground = os.path.join(
-                        MEDIA_DIRECTORY,
-                        'levels',
-                        attribs['foreground']
-                        )
-
-            tmp = pygame.image.load(self.level)
-            self.rect = pygame.Rect(0,0, *tmp.get_size())
-
-            if 'margins' in attribs:
-                margins = [int(i) for i in attribs['margins'].split(',')]
-                self.border = pygame.Rect(
-                    self.rect[0] - margins[0],
-                    self.rect[1] - margins[1],
-                    self.rect[2] + margins[0] + margins[2],
-                    self.rect[3] + margins[1] + margins[3]
-                    )
-            else:
-                self.border = self.rect.inflate(self.rect[2]/2, self.rect[3]/2)
-
-
-            self.entrypoints = []
-            for point in xml.findall('entry-point'):
-                x,y = point.attrib['coords'].split(' ')
-                self.entrypoints.append([ int(x), int(y) ])
-
-            #logging.debug(self.entrypoints)
-
-            for block in xml.findall('block'):
-                nums = block.attrib['coords'].split(' ')
-                nums = [ int(i) for i in nums ]
-                self.map.append(pygame.Rect(nums))
-
-            for block in xml.findall('moving-block'):
-                texture = block.attrib['texture']
-
-                rects = []
-
-                for rect in block.findall('rect'):
-                    rects.append(
-                            pygame.Rect(
-                                [
-                                int(i) for i in rect.attrib['coords'].split(' ')
-                                ]
-                                )
+            rects = []
+            for rect in block.findall('rect'):
+                rects.append(
+                        pygame.Rect(
+                            [
+                            int(i)
+                            for i in
+                            rect.attrib['coords'].split(' ')
+                            ]
                             )
+                        )
 
-                patterns = []
-                for pattern in block.findall('pattern'):
-                    patterns.append(
-                            {
-                            'time': int(pattern.attrib['time']),
-                            'position': [ int(i) for i in
-                            pattern.attrib['position'].split(' ')]
-                            }
-                            )
-
-                self.moving_blocs.append(
-                        MovingPart(
+                self.vector_blocs.append(
+                        VectorBloc(
                             rects,
+                            position,
+                            vector,
+                            relative,
                             texture,
-                            patterns,
                             server
                             )
                         )
-
-            for block in xml.findall('vector-block'):
-                texture = block.attrib['texture']
-                position = [int(i) for i in block.attrib['position'].split(' ')]
-                vector = [int(i) for i in block.attrib['vector'].split(' ')]
-
-                relative = int(block.attrib['relative']) and True or False
-
-                rects = []
-                for rect in block.findall('rect'):
-                    rects.append(
-                            pygame.Rect(
-                                [
-                                int(i)
-                                for i in
-                                rect.attrib['coords'].split(' ')
-                                ]
-                                )
-                            )
-
-                    self.vector_blocs.append(
-                            VectorBloc(
-                                rects,
-                                position,
-                                vector,
-                                relative,
-                                texture,
-                                server
-                                )
-                            )
-
-        else:
-            # else we use old loading method.
-            if not server:
-                self.background = os.path.join(
-                            MEDIA_DIRECTORY,
-                            'levels',
-                            levelname+'-background'+os.extsep+'png'
-                            )
-
-                self.level = os.path.join(
-                            MEDIA_DIRECTORY,
-                            'levels',
-                            levelname+'-middle'+os.extsep+'png'
-                            )
-
-                self.border = self.rect.inflate(self.rect[2]/2, self.rect[3]/2)
-
-                self.foreground = os.path.join(
-                            MEDIA_DIRECTORY,
-                            'levels',
-                            levelname+'-foreground'+os.extsep+'png'
-                            )
-
-            for line in open(
-                os.path.join(
-                    MEDIA_DIRECTORY,
-                    'levels',
-                    levelname+os.extsep+'map'
-                )
-            ).readlines():
-                nums = line.split(' ')
-                for i in range(len(nums)): nums[i]=int(nums[i])
-                self.map.append(pygame.Rect(nums))
-
-        logging.debug(self.rect)
-        self.entrypoints = [
-            [self.rect[2]/2, 50],
-            [self.rect[2]/4, 50],
-            [3*self.rect[2]/4, 50]
-        ]
 
     def __del__(self):
         logging.debug('deleting level')
