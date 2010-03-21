@@ -59,6 +59,7 @@ class AI(object):
         self.global_height = False
         #FIXME : a real function to calculate height
         self.jump_height = float(self.iam.entity_skin.vectors['jump'][0][0][1])/float(10000)*1500
+
     def update(self, game, iam):
         self.sequences_ai = []
         self.num = iam
@@ -69,6 +70,7 @@ class AI(object):
             self.calculate_height()
         self.update_enemy()
         self.choose_strategy()
+
     def choose_strategy(self):
         """if(self.iam.place[0] <self.enemy_position[0][0]):
             self.sequences_ai.append(("PL"+ str(self.num) + "_RIGHT",time.time()))
@@ -103,7 +105,7 @@ class AI(object):
 
         #for pos in self.position:
         #    pygame.draw.line(self.game.screen, pygame.Color("orange"), (pos[0]/8,pos[1]/8), (pos[0]/8,pos[1]/8))"""
-        pygame.display.update()
+        #pygame.display.update()
         if self.enemy_position[0][0] < self.iam.place[0] :
             self.iam.reversed = True
         else :
