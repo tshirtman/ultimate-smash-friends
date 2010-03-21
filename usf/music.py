@@ -25,7 +25,7 @@ import logging
 
 from config import config
 import loaders
-from new_config import Config
+from config import Config
 
 config_ = Config.getInstance()
 general = config_.general

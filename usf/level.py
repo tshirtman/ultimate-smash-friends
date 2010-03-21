@@ -23,7 +23,7 @@ import logging
 
 import loaders
 import time
-from new_config import Config
+from config import Config
 
 config_ = Config.getInstance()
 config = config_.general

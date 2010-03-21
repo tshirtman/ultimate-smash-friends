@@ -28,7 +28,7 @@ import logging
 # Our modules
 from loaders import image
 
-from new_config import Config
+from config import Config
 
 config = Config.getInstance()
 general = config.general

@@ -24,7 +24,7 @@ from pygame.locals import *
 
 import loaders
 from config import config
-from new_config import Config
+from config import Config
 
 config_ = Config.getInstance()
 general = config_.general

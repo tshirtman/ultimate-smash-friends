@@ -40,7 +40,7 @@ import timed_event
 import network
 from level import Level
 from controls import Controls
-from new_config import Config
+from config import Config
 from widgets import game_font
 config_ = Config.getInstance()
 config = config_.general

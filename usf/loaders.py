@@ -35,7 +35,7 @@ except:
     BLEND_MAX = None
 
 
-from new_config import Config
+from config import Config
 
 config_ = Config.getInstance()
 config = config_.general

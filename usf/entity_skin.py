@@ -26,7 +26,7 @@ import game
 import timed_event
 #from config import config
 
-from new_config import Config
+from config import Config
 
 config_ = Config.getInstance()
 config = config_.general

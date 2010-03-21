@@ -18,7 +18,7 @@
 ################################################################################
 import time
 
-from new_config import Config
+from config import Config
 
 config = Config.getInstance()
 general = config.general

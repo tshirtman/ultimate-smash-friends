@@ -22,7 +22,7 @@ import os
 import random
 import logging
 
-from new_config import Config
+from config import Config
 
 config = Config.getInstance()
 general = config.general

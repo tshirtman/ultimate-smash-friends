@@ -32,7 +32,7 @@ from pygame.locals import (
         USEREVENT,
         )
 # my imports
-from new_config import Config
+from config import Config
 config = Config.getInstance()
 general = config.general
 SHARE_DIRECTORY = config.data_dir
