@@ -93,9 +93,7 @@ class Config(Singleton):
 
         (self.config_dir, self.sys_config_file,
          self.user_config_file, self.data_dir) = self.__get_locations()
-        print dir(self)
-        print self.sys_config_file, self.user_config_file
-
+        
         # load sys config options and replace with defined user config options
         self.read([self.sys_config_file, self.user_config_file])
         self.save()
@@ -129,6 +127,7 @@ class Config(Singleton):
                     config_dir = path.join(environ['HOME'], '.config', 'usf')
 
                 user_config_file = path.join(config_dir, 'user.cfg')
+
             except OSError:
                 config_dir = path.dirname(path.abspath(path.join(__file__, '..')))
                 sys_config_file = path.join(config_dir, 'system.cfg')
@@ -161,12 +160,4 @@ class Config(Singleton):
                     parser=self.__parser,
                     config=self.user_config_file,
                     name=section))
-
-reverse_keymap = {}
-for key in dir(pygame):
-    if key[:2] == 'K_':
-        reverse_keymap[pygame.__dict__['key']] = key
-
-from pprint import pprint
-pprint (reverse_keymap)
 

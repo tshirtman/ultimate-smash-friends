@@ -29,6 +29,7 @@ import logging
 # Our modules
 from loaders import image
 
+from enums import reverse_keymap
 from config import Config
 
 config = Config.getInstance()
@@ -75,11 +76,6 @@ class Gui(object):
     dialog = {}
     last_event = 0
     background_alpha = 0
-
-    reverse_keymap = {}
-    for key in dir(pygame):
-        if key[:2] in ('K_', 'KM'):
-            reverse_keymap[pygame.__dict__[key]] = key
 
     def update(self, state, game, controls, eventcurrent=None):
         """
@@ -534,7 +530,7 @@ class Gui(object):
                 self.widget_list[self.screen_current][widget_name].text  = \
                   pygame.key.name(event_current.dict['key'])
 
-                keyboard[widget_name.replace('txtconfig', '')] = self.reverse_keymap[event_current.dict['key']]
+                keyboard[widget_name.replace('txtconfig', '')] = reverse_keymap[event_current.dict['key']]
         else :
             while(True):
                 time.sleep(0.04)
