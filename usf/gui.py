@@ -1,4 +1,4 @@
-################################################################################
+#i###############################################################################
 # copyright 2009 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
 #                                                                              #
 # This file is part of Ultimate Smash Friends                                  #
@@ -33,10 +33,6 @@ from enums import reverse_keymap
 from config import Config
 
 config = Config.getInstance()
-general = config.general
-sound_config = config.audio
-keyboard = config.keyboard
-MEDIA_DIRECTORY = config.data_dir
 
 import usf.controls
 import entity_skin
@@ -45,8 +41,8 @@ import usf.controls
 from usf import loaders
 # Gui modules
 from widgets import (Widget, WidgetLabel, WidgetIcon, WidgetParagraph,
-                    WidgetImage, WidgetImageButton, WidgetTextarea,
-                    WidgetCheckbox, WidgetCoverflow)
+                     WidgetImage, WidgetImageButton, WidgetTextarea,
+                     WidgetCheckbox, WidgetCoverflow)
 
 #translation
 import translation
@@ -110,7 +106,7 @@ class Gui(object):
                 return False, None
             self.draw_screen()
             exec result"""
-        time.sleep(1.00/float(general['MAX_FPS']))
+        time.sleep(1.00/float(config.general['MAX_FPS']))
         for widget in self.widget_anim:
             self.widget_list[self.screen_current][widget].click("1")
         while(True):
@@ -148,7 +144,7 @@ class Gui(object):
         #create a character for every directory in the characters directory.
         files = os.listdir(
                 os.path.join(
-                    MEDIA_DIRECTORY,
+                    config.data_dir,
                     'characters'
                     )
                 )
@@ -179,7 +175,7 @@ class Gui(object):
         #create a level image for every directory in the level directory.
         files = os.listdir(
                 os.path.join(
-                    MEDIA_DIRECTORY,
+                    config.data_dir,
                     'levels'
                     )
                 )
@@ -196,7 +192,7 @@ class Gui(object):
         self.sizex = self.screen.get_width()
         self.sizey = self.screen.get_height()
         self.key_list={}
-        xml_file = xml.dom.minidom.parse(MEDIA_DIRECTORY+
+        xml_file = xml.dom.minidom.parse(config.data_dir+
             os.sep+
             'gui'+
             os.sep+
@@ -248,7 +244,7 @@ class Gui(object):
         global skin
         self.widget_list[filename] = {}
         self.widget_list_order[filename] = []
-        xml_file = xml.dom.minidom.parse(MEDIA_DIRECTORY+
+        xml_file = xml.dom.minidom.parse(config.data_dir+
             os.sep+
             'gui'+
             os.sep+ filename).getElementsByTagName("gui")[0]
@@ -284,8 +280,8 @@ class Gui(object):
                     elif(xml_file.childNodes[i].tagName == "image"):
                         self.widget_list[filename][id_current] = WidgetImage(self.screen)
                     if(self.dialog.has_key(filename)):
-                        self.widget_list[filename][id_current].posx = skin.dialog['posx']+general['WIDTH']/40 + skin.dialog['sizex']*int(xml_file.childNodes[i].getAttribute("posx"))/100
-                        self.widget_list[filename][id_current].posy = skin.dialog['posy'] +general['HEIGHT']/20 + skin.dialog['sizey']*int(xml_file.childNodes[i].getAttribute("posy"))/100
+                        self.widget_list[filename][id_current].posx = skin.dialog['posx']+config.general['WIDTH']/40 + skin.dialog['sizex']*int(xml_file.childNodes[i].getAttribute("posx"))/100
+                        self.widget_list[filename][id_current].posy = skin.dialog['posy'] +config.general['HEIGHT']/20 + skin.dialog['sizey']*int(xml_file.childNodes[i].getAttribute("posy"))/100
                     else:
                         self.widget_list[filename][id_current].posx=self.screen.get_width()*int(xml_file.childNodes[i].getAttribute("posx"))/100
                         self.widget_list[filename][id_current].posy=self.screen.get_height()*int(xml_file.childNodes[i].getAttribute("posy"))/100
@@ -317,12 +313,12 @@ class Gui(object):
             for i in range(0,5):
                 start = time.time()
                 self.draw_screen(True,i*50)
-                time.sleep(1.00/float(general['MAX_FPS']))
+                time.sleep(1.00/float(config.general['MAX_FPS']))
             self.screen_current = screen
             for i in range(0,5):
                 start = time.time()
                 self.draw_screen(True,(i*-1+5)*50)
-                time.sleep(1.00/float(general['MAX_FPS']))
+                time.sleep(1.00/float(config.general['MAX_FPS']))
         self.button_active = 0
         self.widgetselect = -1
         self.widget_anim=[]
@@ -448,11 +444,11 @@ class Gui(object):
             self.image.set_alpha(255)
             str_return  = "return False, None"
         elif(id_widget=="fullscreen"):
-            if(general['FULLSCREEN'] == "True"):
-                general['FULLSCREEN'] = "False"
+            if(config.general['FULLSCREEN'] == "True"):
+                config.general['FULLSCREEN'] = "False"
                 self.widget_list[self.screen_current]['fullscreen'].text = "False"
             else:
-                general['FULLSCREEN'] = "True"
+                config.general['FULLSCREEN'] = "True"
                 self.widget_list[self.screen_current]['fullscreen'].text = "True"
         elif(id_widget=="gotolevel"):
             nb_player = 0
@@ -463,17 +459,17 @@ class Gui(object):
             else:
                 self.goto_screen("dialog_characters.usfgui")
         elif(id_widget=="musicp"):
-            sound_config['MUSIC_VOLUME'] += 5
-            self.widget_list[self.screen_current]['music'].text = str(sound_config['MUSIC_VOLUME'])
+            config.audio['MUSIC_VOLUME'] += 5
+            self.widget_list[self.screen_current]['music'].text = str(config.audio['MUSIC_VOLUME'])
         elif(id_widget=="musicm"):
-            sound_config['MUSIC_VOLUME'] -= 5
-            self.widget_list[self.screen_current]['music'].text = str(sound_config['MUSIC_VOLUME'])
+            config.audio['MUSIC_VOLUME'] -= 5
+            self.widget_list[self.screen_current]['music'].text = str(config.audio['MUSIC_VOLUME'])
         elif(id_widget=="soundp"):
-            sound_config['SOUND_VOLUME'] += 5
-            self.widget_list[self.screen_current]["sounds"].text = str(sound_config['SOUND_VOLUME'])
+            config.audio['SOUND_VOLUME'] += 5
+            self.widget_list[self.screen_current]["sounds"].text = str(config.audio['SOUND_VOLUME'])
         elif(id_widget=="soundm"):
-            sound_config['SOUND_VOLUME'] -= 5
-            self.widget_list[self.screen_current]["sounds"].text = str(sound_config['SOUND_VOLUME'])
+            config.audio['SOUND_VOLUME'] -= 5
+            self.widget_list[self.screen_current]["sounds"].text = str(config.audio['SOUND_VOLUME'])
         elif(id_widget=="launch_game"):
             self.game = self.launch_game(self.game)
             str_return  = "return True, self.game"
@@ -483,11 +479,11 @@ class Gui(object):
             str_return  = "return True, self.game"
         elif(id_widget=="full_check"):
             if self.widget_list[self.screen_current][id_widget].text == "True" :
-                general['FULLSCREEN'] = "False"
+                config.general['FULLSCREEN'] = "False"
                 pygame.display.toggle_fullscreen()
                 self.widget_list[self.screen_current][id_widget].setText("")
             else:
-                general['FULLSCREEN'] = "True"
+                config.general['FULLSCREEN'] = "True"
                 pygame.display.toggle_fullscreen()
                 self.widget_list[self.screen_current][id_widget].setText("True")
         elif "ai" in id_widget :
@@ -523,14 +519,11 @@ class Gui(object):
                     self.update("",None,"",event_current)
                     event_current = pygame.event.wait()
                     pygame.display.update()
-                """
-                if(self.widget_list[self.screen_current][widget_name].text==_("Press a key")):
-                    self.widget_list[self.screen_current][widget_name].text = ""
-                """
+
                 self.widget_list[self.screen_current][widget_name].text  = \
                   pygame.key.name(event_current.dict['key'])
 
-                keyboard[widget_name.replace('txtconfig', '')] = reverse_keymap[event_current.dict['key']]
+                config.keyboard[widget_name.replace('txtconfig', '')] = reverse_keymap[event_current.dict['key']]
         else :
             while(True):
                 time.sleep(0.04)
@@ -549,13 +542,13 @@ class Gui(object):
         """
         global skin
         back = loaders.image(
-            MEDIA_DIRECTORY+
+            config.data_dir+
             os.sep+
             "gui"+
             os.sep +
-            general['THEME']+
+            config.general['THEME']+
             os.sep+
-            skin.background[self.image], scale=(general['WIDTH'], general['HEIGHT'])
+            skin.background[self.image], scale=(config.general['WIDTH'], config.general['HEIGHT'])
             )[0].convert()
         back.set_alpha(250)
         if(self.state == "game"):
@@ -581,20 +574,20 @@ class Skin (object):
     background = []
     background_duration = []
     def __init__(self):
-        xml_file = xml.dom.minidom.parse(MEDIA_DIRECTORY+
+        xml_file = xml.dom.minidom.parse(config.data_dir+
             os.sep+
             'gui'+
-            os.sep+ general['THEME'] + os.sep + "theme.xml").getElementsByTagName("theme")[0]
+            os.sep+ config.general['THEME'] + os.sep + "theme.xml").getElementsByTagName("theme")[0]
         self.color = pygame.color.Color("white")
         for node in xml_file.childNodes:
             try:
                 if node.tagName == "color":
                     self.color = pygame.color.Color(str(node.getAttribute("value")))
                 elif node.tagName == "dialog":
-                    self.dialog['sizex'] = int(node.getAttribute("sizex"))*general['WIDTH']/100
-                    self.dialog['sizey'] = int(node.getAttribute("sizey"))*general['HEIGHT']/100
-                    self.dialog['posx'] = int(node.getAttribute("posx"))*general['WIDTH']/100
-                    self.dialog['posy'] = int(node.getAttribute("posy"))*general['HEIGHT']/100
+                    self.dialog['sizex'] = int(node.getAttribute("sizex"))*config.general['WIDTH']/100
+                    self.dialog['sizey'] = int(node.getAttribute("sizey"))*config.general['HEIGHT']/100
+                    self.dialog['posx'] = int(node.getAttribute("posx"))*config.general['WIDTH']/100
+                    self.dialog['posy'] = int(node.getAttribute("posy"))*config.general['HEIGHT']/100
                 elif node.tagName == "background":
                     for child_node in node.childNodes:
                         try:
@@ -612,11 +605,11 @@ class Dialog(object):
     def __init__(self, screen, name):
         global skin
         self.background = loaders.image(
-            MEDIA_DIRECTORY+
+            config.data_dir+
             os.sep+
             'gui'+
             os.sep+
-            general['THEME']+
+            config.general['THEME']+
             os.sep+
             "background-dialog.png", scale=(skin.dialog['sizex'], skin.dialog['sizey'])
             )[0]
@@ -629,7 +622,7 @@ class Dialog(object):
         if self.state is False:
             self.state = True
             self.tmp_screen = self.screen.copy()
-            cache = pygame.Surface((general['WIDTH'], general['HEIGHT']))
+            cache = pygame.Surface((config.general['WIDTH'], config.general['HEIGHT']))
             cache.fill(pygame.color.Color("black"))
             cache.set_alpha(100)
             self.tmp_screen.blit(cache, (0,0))

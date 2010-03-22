@@ -35,22 +35,22 @@ import SocketServer
 from loaders import image
 import animations
 import entity
+
 #from AI import AI
 import timed_event
 from level import Level
 from controls import Controls
 from config import Config
 from widgets import game_font
-config_ = Config.getInstance()
-config = config_.general
-MEDIA_DIRECTORY = config_.data_dir
-SIZE = (config['WIDTH'], 
-        config['HEIGHT'])
 
 from debug_utils import draw_rect
 from singletonmixin import Singleton
 
 from debug_utils import draw_rect
+
+config = Config.getInstance()
+SIZE = (config.general['WIDTH'], 
+        config.general['HEIGHT'])
 
 if not pygame.font: logging.debug('Warning, fonts disabled')
 if not pygame.mixer: logging.debug('Warning, sound disabled')
@@ -87,19 +87,19 @@ class Game (object):
         if screen is not None:
             self.font = pygame.font.Font(None, 20)
             self.zoom = 1
-            #self.testimage=load_image(os.path.join(MEDIA_DIRECTORY,'items','item-heal'+os.extsep+'png')[0]
+            #self.testimage=load_image(os.path.join(config.data_dir,'items','item-heal'+os.extsep+'png')[0]
             # time for a loading screen ain't it?
             # loading level
             self.level_place = [0, 0]
             self.game_font = pygame.font.Font(None, 50)
             image_src = os.path.join(
-                        MEDIA_DIRECTORY,
+                        config.data_dir,
                         'misc',
                         'loading.png'
                         )
 
             self.heart = os.path.join(
-                        MEDIA_DIRECTORY,
+                        config.data_dir,
                         'misc',
                         'heart.png'
                         )
@@ -208,7 +208,7 @@ class Game (object):
         try:
             os.listdir(
                     os.path.join(
-                        MEDIA_DIRECTORY,
+                        config.data_dir,
                         'items',
                         item
                         )
@@ -391,7 +391,7 @@ class Game (object):
 
     def update_notif(self):
         for notif in self.notif:
-            if config['NOTIF_EFFECT'] == "True":
+            if config.general['NOTIF_EFFECT'] == "True":
                 if(len(notif) <3):
                     notif.append(notif[1][0])
                 elif len(notif[2]) is not len(notif[1]):
@@ -425,7 +425,7 @@ class Game (object):
         deltatime = 0
 
         # frame limiter
-        while deltatime < 1.0/config['MAX_FPS']:
+        while deltatime < 1.0/config.general['MAX_FPS']:
             deltatime = time.time() - self.last_clock
 
         self.gametime += deltatime
@@ -446,7 +446,7 @@ class Game (object):
                 players_barycenter = present_players[0].rect[0:2]
                 precise_zoom = 1
                 self.zoom = int(precise_zoom * 0.70 *
-                            config['ZOOM_SHARPNESS'])/(config['ZOOM_SHARPNESS']*
+                            config.general['ZOOM_SHARPNESS'])/(config.general['ZOOM_SHARPNESS']*
                             1.0 )
             # center the level around the barycenter of present players.
             else:
@@ -470,8 +470,8 @@ class Game (object):
                 # image cache is more useful.
 
                 self.zoom = (
-                    int( precise_zoom * 0.70 * config['ZOOM_SHARPNESS'] )/
-                    (config['ZOOM_SHARPNESS'] * 1.0)
+                    int( precise_zoom * 0.70 * config.general['ZOOM_SHARPNESS'] )/
+                    (config.general['ZOOM_SHARPNESS'] * 1.0)
                 )
 
                 players_barycenter = (

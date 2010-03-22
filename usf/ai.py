@@ -17,18 +17,12 @@
 # UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.           #
 ################################################################################
 import time
+import pygame
 
 from config import Config
 
 config = Config.getInstance()
-general = config.general
-sound_config = config.audio
-SHARE_DIRECTORY = config.config_dir
-MEDIA_DIRECTORY = config.data_dir
-SIZE = (general['WIDTH'], 
-        general['HEIGHT'])
 
-import pygame
 class AI(object):
     sequences_ai = []
     last_vector =0
@@ -74,11 +68,11 @@ class AI(object):
     def choose_strategy(self):
         """if(self.iam.place[0] <self.enemy_position[0][0]):
             self.sequences_ai.append(("PL"+ str(self.num) + "_RIGHT",time.time()))
-            self.iam.walking_vector[0] = config['WALKSPEED']
+            self.iam.walking_vector[0] = config.general['WALKSPEED']
             self.iam.reversed = False
         if(self.iam.place[0] >self.enemy_position[0][0]):
             self.sequences_ai.append(("PL"+ str(self.num) + "_LEFT",time.time()))
-            self.iam.walking_vector[0] = config['WALKSPEED']
+            self.iam.walking_vector[0] = config.general['WALKSPEED']
             self.iam.reversed = True"""
         aix = self.iam.place[0]/8
         aiy = self.iam.place[1]/8
@@ -101,7 +95,7 @@ class AI(object):
         """
         pygame.draw.line(self.game.screen, pygame.Color("red"), (aix,aiy), (enx,eny))
         pygame.draw.line(self.game.screen, pygame.Color("red"), (aix,aiy), (aix,aiy-self.jump_height/8))
-        pygame.draw.line(self.game.screen, pygame.Color("red"), (aix,aiy), (aix+general['WALKSPEED']/8,aiy))
+        pygame.draw.line(self.game.screen, pygame.Color("red"), (aix,aiy), (aix+config.general['WALKSPEED']/8,aiy))
 
         #for pos in self.position:
         #    pygame.draw.line(self.game.screen, pygame.Color("orange"), (pos[0]/8,pos[1]/8), (pos[0]/8,pos[1]/8))"""
@@ -133,7 +127,7 @@ class AI(object):
             self.block.top-80 < self.iam.place[1] and
             self.block.top+80 > self.iam.place[1]):
             #self.game.notif.append([time.time(), "I am on your block"])
-            self.iam.walking_vector[0] = general['WALKSPEED']
+            self.iam.walking_vector[0] = config.general['WALKSPEED']
             self.walk = True
             if self.enemy_position[0][0] < self.iam.place[0]:
                 #self.game.notif.append([time.time(), "I am on your right"])
