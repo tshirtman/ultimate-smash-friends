@@ -14,7 +14,7 @@
 # GNU General Public License for more details.                                #
 #                                                                             #
 # You should have received a copy of the GNU General Public License           #
-# along with UltimateSmashFriends.                                            # 
+# along with UltimateSmashFriends.                                            #
 # If not, see <http://www.gnu.org/licenses/>.                                 #
 ###############################################################################
 
@@ -93,8 +93,6 @@ class Config(Singleton):
 
         (self.config_dir, self.sys_config_file,
          self.user_config_file, self.data_dir) = self.__get_locations()
-        print dir(self)
-        print self.sys_config_file, self.user_config_file
 
         # load sys config options and replace with defined user config options
         self.read([self.sys_config_file, self.user_config_file])
@@ -166,7 +164,4 @@ reverse_keymap = {}
 for key in dir(pygame):
     if key[:2] == 'K_':
         reverse_keymap[pygame.__dict__['key']] = key
-
-from pprint import pprint
-pprint (reverse_keymap)
 
