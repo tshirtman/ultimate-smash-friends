@@ -1,0 +1,76 @@
+== Linux ==
+Note: All commands are terminal commands, as this is the one tool that is universal to all 
+      distributions. If you would like to use a GUI, consult your Distributions documentation
+      or search the forums: http://forum.freegamedev.net/viewforum.php?f=33
+
+      $ represents commands that should be run as normal user
+      # represents commands that should be run as root
+
+A. Source Archive
+   1. Download and Unpack Archive
+      $ wget -c http://download.tuxfamily.org/usf/release/beta/ultimate-smash-friends-0.0.5.tar.gz
+      $ tar -xvzf ultimate-smash-friends-0.0.5.tar.gz
+      $ cd ulitmate-smash-friends 
+
+   2. Install Dependencies
+      Make sure to have python (>= 2.5 < 3.0) and pygame installed. For distribution-specific instructions
+      see relevant sections below.
+
+   3. Install Ultimate Smash Friends (optional)*
+      a. Sytem-wide
+         # python setup.py --record install_files
+      b. User-Specific
+         $ python setup.py --record install_files --home=~
+
+   4. Run
+      a. If you installed as listed above:
+         $ ultimate-smash-friends
+      b. If you did not install:
+         $ ./ultimate-smash-friends
+
+   5. Uninstall
+     a. If installed by method 2a:
+	# cat install_files | xargs rm -rf 
+     b. if installed by method 2b:
+        $ cat install_files | xargs rm -rf
+
+* We highly recommend that you use your distributions package manager to install USF or run locally,
+  but if there are no packages available for your distribution, and you want to make the game available
+  to all users, this would be your best option.
+
+B. Debian File
+   1. Download Package
+      $ wget -c http://download.tuxfamily.org/usf/release/pre-alpha/ultimate-smash-friends_0.0.2_all.deb
+   
+   2. Install Dependencies
+      # apt-get update && apt-get install python-pygame
+
+   3. Install Ultimate Smash Friends
+      # dpkg -i ultimate-smash-friends_0.0.2_all.deb 
+
+   4. Run
+      $ ultimate-smash-friends
+
+   5. Uninstall
+      # apt-get remove ultimate-smash-friends
+
+C. Arch Linux PKGBUILD
+   1. Download PKGBUILD
+      $ wget -c http://download.tuxfamily.org/usf/release/beta/PKGBUILD
+   
+   2. Build and Install Ultimate Smash Friends Package*
+      $ makepkg -si
+
+   3. Run
+      $ ultimate-smash-friends 
+
+   4. Uninstall
+      # pacman -Rsn usf-bzr
+
+* The -s option will automatically fetch dependencies
+
+== Windows ==
+  Stub
+
+== Mac OS X ++
+  Stub
