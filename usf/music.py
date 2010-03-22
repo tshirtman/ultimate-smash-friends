@@ -26,10 +26,8 @@ import logging
 from config import Config
 import loaders
 
-config_ = Config.getInstance()
-general = config_.general
-sound_config = config_.audio
-MEDIA_DIRECTORY = config_.data_dir
+config = Config.getInstance()
+
 class Music (object):
     """
     This class take care of the background music in menus and games, it load the
@@ -43,17 +41,17 @@ class Music (object):
         """
         self.precedent_state = None
         self.playlists = {}
-        self.music_volume = sound_config['MUSIC_VOLUME']
+        self.music_volume = config.audio['MUSIC_VOLUME']
 
         for plist in ['menu','game','credits','victory']:
             self.playlists[plist] = [
                                     os.path.join(
-                                    MEDIA_DIRECTORY,
+                                    config.data_dir,
                                     'music',
                                     'ogg',file)
                                 for file
                                 in os.listdir(os.path.join(
-                                    MEDIA_DIRECTORY,
+                                    config.data_dir,
                                     'music',
                                     'ogg'))\
                                 if plist in file
@@ -68,14 +66,14 @@ class Music (object):
         necessary.
 
         """
-        if sound_config['MUSIC_VOLUME'] != self.music_volume:
-            self.playing.set_volume(sound_config['MUSIC_VOLUME']/100.0)
+        if config.audio['MUSIC_VOLUME'] != self.music_volume:
+            self.playing.set_volume(config.audio['MUSIC_VOLUME']/100.0)
         if state != self.precedent_state:
             self.change_music(self.playlists[state])
         elif self.playing == None\
         or time.time() - self.time_begin + 4 > self.playing.get_length():
             self.change_music(self.playlists[state])
-        self.music_volume = sound_config['MUSIC_VOLUME']
+        self.music_volume = config.audio['MUSIC_VOLUME']
         self.precedent_state = state
 
     def change_music(self, music, fading=True):
@@ -90,7 +88,7 @@ class Music (object):
                 self.playing.fadeout(3000)
             self.playing = loaders.track(random.choice(music))
             if self.playing is not None:
-                self.playing.set_volume(sound_config['MUSIC_VOLUME']/100.0)
+                self.playing.set_volume(config.audio['MUSIC_VOLUME']/100.0)
                 self.playing.play(fade_ms=3000)
         else:
             self.playing = music

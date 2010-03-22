@@ -24,16 +24,12 @@ from animations import Frame, PreciseTimedAnimation
 import loaders
 import game
 import timed_event
-#from config import config
 
 from config import Config
 
-config_ = Config.getInstance()
-config = config_.general
-MEDIA_DIRECTORY = config_.data_dir
-
-SIZE = (config['WIDTH'], 
-        config['HEIGHT'])
+config = Config.getInstance()
+SIZE = (config.general['WIDTH'], 
+        config.general['HEIGHT'])
 
 # different in python 2.4 and 2.5
 # more pythonic
@@ -72,7 +68,7 @@ class Entity_skin (object):
 
         else:
             file = os.path.join(
-                        MEDIA_DIRECTORY,
+                        config.data_dir,
                         dir_name,
                         dir_name.split(os.sep)[-1]
                         +os.extsep+'xml'
@@ -91,7 +87,7 @@ class Entity_skin (object):
         if not server:
             self.image = loaders.image(
                     os.path.join(
-                        MEDIA_DIRECTORY,
+                        config.data_dir,
                         dir_name,
                         attribs['image']
                         )
@@ -149,7 +145,7 @@ class Entity_skin (object):
                     sounds.append(
                             pygame.mixer.Sound(
                                 os.path.join(
-                                    MEDIA_DIRECTORY,
+                                    config.data_dir,
                                     dir_name,
                                     sound.attrib['filename']
                                     )
@@ -162,7 +158,7 @@ class Entity_skin (object):
 
             for frame in movement.findall('frame'):
                 image = os.path.join(
-                            MEDIA_DIRECTORY,
+                            config.data_dir,
                             dir_name,
                             frame.attrib['image']
                             )

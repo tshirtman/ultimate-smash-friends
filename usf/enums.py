@@ -1,3 +1,5 @@
+import pygame
+
 """ Enumerators for use throughout ulitmate-smash-friends.
 
     This module is provided simply for convenience. It allows named constants
@@ -13,3 +15,6 @@
 (TOP_RIGHT, UPPER_RIGHT, LOWER_RIGHT, BOTTOM_RIGHT, BOTTOM_LEFT, LOWER_LEFT,
  UPPER_LEFT, TOP_LEFT) = range(8)
 
+# create a dictionary of pygames global variables that represent keys
+reverse_keymap = dict((pygame.__dict__[key], key) 
+                       for key in pygame.__dict__ if key[:2] in ('K_', 'KM'))

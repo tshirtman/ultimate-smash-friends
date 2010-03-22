@@ -34,10 +34,6 @@ from pygame.locals import (
 # my imports
 from config import Config
 config = Config.getInstance()
-general = config.general
-SHARE_DIRECTORY = config.data_dir
-keyboard_config = dict([[locals.__dict__[config.keyboard[key]], key] 
-                        for key in config.keyboard])
 
 import game
 from ai import AI
@@ -72,13 +68,15 @@ class Controls (object):
 
     """
     ai_true = False
+
     def __init__(self):
         #loaders.load_keys()
-        self.keys = keyboard_config
+        self.keys = dict([[locals.__dict__[config.keyboard[key]], key] 
+                         for key in config.keyboard])
         self.sequences = []
         self.player_sequences = [[],[],[],[]]
         sequences_file = open(os.path.join(
-                SHARE_DIRECTORY,
+                config.data_dir,
                 'sequences'+os.extsep+'cfg')
                               , 'r')
         sequence_tmpl = []
@@ -112,7 +110,7 @@ class Controls (object):
                 if self.keys[key] == "MENU_TOGGLE":
                     ret = "game"
                 elif self.keys[key] == "QUIT":
-                    if general['CONFIRM_EXIT']:
+                    if config.general['CONFIRM_EXIT']:
                         pygame.event.post(
                                 pygame.event.Event(
                                     USEREVENT,
@@ -184,11 +182,11 @@ class Controls (object):
                                 player.walking_vector[0] = 0
 
                             elif "_LEFT" in the_key:
-                                player.walking_vector[0] = general['WALKSPEED']
+                                player.walking_vector[0] = config.general['WALKSPEED']
                                 player.reversed = True
 
                             elif "_RIGHT" in the_key:
-                                player.walking_vector[0] = general['WALKSPEED']
+                                player.walking_vector[0] = config.general['WALKSPEED']
                                 player.reversed = False
                         #test sequences
                         for sequence in self.player_sequences:
