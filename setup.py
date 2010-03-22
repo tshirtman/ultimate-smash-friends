@@ -57,10 +57,10 @@ else:
              'system.cfg'])]
 
 setup(name='ultimate-smash-friends',
-      version='0.0.5',
+      version='0.0.6',
       description=('A 2d arcade fight game, based on the gameplay of super '
                    'smash bros, from nintendo.'),
-      author='Gabirel Pettier',
+      author='Gabriel Pettier',
       author_email='gabriel.pettier@gmail.com',
       maintainer='Edwin Marshall (aspidites',
       maintainer_email='aspidites@inbox.com',
