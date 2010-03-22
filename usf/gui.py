@@ -209,7 +209,7 @@ class Gui(object):
                 continue
         #load background image
         
-        self.image =0
+        self.image = 0
         self.draw_screen(True)
 
     def launch_game(self, game):
@@ -441,7 +441,6 @@ class Gui(object):
             self.game = None
             self.state = "menu"
             self.goto_screen("main.usfgui")
-            self.image.set_alpha(255)
             str_return  = "return False, None"
         elif(id_widget=="fullscreen"):
             if(config.general['FULLSCREEN'] == "True"):
@@ -474,7 +473,6 @@ class Gui(object):
             self.game = self.launch_game(self.game)
             str_return  = "return True, self.game"
         elif(id_widget=="resume_game"):
-            self.image.set_alpha(255)
             self.screen_shot = None
             str_return  = "return True, self.game"
         elif(id_widget=="full_check"):
