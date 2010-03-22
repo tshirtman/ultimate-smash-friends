@@ -1,0 +1,84 @@
+== Linux ==
+Note: toutes les commandes suivantes sont à entrer dans un terminal, celui ci
+      étant l'outil commun à toutes les distributions, si vous souhaitez
+      utiliser une interface graphique, consultez la documentation de votre
+      distribution, ou les forums: http://forum.freegamedev.net/viewforum.php?f=33
+
+      $ represente les commandes devant être tapé en tant que simple
+      utilisateur.
+      # represente les commandes devant être tapé en tant qu'utilisateur root.
+
+A. Archive sources.
+   1. Télécharger et décompresser l'archive.
+      $ wget -c http://download.tuxfamily.org/usf/release/beta/ultimate-smash-friends-0.0.5.tar.gz
+      $ tar -xvzf ultimate-smash-friends-0.0.5.tar.gz
+      $ cd ulitmate-smash-friends
+
+   2. Installation des dépendances.
+      Assurez vous de disposer de python (>= 2.5 et < 3.0) et pygame installés.
+      Pour des instructions spécifiques à la distribution, reportez vous aux
+      sections ci dessous, relatives à votre systeme.
+
+   3. Installer Ultimate Smash Friends (optionel)*
+      a. Pour tous les utilisateurs
+         # python setup.py --record install_files
+      b. Ou juste pour votre utilisateur
+         $ python setup.py --record install_files --home=~
+
+   4. Jouer
+      a. Si vous avez effectué l'étape 3:
+         $ ultimate-smash-friends
+      b. Sinon:
+         $ ./ultimate-smash-friends
+
+   5. Désinstaller
+     a. si vous avez installé avec la méthode 2a
+        # cat install_files | xargs rm -rf
+     b. ou si vous avez utilisé la méthode 2b
+        $ cat install_files | xargs rm -rf
+
+* We highly recommend that you use your distributions package manager to install USF or run locally,
+  but if there are no packages available for your distribution, and you want to make the game available
+  to all users, this would be your best option.
+
+* Nous recommandons fortement l'utilisation des paquets de votre distribution
+  pour installer USF ou y jouer localement. Mais si aucun paquet n'est
+  disponible pour vitre distribution, et que vous voulez vous en charger, ceci
+  est probablement votre meilleur option.
+
+B. Fichier Debian
+   1. Téléchargement.
+      $ wget -c http://download.tuxfamily.org/usf/release/pre-alpha/ultimate-smash-friends_0.0.2_all.deb
+
+   2. Installation des dependances.
+      # apt-get update && apt-get install python-pygame
+
+   3. Installation d'Ultimate Smash Friends
+      # dpkg -i ultimate-smash-friends_0.0.2_all.deb 
+
+   4. Jouer.
+      $ ultimate-smash-friends
+
+   5. Désinstaller
+      # apt-get remove ultimate-smash-friends
+
+C. Arch Linux PKGBUILD
+   1. Télécharger le PKGBUILD
+      $ wget -c http://download.tuxfamily.org/usf/release/beta/PKGBUILD
+
+   2. Construire et Installer Ultimate Smash Friends*
+      $ makepkg -si
+
+   3. Jouer
+      $ ultimate-smash-friends 
+
+   4. Désinstaller
+      # pacman -Rsn usf-bzr
+
+* L'option -s installera automatiquement les dépendances.
+
+== Windows ==
+  à faire.
+
+== Mac OS X ==
+  à faire.
