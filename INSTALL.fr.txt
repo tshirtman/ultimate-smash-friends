@@ -37,10 +37,6 @@ A. Archive sources.
      b. ou si vous avez utilisé la méthode 2b
         $ cat install_files | xargs rm -rf
 
-* We highly recommend that you use your distributions package manager to install USF or run locally,
-  but if there are no packages available for your distribution, and you want to make the game available
-  to all users, this would be your best option.
-
 * Nous recommandons fortement l'utilisation des paquets de votre distribution
   pour installer USF ou y jouer localement. Mais si aucun paquet n'est
   disponible pour vitre distribution, et que vous voulez vous en charger, ceci
