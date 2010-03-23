@@ -53,9 +53,7 @@ else:
     doc[-1][-1].append('README.txt')
     doc[-1][-1].append('README.fr.txt')
 
-    etc = [('/etc/ultimate-smash-friends/', 
-            ['default_keys.cfg', 'default_sound.cfg', 'default_config.cfg', 
-             'system.cfg'])]
+    etc = [('/etc/ultimate-smash-friends/', ['system.cfg',])]
 
 setup(name='ultimate-smash-friends',
       version='0.0.6',
