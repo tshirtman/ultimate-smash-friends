@@ -454,22 +454,45 @@ class WidgetCoverflow(Widget):
     state_str = "norm"
     elements = {}
     hover =''
+    items = []
+    num_item = 0
     def drawSimple(self):
         self.surface = pygame.Surface((self.sizex,self.sizey/2))
         """self.screen.blit(
             self.image,
         (self.posx, self.posy)
         )"""
+        if self.num_item == 0:
+            left = len(self.items)-1
+            right = self.num_item +1
+        elif self.num_item == len(self.items)-1:
+            left = self.num_item -1
+            right = 0
+        else:
+            left = self.num_item - 1
+            right = self.num_item + 1
         self.surface.blit(
             self.frameleft,
         (self.sizex-self.frameleft.get_width(), 0)
+        )
+        self.surface.blit(
+            self.items[left][0],
+        (self.sizex-self.frameleft.get_width()+10, 10)
         )
         self.surface.blit(
             self.frameright,
         (0,0)
         )
         self.surface.blit(
+            self.items[right][0],
+        (0,0)
+        )
+        self.surface.blit(
             self.frame,
+        (self.sizex/2-self.frame.get_width()/2, 0)
+        )
+        self.surface.blit(
+            self.items[self.num_item][0],
         (self.sizex/2-self.frame.get_width()/2, 0)
         )
         
@@ -494,16 +517,15 @@ class WidgetCoverflow(Widget):
         elif (self.state_str == "hover"):
             self.drawHover()
     def setText(self, text):
-        self.text = text.replace("theme/", config.data_dir + os.sep)
-        self.image = loaders.image(
-            config.data_dir+
-            os.sep+
-            'gui'+
-            os.sep+
-            "image"+
-            os.sep+
-            self.text
-            )[0]
+        for item in text.split(":"):
+            try:
+                self.items.append([loaders.image(
+                    config.data_dir+
+                    os.sep+
+                    item.split("#")[0]
+                    )[0],item.split("#")[1]])
+            except:
+                print "no image : " +item
         if(self.sizex == 0):
             self.sizex = self.sizey
         self.image = pygame.transform.scale(self.image, (self.sizex, self.sizey))
@@ -572,6 +594,11 @@ class WidgetCoverflow(Widget):
                                             os.sep+
                                             "light.png", scale=(self.elements['frameright']['width'], self.elements['frameright']['height'])
                                             )[0], (0,0))
+                if event.type == pygame.MOUSEBUTTONUP:
+                    if self.num_item == 0:
+                        self.num_item = len(self.items)-1
+                    else:
+                        self.num_item = self.num_item -1
             elif self.hover == 'frameright':
                 self.frameright = loaders.image(
                     config.data_dir+
@@ -583,16 +610,6 @@ class WidgetCoverflow(Widget):
                     "cover-frame-small.png", scale=(self.sizex/3, self.sizey/3)
                     )[0]
                 self.hover = ''
-            if event.type == pygame.MOUSEBUTTONUP:
-                self.frameright = loaders.image(
-                    config.data_dir+
-                    os.sep+
-                    'gui'+
-                    os.sep+
-                    config.general['THEME']+
-                    os.sep+
-                    "cover-frame-small.png", scale=(self.sizex/2, self.sizey/2)
-                    )[0]
         except:
             print "it is a str"
         pass
