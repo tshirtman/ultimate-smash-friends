@@ -92,44 +92,9 @@ class Game (object):
             # loading level
             self.level_place = [0, 0]
             self.game_font = pygame.font.Font(None, 50)
-            image_src = os.path.join(
-                        config.data_dir,
-                        'misc',
-                        'loading.png'
-                        )
-
-            self.heart = os.path.join(
-                        config.data_dir,
-                        'misc',
-                        'heart.png'
-                        )
-
-            self.screen.blit(image(image_src)[0],(0,0))
-            self.screen.blit(
-                    self.game_font.render(
-                        "level...",
-                        True,
-                        pygame.color.Color("white")
-                        ),
-                    ( 30, 4*SIZE[1]/5 )
-                    )
-
-            pygame.display.flip()
-
             self.tmp_surface = self.screen.copy()
 
             # loading players
-            self.screen.blit(image(image_src)[0],(0,0))
-            self.screen.blit(
-                    self.game_font.render(
-                        "players...",
-                        True,
-                        pygame.color.Color("white")
-                        ),
-                    ( 30, 4*SIZE[1]/5 )
-                    )
-
-            pygame.display.flip()
 
         self.players = []
         logging.debug('loading players')
@@ -304,13 +269,19 @@ class Game (object):
             # draw player's lives.
             for i in range(player.lives):
                 self.screen.blit(
-                                 image(self.heart)[0],
-                                    (
-                                    -0.5*self.icon_space+player.num*\
-                                    self.icon_space+i*self.icon_space/40,
-                                    SIZE[1]*.95
-                                    )
+                        image(
+                            os.path.join(
+                                config.data_dir,
+                                'misc',
+                                'heart.png'
                                 )
+                            )[0],
+                        (
+                         -0.5*self.icon_space+player.num*\
+                         self.icon_space+i*self.icon_space/40,
+                         SIZE[1]*.95
+                        )
+                        )
 
             # displays coords of player, usefull for debuging
             if 'coords' in debug_params:
