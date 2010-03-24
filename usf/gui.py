@@ -197,7 +197,7 @@ class Gui(object):
             'gui'+
             os.sep+
             'list.usfgui').getElementsByTagName("gui")[0]
-        for i in range (0, len(xml_file.childNodes)):
+        for i in xrange (0, len(xml_file.childNodes)):
             try:
                 if(xml_file.childNodes[i].tagName == "menu"):
                    self.load_from_xml(xml_file.childNodes[i].childNodes[0].nodeValue)
@@ -223,7 +223,7 @@ class Gui(object):
         self.game_data['character_file'][p]
         for p in self.players if p != -1
         ]
-        for i in range(0,3):
+        for i in xrange(len(players)):
             if self.widget_list['characters.usfgui']["ai" + str(i)].text == "True":
                 players[i] = players[i].replace("characters/", "characters/AI")
         game = Game(
@@ -248,7 +248,7 @@ class Gui(object):
             os.sep+
             'gui'+
             os.sep+ filename).getElementsByTagName("gui")[0]
-        for i in range (0, len(xml_file.childNodes)):
+        for i in xrange (0, len(xml_file.childNodes)):
             try:
                 if xml_file.childNodes[i].tagName != "parent":
                     id_current = xml_file.childNodes[i].getAttribute("id")
@@ -310,12 +310,12 @@ class Gui(object):
             self.screen_current = screen
             self.dialog[self.screen_current].show()
         else:
-            for i in range(0,5):
+            for i in xrange(0,5):
                 start = time.time()
                 self.draw_screen(True,i*50)
                 time.sleep(1.00/float(config.general['MAX_FPS']))
             self.screen_current = screen
-            for i in range(0,5):
+            for i in xrange(0,5):
                 start = time.time()
                 self.draw_screen(True,(i*-1+5)*50)
                 time.sleep(1.00/float(config.general['MAX_FPS']))
@@ -511,7 +511,7 @@ class Gui(object):
             #update screen
             self.update("",None,"",pygame.event.Event(pygame.USEREVENT, {}))
             pygame.display.update()
-            for len_str in range(0,self.widget_list[self.screen_current][widget_name].str_len):
+            for len_str in xrange(0,self.widget_list[self.screen_current][widget_name].str_len):
                 event_current = pygame.event.wait()
                 while(event_current.type != pygame.KEYDOWN):
                     self.update("",None,"",event_current)
@@ -526,7 +526,7 @@ class Gui(object):
             while(True):
                 time.sleep(0.04)
                 self.screen.blit(self.image,(0,0))
-                for j in range (0, len(self.widget_list[self.screen_current].values())):
+                for j in xrange (0, len(self.widget_list[self.screen_current].values())):
                     #draw items at once
                     self.widget_list[self.screen_current].values()[j].draw()
                 pygame.display.update()

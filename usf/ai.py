@@ -52,7 +52,8 @@ class AI(object):
     def calculate_height(self):
         self.global_height = False
         #FIXME : a real function to calculate height
-        self.jump_height = float(self.iam.entity_skin.vectors['jump'][0][0][1])/float(10000)*1500
+        #self.jump_height = float(self.iam.entity_skin.vectors['jump'][0][0][1])/float(10000)*1500
+        self.jump_height = config.general['JUMP_HEIGHT']
 
     def update(self, game, iam):
         self.sequences_ai = []
