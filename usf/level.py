@@ -370,6 +370,20 @@ class Level ( object ):
 
     def draw_after_players(self, surface, level_place, zoom):
         self.draw_foreground(surface, level_place, zoom)
+        self.draw_minimap(surface)
+
+    def draw_minimap(self, surface):
+        for rect in self.map:
+            draw_rect(
+                    surface,
+                    pygame.Rect(
+                        (rect[0])/8,
+                        (rect[1])/8,
+                        rect[2]/8,
+                        rect[3]/8
+                        ),
+                    pygame.Color('grey')
+                    )
 
     def draw_background(self, surface, coords=(0,0)):
         surface.blit( loaders.image(self.background,

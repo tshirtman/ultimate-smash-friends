@@ -211,30 +211,16 @@ class Game (object):
 
         """
         self.level.draw_before_players(
-            self.tmp_surface, self.level_place, self.zoom
+            self.screen, self.level_place, self.zoom
         )
         for entity in self.players+self.items:
             entity.present and entity.draw(
-                self.level_place, self.zoom, self.tmp_surface
+                self.level_place, self.zoom, self.screen
                 )
 
         self.level.draw_after_players(
-            self.tmp_surface, self.level_place, self.zoom
+            self.screen, self.level_place, self.zoom
         )
-        self.screen.blit(self.tmp_surface,(0,0) )
-
-        # minimap
-        for rect in self.level.map:
-            draw_rect(
-                    self.screen,
-                    pygame.Rect(
-                        (rect[0])/8,
-                        (rect[1])/8,
-                        rect[2]/8,
-                        rect[3]/8
-                        ),
-                    pygame.Color('grey')
-                    )
 
         # draw players portraits at bottom of screen
         for num, player in enumerate(self.players):
