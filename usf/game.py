@@ -36,7 +36,6 @@ from loaders import image
 import animations
 import entity
 
-#from AI import AI
 import timed_event
 from level import Level
 from controls import Controls
@@ -49,7 +48,7 @@ from singletonmixin import Singleton
 from debug_utils import draw_rect
 
 config = Config.getInstance()
-SIZE = (config.general['WIDTH'], 
+SIZE = (config.general['WIDTH'],
         config.general['HEIGHT'])
 
 if not pygame.font: logging.debug('Warning, fonts disabled')
@@ -171,25 +170,19 @@ class Game (object):
 
         """
         try:
-            os.listdir(
-                    os.path.join(
-                        config.data_dir,
-                        'items',
-                        item
+            os.listdir(os.path.join( config.data_dir, 'items', item))
+            self.items.append(
+                    entity.Entity(
+                        None,
+                        self,
+                        os.path.join( 'items', item,),
+                        place=place,
+                        vector=vector,
+                        reversed=reversed,
+                        visible=True,
+                        present=True
                         )
                     )
-            the_item = entity.Entity(
-                    None,
-                    self,
-                    os.path.join( 'items', item,),
-                    place=place,
-                    vector=vector,
-                    reversed=reversed
-                    )
-            the_item.present = True
-            the_item.visible = True
-            self.items.append(the_item)
-            return the_item
 
         except OSError, e:
             if e.errno is 22:
@@ -217,21 +210,17 @@ class Game (object):
         Draw every parts of the game on the screen.
 
         """
-        self.level.draw_background( self.tmp_surface, (0,0))
-        self.level.draw_level( self.tmp_surface ,self.level_place, self.zoom )
-        #logging.debug(self.level.moving_blocs)
-        for block in self.level.moving_blocs:
-            block.draw( self.tmp_surface, self.level_place, self.zoom)
-
-        for block in self.level.vector_blocs:
-            block.draw( self.tmp_surface, self.level_place, self.zoom)
-
+        self.level.draw_before_players(
+            self.tmp_surface, self.level_place, self.zoom
+        )
         for entity in self.players+self.items:
             entity.present and entity.draw(
                 self.level_place, self.zoom, self.tmp_surface
                 )
 
-        self.level.draw_foreground(self.tmp_surface,self.level_place, self.zoom)
+        self.level.draw_after_players(
+            self.tmp_surface, self.level_place, self.zoom
+        )
         self.screen.blit(self.tmp_surface,(0,0) )
 
         # minimap

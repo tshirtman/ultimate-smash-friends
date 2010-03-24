@@ -72,7 +72,7 @@ class Entity (object):
     def __init__( self, num, game,
             entity_skinname='characters'+os.sep+'stick-tiny', place=(550,1),
             lives=3, carried_by=None, vector=[0,0], reversed=False,
-            server=False, number=None
+            server=False, number=None, visible=False, present=False
             ):
         if number is None:
             self.number = Entity.counter
@@ -96,8 +96,8 @@ class Entity (object):
         self.lives = lives
         self.gravity = True
         self.invincible = False
-        self.present = False
-        self.visible = False
+        self.present = present
+        self.visible = visible
         self.onGround = False
         if entity_skinname is not None:
             self.name = entity_skinname.split(os.sep)[-1]

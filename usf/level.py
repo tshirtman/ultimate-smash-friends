@@ -358,14 +358,27 @@ class Level ( object ):
                 ]
             )
 
+    def draw_before_players(self, surface, level_place, zoom):
+        self.draw_background(surface)
+        self.draw_level( surface , level_place, zoom )
+        #logging.debug(self.level.moving_blocs)
+        for block in self.moving_blocs:
+            block.draw( surface, level_place, zoom)
+
+        for block in self.vector_blocs:
+            block.draw( surface, level_place, zoom)
+
+    def draw_after_players(self, surface, level_place, zoom):
+        self.draw_foreground(surface, level_place, zoom)
+
     def draw_background(self, surface, coords=(0,0)):
         surface.blit( loaders.image(self.background,
             scale=SIZE)[0], coords )
 
-    def draw_level(self, surface, coords=(0,0), zoom=1):
+    def draw_level(self, surface, coords, zoom):
         surface.blit( loaders.image(self.level, zoom=zoom)[0], coords)
 
-    def draw_foreground(self, surface, coords=(0,0), zoom=1):
+    def draw_foreground(self, surface, coords, zoom):
         surface.blit( loaders.image(self.foreground, zoom=zoom)[0], coords)
 
     def update(self, time):
