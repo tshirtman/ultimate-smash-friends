@@ -476,23 +476,29 @@ class Game (object):
                                 and i.invincible is False ]:
                     if pl.collide_point([point[0][0]+entity.rect[0],
                                          point[0][1]+entity.rect[1]] )is not -1:
-                        if entity.reversed != pl.reversed:
-                            pl.vector = [-point[1][0]*(1+pl.percents),
-                                          point[1][1]*(1+pl.percents)]
+                        if pl.shield['on'] :
+                            pl.shield['power'] -= math.sqrt(
+                                                point[1][0]**2 + point[1][1]**2
+                                                )/6000.0
+                            pl.shield['power'] = max(0, pl.shield['power'])
                         else:
-                            pl.vector = [ point[1][0]*(1+pl.percents),
-                                          point[1][1]*(1+pl.percents) ]
-                        pl.percents += math.sqrt( point[1][0]**2\
-                                                 +point[1][1]**2)/(30 * (100 -
-                                                 pl.armor ))
+                            if entity.reversed != pl.reversed:
+                                pl.vector = [-point[1][0]*(1+pl.percents),
+                                              point[1][1]*(1+pl.percents)]
+                            else:
+                                pl.vector = [ point[1][0]*(1+pl.percents),
+                                              point[1][1]*(1+pl.percents) ]
+                            pl.percents += math.sqrt( point[1][0]**2\
+                                                     +point[1][1]**2)/(30 * (100 -
+                                                     pl.armor ))
 
-                        pl.entity_skin.change_animation(
-                                "take",
-                                self,
-                                params={
-                                'entity': pl
-                                }
-                                )
+                            pl.entity_skin.change_animation(
+                                    "take",
+                                    self,
+                                    params={
+                                    'entity': pl
+                                    }
+                                    )
 
         # collision between players and items -- tests and
         # consequences
