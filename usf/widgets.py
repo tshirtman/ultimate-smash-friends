@@ -97,6 +97,7 @@ class Widget (object):
         self.state_str = state_str
     def click(self,event):
         pass
+        return ""
 
 class WidgetCheckbox(Widget):
     """
@@ -599,7 +600,33 @@ class WidgetCoverflow(Widget):
                         self.num_item = len(self.items)-1
                     else:
                         self.num_item = self.num_item -1
-            elif self.hover == 'frameright':
+            elif(mousex in range(self.elements['frameleft']['posx'],
+                                 self.elements['frameleft']['posx']+self.elements['frameleft']['width']) and
+               mousey in range(self.elements['frameleft']['posy'],
+                                 self.elements['frameleft']['posy']+self.elements['frameleft']['height'])):
+                if self.hover != 'frameleft':
+                    self.hover = 'frameleft'
+                    self.frameleft = self.frameleft.copy()
+                    self.frameleft.blit(loaders.image(
+                                            config.data_dir+
+                                            os.sep+
+                                            'gui'+
+                                            os.sep+
+                                            config.general['THEME']+
+                                            os.sep+
+                                            "light.png", scale=(self.elements['frameleft']['width'], self.elements['frameleft']['height'])
+                                            )[0], (0,0))
+                if event.type == pygame.MOUSEBUTTONUP:
+                    if self.num_item == len(self.items)-1:
+                        self.num_item = 0
+                    else:
+                        self.num_item = self.num_item +1
+            elif(mousex in range(self.elements['frame']['posx'],
+                                 self.elements['frame']['posx']+self.elements['frame']['width']) and
+               mousey in range(self.elements['frame']['posy'],
+                                 self.elements['frame']['posy']+self.elements['frame']['height']) and event.type == pygame.MOUSEBUTTONUP):
+                return "self.valid(0, 'quit')"
+            elif self.hover != '':
                 self.frameright = loaders.image(
                     config.data_dir+
                     os.sep+
@@ -609,7 +636,8 @@ class WidgetCoverflow(Widget):
                     os.sep+
                     "cover-frame-small.png", scale=(self.sizex/3, self.sizey/3)
                     )[0]
+                self.frameleft = pygame.transform.flip(self.frameright, True, False)
                 self.hover = ''
         except:
             print "it is a str"
-        pass
+        return ""
