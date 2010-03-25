@@ -479,7 +479,7 @@ class Game (object):
                         if pl.shield['on'] :
                             pl.shield['power'] -= math.sqrt(
                                                 point[1][0]**2 + point[1][1]**2
-                                                )/6000.0
+                                                )/config.general['SHIELD_SOLIDITY']
                             pl.shield['power'] = max(0, pl.shield['power'])
                         else:
                             if entity.reversed != pl.reversed:
