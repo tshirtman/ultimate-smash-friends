@@ -31,12 +31,10 @@ import timed_event
 
 from config import Config
 
-config_ = Config.getInstance()
-config = config_.general
-MEDIA_DIRECTORY = config_.data_dir
+config = Config.getInstance()
 
-SIZE = (config['WIDTH'], 
-        config['HEIGHT'])
+SIZE = (config.general['WIDTH'], 
+        config.general['HEIGHT'])
 
 from debug_utils import draw_rect
 from enums import (TOP_RIGHT, UPPER_RIGHT, LOWER_RIGHT, BOTTOM_RIGHT,
@@ -74,7 +72,7 @@ class Entity (object):
     def __init__( self, num, game,
             entity_skinname='characters'+os.sep+'stick-tiny', place=(550,1),
             lives=3, carried_by=None, vector=[0,0], reversed=False,
-            server=False, number=None
+            server=False, number=None, visible=False, present=False
             ):
         if number is None:
             self.number = Entity.counter
@@ -98,8 +96,8 @@ class Entity (object):
         self.lives = lives
         self.gravity = True
         self.invincible = False
-        self.present = False
-        self.visible = False
+        self.present = present
+        self.visible = visible
         self.onGround = False
         if entity_skinname is not None:
             self.name = entity_skinname.split(os.sep)[-1]
@@ -414,7 +412,7 @@ class Entity (object):
             if self.shield['on']:
                 image = loaders.image(
                             os.path.sep.join(
-                                (MEDIA_DIRECTORY,'misc','shield.png')
+                                (config.data_dir,'misc','shield.png')
                                 ),
                                 zoom=zoom*self.shield['power']*3
                             )
@@ -465,11 +463,11 @@ class Entity (object):
 
         # Gravity
         if self.gravity :#and not self.onGround:
-            self.vector[1] += float(config['GRAVITY']) * dt
+            self.vector[1] += float(config.general['GRAVITY']) * dt
 
         # Application of air friction.
-        self.vector[0] -= config['AIR_FRICTION'] * self.vector[0] * dt
-        self.vector[1] -= config['AIR_FRICTION'] * self.vector[1] * dt
+        self.vector[0] -= config.general['AIR_FRICTION'] * self.vector[0] * dt
+        self.vector[1] -= config.general['AIR_FRICTION'] * self.vector[1] * dt
 
         # apply the vector to entity.
         self.move ((self.vector[0] * dt, self.vector[1] * dt), 'vector')

@@ -35,22 +35,21 @@ import SocketServer
 from loaders import image
 import animations
 import entity
-#from AI import AI
+
 import timed_event
 from level import Level
 from controls import Controls
 from config import Config
 from widgets import game_font
-config_ = Config.getInstance()
-config = config_.general
-MEDIA_DIRECTORY = config_.data_dir
-SIZE = (config['WIDTH'], 
-        config['HEIGHT'])
 
 from debug_utils import draw_rect
 from singletonmixin import Singleton
 
 from debug_utils import draw_rect
+
+config = Config.getInstance()
+SIZE = (config.general['WIDTH'],
+        config.general['HEIGHT'])
 
 if not pygame.font: logging.debug('Warning, fonts disabled')
 if not pygame.mixer: logging.debug('Warning, sound disabled')
@@ -87,49 +86,14 @@ class Game (object):
         if screen is not None:
             self.font = pygame.font.Font(None, 20)
             self.zoom = 1
-            #self.testimage=load_image(os.path.join(MEDIA_DIRECTORY,'items','item-heal'+os.extsep+'png')[0]
+            #self.testimage=load_image(os.path.join(config.data_dir,'items','item-heal'+os.extsep+'png')[0]
             # time for a loading screen ain't it?
             # loading level
             self.level_place = [0, 0]
             self.game_font = pygame.font.Font(None, 50)
-            image_src = os.path.join(
-                        MEDIA_DIRECTORY,
-                        'misc',
-                        'loading.png'
-                        )
-
-            self.heart = os.path.join(
-                        MEDIA_DIRECTORY,
-                        'misc',
-                        'heart.png'
-                        )
-
-            self.screen.blit(image(image_src)[0],(0,0))
-            self.screen.blit(
-                    self.game_font.render(
-                        "level...",
-                        True,
-                        pygame.color.Color("white")
-                        ),
-                    ( 30, 4*SIZE[1]/5 )
-                    )
-
-            pygame.display.flip()
-
             self.tmp_surface = self.screen.copy()
 
             # loading players
-            self.screen.blit(image(image_src)[0],(0,0))
-            self.screen.blit(
-                    self.game_font.render(
-                        "players...",
-                        True,
-                        pygame.color.Color("white")
-                        ),
-                    ( 30, 4*SIZE[1]/5 )
-                    )
-
-            pygame.display.flip()
 
         self.players = []
         logging.debug('loading players')
@@ -206,25 +170,19 @@ class Game (object):
 
         """
         try:
-            os.listdir(
-                    os.path.join(
-                        MEDIA_DIRECTORY,
-                        'items',
-                        item
+            os.listdir(os.path.join( config.data_dir, 'items', item))
+            self.items.append(
+                    entity.Entity(
+                        None,
+                        self,
+                        os.path.join( 'items', item,),
+                        place=place,
+                        vector=vector,
+                        reversed=reversed,
+                        visible=True,
+                        present=True
                         )
                     )
-            the_item = entity.Entity(
-                    None,
-                    self,
-                    os.path.join( 'items', item,),
-                    place=place,
-                    vector=vector,
-                    reversed=reversed
-                    )
-            the_item.present = True
-            the_item.visible = True
-            self.items.append(the_item)
-            return the_item
 
         except OSError, e:
             if e.errno is 22:
@@ -252,35 +210,17 @@ class Game (object):
         Draw every parts of the game on the screen.
 
         """
-        self.level.draw_background( self.tmp_surface, (0,0))
-        self.level.draw_level( self.tmp_surface ,self.level_place, self.zoom )
-        #logging.debug(self.level.moving_blocs)
-        for block in self.level.moving_blocs:
-            block.draw( self.tmp_surface, self.level_place, self.zoom)
-
-        for block in self.level.vector_blocs:
-            block.draw( self.tmp_surface, self.level_place, self.zoom)
-
+        self.level.draw_before_players(
+            self.screen, self.level_place, self.zoom
+        )
         for entity in self.players+self.items:
             entity.present and entity.draw(
-                self.level_place, self.zoom, self.tmp_surface
+                self.level_place, self.zoom, self.screen
                 )
 
-        self.level.draw_foreground(self.tmp_surface,self.level_place, self.zoom)
-        self.screen.blit(self.tmp_surface,(0,0) )
-
-        # minimap
-        for rect in self.level.map:
-            draw_rect(
-                    self.screen,
-                    pygame.Rect(
-                        (rect[0])/8,
-                        (rect[1])/8,
-                        rect[2]/8,
-                        rect[3]/8
-                        ),
-                    pygame.Color('grey')
-                    )
+        self.level.draw_after_players(
+            self.screen, self.level_place, self.zoom
+        )
 
         # draw players portraits at bottom of screen
         for num, player in enumerate(self.players):
@@ -304,13 +244,19 @@ class Game (object):
             # draw player's lives.
             for i in range(player.lives):
                 self.screen.blit(
-                                 image(self.heart)[0],
-                                    (
-                                    -0.5*self.icon_space+player.num*\
-                                    self.icon_space+i*self.icon_space/40,
-                                    SIZE[1]*.95
-                                    )
+                        image(
+                            os.path.join(
+                                config.data_dir,
+                                'misc',
+                                'heart.png'
                                 )
+                            )[0],
+                        (
+                         -0.5*self.icon_space+player.num*\
+                         self.icon_space+i*self.icon_space/40,
+                         SIZE[1]*.95
+                        )
+                        )
 
             # displays coords of player, usefull for debuging
             if 'coords' in debug_params:
@@ -391,7 +337,7 @@ class Game (object):
 
     def update_notif(self):
         for notif in self.notif:
-            if config['NOTIF_EFFECT'] == "True":
+            if config.general['NOTIF_EFFECT'] == "True":
                 if(len(notif) <3):
                     notif.append(notif[1][0])
                 elif len(notif[2]) is not len(notif[1]):
@@ -425,7 +371,7 @@ class Game (object):
         deltatime = 0
 
         # frame limiter
-        while deltatime < 1.0/config['MAX_FPS']:
+        while deltatime < 1.0/config.general['MAX_FPS']:
             deltatime = time.time() - self.last_clock
 
         self.gametime += deltatime
@@ -446,7 +392,7 @@ class Game (object):
                 players_barycenter = present_players[0].rect[0:2]
                 precise_zoom = 1
                 self.zoom = int(precise_zoom * 0.70 *
-                            config['ZOOM_SHARPNESS'])/(config['ZOOM_SHARPNESS']*
+                            config.general['ZOOM_SHARPNESS'])/(config.general['ZOOM_SHARPNESS']*
                             1.0 )
             # center the level around the barycenter of present players.
             else:
@@ -470,8 +416,8 @@ class Game (object):
                 # image cache is more useful.
 
                 self.zoom = (
-                    int( precise_zoom * 0.70 * config['ZOOM_SHARPNESS'] )/
-                    (config['ZOOM_SHARPNESS'] * 1.0)
+                    int( precise_zoom * 0.70 * config.general['ZOOM_SHARPNESS'] )/
+                    (config.general['ZOOM_SHARPNESS'] * 1.0)
                 )
 
                 players_barycenter = (

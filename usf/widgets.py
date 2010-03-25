@@ -25,11 +25,7 @@ from pygame.locals import *
 import loaders
 from config import Config
 
-config_ = Config.getInstance()
-general = config_.general
-sound_config = config_.audio
-keyboard_config = config_.keyboard
-MEDIA_DIRECTORY = config_.data_dir
+config = Config.getInstance()
 
 class Widget (object):
     """
@@ -47,15 +43,15 @@ class Widget (object):
     color="white"
     def __init__(self, screen):
         self.game_font = pygame.font.Font(
-            MEDIA_DIRECTORY +
+            config.data_dir +
             os.sep +
-            "gui" +os.sep + general['THEME'] + os.sep +
+            "gui" +os.sep + config.general['THEME'] + os.sep +
             "font.otf", screen.get_height()/20)
         self.screen = screen
-        xml_file = xml.dom.minidom.parse(MEDIA_DIRECTORY+
+        xml_file = xml.dom.minidom.parse(config.data_dir+
             os.sep+
             'gui'+
-            os.sep+ general['THEME'] + os.sep + "theme.xml").getElementsByTagName("theme")[0]
+            os.sep+ config.general['THEME'] + os.sep + "theme.xml").getElementsByTagName("theme")[0]
         self.color = pygame.color.Color("white")
         for i in range (0, len(xml_file.childNodes)):
             try:
@@ -82,19 +78,19 @@ class Widget (object):
             if(value.split(':')[1] == "keyboard"):
                 numcle=0
                 try:
-                    while keyboard_config.keys()[numcle] != value.split(':')[2]:
+                    while config.keyboard.keys()[numcle] != value.split(':')[2]:
                         numcle += 1
 
-                    self.text = pygame.key.name(eval(keyboard_config.values()[numcle]))
+                    self.text = pygame.key.name(eval(config.keyboard.values()[numcle]))
                 except:
                     self.text ="not defined"
             elif(value.split(':')[1] == "sounds"):
-                self.text = str(sound_config[value.split(':')[2]])
+                self.text = str(config.audio[value.split(':')[2]])
             else:
-                if(general[value.split(':')[1]] == 0):
+                if(config.general[value.split(':')[1]] == 0):
                     self.text = "False"
                 else:
-                    self.text = str(general[value.split(':')[1]])
+                    self.text = str(config.general[value.split(':')[1]])
         else:
             self.text = value
     def state(self,state_str):
@@ -130,40 +126,40 @@ class WidgetCheckbox(Widget):
             if(value.split(':')[1] == "keyboard"):
                 numcle=0
                 try:
-                    while keyboard_config.keys()[numcle] != value.split(':')[2]:
+                    while config.keyboard.keys()[numcle] != value.split(':')[2]:
                         numcle += 1
 
-                    self.text = pygame.key.name(eval(keyboard_config.values()[numcle]))
+                    self.text = pygame.key.name(eval(config.keyboard.values()[numcle]))
                 except:
                     self.text ="not defined"
             elif(value.split(':')[1] == "sounds"):
-                self.text = str(sound_config[value.split(':')[2]])
+                self.text = str(config.audio[value.split(':')[2]])
             else:
-                if(general[value.split(':')[1]] == 0):
+                if(config.general[value.split(':')[1]] == 0):
                     self.text = "False"
                 else:
-                    self.text = str(general[value.split(':')[1]])
+                    self.text = str(config.general[value.split(':')[1]])
         else:
             self.text = value
         if(self.sizex == 0):
             self.sizex = self.sizey
         if self.text == "True" :
             self.image = loaders.image(
-                MEDIA_DIRECTORY+
+                config.data_dir+
                 os.sep+
                 'gui'+
                 os.sep+
-                general['THEME']+
+                config.general['THEME']+
                 os.sep+
                 "checkbox_full.png", scale=(self.sizex, self.sizey)
                 )[0]
         else :
             self.image = loaders.image(
-                MEDIA_DIRECTORY+
+                config.data_dir+
                 os.sep+
                 'gui'+
                 os.sep+
-                general['THEME']+
+                config.general['THEME']+
                 os.sep+
                 "checkbox_empty.png", scale=(self.sizex, self.sizey)
                 )[0]
@@ -213,19 +209,19 @@ class WidgetIcon(Widget):
         (self.posx + self.sizex/10, self.posy+self.sizey/2-self.screen.get_height()/50)
         )
     def load(self):
-        path = (MEDIA_DIRECTORY+
+        path = (config.data_dir+
             os.sep+
             'gui'+
             os.sep+
-            general['THEME']+
+            config.general['THEME']+
             os.sep+
             'back_button.png')
         self.background = loaders.image(path, scale=(self.sizex, self.sizey))[0]
-        self.background_hover = loaders.image(MEDIA_DIRECTORY+
+        self.background_hover = loaders.image(config.data_dir+
             os.sep+
             'gui'+
             os.sep+
-            general['THEME']+
+            config.general['THEME']+
             os.sep+
             'back_button_hover.png', scale=(self.sizex, self.sizey))[0]
 
@@ -254,9 +250,9 @@ class WidgetImageButton(Widget):
         elif (self.state_str == "hover"):
             self.drawHover()
     def setText(self, text):
-        self.text = text.replace("theme/", MEDIA_DIRECTORY + os.sep)
+        self.text = text.replace("theme/", config.data_dir + os.sep)
         self.image = loaders.image(
-            MEDIA_DIRECTORY+
+            config.data_dir+
             os.sep+
             'gui'+
             os.sep+
@@ -286,7 +282,7 @@ class WidgetImage(Widget):
             self.sizex = self.sizey
         self.text = text.replace("/", os.sep)
         self.image = loaders.image(
-            MEDIA_DIRECTORY+
+            config.data_dir+
             os.sep+
             self.text, scale=(self.sizex, self.sizey)
             )[0]
@@ -425,30 +421,30 @@ class WidgetTextarea(Widget):
         (self.posx + self.sizex/10, self.posy+self.sizey/2-self.screen.get_height()/50)
         )
     def load(self):
-        self.background = pygame.image.load(MEDIA_DIRECTORY+
+        self.background = pygame.image.load(config.data_dir+
             os.sep+
             'gui'+
             os.sep+
-            general['THEME']+
+            config.general['THEME']+
             os.sep+
             'back_button.png').convert_alpha()
         self.background  = pygame.transform.scale(self.background, (self.sizex, self.sizey))
         #self.background.set_colorkey((255,255,255))
-        self.background_hover = pygame.image.load(MEDIA_DIRECTORY+
+        self.background_hover = pygame.image.load(config.data_dir+
             os.sep+
             'gui'+
             os.sep+
-            general['THEME']+
+            config.general['THEME']+
             os.sep+
             'back_button_hover.png').convert_alpha()
         self.background_hover  = pygame.transform.scale(self.background_hover, (self.sizex, self.sizey))
         #self.background_hover.set_colorkey((255,255,255))
 pygame.font.init()
 game_font = pygame.font.Font(
-            MEDIA_DIRECTORY +
+            config.data_dir +
             os.sep +
-            "gui" +os.sep + general['THEME'] + os.sep +
-            "font.otf", general['HEIGHT']/20)
+            "gui" +os.sep + config.general['THEME'] + os.sep +
+            "font.otf", config.general['HEIGHT']/20)
             
 class WidgetCoverflow(Widget):
     """
@@ -458,22 +454,45 @@ class WidgetCoverflow(Widget):
     state_str = "norm"
     elements = {}
     hover =''
+    items = []
+    num_item = 0
     def drawSimple(self):
         self.surface = pygame.Surface((self.sizex,self.sizey/2))
         """self.screen.blit(
             self.image,
         (self.posx, self.posy)
         )"""
+        if self.num_item == 0:
+            left = len(self.items)-1
+            right = self.num_item +1
+        elif self.num_item == len(self.items)-1:
+            left = self.num_item -1
+            right = 0
+        else:
+            left = self.num_item - 1
+            right = self.num_item + 1
         self.surface.blit(
             self.frameleft,
         (self.sizex-self.frameleft.get_width(), 0)
+        )
+        self.surface.blit(
+            self.items[left][0],
+        (self.sizex-self.frameleft.get_width()+10, 10)
         )
         self.surface.blit(
             self.frameright,
         (0,0)
         )
         self.surface.blit(
+            self.items[right][0],
+        (0,0)
+        )
+        self.surface.blit(
             self.frame,
+        (self.sizex/2-self.frame.get_width()/2, 0)
+        )
+        self.surface.blit(
+            self.items[self.num_item][0],
         (self.sizex/2-self.frame.get_width()/2, 0)
         )
         
@@ -498,27 +517,26 @@ class WidgetCoverflow(Widget):
         elif (self.state_str == "hover"):
             self.drawHover()
     def setText(self, text):
-        self.text = text.replace("theme/", MEDIA_DIRECTORY + os.sep)
-        self.image = loaders.image(
-            MEDIA_DIRECTORY+
-            os.sep+
-            'gui'+
-            os.sep+
-            "image"+
-            os.sep+
-            self.text
-            )[0]
+        for item in text.split(":"):
+            try:
+                self.items.append([loaders.image(
+                    config.data_dir+
+                    os.sep+
+                    item.split("#")[0]
+                    )[0],item.split("#")[1]])
+            except:
+                print "no image : " +item
         if(self.sizex == 0):
             self.sizex = self.sizey
         self.image = pygame.transform.scale(self.image, (self.sizex, self.sizey))
     def load(self):
         self.surface = pygame.Surface((self.sizex,self.sizey/2))
         self.foreground = loaders.image(
-            MEDIA_DIRECTORY+
+            config.data_dir+
             os.sep+
             'gui'+
             os.sep+
-            general['THEME']+
+            config.general['THEME']+
             os.sep+
             "cover-foreground.png", scale=(self.sizex, self.sizey/2)
             )[0]
@@ -528,11 +546,11 @@ class WidgetCoverflow(Widget):
         self.elements['frameright']['width'] = self.sizex/3
         self.elements['frameright']['height'] = self.sizey/3
         self.frameright = loaders.image(
-            MEDIA_DIRECTORY+
+            config.data_dir+
             os.sep+
             'gui'+
             os.sep+
-            general['THEME']+
+            config.general['THEME']+
             os.sep+
             "cover-frame-small.png", scale=(self.sizex/3, self.sizey/3)
             )[0]
@@ -542,11 +560,11 @@ class WidgetCoverflow(Widget):
         self.elements['frame']['width'] = self.sizex/2
         self.elements['frame']['height'] = self.sizey/2
         self.frame = loaders.image(
-            MEDIA_DIRECTORY+
+            config.data_dir+
             os.sep+
             'gui'+
             os.sep+
-            general['THEME']+
+            config.general['THEME']+
             os.sep+
             "cover-frame-big.png", scale=(self.sizex/2, self.sizey/2)
             )[0]
@@ -568,35 +586,30 @@ class WidgetCoverflow(Widget):
                     self.hover = 'frameright'
                     self.frameright = self.frameright.copy()
                     self.frameright.blit(loaders.image(
-                                            MEDIA_DIRECTORY+
+                                            config.data_dir+
                                             os.sep+
                                             'gui'+
                                             os.sep+
-                                            general['THEME']+
+                                            config.general['THEME']+
                                             os.sep+
                                             "light.png", scale=(self.elements['frameright']['width'], self.elements['frameright']['height'])
                                             )[0], (0,0))
+                if event.type == pygame.MOUSEBUTTONUP:
+                    if self.num_item == 0:
+                        self.num_item = len(self.items)-1
+                    else:
+                        self.num_item = self.num_item -1
             elif self.hover == 'frameright':
                 self.frameright = loaders.image(
-                    MEDIA_DIRECTORY+
+                    config.data_dir+
                     os.sep+
                     'gui'+
                     os.sep+
-                    general['THEME']+
+                    config.general['THEME']+
                     os.sep+
                     "cover-frame-small.png", scale=(self.sizex/3, self.sizey/3)
                     )[0]
                 self.hover = ''
-            if event.type == pygame.MOUSEBUTTONUP:
-                self.frameright = loaders.image(
-                    MEDIA_DIRECTORY+
-                    os.sep+
-                    'gui'+
-                    os.sep+
-                    general['THEME']+
-                    os.sep+
-                    "cover-frame-small.png", scale=(self.sizex/2, self.sizey/2)
-                    )[0]
         except:
             print "it is a str"
         pass

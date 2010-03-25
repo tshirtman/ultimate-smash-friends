@@ -25,11 +25,9 @@ import loaders
 import time
 from config import Config
 
-config_ = Config.getInstance()
-config = config_.general
-MEDIA_DIRECTORY = config_.data_dir
-SIZE = (config['WIDTH'], 
-        config['HEIGHT'])
+config = Config.getInstance()
+SIZE = (config.general['WIDTH'], 
+        config.general['HEIGHT'])
 
 from debug_utils import draw_rect
 
@@ -83,7 +81,7 @@ class VectorBloc (Block):
         self.rects = rects
         self.relative = relative
         self.texture = os.path.join(
-                MEDIA_DIRECTORY,
+                config.data_dir,
                 "levels",
                 texture
                 )
@@ -122,7 +120,7 @@ class MovingPart (Block):
         #logging.debug('moving block created')
         self.rects = rects
         self.texture = os.path.join(
-                MEDIA_DIRECTORY,
+                config.data_dir,
                 "levels",
                 texture
                 )
@@ -213,7 +211,7 @@ class Level ( object ):
         xml = ElementTree.ElementTree(
                 None,
                 os.path.join(
-                    MEDIA_DIRECTORY,
+                    config.data_dir,
                     'levels',
                     levelname+os.extsep+'xml'
                     )
@@ -224,19 +222,19 @@ class Level ( object ):
         self.name = attribs['name']
 
         self.background = os.path.join(
-                    MEDIA_DIRECTORY,
+                    config.data_dir,
                     'levels',
                     attribs['background']
                     )
 
         self.level = os.path.join(
-                    MEDIA_DIRECTORY,
+                    config.data_dir,
                     'levels',
                     attribs['middle']
                     )
 
         self.foreground = os.path.join(
-                    MEDIA_DIRECTORY,
+                    config.data_dir,
                     'levels',
                     attribs['foreground']
                     )
@@ -268,7 +266,7 @@ class Level ( object ):
             self.layers.append(
                 (
                     os.path.join(
-                        MEDIA_DIRECTORY,
+                        config.data_dir,
                         'levels',
                         layer.attrib['image']
                         ),
@@ -360,14 +358,41 @@ class Level ( object ):
                 ]
             )
 
+    def draw_before_players(self, surface, level_place, zoom):
+        self.draw_background(surface)
+        self.draw_level( surface , level_place, zoom )
+        #logging.debug(self.level.moving_blocs)
+        for block in self.moving_blocs:
+            block.draw( surface, level_place, zoom)
+
+        for block in self.vector_blocs:
+            block.draw( surface, level_place, zoom)
+
+    def draw_after_players(self, surface, level_place, zoom):
+        self.draw_foreground(surface, level_place, zoom)
+        self.draw_minimap(surface)
+
+    def draw_minimap(self, surface):
+        for rect in self.map:
+            draw_rect(
+                    surface,
+                    pygame.Rect(
+                        (rect[0])/8,
+                        (rect[1])/8,
+                        rect[2]/8,
+                        rect[3]/8
+                        ),
+                    pygame.Color('grey')
+                    )
+
     def draw_background(self, surface, coords=(0,0)):
         surface.blit( loaders.image(self.background,
             scale=SIZE)[0], coords )
 
-    def draw_level(self, surface, coords=(0,0), zoom=1):
+    def draw_level(self, surface, coords, zoom):
         surface.blit( loaders.image(self.level, zoom=zoom)[0], coords)
 
-    def draw_foreground(self, surface, coords=(0,0), zoom=1):
+    def draw_foreground(self, surface, coords, zoom):
         surface.blit( loaders.image(self.foreground, zoom=zoom)[0], coords)
 
     def update(self, time):
