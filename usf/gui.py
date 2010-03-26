@@ -358,7 +358,7 @@ class Gui(object):
                                 str_return = self.select(self.widget_list_order[self.screen_current].index(self.widget_list[self.screen_current].keys()[self.widget_list[self.screen_current].values().index(widget)]))
                             elif(eventcurrent.type==pygame.MOUSEBUTTONUP):
                                 str_return = self.valid(self.widget_list_order[self.screen_current].index(self.widget_list[self.screen_current].keys()[self.widget_list[self.screen_current].values().index(widget)]))
-                            return widget.click(eventcurrent)
+                            widget.click(eventcurrent)
                             break
             return str_return
 
@@ -384,16 +384,13 @@ class Gui(object):
             self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][self.widgetselect]].state("hover")
         return ""
 
-    def valid(self,i, widget_id = None):
+    def valid(self,i):
         """
         /!\ documentation #TODO
 
         """
         str_return = ""
-        if widget_id != None:
-            id_widget = widget_id
-        else:
-            id_widget = self.widget_list_order[self.screen_current][i]
+        id_widget = self.widget_list_order[self.screen_current][i]
         self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][self.widgetselect]].state("norm")
         widget_action =self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][i]].action
 

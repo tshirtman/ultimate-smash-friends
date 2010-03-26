@@ -482,6 +482,33 @@ class Game (object):
                                 }
                                 )
 
+    def update_players(self, deltatime):
+        for player in (p for p in self.players if p.present ):
+            player.update(
+                    deltatime,
+                    self.gametime,
+                    self.tmp_surface,
+                    self,
+                    self.level_place,
+                    self.zoom
+                    )
+
+            # if the player is out of the level zone
+            if player.rect.collidelist([self.level.border,]) == -1:
+                self.events.append(
+                        timed_event.PlayerOut(
+                            (self.gametime, 0),
+                            params={
+                            'entity': player,
+                            'world': self,
+                            'gametime' : self.gametime
+                            }
+                            )
+                        )
+            if player.lives <= 0:
+                #logging.debug("player's DEAD")
+                player.present = False
+
     def update(self, debug_params={}):
         """
         sync everything to current time. Return "game" if we are still in game
@@ -511,35 +538,9 @@ class Game (object):
 
         self.update_events( deltatime )
 
-        # update level
         self.level.update(self.gametime)
 
-        # update players
-        for player in (p for p in self.players if p.present ):
-            player.update(
-                    deltatime,
-                    self.gametime,
-                    self.tmp_surface,
-                    self,
-                    self.level_place,
-                    self.zoom
-                    )
-
-            # if the player is out of the level zone
-            if player.rect.collidelist([self.level.border,]) == -1:
-                self.events.append(
-                        timed_event.PlayerOut(
-                            (self.gametime, 0),
-                            params={
-                            'entity': player,
-                            'world': self,
-                            'gametime' : self.gametime
-                            }
-                            )
-                        )
-            if player.lives <= 0:
-                #logging.debug("player's DEAD")
-                player.present = False
+        self.update_players(deltatime)
 
         self.update_physics()
 
