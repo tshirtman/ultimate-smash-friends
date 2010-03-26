@@ -79,6 +79,7 @@ class Game (object):
         self.type = 'local'
         self.screen = screen
 
+        self.items = []
         self.events = []
         self.gametime = 0
 
@@ -95,8 +96,43 @@ class Game (object):
 
             # loading players
 
-        self.players = []
+        self.load_players(players_)
+        if screen is not None:
+            self.icon_space = SIZE[0]/len(players_)
+
+        # various other initialisations
+        self.last_clock = time.time()
+
+        ## adding test events.
+        self.events.append(
+            timed_event.ItemShower(
+                (None, None),
+                {
+                'freq': 15,
+                'world': self
+                }
+                )
+            )
+
+        # a countdown to the game end
+        self.ending = 5.0
+        #logging.debug('DONE')
+
+    def __del__(self):
+        """
+        destructor method of game, just useful for loging.
+
+        """
+        logging.debug('game deleted')
+
+    def load_players(self, players_):
+        """
+        this function is responsible of adding the requested players to the
+        game.
+
+        """
         logging.debug('loading players')
+        self.players = []
         for i,player in enumerate(players_):
             logging.debug('player '+str(i)+' loaded')
             if player is not None:
@@ -120,27 +156,9 @@ class Game (object):
                                 ((i+1)*SIZE[0]/5,100)
                                 )
                             )
-        if screen is not None:
-            self.icon_space = SIZE[0]/len(players_)
 
-        # various other initialisations
-        self.last_clock = time.time()
-
-        self.items = []
-
-        ## adding test events.
-        self.events.append(
-            timed_event.ItemShower(
-                (None, None),
-                {
-                'freq': 15,
-                'world': self
-                }
-                )
-            )
-
-        # insert players in game
-        #logging.debug('players insertion in game')
+        # events to make players appear into game
+        # logging.debug('players insertion in game')
         for pl in self.players:
             self.events.append(
                 timed_event.DropPlayer(
@@ -152,17 +170,6 @@ class Game (object):
                     }
                     )
                 )
-
-        # a countdown to the game end
-        self.ending = 5.0
-        #logging.debug('DONE')
-
-    def __del__(self):
-        """
-        destructor method of game, just useful for loging.
-
-        """
-        logging.debug('game deleted')
 
     def addItem(self, item='heal', place=(550,50), reversed=False,vector=(0,0)):
         """
