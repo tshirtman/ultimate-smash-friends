@@ -223,6 +223,7 @@ class Gui(object):
         self.game_data['character_file'][p]
         for p in self.players if p != -1
         ]
+
         for i in xrange(len(players)):
             if self.widget_list['characters.usfgui']["ai" + str(i)].text == "True":
                 players[i] = players[i].replace("characters/", "characters/AI")

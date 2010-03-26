@@ -135,27 +135,26 @@ class Game (object):
         self.players = []
         for i,player in enumerate(players_):
             logging.debug('player '+str(i)+' loaded')
-            if player is not None:
                 #logging.debug(player)
-                if "AI" in player.split(os.sep)[1][:2]:
-                    self.players.append(
-                            entity.Entity(
-                                i+1,
-                                self,
-                                player.replace("AI", ""),
-                                ((i+1)*SIZE[0]/5,100)
-                                )
+            if player and "AI" in player.split(os.sep)[1][:2]:
+                self.players.append(
+                        entity.Entity(
+                            i+1,
+                            self,
+                            player.replace("AI", ""),
+                            ((i+1)*SIZE[0]/5,100)
                             )
-                    self.players[len(self.players)-1].ai = True
-                else:
-                    self.players.append(
-                            entity.Entity(
-                                i+1,
-                                self,
-                                player,
-                                ((i+1)*SIZE[0]/5,100)
-                                )
+                        )
+                self.players[len(self.players)-1].ai = True
+            else:
+                self.players.append(
+                        entity.Entity(
+                            i+1,
+                            self,
+                            player,
+                            ((i+1)*SIZE[0]/5,100)
                             )
+                        )
 
         # events to make players appear into game
         # logging.debug('players insertion in game')
