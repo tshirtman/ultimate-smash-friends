@@ -7,6 +7,6 @@ import gettext
 from config import Config
 
 config = Config.getInstance()
-locale_dir = os.path.join(config.data_dir, "locale")
+locale_dir = os.path.join(config.sys_data_dir, "locale")
 gettext.install("messages", locale_dir)
 

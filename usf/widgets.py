@@ -43,12 +43,12 @@ class Widget (object):
     color="white"
     def __init__(self, screen):
         self.game_font = pygame.font.Font(
-            config.data_dir +
+            config.sys_data_dir +
             os.sep +
             "gui" +os.sep + config.general['THEME'] + os.sep +
             "font.otf", screen.get_height()/20)
         self.screen = screen
-        xml_file = xml.dom.minidom.parse(config.data_dir+
+        xml_file = xml.dom.minidom.parse(config.sys_data_dir+
             os.sep+
             'gui'+
             os.sep+ config.general['THEME'] + os.sep + "theme.xml").getElementsByTagName("theme")[0]
@@ -146,7 +146,7 @@ class WidgetCheckbox(Widget):
             self.sizex = self.sizey
         if self.text == "True" :
             self.image = loaders.image(
-                config.data_dir+
+                config.sys_data_dir+
                 os.sep+
                 'gui'+
                 os.sep+
@@ -156,7 +156,7 @@ class WidgetCheckbox(Widget):
                 )[0]
         else :
             self.image = loaders.image(
-                config.data_dir+
+                config.sys_data_dir+
                 os.sep+
                 'gui'+
                 os.sep+
@@ -210,7 +210,7 @@ class WidgetIcon(Widget):
         (self.posx + self.sizex/10, self.posy+self.sizey/2-self.screen.get_height()/50)
         )
     def load(self):
-        path = (config.data_dir+
+        path = (config.sys_data_dir+
             os.sep+
             'gui'+
             os.sep+
@@ -218,7 +218,7 @@ class WidgetIcon(Widget):
             os.sep+
             'back_button.png')
         self.background = loaders.image(path, scale=(self.sizex, self.sizey))[0]
-        self.background_hover = loaders.image(config.data_dir+
+        self.background_hover = loaders.image(config.sys_data_dir+
             os.sep+
             'gui'+
             os.sep+
@@ -251,9 +251,9 @@ class WidgetImageButton(Widget):
         elif (self.state_str == "hover"):
             self.drawHover()
     def setText(self, text):
-        self.text = text.replace("theme/", config.data_dir + os.sep)
+        self.text = text.replace("theme/", config.sys_data_dir + os.sep)
         self.image = loaders.image(
-            config.data_dir+
+            config.sys_data_dir+
             os.sep+
             'gui'+
             os.sep+
@@ -283,7 +283,7 @@ class WidgetImage(Widget):
             self.sizex = self.sizey
         self.text = text.replace("/", os.sep)
         self.image = loaders.image(
-            config.data_dir+
+            config.sys_data_dir+
             os.sep+
             self.text, scale=(self.sizex, self.sizey)
             )[0]
@@ -422,7 +422,7 @@ class WidgetTextarea(Widget):
         (self.posx + self.sizex/10, self.posy+self.sizey/2-self.screen.get_height()/50)
         )
     def load(self):
-        self.background = pygame.image.load(config.data_dir+
+        self.background = pygame.image.load(config.sys_data_dir+
             os.sep+
             'gui'+
             os.sep+
@@ -431,7 +431,7 @@ class WidgetTextarea(Widget):
             'back_button.png').convert_alpha()
         self.background  = pygame.transform.scale(self.background, (self.sizex, self.sizey))
         #self.background.set_colorkey((255,255,255))
-        self.background_hover = pygame.image.load(config.data_dir+
+        self.background_hover = pygame.image.load(config.sys_data_dir+
             os.sep+
             'gui'+
             os.sep+
@@ -442,7 +442,7 @@ class WidgetTextarea(Widget):
         #self.background_hover.set_colorkey((255,255,255))
 pygame.font.init()
 game_font = pygame.font.Font(
-            config.data_dir +
+            config.sys_data_dir +
             os.sep +
             "gui" +os.sep + config.general['THEME'] + os.sep +
             "font.otf", config.general['HEIGHT']/20)
@@ -521,7 +521,7 @@ class WidgetCoverflow(Widget):
         for item in text.split(":"):
             try:
                 self.items.append([loaders.image(
-                    config.data_dir+
+                    config.sys_data_dir+
                     os.sep+
                     item.split("#")[0]
                     )[0],item.split("#")[1]])
@@ -533,7 +533,7 @@ class WidgetCoverflow(Widget):
     def load(self):
         self.surface = pygame.Surface((self.sizex,self.sizey/2))
         self.foreground = loaders.image(
-            config.data_dir+
+            config.sys_data_dir+
             os.sep+
             'gui'+
             os.sep+
@@ -547,7 +547,7 @@ class WidgetCoverflow(Widget):
         self.elements['frameright']['width'] = self.sizex/3
         self.elements['frameright']['height'] = self.sizey/3
         self.frameright = loaders.image(
-            config.data_dir+
+            config.sys_data_dir+
             os.sep+
             'gui'+
             os.sep+
@@ -561,7 +561,7 @@ class WidgetCoverflow(Widget):
         self.elements['frame']['width'] = self.sizex/2
         self.elements['frame']['height'] = self.sizey/2
         self.frame = loaders.image(
-            config.data_dir+
+            config.sys_data_dir+
             os.sep+
             'gui'+
             os.sep+
@@ -587,7 +587,7 @@ class WidgetCoverflow(Widget):
                     self.hover = 'frameright'
                     self.frameright = self.frameright.copy()
                     self.frameright.blit(loaders.image(
-                                            config.data_dir+
+                                            config.sys_data_dir+
                                             os.sep+
                                             'gui'+
                                             os.sep+
@@ -608,7 +608,7 @@ class WidgetCoverflow(Widget):
                     self.hover = 'frameleft'
                     self.frameleft = self.frameleft.copy()
                     self.frameleft.blit(loaders.image(
-                                            config.data_dir+
+                                            config.sys_data_dir+
                                             os.sep+
                                             'gui'+
                                             os.sep+
@@ -628,7 +628,7 @@ class WidgetCoverflow(Widget):
                 return "self.valid(0, 'quit')"
             elif self.hover != '':
                 self.frameright = loaders.image(
-                    config.data_dir+
+                    config.sys_data_dir+
                     os.sep+
                     'gui'+
                     os.sep+

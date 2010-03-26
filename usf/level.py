@@ -81,7 +81,7 @@ class VectorBloc (Block):
         self.rects = rects
         self.relative = relative
         self.texture = os.path.join(
-                config.data_dir,
+                config.sys_data_dir,
                 "levels",
                 texture
                 )
@@ -120,7 +120,7 @@ class MovingPart (Block):
         #logging.debug('moving block created')
         self.rects = rects
         self.texture = os.path.join(
-                config.data_dir,
+                config.sys_data_dir,
                 "levels",
                 texture
                 )
@@ -211,7 +211,7 @@ class Level ( object ):
         xml = ElementTree.ElementTree(
                 None,
                 os.path.join(
-                    config.data_dir,
+                    config.sys_data_dir,
                     'levels',
                     levelname+os.extsep+'xml'
                     )
@@ -222,19 +222,19 @@ class Level ( object ):
         self.name = attribs['name']
 
         self.background = os.path.join(
-                    config.data_dir,
+                    config.sys_data_dir,
                     'levels',
                     attribs['background']
                     )
 
         self.level = os.path.join(
-                    config.data_dir,
+                    config.sys_data_dir,
                     'levels',
                     attribs['middle']
                     )
 
         self.foreground = os.path.join(
-                    config.data_dir,
+                    config.sys_data_dir,
                     'levels',
                     attribs['foreground']
                     )
@@ -266,7 +266,7 @@ class Level ( object ):
             self.layers.append(
                 (
                     os.path.join(
-                        config.data_dir,
+                        config.sys_data_dir,
                         'levels',
                         layer.attrib['image']
                         ),

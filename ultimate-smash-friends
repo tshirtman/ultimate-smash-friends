@@ -192,7 +192,7 @@ class Main(object):
         self.screen = pygame.display.set_mode(SIZE)
         pygame.display.set_caption('Ultimate Smash Friends')
         icon = loaders.image(
-            config.data_dir+
+            config.sys_data_dir+
             os.sep+
             'gui'+
             os.sep+
@@ -203,7 +203,7 @@ class Main(object):
             pygame.display.toggle_fullscreen()
 
         # following operation can be quite long, so a loading screen is good
-        image = loaders.image(config.data_dir +
+        image = loaders.image(config.sys_data_dir +
 os.sep+
             'gui'+
             os.sep+

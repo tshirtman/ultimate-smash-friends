@@ -412,7 +412,7 @@ class Entity (object):
             if self.shield['on']:
                 image = loaders.image(
                             os.path.sep.join(
-                                (config.data_dir,'misc','shield.png')
+                                (config.sys_data_dir,'misc','shield.png')
                                 ),
                                 zoom=zoom*self.shield['power']*3
                             )

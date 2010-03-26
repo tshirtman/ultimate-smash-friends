@@ -87,7 +87,7 @@ class Game (object):
         if screen is not None:
             self.font = pygame.font.Font(None, 20)
             self.zoom = 1
-            #self.testimage=load_image(os.path.join(config.data_dir,'items','item-heal'+os.extsep+'png')[0]
+            #self.testimage=load_image(os.path.join(config.sys_data_dir,'items','item-heal'+os.extsep+'png')[0]
             # time for a loading screen ain't it?
             # loading level
             self.level_place = [0, 0]
@@ -176,7 +176,7 @@ class Game (object):
 
         """
         try:
-            os.listdir(os.path.join( config.data_dir, 'items', item))
+            os.listdir(os.path.join( config.sys_data_dir, 'items', item))
             self.items.append(
                     entity.Entity(
                         None,
@@ -252,7 +252,7 @@ class Game (object):
                 self.screen.blit(
                         image(
                             os.path.join(
-                                config.data_dir,
+                                config.sys_data_dir,
                                 'misc',
                                 'heart.png'
                                 )

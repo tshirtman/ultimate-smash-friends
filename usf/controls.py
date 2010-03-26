@@ -76,7 +76,7 @@ class Controls (object):
         self.sequences = []
         self.player_sequences = [[],[],[],[]]
         sequences_file = open(os.path.join(
-                config.data_dir,
+                config.sys_data_dir,
                 'sequences'+os.extsep+'cfg')
                               , 'r')
         sequence_tmpl = []

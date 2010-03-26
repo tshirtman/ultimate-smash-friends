@@ -37,11 +37,9 @@ except:
 
 from config import Config
 
-config_ = Config.getInstance()
-config = config_.general
-MEDIA_DIRECTORY = config_.data_dir
-SIZE = (config['WIDTH'], 
-        config['HEIGHT'])
+config = Config.getInstance()
+SIZE = (config.general['WIDTH'], 
+        config.general['HEIGHT'])
 
 from debug_utils import draw_rect
 
@@ -104,7 +102,7 @@ def image(name, *args, **kwargs):
                 )
         scale = kwargs['scale']
         kwargs['scale'] = None
-        if config['SMOOTHSCALE'] == "True":
+        if config.general['SMOOTHSCALE'] == "True":
             image = pygame.transform.smoothscale(
                 loaders.image(name, *args, **kwargs)[0],
                 scale
@@ -119,7 +117,7 @@ def image(name, *args, **kwargs):
         zoom = kwargs['zoom']
         kwargs['zoom'] = None
         #logging.debug('scaling image '+name+' :'+str(zoom))
-        if config['SMOOTHSCALE'] == "True":
+        if config.general['SMOOTHSCALE'] == "True":
             image = pygame.transform.smoothscale(
                     loaders.image(name, **kwargs)[0],
                     (

@@ -68,7 +68,7 @@ class Entity_skin (object):
 
         else:
             file = os.path.join(
-                        config.data_dir,
+                        config.sys_data_dir,
                         dir_name,
                         dir_name.split(os.sep)[-1]
                         +os.extsep+'xml'
@@ -87,7 +87,7 @@ class Entity_skin (object):
         if not server:
             self.image = loaders.image(
                     os.path.join(
-                        config.data_dir,
+                        config.sys_data_dir,
                         dir_name,
                         attribs['image']
                         )
@@ -145,7 +145,7 @@ class Entity_skin (object):
                     sounds.append(
                             pygame.mixer.Sound(
                                 os.path.join(
-                                    config.data_dir,
+                                    config.sys_data_dir,
                                     dir_name,
                                     sound.attrib['filename']
                                     )
@@ -158,7 +158,7 @@ class Entity_skin (object):
 
             for frame in movement.findall('frame'):
                 image = os.path.join(
-                            config.data_dir,
+                            config.sys_data_dir,
                             dir_name,
                             frame.attrib['image']
                             )

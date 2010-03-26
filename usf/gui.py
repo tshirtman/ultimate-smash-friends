@@ -144,7 +144,7 @@ class Gui(object):
         #create a character for every directory in the characters directory.
         files = os.listdir(
                 os.path.join(
-                    config.data_dir,
+                    config.sys_data_dir,
                     'characters'
                     )
                 )
@@ -175,7 +175,7 @@ class Gui(object):
         #create a level image for every directory in the level directory.
         files = os.listdir(
                 os.path.join(
-                    config.data_dir,
+                    config.sys_data_dir,
                     'levels'
                     )
                 )
@@ -192,7 +192,7 @@ class Gui(object):
         self.sizex = self.screen.get_width()
         self.sizey = self.screen.get_height()
         self.key_list={}
-        xml_file = xml.dom.minidom.parse(config.data_dir+
+        xml_file = xml.dom.minidom.parse(config.sys_data_dir+
             os.sep+
             'gui'+
             os.sep+
@@ -245,7 +245,7 @@ class Gui(object):
         global skin
         self.widget_list[filename] = {}
         self.widget_list_order[filename] = []
-        xml_file = xml.dom.minidom.parse(config.data_dir+
+        xml_file = xml.dom.minidom.parse(config.sys_data_dir+
             os.sep+
             'gui'+
             os.sep+ filename).getElementsByTagName("gui")[0]
@@ -541,7 +541,7 @@ class Gui(object):
         """
         global skin
         back = loaders.image(
-            config.data_dir+
+            config.sys_data_dir+
             os.sep+
             "gui"+
             os.sep +
@@ -573,7 +573,7 @@ class Skin (object):
     background = []
     background_duration = []
     def __init__(self):
-        xml_file = xml.dom.minidom.parse(config.data_dir+
+        xml_file = xml.dom.minidom.parse(config.sys_data_dir+
             os.sep+
             'gui'+
             os.sep+ config.general['THEME'] + os.sep + "theme.xml").getElementsByTagName("theme")[0]
@@ -604,7 +604,7 @@ class Dialog(object):
     def __init__(self, screen, name):
         global skin
         self.background = loaders.image(
-            config.data_dir+
+            config.sys_data_dir+
             os.sep+
             'gui'+
             os.sep+

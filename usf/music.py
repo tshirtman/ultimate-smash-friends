@@ -46,12 +46,12 @@ class Music (object):
         for plist in ['menu','game','credits','victory']:
             self.playlists[plist] = [
                                     os.path.join(
-                                    config.data_dir,
+                                    config.sys_data_dir,
                                     'music',
                                     'ogg',file)
                                 for file
                                 in os.listdir(os.path.join(
-                                    config.data_dir,
+                                    config.sys_data_dir,
                                     'music',
                                     'ogg'))\
                                 if plist in file
