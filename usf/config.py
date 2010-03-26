@@ -29,7 +29,8 @@
 """
 from __future__ import with_statement
 
-from os import environ, makedirs, path, stat
+from os import environ, makedirs, stat
+from os.path import join, dirname, abspath
 from sys import prefix
 from ConfigParser import SafeConfigParser
 import platform
@@ -56,6 +57,7 @@ class Option(dict):
     def __setitem__(self, option, value):
         self.__parser.set(self.name, option, str(value))
         dict.__setitem__(self, option, value)
+        # automatically save recently changed value to file
         with open(self.__config, 'wb') as config_file:
             self.__parser.write(config_file)
 
@@ -74,6 +76,8 @@ class Option(dict):
                     return False
                 else:
                     return item
+
+
 class Config(Singleton):
     """ Object that implements automatic saving.
 
@@ -91,55 +95,58 @@ class Config(Singleton):
         self.__parser = SafeConfigParser()
         self.__parser.optionxform=str
 
-        (self.config_dir, self.sys_config_file,
-         self.user_config_file, self.data_dir) = self.__get_locations()
+        (self.config_dir, self.sys_config_file, self.user_config_file, 
+         self.sys_data_dir, self.user_data_dir) = self.__get_locations()
+
         # load sys config options and replace with defined user config options
         self.read([self.sys_config_file, self.user_config_file])
         self.save()
 
     def __get_locations(self):
-        """ returns the appropriate locations of the config directory, system
-            config file, user config file, and datadirectories according to the
-            user's platform
+        """ returns the appropriate locations of the config directory, config
+            files, and data directories according to the user's platform
         """
 
         # may need to expand once other platforms are tested
         if OS == 'windows':
-            # set the config directory to the parent directory of this script
-            config_dir = path.dirname(path.abspath(path.join(__file__, '..')))
-            sys_config_file = path.join(config_dir, 'system.cfg')
-            user_config_file = path.join(config_dir, 'user.cfg')
-            data_dir = path.join(config_dir, 'data')
-        else:
+            """ from what I can understand, windows saves user data/config info
+                inside of an APPDATA environment variable. I am hold off on
+                writing this portion until we get a working setup.py, py2exe or
+                similar so that proper testing can be done. From there, filling
+                in the blanks should be trivial
+            """
+            pass
+        elif OS == 'linux':
             try:
-                # determine if usf has been installed. If not, use config_dir as the data
-                # dir, similar to windows
-                data_dir = path.join(prefix, 'share', 
-                                     'ultimate-smash-friends', 'data')
-                stat(data_dir)
-                sys_config_file = path.join('/etc', 'ultimate-smash-friends', 
-                                            'system.cfg')
+                # see if files are installed on the system
+                stat(join(prefix, 'share', 'ultimate-smash-friends'))
 
+                # set the variables according to HOME variable
                 if 'XDG_CONFIG_HOME' in environ.keys():
-                    config_dir = path.join(environ['XDG_CONFIG_HOME'], 'usf')
+                    config_dir = join(environ['XDG_CONFIG_HOME'],
+                                      'ultimate-smash-friends')
                 else:
-                    config_dir = path.join(environ['HOME'], '.config', 'usf')
+                    config_dir = join(environ['HOME'], '.config', 'usf')
 
-                user_config_file = path.join(config_dir, 'user.cfg')
             except OSError:
-                config_dir = path.dirname(path.abspath(path.join(__file__, '..')))
-                sys_config_file = path.join(config_dir, 'system.cfg')
-                user_config_file = path.join(config_dir, 'user.cfg')
-                data_dir = path.join(config_dir, 'data')
+                # set config_dir to the parent directory of this module
+                config_dir = dirname(abspath(join(__file__, '..')))
 
-        # create config directory and user config file
+            sys_config_file = join(config_dir, 'system.cfg')
+            user_config_file = join(config_dir, 'user.cfg')
+            sys_data_dir = join(config_dir, 'data')
+            user_data_dir = join(config_dir, 'user_data')
+
         try:
-            logging.debug('creating new config directory')
+            # create user config and user data directories
             makedirs(config_dir)
+            makedirs(user_data_dir)
         except OSError:
-           pass
-
-        return config_dir, sys_config_file, user_config_file, data_dir
+            # paths already exist or user doesn't have permissions
+            pass
+        
+        return (config_dir, sys_config_file, user_config_file, 
+                sys_data_dir, user_data_dir)
 
     def save(self):
         with open(self.user_config_file, 'wb') as config_file:
