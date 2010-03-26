@@ -359,7 +359,8 @@ class Gui(object):
                                 str_return = self.select(self.widget_list_order[self.screen_current].index(self.widget_list[self.screen_current].keys()[self.widget_list[self.screen_current].values().index(widget)]))
                             elif(eventcurrent.type==pygame.MOUSEBUTTONUP):
                                 str_return = self.valid(self.widget_list_order[self.screen_current].index(self.widget_list[self.screen_current].keys()[self.widget_list[self.screen_current].values().index(widget)]))
-                            widget.click(eventcurrent)
+                            if(str_return == ""):
+                                return widget.click(eventcurrent)
                             break
             return str_return
 
@@ -385,13 +386,16 @@ class Gui(object):
             self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][self.widgetselect]].state("hover")
         return ""
 
-    def valid(self,i):
+    def valid(self,i, widget_id = None):
         """
         /!\ documentation #TODO
 
         """
         str_return = ""
-        id_widget = self.widget_list_order[self.screen_current][i]
+        if widget_id != None:
+            id_widget = widget_id
+        else:
+            id_widget = self.widget_list_order[self.screen_current][i]
         self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][self.widgetselect]].state("norm")
         widget_action =self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][i]].action
 
@@ -550,7 +554,7 @@ class Gui(object):
             skin.background[self.image], scale=(config.general['WIDTH'], config.general['HEIGHT'])
             )[0].convert()
         back.set_alpha(250)
-        if(self.state == "game"):
+        if(self.state == "game" and self.screen_shot is not None):
             self.screen.blit(self.screen_shot,(0,0))
         if not self.dialog.has_key(self.screen_current):
             self.screen.blit(back,(0,0))
