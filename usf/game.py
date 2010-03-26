@@ -350,49 +350,36 @@ class Game (object):
                 elif len(notif[2]) is not len(notif[1]):
                     notif[2] = notif[2] + notif[1][len(notif[2])]
                 if(notif[0] +4 > time.time()):
-                    self.screen.blit(game_font.render(
-                                            str(notif[2]),
-                                            True,
-                                            pygame.color.Color("black")),
-                                            (SIZE[0]/4, self.notif.index(notif)*SIZE[1]/20)
-                                                )
+                    self.screen.blit(
+                            game_font.render(
+                                str(notif[2]),
+                                True,
+                                pygame.color.Color("black")
+                                ),
+                            (
+                             SIZE[0]/4,
+                             self.notif.index(notif)*SIZE[1]/20
+                            )
+                            )
                 else:
                     self.notif.remove(notif)
             else:
                 if(notif[0] +4 > time.time()):
-                    self.screen.blit(game_font.render(
-                                            str(notif[1]),
-                                            True,
-                                            pygame.color.Color("black")),
-                                            (SIZE[0]/4, self.notif.index(notif)*SIZE[1]/20)
-                                                )
+                    self.screen.blit(
+                            game_font.render(
+                                str(notif[1]),
+                                True,
+                                pygame.color.Color("black")
+                                ),
+                            (
+                             SIZE[0]/4,
+                             self.notif.index(notif)*SIZE[1]/20
+                            )
+                            )
                 else:
                     self.notif.remove(notif)
-    def update(self, debug_params={}):
-        """
-        sync everything to current time. Return "game" if we are still in game
-        mode, return "menu" otherwise.
 
-        """
-        # calculate elapsed time
-        deltatime = 0
-
-        # frame limiter
-        while deltatime < 1.0/config.general['MAX_FPS']:
-            deltatime = time.time() - self.last_clock
-
-        self.gametime += deltatime
-        sys.stdout.write("\r"+str(self.gametime))
-        sys.stdout.flush()
-
-        self.last_clock = time.time()
-
-        if deltatime > .25:
-            # if true we are lagging, prevent anything from happening until next
-            # frame (and forget about passed time).
-            logging.debug("too slow, forget this frame!")
-            return "game"
-
+    def center_zoom_camera(self):
         present_players = [ i for i in self.players if i.present ]
         if len(present_players) is not 0:
             if len(present_players) == 1:
@@ -439,39 +426,12 @@ class Game (object):
                  -(players_barycenter[0])*self.zoom+SIZE[0]/2 ,
                  -(players_barycenter[1])*self.zoom+SIZE[1]/2 
                  ]
+    def update_physics(self):
+        """
+        all physical interaction here would probably better in a physics
+        engine, but lie here for now.
 
-        self.update_events( deltatime )
-
-        # update level
-        self.level.update(self.gametime)
-
-        # update players
-        for player in (p for p in self.players if p.present ):
-            player.update(
-                    deltatime,
-                    self.gametime,
-                    self.tmp_surface,
-                    self,
-                    self.level_place,
-                    self.zoom
-                    )
-
-            # if the player is out of the level zone
-            if player.rect.collidelist([self.level.border,]) == -1:
-                self.events.append(
-                        timed_event.PlayerOut(
-                            (self.gametime, 0),
-                            params={
-                            'entity': player,
-                            'world': self,
-                            'gametime' : self.gametime
-                            }
-                            )
-                        )
-            if player.lives <= 0:
-                #logging.debug("player's DEAD")
-                player.present = False
-
+        """
         # FIXME: would be good to relocate this in an entity method, and
         # just loop on all the entities here.
 
@@ -521,6 +481,67 @@ class Game (object):
                                 'entity': item
                                 }
                                 )
+
+    def update(self, debug_params={}):
+        """
+        sync everything to current time. Return "game" if we are still in game
+        mode, return "menu" otherwise.
+
+        """
+        # calculate elapsed time
+        deltatime = 0
+
+        # frame limiter
+        while deltatime < 1.0/config.general['MAX_FPS']:
+            deltatime = time.time() - self.last_clock
+
+        self.gametime += deltatime
+        #sys.stdout.write("\r"+str(self.gametime))
+        #sys.stdout.flush()
+
+        self.last_clock = time.time()
+
+        if deltatime > .25:
+            # if true we are lagging, prevent anything from happening until next
+            # frame (and forget about passed time).
+            logging.debug("too slow, forget this frame!")
+            return "game"
+
+        self.center_zoom_camera()
+
+        self.update_events( deltatime )
+
+        # update level
+        self.level.update(self.gametime)
+
+        # update players
+        for player in (p for p in self.players if p.present ):
+            player.update(
+                    deltatime,
+                    self.gametime,
+                    self.tmp_surface,
+                    self,
+                    self.level_place,
+                    self.zoom
+                    )
+
+            # if the player is out of the level zone
+            if player.rect.collidelist([self.level.border,]) == -1:
+                self.events.append(
+                        timed_event.PlayerOut(
+                            (self.gametime, 0),
+                            params={
+                            'entity': player,
+                            'world': self,
+                            'gametime' : self.gametime
+                            }
+                            )
+                        )
+            if player.lives <= 0:
+                #logging.debug("player's DEAD")
+                player.present = False
+
+        self.update_physics()
 
         #update items
         for item in self.items:
