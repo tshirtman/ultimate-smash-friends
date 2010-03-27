@@ -167,7 +167,7 @@ class Main(object):
                 self.go()
 
             else:
-                self.screen.blit(
+                """self.screen.blit(
                     self.game_font.render(
                         "menus...",
                         True,
@@ -176,7 +176,7 @@ class Main(object):
                             )
                         ),
                     (30, 4*SIZE[1]/5)
-                    )
+                    )"""
 
                 pygame.display.update()
 

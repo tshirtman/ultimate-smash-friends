@@ -641,3 +641,32 @@ class WidgetCoverflow(Widget):
         except:
             print "it is a str"
         return ""
+class WidgetProgressBar(Widget):
+    i = 0
+    progress_pos = (config.general['WIDTH']/2-config.general['WIDTH']/4, config.general['HEIGHT']/2-config.general['HEIGHT']/20*0.5)
+    def load(self):
+        self.back_progress = loaders.image(
+            config.sys_data_dir+
+            os.sep+
+            "gui"+
+            os.sep +
+            config.general['THEME']+
+            os.sep+
+            "progressbar_back.png", scale=(config.general['WIDTH']/2,config.general['HEIGHT']/20)
+            )[0]
+        self.fore_progress = loaders.image(
+            config.sys_data_dir+
+            os.sep+
+            "gui"+
+            os.sep +
+            config.general['THEME']+
+            os.sep+
+            "progressbar_fore.png", scale=(config.general['WIDTH']/20,config.general['HEIGHT']/20)
+            )[0]
+    def draw(self):
+        if(self.i == 8):
+            self.i = 0
+        else:
+            self.i+=2
+        self.screen.blit(self.back_progress, self.progress_pos)
+        self.screen.blit(self.fore_progress, (self.progress_pos[0]+self.i*config.general['WIDTH']/20,self.progress_pos[1]))
