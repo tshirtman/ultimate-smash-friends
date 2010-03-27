@@ -24,6 +24,6 @@
 <label value="AI : " posx="50" posy="77" id="ai_label3" />
 <checkbox value="" posx="60" posy="77" sizey="7" sizex="0" id="ai3" action="" />
 
-<button value="Next" posx="60" posy="90" sizey="8" sizex="20" id="gotolevel" action="" />
+<button value="Next" posx="60" posy="87" sizey="10" sizex="20" id="gotolevel" action="" />
 <parent>main.usfgui</parent>
 </gui>

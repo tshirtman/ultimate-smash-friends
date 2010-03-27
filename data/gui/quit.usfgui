@@ -1,6 +1,6 @@
 <gui>
 <label value="Quit ?" posx="30" posy="30" sizey="0" sizex="0" id="label" />
-<button value="Yes" posx="40" posy="55" sizey="8" sizex="20" id="quit" action="pygame.event.post( pygame.event.Event(QUIT) )" />
-<button value="No" posx="40" posy="65" sizey="8" sizex="20" id="credits" action="goto:main.usfgui" />
+<button value="Yes" posx="40" posy="55" sizey="10" sizex="20" id="quit" action="pygame.event.post( pygame.event.Event(QUIT) )" />
+<button value="No" posx="40" posy="68" sizey="10" sizex="20" id="credits" action="goto:main.usfgui" />
 <parent>main.usfgui</parent>
 </gui>

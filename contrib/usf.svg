@@ -466,15 +466,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.40113828"
-     inkscape:cx="-432.17606"
-     inkscape:cy="774.54902"
+     inkscape:cx="471.50234"
+     inkscape:cy="773.35081"
      inkscape:document-units="px"
      inkscape:current-layer="g3207"
      showgrid="false"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:window-width="1920"
-     inkscape:window-height="1124"
+     inkscape:window-width="1280"
+     inkscape:window-height="951"
      inkscape:window-x="0"
      inkscape:window-y="25"
      inkscape:window-maximized="1">
@@ -494,7 +494,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -558,7 +558,10 @@
          height="100"
          width="360"
          id="rect2385"
-         style="opacity:0.33606557;fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:1.50000000000000000;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+         style="opacity:0.33606557;fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:1.50000000000000000;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         inkscape:export-filename="/home/xapantu/ultimate-smash-friends/data/gui/japan/back_button_hover.png"
+         inkscape:export-xdpi="90"
+         inkscape:export-ydpi="90" />
       <rect
          ry="24.947903"
          y="472.36218"
@@ -566,7 +569,10 @@
          height="100"
          width="360"
          id="rect3167"
-         style="opacity:0.79653679;fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:1.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+         style="opacity:0.79653679;fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:1.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         inkscape:export-filename="/home/xapantu/ultimate-smash-friends/data/gui/japan/back_button.png"
+         inkscape:export-xdpi="90"
+         inkscape:export-ydpi="90" />
       <rect
          ry="24.947903"
          y="592.36218"
@@ -971,7 +977,7 @@
          height="106.22027"
          width="107.80095"
          id="rect2385-1"
-         style="opacity:0.85106387;fill:#ff3b00;fill-opacity:1;stroke:none"
+         style="opacity:0.79700000000000004;fill:#ff0000;fill-opacity:1;stroke:none"
          inkscape:export-filename="/home/xapantu/Documents/ultimate-smash-friends/code/data/gui/friend/checkbox_empty.png"
          inkscape:export-xdpi="23.782238"
          inkscape:export-ydpi="23.782238"
@@ -994,12 +1000,12 @@
          transform="matrix(-0.6900901,-0.72372347,0.72372347,-0.6900901,0,0)" />
       <rect
          ry="15.864746"
-         y="915.96204"
-         x="766.2193"
+         y="970.80597"
+         x="816.07739"
          height="106.22027"
          width="403.06171"
          id="rect2385-1-1"
-         style="opacity:0.5035461;fill:#ff3b00;fill-opacity:1;stroke:none"
+         style="opacity:0.50354614;fill:#ff3b00;fill-opacity:1;stroke:none"
          inkscape:export-filename="/home/xapantu/Documents/ultimate-smash-friends/code/data/gui/friend/back_button_hover.png"
          inkscape:export-xdpi="31.725134"
          inkscape:export-ydpi="31.725134"
