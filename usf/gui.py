@@ -430,7 +430,6 @@ class Gui(object):
             id_widget = widget_id
         else:
             id_widget = self.widget_list_order[self.screen_current][i]
-        print id_widget
         self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][self.widgetselect]].state("norm")
         widget_action =self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][i]].action
         widget = self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][self.widgetselect]]

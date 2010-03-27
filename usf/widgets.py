@@ -329,9 +329,7 @@ class WidgetParagraph(Widget):
                 self.game_font.render(
                 self.credits.split("\n")[i].strip("=="),
                 True,
-                pygame.color.Color(
-                    color
-                    )
+                self.color
                 ),
                 (0, self.screen.get_height()/20*i-self.defil)
                 )
