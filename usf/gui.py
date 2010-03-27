@@ -25,7 +25,7 @@ import os
 import time
 import xml.dom.minidom
 import logging
-
+import thread
 # Our modules
 from loaders import image
 
@@ -72,7 +72,8 @@ class Gui(object):
     dialog = {}
     last_event = 0
     background_alpha = 0
-
+    load = True
+    
     def update(self, state, game, controls, eventcurrent=None):
         """
         Update the screen state based on user inputs.
@@ -125,7 +126,49 @@ class Gui(object):
                 break
         self.draw_screen()
         return False, None
-
+    def loading(self):
+        back = loaders.image(
+            config.sys_data_dir+
+            os.sep+
+            "gui"+
+            os.sep +
+            config.general['THEME']+
+            os.sep+
+            skin.background[self.image], scale=(config.general['WIDTH'], config.general['HEIGHT'])
+            )[0].convert()
+        back_progress = loaders.image(
+            config.sys_data_dir+
+            os.sep+
+            "gui"+
+            os.sep +
+            config.general['THEME']+
+            os.sep+
+            "progressbar_back.png", scale=(config.general['WIDTH']/2,config.general['HEIGHT']/20)
+            )[0]
+        fore_progress = loaders.image(
+            config.sys_data_dir+
+            os.sep+
+            "gui"+
+            os.sep +
+            config.general['THEME']+
+            os.sep+
+            "progressbar_fore.png", scale=(config.general['WIDTH']/20,config.general['HEIGHT']/20)
+            )[0]
+        i = 0
+        back.set_alpha(250)
+        progress_pos = (config.general['WIDTH']/2-config.general['WIDTH']/4, config.general['HEIGHT']/2-config.general['HEIGHT']/20*0.5)
+        while(self.load):
+            self.screen.blit(back, (0,0))
+            self.screen.blit(back_progress, progress_pos)
+            self.screen.blit(fore_progress, (progress_pos[0]+i*config.general['WIDTH']/20,progress_pos[1]))
+            if(i == 8):
+                i = 0
+            else:
+                i+=2
+            self.widget_list['loading.usfgui']['label'].draw()
+            pygame.display.update()
+            #FPS is * 3 to keep a little processor for loading the game
+            time.sleep(1.00/float(config.general['MAX_FPS'])*3)
     def __init__(self, surface):
         """
         Initialize menues from xml files, loading every characters and levels
@@ -235,6 +278,7 @@ class Gui(object):
 
         self.goto_screen("ingame.usfgui")
         self.state="game"
+        thread.start_new_thread(self.loading, ())
         return game
 
     def load_from_xml(self, filename):

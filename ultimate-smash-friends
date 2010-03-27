@@ -259,6 +259,7 @@ os.sep+
                             #'action':None,
                             }
                         )
+                    self.menu.load = False
 
             pygame.display.update()
             if config.audio['MUSIC']:

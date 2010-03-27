@@ -1,0 +1,3 @@
+<gui>
+<label value="Loading" sizex="0" sizey="0" posx="30" posy="30" id="label" />
+</gui>

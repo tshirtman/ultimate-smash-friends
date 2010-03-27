@@ -10,5 +10,6 @@
 <menu>sounds.usfgui</menu>
 <menu>screen.usfgui</menu>
 <menu>demo.usfgui</menu>
+<menu>loading.usfgui</menu>
 <dialog>dialog_characters.usfgui</dialog>
 </gui>
