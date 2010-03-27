@@ -160,6 +160,8 @@ class Main(object):
                 self.game = Game( self.screen, level, players )
                 self.menu = None
                 self.state = "game"
+                self.menu = Gui(self.screen)
+                self.menu.goto_screen('ingame.usfgui')
                 self.clock = pygame.time.Clock()
                 self.controls = Controls()
                 self.go()
