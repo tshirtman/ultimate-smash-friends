@@ -1,4 +1,3 @@
 <gui>
-<coverflow value="items/item-heal.png#item1:items/bomb/bomb1.png#item1:items/bomb/bomb4.png#item3:items/item-heal.png#item1" posx="30" posy="50" sizey="25" sizex="25" id="cover_test" action="" />
 <parent>main.usfgui</parent>
 </gui>

@@ -319,12 +319,12 @@ class WidgetParagraph(Widget):
     defil = 0
     stop = False
     def drawSimple(self):
-        self.surface.fill(pygame.color.Color("black"))
+        self.surface = self.surface.convert().convert_alpha()
         for i in range(0,len(self.credits.split("\n"))):
             if "==" in self.credits.split("\n")[i]:
                 color = "brown"
             else:
-                color = "white"
+                color = "black"
             self.surface.blit(
                 self.game_font.render(
                 self.credits.split("\n")[i].strip("=="),
@@ -358,7 +358,7 @@ class WidgetParagraph(Widget):
             self.falseposy -= self.screen.get_height()/400
             self.defil += self.screen.get_height()/400
             self.last_event = time.time()
-        return True
+        return ""
     def setParagraph(self, text):
         if(text.split(":")[0] == "file"):
             credits_file = open(text.split(":")[1], 'r').readlines()
@@ -473,19 +473,21 @@ class WidgetCoverflow(Widget):
             left = self.num_item - 1
             right = self.num_item + 1
         self.surface.blit(
-            self.frameleft,
-        (self.sizex-self.frameleft.get_width(), 0)
-        )
-        self.surface.blit(
-            self.items[left][0],
-        (self.sizex-self.frameleft.get_width()+10, 10)
-        )
-        self.surface.blit(
             self.frameright,
         (0,0)
         )
         self.surface.blit(
             self.items[right][0],
+        (0,0)
+        )
+        self.surface.blit(
+            self.game_font.render(
+                self.items[right][1],
+                True,
+                pygame.color.Color(
+                    "white"
+                    )
+                ),
         (0,0)
         )
         self.surface.blit(
@@ -497,6 +499,34 @@ class WidgetCoverflow(Widget):
         (self.sizex/2-self.frame.get_width()/2, 0)
         )
         
+        self.surface.blit(
+            self.game_font.render(
+                self.items[self.num_item][1],
+                True,
+                pygame.color.Color(
+                    "white"
+                    )
+                ),
+        (self.sizex/2-self.frame.get_width()/2, 0)
+        )
+        self.surface.blit(
+            self.frameleft,
+        (self.elements['frameleft']['posx']-self.posx, 0)
+        )
+        self.surface.blit(
+            self.items[left][0],
+        (self.elements['frameleft']['posx']-self.posx, 0)
+        )
+        self.surface.blit(
+            self.game_font.render(
+                self.items[left][1],
+                True,
+                pygame.color.Color(
+                    "white"
+                    )
+                ),
+        (self.sizex-self.frameleft.get_width(), 0)
+        )
         self.screen.blit(
             self.surface,
         (self.posx, self.posy)
@@ -518,15 +548,17 @@ class WidgetCoverflow(Widget):
         elif (self.state_str == "hover"):
             self.drawHover()
     def setText(self, text):
+        text = text.replace('\n', "")
         for item in text.split(":"):
             try:
+                item = item.replace("/", os.sep)
                 self.items.append([loaders.image(
                     config.sys_data_dir+
                     os.sep+
                     item.split("#")[0]
                     )[0],item.split("#")[1]])
             except:
-                print "no image : " +item
+                print "no image : " +item.split("#")[0]
         if(self.sizex == 0):
             self.sizex = self.sizey
         self.image = pygame.transform.scale(self.image, (self.sizex, self.sizey))
@@ -600,6 +632,7 @@ class WidgetCoverflow(Widget):
                         self.num_item = len(self.items)-1
                     else:
                         self.num_item = self.num_item -1
+                    return "self.valid(0, '"+self.name+"')"
             elif(mousex in range(self.elements['frameleft']['posx'],
                                  self.elements['frameleft']['posx']+self.elements['frameleft']['width']) and
                mousey in range(self.elements['frameleft']['posy'],
@@ -621,11 +654,12 @@ class WidgetCoverflow(Widget):
                         self.num_item = 0
                     else:
                         self.num_item = self.num_item +1
+                    return "self.valid(0, '"+self.name+"')"
             elif(mousex in range(self.elements['frame']['posx'],
                                  self.elements['frame']['posx']+self.elements['frame']['width']) and
                mousey in range(self.elements['frame']['posy'],
                                  self.elements['frame']['posy']+self.elements['frame']['height']) and event.type == pygame.MOUSEBUTTONUP):
-                return "self.valid(0, 'quit')"
+                return "self.valid(0, '"+self.name+"')"
             elif self.hover != '':
                 self.frameright = loaders.image(
                     config.sys_data_dir+

@@ -2,5 +2,6 @@
 
 <label value="Fullscreen" posx="25" posy="45" id="full_label" />
 <checkbox value="config:FULLSCREEN" posx="45" posy="45" sizey="7" sizex="0" id="full_check" action="" />
+<coverflow value="gui/image/screen.png#800x480:gui/image/screen.png#1200x720:gui/image/screen.png#1600x960:gui/image/screen.png#1800x1080" posx="30" posy="60" sizey="45" sizex="45" id="cover_screen" action="" />
 <parent>configure.usfgui</parent>
 </gui>

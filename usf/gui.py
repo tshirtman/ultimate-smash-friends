@@ -233,6 +233,15 @@ class Gui(object):
         #load background image
         
         self.image = 0
+        self.back = loaders.image(
+            config.sys_data_dir+
+            os.sep+
+            "gui"+
+            os.sep +
+            config.general['THEME']+
+            os.sep+
+            skin.background[self.image], scale=(config.general['WIDTH'], config.general['HEIGHT'])
+            )[0].convert()
         self.draw_screen(True)
         self.load = False
 
@@ -421,11 +430,16 @@ class Gui(object):
             id_widget = widget_id
         else:
             id_widget = self.widget_list_order[self.screen_current][i]
+        print id_widget
         self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][self.widgetselect]].state("norm")
         widget_action =self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][i]].action
+        widget = self.widget_list[self.screen_current][self.widget_list_order[self.screen_current][self.widgetselect]]
 
         ############################## CUSTOM ACTION ###########################
-        if(id_widget=="nextlevel"):
+        if id_widget == "cover_screen":
+            config.general['WIDTH'] = widget.items[widget.num_item][1].split('x')[0]
+            config.general['HEIGHT'] = widget.items[widget.num_item][1].split('x')[1]
+        elif(id_widget=="nextlevel"):
             if(self.level_current< len(self.game_data['level_name'])-1):
                 self.level_current += 1
                 self.widget_list[self.screen_current]["level_name"].setText(
@@ -569,20 +583,11 @@ class Gui(object):
 
         """
         global skin
-        back = loaders.image(
-            config.sys_data_dir+
-            os.sep+
-            "gui"+
-            os.sep +
-            config.general['THEME']+
-            os.sep+
-            skin.background[self.image], scale=(config.general['WIDTH'], config.general['HEIGHT'])
-            )[0].convert()
-        back.set_alpha(250)
+        self.back.set_alpha(250)
         if(self.state == "game" and self.screen_shot is not None):
             self.screen.blit(self.screen_shot,(0,0))
         if not self.dialog.has_key(self.screen_current):
-            self.screen.blit(back,(0,0))
+            self.screen.blit(self.back,(0,0))
 
         for dialog in [dialog for dialog in self.dialog.values() if dialog.state is True]:
         #    draw items at once
@@ -592,8 +597,8 @@ class Gui(object):
             widget.draw()
         if opacity is not None:
             self.background_alpha = opacity
-            back.set_alpha(opacity)
-            self.screen.blit(back,(0,0))
+            self.back.set_alpha(opacity)
+            self.screen.blit(self.back,(0,0))
         if update : pygame.display.update()
 
 class Skin (object):
