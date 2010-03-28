@@ -4,43 +4,111 @@
   <!-- interface-naming-policy project-wide -->
   <widget class="GtkWindow" id="window1">
     <child>
-      <widget class="GtkScrolledWindow" id="scrolledwindow1">
+      <widget class="GtkNotebook" id="notebook1">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
-        <property name="hscrollbar_policy">automatic</property>
-        <property name="vscrollbar_policy">automatic</property>
         <child>
-          <widget class="GtkExpander" id="from_gimp">
+          <widget class="GtkHBox" id="hbox1">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
             <child>
-              <widget class="GtkExpander" id="from_level">
+              <widget class="GtkButton" id="button1">
+                <property name="label" translatable="yes">Convert to level</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="fromlevellab">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">From Level</property>
-                  </widget>
-                  <packing>
-                    <property name="type">label_item</property>
-                  </packing>
-                </child>
-              </widget>
-            </child>
-            <child>
-              <widget class="GtkLabel" id="fromgimplab">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">From Gimp</property>
+                <property name="receives_default">True</property>
               </widget>
               <packing>
-                <property name="type">label_item</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkFileChooserButton" id="filechooserbutton1">
+                <property name="visible">True</property>
+                <property name="create_folders">False</property>
+              </widget>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkFileChooserButton" id="filechooserbutton2">
+                <property name="visible">True</property>
+                <property name="create_folders">False</property>
+                <property name="action">save</property>
+              </widget>
+              <packing>
+                <property name="position">2</property>
               </packing>
             </child>
           </widget>
+        </child>
+        <child>
+          <widget class="GtkLabel" id="label1">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">From Gimp</property>
+          </widget>
+          <packing>
+            <property name="tab_fill">False</property>
+            <property name="type">tab</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkHBox" id="hbox2">
+            <property name="visible">True</property>
+            <child>
+              <widget class="GtkButton" id="button2">
+                <property name="label" translatable="yes">Convert to Gimp</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+              </widget>
+              <packing>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkFileChooserButton" id="filechooserbutton3">
+                <property name="visible">True</property>
+                <property name="create_folders">False</property>
+              </widget>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkFileChooserButton" id="filechooserbutton4">
+                <property name="visible">True</property>
+                <property name="create_folders">False</property>
+                <property name="action">save</property>
+              </widget>
+              <packing>
+                <property name="position">2</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkLabel" id="label2">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">From Level</property>
+          </widget>
+          <packing>
+            <property name="position">1</property>
+            <property name="tab_fill">False</property>
+            <property name="type">tab</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+          <packing>
+            <property name="type">tab</property>
+          </packing>
         </child>
       </widget>
     </child>
