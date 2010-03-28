@@ -456,7 +456,7 @@ class WidgetCoverflow(Widget):
     items = []
     num_item = 0
     def drawSimple(self):
-        self.surface = pygame.Surface((self.sizex,self.sizey/2))
+        self.surface = self.surface.convert().convert_alpha()
         """self.screen.blit(
             self.image,
         (self.posx, self.posy)
@@ -476,7 +476,7 @@ class WidgetCoverflow(Widget):
         )
         self.surface.blit(
             self.items[right][0],
-        (0,0)
+        (0,0+config.general['HEIGHT']/20)
         )
         self.surface.blit(
             self.game_font.render(
@@ -494,7 +494,7 @@ class WidgetCoverflow(Widget):
         )
         self.surface.blit(
             self.items[self.num_item][0],
-        (self.sizex/2-self.frame.get_width()/2, 0)
+        (self.sizex/2-self.frame.get_width()/2, 0+config.general['HEIGHT']/20)
         )
         
         self.surface.blit(
@@ -513,7 +513,7 @@ class WidgetCoverflow(Widget):
         )
         self.surface.blit(
             self.items[left][0],
-        (self.elements['frameleft']['posx']-self.posx, 0)
+        (self.elements['frameleft']['posx']-self.posx, 0+config.general['HEIGHT']/20)
         )
         self.surface.blit(
             self.game_font.render(
@@ -553,7 +553,7 @@ class WidgetCoverflow(Widget):
                 self.items.append([loaders.image(
                     config.sys_data_dir+
                     os.sep+
-                    item.split("#")[0]
+                    item.split("#")[0], scale=(self.sizex/3-self.sizex/3/10, self.sizey/3-self.sizey/3/10)
                     )[0],item.split("#")[1]])
             except:
                 print "no image : " +item.split("#")[0]
@@ -583,7 +583,7 @@ class WidgetCoverflow(Widget):
             os.sep+
             config.general['THEME']+
             os.sep+
-            "cover-frame-small.png", scale=(self.sizex/3, self.sizey/3)
+            "cover-frame-big.png", scale=(self.sizex/3, self.sizey/3)
             )[0]
         self.elements['frame'] = {}
         self.elements['frame']['posx'] = self.posx + self.sizex/2-self.sizex/2/2

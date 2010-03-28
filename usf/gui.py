@@ -436,6 +436,7 @@ class Gui(object):
 
         ############################## CUSTOM ACTION ###########################
         if id_widget == "cover_screen":
+            print widget.items[widget.num_item][1]
             config.general['WIDTH'] = widget.items[widget.num_item][1].split('x')[0]
             config.general['HEIGHT'] = widget.items[widget.num_item][1].split('x')[1]
         elif(id_widget=="nextlevel"):
