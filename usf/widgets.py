@@ -696,9 +696,9 @@ class WidgetProgressBar(Widget):
             "progressbar_fore.png", scale=(config.general['WIDTH']/20,config.general['HEIGHT']/20)
             )[0]
     def draw(self):
-        if(self.i == 8):
+        if(self.i == 9.5):
             self.i = 0
         else:
-            self.i+=2
+            self.i+=0.5
         self.screen.blit(self.back_progress, self.progress_pos)
         self.screen.blit(self.fore_progress, (self.progress_pos[0]+self.i*config.general['WIDTH']/20,self.progress_pos[1]))
