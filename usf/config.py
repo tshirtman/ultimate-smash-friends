@@ -29,7 +29,7 @@
 """
 from __future__ import with_statement
 
-from os import environ, makedirs, stat
+from os import environ, makedirs, stat, sep
 from os.path import join, dirname, abspath
 from sys import prefix
 from ConfigParser import SafeConfigParser
@@ -118,23 +118,30 @@ class Config(Singleton):
             pass
         elif OS == 'linux':
             try:
+                sys_data_dir = join(prefix, 'share', 'ultimate-smash-friends',
+                                    'data')
+                sys_config_file = join(sep, 'etc', 'ultimate-smash-friends',
+                                       'system.cfg')
+
+                #TODO: detect location of ultimate-smash-friends instead
                 # see if files are installed on the system
-                stat(join(prefix, 'share', 'ultimate-smash-friends'))
+                stat(sys_data_dir)
 
                 # set the variables according to HOME variable
                 if 'XDG_CONFIG_HOME' in environ.keys():
                     config_dir = join(environ['XDG_CONFIG_HOME'],
                                       'ultimate-smash-friends')
                 else:
-                    config_dir = join(environ['HOME'], '.config', 'usf')
+                    config_dir = join(environ['HOME'], '.config',
+                                      'ultimate-smash-friends')
 
             except OSError:
                 # set config_dir to the parent directory of this module
                 config_dir = dirname(abspath(join(__file__, '..')))
+                sys_data_dir = join(config_dir, 'data')
+                sys_config_file = join(config_dir, 'system.cfg')
 
-            sys_config_file = join(config_dir, 'system.cfg')
             user_config_file = join(config_dir, 'user.cfg')
-            sys_data_dir = join(config_dir, 'data')
             user_data_dir = join(config_dir, 'user_data')
 
         try:
