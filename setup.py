@@ -55,6 +55,8 @@ else:
 
     etc = [('/etc/ultimate-smash-friends/', ['system.cfg',])]
 
+    icon = [('share/applications', ['ultimate-smash-friends.desktop'])]
+
 setup(name='ultimate-smash-friends',
       version='0.0.7',
       description=('A 2d arcade fight game, based on the gameplay of super '
@@ -76,5 +78,5 @@ setup(name='ultimate-smash-friends',
       scripts=['ultimate-smash-friends', 'utils/viewer', 'utils/togimpmap', 
                'utils/tolevel', 'utils/xml_text_extractor'],
       requires=['pygame (>=1.6)'],
-      data_files = [] if OS == 'windows' else data + doc + etc
+      data_files = [] if OS == 'windows' else data + doc + etc + icon
      )
