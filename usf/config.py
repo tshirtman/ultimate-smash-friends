@@ -123,7 +123,6 @@ class Config(Singleton):
                 sys_config_file = join(sep, 'etc', 'ultimate-smash-friends',
                                        'system.cfg')
 
-                #TODO: detect location of ultimate-smash-friends instead
                 # see if files are installed on the system
                 stat(sys_data_dir)
 
@@ -136,7 +135,8 @@ class Config(Singleton):
                                       'ultimate-smash-friends')
 
             except OSError:
-                # set config_dir to the parent directory of this module
+                # files aren't installed on the system so set config_dir to the
+                # parent directory of this module
                 config_dir = dirname(abspath(join(__file__, '..')))
                 sys_data_dir = join(config_dir, 'data')
                 sys_config_file = join(config_dir, 'system.cfg')
