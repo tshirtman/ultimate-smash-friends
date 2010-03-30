@@ -56,7 +56,7 @@ else:
     etc = [('/etc/ultimate-smash-friends/', ['system.cfg',])]
 
 setup(name='ultimate-smash-friends',
-      version='0.0.6',
+      version='0.0.7',
       description=('A 2d arcade fight game, based on the gameplay of super '
                    'smash bros, from nintendo.'),
       author='Gabriel Pettier',
