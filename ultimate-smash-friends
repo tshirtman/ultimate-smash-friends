@@ -36,8 +36,8 @@ SIZE = (config.general['WIDTH'],
 from usf.game import Game, NetworkServerGame, NetworkClientGame
 from usf.gui import Gui
 from usf.controls import Controls
-from usf import loaders
-from usf import music
+from usf import loaders, music
+
 
 #logging.basicConfig(filename=config['LOG_FILENAME'],level=logging.DEBUG)
 
@@ -112,7 +112,7 @@ class Main(object):
         if options.author:
             author()
 
-        """
+        """ viewer is broken
         if options.character_creator:
             launch_character_creator()
         """
@@ -136,12 +136,13 @@ class Main(object):
 
         pygame.init()
 
+        self.clock = pygame.time.Clock()
+        self.controls = Controls()
+        self.menu = None
+        self.state = ""
+
         if game_type == "server":
             self.game = NetworkServerGame(num)
-            self.clock = pygame.time.Clock()
-            self.state = ""
-            self.controls = Controls()
-            self.menu = None
 
         elif game_type == "client":
             self.init_screen()
@@ -149,7 +150,6 @@ class Main(object):
 
             self.game = NetworkClientGame(players, level)
             self.state = "game"
-            self.controls = Controls()
             self.menu = Gui()
 
         else:
@@ -158,13 +158,9 @@ class Main(object):
 
             if len(players) > 1 and level is not None:
                 self.game = Game( self.screen, level, players )
-                self.menu = None
                 self.state = "game"
                 self.menu = Gui(self.screen)
                 self.menu.goto_screen('ingame.usfgui')
-                self.clock = pygame.time.Clock()
-                self.controls = Controls()
-                self.go()
 
             else:
                 """self.screen.blit(
@@ -183,12 +179,11 @@ class Main(object):
                 self.menu = Gui(self.screen)
 
                 self.state = "menu"
-                self.controls = Controls()
 
-                self.clock = pygame.time.Clock()
                 self.game = None
                 level = None
-                self.go()
+
+            self.go()
 
     def init_screen(self):
         self.screen = pygame.display.set_mode(SIZE)
@@ -236,9 +231,9 @@ os.sep+
             self.clock.tick()
 
             # poll controls and update informations on current state of the UI
-            if self.state!="menu" :
+            if self.state != "menu" :
                 self.state = self.controls.poll(self.game, self.menu, self.state)
-            if self.state =="menu":
+            if self.state == "menu":
                 # return of the menu update function may contain a new game
                 # instance to switch to.
                 newgame, game_ = self.menu.update(
