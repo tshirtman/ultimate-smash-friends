@@ -42,21 +42,6 @@ from usf import loaders, music
 #logging.basicConfig(filename=config['LOG_FILENAME'],level=logging.DEBUG)
 
 
-def author():
-    if 'CREDITS' not in os.listdir(os.path.join(config.config_dir)):
-        logging.debug(config.config_dir+'/CREDITS file not found')
-        #sys.exit(0)
-    else:
-        author_file = open(os.path.join(config.config_dir,'CREDITS'))
-        author_file.close()
-        #sys.exit(2)
-
-""" TODO: Rather than having a BIN_DIRECTORY variable, programmatically determine
-    binary location
-def launch_character_creator():
-    os.popen(os.path.join(config['BIN_DIRECTORY'],'viewer'))
-    sys.exit(2)
-"""
 
 class Main(object):
     """
@@ -72,9 +57,58 @@ class Main(object):
 
         """
 
-        game_type = ''
-        self.newGui = True
+        self.init_screen()
+        self.init_sound()
 
+        self.game_type = ''
+        self.level = None
+        self.players = []
+        self.num = None
+        self.address = None
+
+        self.parse_options()
+
+        if self.game_type == "server":
+            self.game = NetworkServerGame(num)
+
+        elif self.game_type == "client":
+
+            self.game = NetworkClientGame(players, level)
+            self.state = "game"
+            self.menu = Gui()
+
+        else:
+
+            if len(self.players) > 1 and self.level is not None:
+                self.game = Game(self.screen, self.level, self.players)
+                self.state = "game"
+                self.menu = Gui(self.screen)
+                self.menu.goto_screen('ingame.usfgui')
+
+            else:
+                """self.screen.blit(
+                    self.game_font.render(
+                        "menus...",
+                        True,
+                        pygame.color.Color(
+                            "white"
+                            )
+                        ),
+                    (30, 4*SIZE[1]/5)
+                    )"""
+
+                pygame.display.update()
+
+                self.menu = Gui(self.screen)
+
+                self.state = "menu"
+
+                self.game = None
+                self.level = None
+
+            self.go()
+
+    def parse_options(self):
         # set up the comand line parser and its options
         usage = 'ultimate-smash-friends [-h] [-a][-l level-name] ' \
                 '[-p player1,player2...] [-s num] [-C address]\n' \
@@ -110,7 +144,7 @@ class Main(object):
 
         # actually parse the command line options
         if options.author:
-            author()
+            self.author()
 
         """ viewer is broken
         if options.character_creator:
@@ -118,21 +152,18 @@ class Main(object):
         """
 
         if options.level:
-            level = options.level
+            self.level = options.level
 
         if options.players:
             players = ['characters'+os.sep+np for np in options.players.split(',')]
 
-        else:
-            players = []
-
         if options.server:
-            game_type = 'server'
-            num = options.server
+            self.game_type = 'server'
+            self.num = options.server
 
         if options.client:
-            game_type = 'client'
-            address = option.client
+            self.game_type = 'client'
+            self.address = option.client
 
         pygame.init()
 
@@ -141,73 +172,19 @@ class Main(object):
         self.menu = None
         self.state = ""
 
-        if game_type == "server":
-            self.game = NetworkServerGame(num)
-
-        elif game_type == "client":
-            self.init_screen()
-            self.init_sound()
-
-            self.game = NetworkClientGame(players, level)
-            self.state = "game"
-            self.menu = Gui()
-
-        else:
-            self.init_screen()
-            self.init_sound()
-
-            if len(players) > 1 and level is not None:
-                self.game = Game( self.screen, level, players )
-                self.state = "game"
-                self.menu = Gui(self.screen)
-                self.menu.goto_screen('ingame.usfgui')
-
-            else:
-                """self.screen.blit(
-                    self.game_font.render(
-                        "menus...",
-                        True,
-                        pygame.color.Color(
-                            "white"
-                            )
-                        ),
-                    (30, 4*SIZE[1]/5)
-                    )"""
-
-                pygame.display.update()
-
-                self.menu = Gui(self.screen)
-
-                self.state = "menu"
-
-                self.game = None
-                level = None
-
-            self.go()
-
     def init_screen(self):
         self.screen = pygame.display.set_mode(SIZE)
         pygame.display.set_caption('Ultimate Smash Friends')
-        icon = loaders.image(
-            config.sys_data_dir+
-            os.sep+
-            'gui'+
-            os.sep+
-            'icon.png'
-            )[0]
+        icon = loaders.image(os.path.join(config.sys_data_dir, 'gui',
+                                          'icon.png'))[0]
         pygame.display.set_icon(icon)
         if config.general['FULLSCREEN'] == "True":
             pygame.display.toggle_fullscreen()
 
         # following operation can be quite long, so a loading screen is good
-        image = loaders.image(config.sys_data_dir +
-os.sep+
-            'gui'+
-            os.sep+
-            config.general['THEME']+
-            os.sep+
-            'loading.png'
-            )[0]
+        image = loaders.image(os.path.join(config.sys_data_dir, 'gui', 
+                                           config.general['THEME'],
+                                           'loading.png'))[0]
 
         self.game_font = pygame.font.Font(None, 50)
         self.screen.blit(image,(0,0))
@@ -236,16 +213,14 @@ os.sep+
             if self.state == "menu":
                 # return of the menu update function may contain a new game
                 # instance to switch to.
-                newgame, game_ = self.menu.update(
-                    self.state,
-                    self.game,
-                    self.controls
-                    )
+                newgame, game_ = self.menu.update(self.state, self.game, 
+                                                  self.controls)
                 if newgame:
                     if game_ is not self.game:
                         #logging.debug('new game')
                         del(self.game)
                         self.game = game_
+
                     self.state = 'game'
             else:
                 self.state = self.game.update()
@@ -268,6 +243,23 @@ os.sep+
                 logging.debug('fps = '+str(self.clock.get_fps()))
                 pygame.quit()
                 break
+
+    def author(self):
+        if 'CREDITS' not in os.listdir(os.path.join(config.config_dir)):
+            logging.debug(config.config_dir+'/CREDITS file not found')
+            #sys.exit(0)
+        else:
+            author_file = open(os.path.join(config.config_dir,'CREDITS'))
+            author_file.close()
+            #sys.exit(2)
+
+    """ TODO: Rather than having a BIN_DIRECTORY variable, programmatically determine
+        binary location
+    def launch_character_creator(self):
+        os.popen(os.path.join(config['BIN_DIRECTORY'],'viewer'))
+        sys.exit(2)
+    """
+
 
 if __name__ == '__main__':
     """
