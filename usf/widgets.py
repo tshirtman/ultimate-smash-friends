@@ -56,7 +56,7 @@ class Widget (object):
                                         config.general['THEME'], 'theme.xml'))
 
         for node in self.theme.getElementsByTagName('color'):
-            self.color = pygame.color.Color(str(node.getAttribute('value')))
+            self.color = Color(str(node.getAttribute('value')))
 
         self.load()
 
