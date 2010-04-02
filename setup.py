@@ -75,7 +75,7 @@ setup(name='ultimate-smash-friends',
                    'Topic :: Games/Entertainment :: Arcade'
                   ],
       packages=['usf'],
-      scripts=['ultimate-smash-friends', 'utils/viewer', 'utils/togimpmap', 
+      scripts=['ultimate-smash-friends', 'viewer', 'utils/togimpmap', 
                'utils/tolevel', 'utils/xml_text_extractor'],
       requires=['pygame (>=1.6)'],
       data_files = [] if OS == 'windows' else data + doc + etc + icon

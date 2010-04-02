@@ -18,9 +18,12 @@
 ################################################################################
 
 import os, time
-import xml.dom.minidom
+from os.path import join
+from xml.etree.ElementTree import ElementTree
 import pygame
 from pygame.locals import *
+from pygame.color import Color
+from pygame.font import Font
 
 import loaders
 from config import Config
@@ -31,48 +34,47 @@ class Widget (object):
     """
     This class is the base of all other widget.
     """
-    sizex = 0
-    sizey = 0
-    posx = 0
-    posy = 0
-    name = "name"
-    action = "print 'click'"
-    selectable = False
-    text = ""
-    anim = False
-    color="white"
+
     def __init__(self, screen):
-        self.game_font = pygame.font.Font(
-            config.sys_data_dir +
-            os.sep +
-            "gui" +os.sep + config.general['THEME'] + os.sep +
-            "font.otf", screen.get_height()/20)
+        self.sizex = 0
+        self.sizey = 0
+        self.posx = 0
+        self.posy = 0
+        self.name = "name"
+        self.action = "print 'click'"
+        self.selectable = False
+        self.text = ""
+        self.anim = False
         self.screen = screen
-        xml_file = xml.dom.minidom.parse(config.sys_data_dir+
-            os.sep+
-            'gui'+
-            os.sep+ config.general['THEME'] + os.sep + "theme.xml").getElementsByTagName("theme")[0]
-        self.color = pygame.color.Color("white")
-        for i in range (0, len(xml_file.childNodes)):
-            try:
-                if xml_file.childNodes[i].tagName == "color":
-                    self.color = pygame.color.Color(str(xml_file.childNodes[i].getAttribute("value")))
-            except:
-                pass
         self.font_size = screen.get_height()/20
+        self.game_font = Font(join(config.sys_data_dir, 'gui',
+                                   config.general['THEME'], 'font.otf'),
+                               self.font_size)
+                              
+        filename = join(config.sys_data_dir, 'gui', config.general['THEME'],
+                        'theme.xml')
+        self.theme = ElementTree().parse(filename)
+        self.color = Color(tree.find('color').attrib['value'])
+
         self.load()
+
     def load(self):
         pass
+
     def drawSimple(self):
         pass
+
     def drawHover(self):
         self.drawSimple()
+        
     def set_sizex(self, size):
         self.sizex =size
         self.load()
+        
     def set_sizey(self, size):
         self.sizey =size
         self.load()
+        
     def setText(self, value):
         if(value.split(':')[0] == "config"):
             if(value.split(':')[1] == "keyboard"):
@@ -93,8 +95,10 @@ class Widget (object):
                     self.text = str(config.general[value.split(':')[1]])
         else:
             self.text = value
+            
     def state(self,state_str):
         self.state_str = state_str
+        
     def click(self,event):
         pass
         return ""
@@ -105,11 +109,13 @@ class WidgetCheckbox(Widget):
     """
     text = ""
     state_str = "norm"
+    
     def drawSimple(self):
         self.screen.blit(
             self.image,
         (self.posx, self.posy)
         )
+        
     def drawHover(self):
         self.screen.blit(
             self.image,
@@ -144,27 +150,16 @@ class WidgetCheckbox(Widget):
             self.text = value
         if(self.sizex == 0):
             self.sizex = self.sizey
-        if self.text == "True" :
-            self.image = loaders.image(
-                config.sys_data_dir+
-                os.sep+
-                'gui'+
-                os.sep+
-                config.general['THEME']+
-                os.sep+
-                "checkbox_full.png", scale=(self.sizex, self.sizey)
-                )[0]
-        else :
-            self.image = loaders.image(
-                config.sys_data_dir+
-                os.sep+
-                'gui'+
-                os.sep+
-                config.general['THEME']+
-                os.sep+
-                "checkbox_empty.png", scale=(self.sizex, self.sizey)
-                )[0]
-        
+
+        image_name = ''
+        if self.text == 'True' :
+            image_name = 'checkbox_full.png' 
+        else:
+            image_name = 'checkbox_empty.png'
+
+        self.image = loaders.image(join(config.sys_data_dir, 'gui',
+                                        config.general['THEME'], image_name),
+                                    scale=(self.sizex, self.sizey))[0]
 
 class WidgetIcon(Widget):
     """
@@ -179,6 +174,7 @@ class WidgetIcon(Widget):
             self.drawClick()
         elif (self.state_str == "hover"):
             self.drawHover()
+
     def drawSimple(self):
         self.screen.blit(self.background,(self.posx,self.posy))
         self.screen.blit(
@@ -334,6 +330,7 @@ class WidgetParagraph(Widget):
                 (0, self.screen.get_height()/20*i-self.defil)
                 )
         self.screen.blit(self.surface,(self.posx,self.posy))
+
     def draw(self):
         try:
             self.falseposy
@@ -480,9 +477,7 @@ class WidgetCoverflow(Widget):
         )
         self.surface.blit(
             self.game_font.render(
-                self.items[right][1],
-                True,
-                pygame.color.Color(
+                self.items[right][1], True, pygame.color.Color(
                     "white"
                     )
                 ),

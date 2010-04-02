@@ -1,7 +1,7 @@
 <theme>
-<color value="black" />
-<dialog sizex="50" sizey="50" posx="25" posy="25" />
-<background>
-<img src="background.png" time="10"/>
-</background>
+  <color value="black" />
+  <dialog sizex="50" sizey="50" posx="25" posy="25" />
+  <background>
+    <img src="background.png" time="10"/>
+  </background>
 </theme>

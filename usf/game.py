@@ -21,22 +21,14 @@
 
 # standards import
 import pygame
-import time
-import math
-import os
-import logging
-import sys
+import time, math, os, logging, sys
 
-import socket
-import threading
-import SocketServer
+import socket, threading, SocketServer
 
 # my modules import
 from loaders import image
-import animations
-import entity
+import animations, entity, timed_event
 
-import timed_event
 from level import Level
 from controls import Controls
 from config import Config
