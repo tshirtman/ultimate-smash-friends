@@ -54,7 +54,7 @@ class Widget (object):
         filename = join(config.sys_data_dir, 'gui', config.general['THEME'],
                         'theme.xml')
         self.theme = ElementTree().parse(filename)
-        self.color = Color(tree.find('color').attrib['value'])
+        self.color = Color(self.theme.find('color').attrib['value'])
 
         self.load()
 
