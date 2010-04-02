@@ -19,8 +19,7 @@
 
 import os, time
 from os.path import join
-import xml.dom.minidom
-from xml.dom import minidom
+from xml.etree.ElementTree import ElementTree
 import pygame
 from pygame.locals import *
 from pygame.color import Color
@@ -52,11 +51,10 @@ class Widget (object):
                                    config.general['THEME'], 'font.otf'),
                                self.font_size)
                               
-        self.theme = minidom.parse(join(config.sys_data_dir, 'gui',
-                                        config.general['THEME'], 'theme.xml'))
-
-        for node in self.theme.getElementsByTagName('color'):
-            self.color = Color(str(node.getAttribute('value')))
+        filename = join(config.sys_data_dir, 'gui', config.general['THEME'],
+                        'theme.xml')
+        self.theme = ElementTree().parse(filename)
+        self.color = Color(tree.find('color').attrib['value'])
 
         self.load()
 
