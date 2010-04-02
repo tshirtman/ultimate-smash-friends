@@ -1,0 +1,15 @@
+character designer
+change characters and level from xml to json?
+test key management
+correct physics bugs
+network game
+    seperate server and client tasks
+    implement interface for the local as wel as network client
+add A* algorithme to AI
+add multilayer to level
+add animation capacity to layers
+add wind?
+correct shield placement
+for B find at last ten fresh new testers
+build for windows and OSX?
+
