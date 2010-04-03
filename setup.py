@@ -5,13 +5,13 @@
     http://wiki.python.org/moin/Distutils/Cookbook/AutoDataDiscovery
 
 """
-import os 
+import os, platform, imp
 from sys import exit
-import platform
-import imp
 from distutils.core import setup
-import py2exe
 OS = platform.system().lower()
+
+if OS == 'windows':
+    import py2exe
 
 def files(path):
     """ Return all non-python-file filenames in path """
