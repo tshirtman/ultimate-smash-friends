@@ -57,6 +57,7 @@ class Entity (object):
     # collision method: FIXME someday.
     nb_points = 8
     ai = False
+    ai_ = None
     list_sin_cos = [
                     [
                      math.sin(i * math.pi / (nb_points/2) + math.pi / nb_points)
