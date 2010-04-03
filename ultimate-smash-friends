@@ -60,7 +60,6 @@ class Main(object):
         self.init_screen()
         self.init_sound()
 
-        self.game = None
         self.game_type = ''
         self.level = None
         self.players = []
@@ -102,9 +101,9 @@ class Main(object):
 
                 self.menu = Gui(self.screen)
 
-                if self.game == None:
-                    self.state = "menu"
+                self.state = "menu"
 
+                self.game = None
                 self.level = None
 
             self.go()
@@ -154,9 +153,9 @@ class Main(object):
 
         if options.level:
             self.level = options.level
-            
+
         if options.players:
-            players = ['characters'+os.sep+np for np in options.players.split(',')]
+            self.players = ['characters'+os.sep+np for np in options.players.split(',')]
 
         if options.server:
             self.game_type = 'server'
@@ -172,15 +171,9 @@ class Main(object):
         self.controls = Controls()
         self.menu = None
         self.state = ""
-        if options.players and options.level:
-            self.game = Game(
-                self.screen,
-                self.level,
-                players
-            )
 
     def init_screen(self):
-        self.	screen = pygame.display.set_mode(SIZE)
+        self.screen = pygame.display.set_mode(SIZE)
         pygame.display.set_caption('Ultimate Smash Friends')
         icon = loaders.image(os.path.join(config.sys_data_dir, 'gui',
                                           'icon.png'))[0]
