@@ -10,7 +10,7 @@ from sys import exit
 import platform
 import imp
 from distutils.core import setup
-
+import py2exe
 OS = platform.system().lower()
 
 def files(path):
@@ -34,13 +34,7 @@ def files(path):
 
 if OS == 'windows':
     # TODO: change to sane install locations for windows
-    print("Sorry, setup.py is currently unable to build a proper windows" 
-          " executable.")
-    exit(1)
-    """
-    data = [('Ultimate Smash Friends' + item[0], item[1])
-            for item in files('.')]
-    """
+    data = [('',['system.cfg', 'user.cfg'])]
 else:
     data = [('share/ultimate-smash-friends/' + item[0], item[1]) 
             for item in files('data')]
@@ -78,5 +72,6 @@ setup(name='ultimate-smash-friends',
       scripts=['ultimate-smash-friends', 'viewer', 'utils/togimpmap', 
                'utils/tolevel', 'utils/xml_text_extractor'],
       requires=['pygame (>=1.6)'],
-      data_files = [] if OS == 'windows' else data + doc + etc + icon
+      console=['ultimate-smash-friends'],
+      data_files = data if OS == 'windows' else data + doc + etc + icon
      )

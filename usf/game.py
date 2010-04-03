@@ -77,13 +77,13 @@ class Game (object):
 
         self.level = Level(level)
         if screen is not None:
-            self.font = pygame.font.Font(None, 20)
+            self.font = game_font
             self.zoom = 1
             #self.testimage=load_image(os.path.join(config.sys_data_dir,'items','item-heal'+os.extsep+'png')[0]
             # time for a loading screen ain't it?
             # loading level
             self.level_place = [0, 0]
-            self.game_font = pygame.font.Font(None, 50)
+            self.game_font = game_font
             self.tmp_surface = self.screen.copy()
 
             # loading players

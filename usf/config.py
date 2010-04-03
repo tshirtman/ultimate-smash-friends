@@ -115,7 +115,17 @@ class Config(Singleton):
                 similar so that proper testing can be done. From there, filling
                 in the blanks should be trivial
             """
-            pass
+			#TODO : a proper system to localize .cfg
+            sys_data_dir = join(__file__, '..', '..', '..', 'data')
+            sys_config_file = join(__file__, '..', '..', '..', 'system.cfg')
+            # see if files are installed on the system
+            stat(sys_data_dir)
+
+            # set the variables according to HOME variable
+            config_dir = join(environ['APPDATA'], 'usf')
+
+            user_config_file = join(config_dir, 'user.cfg')
+            user_data_dir = join(config_dir, 'user_data')
         elif OS == 'linux':
             try:
                 sys_data_dir = join(prefix, 'share', 'ultimate-smash-friends',

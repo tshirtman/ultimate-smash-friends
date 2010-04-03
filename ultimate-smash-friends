@@ -186,7 +186,7 @@ class Main(object):
                                            config.general['THEME'],
                                            'loading.png'))[0]
 
-        self.game_font = pygame.font.Font(None, 50)
+        #self.game_font = pygame.font.Font(None, 50)
         self.screen.blit(image,(0,0))
 
     def init_sound(self):
