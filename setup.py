@@ -42,7 +42,7 @@ if OS == 'windows':
              item[0], item[1]) for item in files('utils')]
 
     scripts = [(join(environ['PROGRAMFILES'], 'Ultimate Smash Friends\\'),
-               ['ultimate-smash-friends', 'viewer'])]
+               ['ultimate-smash-friends.pyw', 'viewer.pyw'])]
 else:
     data = [(join('share', 'ultimate-smash-friends/') + item[0], item[1])
             for item in files('data')]
@@ -78,9 +78,10 @@ setup(name='ultimate-smash-friends',
                    'Topic :: Games/Entertainment :: Arcade'
                   ],
       packages=['usf'],
-      scripts=[] if OS == 'windows' else ['ultimate-smash-friends', 'viewer', 
-                                          'utils/togimpmap', 'utils/tolevel', 
-                                          'utils/xml_text_extractor'],
+      scripts=[] if OS == 'windows' else ['ultimate-smash-friends.pyw', 
+                                          'viewer.pyw', 'utils/togimpmap.py', 
+                                          'utils/tolevel.py', 
+                                          'utils/xml_text_extractor.py'],
       requires=['pygame (>=1.6)', 'python (>=2.5)'],
       console=['ultimate-smash-friends'],
       data_files=(data + doc + config + utils + scripts if OS == 'windows' else
