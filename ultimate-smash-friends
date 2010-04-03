@@ -115,7 +115,7 @@ class Main(object):
                 'If a level and at least two players are selected, a match is ' \
                 'launched immediately.'
 
-        version = '%prog 2010-1-19'
+        version = '%prog 0.0.7'
 
         parser = OptionParser(usage=usage, version=version)
         parser.add_option('-a', '--authors', 

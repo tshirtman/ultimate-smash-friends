@@ -1,29 +1,29 @@
 <gui>
-<label value="Choose characters : " posx="30" posy="30" id="label" />
-<imagebutton value="prev.png" posx="30" posy="40" sizey="7" sizex="4" id="prev0" action="" />
-<imagebutton value="next.png" posx="40" posy="40" sizey="7" sizex="4" id="next0" action="" />
-<image value="gui/image/none.png" posx="35" posy="40" sizey="10" sizex="0" id="player0" action="" />
-<label value="AI : " posx="30" posy="52" id="ai_label0" />
-<checkbox value="" posx="40" posy="52" sizey="7" sizex="0" id="ai0" action="" />
+  <label value="Choose characters : " posx="30" posy="30" id="label" />
+  <imagebutton value="prev.png" posx="30" posy="40" sizey="7" sizex="4" id="prev0" action="" />
+  <imagebutton value="next.png" posx="40" posy="40" sizey="7" sizex="4" id="next0" action="" />
+  <image value="gui/image/none.png" posx="35" posy="40" sizey="10" sizex="0" id="player0" action="" />
+  <label value="AI : " posx="30" posy="52" id="ai_label0" />
+  <checkbox value="" posx="40" posy="52" sizey="7" sizex="0" id="ai0" action="" />
 
-<imagebutton value="prev.png" posx="50" posy="40" sizey="7" sizex="4" id="prev1" action="" />
-<imagebutton value="next.png" posx="60" posy="40" sizey="7" sizex="4" id="next1" action="" />
-<image value="gui/image/none.png" posx="55" posy="40" sizey="10" sizex="0" id="player1" action="" />
-<label value="AI : " posx="50" posy="52" id="ai_label1" />
-<checkbox value="" posx="60" posy="52" sizey="7" sizex="0" id="ai1" action="" />
+  <imagebutton value="prev.png" posx="50" posy="40" sizey="7" sizex="4" id="prev1" action="" />
+  <imagebutton value="next.png" posx="60" posy="40" sizey="7" sizex="4" id="next1" action="" />
+  <image value="gui/image/none.png" posx="55" posy="40" sizey="10" sizex="0" id="player1" action="" />
+  <label value="AI : " posx="50" posy="52" id="ai_label1" />
+  <checkbox value="" posx="60" posy="52" sizey="7" sizex="0" id="ai1" action="" />
 
-<imagebutton value="prev.png" posx="30" posy="65" sizey="7" sizex="4" id="prev2" action="" />
-<imagebutton value="next.png" posx="40" posy="65" sizey="7" sizex="4" id="next2" action="" />
-<image value="gui/image/none.png" posx="35" posy="65" sizey="10" sizex="0" id="player2" action="" />
-<label value="AI : " posx="30" posy="77" id="ai_label2" />
-<checkbox value="" posx="40" posy="77" sizey="7" sizex="0" id="ai2" action="" />
+  <imagebutton value="prev.png" posx="30" posy="65" sizey="7" sizex="4" id="prev2" action="" />
+  <imagebutton value="next.png" posx="40" posy="65" sizey="7" sizex="4" id="next2" action="" />
+  <image value="gui/image/none.png" posx="35" posy="65" sizey="10" sizex="0" id="player2" action="" />
+  <label value="AI : " posx="30" posy="77" id="ai_label2" />
+  <checkbox value="" posx="40" posy="77" sizey="7" sizex="0" id="ai2" action="" />
 
-<imagebutton value="prev.png" posx="50" posy="65" sizey="7" sizex="4" id="prev3" action="" />
-<imagebutton value="next.png" posx="60" posy="65" sizey="7" sizex="4" id="next3" action="" />
-<image value="gui/image/none.png" posx="55" posy="65" sizey="10" sizex="0" id="player3" action="" />
-<label value="AI : " posx="50" posy="77" id="ai_label3" />
-<checkbox value="" posx="60" posy="77" sizey="7" sizex="0" id="ai3" action="" />
+  <imagebutton value="prev.png" posx="50" posy="65" sizey="7" sizex="4" id="prev3" action="" />
+  <imagebutton value="next.png" posx="60" posy="65" sizey="7" sizex="4" id="next3" action="" />
+  <image value="gui/image/none.png" posx="55" posy="65" sizey="10" sizex="0" id="player3" action="" />
+  <label value="AI : " posx="50" posy="77" id="ai_label3" />
+  <checkbox value="" posx="60" posy="77" sizey="7" sizex="0" id="ai3" action="" />
 
-<button value="Next" posx="60" posy="87" sizey="10" sizex="20" id="gotolevel" action="" />
-<parent>main.usfgui</parent>
+  <button value="Next" posx="60" posy="87" sizey="10" sizex="20" id="gotolevel" action="" />
+  <parent>main.usfgui</parent>
 </gui>
