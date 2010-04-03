@@ -251,9 +251,12 @@ class Controls (object):
                 i=0
                 for player in game_instance.players:
                     if(player.ai):
-                        self.ai.update( game_instance, i)
-                        for sequence_ai in self.ai.sequences_ai:
-                            self.player_sequences[i].append(sequence_ai)
+                        if player.ai_ != None:
+                            player.ai_.update( game_instance, i)
+                            for sequence_ai in player.ai_.sequences_ai:
+                                self.player_sequences[i].append(sequence_ai)
+                        else:
+                            player.ai_ = AI()
                     i+=1
             except:
                 pass
