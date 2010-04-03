@@ -116,8 +116,9 @@ class Config(Singleton):
                 in the blanks should be trivial
             """
 			#TODO : a proper system to localize .cfg
-            sys_data_dir = dirname(abspath(join(__file__, '..', 'data')
-            sys_config_file = dirname(abspath(join(__file__, '..', 'system.cfg')
+            sys_data_dir = dirname(abspath(join(__file__, '..', 'data')))
+            sys_config_file = dirname(abspath(join(__file__, '..', 
+                                      'system.cfg')))
             # see if files are installed on the system
             stat(sys_data_dir)
 
