@@ -32,7 +32,6 @@ def files(path):
     return all_results
 
 if OS == 'windows':
-    # TODO: change to sane install locations for windows
     data = [(join(environ['PROGRAMFILES'], 'Ultimate Smash Friends\\') + 
              item[0], item[1]) for item in files('data')]
     doc = [(join(environ['PROGRAMFILES'], 'Ultimate Smash Friends\\') +
@@ -67,7 +66,7 @@ setup(name='ultimate-smash-friends',
                    'smash bros, from nintendo.'),
       author='Gabriel Pettier',
       author_email='gabriel.pettier@gmail.com',
-      maintainer='Edwin Marshall (aspidites',
+      maintainer='Edwin Marshall (aspidites)',
       maintainer_email='aspidites@inbox.com',
       url='http://usf.tuxfamily.org',
       classifiers=['Development Status :: 2 - Pre-Alpha',
