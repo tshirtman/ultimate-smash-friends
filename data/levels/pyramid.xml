@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map 
+	name="pyramid"
+	background="pyramid-background.png"
+	foreground="pyramid-foreground.png"
+	middle="pyramid-middle.png"
+	>
+	<block coords="76 373 270 46" ></block>
+	<block coords="343 241 190 44" ></block>
+	<block coords="594 419 229 47" ></block>
+	<block coords="542 108 286 46" ></block>
+</map>
