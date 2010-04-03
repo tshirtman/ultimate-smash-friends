@@ -10,6 +10,6 @@ add multilayer to level
 add animation capacity to layers
 add wind?
 correct shield placement
-for B find at last ten fresh new testers
-build for windows and OSX?
+for Beta find at last ten fresh new testers
+build for windows vista, windows 7, and OSX
 
