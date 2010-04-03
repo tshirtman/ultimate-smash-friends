@@ -336,6 +336,7 @@ class WidgetParagraph(Widget):
             self.falseposy
         except:
             self.falseposy = self.posy
+        self.click(pygame.event.Event(pygame.NOEVENT))
         self.drawSimple()
     def click(self, event, sens=True):
         if(type(event) is not type('') and event.type == pygame.MOUSEBUTTONDOWN):
