@@ -6,12 +6,11 @@
 
 """
 import os, platform, imp
+from os import environ
+from os.path import join, splitext, isdir, isfile
 from sys import exit
 from distutils.core import setup
 OS = platform.system().lower()
-
-if OS == 'windows':
-    import py2exe
 
 def files(path):
     """ Return all non-python-file filenames in path """
@@ -20,13 +19,13 @@ def files(path):
     module_suffixes = [info[0] for info in imp.get_suffixes()]
     ignore_dirs = ['cvs']
     for item in os.listdir(path):
-        name = os.path.join(path, item)
+        name = join(path, item)
         if (
-            os.path.isfile(name) and
-            os.path.splitext(item)[1] not in module_suffixes
+            isfile(name) and
+            splitext(item)[1] not in module_suffixes
             ):
             result.append(name)
-        elif os.path.isdir(name) and item.lower() not in ignore_dirs:
+        elif isdir(name) and item.lower() not in ignore_dirs:
             all_results.extend(files(name))
     if result:
         all_results.append([path, result])
@@ -34,25 +33,36 @@ def files(path):
 
 if OS == 'windows':
     # TODO: change to sane install locations for windows
-    data = [('',['system.cfg', 'user.cfg'])]
+    data = [(join(environ['PROGRAMFILES'], 'Ultimate Smash Friends\\') + 
+             item[0], item[1]) for item in files('data')]
+    doc = [(join(environ['PROGRAMFILES'], 'Ultimate Smash Friends\\') +
+            item[0], item[1]) for item in files('doc')]
+    config = [(join(environ['PROGRAMFILES'], 'Ultimate Smash Friends\\'),
+              ['system.cfg'])]
+    utils = [(join(environ['PROGRAMFILES'], 'Ultimate Smash Friends\\') +
+             item[0], item[1]) for item in files('utils')]
+
+    scripts = [(join(environ['PROGRAMFILES'], 'Ultimate Smash Friends\\'),
+               ['ultimate-smash-friends', 'viewer'])]
 else:
-    data = [('share/ultimate-smash-friends/' + item[0], item[1]) 
+    data = [(join('share', 'ultimate-smash-friends/') + item[0], item[1])
             for item in files('data')]
 
-    doc = [('share/doc/ultimate-smash-friends' + 
-            item[0].replace('doc', ''), item[1]) 
-            for item in files('doc')]
-    doc[-1][-1].append('COPYING.txt')
-    doc[-1][-1].append('CREDITS')
-    doc[-1][-1].append('README.txt')
-    doc[-1][-1].append('README.fr.txt')
+    doc = [(join('share', 'doc', 'ultimate-smash-friends') +
+           item[0].replace('doc', ''), item[1]) for item in files('doc')]
 
-    etc = [('/etc/ultimate-smash-friends/', ['system.cfg',])]
+    config = [(join('/etc', 'ultimate-smash-friends'), ['system.cfg'])]
 
-    icon = [('share/applications', ['ultimate-smash-friends.desktop'])]
+    icon = [(join('share', 'applications'), 
+                  ['ultimate-smash-friends.desktop'])]
+
+doc[-1][-1].append('COPYING.txt')
+doc[-1][-1].append('CREDITS')
+doc[-1][-1].append('README.txt')
+doc[-1][-1].append('README.fr.txt')
 
 setup(name='ultimate-smash-friends',
-      version='0.0.7',
+      version='0.0.8',
       description=('A 2d arcade fight game, based on the gameplay of super '
                    'smash bros, from nintendo.'),
       author='Gabriel Pettier',
@@ -69,9 +79,11 @@ setup(name='ultimate-smash-friends',
                    'Topic :: Games/Entertainment :: Arcade'
                   ],
       packages=['usf'],
-      scripts=['ultimate-smash-friends', 'viewer', 'utils/togimpmap', 
-               'utils/tolevel', 'utils/xml_text_extractor'],
-      requires=['pygame (>=1.6)'],
+      scripts=[] if OS == 'windows' else ['ultimate-smash-friends', 'viewer', 
+                                          'utils/togimpmap', 'utils/tolevel', 
+                                          'utils/xml_text_extractor'],
+      requires=['pygame (>=1.6)', 'python (>=2.5)'],
       console=['ultimate-smash-friends'],
-      data_files = data if OS == 'windows' else data + doc + etc + icon
+      data_files=(data + doc + config + utils + scripts if OS == 'windows' else
+                  data + doc + config + icon)
      )

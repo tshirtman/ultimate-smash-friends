@@ -5,6 +5,7 @@ INSTALL.txt
 README.fr.txt
 README.txt
 setup.py
+stdeb.cfg
 system.cfg
 ultimate-smash-friends
 ultimate-smash-friends.desktop
@@ -514,6 +515,7 @@ data/gui/image/next.png
 data/gui/image/none.png
 data/gui/image/none800.png
 data/gui/image/prev.png
+data/gui/image/pyramid.png
 data/gui/image/screen.png
 data/gui/japan/back_button.png
 data/gui/japan/back_button_hover.png
@@ -619,8 +621,13 @@ data/levels/maryoland-foreground.png
 data/levels/maryoland-middle.png
 data/levels/maryoland.map
 data/levels/maryoland.xml
+data/levels/pod-pyramid.png
 data/levels/pod.png
 data/levels/puddle.png
+data/levels/pyramid-background.png
+data/levels/pyramid-foreground.png
+data/levels/pyramid-middle.png
+data/levels/pyramid.xml
 data/locale/messages.po
 data/locale/es_ES/LC_MESSAGES/messages.mo
 data/locale/es_ES/LC_MESSAGES/messages.po

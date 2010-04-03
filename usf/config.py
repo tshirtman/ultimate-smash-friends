@@ -18,8 +18,7 @@
 # If not, see <http://www.gnu.org/licenses/>.                                 #
 ###############################################################################
 
-""" It should be noted that unlike the old config, key/value pairs are loaded
-    exactly as they are represented in the config file. This is important
+""" It should be noted that unlike the old config, key/value pairs are loaded exactly as they are represented in the config file. This is important
     particularly for keyboard configuration, because the old  config converted
     key names to key codes, and used them as the dicitonary's keys, using the
     keys pressed as the values. Conversely, in new_config.py, no conversion is
@@ -95,7 +94,7 @@ class Config(Singleton):
         self.__parser = SafeConfigParser()
         self.__parser.optionxform=str
 
-        (self.config_dir, self.sys_config_file, self.user_config_file, 
+        (self.user_config_dir, self.sys_config_file, self.user_config_file, 
          self.sys_data_dir, self.user_data_dir) = self.__get_locations()
 
         # load sys config options and replace with defined user config options
@@ -115,18 +114,29 @@ class Config(Singleton):
                 similar so that proper testing can be done. From there, filling
                 in the blanks should be trivial
             """
-			#TODO : a proper system to localize .cfg
-            sys_data_dir = dirname(abspath(join(__file__, '..', 'data')))
-            sys_config_file = dirname(abspath(join(__file__, '..', 
-                                      'system.cfg')))
-            # see if files are installed on the system
-            stat(sys_data_dir)
 
-            # set the variables according to HOME variable
-            config_dir = join(environ['APPDATA'], 'usf')
+            try:
+                sys_data_dir = join(environ['PROGRAMFILES'], 
+                                    'Ultimate Smash Friends', 'data')
+                sys_config_file = join(environ['PROGRAMFILES'],
+                                       'Ultimate Smash Friends', 'system.cfg')
 
-            user_config_file = join(config_dir, 'user.cfg')
-            user_data_dir = join(config_dir, 'user_data')
+                # see if files are installed on the system
+                stat(sys_data_dir)
+
+                user_config_dir = join(environ['APPDATA'], 
+                                       'Ultimate Smash Friends')
+
+            except OSError:
+                # files aren't installed on the system so set user_config_dir
+                # to the parent directory of this module
+                user_config_dir = dirname(abspath(join(__file__, '..')))
+                sys_data_dir = join(user_config_dir, 'data')
+                sys_config_file = join(user_config_dir, 'system.cfg')
+
+            user_config_file = join(user_config_dir, 'user.cfg')
+            user_data_dir = join(user_config_dir, 'user_data')
+
         elif OS == 'linux':
             try:
                 sys_data_dir = join(prefix, 'share', 'ultimate-smash-friends',
@@ -137,33 +147,33 @@ class Config(Singleton):
                 # see if files are installed on the system
                 stat(sys_data_dir)
 
-                # set the variables according to HOME variable
+                # if XDG_CONFIG_HOME is defined, use it as the user config dir
                 if 'XDG_CONFIG_HOME' in environ.keys():
-                    config_dir = join(environ['XDG_CONFIG_HOME'],
+                    user_config_dir = join(environ['XDG_CONFIG_HOME'],
                                       'ultimate-smash-friends')
                 else:
-                    config_dir = join(environ['HOME'], '.config',
+                    user_config_dir = join(environ['HOME'], '.config',
                                       'ultimate-smash-friends')
 
             except OSError:
-                # files aren't installed on the system so set config_dir to the
+                # files aren't installed on the system so set user_config_dir to the
                 # parent directory of this module
-                config_dir = dirname(abspath(join(__file__, '..')))
-                sys_data_dir = join(config_dir, 'data')
-                sys_config_file = join(config_dir, 'system.cfg')
+                user_config_dir = dirname(abspath(join(__file__, '..')))
+                sys_data_dir = join(user_config_dir, 'data')
+                sys_config_file = join(user_config_dir, 'system.cfg')
 
-            user_config_file = join(config_dir, 'user.cfg')
-            user_data_dir = join(config_dir, 'user_data')
+            user_config_file = join(user_config_dir, 'user.cfg')
+            user_data_dir = join(user_config_dir, 'user_data')
 
         try:
             # create user config and user data directories
-            makedirs(config_dir)
+            makedirs(user_config_dir)
             makedirs(user_data_dir)
         except OSError:
-            # paths already exist or user doesn't have permissions
+            # paths already exist or user doesn't have permission to create them
             pass
         
-        return (config_dir, sys_config_file, user_config_file, 
+        return (user_config_dir, sys_config_file, user_config_file, 
                 sys_data_dir, user_data_dir)
 
     def save(self):
