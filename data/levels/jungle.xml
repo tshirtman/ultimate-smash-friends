@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map 
+	name="jungle"
+	background="jungle-background.png"
+	foreground="jungle-foreground.png"
+	middle="jungle-middle.png"
+	>
+	<block coords="0 443 167 77" ></block>
+	<block coords="330 227 125 69" ></block>
+	<block coords="493 392 173 93" ></block>
+	<block coords="762 435 149 85" ></block>
+    <moving-block
+    texture="pod-jungle.png"
+    >
+        <rect
+        coords="0 0 176 69"
+        ></rect>
+        <pattern
+        position="150 100"
+        time="1"
+        ></pattern>
+        <pattern
+        position="150 500"
+        time="20000"
+        ></pattern>
+        <pattern
+        position="150 100"
+        time="28000"
+        ></pattern>
+    </moving-block>
+</map>
