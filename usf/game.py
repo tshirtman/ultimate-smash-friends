@@ -59,14 +59,14 @@ class Game (object):
     menu).
 
     """
-    notif = [[time.time(), "Notif"]]
-    ingame = True
     def __init__(self, screen, level="biglevel", players_=(None, None, None, None)):
         """
         Initialize a game with a list of player and a level,
         level is the basename of the level in levels/
 
         """
+        self.notif = [[time.time(), "Notif"]]
+        self.ingame = True
         self.ended = False
         self.type = 'local'
         self.screen = screen
@@ -208,6 +208,7 @@ class Game (object):
         Draw every parts of the game on the screen.
 
         """
+        self.center_zoom_camera()
         self.level.draw_before_players(
             self.screen, self.level_place, self.zoom
         )
@@ -524,8 +525,6 @@ class Game (object):
             # frame (and forget about passed time).
             logging.debug("too slow, forget this frame!")
             return "game"
-
-        self.center_zoom_camera()
 
         self.update_events( deltatime )
 

@@ -181,14 +181,6 @@ class Main(object):
         if config.general['FULLSCREEN'] == "True":
             pygame.display.toggle_fullscreen()
 
-        # following operation can be quite long, so a loading screen is good
-        image = loaders.image(os.path.join(config.sys_data_dir, 'gui', 
-                                           config.general['THEME'],
-                                           'loading.png'))[0]
-
-        #self.game_font = pygame.font.Font(None, 50)
-        self.screen.blit(image,(0,0))
-
     def init_sound(self):
         if config.audio['MUSIC']:
             try:
