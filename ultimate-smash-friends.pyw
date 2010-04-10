@@ -64,13 +64,13 @@ class Main(object):
         self.parse_options()
 
         if self.game_type == "server":
-            self.game = NetworkServerGame(num)
+            self.game = NetworkServerGame()
 
         elif self.game_type == "client":
             self.init_screen()
             self.init_sound()
 
-            self.game = NetworkClientGame(players, level)
+            self.game = NetworkClientGame(level, players)
             self.state = "game"
             self.menu = Gui()
 

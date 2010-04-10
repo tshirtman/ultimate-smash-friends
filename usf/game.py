@@ -568,11 +568,14 @@ class Game (object):
         return "game"
 
 class ThreadedTCPRequestHandler(SocketServer.BaseRequestHandler):
+    def __init__(self):
+        super()
+        self.sharedMemory = sharedMemory()
 
     def handle(self):
         try:
             self.sharedMemory.lock.acquire()
-            self.id = sharedMemory.get('current_client_id')
+            self.id = self.sharedMemory.get('current_client_id')
             clients = self.sharedMemory.get('clients')
             clients.append({})
             self.sharedMemory.release()
@@ -604,7 +607,8 @@ class ThreadedTCPRequestHandler(SocketServer.BaseRequestHandler):
                             )
                 self.request.send(response)
         except:
-           print "client quit"
+            raise
+            print "client quit"
 
 class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     pass
@@ -651,7 +655,7 @@ class NetworkServerGame(Game):
     send new postions of every entities, to every network players.
 
     """
-    def __init__(self, level="biglevel", players=(None, None, None, None)):
+    def __init__(self):
         """
         Initialize a game with a list of player and a level,
         level is the basename of the level in media/levels/
@@ -660,14 +664,19 @@ class NetworkServerGame(Game):
         self.sharedMemory = sharedMemory.getInstance()
         self.sharedMemory.set('clients', [])
 
-        Game.__init__(self, None, level, players)
+        players = []
+        level = ""
+
         self.current_client_id = 0
-        server = ThreadedTCPServer((HOST, PORT), ThreadedTCPRequestHandler)
-        ip, port = server.server_address
+        self.server = ThreadedTCPServer(
+            ('0.0.0.0', config.general['NETWORK_PORT']),
+            ThreadedTCPRequestHandler
+            )
+        ip, port = self.server.server_address
 
         # Start a thread with the server -- that thread will then start one
         # more thread for each request
-        server_thread = threading.Thread(target=server.serve_forever)
+        server_thread = threading.Thread(target=self.server.serve_forever)
         # Exit the server thread when the main thread terminates
         server_thread.setDaemon(True)
         server_thread.start()
@@ -675,9 +684,10 @@ class NetworkServerGame(Game):
 
         # choose level
 
-        while len(self.sharedMemory.get(clients)) < 4:
+        while len(self.sharedMemory.get('clients')) < 4:
             time.sleep(1)
 
+        Game.__init__(self, None, level, players)
         self.begin(caracters, level)
 
     def begin(self, level, players_):
@@ -702,7 +712,7 @@ class NetworkServerGame(Game):
         )+'|'+self.level.serialize()
 
     def __del__(self):
-        server.shutdown()
+        self.server.shutdown()
 
 class NetworkClientGame(Game):
     """
