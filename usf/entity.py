@@ -394,6 +394,21 @@ class Entity (object):
         the current zoom of the camera.
 
         """
+        # Draw a point on the map at the entity position.
+        if not self.present:
+            return
+
+        draw_rect(
+                surface,
+                pygame.Rect(
+                    self.place[0]/8,
+                    self.place[1]/8,
+                    2,
+                    2
+                    ),
+                pygame.Color('red')
+                )
+
         if self.visible == True:
             real_coords = (
                     int(self.place[0]*zoom)*(SIZE[0]/800.0)+coords[0]
@@ -476,6 +491,7 @@ class Entity (object):
         # Avoid collisions with the map
         self.worldCollide (game)
 
+
     def update(self, dt, t, surface, game, coords=(0,0), zoom=1):
         """
         Global function to update everything about entity, dt is the time
@@ -486,30 +502,12 @@ class Entity (object):
 
         """
         self.update_floor_vector( game.level.moving_blocs)
-        #TODO: fix vector movement to take account of framechange between two
-        # displays
-
-        # This function is dirty and slow. must be cleaned and optimized
-
         # all of this is nonsense if the entity is not present.
         if not self.present:
             return
 
         self.rect[2:] = self.entity_skin.animation.rect[2:]
         self.rect[:2] = self.place[0] - self.rect[2]/2, self.place[1]
-
-        # Draw a point on the map at the entity position.
-        if surface is not None:
-            draw_rect(
-                    surface,
-                    pygame.Rect(
-                        self.place[0]/8,
-                        self.place[1]/8,
-                        2,
-                        2
-                        ),
-                    pygame.Color('red')
-                    )
 
         # Update animation of entity
         if self.entity_skin.update( t, self.reversed ) == 0:
