@@ -38,14 +38,11 @@ from usf.gui import Gui
 from usf.controls import Controls
 from usf import loaders, music
 
-
 #logging.basicConfig(filename=config['LOG_FILENAME'],level=logging.DEBUG)
-
-
 
 class Main(object):
     """
-    The main class, load some parameters, set initial states and take care of
+    The main class, load some parameters, sets initial states and takes care of
     the game main loop.
 
     """
@@ -57,8 +54,6 @@ class Main(object):
 
         """
 
-        self.init_screen()
-        self.init_sound()
 
         self.game_type = ''
         self.level = None
@@ -72,12 +67,16 @@ class Main(object):
             self.game = NetworkServerGame(num)
 
         elif self.game_type == "client":
+            self.init_screen()
+            self.init_sound()
 
             self.game = NetworkClientGame(players, level)
             self.state = "game"
             self.menu = Gui()
 
         else:
+            self.init_screen()
+            self.init_sound()
 
             if len(self.players) > 1 and self.level is not None:
                 self.game = Game(self.screen, self.level, self.players)
@@ -237,11 +236,15 @@ class Main(object):
                 break
 
     def author(self):
-        if 'CREDITS' not in os.listdir(os.path.join(config.config_dir)):
-            logging.debug(config.config_dir+'/CREDITS file not found')
+        if 'CREDITS' not in os.listdir(os.path.join(config.sys_data_dir)):
+            print config.sys_data_dir
+            print '\n'.join(os.listdir(os.path.join(config.sys_data_dir)))
+            print "plop?"
+            logging.debug(config.sys_data_dir+'/CREDITS file not found')
             #sys.exit(0)
         else:
-            author_file = open(os.path.join(config.config_dir,'CREDITS'))
+            author_file = open(os.path.join(config.sys_data_dir,'CREDITS'))
+            print author_file.read()
             author_file.close()
             #sys.exit(2)
 
