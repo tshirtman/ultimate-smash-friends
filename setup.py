@@ -1,16 +1,24 @@
 #!/usr/bin/env python
+from __future__ import with_statement
 
 """ The files method was adapted from the AutoDataDiscovery solution in the
     official Distutils Cookbook:
     http://wiki.python.org/moin/Distutils/Cookbook/AutoDataDiscovery
 
 """
-import os, platform, imp
-from os import environ
-from os.path import join, splitext, isdir, isfile
+import sys, os, platform, imp
+from os import environ, sep
+from os.path import abspath, join, splitext, isdir, isfile
 from sys import exit
 from distutils.core import setup
+
 OS = platform.system().lower()
+
+if OS == 'windows' or 'bdist_wininst' in sys.argv:
+    print ('This script was not meant to be run under windows. If you want '
+          'to create a package for windows, please install InnoSetup and use'
+          'the included setup.iss script, thanks.')
+    sys.exit(1)
 
 def files(path):
     """ Return all non-python-file filenames in path """
@@ -31,34 +39,21 @@ def files(path):
         all_results.append([path, result])
     return all_results
 
-if OS == 'windows':
-    data = [(join(environ['PROGRAMFILES'], 'Ultimate Smash Friends\\') + 
-             item[0], item[1]) for item in files('data')]
-    doc = [(join(environ['PROGRAMFILES'], 'Ultimate Smash Friends\\') +
-            item[0], item[1]) for item in files('doc')]
-    config = [(join(environ['PROGRAMFILES'], 'Ultimate Smash Friends\\'),
-              ['system.cfg'])]
-    utils = [(join(environ['PROGRAMFILES'], 'Ultimate Smash Friends\\') +
-             item[0], item[1]) for item in files('utils')]
+data = [(join('share', 'ultimate-smash-friends') + sep + item[0], item[1])
+        for item in files('data')]
 
-    scripts = [(join(environ['PROGRAMFILES'], 'Ultimate Smash Friends\\'),
-               ['ultimate-smash-friends.pyw', 'viewer.pyw'])]
-else:
-    data = [(join('share', 'ultimate-smash-friends/') + item[0], item[1])
-            for item in files('data')]
-
-    doc = [(join('share', 'doc', 'ultimate-smash-friends') +
-           item[0].replace('doc', ''), item[1]) for item in files('doc')]
-
-    config = [(join('/etc', 'ultimate-smash-friends'), ['system.cfg'])]
-
-    icon = [(join('share', 'applications'), 
-                  ['ultimate-smash-friends.desktop'])]
-
+doc = [(join('share', 'doc', 'ultimate-smash-friends') +
+       item[0].replace('doc', ''), item[1]) for item in files('doc')]
 doc[-1][-1].append('COPYING.txt')
 doc[-1][-1].append('CREDITS')
 doc[-1][-1].append('README.txt')
 doc[-1][-1].append('README.fr.txt')
+
+config = [(sep + join('etc', 'ultimate-smash-friends'), ['system.cfg'])]
+
+icon = [(join('share', 'applications'), 
+              ['ultimate-smash-friends.desktop'])]
+
 
 setup(name='ultimate-smash-friends',
       version='0.0.8',
@@ -78,12 +73,10 @@ setup(name='ultimate-smash-friends',
                    'Topic :: Games/Entertainment :: Arcade'
                   ],
       packages=['usf'],
-      scripts=[] if OS == 'windows' else ['ultimate-smash-friends.pyw', 
-                                          'viewer.pyw', 'utils/togimpmap.py', 
-                                          'utils/tolevel.py', 
-                                          'utils/xml_text_extractor.py'],
+      scripts=['ultimate-smash-friends.pyw', 
+               'viewer.pyw', 'utils/togimpmap.py', 
+               'utils/tolevel.py', 
+               'utils/xml_text_extractor.py'],
       requires=['pygame (>=1.6)', 'python (>=2.5)'],
-      console=['ultimate-smash-friends'],
-      data_files=(data + doc + config + utils + scripts if OS == 'windows' else
-                  data + doc + config + icon)
+      data_files=(data + doc + config + icon)
      )
