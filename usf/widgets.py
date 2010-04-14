@@ -356,6 +356,7 @@ class WidgetParagraph(Widget):
             self.last_event = time.time()
         return ""
     def setParagraph(self, text):
+        print text
         if(text.split(":")[0] == "file"):
             credits_file = open(text.split(":")[1], 'r').readlines()
             self.credits = ""

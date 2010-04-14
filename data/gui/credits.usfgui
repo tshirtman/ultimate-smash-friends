@@ -1,4 +1,4 @@
 <gui>
-<p posx="25" posy="49" sizey="35" sizex="50" id="credits">file:CREDITS</p>
+<p posx="25" posy="49" sizey="35" sizex="50" id="credits">file:CREDITS.txt</p>
 <parent>main.usfgui</parent>
 </gui>
