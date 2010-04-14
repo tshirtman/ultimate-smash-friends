@@ -29,7 +29,6 @@ import thread
 # Our modules
 from loaders import image
 
-from enums import reverse_keymap
 from config import Config
 
 config = Config.getInstance()
@@ -565,7 +564,8 @@ class Gui(object):
                 self.widget_list[self.screen_current][widget_name].text  = \
                   pygame.key.name(event_current.dict['key'])
 
-                config.keyboard[widget_name.replace('txtconfig', '')] = reverse_keymap[event_current.dict['key']]
+                config.keyboard[widget_name.replace('txtconfig', '')] = \
+                    config.reverse_keymap[event_current.dict['key']]
         else :
             while(True):
                 time.sleep(0.04)

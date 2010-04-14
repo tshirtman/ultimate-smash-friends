@@ -97,6 +97,11 @@ class Config(Singleton):
         (self.user_config_dir, self.sys_config_file, self.user_config_file, 
          self.sys_data_dir, self.user_data_dir) = self.__get_locations()
 
+        # create a dictionary of pygames global variables that represent keys
+        self.reverse_keymap = dict((pygame.__dict__[key], key) 
+                                    for key in pygame.__dict__ 
+                                    if key[:2] in ('K_', 'KM'))
+
         # load sys config options and replace with defined user config options
         self.read([self.sys_config_file, self.user_config_file])
         self.save()
