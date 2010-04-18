@@ -56,7 +56,7 @@ icon = [(join('share', 'applications'),
 
 
 setup(name='ultimate-smash-friends',
-      version='0.0.8',
+      version='0.0.9',
       description=('A 2d arcade fight game, based on the gameplay of super '
                    'smash bros, from nintendo.'),
       author='Gabriel Pettier',

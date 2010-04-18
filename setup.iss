@@ -12,7 +12,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{2960F315-EA73-4EFF-B16D-F82C319CDC88}
 AppName=Ultimate Smash Friends
-AppVerName=Ultimate Smash Friends 0.0.8-2
+AppVerName=Ultimate Smash Friends 0.0.9-1
 AppPublisher=USF Team
 AppPublisherURL=http://usf.tuxfamily.org
 AppSupportURL=http://usf.tuxfamily.org
@@ -54,6 +54,7 @@ Name: "{group}\{cm:UninstallProgram,My Program}"; Filename: "{uninstallexe}"
 
 [Run]
 Filename: "{app}\ultimate-smash-friends.pyw"; Description: "{cm:LaunchProgram,Ultimate Smash Friends}"; Flags: shellexec postinstall skipifsilent
+
 
 
 
