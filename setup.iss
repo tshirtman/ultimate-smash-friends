@@ -35,7 +35,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "\\Vboxsvr\ultimate-smash-friends\ultimate-smash-friends.pyw"; DestDir: "{app}"; Flags: ignoreversion
 Source: "\\Vboxsvr\ultimate-smash-friends\README.fr.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "\\Vboxsvr\ultimate-smash-friends\CREDITS"; DestDir: "{app}"; Flags: ignoreversion
+Source: "\\Vboxsvr\ultimate-smash-friends\CREDITS.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "\\Vboxsvr\ultimate-smash-friends\README.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "\\Vboxsvr\ultimate-smash-friends\system.cfg"; DestDir: "{app}"; Flags: ignoreversion
 Source: "\\Vboxsvr\ultimate-smash-friends\TODO.txt"; DestDir: "{app}"; Flags: ignoreversion
@@ -54,6 +54,7 @@ Name: "{group}\{cm:UninstallProgram,My Program}"; Filename: "{uninstallexe}"
 
 [Run]
 Filename: "{app}\ultimate-smash-friends.pyw"; Description: "{cm:LaunchProgram,Ultimate Smash Friends}"; Flags: shellexec postinstall skipifsilent
+
 
 
 

@@ -66,16 +66,16 @@ class Music (object):
         necessary.
 
         """
-        if config.audio['MUSIC_VOLUME'] != self.music_volume:
-            self.playing.set_volume(config.audio['MUSIC_VOLUME']/100.0)
-        if state != self.precedent_state:
-            self.change_music(self.playlists[state])
-        elif self.playing is None \
-        or time.time() - self.time_begin + 4 > self.playing.get_length():
-            self.change_music(self.playlists[state])
+        if self.playing:
+            if config.audio['MUSIC_VOLUME'] != self.music_volume:
+                self.playing.set_volume(config.audio['MUSIC_VOLUME']/100.0)
+            if state != self.precedent_state:
+                self.change_music(self.playlists[state])
+            elif time.time() - self.time_begin + 4 > self.playing.get_length():
+                self.change_music(self.playlists[state])
 
-        self.music_volume = config.audio['MUSIC_VOLUME']
-        self.precedent_state = state
+            self.music_volume = config.audio['MUSIC_VOLUME']
+            self.precedent_state = state
 
     def change_music(self, music, fading=True):
         """
