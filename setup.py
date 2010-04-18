@@ -45,7 +45,7 @@ data = [(join('share', 'ultimate-smash-friends') + sep + item[0], item[1])
 doc = [(join('share', 'doc', 'ultimate-smash-friends') +
        item[0].replace('doc', ''), item[1]) for item in files('doc')]
 doc[-1][-1].append('COPYING.txt')
-doc[-1][-1].append('CREDITS')
+doc[-1][-1].append('CREDITS.txt')
 doc[-1][-1].append('README.txt')
 doc[-1][-1].append('README.fr.txt')
 

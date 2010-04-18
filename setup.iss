@@ -21,7 +21,7 @@ DefaultDirName={pf}\Ultimate Smash Friends
 DisableDirPage=yes
 DefaultGroupName=Ultimate Smash Friends
 LicenseFile=\\Vboxsvr\ultimate-smash-friends\COPYING.txt
-OutputBaseFilename=ultimate-smash-friends-0.0.8-setup
+OutputBaseFilename=ultimate-smash-friends-0.0.9-setup
 Compression=lzma
 SolidCompression=yes
 
@@ -54,6 +54,7 @@ Name: "{group}\{cm:UninstallProgram,My Program}"; Filename: "{uninstallexe}"
 
 [Run]
 Filename: "{app}\ultimate-smash-friends.pyw"; Description: "{cm:LaunchProgram,Ultimate Smash Friends}"; Flags: shellexec postinstall skipifsilent
+
 
 
 
