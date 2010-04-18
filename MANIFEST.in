@@ -1,6 +1,5 @@
-include ../CREDITS
-include ../*.txt
-include ../*.cfg
-include ../ultimate-smash-friends.desktop
-recursive-include ../data
-recursive-include ../doc
+include *.txt
+include *.cfg
+include ./ultimate-smash-friends.desktop
+recursive-include ./data
+recursive-include ./doc
