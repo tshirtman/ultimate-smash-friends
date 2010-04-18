@@ -155,8 +155,11 @@ def image(name, *args, **kwargs):
 @memoize
 def track(name):
     try:
+        FREQ, BITSIZE, CHANNELS, BUFFER = (44100, -16, 2, 1024)
+        pygame.mixer.init(FREQ, BITSIZE, CHANNELS, BUFFER)
         return pygame.mixer.Sound(name)
     except (pygame.error):
         # no sound
-        pass
+        print "Unable to initialize audio."
+        return None
 
