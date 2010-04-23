@@ -25,6 +25,8 @@ from pygame.locals import *
 from pygame.color import Color
 from pygame.font import Font
 
+from os import stat
+from sys import prefix
 import loaders
 from config import Config
 
@@ -357,7 +359,13 @@ class WidgetParagraph(Widget):
         return ""
     def setParagraph(self, text):
         if(text.split(":")[0] == "file"):
-            credits_file = open(text.split(":")[1], 'r').readlines()
+            sys_data_dir = join(prefix, 'share', 'ultimate-smash-friends',
+                                'data')
+            try:
+                stat(sys_data_dir)
+                credits_file = open(config.sys_data_dir+os.sep+text.split(":")[1], 'r').readlines()
+            except:
+                credits_file = open(text.split(":")[1], 'r').readlines()
             self.credits = ""
             for i in range(0, len(credits_file)):
                 self.credits += credits_file[i]

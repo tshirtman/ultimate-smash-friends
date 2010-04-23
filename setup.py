@@ -41,20 +41,24 @@ def files(path):
 
 data = [(join('share', 'ultimate-smash-friends') + sep + item[0], item[1])
         for item in files('data')]
-
+data.append((join('share', 'ultimate-smash-friends') + sep + 'data', ['CREDITS.txt']))
 doc = [(join('share', 'doc', 'ultimate-smash-friends') +
        item[0].replace('doc', ''), item[1]) for item in files('doc')]
 doc[-1][-1].append('COPYING.txt')
 doc[-1][-1].append('CREDITS.txt')
 doc[-1][-1].append('README.txt')
 doc[-1][-1].append('README.fr.txt')
-
 config = [(sep + join('etc', 'ultimate-smash-friends'), ['system.cfg'])]
 
 icon = [(join('share', 'applications'), 
               ['ultimate-smash-friends.desktop'])]
-
-
+scripts = ['ultimate-smash-friends.pyw',
+               'viewer.pyw', 'utils/togimpmap.py', 
+               'utils/tolevel.py', 
+               'utils/xml_text_extractor.py']
+if platform.system().lower() != 'windows':
+    os.system('mv ultimate-smash-friends.pyw ultimate-smash-friends')
+    scripts[0] = 'ultimate-smash-friends'
 setup(name='ultimate-smash-friends',
       version='0.1.0',
       description=('A 2d arcade fight game, based on the gameplay of super '
@@ -73,10 +77,9 @@ setup(name='ultimate-smash-friends',
                    'Topic :: Games/Entertainment :: Arcade'
                   ],
       packages=['usf'],
-      scripts=['ultimate-smash-friends.pyw', 
-               'viewer.pyw', 'utils/togimpmap.py', 
-               'utils/tolevel.py', 
-               'utils/xml_text_extractor.py'],
+      scripts=scripts,
       requires=['pygame (>=1.6)', 'python (>=2.5)'],
       data_files=(data + doc + config + icon)
      )
+if platform.system().lower() != 'windows':
+    os.system('mv ultimate-smash-friends ultimate-smash-friends.pyw')
