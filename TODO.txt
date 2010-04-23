@@ -10,4 +10,5 @@ add multilayer to level
 add animation capacity to layers
 add wind?
 correct shield placement
+build for Mac OS X
 for Beta find at last ten fresh new testers
