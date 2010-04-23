@@ -12,7 +12,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{2960F315-EA73-4EFF-B16D-F82C319CDC88}
 AppName=Ultimate Smash Friends
-AppVerName=Ultimate Smash Friends 0.0.9-1
+AppVerName=Ultimate Smash Friends 0.1.0-1
 AppPublisher=USF Team
 AppPublisherURL=http://usf.tuxfamily.org
 AppSupportURL=http://usf.tuxfamily.org
@@ -21,7 +21,7 @@ DefaultDirName={pf}\Ultimate Smash Friends
 DisableDirPage=yes
 DefaultGroupName=Ultimate Smash Friends
 LicenseFile=\\Vboxsvr\ultimate-smash-friends\COPYING.txt
-OutputBaseFilename=ultimate-smash-friends-0.0.9-setup
+OutputBaseFilename=ultimate-smash-friends-0.1.0-setup
 Compression=lzma
 SolidCompression=yes
 
