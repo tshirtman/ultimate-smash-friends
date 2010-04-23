@@ -72,7 +72,7 @@ class Music (object):
         else:
             if state != self.previous_state:
                 self.change_music(self.playlists[state])
-            elif time.time() - self.time_begin + 4 > self.current_track.get_length():
+            elif self.current_track and time.time() - self.time_begin + 4 > self.current_track.get_length():
                 self.change_music(self.playlists[state])
 
         self.music_volume = config.audio['MUSIC_VOLUME']
