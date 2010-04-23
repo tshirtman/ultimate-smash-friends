@@ -16,18 +16,18 @@
     Herberts
     Necroluckyboy
 
-==Levels design
+==Levels Design
     Gabriel Pettier
     Necroluckyboy
     Qubodup
 
-==Others graphics
+==Others Graphics
     Jean-Manuel Clemençon aka Samuncle
 
-==Musics
+==Music
     Mourad Achir
 
-==Sounds
+==Sound
     remaxim
 
 ==Translation

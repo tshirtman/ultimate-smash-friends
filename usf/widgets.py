@@ -1,5 +1,4 @@
 ################################################################################
-            irint widget.items[widget.num_item][1]
 # copyright 2009 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
 #                                                                              #
 # This file is part of Ultimate Smash Friends.                                 #

@@ -39,7 +39,7 @@ class Music (object):
         We load the playlist.
 
         """
-        self.precedent_state = None
+        self.previous_state = None
         self.playlists = {}
         self.music_volume = config.audio['MUSIC_VOLUME']
 
@@ -56,7 +56,7 @@ class Music (object):
                                     'ogg'))\
                                 if plist in file
                             ]
-        self.playing = None
+        self.current_track = None
         self.time_begin = 0
 
     def update(self, state, params={}):
@@ -66,16 +66,17 @@ class Music (object):
         necessary.
 
         """
-        if self.playing:
+        if self.current_track is not None:
             if config.audio['MUSIC_VOLUME'] != self.music_volume:
-                self.playing.set_volume(config.audio['MUSIC_VOLUME']/100.0)
-            if state != self.precedent_state:
+                self.current_track.set_volume(config.audio['MUSIC_VOLUME']/100.0)
+        else:
+            if state != self.previous_state:
                 self.change_music(self.playlists[state])
-            elif time.time() - self.time_begin + 4 > self.playing.get_length():
+            elif time.time() - self.time_begin + 4 > self.current_track.get_length():
                 self.change_music(self.playlists[state])
 
-            self.music_volume = config.audio['MUSIC_VOLUME']
-            self.precedent_state = state
+        self.music_volume = config.audio['MUSIC_VOLUME']
+        self.previous_state = state
 
     def change_music(self, music, fading=True):
         """
@@ -85,13 +86,13 @@ class Music (object):
         #logging.debug('launching music: '+str(music.get_length()))
         self.time_begin = time.time()
         if fading == True:
-            if self.playing != None:
-                self.playing.fadeout(3000)
-            self.playing = loaders.track(random.choice(music))
-            if self.playing:
-                self.playing.set_volume(config.audio['MUSIC_VOLUME']/100.0)
-                self.playing.play(fade_ms=3000)
+            if self.current_track != None:
+                self.current_track.fadeout(3000)
+            self.current_track = loaders.track(random.choice(music))
+            if self.current_track:
+                self.current_track.set_volume(config.audio['MUSIC_VOLUME']/100.0)
+                self.current_track.play(fade_ms=3000)
         else:
-            self.playing = music
-            self.playing.play()
+            self.current_track = music
+            self.current_track.play()
 

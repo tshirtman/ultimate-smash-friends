@@ -182,12 +182,7 @@ class Main(object):
 
     def init_sound(self):
         if config.audio['MUSIC']:
-            try:
-                self.music = music.Music()
-            except:
-                pass
-                #TODO: add more useful error handling
-                #exit(0)
+            self.music = music.Music()
 
     def go(self):
         """
