@@ -11,5 +11,3 @@ add animation capacity to layers
 add wind?
 correct shield placement
 for Beta find at last ten fresh new testers
-build for windows vista, windows 7, and OSX
-
