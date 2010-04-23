@@ -27,17 +27,16 @@ import xml.dom.minidom
 import logging
 import thread
 # Our modules
-from loaders import image
 
 from config import Config
 
 config = Config.getInstance()
 
-import usf.controls
+import controls
 import entity_skin
-from usf.game import Game
-import usf.controls
-from usf import loaders
+from game import Game
+import controls
+import loaders
 # Gui modules
 from widgets import (Widget, WidgetLabel, WidgetIcon, WidgetParagraph,
                      WidgetImage, WidgetImageButton, WidgetTextarea,

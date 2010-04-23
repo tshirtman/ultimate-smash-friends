@@ -27,16 +27,16 @@ from optparse import OptionParser
 import logging
 
 # our modules
-from usf.config import Config
+from config import Config
 config = Config.getInstance()
 SIZE = (config.general['WIDTH'], 
         config.general['HEIGHT'])
 
 
-from usf.game import Game, NetworkServerGame, NetworkClientGame
-from usf.gui import Gui
-from usf.controls import Controls
-from usf import loaders, music
+from game import Game, NetworkServerGame, NetworkClientGame
+from gui import Gui
+from controls import Controls
+import loaders, music
 
 #logging.basicConfig(filename=config['LOG_FILENAME'],level=logging.DEBUG)
 
