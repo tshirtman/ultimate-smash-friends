@@ -38,7 +38,7 @@ from game import Game
 import controls
 import loaders
 # Gui modules
-from new_widgets import (Widget, WidgetLabel)
+from new_widgets import (HBox, VBox, Label)
 from skin import Skin
 #translation
 import translation
