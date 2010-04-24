@@ -35,6 +35,7 @@ SIZE = (config.general['WIDTH'],
 
 from game import Game, NetworkServerGame, NetworkClientGame
 from gui import Gui
+from new_gui import NewGui
 from controls import Controls
 import loaders, music
 
@@ -72,7 +73,10 @@ class Main(object):
 
             self.game = NetworkClientGame(level, players)
             self.state = "game"
-            self.menu = Gui()
+            if self.gui == "new":
+                self.menu = NewGui(self.screen)
+            else:
+                self.menu = Gui(self.screen)
 
         else:
             self.init_screen()
@@ -98,7 +102,10 @@ class Main(object):
 
                 pygame.display.update()
 
-                self.menu = Gui(self.screen)
+                if self.gui == "new":
+                    self.menu = NewGui(self.screen)
+                else:
+                    self.menu = Gui(self.screen)
 
                 self.state = "menu"
 
@@ -120,6 +127,9 @@ class Main(object):
         parser.add_option('-a', '--authors', 
                           action='store_true', dest='author',
                           help='See authors of this game.')
+        parser.add_option('-g', '--gui', 
+                          action='store_true', dest='gui',
+                          help='Use the new GUI system')
         parser.add_option('-c', '--character_creator',
                           action='store_true', dest='character_creator',
                           help='create new character')
@@ -149,6 +159,10 @@ class Main(object):
         if options.character_creator:
             launch_character_creator()
         """
+        if options.gui:
+            self.gui = "new"
+        else:
+            self.gui = "old"
 
         if options.level:
             self.level = options.level
