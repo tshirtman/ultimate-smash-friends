@@ -42,15 +42,23 @@ from new_widgets import (HBox, VBox, Label)
 from skin import Skin
 #translation
 import translation
-
+import screen
+        
 
 class NewGui(object):
     """
     Main class of the GUI. Init and maintain all menus and widgets.
 
     """
-    def __init__(self, screen):
-        self.screen = screen
+    def __init__(self, surface):
+        self.screen = surface
+        self.screens = []
+        #TODO : Use a config file
+        screens = ['main_screen']
+        for name in screens:
+            exec("import screen." + name)
+            exec('scr = screen.' + name + '.' + name + "()")
+            self.screens.append(scr)
     def update(self, first, second, third):
         pass
         return False,None

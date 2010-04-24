@@ -40,8 +40,10 @@ class Widget (object):
     This class is the base of all other widget.
     """
 
-    def __init__(self, screen):
-        self.screen = screen
+    def __init__(self):
+        pass
+    def draw(self, surface):
+        pass
         
 class Container(object):
     pass
