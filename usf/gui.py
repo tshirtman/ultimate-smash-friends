@@ -563,7 +563,7 @@ class Gui(object):
                   pygame.key.name(event_current.dict['key'])
 
                 config.keyboard[widget_name.replace('txtconfig', '')] = \
-                    config.reverse_keymap[event_current.dict['key']]
+                    config.reverse_keymap(event_current.dict['key'])
         else :
             while(True):
                 time.sleep(0.04)
