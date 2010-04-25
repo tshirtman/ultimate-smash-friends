@@ -18,7 +18,13 @@
 ################################################################################
 
 from screen import Screen
-
+import widgets
 class main_screen(Screen):
-    def __init__(self):
-        pass
+    def init(self):
+        self.add(widgets.VBox(True))
+        hbox = widgets.HBox(False)
+        self.widget.add(widgets.Image('gui/icon.png'))
+        self.widget.add(hbox)
+        self.widget.add(widgets.Image('gui/icon.png'))
+        hbox.add(widgets.Label('gui/icon.png'), (10,40))
+        hbox.add(widgets.Image('gui/icon.png'))

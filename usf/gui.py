@@ -38,7 +38,7 @@ from game import Game
 import controls
 import loaders
 # Gui modules
-from widgets import (Widget, WidgetLabel, WidgetIcon, WidgetParagraph,
+from old_widgets import (Widget, WidgetLabel, WidgetIcon, WidgetParagraph,
                      WidgetImage, WidgetImageButton, WidgetTextarea,
                      WidgetCheckbox, WidgetCoverflow, WidgetProgressBar)
 

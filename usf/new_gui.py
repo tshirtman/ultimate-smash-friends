@@ -38,11 +38,10 @@ from game import Game
 import controls
 import loaders
 # Gui modules
-from new_widgets import (HBox, VBox, Label)
+from widgets import (HBox, VBox, Label)
 from skin import Skin
 #translation
 import translation
-import screen
         
 
 class NewGui(object):
@@ -52,15 +51,16 @@ class NewGui(object):
     """
     def __init__(self, surface):
         self.screen = surface
-        self.screens = []
+        self.screens = {}
         #TODO : Use a config file
         screens = ['main_screen']
         for name in screens:
             exec("import screen." + name)
-            exec('scr = screen.' + name + '.' + name + "()")
-            self.screens.append(scr)
+            exec('scr = screen.' + name + '.' + name + "('"+ name +"',self.screen)")
+            self.screens[name] = scr
+        self.screen_current = 'main_screen'
     def update(self, first, second, third):
-        pass
+        self.screens[self.screen_current].update()
         return False,None
 skin = Skin()
 class Dialog(object):
