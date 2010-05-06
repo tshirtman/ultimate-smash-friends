@@ -59,10 +59,20 @@ class NewGui(object):
             exec('scr = screen.' + name + '.' + name + "('"+ name +"',self.screen)")
             self.screens[name] = scr
         self.screen_current = 'main_screen'
+        self.skin = Skin()
     def update(self, first, second, third):
+        #draw background
+        self.screen.blit(loaders.image(
+            config.sys_data_dir+
+            os.sep+
+            "gui"+
+            os.sep +
+            config.general['THEME']+
+            os.sep+
+            self.skin.background[0], scale=(config.general['WIDTH'], config.general['HEIGHT'])
+            )[0], (0,0))
         self.screens[self.screen_current].update()
-        return False,None
-skin = Skin()
+        return False, None
 class Dialog(object):
     state = False
     image = None

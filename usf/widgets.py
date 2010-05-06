@@ -65,7 +65,7 @@ class HBox(Container):
     def __init__(self, extend=True):
         self.extend = extend
         self.init()
-    def add(self, widget, size=(20,20)):
+    def add(self, widget, size=(0,0)):
         self.widgets.append(widget)
         if self.extend:
             for widget in self.widgets:
@@ -77,6 +77,7 @@ class HBox(Container):
             for widget in self.widgets:
                 posx += widget.width
             widget.x = posx
+            #if size != (0,0):
             widget.setSize(size[0]*self.width/100, size[1*self.height/100])
     def draw(self):
         self.surface = self.surface.convert().convert_alpha()
@@ -88,7 +89,7 @@ class VBox(Container):
     def __init__(self, extend=True):
         self.extend = extend
         self.init()
-    def add(self, widget, size=(20,20)):
+    def add(self, widget, size=(0,0)):
         self.widgets.append(widget)
         if self.extend:
             for widget in self.widgets:
@@ -100,7 +101,8 @@ class VBox(Container):
             for widget in self.widgets:
                 posy += widget.height
             widget.y = posx
-            widget.setSize(size[0]*self.width/100, size[1*self.height/100])
+            if size != (0,0):
+                widget.setSize(size[0]*self.width/100, size[1*self.height/100])
     def draw(self):
         self.surface = self.surface.convert().convert_alpha()
         for widget in self.widgets:
@@ -128,13 +130,19 @@ class Image(Widget):
     def __init__(self, image):
         #save the path to scale it later -> maybe it is bad for performance, FIXME
         self.path = image
+        size = get_scale(loaders.image(
+                    config.sys_data_dir+
+                    os.sep+
+                    image)[0])
+        print size
         self.surface = loaders.image(
                     config.sys_data_dir+
                     os.sep+
-                    image)[0]
+                    image, scale=size)[0]
         self.init()
         print "loading an image : " + self.path
     def setSize(self, w,h):
+        print "resize an image " + self.path
         self.height = h
         self.width = w
         self.surface = loaders.image(
@@ -147,3 +155,6 @@ class Image(Widget):
         return self.surface
 class Button(Label):
     pass
+def get_scale(surface):
+    size = (surface.get_width()*800/config.general['WIDTH'], surface.get_height()*480/config.general['HEIGHT'])
+    return size

@@ -26,5 +26,5 @@ class main_screen(Screen):
         self.widget.add(widgets.Image('gui/icon.png'))
         self.widget.add(hbox)
         self.widget.add(widgets.Image('gui/icon.png'))
-        hbox.add(widgets.Label('gui/icon.png'), (10,40))
-        hbox.add(widgets.Image('gui/icon.png'))
+        hbox.add(widgets.Label('gui/icon.png'))
+        hbox.add(widgets.Image('gui/image/biglevel.png'))
