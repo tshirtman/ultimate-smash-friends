@@ -27,7 +27,6 @@ import logging
 import entity_skin
 import loaders
 import timed_event
-#from config import config
 
 from config import Config
 

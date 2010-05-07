@@ -39,6 +39,7 @@ from debug_utils import draw_rect
 from debug_utils import draw_rect
 
 config = Config()
+
 SIZE = (config.general['WIDTH'],
         config.general['HEIGHT'])
 

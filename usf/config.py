@@ -29,8 +29,6 @@ import platform
 import logging
 import pygame
 
-#from singletonmixin import Singleton
-
 OS = platform.system().lower()
 
 class Option(dict):
@@ -94,7 +92,7 @@ class Config(object):
     # inspired by http://code.activestate.com/recipes/66531/
     __shared_state = {}
 
-    def __init__(self):
+    def __init__(self, config_files=None):
         self.__dict__ = self.__shared_state
         self.__parser = SafeConfigParser()
         self.__parser.optionxform=str
@@ -102,8 +100,12 @@ class Config(object):
         (self.user_config_dir, self.sys_config_file, self.user_config_file, 
          self.sys_data_dir, self.user_data_dir) = self.__get_locations()
 
-        # load sys config options and replace with defined user config options
-        self.read([self.sys_config_file, self.user_config_file])
+        
+        if config_files is None:
+            self.read([self.sys_config_file, self.user_config_file])
+        else:
+            self.read(config_files)
+
         self.save()
 
     def __get_locations(self):
