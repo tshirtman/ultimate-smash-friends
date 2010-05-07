@@ -27,6 +27,7 @@ from sys import prefix
 from ConfigParser import SafeConfigParser
 import platform
 import logging
+
 import pygame
 
 OS = platform.system().lower()
@@ -200,3 +201,11 @@ class Config(object):
                     parser=self.__parser,
                     config=self.user_config_file,
                     name=section))
+
+    def reverse_keymap(self, keycode=None):
+        keymap = dict((value, key) 
+                      for key, value in pygame.__dict__.iteritems()
+                      if key[:2] in ('K_', 'KM'))
+
+        if keycode is not None:
+            return keymap[keycode]
