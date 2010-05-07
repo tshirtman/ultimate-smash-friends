@@ -31,6 +31,7 @@ from __future__ import with_statement
 from os import environ, makedirs, stat, sep
 from os.path import join, dirname, abspath
 from sys import prefix
+
 from ConfigParser import SafeConfigParser
 import platform
 import logging
@@ -61,20 +62,28 @@ class Option(dict):
             self.__parser.write(config_file)
 
     def __getitem__(self, key):
-        item = dict.__getitem__(self, key)
-        # detect whether the item is a bool, int, float, or string
-        try:
-            return int(item)
-        except ValueError:
+        # create a list of strings for the stored value
+        object = [value.strip().strip('\'\"') 
+                  for value in dict.__getitem__(self, key).split(',')]
+        for item in object:
             try:
-                return float(item)
+                # try to convert it into an integer instead
+                object[object.index(item)] = int(item)
             except ValueError:
-                if item.upper() == "True":
-                    return True
-                elif item.upper() == "False":
-                    return False
-                else:
-                    return item
+                try:
+                    # try to convert the item into a float
+                    object[object.index(item)] = float(item)
+                except ValueError:
+                    # try to convert it into a boolean other wise it's a string
+                    if item.lower() in ['true', 't', 'yes', 'y']:
+                        object[object.index(item)] = True
+                    elif item.lower() in ['false', 'f', 'no', 'n']:
+                        object[object.index(item)] = False
+
+        if len(object) == 1:
+            return object[0]
+        else:
+            return object
 
 
 class Config(Singleton):
@@ -195,11 +204,3 @@ class Config(Singleton):
                     parser=self.__parser,
                     config=self.user_config_file,
                     name=section))
-
-    def reverse_keymap(self, keycode=None):
-        keymap = dict((value, key) 
-                            for key, value in pygame.__dict__.iteritems()
-                            if key[:2] == ('K_' or 'KM'))
-
-        if keycode is not None:
-            return keymap[keycode]
