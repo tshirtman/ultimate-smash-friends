@@ -26,7 +26,7 @@ import logging
 from config import Config
 import loaders
 
-config = Config.getInstance()
+config = Config()
 
 class Music (object):
     """

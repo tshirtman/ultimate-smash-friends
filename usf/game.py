@@ -35,11 +35,10 @@ from config import Config
 from widgets import game_font
 
 from debug_utils import draw_rect
-from singletonmixin import Singleton
 
 from debug_utils import draw_rect
 
-config = Config.getInstance()
+config = Config()
 SIZE = (config.general['WIDTH'],
         config.general['HEIGHT'])
 
@@ -613,13 +612,15 @@ class ThreadedTCPRequestHandler(SocketServer.BaseRequestHandler):
 class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     pass
 
-class sharedMemory(Singleton):
+class sharedMemory(object):
     """
     Useful to share information between threads, this is a singleton with thread safe access
 
     """
+    __shared_state = {}
     lock = threading.RLock()
     def __init__(self):
+        self.__dict__ = self.__shared_state
         self.dict = {}
 
     def set(self, key, value):
@@ -661,7 +662,7 @@ class NetworkServerGame(Game):
         level is the basename of the level in media/levels/
 
         """
-        self.sharedMemory = sharedMemory.getInstance()
+        self.sharedMemory = sharedMemory()
         self.sharedMemory.set('clients', [])
 
         players = []

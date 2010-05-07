@@ -30,7 +30,7 @@ import thread
 
 from config import Config
 
-config = Config.getInstance()
+config = Config()
 
 import controls
 import entity_skin

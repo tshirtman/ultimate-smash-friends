@@ -18,14 +18,6 @@
 # If not, see <http://www.gnu.org/licenses/>.                                 #
 ###############################################################################
 
-""" It should be noted that unlike the old config, key/value pairs are loaded exactly as they are represented in the config file. This is important
-    particularly for keyboard configuration, because the old  config converted
-    key names to key codes, and used them as the dicitonary's keys, using the
-    keys pressed as the values. Conversely, in new_config.py, no conversion is
-    done, so the key names are used as values where the action to perform is
-    used as the keys in the dictionary.
-
-"""
 from __future__ import with_statement
 
 from os import environ, makedirs, stat, sep
@@ -37,7 +29,7 @@ import platform
 import logging
 import pygame
 
-from singletonmixin import Singleton
+#from singletonmixin import Singleton
 
 OS = platform.system().lower()
 
@@ -56,7 +48,7 @@ class Option(dict):
 
     def __setitem__(self, option, value):
         self.__parser.set(self.name, option, str(value))
-        dict.__setitem__(self, option, value)
+        dict.__setitem__(self, option, str(value))
         # automatically save recently changed value to file
         with open(self.__config, 'wb') as config_file:
             self.__parser.write(config_file)
@@ -86,7 +78,7 @@ class Option(dict):
             return object
 
 
-class Config(Singleton):
+class Config(object):
     """ Object that implements automatic saving.
 
         Config first loads default settings from the system config file, then
@@ -99,14 +91,16 @@ class Config(Singleton):
         (Config().section[option]).
     """
 
+    # inspired by http://code.activestate.com/recipes/66531/
+    __shared_state = {}
+
     def __init__(self):
+        self.__dict__ = self.__shared_state
         self.__parser = SafeConfigParser()
         self.__parser.optionxform=str
 
         (self.user_config_dir, self.sys_config_file, self.user_config_file, 
          self.sys_data_dir, self.user_data_dir) = self.__get_locations()
-
-        # create a dictionary of pygames global variables that represent keys
 
         # load sys config options and replace with defined user config options
         self.read([self.sys_config_file, self.user_config_file])
