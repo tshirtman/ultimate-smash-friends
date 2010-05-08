@@ -37,5 +37,5 @@ class main_screen(Screen):
         #hbox.add(widgets.Image('gui/icon.png'))
         #hbox.add(widgets.Image('gui/icon.png'))
         #hbox.add(widgets.Image('gui/icon.png'))
-        print hbox.widgets
-        print hboxa.widgets
+        #print hbox.widgets
+        #print hboxa.widgets
