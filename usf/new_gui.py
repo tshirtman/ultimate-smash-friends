@@ -60,14 +60,18 @@ class NewGui(object):
             self.screens[name] = scr
         self.screen_current = 'main_screen'
         self.skin = Skin()
+        self.last_event = time.time()
+        self.image = 0
     def update(self, first, second, third):
+        #FIXME : it sould be in main.pyw
+        time.sleep(1.00/float(config.general['MAX_FPS']))
         #draw background
         self.screen.blit(loaders.image(
             config.sys_data_dir+
             os.sep+
             "gui"+
             os.sep +
-            config.general['THEME']+
+            'japan'+
             os.sep+
             self.skin.background[0], scale=(config.general['WIDTH'], config.general['HEIGHT'])
             )[0], (0,0))

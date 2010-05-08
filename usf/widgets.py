@@ -68,17 +68,19 @@ class HBox(Container):
     def add(self, widget, size=(0,0)):
         self.widgets.append(widget)
         if self.extend:
-            for widget in self.widgets:
-                #set the size of the widgets, they have the same height as the container
-                    widget.setSize(self.width/len(self.widgets), self.height)
-                    widget.x = self.width/len(self.widgets)*self.widgets.index(widget)
+        #set the size of the widgets, they have the same height as the container
+            for widget_ in self.widgets:
+                widget_.setSize(self.width/len(self.widgets), self.height)
+                widget_.x = self.width/len(self.widgets)*self.widgets.index(widget_)
         else:
             posx = 0
-            for widget in self.widgets:
-                posx += widget.width
+            for widget_ in self.widgets:
+                if widget_ != widget:
+                    posx += widget.width
             widget.x = posx
             if size != (0,0):
-                widget.setSize(size[0]*self.width/100, size[1*self.height/100])
+                widget.setSize(size[0]*self.width/100, size[1]*self.height/100)
+            #widget.setSize(self.width/len(self.widgets), self.height)
     def draw(self):
         self.surface = self.surface.convert().convert_alpha()
         for widget in self.widgets:
@@ -89,7 +91,7 @@ class VBox(Container):
     def __init__(self, extend=True):
         self.extend = extend
         self.init()
-    def add(self, widget, size=(0,0)):
+    def add(self, widget, size=(None,None)):
         self.widgets.append(widget)
         if self.extend:
             for widget in self.widgets:
@@ -101,7 +103,7 @@ class VBox(Container):
             for widget in self.widgets:
                 posy += widget.height
             widget.y = posx
-            if size != (0,0):
+            if size != (None,None):
                 widget.setSize(size[0]*self.width/100, size[1*self.height/100])
             
     def draw(self):
@@ -136,17 +138,15 @@ class Image(Widget):
                     os.sep+
                     image)[0])
         print "loading an image : " + self.path
-        self.setSize(size[0], size[1])
-        #self.setSize(size[0], size[1])
         self.init()
+        self.setSize(size[0], size[1])
     def setSize(self, w,h):
-        print "resize an image " + self.path + str(w)
         self.height = h
         self.width = w
         self.surface = loaders.image(
                     config.sys_data_dir+
                     os.sep+
-                    self.path
+                    self.path, scale=(w,h)
                     )[0]
     def draw(self):
         #empty the surface
