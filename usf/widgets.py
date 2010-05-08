@@ -77,8 +77,8 @@ class HBox(Container):
             for widget in self.widgets:
                 posx += widget.width
             widget.x = posx
-            #if size != (0,0):
-            widget.setSize(size[0]*self.width/100, size[1*self.height/100])
+            if size != (0,0):
+                widget.setSize(size[0]*self.width/100, size[1*self.height/100])
     def draw(self):
         self.surface = self.surface.convert().convert_alpha()
         for widget in self.widgets:
@@ -103,6 +103,7 @@ class VBox(Container):
             widget.y = posx
             if size != (0,0):
                 widget.setSize(size[0]*self.width/100, size[1*self.height/100])
+            
     def draw(self):
         self.surface = self.surface.convert().convert_alpha()
         for widget in self.widgets:
@@ -134,21 +135,18 @@ class Image(Widget):
                     config.sys_data_dir+
                     os.sep+
                     image)[0])
-        print size
-        self.surface = loaders.image(
-                    config.sys_data_dir+
-                    os.sep+
-                    image, scale=size)[0]
-        self.init()
         print "loading an image : " + self.path
+        self.setSize(size[0], size[1])
+        #self.setSize(size[0], size[1])
+        self.init()
     def setSize(self, w,h):
-        print "resize an image " + self.path
+        print "resize an image " + self.path + str(w)
         self.height = h
         self.width = w
         self.surface = loaders.image(
                     config.sys_data_dir+
                     os.sep+
-                    self.path, scale=(w, h)
+                    self.path
                     )[0]
     def draw(self):
         #empty the surface
