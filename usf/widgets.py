@@ -61,10 +61,11 @@ class Widget (object):
 class Container(Widget):
     pass
 class HBox(Container):
-    widgets = []
     def __init__(self, extend=True):
         self.extend = extend
         self.init()
+        self.widgets = []
+        print "new hbox"
     def add(self, widget, size=(0,0)):
         self.widgets.append(widget)
         if self.extend:
@@ -83,29 +84,30 @@ class HBox(Container):
             #widget.setSize(self.width/len(self.widgets), self.height)
     def draw(self):
         self.surface = self.surface.convert().convert_alpha()
-        for widget in self.widgets:
-            self.surface.blit(widget.draw(),(widget.x,0))
+        for widget_ in self.widgets:
+            self.surface.blit(widget_.draw(),(widget_.x,0))
         return self.surface
 class VBox(Container):
-    widgets = []
     def __init__(self, extend=True):
         self.extend = extend
         self.init()
-    def add(self, widget, size=(None,None)):
+        self.widgets = []
+    def add(self, widget, size=(0,0)):
         self.widgets.append(widget)
         if self.extend:
-            for widget in self.widgets:
-                #set the size of the widgets, they have the same height as the container
-                    widget.setSize(self.width, self.height/len(self.widgets))
-                    widget.y = self.height/len(self.widgets)*self.widgets.index(widget)
+        #set the size of the widgets, they have the same height as the container
+            for widget_ in self.widgets:
+                widget_.setSize(self.width, self.height/len(self.widgets))
+                widget_.y = self.height/len(self.widgets)*self.widgets.index(widget_)
         else:
             posy = 0
-            for widget in self.widgets:
-                posy += widget.height
-            widget.y = posx
-            if size != (None,None):
-                widget.setSize(size[0]*self.width/100, size[1*self.height/100])
-            
+            for widget_ in self.widgets:
+                if widget_ != widget:
+                    posy += widget.height
+            widget.y = posy
+            if size != (0,0):
+                widget.setSize(size[0]*self.width/100, size[1]*self.height/100)
+            #widget.setSize(self.width/len(self.widgets), self.height)
     def draw(self):
         self.surface = self.surface.convert().convert_alpha()
         for widget in self.widgets:

@@ -19,23 +19,23 @@
 
 from screen import Screen
 import widgets
+import copy
 class main_screen(Screen):
     def init(self):
-        self.add(widgets.VBox(True))
-        hbox = widgets.HBox(True)
-        hboxa = widgets.HBox(False)
-        hbox__ = widgets.Image('gui/icon.png')
-        hboxa.add(widgets.Image('gui/icon.png'))
+        self.add(widgets.HBox(True))
+        hbox = widgets.HBox(False)
+        vbox2 = widgets.HBox(False)
         self.widget.add(hbox)
-        self.widget.add(hbox__)
-        self.widget.add(hboxa)
-        hboxa.add(widgets.Image('misc/heart.png'))
+        self.widget.add(vbox2)
         #hbox.add(widgets.Label('gui/icon.png'))
-        #hbox.add(widgets.Label('gui/image/cave.png'))
         hbox.add(widgets.Image('gui/icon.png'))
         #hbox.add(widgets.Image('gui/icon.png'))
         #hbox.add(widgets.Image('gui/icon.png'))
+        hbox.add(widgets.Image('gui/icon.png'))
         #hbox.add(widgets.Image('gui/icon.png'))
         #hbox.add(widgets.Image('gui/icon.png'))
         #print hbox.widgets
         #print hboxa.widgets
+        vbox2.add(widgets.Image('gui/icon.png'))
+        print hbox
+        print vbox2
