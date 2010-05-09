@@ -59,29 +59,50 @@ class Widget (object):
         self.width = w
         self.surface = pygame.Surface((w,h))
 class Container(Widget):
-    pass
+    def update_size(self):
+        sizex = 0
+        sizey = 0
+        for widget in self.widgets:
+            sizex += widget.width
+            sizey += widget.height
+            widget.init()
+        self.width = sizex
+        self.height = sizey
+        print self.height
+        print self.width
+    def update_pos(self):
+        posx = 0
+        posy = 0
+        for widget in self.widgets:
+            widget.x = posx
+            posx += widget.width
+            widget.y = posy
+            posy += widget.height
 class HBox(Container):
     def __init__(self, extend=True):
         self.extend = extend
         self.init()
         self.widgets = []
-        print "new hbox"
-    def add(self, widget, size=(0,0)):
+    def add(self, widget, *args, **kwargs):
         self.widgets.append(widget)
+        posx = 0
         if self.extend:
         #set the size of the widgets, they have the same height as the container
-            for widget_ in self.widgets:
-                widget_.setSize(self.width/len(self.widgets), self.height)
-                widget_.x = self.width/len(self.widgets)*self.widgets.index(widget_)
+            for widget in self.widgets:
+                widget.setSize(self.width/len(self.widgets), self.height)
+                posx = self.width/len(self.widgets)*self.widgets.index(widget)
         else:
-            posx = 0
-            for widget_ in self.widgets:
-                if widget_ != widget:
-                    posx += widget.width
-            widget.x = posx
-            if size != (0,0):
-                widget.setSize(size[0]*self.width/100, size[1]*self.height/100)
+            if len(self.widgets) > 1:
+                posx = self.widgets[len(self.widgets)-2].x + self.widgets[len(self.widgets)-2].width
+            
+            if 'size' in kwargs:
+                widget.setSize(kwargs['size'][0]*self.width/100, kwargs['size'][1]*self.height/100)
             #widget.setSize(self.width/len(self.widgets), self.height)
+            if 'margin' in kwargs:
+                posx += kwargs['margin']
+        widget.x = posx
+        self.update_pos()
+        self.update_size()
     def draw(self):
         self.surface = self.surface.convert().convert_alpha()
         for widget_ in self.widgets:
@@ -92,7 +113,7 @@ class VBox(Container):
         self.extend = extend
         self.init()
         self.widgets = []
-    def add(self, widget, size=(0,0)):
+    def add(self, widget, *args, **kwargs):
         self.widgets.append(widget)
         if self.extend:
         #set the size of the widgets, they have the same height as the container
@@ -105,8 +126,8 @@ class VBox(Container):
                 if widget_ != widget:
                     posy += widget.height
             widget.y = posy
-            if size != (0,0):
-                widget.setSize(size[0]*self.width/100, size[1]*self.height/100)
+            if 'size' in kwargs:
+                widget.setSize(kwargs['size'][0]*self.width/100, kwargs['size'][1]*self.height/100)
             #widget.setSize(self.width/len(self.widgets), self.height)
     def draw(self):
         self.surface = self.surface.convert().convert_alpha()
@@ -156,5 +177,5 @@ class Image(Widget):
 class Button(Label):
     pass
 def get_scale(surface):
-    size = (surface.get_width()*800/config.general['WIDTH'], surface.get_height()*480/config.general['HEIGHT'])
+    size = (surface.get_width()*config.general['WIDTH']/800, surface.get_height()*config.general['HEIGHT']/480)
     return size

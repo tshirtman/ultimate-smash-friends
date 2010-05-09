@@ -22,20 +22,22 @@ import widgets
 import copy
 class main_screen(Screen):
     def init(self):
-        self.add(widgets.HBox(True))
+        self.add(widgets.HBox(False))
         hbox = widgets.HBox(False)
-        vbox2 = widgets.HBox(False)
+        #vbox2 = widgets.HBox(False)
+        #hbox2 = widgets.HBox(False)
         self.widget.add(hbox)
-        self.widget.add(vbox2)
+        #self.widget.add(hbox2)
+        #self.widget.add(vbox2)
         #hbox.add(widgets.Label('gui/icon.png'))
         hbox.add(widgets.Image('gui/icon.png'))
         #hbox.add(widgets.Image('gui/icon.png'))
         #hbox.add(widgets.Image('gui/icon.png'))
         hbox.add(widgets.Image('gui/icon.png'))
-        #hbox.add(widgets.Image('gui/icon.png'))
-        #hbox.add(widgets.Image('gui/icon.png'))
+        hbox.add(widgets.Image('gui/icon.png'))
+        hbox.add(widgets.Image('gui/icon.png'), margin=100)
         #print hbox.widgets
         #print hboxa.widgets
-        vbox2.add(widgets.Image('gui/icon.png'))
-        print hbox
-        print vbox2
+        #vbox2.add(widgets.Image('gui/icon.png'))
+        self.widget.update_size()
+        self.widget.update_pos()
