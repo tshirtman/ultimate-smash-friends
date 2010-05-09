@@ -46,6 +46,7 @@ class Widget (object):
     height = 0
     x =0
     y = 0
+    margin = 0
     def __init__(self):
         self.init()
     def init(self):
@@ -65,17 +66,25 @@ class Container(Widget):
         for widget in self.widgets:
             sizex += widget.width
             sizey += widget.height
+            if type(self) == HBox:
+                sizex += widget.margin
+            else:
+                sizey += widget.margin
             widget.init()
         self.width = sizex
         self.height = sizey
-        print self.height
-        print self.width
     def update_pos(self):
         posx = 0
         posy = 0
         for widget in self.widgets:
-            widget.x = posx
+            widget.x = posx+widget.margin
             posx += widget.width
+            if type(self) == HBox:
+                posx += widget.margin
+                if widget.margin != 0:
+                    print "margin"
+            else:
+                posy += widget.margin
             widget.y = posy
             posy += widget.height
 class HBox(Container):
@@ -94,12 +103,10 @@ class HBox(Container):
         else:
             if len(self.widgets) > 1:
                 posx = self.widgets[len(self.widgets)-2].x + self.widgets[len(self.widgets)-2].width
-            
             if 'size' in kwargs:
                 widget.setSize(kwargs['size'][0]*self.width/100, kwargs['size'][1]*self.height/100)
-            #widget.setSize(self.width/len(self.widgets), self.height)
             if 'margin' in kwargs:
-                posx += kwargs['margin']
+                widget.margin = kwargs['margin']*config.general['WIDTH']/800
         widget.x = posx
         self.update_pos()
         self.update_size()
@@ -115,20 +122,22 @@ class VBox(Container):
         self.widgets = []
     def add(self, widget, *args, **kwargs):
         self.widgets.append(widget)
+        posy = 0
         if self.extend:
         #set the size of the widgets, they have the same height as the container
             for widget_ in self.widgets:
                 widget_.setSize(self.width, self.height/len(self.widgets))
-                widget_.y = self.height/len(self.widgets)*self.widgets.index(widget_)
+                posy = self.height/len(self.widgets)*self.widgets.index(widget_)
         else:
-            posy = 0
-            for widget_ in self.widgets:
-                if widget_ != widget:
-                    posy += widget.height
-            widget.y = posy
+            if len(self.widgets) > 1:
+                posy = self.widgets[len(self.widgets)-2].x + self.widgets[len(self.widgets)-2].width
             if 'size' in kwargs:
                 widget.setSize(kwargs['size'][0]*self.width/100, kwargs['size'][1]*self.height/100)
-            #widget.setSize(self.width/len(self.widgets), self.height)
+            if 'margin' in kwargs:
+                widget.margin = kwargs['margin']*config.general['WIDTH']/480
+        widget.y = posy
+        self.update_pos()
+        self.update_size()
     def draw(self):
         self.surface = self.surface.convert().convert_alpha()
         for widget in self.widgets:
@@ -153,6 +162,8 @@ class Label(Widget):
 class CheckBox(Widget):
     pass
 class Image(Widget):
+    def init(self):
+        pass
     def __init__(self, image):
         #save the path to scale it later -> maybe it is bad for performance, FIXME
         self.path = image
