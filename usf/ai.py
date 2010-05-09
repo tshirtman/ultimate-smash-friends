@@ -21,7 +21,7 @@ import pygame
 
 from config import Config
 
-config = Config.getInstance()
+config = Config()
 
 class AI(object):
     sequences_ai = []

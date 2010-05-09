@@ -30,7 +30,7 @@ from sys import prefix
 import loaders
 from config import Config
 
-config = Config.getInstance()
+config = Config()
 
 class Widget (object):
     """

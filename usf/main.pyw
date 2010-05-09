@@ -28,7 +28,7 @@ import logging
 
 # our modules
 from config import Config
-config = Config.getInstance()
+config = Config()
 SIZE = (config.general['WIDTH'], 
         config.general['HEIGHT'])
 

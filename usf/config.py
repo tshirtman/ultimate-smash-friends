@@ -18,25 +18,17 @@
 # If not, see <http://www.gnu.org/licenses/>.                                 #
 ###############################################################################
 
-""" It should be noted that unlike the old config, key/value pairs are loaded exactly as they are represented in the config file. This is important
-    particularly for keyboard configuration, because the old  config converted
-    key names to key codes, and used them as the dicitonary's keys, using the
-    keys pressed as the values. Conversely, in new_config.py, no conversion is
-    done, so the key names are used as values where the action to perform is
-    used as the keys in the dictionary.
-
-"""
 from __future__ import with_statement
 
 from os import environ, makedirs, stat, sep
 from os.path import join, dirname, abspath
 from sys import prefix
+
 from ConfigParser import SafeConfigParser
 import platform
 import logging
-import pygame
 
-from singletonmixin import Singleton
+import pygame
 
 OS = platform.system().lower()
 
@@ -55,29 +47,37 @@ class Option(dict):
 
     def __setitem__(self, option, value):
         self.__parser.set(self.name, option, str(value))
-        dict.__setitem__(self, option, value)
+        dict.__setitem__(self, option, str(value))
         # automatically save recently changed value to file
         with open(self.__config, 'wb') as config_file:
             self.__parser.write(config_file)
 
     def __getitem__(self, key):
-        item = dict.__getitem__(self, key)
-        # detect whether the item is a bool, int, float, or string
-        try:
-            return int(item)
-        except ValueError:
+        # create a list of strings for the stored value
+        object = [value.strip().strip('\'\"') 
+                  for value in dict.__getitem__(self, key).split(',')]
+        for item in object:
             try:
-                return float(item)
+                # try to convert it into an integer instead
+                object[object.index(item)] = int(item)
             except ValueError:
-                if item.upper() == "True":
-                    return True
-                elif item.upper() == "False":
-                    return False
-                else:
-                    return item
+                try:
+                    # try to convert the item into a float
+                    object[object.index(item)] = float(item)
+                except ValueError:
+                    # try to convert it into a boolean other wise it's a string
+                    if item.lower() in ['true', 't', 'yes', 'y']:
+                        object[object.index(item)] = True
+                    elif item.lower() in ['false', 'f', 'no', 'n']:
+                        object[object.index(item)] = False
+
+        if len(object) == 1:
+            return object[0]
+        else:
+            return object
 
 
-class Config(Singleton):
+class Config(object):
     """ Object that implements automatic saving.
 
         Config first loads default settings from the system config file, then
@@ -90,17 +90,23 @@ class Config(Singleton):
         (Config().section[option]).
     """
 
-    def __init__(self):
+    # inspired by http://code.activestate.com/recipes/66531/
+    __shared_state = {}
+
+    def __init__(self, config_files=None):
+        self.__dict__ = self.__shared_state
         self.__parser = SafeConfigParser()
         self.__parser.optionxform=str
 
         (self.user_config_dir, self.sys_config_file, self.user_config_file, 
          self.sys_data_dir, self.user_data_dir) = self.__get_locations()
 
-        # create a dictionary of pygames global variables that represent keys
+        
+        if config_files is None:
+            self.read([self.sys_config_file, self.user_config_file])
+        else:
+            self.read(config_files)
 
-        # load sys config options and replace with defined user config options
-        self.read([self.sys_config_file, self.user_config_file])
         self.save()
 
     def __get_locations(self):
@@ -198,8 +204,8 @@ class Config(Singleton):
 
     def reverse_keymap(self, keycode=None):
         keymap = dict((value, key) 
-                            for key, value in pygame.__dict__.iteritems()
-                            if key[:2] == ('K_' or 'KM'))
+                      for key, value in pygame.__dict__.iteritems()
+                      if key[:2] in ('K_', 'KM'))
 
         if keycode is not None:
             return keymap[keycode]

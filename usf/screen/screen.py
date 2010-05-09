@@ -19,7 +19,7 @@
 
 # Our modules
 from config import Config
-config = Config.getInstance()
+config = Config()
 
 class Screen(object):
     def __init__(self, name, screen):

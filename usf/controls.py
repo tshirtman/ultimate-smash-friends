@@ -33,7 +33,7 @@ from pygame.locals import (
         )
 # my imports
 from config import Config
-config = Config.getInstance()
+config = Config()
 
 import game
 from ai import AI

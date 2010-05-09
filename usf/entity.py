@@ -27,11 +27,10 @@ import logging
 import entity_skin
 import loaders
 import timed_event
-#from config import config
 
 from config import Config
 
-config = Config.getInstance()
+config = Config()
 
 SIZE = (config.general['WIDTH'], 
         config.general['HEIGHT'])
