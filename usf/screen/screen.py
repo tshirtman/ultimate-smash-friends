@@ -26,6 +26,8 @@ class Screen(object):
         self.name = name
         self.screen = screen
         self.init()
+        self.widget.update_size()
+        self.widget.update_pos()
     def add(self, widget):
         self.widget = widget
         #define the position and the size of the top-level widget

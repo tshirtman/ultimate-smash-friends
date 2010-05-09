@@ -58,7 +58,9 @@ class Widget (object):
     def setSize(self, w,h):
         self.height = h
         self.width = w
-        self.surface = pygame.Surface((w,h))
+        self.init()
+        
+        
 class Container(Widget):
     def update_size(self):
         sizex = 0
@@ -87,6 +89,8 @@ class Container(Widget):
                 posy += widget.margin
             widget.y = posy
             posy += widget.height
+            
+            
 class HBox(Container):
     def __init__(self, extend=True):
         self.extend = extend
@@ -115,6 +119,8 @@ class HBox(Container):
         for widget_ in self.widgets:
             self.surface.blit(widget_.draw(),(widget_.x,0))
         return self.surface
+        
+        
 class VBox(Container):
     def __init__(self, extend=True):
         self.extend = extend
@@ -143,24 +149,30 @@ class VBox(Container):
         for widget in self.widgets:
             self.surface.blit(widget.draw(),(0,widget.y))
         return self.surface
+        
+        
 class Label(Widget):
+    def init(self):
+        pass
     def __init__(self, text):
         self.text = text
-        self.init()
-    def draw(self):
-        #TODO : a @memoize function, and a config file with the color
-        self.surface = self.surface.convert().convert_alpha()
-        self.surface.blit(
-            game_font.render(
+        #self.init()
+        self.surface  = game_font.render(
             _(self.text),
             True,
-            pygame.color.Color("white")
-            ),
-        (0,0)
-        )
+            pygame.color.Color("black")
+            )
+        self.height = self.surface.get_height()
+        self.width = self.surface.get_width()
+    def draw(self):
+        #TODO : a @memoize function, and a config file with the color
         return self.surface
+        
+        
 class CheckBox(Widget):
     pass
+    
+    
 class Image(Widget):
     def init(self):
         pass
