@@ -102,7 +102,7 @@ def image(name, *args, **kwargs):
                 )
         scale = kwargs['scale']
         kwargs['scale'] = None
-        if config.general['SMOOTHSCALE'] == "True":
+        if config.general['SMOOTHSCALE'] == True:
             image = pygame.transform.smoothscale(
                 loaders.image(name, *args, **kwargs)[0],
                 scale
@@ -117,7 +117,7 @@ def image(name, *args, **kwargs):
         zoom = kwargs['zoom']
         kwargs['zoom'] = None
         #logging.debug('scaling image '+name+' :'+str(zoom))
-        if config.general['SMOOTHSCALE'] == "True":
+        if config.general['SMOOTHSCALE'] == True:
             image = pygame.transform.smoothscale(
                     loaders.image(name, **kwargs)[0],
                     (
