@@ -101,7 +101,7 @@ class Config(object):
         (self.user_config_dir, self.sys_config_file, self.user_config_file, 
          self.sys_data_dir, self.user_data_dir) = self.__get_locations()
 
-        
+
         if config_files is None:
             self.read([self.sys_config_file, self.user_config_file])
         else:
