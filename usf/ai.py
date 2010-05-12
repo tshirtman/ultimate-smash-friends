@@ -49,6 +49,7 @@ class AI(object):
             self.enemy_position.append (pl.place)
             self.enemy_distance.append (self.iam.dist (pl))
             self.enemy_distanceh.append (pl.place[1]- self.iam.place[1])
+
     def calculate_height(self):
         self.global_height = False
         #FIXME : a real function to calculate height
@@ -121,6 +122,7 @@ class AI(object):
                 self.wait_for = "static:mesure2"""
         if self.enemy_distance[0] < 100 :
             self.sequences_ai.append(("PL"+ str(self.num+1) + "_B",time.time()))
+
     def goto(self):
         #if i am on the same block :
         if (self.block.right+80 > self.iam.place[0] and
@@ -130,10 +132,11 @@ class AI(object):
             #self.game.notif.append([time.time(), "I am on your block"])
             self.iam.walking_vector[0] = config.general['WALKSPEED']
             self.walk = True
-            if self.enemy_position[0][0] < self.iam.place[0]:
+            if self.enemy_position[0][0] < self.iam.place[0] - self.iam.rect[2]:
                 #self.game.notif.append([time.time(), "I am on your right"])
                 self.sequences_ai.append(("PL"+ str(self.num+1) + "_LEFT",time.time()))
-            else :
+            elif self.enemy_position[0][0] > self.iam.place[0] +\
+            self.iam.rect[2]:
                 #self.game.notif.append([time.time(), "I am on your left"])
                 self.sequences_ai.append(("PL"+ str(self.num+1) + "_RIGHT",time.time()))
             #to jump over another block
@@ -155,3 +158,4 @@ class AI(object):
         elif self.wait_time +1.5 < time.time():
             self.walk = False
             self.iam.walking_vector[0] = 0
+
