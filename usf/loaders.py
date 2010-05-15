@@ -68,10 +68,10 @@ def image(name, *args, **kwargs):
     """
     # FIXME: should not have to load the image in server mode, we just want
     # it's size!
-    if 'nodisplay' in kwargs and kwargs['nodisplay'] == True:
+    if 'nodisplay' in kwargs and kwargs['nodisplay']:
         return None, pygame.Rect((0, 0), pygame.image.load(name).get_size())
 
-    if 'reversed' in kwargs and kwargs['reversed'] == True:
+    if 'reversed' in kwargs and kwargs['reversed']:
         kwargs['reversed'] = False
         #logging.debug("reverse "+name)
         image = pygame.transform.flip(
@@ -80,7 +80,7 @@ def image(name, *args, **kwargs):
             False #not verticaly
             )
 
-    elif 'lighten' in kwargs and kwargs['lighten'] == True:
+    elif 'lighten' in kwargs and kwargs['lighten']:
         #logging.debug('lightened: '+name)
         kwargs['lighten'] = False
         image = loaders.image(name, *args, **kwargs)[0].copy()
@@ -102,7 +102,7 @@ def image(name, *args, **kwargs):
                 )
         scale = kwargs['scale']
         kwargs['scale'] = None
-        if config.general['SMOOTHSCALE'] == True:
+        if config.general['SMOOTHSCALE']:
             image = pygame.transform.smoothscale(
                 loaders.image(name, *args, **kwargs)[0],
                 scale
@@ -117,7 +117,7 @@ def image(name, *args, **kwargs):
         zoom = kwargs['zoom']
         kwargs['zoom'] = None
         #logging.debug('scaling image '+name+' :'+str(zoom))
-        if config.general['SMOOTHSCALE'] == True:
+        if config.general['SMOOTHSCALE']:
             image = pygame.transform.smoothscale(
                     loaders.image(name, **kwargs)[0],
                     (
