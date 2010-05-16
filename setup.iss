@@ -20,6 +20,8 @@ InfoAfterFile=\\Vboxsvr\ultimate-smash-friends\README.txt
 OutputBaseFilename=ultimate-smash-friends-0.1.1-setup
 Compression=lzma
 SolidCompression=yes
+PythonUrl=http://www.python.org/ftp/python/2.6.5/python-2.6.5.msi
+PygameUrl=http://pygame.org/ftp/pygame-1.9.1.win32-py2.6.msi
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -54,6 +56,4 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\Ultimate Smash Fri
 
 [Run]
 Filename: "{sd}\Python26\Lib\site-packages\usf\main.pyw"; Description: "{cm:LaunchProgram,Ultimate Smash Friends}"; Flags: shellexec postinstall skipifsilent
-
-
 

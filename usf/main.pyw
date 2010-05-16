@@ -176,7 +176,7 @@ class Main(object):
 
         if options.client:
             self.game_type = 'client'
-            self.address = option.client
+            self.address = options.client
 
         pygame.init()
 
