@@ -101,7 +101,6 @@ class Config(object):
         (self.user_config_dir, self.sys_config_file, self.user_config_file, 
          self.sys_data_dir, self.user_data_dir) = self.__get_locations()
 
-
         if config_files is None:
             self.read([self.sys_config_file, self.user_config_file])
         else:
@@ -180,7 +179,7 @@ class Config(object):
         except OSError:
             # paths already exist or user doesn't have permission to create them
             pass
-        
+
         return (user_config_dir, sys_config_file, user_config_file, 
                 sys_data_dir, user_data_dir)
 
