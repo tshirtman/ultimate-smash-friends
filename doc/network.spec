@@ -46,17 +46,34 @@ in "no room" mode:
     /admin password: if the password is the one defined in the configuration,
     connected client is now able to use admin commands (which work in every
     mods)
-    
+
 admin commands:
     /kick player_name: close the player connection
 
 in "room" mode:
     from client to server:
+    /leave: leave the room
+    /ready number: the player "number" is ready to play
+    /nick number nick: the player "numer" change his nick to nick
+    /character character: the player choose the named character
+    /msg num_player msg: player send the message msg to the room.
 
     from server to client:
+    /time timestamp: the server send a timestamp too client for synchronisation
+    purpose
+    /msg nick msg: the message msg was sent by player nick.
+    /start timestamp level [list]: game start at timestamp with level and
+    players [list]
+    /level l: level l is currently selected
 
 in game mode:
     from client to server:
+    /key p k: player p pushed his key k ('UP', 'DOWN', 'LEFT', 'RIGHT', 'A',
+    'B')
+    /msg p m: player p sent message
 
     from server to client:
-
+    /world [list]: a list of entities positions 
+    /end p: the game is finished with p being the winner, or None if it's a
+    draw.
+    /msg nick msg: the player nick sent message msg
