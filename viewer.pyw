@@ -39,15 +39,16 @@ except:
     sys.exit(1)
 
 # our modules
-from usf.config import config
+from usf.config import Config
 
 from usf.animations import EmptyAnimationException
 from usf.game import Game, NetworkServerGame, NetworkClientGame
-from usf.menu import Menu
 from usf.entity import Entity
 from usf.debug_utils import draw_rect
 from usf import entity_skin
 from usf import loaders
+
+config = Config()
 
 # thanks to Samuel Abels
 # http://csourcesearch.net/python/fidC15F2CB91333517E23E41191CFCDA6155BDC8B7B.aspx?s=cdef%3Atree+mdef%3Ainsert
@@ -91,14 +92,20 @@ def create_filechooser_save():
 # thanks to Seo Sanghyeon
 # http://sparcs.kaist.ac.kr/~tinuviel/devel/gtksdl.py
 def pygame_hack(widget):
-    def callback(widget, *args):
-        handle = widget.window.xid
-        size = widget.size_request()
-        os.environ['SDL_WINDOWID'] = str(handle)
-        pygame.mixer.init()
-        pygame.display.init()
-        pygame.display.set_mode(size)
-    widget.connect('map-event', callback)
+    handle = widget.window.xid
+    size = widget.size_request()
+    os.environ['SDL_WINDOWID'] = str(handle)
+    pygame.mixer.init()
+    pygame.display.init()
+    pygame.display.set_mode(size)
+    #def callback(widget, *args):
+        #handle = widget.window.xid
+        #size = widget.size_request()
+        #os.environ['SDL_WINDOWID'] = str(handle)
+        #pygame.mixer.init()
+        #pygame.display.init()
+        #pygame.display.set_mode(size)
+    #widget.connect('map-event', callback)
 
 def update_pygame_widget(widget, game=None):
     screen = pygame.display.get_surface()
@@ -106,7 +113,7 @@ def update_pygame_widget(widget, game=None):
     screen.fill(pygame.Color("#CCCCFF"))
     if game.entity == None:
         screen.blit(
-            loaders.image(os.path.join(config['MEDIA_DIRECTORY'],'media','items','trunk','trunk.png'))[0],
+            loaders.image(os.path.join(config.sys_data_dir,'items','trunk','trunk.png'))[0],
             (time.time()*100%200,0)
             )
     else:
@@ -141,29 +148,29 @@ class NotGame(Game):
         if self.entity is not None:
             logging.debug(dt)
             self.entity.entity_skin.update(time.time(), self.entity.reversed)
-            
+
             self.entity.move(
                 self.entity.vector[0] * dt,
                 self.entity.vector[1] * dt
                 )
             self.entity.vector[0] -= (
-                config['AIR_FRICTION'] * self.entity.vector[0] * dt
+                config.general['AIR_FRICTION'] * self.entity.vector[0] * dt
                 )
             self.entity.vector[1] -= (
-                config['AIR_FRICTION'] * self.entity.vector[1] * dt
+                config.general['AIR_FRICTION'] * self.entity.vector[1] * dt
                 )
             self.entity.place[0] %= 250
             self.entity.place[1] = max(
                 self.entity.entity_skin.animation.rect[3],
                 self.entity.place[1]
                 )
-            
+
             if self.entity.place[1] > 250:
                 self.entity.place[1] = 250
                 self.entity.vector[1] *= -.5
             else:
-                self.entity.vector[1] += config['GRAVITY']
-                
+                self.entity.vector[1] += config.general['GRAVITY']
+
 class usf_character_creator(object):
     """
     This is a gtk application to create and edit characters for
@@ -171,7 +178,7 @@ class usf_character_creator(object):
 
     """
     def __init__(self):
-        self.gladefile = os.path.join(config['MEDIA_DIRECTORY'],'glade','usf_character_creator.glade')
+        self.gladefile = os.path.join(config.sys_data_dir, 'glade','usf_character_creator.glade')
         self.wTree = gtk.glade.XML(self.gladefile,'window1')
 
         self.window = self.wTree.get_widget("window1")
@@ -191,7 +198,6 @@ class usf_character_creator(object):
 
         self.pygame_widget = self.wTree.get_widget('pygame_widget')
         self.pygame_widget.set_size_request(300,300)
-        pygame_hack(self.pygame_widget)
         self.pygame_update = None
         self.play_pygame()
 
@@ -200,7 +206,7 @@ class usf_character_creator(object):
         buffer = gtksourceview2.Buffer(language=lang)
         buffer.set_max_undo_levels(1000)
         self.buffer = buffer
-        
+
         view = gtksourceview2.View()
         view.set_buffer(buffer)
         view.set_show_line_numbers(True)
@@ -212,6 +218,7 @@ class usf_character_creator(object):
 
         self.wTree.get_widget("scrolledwindow_source").add(view)
         view.show()
+        pygame_hack(self.pygame_widget)
         #self.wTree.get_widget("xml_text").set_auto_indent(True)
 
         self.last_refresh = time.time()
