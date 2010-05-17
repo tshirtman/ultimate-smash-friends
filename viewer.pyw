@@ -39,15 +39,15 @@ except:
     sys.exit(1)
 
 # our modules
-from usf_modules.config import config
+from usf.config import config
 
-from usf_modules.animations import EmptyAnimationException
-from usf_modules.game import Game, NetworkServerGame, NetworkClientGame
-from usf_modules.menu import Menu
-from usf_modules.entity import Entity
-from usf_modules.debug_utils import draw_rect
-from usf_modules import entity_skin
-from usf_modules import loaders
+from usf.animations import EmptyAnimationException
+from usf.game import Game, NetworkServerGame, NetworkClientGame
+from usf.menu import Menu
+from usf.entity import Entity
+from usf.debug_utils import draw_rect
+from usf import entity_skin
+from usf import loaders
 
 # thanks to Samuel Abels
 # http://csourcesearch.net/python/fidC15F2CB91333517E23E41191CFCDA6155BDC8B7B.aspx?s=cdef%3Atree+mdef%3Ainsert
