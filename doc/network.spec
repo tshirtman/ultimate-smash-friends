@@ -19,14 +19,44 @@ server configuration is done by a config file, that define max number of
 gameroom, admin password (allowing restart of server, closing of gameroom, kick
 of any player...), and if the server declare itself to an internet main index.
 
+Client part:
 the client part of the game is a graphical application: allowing to discover
 server in the lan, or using an internet index, and to connect with one of them,
 declare any player wanting to play on the connected server, and start a display
 game when the server start it.
 
 When a client is connected to a running game, the client send a message
-containing a timestamp (for ping data) and every keystrock done in the frame,
+containing a timestamp (for ping data) and every keystrock done during the frame,
 to the server, eanch keystrock being converted to a simple format indicating
 the player and the mapping of the key.  Every frame the server send a stream to
 all the players, containing which entities are to display, and their state,
 (position and current animation frame).
+
+
+data stream specification:
+connexion:
+    the server listen on port 8421 by default, the client connect and get a
+    stream socket, it's in "no room" mode.
+
+in "no room" mode:
+    /nick player_num name: change player name of player_num of this connexion
+    to "name"
+    /join room: the connexion is now bound to room the room is created if it
+    did not exist
+    /admin password: if the password is the one defined in the configuration,
+    connected client is now able to use admin commands (which work in every
+    mods)
+    
+admin commands:
+    /kick player_name: close the player connection
+
+in "room" mode:
+    from client to server:
+
+    from server to client:
+
+in game mode:
+    from client to server:
+
+    from server to client:
+
