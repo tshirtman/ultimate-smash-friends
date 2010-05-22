@@ -52,8 +52,9 @@ class NewGui(object):
     def __init__(self, surface):
         self.screen = surface
         self.screens = {}
+        self.screen_history = []
         #TODO : Use a config file
-        screens = ['main_screen']
+        screens = ['main_screen', 'configure']
         for name in screens:
             exec("import screen." + name)
             exec('scr = screen.' + name + '.' + name + "('"+ name +"',self.screen)")
@@ -75,7 +76,7 @@ class NewGui(object):
                 if self.focus != None:
                     pass
                 else:
-                    if event.type == pygame.KEYUP or event.type == pygame.KEYDOWN:
+                    if event.type == pygame.KEYUP:
                         self.handle_keys(event)
                     elif event.type == pygame.MOUSEBUTTONUP:
                         self.handle_mouse(event)
@@ -99,11 +100,19 @@ class NewGui(object):
         query = self.screens[self.screen_current].widget.handle_mouse(event)
         if  query != False:
             print query
-            self.screens[self.screen_current].callback(query)
+            reply = self.screens[self.screen_current].callback(query)
+            self.handle_reply(reply)
         del(event)
     def handle_keys(self,event):
-        print event
-
+        if event.dict['key'] == pygame.K_ESCAPE:
+            if len(self.screen_history) > 0:
+                self.screen_current = self.screen_history[-1]
+                del self.screen_history[-1]
+    def handle_reply(self,reply):
+        if type(reply) == str:
+            if reply.split(':')[0] == 'goto':
+                self.screen_history.append(self.screen_current)
+                self.screen_current = reply.split(':')[1]
 
 
 

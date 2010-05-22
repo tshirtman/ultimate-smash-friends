@@ -20,15 +20,11 @@
 from screen import Screen
 import widgets
 import copy
-class main_screen(Screen):
+class configure(Screen):
     def init(self):
         self.add(widgets.HBox(False))
         vbox = widgets.VBox(False)
         self.widget.add(vbox, margin=300)
-        vbox.add(widgets.Button('Local game'), margin=120)
-        vbox.add(widgets.Label('Configure'), margin=0)
-        vbox.add(widgets.Label('Credits'), margin=0)
+        vbox.add(widgets.Button('Configure'), margin=120)
     def callback(self,action):
-        if action == 'Local game':
-            print action
-            return 'goto:configure'
+        pass
