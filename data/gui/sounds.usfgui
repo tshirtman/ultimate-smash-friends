@@ -2,11 +2,11 @@
 <label value="Sounds configuration" posx="30" posy="30" id="label" />
 <button value="-" posx="30" posy="55" sizey="5" sizex="5" id="soundm" action="" />
 <label value="Sounds" posx="36" posy="55" id="soundlabel" />
-<label value="config:sounds:SOUND_VOLUME" posx="45" posy="55" id="sounds" />
+<label value="config:sounds:SOUND_VOLUME" posx="55" posy="55" id="sounds" />
 <button value="+" posx="55" posy="55" sizey="5" sizex="5" id="soundp" action="" />
 <button value="-" posx="30" posy="65" sizey="5" sizex="5" id="musicm" action="" />
 <label value="Music" posx="36" posy="65" id="musiclabel" />
-<label value="config:sounds:MUSIC_VOLUME" posx="45" posy="65" id="music" />
+<label value="config:sounds:MUSIC_VOLUME" posx="55" posy="65" id="music" />
 <button value="+" posx="55" posy="65" sizey="5" sizex="5" id="musicp" action="" />
 <parent>configure.usfgui</parent>
 </gui>
