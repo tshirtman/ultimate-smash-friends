@@ -62,9 +62,25 @@ class NewGui(object):
         self.skin = Skin()
         self.last_event = time.time()
         self.image = 0
+        self.focus = None
     def update(self, first, second, third):
         #FIXME : it sould be in main.pyw
         time.sleep(1.00/float(config.general['MAX_FPS']))
+        while(True):
+            event = pygame.event.poll()
+            if event.type == pygame.QUIT:
+                pygame.event.post( pygame.event.Event(QUIT) )
+                break
+            elif event.type != pygame.NOEVENT:
+                if self.focus != None:
+                    pass
+                else:
+                    if event.type == pygame.KEYUP or event.type == pygame.KEYDOWN:
+                        self.handle_keys(event)
+                    elif event.type == pygame.MOUSEBUTTONUP:
+                        self.handle_mouse(event)
+            else:
+                break
         #draw background
         self.screen.blit(loaders.image(
             config.sys_data_dir+
@@ -73,10 +89,29 @@ class NewGui(object):
             os.sep +
             'japan'+
             os.sep+
-            self.skin.background[0], scale=(config.general['WIDTH'], config.general['HEIGHT'])
+            self.skin.background[0],
+            scale=(config.general['WIDTH'],
+            config.general['HEIGHT'])
             )[0], (0,0))
         self.screens[self.screen_current].update()
         return False, None
+    def handle_mouse(self,event):
+        query = self.screens[self.screen_current].widget.handle_mouse(event)
+        if  query != False:
+            print query
+            self.screens[self.screen_current].callback(query)
+        del(event)
+    def handle_keys(self,event):
+        print event
+
+
+
+
+
+
+
+
+
 class Dialog(object):
     state = False
     image = None

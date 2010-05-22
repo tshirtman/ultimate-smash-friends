@@ -29,7 +29,6 @@ from os import stat
 from sys import prefix
 import loaders
 from config import Config
-
 config = Config()
 
 #theme support
@@ -59,6 +58,20 @@ class Widget (object):
         self.height = h
         self.width = w
         self.init()
+    def handle_mouse(self,event):
+        try:
+            self.widgets
+        except:
+            self.widgets = []
+        #print event.dict['pos']
+        x = event.dict['pos'][0]
+        y = event.dict['pos'][1]
+        for widget in self.widgets:
+            if widget.x < x < widget.x+widget.width and widget.y < y < widget.y+widget.height:
+                print 'widget: ' + str(widget) + ' x: ' + str(widget.x) + ' width: ' + str(widget.width) + ' y: ' + str(widget.y) + ' height: ' + str(widget.height)
+                event.dict['pos'] = (x-widget.x, y-widget.y)
+                return widget.handle_mouse(event)
+                break
         
         
 class Container(Widget):
@@ -79,8 +92,7 @@ class Container(Widget):
         posx = 0
         posy = 0
         for widget in self.widgets:
-            widget.x = posx+widget.margin
-            posx += widget.width
+            #widget.x = posx+widget.margin
             if type(self) == HBox:
                 posx += widget.margin
                 if widget.margin != 0:
@@ -88,7 +100,10 @@ class Container(Widget):
             else:
                 posy += widget.margin
             widget.y = posy
+            widget.x = posx
             posy += widget.height
+            posx += widget.width
+    
             
             
 class HBox(Container):
@@ -198,7 +213,13 @@ class Image(Widget):
         #empty the surface
         return self.surface
 class Button(Label):
-    pass
+    
+    def draw(self):
+        #print self.x
+        #TODO : a @memoize function, and a config file with the color
+        return self.surface
+    def handle_mouse(self,event):
+        return self.text
 def get_scale(surface):
     size = (surface.get_width()*config.general['WIDTH']/800, surface.get_height()*config.general['HEIGHT']/480)
     return size

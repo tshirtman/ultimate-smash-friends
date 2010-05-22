@@ -25,6 +25,9 @@ class main_screen(Screen):
         self.add(widgets.HBox(False))
         vbox = widgets.VBox(False)
         self.widget.add(vbox, margin=300)
-        vbox.add(widgets.Label('Local game'), margin=120)
+        vbox.add(widgets.Button('Local game'), margin=120)
         vbox.add(widgets.Label('Configure'), margin=0)
         vbox.add(widgets.Label('Credits'), margin=0)
+    def callback(self,action):
+        if action == 'Local game':
+            print action

@@ -38,4 +38,6 @@ class Screen(object):
         self.screen.blit(self.widget.draw(), (0,0))
     def init(self):
         pass
+    def callback(self, action):
+        pass
         
