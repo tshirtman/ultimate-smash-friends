@@ -66,7 +66,7 @@ class NewGui(object):
         self.skin = Skin()
         self.last_event = time.time()
         self.image = 0
-        self.focus = None
+        self.focus = False
     def update(self, first, second, third):
         #FIXME : it sould be in main.pyw
         time.sleep(1.00/float(config.general['MAX_FPS']))
@@ -76,15 +76,12 @@ class NewGui(object):
                 pygame.event.post( pygame.event.Event(QUIT) )
                 break
             elif event.type != pygame.NOEVENT:
-                if self.focus != None:
-                    pass
-                else:
-                    if event.type == pygame.KEYUP:
-                        self.handle_keys(event)
-                    elif ( event.type == pygame.MOUSEBUTTONUP or
-                        event.type == pygame.MOUSEBUTTONDOWN or
-                        event.type == pygame.MOUSEMOTION) :
-                        self.handle_mouse(event)
+                if event.type == pygame.KEYUP:
+                    self.handle_keys(event)
+                elif ( event.type == pygame.MOUSEBUTTONUP or
+                    event.type == pygame.MOUSEBUTTONDOWN or
+                    event.type == pygame.MOUSEMOTION) :
+                    self.handle_mouse(event)
             else:
                 break
         #draw background
@@ -102,12 +99,17 @@ class NewGui(object):
         self.screens[self.screen_current].update()
         return False, None
     def handle_mouse(self,event):
-        (query, focus) = self.screens[self.screen_current].widget.handle_mouse(event)
+        if self.focus == False:
+            (query, self.focus) = self.screens[self.screen_current].widget.handle_mouse(event)
+            if self.focus != False:
+                print "stayfocus on " + str(query)
+        else:
+            (query, focus) = self.focus.handle_mouse(event)
+            if focus == False:
+                self.focus = False
         if  query != False:
             reply = self.screens[self.screen_current].callback(query)
             self.handle_reply(reply)
-        if focus != False:
-            print "stayfocus on " + str(query)
         del(event)
     def handle_keys(self,event):
         if event.dict['key'] == pygame.K_ESCAPE:

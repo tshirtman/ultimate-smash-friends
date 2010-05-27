@@ -46,6 +46,7 @@ class Widget (object):
     x =0
     y = 0
     margin = 0
+    parentpos = (0,0)
     def __init__(self):
         self.init()
     def init(self):
@@ -127,6 +128,7 @@ class HBox(Container):
             if 'margin' in kwargs:
                 widget.margin = kwargs['margin']*config.general['WIDTH']/800
         widget.x = posx
+        widget.parentpos = (self.parentpos[0] + self.x, self.parentpos[1] + self.y)
         self.update_pos()
         self.update_size()
     def draw(self):
@@ -156,6 +158,7 @@ class VBox(Container):
                 widget.setSize(kwargs['size'][0]*self.width/100, kwargs['size'][1]*self.height/100)
             if 'margin' in kwargs:
                 widget.margin = kwargs['margin']*config.general['WIDTH']/480
+        widget.parentpos = (self.parentpos[0] + self.x, self.parentpos[1] + self.y)
         widget.y = posy
         self.update_pos()
         self.update_size()
@@ -181,6 +184,7 @@ class Label(Widget):
         self.surface_ = self.surface
         self.height = self.surface.get_height()
         self.width = self.surface.get_width()
+        self.state = False
     def draw(self):
         #TODO : a @memoize function, and a config file with the color
         return self.surface
@@ -225,6 +229,8 @@ class Button(Label):
         if event.type == pygame.MOUSEBUTTONUP:
             return self,False
         else:
+            if self.state:
+                event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0]-self.x, event.dict['pos'][1] - self.parentpos[1]-self.y)
             if 0 < event.dict['pos'][0] < self.width and 0 < event.dict['pos'][1] < self.height:
                 self.state = True
                 self.surface = self.surface.convert().convert_alpha()
