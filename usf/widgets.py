@@ -68,12 +68,12 @@ class Widget (object):
         y = event.dict['pos'][1]
         for widget in self.widgets:
             if widget.x < x < widget.x+widget.width and widget.y < y < widget.y+widget.height:
-                print 'widget: ' + str(widget) + ' x: ' + str(widget.x) + ' width: ' + str(widget.width) + ' y: ' + str(widget.y) + ' height: ' + str(widget.height)
+                #print 'widget: ' + str(widget) + ' x: ' + str(widget.x) + ' width: ' + str(widget.width) + ' y: ' + str(widget.y) + ' height: ' + str(widget.height)
                 event.dict['pos'] = (x-widget.x, y-widget.y)
                 return widget.handle_mouse(event)
                 break
         
-        
+        return (False,False)
 class Container(Widget):
     def update_size(self):
         sizex = 0
@@ -177,6 +177,8 @@ class Label(Widget):
             True,
             pygame.color.Color("black")
             )
+        #backup for button
+        self.surface_ = self.surface
         self.height = self.surface.get_height()
         self.width = self.surface.get_width()
     def draw(self):
@@ -217,9 +219,27 @@ class Button(Label):
     def draw(self):
         #print self.x
         #TODO : a @memoize function, and a config file with the color
+        
         return self.surface
     def handle_mouse(self,event):
-        return self.text
+        if event.type == pygame.MOUSEBUTTONUP:
+            return self,False
+        else:
+            if 0 < event.dict['pos'][0] < self.width and 0 < event.dict['pos'][1] < self.height:
+                self.state = True
+                self.surface = self.surface.convert().convert_alpha()
+                self.surface.blit(loaders.image(
+                    config.sys_data_dir+
+                    os.sep+
+                    'gui'+
+                    os.sep+
+                    config.general['THEME']+
+                    os.sep+
+                    'back_button_hover.png')[0], (0,0))
+                return False,self
+            self.state = False
+            self.surface = self.surface_
+            return False,False
 def get_scale(surface):
     size = (surface.get_width()*config.general['WIDTH']/800, surface.get_height()*config.general['HEIGHT']/480)
     return size

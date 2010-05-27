@@ -29,6 +29,6 @@ class main_screen(Screen):
         vbox.add(widgets.Label('Configure'), margin=0)
         vbox.add(widgets.Label('Credits'), margin=0)
     def callback(self,action):
-        if action == 'Local game':
+        if action.text == 'Local game':
             print action
             return 'goto:configure'

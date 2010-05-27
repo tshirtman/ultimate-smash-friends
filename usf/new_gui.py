@@ -58,6 +58,9 @@ class NewGui(object):
         for name in screens:
             exec("import screen." + name)
             exec('scr = screen.' + name + '.' + name + "('"+ name +"',self.screen)")
+            #load all image
+            scr.update()
+            scr.update()
             self.screens[name] = scr
         self.screen_current = 'main_screen'
         self.skin = Skin()
@@ -78,7 +81,9 @@ class NewGui(object):
                 else:
                     if event.type == pygame.KEYUP:
                         self.handle_keys(event)
-                    elif event.type == pygame.MOUSEBUTTONUP:
+                    elif ( event.type == pygame.MOUSEBUTTONUP or
+                        event.type == pygame.MOUSEBUTTONDOWN or
+                        event.type == pygame.MOUSEMOTION) :
                         self.handle_mouse(event)
             else:
                 break
@@ -97,11 +102,12 @@ class NewGui(object):
         self.screens[self.screen_current].update()
         return False, None
     def handle_mouse(self,event):
-        query = self.screens[self.screen_current].widget.handle_mouse(event)
+        (query, focus) = self.screens[self.screen_current].widget.handle_mouse(event)
         if  query != False:
-            print query
             reply = self.screens[self.screen_current].callback(query)
             self.handle_reply(reply)
+        if focus != False:
+            print "stayfocus on " + str(query)
         del(event)
     def handle_keys(self,event):
         if event.dict['key'] == pygame.K_ESCAPE:
