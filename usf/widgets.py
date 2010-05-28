@@ -75,6 +75,8 @@ class Widget (object):
                 break
         
         return (False,False)
+    def align(self,align):
+        pass
 class Container(Widget):
     def update_size(self):
         sizex = 0
@@ -102,8 +104,15 @@ class Container(Widget):
                 posy += widget.margin
             widget.y = posy
             widget.x = posx
-            posy += widget.height
-            posx += widget.width
+            if type(self) == HBox:
+                posx += widget.width
+            else:
+                posy += widget.height
+    def draw(self):
+        self.surface = self.surface.convert().convert_alpha()
+        for widget in self.widgets:
+            self.surface.blit(widget.draw(),(widget.x,widget.y))
+        return self.surface
     
             
             
@@ -131,11 +140,6 @@ class HBox(Container):
         widget.parentpos = (self.parentpos[0] + self.x, self.parentpos[1] + self.y)
         self.update_pos()
         self.update_size()
-    def draw(self):
-        self.surface = self.surface.convert().convert_alpha()
-        for widget_ in self.widgets:
-            self.surface.blit(widget_.draw(),(widget_.x,0))
-        return self.surface
         
         
 class VBox(Container):
@@ -155,21 +159,19 @@ class VBox(Container):
             if len(self.widgets) > 1:
                 posy = self.widgets[len(self.widgets)-2].x + self.widgets[len(self.widgets)-2].width
             if 'size' in kwargs:
-                widget.setSize(kwargs['size'][0]*self.width/100, kwargs['size'][1]*self.height/100)
+                widget.setSize(kwargs['size'][0]*800/config.general['WIDTH'], kwargs['size'][1]*480/config.general['HEIGHT'])
             if 'margin' in kwargs:
                 widget.margin = kwargs['margin']*config.general['WIDTH']/480
+            if 'align' in kwargs:
+                widget.align(kwargs['align'])
         widget.parentpos = (self.parentpos[0] + self.x, self.parentpos[1] + self.y)
         widget.y = posy
         self.update_pos()
         self.update_size()
-    def draw(self):
-        self.surface = self.surface.convert().convert_alpha()
-        for widget in self.widgets:
-            self.surface.blit(widget.draw(),(0,widget.y))
-        return self.surface
         
         
 class Label(Widget):
+    indent = 0
     def init(self):
         pass
     def __init__(self, text):
@@ -178,10 +180,9 @@ class Label(Widget):
         self.surface  = game_font.render(
             _(self.text),
             True,
-            pygame.color.Color("black")
+            pygame.color.Color("white")
             )
         #backup for button
-        self.surface_ = self.surface
         self.height = self.surface.get_height()
         self.width = self.surface.get_width()
         self.state = False
@@ -219,32 +220,46 @@ class Image(Widget):
         #empty the surface
         return self.surface
 class Button(Label):
-    
+    posy = 0
+    def setSize(self, w,h):
+        if self.width < w:
+            # a nice effect to unstick the text from the left
+            self.indent = 20*config.general['WIDTH']/800
+        self.height = h
+        self.width = w
+        #center the text
+        self.posy = self.height/2-get_scale(self.surface)[1]/2
     def draw(self):
         #print self.x
         #TODO : a @memoize function, and a config file with the color
-        
-        return self.surface
-    def handle_mouse(self,event):
-        if event.type == pygame.MOUSEBUTTONUP:
-            return self,False
-        else:
-            if self.state:
-                event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0]-self.x, event.dict['pos'][1] - self.parentpos[1]-self.y)
-            if 0 < event.dict['pos'][0] < self.width and 0 < event.dict['pos'][1] < self.height:
-                self.state = True
-                self.surface = self.surface.convert().convert_alpha()
-                self.surface.blit(loaders.image(
+        if self.state == True:
+            return loaders.image_layer(loaders.image(
                     config.sys_data_dir+
                     os.sep+
                     'gui'+
                     os.sep+
                     config.general['THEME']+
                     os.sep+
-                    'back_button_hover.png')[0], (0,0))
+                    'back_button_hover.png', scale=(self.width, self.height))[0], self.surface, (self.indent, self.posy))
+        else:
+            return loaders.image_layer(loaders.image(
+                    config.sys_data_dir+
+                    os.sep+
+                    'gui'+
+                    os.sep+
+                    config.general['THEME']+
+                    os.sep+
+                    'back_button.png', scale=(self.width, self.height))[0], self.surface, (self.indent, self.posy))
+    def handle_mouse(self,event):
+        if event.type == pygame.MOUSEBUTTONUP:
+            return self,False
+        else:
+            if self.state == True:
+                event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0]-self.x, event.dict['pos'][1] - self.parentpos[1]-self.y)
+            if 0 < event.dict['pos'][0] < self.width and 0 < event.dict['pos'][1] < self.height:
+                self.state = True
                 return False,self
             self.state = False
-            self.surface = self.surface_
             return False,False
 def get_scale(surface):
     size = (surface.get_width()*config.general['WIDTH']/800, surface.get_height()*config.general['HEIGHT']/480)

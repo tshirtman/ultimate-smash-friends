@@ -1,5 +1,5 @@
 ################################################################################
-# copyright 2010 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
+# copyright 2009 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
 #                                                                              #
 # This file is part of Ultimate Smash Friends.                                 #
 #                                                                              #
@@ -20,23 +20,11 @@
 from screen import Screen
 import widgets
 import copy
-import pygame
-class main_screen(Screen):
+class about(Screen):
     def init(self):
         self.add(widgets.HBox(False))
         vbox = widgets.VBox(False)
         self.widget.add(vbox, margin=300)
-        vbox.add(widgets.Button('Local game'), margin=120, size=(200,50))
-        vbox.add(widgets.Button('Configure'), margin=10, size=(200,50))
-        vbox.add(widgets.Button('Credits'), margin=10, size=(200,50))
-        vbox.add(widgets.Button('Quit'), margin=10, size=(200,50))
+        vbox.add(widgets.Button('About us'), margin=120)
     def callback(self,action):
-        if action.text == 'Local game':
-            return 'goto:local_game'
-        if action.text == 'Configure':
-            return 'goto:configure'
-        if action.text == 'Credits':
-            return 'goto:about'
-        if action.text == 'Quit':
-            pygame.event.post( pygame.event.Event(pygame.QUIT) )
-            
+        pass

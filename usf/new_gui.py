@@ -54,7 +54,7 @@ class NewGui(object):
         self.screens = {}
         self.screen_history = []
         #TODO : Use a config file
-        screens = ['main_screen', 'configure']
+        screens = ['main_screen', 'configure', 'about', 'local_game']
         for name in screens:
             exec("import screen." + name)
             exec('scr = screen.' + name + '.' + name + "('"+ name +"',self.screen)")
@@ -90,7 +90,7 @@ class NewGui(object):
             os.sep+
             "gui"+
             os.sep +
-            'japan'+
+            config.general['THEME']+
             os.sep+
             self.skin.background[0],
             scale=(config.general['WIDTH'],

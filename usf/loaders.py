@@ -19,7 +19,7 @@
 ##################################################################################
 
 # standards imports
-import os, sys
+import os, sys, copy
 import pygame
 import logging
 
@@ -119,6 +119,7 @@ def image(name, *args, **kwargs):
                 scale
                 )
 
+
     elif 'zoom' in kwargs and kwargs['zoom'] not in (None, 1):
         zoom = kwargs['zoom']
         kwargs['zoom'] = None
@@ -157,6 +158,11 @@ def image(name, *args, **kwargs):
                 colorkey = image.get_at((0,0))
             image.set_colorkey(colorkey, RLEACCEL)
     return image, image.get_rect()
+@memoize
+def image_layer(first, second, pos):
+    surface = copy.copy(first)
+    surface.blit(second, pos)
+    return surface
 
 @memoize
 def track(name):
