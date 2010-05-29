@@ -252,6 +252,7 @@ class Button(Label):
                     'back_button.png', scale=(self.width, self.height))[0], self.surface, (self.indent, self.posy))
     def handle_mouse(self,event):
         if event.type == pygame.MOUSEBUTTONUP:
+            self.state = False
             return self,False
         else:
             if self.state == True:
