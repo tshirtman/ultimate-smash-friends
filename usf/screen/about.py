@@ -22,8 +22,8 @@ import widgets
 import copy
 class about(Screen):
     def init(self):
-        self.add(widgets.HBox(False))
-        vbox = widgets.VBox(False)
+        self.add(widgets.HBox())
+        vbox = widgets.VBox()
         self.widget.add(vbox, margin=300)
         vbox.add(widgets.Button('About us'), margin=120)
     def callback(self,action):

@@ -31,7 +31,7 @@ class Screen(object):
     def add(self, widget):
         self.widget = widget
         #define the position and the size of the top-level widget
-        self.widget.setSize(config.general['WIDTH'],config.general['HEIGHT'])
+        self.widget.setSize((config.general['WIDTH'],config.general['HEIGHT']))
         self.widget.x = 0
         self.widget.y = 0
     def update(self):

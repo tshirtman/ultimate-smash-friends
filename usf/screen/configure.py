@@ -22,8 +22,8 @@ import widgets
 import copy
 class configure(Screen):
     def init(self):
-        self.add(widgets.HBox(False))
-        vbox = widgets.VBox(False)
+        self.add(widgets.HBox())
+        vbox = widgets.VBox()
         self.widget.add(vbox, margin=300)
         vbox.add(widgets.Button('Configure'), margin=120)
     def callback(self,action):

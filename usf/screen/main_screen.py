@@ -23,10 +23,10 @@ import copy
 import pygame
 class main_screen(Screen):
     def init(self):
-        self.add(widgets.HBox(False))
-        vbox = widgets.VBox(False)
+        self.add(widgets.HBox())
+        vbox = widgets.VBox()
         self.widget.add(vbox, margin=300)
-        vbox.add(widgets.Button('Local game'), margin=120, size=(180,50))
+        vbox.add(widgets.Button('Local game'), margin=170, size=(180,50))
         vbox.add(widgets.Button('Configure'), margin=10, size=(180,50))
         vbox.add(widgets.Button('Credits'), margin=10, size=(180,50))
         vbox.add(widgets.Button('Quit'), margin=10, size=(180,50))

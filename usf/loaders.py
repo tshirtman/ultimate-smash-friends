@@ -159,7 +159,7 @@ def image(name, *args, **kwargs):
             image.set_colorkey(colorkey, RLEACCEL)
     return image, image.get_rect()
 @memoize
-def image_layer(first, second, pos):
+def image_layer(first, second, pos=(0,0)):
     surface = copy.copy(first)
     surface.blit(second, pos)
     return surface

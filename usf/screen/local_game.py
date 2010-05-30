@@ -22,9 +22,7 @@ import widgets
 import copy
 class local_game(Screen):
     def init(self):
-        self.add(widgets.HBox(False))
-        vbox = widgets.VBox(False)
-        self.widget.add(vbox, margin=300)
-        vbox.add(widgets.Button('Configure'), margin=120)
+        self.add(widgets.HBox())
+        self.widget.add(widgets.Spinner(['local', 'Configure', 'game']), margin=220)
     def callback(self,action):
-        pass
+        print "spinner"
