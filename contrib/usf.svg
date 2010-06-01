@@ -21,6 +21,17 @@
   <defs
      id="defs4">
     <linearGradient
+       id="linearGradient3917">
+      <stop
+         id="stop3919"
+         offset="0"
+         style="stop-color:#8300ff;stop-opacity:1;" />
+      <stop
+         id="stop3921"
+         offset="1"
+         style="stop-color:#8300ff;stop-opacity:0.72592592;" />
+    </linearGradient>
+    <linearGradient
        inkscape:collect="always"
        id="linearGradient3871">
       <stop
@@ -666,7 +677,7 @@
        gradientTransform="matrix(1.6437079,0,0,0.7389951,1493.1731,-577.53666)"
        gradientUnits="userSpaceOnUse"
        id="linearGradient3060"
-       xlink:href="#linearGradient4221-8"
+       xlink:href="#linearGradient3917"
        inkscape:collect="always" />
     <linearGradient
        y2="530.59937"
@@ -739,18 +750,18 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.80227657"
-     inkscape:cx="-1215.4757"
-     inkscape:cy="871.10904"
+     inkscape:cx="-1211.7363"
+     inkscape:cy="878.58776"
      inkscape:document-units="px"
      inkscape:current-layer="g4215"
      showgrid="false"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:window-width="1920"
-     inkscape:window-height="1125"
-     inkscape:window-x="0"
-     inkscape:window-y="24"
-     inkscape:window-maximized="1">
+     inkscape:window-width="737"
+     inkscape:window-height="504"
+     inkscape:window-x="543"
+     inkscape:window-y="142"
+     inkscape:window-maximized="0">
     <inkscape:grid
        type="xygrid"
        id="grid2383" />
@@ -771,7 +782,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -1100,17 +1111,26 @@
            height="59.119602"
            width="525.98651"
            id="rect4203-9"
-           style="opacity:0.5497835;fill:url(#linearGradient3060);fill-opacity:1;fill-rule:nonzero;stroke:url(#linearGradient3062);stroke-width:2.75532675;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+           style="opacity:0.54978349999999998;fill:url(#linearGradient3060);fill-opacity:1.0;fill-rule:nonzero;stroke:url(#linearGradient3062);stroke-width:2.75532675000000005;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           inkscape:export-filename="/home/xapantu/Documents/projets/usf.xapantu/data/gui/tech/spinner.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90" />
         <path
            style="fill:url(#linearGradient3877);fill-opacity:1;stroke:none"
            d="m -1146.7261,-166.64647 -0.2203,50.67909 -29.7464,-25.28769 29.9667,-25.3914 z"
            id="path3869"
-           sodipodi:nodetypes="cccc" />
+           sodipodi:nodetypes="cccc"
+           inkscape:export-filename="/home/xapantu/Documents/projets/usf.xapantu/data/gui/tech/spinner.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90" />
         <path
            style="fill:url(#linearGradient3896);fill-opacity:1;fill-rule:nonzero;stroke:none"
            d="m -704.98095,-116.37026 0.2203,-50.67909 29.7464,25.28769 -29.9667,25.3914 z"
            id="path3869-5"
-           sodipodi:nodetypes="cccc" />
+           sodipodi:nodetypes="cccc"
+           inkscape:export-filename="/home/xapantu/Documents/projets/usf.xapantu/data/gui/tech/spinner.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90" />
       </g>
       <flowRoot
          xml:space="preserve"

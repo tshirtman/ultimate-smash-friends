@@ -40,6 +40,8 @@ import loaders
 # Gui modules
 from widgets import (HBox, VBox, Label)
 from skin import Skin
+import game
+
 #translation
 import translation
         
@@ -51,6 +53,7 @@ class NewGui(object):
     """
     def __init__(self, surface):
         self.screen = surface
+        self.game = None
         self.screens = {}
         self.screen_history = []
         #TODO : Use a config file
@@ -97,19 +100,20 @@ class NewGui(object):
             config.general['HEIGHT'])
             )[0], (0,0))
         self.screens[self.screen_current].update()
+        if self.game != None:
+            print "game2"
+            return True, self.game
         return False, None
     def handle_mouse(self,event):
         if self.focus == False:
             (query, self.focus) = self.screens[self.screen_current].widget.handle_mouse(event)
-            if self.focus != False:
-                print "stayfocus on " + str(query)
         else:
             (query, focus) = self.focus.handle_mouse(event)
             if focus == False:
                 self.focus = False
         if  query != False:
             reply = self.screens[self.screen_current].callback(query)
-            self.handle_reply(reply)
+            return self.handle_reply(reply)
         del(event)
     def handle_keys(self,event):
         if event.dict['key'] == pygame.K_ESCAPE:
@@ -117,11 +121,14 @@ class NewGui(object):
                 self.screen_current = self.screen_history[-1]
                 del self.screen_history[-1]
     def handle_reply(self,reply):
+        print type(reply)
         if type(reply) == str:
             if reply.split(':')[0] == 'goto':
                 self.screen_history.append(self.screen_current)
                 self.screen_current = reply.split(':')[1]
-
+        elif reply != None:
+            self.game = reply
+            return True, reply
 
 
 
