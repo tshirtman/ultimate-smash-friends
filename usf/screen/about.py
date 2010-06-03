@@ -25,6 +25,6 @@ class about(Screen):
         self.add(widgets.HBox())
         vbox = widgets.VBox()
         self.widget.add(vbox, margin=300)
-        vbox.add(widgets.Button('About us'), margin=120)
+        vbox.add(widgets.LongText('CREDITS'), margin=120)
     def callback(self,action):
         pass

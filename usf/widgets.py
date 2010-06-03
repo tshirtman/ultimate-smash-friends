@@ -271,6 +271,30 @@ class Label(Widget):
         else:
             self.surface = self.surface_text
           
+class LongText(Widget):
+    def __init__(self, text, *args, **kwargs):
+        self.init()
+        self.text = open(config.sys_data_dir + os.sep + text, 'r').readlines()
+        print self.text
+        text_height = game_font.render(
+            "",
+            True,
+            pygame.color.Color("white")
+            ).get_height()
+        for text in self.text:
+            pass
+        """
+        if "height" in kwargs:
+            self.height = kwargs['height']
+        else:
+            self.height = self.surface_text.get_height()
+        if "width" in kwargs:
+            self.width = kwargs['width']
+        else:
+            self.width = self.surface_text.get_width()
+        if "margin" in kwargs:
+            self.txtmargin= kwargs['margin']
+        """
         
 class CheckBox(Widget):
     pass
