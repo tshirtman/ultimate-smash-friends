@@ -33,6 +33,7 @@ class local_game(Screen):
     def init(self):
         self.game_data = {}
         self.game_data['character_file'] = []
+        self.game_data['character_file'].append("characters" + os.sep + 'BiX')
         self.character = []
         self.character.append("None")
         self.game_data['level_name'] = []
@@ -130,12 +131,22 @@ class local_game(Screen):
     def callback(self,action):
         if action == self.pl1 :
             self.players[0] = action.getIndex()
+            self.img1.setImage(self.game_data['character_file'][action.getIndex()] + os.sep +
+                self.game_data['character_file'][action.getIndex()].replace('characters' + os.sep, "") + "-portrait.png")
         if action == self.pl2 :
             self.players[1] = action.getIndex()
+            self.img2.setImage(self.game_data['character_file'][action.getIndex()] + os.sep +
+                self.game_data['character_file'][action.getIndex()].replace('characters' + os.sep, "") + "-portrait.png")
         if action == self.pl3 :
             self.players[2] = action.getIndex()
+            self.img3.setImage(self.game_data['character_file'][action.getIndex()] + os.sep +
+                self.game_data['character_file'][action.getIndex()].replace('characters' + os.sep, "") + "-portrait.png")
         if action == self.pl4 :
             self.players[3] = action.getIndex()
+            self.img4.setImage(self.game_data['character_file'][action.getIndex()] + os.sep +
+                self.game_data['character_file'][action.getIndex()].replace('characters' + os.sep, "") + "-portrait.png")
+        if action == self.level_name :
+            self.level_image.setImage("gui" + os.sep + "image" + os.sep + self.game_data['level_name'][action.getIndex()] + ".png")
         if action == self.w_launch:
             return self.launch_game()
 
@@ -148,11 +159,11 @@ class local_game(Screen):
 
         players = [
         self.game_data['character_file'][p]
-        for p in self.players if p != -1
+        for p in self.players if p != 0
         ]
         game = Game(
             self.screen,
-            self.game_data['level_name'][0],
+            self.game_data['level_name'][self.level_name.getIndex()],
             players
         )
 

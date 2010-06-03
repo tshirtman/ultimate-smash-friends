@@ -1,4 +1,4 @@
-#i###############################################################################
+################################################################################
 # copyright 2009 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
 #                                                                              #
 # This file is part of Ultimate Smash Friends                                  #
@@ -57,7 +57,7 @@ class NewGui(object):
         self.screens = {}
         self.screen_history = []
         #TODO : Use a config file
-        screens = ['main_screen', 'configure', 'about', 'local_game']
+        screens = ['main_screen', 'configure', 'about', 'local_game', 'resume']
         for name in screens:
             exec("import screen." + name)
             exec('scr = screen.' + name + '.' + name + "('"+ name +"',self.screen)")
@@ -70,6 +70,7 @@ class NewGui(object):
         self.last_event = time.time()
         self.image = 0
         self.focus = False
+        self.state = "menu"
     def update(self, first, second, third):
         #FIXME : it sould be in main.pyw
         time.sleep(1.00/float(config.general['MAX_FPS']))
@@ -79,7 +80,7 @@ class NewGui(object):
                 pygame.event.post( pygame.event.Event(QUIT) )
                 break
             elif event.type != pygame.NOEVENT:
-                if event.type == pygame.KEYUP:
+                if event.type == pygame.KEYDOWN:
                     self.handle_keys(event)
                 elif ( event.type == pygame.MOUSEBUTTONUP or
                     event.type == pygame.MOUSEBUTTONDOWN or
@@ -100,8 +101,10 @@ class NewGui(object):
             config.general['HEIGHT'])
             )[0], (0,0))
         self.screens[self.screen_current].update()
-        if self.game != None:
-            print "game2"
+        if self.game != None and self.state != "ingame":
+            self.state = "ingame"
+            self.screen_current = 'resume'
+            self.screen_history = []
             return True, self.game
         return False, None
     def handle_mouse(self,event):
@@ -113,7 +116,7 @@ class NewGui(object):
                 self.focus = False
         if  query != False:
             reply = self.screens[self.screen_current].callback(query)
-            return self.handle_reply(reply)
+            self.handle_reply(reply)
         del(event)
     def handle_keys(self,event):
         if event.dict['key'] == pygame.K_ESCAPE:
@@ -127,8 +130,11 @@ class NewGui(object):
                 self.screen_history.append(self.screen_current)
                 self.screen_current = reply.split(':')[1]
         elif reply != None:
-            self.game = reply
-            return True, reply
+            if reply == True:
+                self.state = "menu"
+            else:
+                self.state = "menu"
+                self.game = reply
 
 
 

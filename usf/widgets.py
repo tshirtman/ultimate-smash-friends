@@ -163,7 +163,67 @@ class VBox(Container):
         self.widgets = []
         self.orientation = False
         
+class Tab(VBox):
+    def __init__(self):
+        self.init()
+        self.widgets = []
+        self.orientation = False
+        self.tab = TabBar()
+        self.add(self.tab)
+        self.tab_list = []
+        self.tab_content = []
+    def add_tab(self, tab, box):
+        self.tab.add(tab)
+        self.tab_list.append(tab)
+        box_content = HBox()
+        box_content.add(box)
+        self.tab_content.append(box_content)
+        if len(self.tab_content) == 1:
+            self.add(box_content)
+            print self.widgets.index(box_content)
+        self.update_pos()
+        self.update_size()
+    def handle_mouse(self,event):
+        try:
+            self.widgets
+        except:
+            self.widgets = []
+        #print event.dict['pos']
+        x = event.dict['pos'][0]
+        y = event.dict['pos'][1]
+        for widget in self.widgets:
+            if widget.x < x < widget.x+widget.width and widget.y < y < widget.y+widget.height:
+                #print 'widget: ' + str(widget) + ' x: ' + str(widget.x) + ' width: ' + str(widget.width) + ' y: ' + str(widget.y) + ' height: ' + str(widget.height)
+                event.dict['pos'] = (x-widget.x, y-widget.y)
+                if widget == self.tab:
+                    for wid in widget.widgets:
+                        wid.state=False
+                    widget_ = widget.handle_mouse(event)
+                    if event.type == pygame.MOUSEBUTTONUP:
+                        self.widgets[1] = self.tab_content[self.tab_list.index(widget_)]
+                        self.update_pos()
+                        self.update_size()
+                    elif widget_ != None:
+                        widget_.state=True
+                else:
+                    return widget.handle_mouse(event)
+                break
         
+        return (False,False)
+class TabBar(HBox):
+    def handle_mouse(self,event):
+        try:
+            self.widgets
+        except:
+            self.widgets = []
+        #print event.dict['pos']
+        x = event.dict['pos'][0]
+        y = event.dict['pos'][1]
+        for widget in self.widgets:
+            if widget.x < x < widget.x+widget.width and widget.y < y < widget.y+widget.height:
+                #print 'widget: ' + str(widget) + ' x: ' + str(widget.x) + ' width: ' + str(widget.width) + ' y: ' + str(widget.y) + ' height: ' + str(widget.height)
+                return widget
+                break
 class Label(Widget):
     indent = 0
     def init(self):
@@ -244,6 +304,9 @@ class Image(Widget):
     def draw(self):
         #empty the surface
         return self.surface
+    def setImage(self,path):
+        self.path = path
+        self.setSize((self.width,self.height))
 class Button(Label):
     posy = 0
     def setSize(self, (w,h)):

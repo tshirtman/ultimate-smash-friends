@@ -1,5 +1,5 @@
 ################################################################################
-# copyright 2009 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
+# copyright 2010 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
 #                                                                              #
 # This file is part of Ultimate Smash Friends.                                 #
 #                                                                              #
@@ -20,14 +20,14 @@
 from screen import Screen
 import widgets
 import copy
-class configure(Screen):
+import pygame
+class resume(Screen):
     def init(self):
         self.add(widgets.HBox())
         vbox = widgets.VBox()
         self.widget.add(vbox, margin=300)
-        tab = widgets.Tab()
-        tab.add_tab(widgets.Button('Configure'), widgets.Label("aaaaaa"))
-        tab.add_tab(widgets.Button('Tab2'), widgets.Label("bbbbb"))
-        vbox.add(tab, margin=200)
+        vbox.add(widgets.Button('Resume'), margin=170, size=(180,50))
     def callback(self,action):
-        pass
+        if action.text == 'Resume':
+            return True
+            
