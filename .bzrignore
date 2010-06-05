@@ -8,3 +8,7 @@ code/usf_media/gui/set_game.usfgui
 *.pyc
 Session.vim
 MANIFEST
+.directory
+.project
+.pydevproject
+usf/.project
