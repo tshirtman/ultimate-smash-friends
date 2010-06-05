@@ -18,32 +18,32 @@
 ################################################################################
 
 import pygame
-from pygame.locals import USEREVENT, QUIT
-from math import sin, cos
-from time import time
+from pygame.locals import QUIT
+#from math import sin, cos
+#from time import time
 import os
 import time
-import xml.dom.minidom
-import logging
-import thread
+#import xml.dom.minidom
+#import logging
+#import thread
 # Our modules
 
 from config import Config
 
 config = Config()
 
-import controls
-import entity_skin
-from game import Game
-import controls
+#import controls
+#import entity_skin
+#from game import Game
+#import controls
 import loaders
 # Gui modules
-from widgets import (HBox, VBox, Label)
+#from widgets import (HBox, VBox, Label)
 from skin import Skin
-import game
+#import game
 
 #translation
-import translation
+#import translation
         
 
 class NewGui(object):
