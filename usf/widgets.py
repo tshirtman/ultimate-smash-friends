@@ -339,13 +339,85 @@ class LongText(Widget):
             elif event.dict['button'] == 5:
                 if self.scroll < self.text_height * len(self.text)-self.width:
                     self.scroll += 20
+            print self.scroll*100/self.getTextHeight()
+            self.slider.setValue(self.scroll*100/self.getTextHeight())
         return (False,False)
-
+    def getTextHeight(self):
+        return self.text_height * len(self.text)-self.width
 class Paragraph(HBox):
     def setText(self, widget):
+        self.widgets = []
         self.add(widget)
-        
-
+        self.add(SliderParagraph('a'), size=(20,self.height))
+        self.widgets[0].slider = self.widgets[1]
+        self.widgets[1].slider = self.widgets[0]
+    def draw(self):
+        self.surface = self.surface.convert().convert_alpha()
+        for widget in self.widgets:
+            self.surface.blit(widget.draw(),(widget.x,widget.y))
+        return self.surface
+class SliderParagraph(Widget):
+    def __init__(self, text):
+        self.text = text
+        self.parentpos = (0,0)
+        self.extend = False
+        self.value = 0
+        self.orientation = False
+        self.init()
+        self.index = 0
+        self.state = False
+        self.height =0
+        self.width = 0
+    def init(self):
+        self.background= loaders.image(config.sys_data_dir + os.sep + 'gui' + os.sep + config.general['THEME'] + os.sep + 'sliderh_background.png',
+            scale=optimize_size((self.width,self.height)))[0]
+        self.center= loaders.image(config.sys_data_dir + os.sep + 'gui' + os.sep + config.general['THEME'] + os.sep + 'sliderh_center.png',
+            scale=optimize_size((self.width,self.width*6)))[0]
+        self.center_hover= loaders.image(config.sys_data_dir + os.sep + 'gui' + os.sep + config.general['THEME'] + os.sep + 'sliderh_center.png',
+            scale=optimize_size((self.width,self.width*6)))[0]
+    def handle_mouse(self,event):
+        if self.state == True:
+            event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0]-self.x,
+                                event.dict['pos'][1] - self.parentpos[1]-self.y)
+        x = event.dict['pos'][0]
+        y = event.dict['pos'][1]
+        if self.state == True:
+            if event.type == pygame.MOUSEBUTTONUP:
+                self.state = False
+                return False, False
+            elif event.type == pygame.MOUSEMOTION and y -self.space >0 and y - self.space + self.width*6 < self.height:
+                self.value = y - self.space
+            elif event.type == pygame.MOUSEMOTION  and y -self.space >0:
+                self.value = self.height-self.width*6
+            elif event.type == pygame.MOUSEMOTION  and y - self.space + self.width*6 < self.height:
+                self.value = 0
+            
+            textheight = self.slider.getTextHeight()
+            scroll = self.getValue()
+            self.slider.scroll = textheight*scroll/100
+            return self, self
+        if 0 < x < self.width and 0 < y < self.height:
+            if self.value-self.height < y and y < self.value + self.height:
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    #to adjust the position of the slider
+                    self.space = y - self.value
+                    
+                    self.state = True
+                    return self, self
+            return False, False
+        self.state = False
+        return (False,False)
+    def getValue(self):
+        return self.value*100/(self.height - self.width*6)
+    def setValue(self, value):
+        print value
+        self.value = value*(self.height - self.width*6)/100
+        print self.value
+    def draw(self):
+        if self.state:
+            return loaders.image_layer(self.background, self.center_hover, (0,self.value))
+        else:
+            return loaders.image_layer(self.background, self.center, (0,self.value))
 class Slider(Widget):
     def __init__(self, text):
         self.text = text
