@@ -25,9 +25,9 @@ class configure(Screen):
         self.add(widgets.HBox())
         vbox = widgets.VBox()
         self.widget.add(vbox, margin=300)
-        tab = widgets.Tab()
-        tab.add_tab(widgets.Button('Configure'), widgets.Label("aaaaaa"))
-        tab.add_tab(widgets.Button('Tab2'), widgets.Label("bbbbb"))
-        vbox.add(tab, margin=200)
+        vbox.add(widgets.Button('Sounds and music'), margin=150, size=(220,50))
+        vbox.add(widgets.Button('Screen'), margin=10, size=(220,50))
+        vbox.add(widgets.Button('Keyboard'), margin=10, size=(220,50))
     def callback(self,action):
-        pass
+        if action.text == 'Sounds and music':
+            return "goto:sound"

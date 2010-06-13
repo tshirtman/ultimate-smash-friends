@@ -26,10 +26,11 @@ class main_screen(Screen):
         self.add(widgets.HBox())
         vbox = widgets.VBox()
         self.widget.add(vbox, margin=300)
-        vbox.add(widgets.Button('Local game'), margin=170, size=(180,50))
+        vbox.add(widgets.Button('Local game'), margin=150, size=(180,50))
         vbox.add(widgets.Button('Configure'), margin=10, size=(180,50))
         vbox.add(widgets.Button('Credits'), margin=10, size=(180,50))
         vbox.add(widgets.Button('Quit'), margin=10, size=(180,50))
+        #vbox.add(widgets.Slider('slider'), margin=10, size=(180,20))
     def callback(self,action):
         if action.text == 'Local game':
             return 'goto:local_game'

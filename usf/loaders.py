@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 ####################################################################################
 # copyright 2008 Gabriel Pettier <gabriel.pettier@gmail.com>
 #
@@ -163,7 +165,11 @@ def image_layer(first, second, pos=(0,0)):
     surface = copy.copy(first)
     surface.blit(second, pos)
     return surface
-
+@memoize
+def text(text_send, font):
+    return font.render(text_send.decode('utf-8'),
+            True,
+            pygame.color.Color("white"))
 @memoize
 def track(name):
     try:

@@ -57,7 +57,7 @@ class NewGui(object):
         self.screens = {}
         self.screen_history = []
         #TODO : Use a config file
-        screens = ['main_screen', 'configure', 'about', 'local_game', 'resume']
+        screens = ['main_screen', 'configure', 'about', 'local_game', 'resume', 'sound']
         for name in screens:
             exec("import screen." + name)
             exec('scr = screen.' + name + '.' + name + "('"+ name +"',self.screen)")
@@ -124,7 +124,7 @@ class NewGui(object):
                 self.screen_current = self.screen_history[-1]
                 del self.screen_history[-1]
     def handle_reply(self,reply):
-        print type(reply)
+        #print type(reply)
         if type(reply) == str:
             if reply.split(':')[0] == 'goto':
                 self.screen_history.append(self.screen_current)

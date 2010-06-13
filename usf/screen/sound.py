@@ -19,15 +19,26 @@
 
 from screen import Screen
 import widgets
-import copy
-class about(Screen):
+from config import Config
+
+config = Config()
+
+class sound(Screen):
     def init(self):
         self.add(widgets.HBox())
         vbox = widgets.VBox()
-        self.widget.add(vbox, margin=250)
-        lt = widgets.LongText('CREDITS', height=300, width=450)
-        par = widgets.Paragraph()
-        par.setText(lt)
-        vbox.add(par, margin=120)
+        self.widget.add(vbox, margin=220)
+        vbox.add(widgets.Label('Sound'), margin=150)
+        sound = widgets.Slider('sound_slider')
+        vbox.add(sound, margin=10, size=(360,40))
+        vbox.add(widgets.Label('Music'), margin=10)
+        music = widgets.Slider('music_slider')
+        vbox.add(music, margin=10, size=(360,40))
+        
+        music.setValue(config.audio['MUSIC_VOLUME'])
+        sound.setValue(config.audio['SOUND_VOLUME'])
     def callback(self,action):
-        pass
+        if action.text == 'music_slider':
+            config.audio['MUSIC_VOLUME'] = action.getValue()
+        if action.text == 'sound_slider':
+            config.audio['SOUND_VOLUME'] = action.getValue()
