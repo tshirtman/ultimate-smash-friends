@@ -29,11 +29,11 @@ class local_game(Screen):
     name_pl2 = 0
     name_pl3 = 0
     name_pl4 = 0
-    players = [-1,-1,-1,-1]
+    players = [0,0,0,0]
     def init(self):
         self.game_data = {}
         self.game_data['character_file'] = []
-        self.game_data['character_file'].append("characters" + os.sep + 'BiX')
+        self.game_data['character_file'].append("characters" + os.sep + 'none')
         self.character = []
         self.character.append("None")
         self.game_data['level_name'] = []
@@ -61,7 +61,7 @@ class local_game(Screen):
                 else:
                     raise
             except IOError, e:
-                logging.debug(file+" is not a valid character directory.", 3)
+                #logging.debug(file+" is not a valid character directory.", 3)
                 #raise
                 #logging.debug(e)
                 pass
@@ -161,13 +161,14 @@ class local_game(Screen):
         self.game_data['character_file'][p]
         for p in self.players if p != 0
         ]
-        game = Game(
-            self.screen,
-            self.game_data['level_name'][self.level_name.getIndex()],
-            players
-        )
+        if len(players) > 1:
+            game = Game(
+                self.screen,
+                self.game_data['level_name'][self.level_name.getIndex()],
+                players
+            )
 
-        #thread.start_new_thread(self.loading, ())
-        #self.goto_screen("ingame.usfgui", False)
-        #self.state="game"
-        return game
+            #thread.start_new_thread(self.loading, ())
+            #self.goto_screen("ingame.usfgui", False)
+            #self.state="game"
+            return game
