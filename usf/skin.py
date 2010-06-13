@@ -73,4 +73,4 @@ game_font = pygame.font.Font(
             config.sys_data_dir +
             os.sep +
             "gui" +os.sep + config.general['THEME'] + os.sep +
-            "font.otf", config.general['HEIGHT']/20)
+            "font.otf", config.general['HEIGHT']/25)
