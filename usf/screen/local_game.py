@@ -131,17 +131,22 @@ class local_game(Screen):
         self.player_vbox = [widgets.VBox(), widgets.VBox()]
         for i in range(0,4):
             self.checkboxes_ai.append(widgets.CheckBox())
-            self.portraits.append(widgets.Image(self.game_data['character_file'][0] + os.sep + self.game_data['character_file'][0].replace('characters' + os.sep, "") + "-portrait.png", size=(50,50)))
+            self.portraits.append(widgets.Image(self.game_data['character_file'][0]
+                                 + os.sep
+                                 + self.game_data['character_file'][0].replace('characters' + os.sep, "")
+                                 + "-portrait.png", size=(50,50)))
             self.player_spinner.append(widgets.Spinner(self.character))
             
             self.player_vbox[i/2].add(widgets.Label("Player " + str(i+1)), margin=20)
             self.player_vbox[i/2].add(self.player_spinner[-1])
             self.player_vbox[i/2].add(self.portraits[-1], margin_left=50, margin=5)
-            self.player_vbox[i/2].add(widgets.Label("AI :"), margin=20)
+            self.player_vbox[i/2].add(widgets.Label("AI :"), margin=10)
             self.player_vbox[i/2].add(self.checkboxes_ai[-1])
         for vbox in self.player_vbox:
-            self.widget.add(vbox, size=(200,50), margin=20)
-        self.player_vbox[1].add(self.w_launch, margin=20)
+            self.widget.add(vbox, size=(200,50), margin=50)
+        self.player_vbox[1].add(self.w_launch, margin=20, size=(250,50))
+        
+        
         #level elements
         self.level_name = widgets.Spinner(self.game_data['level_name'])
         self.level_image = widgets.Image('gui'+ os.sep + 'image' + os.sep + 'BiX_level.png')
