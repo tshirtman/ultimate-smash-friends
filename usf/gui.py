@@ -100,14 +100,22 @@ class Gui(object):
             scale=(config.general['WIDTH'],
             config.general['HEIGHT'])
             )[0], (0,0))
+            
         self.screens[self.screen_current].update()
+        
+        #if we have a game instance and the state is menu...
         if self.game != None and self.state != "ingame":
             self.state = "ingame"
             self.screen_current = 'resume'
             self.screen_history = []
             return True, self.game
+            
         return False, None
+        
     def handle_mouse(self,event):
+        """
+        This function handles mouse event which are send from the update function.
+        """
         if self.focus == False:
             (query, self.focus) = self.screens[self.screen_current].widget.handle_mouse(event)
         else:
@@ -117,18 +125,26 @@ class Gui(object):
         if  query != False:
             reply = self.screens[self.screen_current].callback(query)
             self.handle_reply(reply)
+        #remove the event for performance, maybe it is useless
         del(event)
+        
     def handle_keys(self,event):
+        """
+        This function handles keyboard event which are send from the update function.
+        """
+        #TODO : a complete navigation system with the keyboard.
         if event.dict['key'] == pygame.K_ESCAPE:
-            if len(self.screen_history) > 0:
-                self.screen_current = self.screen_history[-1]
-                del self.screen_history[-1]
+            self.screen_back()
+                
     def handle_reply(self,reply):
         #print type(reply)
         if type(reply) == str:
             if reply.split(':')[0] == 'goto':
-                self.screen_history.append(self.screen_current)
-                self.screen_current = reply.split(':')[1]
+                if reply.split(':')[1] == 'back':
+                    self.screen_back()
+                else:
+                    self.screen_history.append(self.screen_current)
+                    self.screen_current = reply.split(':')[1]
         elif reply != None:
             if reply == True:
                 self.state = "menu"
@@ -136,7 +152,11 @@ class Gui(object):
                 self.state = "menu"
                 self.game = reply
 
-
+    def screen_back(self):
+        if len(self.screen_history) > 0:
+            self.screen_current = self.screen_history[-1]
+            del self.screen_history[-1]
+        
 
 
 
