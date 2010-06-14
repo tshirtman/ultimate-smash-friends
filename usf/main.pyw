@@ -180,7 +180,7 @@ class Main(object):
         icon = loaders.image(os.path.join(config.sys_data_dir, 'gui',
                                           'icon.png'))[0]
         pygame.display.set_icon(icon)
-        if config.general['FULLSCREEN'] == "True":
+        if config.general['FULLSCREEN'] == True:
             pygame.display.toggle_fullscreen()
 
     def init_sound(self):

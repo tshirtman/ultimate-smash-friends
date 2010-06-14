@@ -82,22 +82,23 @@ class local_game(Screen):
                 raise
                 pass
         self.add(widgets.HBox())
+        """
         pl12 = widgets.VBox()
         pl23 = widgets.VBox()
-        level_box = widgets.VBox()
+        """
+        """
         self.widget.add(pl12, margin=100)
         
         
         self.widget.add(pl23, margin=20)
-        self.widget.add(level_box, margin=40)
-        
+        """
+        """
         self.pl1 = widgets.Spinner(self.character)
         self.pl2 = widgets.Spinner(self.character)
         self.pl3 = widgets.Spinner(self.character)
         self.pl4 = widgets.Spinner(self.character)
-        
-        self.level_name = widgets.Spinner(self.game_data['level_name'])
-        
+        """
+        """
         self.img1 = widgets.Image(self.game_data['character_file'][0] + os.sep +
             self.game_data['character_file'][0].replace('characters' + os.sep, "") + "-portrait.png", size=(50,50))
         self.img2 = widgets.Image(self.game_data['character_file'][0] + os.sep +
@@ -106,10 +107,10 @@ class local_game(Screen):
             self.game_data['character_file'][0].replace('characters' + os.sep, "") + "-portrait.png", size=(50,50))
         self.img4 = widgets.Image(self.game_data['character_file'][0] + os.sep +
             self.game_data['character_file'][0].replace('characters' + os.sep, "") + "-portrait.png", size=(50,50))
-        
-        self.level_image = widgets.Image('gui'+ os.sep + 'image' + os.sep + 'BiX_level.png')
+        """
             
         self.w_launch = widgets.Button("Launch the game")
+        """
         pl12.add(widgets.Label("Player 1"), margin=150)
         pl12.add(self.pl1)
         pl12.add(self.img1, margin_left=50, margin=5)
@@ -123,27 +124,38 @@ class local_game(Screen):
         pl23.add(self.pl4)
         pl23.add(self.img4, margin_left=50, margin=5)
         pl23.add(self.w_launch, size=(200,50), margin=20)
-        
+        """
+        self.checkboxes_ai = []
+        self.portraits = []
+        self.player_spinner = []
+        self.player_vbox = [widgets.VBox(), widgets.VBox()]
+        for i in range(0,4):
+            self.checkboxes_ai.append(widgets.CheckBox())
+            self.portraits.append(widgets.Image(self.game_data['character_file'][0] + os.sep + self.game_data['character_file'][0].replace('characters' + os.sep, "") + "-portrait.png", size=(50,50)))
+            self.player_spinner.append(widgets.Spinner(self.character))
+            
+            self.player_vbox[i/2].add(widgets.Label("Player " + str(i+1)), margin=20)
+            self.player_vbox[i/2].add(self.player_spinner[-1])
+            self.player_vbox[i/2].add(self.portraits[-1], margin_left=50, margin=5)
+            self.player_vbox[i/2].add(widgets.Label("AI :"), margin=20)
+            self.player_vbox[i/2].add(self.checkboxes_ai[-1])
+        for vbox in self.player_vbox:
+            self.widget.add(vbox, size=(200,50), margin=20)
+        self.player_vbox[1].add(self.w_launch, margin=20)
+        #level elements
+        self.level_name = widgets.Spinner(self.game_data['level_name'])
+        self.level_image = widgets.Image('gui'+ os.sep + 'image' + os.sep + 'BiX_level.png')
+        level_box = widgets.VBox()
         level_box.add(widgets.Label("Level"), margin=150)
+        self.widget.add(level_box, margin=40)
         level_box.add(self.level_name)
         level_box.add(self.level_image, size=(200,120), margin=5)
-        #vbox.add(widgets.Spinner(['local1', 'Configure2', 'game3']))
+        
     def callback(self,action):
-        if action == self.pl1 :
-            self.players[0] = action.getIndex()
-            self.img1.setImage(self.game_data['character_file'][action.getIndex()] + os.sep +
-                self.game_data['character_file'][action.getIndex()].replace('characters' + os.sep, "") + "-portrait.png")
-        if action == self.pl2 :
-            self.players[1] = action.getIndex()
-            self.img2.setImage(self.game_data['character_file'][action.getIndex()] + os.sep +
-                self.game_data['character_file'][action.getIndex()].replace('characters' + os.sep, "") + "-portrait.png")
-        if action == self.pl3 :
-            self.players[2] = action.getIndex()
-            self.img3.setImage(self.game_data['character_file'][action.getIndex()] + os.sep +
-                self.game_data['character_file'][action.getIndex()].replace('characters' + os.sep, "") + "-portrait.png")
-        if action == self.pl4 :
-            self.players[3] = action.getIndex()
-            self.img4.setImage(self.game_data['character_file'][action.getIndex()] + os.sep +
+        if action in self.player_spinner :
+            player_number = self.player_spinner.index(action)
+            self.players[player_number] = action.getIndex()
+            self.portraits[player_number].setImage(self.game_data['character_file'][action.getIndex()] + os.sep +
                 self.game_data['character_file'][action.getIndex()].replace('characters' + os.sep, "") + "-portrait.png")
         if action == self.level_name :
             self.level_image.setImage("gui" + os.sep + "image" + os.sep + self.game_data['level_name'][action.getIndex()] + ".png")
@@ -161,6 +173,9 @@ class local_game(Screen):
         self.game_data['character_file'][p]
         for p in self.players if p != 0
         ]
+        for i in range(0,len(players)):
+            if self.checkboxes_ai[i].get_value():
+                players[i] = players[i].replace("characters/", "characters/AI")
         if len(players) > 1:
             game = Game(
                 self.screen,

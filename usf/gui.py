@@ -71,6 +71,8 @@ class Gui(object):
         self.image = 0
         self.focus = False
         self.state = "menu"
+        self.background_scale = (config.general['WIDTH'],
+            config.general['HEIGHT'])
     def update(self, first, second, third):
         #FIXME : it sould be in main.pyw
         time.sleep(1.00/float(config.general['MAX_FPS']))
@@ -97,8 +99,7 @@ class Gui(object):
             config.general['THEME']+
             os.sep+
             self.skin.background[0],
-            scale=(config.general['WIDTH'],
-            config.general['HEIGHT'])
+            scale=self.background_scale
             )[0], (0,0))
             
         self.screens[self.screen_current].update()

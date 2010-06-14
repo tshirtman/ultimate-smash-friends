@@ -20,25 +20,38 @@
 from screen import Screen
 import widgets
 from config import Config
-
+import pygame
 config = Config()
 
-class sound(Screen):
+class screen_screen(Screen):
     def init(self):
         self.add(widgets.HBox())
         vbox = widgets.VBox()
-        self.widget.add(vbox, margin=220)
-        vbox.add(widgets.Label('Sound'), margin=150)
-        sound = widgets.Slider('sound_slider')
-        vbox.add(sound, margin=10, size=(360,40))
-        vbox.add(widgets.Label('Music'), margin=10)
-        music = widgets.Slider('music_slider')
-        vbox.add(music, margin=10, size=(360,40))
+        self.resolution = widgets.Spinner(['800x480', '1200x720', '1600x960'], 170)
+        self.fullscreen = widgets.CheckBox()
         
-        music.set_value(config.audio['MUSIC_VOLUME'])
-        sound.set_value(config.audio['SOUND_VOLUME'])
+        if config.general['FULLSCREEN']:
+            self.fullscreen.set_value(True)
+        self.resolution.set_value(str(config.general['WIDTH']) + 'x'
+                                    + str(config.general['HEIGHT']))
+        
+        vbox.add(widgets.Label('Screen resolution :'), margin=150)
+        vbox.add(self.resolution, margin=10)
+        fullscreen_hbox = widgets.HBox()
+        
+        fullscreen_hbox.add(widgets.Label('Fullscreen :'))
+        fullscreen_hbox.add(self.fullscreen, margin=50)
+        vbox.add(fullscreen_hbox, margin=25)
+        self.widget.add(vbox, margin=220)
+        
     def callback(self,action):
-        if action.text == 'music_slider':
-            config.audio['MUSIC_VOLUME'] = action.get_value()
-        if action.text == 'sound_slider':
-            config.audio['SOUND_VOLUME'] = action.get_value()
+        if action == self.resolution:
+            value = action.get_value()
+            config.general['WIDTH'] = int(value.split('x')[0])
+            config.general['HEIGHT'] = int(value.split('x')[1])
+        if action == self.fullscreen:
+            pygame.display.toggle_fullscreen()
+            if config.general['FULLSCREEN']:
+                config.general['FULLSCREEN'] = False
+            else:
+                config.general['FULLSCREEN'] = True

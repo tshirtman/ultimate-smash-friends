@@ -30,7 +30,7 @@ class main_screen(Screen):
         vbox.add(widgets.Button('Configure'), margin=10, size=(180,50))
         vbox.add(widgets.Button('Credits'), margin=10, size=(180,50))
         vbox.add(widgets.Button('Quit'), margin=10, size=(180,50))
-        #vbox.add(widgets.Slider('slider'), margin=10, size=(180,20))
+        
     def callback(self,action):
         if action.text == 'Local game':
             return 'goto:local_game'

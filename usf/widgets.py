@@ -59,7 +59,7 @@ class Widget (object):
         self.surface = self.surface.convert().convert_alpha()
         return self.surface
     #this function is used to resize a widget
-    def setSize(self, (w,h)):
+    def set_size(self, (w,h)):
         self.height = h
         self.width = w
         self.init()
@@ -134,7 +134,7 @@ class Container(Widget):
     def add(self, widget, *args, **kwargs):
         self.widgets.append(widget)
         if 'size' in kwargs:
-            widget.setSize((kwargs['size'][0]*800/config.general['WIDTH'], kwargs['size'][1]*480/config.general['HEIGHT']))
+            widget.set_size((optimize_size(kwargs['size'])[0], optimize_size(kwargs['size'])[1]))
         if 'margin' in kwargs:
             if self.orientation:
                 widget.margin = kwargs['margin']*config.general['WIDTH']/800
@@ -221,7 +221,6 @@ class TabBar(HBox):
         y = event.dict['pos'][1]
         for widget in self.widgets:
             if widget.x < x < widget.x+widget.width and widget.y < y < widget.y+widget.height:
-                #print 'widget: ' + str(widget) + ' x: ' + str(widget.x) + ' width: ' + str(widget.width) + ' y: ' + str(widget.y) + ' height: ' + str(widget.height)
                 return widget
                 break
 class Label(Widget):
@@ -283,12 +282,12 @@ class LongText(Widget):
                 self.max_width = loaders.text(self.text[i], game_font).get_width()
         #print self.text
         if "height" in kwargs:
-            self.height = kwargs['height']
+            self.height = optimize_size((0,kwargs['height']))[1]
         else:
             #if there isn't any specified height, we keep the height of all the lines
             self.height = self.text_height * len(self.text)
         if "width" in kwargs:
-            self.width = kwargs['width']
+            self.width = optimize_size((kwargs['width'],0))[0]
         else:
             self.width = self.max_width
         if "margin" in kwargs:
@@ -345,7 +344,7 @@ class LongText(Widget):
                     self.scroll = self.text_height * len(self.text)-self.width
                     
             #update the scrollbar
-            self.slider.setValue(self.scroll*100/self.getTextHeight())
+            self.slider.set_value(self.scroll*100/self.getTextHeight())
         return (False,False)
         
     def getTextHeight(self):
@@ -357,9 +356,10 @@ class Paragraph(HBox):
     def setText(self, widget):
         self.widgets = []
         self.add(widget)
-        self.add(SliderParagraph('a'), size=(25,self.height))
+        self.add(SliderParagraph(''), size=(25,460))
         self.widgets[0].slider = self.widgets[1]
         self.widgets[1].slider = self.widgets[0]
+        print self.height
     def draw(self):
         self.surface = self.surface.convert().convert_alpha()
         for widget in self.widgets:
@@ -378,14 +378,12 @@ class SliderParagraph(Widget):
         self.height =0
         self.width = 0
     def init(self):
-        print 180*self.width/34
-        print self.width
         self.background= loaders.image(config.sys_data_dir + os.sep + 'gui' + os.sep + config.general['THEME'] + os.sep + 'sliderh_background.png',
-            scale=optimize_size((self.width,self.height)))[0]
+            scale=(self.width, self.height))[0]
         self.center= loaders.image(config.sys_data_dir + os.sep + 'gui' + os.sep + config.general['THEME'] + os.sep + 'sliderh_center.png',
-            scale=optimize_size((self.width,180*self.width/34)))[0]
+            scale=(self.width, 180*self.width/34))[0]
         self.center_hover= loaders.image(config.sys_data_dir + os.sep + 'gui' + os.sep + config.general['THEME'] + os.sep + 'sliderh_center_hover.png',
-            scale=optimize_size((self.width,180*self.width/34)))[0]
+            scale=(self.width, 180*self.width/34))[0]
     def handle_mouse(self,event):
         if self.state == True:
             event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0]-self.x,
@@ -404,7 +402,7 @@ class SliderParagraph(Widget):
                 self.value = 0
             
             textheight = self.slider.getTextHeight()
-            scroll = self.getValue()
+            scroll = self.get_value()
             self.slider.scroll = textheight*scroll/100
             return self, self
         if 0 < x < self.width and 0 < y < self.height:
@@ -418,10 +416,10 @@ class SliderParagraph(Widget):
             return False, False
         self.state = False
         return (False,False)
-    def getValue(self):
+    def get_value(self):
         return self.value*100/(self.height - 180*self.width/34)
         
-    def setValue(self, value):
+    def set_value(self, value):
         self.value = value*(self.height - 180*self.width/34)/100
         
     def draw(self):
@@ -448,6 +446,7 @@ class Slider(Widget):
             scale=optimize_size((self.height,self.height)))[0]
         self.center_hover= loaders.image(config.sys_data_dir + os.sep + 'gui' + os.sep + config.general['THEME'] + os.sep + 'slider_center_hover.png',
             scale=optimize_size((self.height,self.height)))[0]
+            
     def handle_mouse(self,event):
         if self.state == True:
             event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0]-self.x,
@@ -476,18 +475,21 @@ class Slider(Widget):
             return False, False
         self.state = False
         return (False,False)
-    def getValue(self):
+        
+    def get_value(self):
         return self.value*100/(self.width - self.height)
-    def setValue(self, value):
+        
+    def set_value(self, value):
         self.value = value*(self.width - self.height)/100
+        
     def draw(self):
         if self.state:
             return loaders.image_layer(self.background, self.center_hover, (self.value,0))
         else:
             return loaders.image_layer(self.background, self.center, (self.value,0))
             
-class CheckBox(Widget):
-    pass
+            
+
     
     
 class Image(Widget):
@@ -505,9 +507,9 @@ class Image(Widget):
                     image)[0])
                     
         self.init()
-        self.setSize((size[0], size[1]))
+        self.set_size((size[0], size[1]))
         self.state = True
-    def setSize(self, (w,h)):
+    def set_size(self, (w,h)):
         self.height = h
         self.width = w
         self.surface = loaders.image(
@@ -520,17 +522,73 @@ class Image(Widget):
         return self.surface
     def setImage(self,path):
         self.path = path
-        self.setSize((self.width,self.height))
+        self.set_size((self.width,self.height))
+        
+class CheckBox(Widget):
+    def __init__(self):
+        #save the path to scale it later -> maybe it is bad 
+        #for performance, FIXME
+        self.path = 'gui'  + os.sep + config.general['THEME'] \
+                     + os.sep + 'checkbox_empty.png' 
+        self.path_checked = 'gui'  + os.sep + config.general['THEME'] \
+                     + os.sep + 'checkbox_full.png'
+        self.init()
+        self.set_size((optimize_size((25,25))[0], optimize_size((25,25))[1]))
+        self.state = False
+        self.checked = False
+
+    def init(self):
+        pass
+        
+    def set_size(self, (w,h)):
+        self.height = h
+        self.width = w
+        self.surface = loaders.image(config.sys_data_dir +  os.sep + self.path,
+                    scale=(w, h)
+                    )[0]
+        self.surface_checked = loaders.image(config.sys_data_dir + os.sep +
+                    self.path_checked,
+                    scale=(w, h)
+                    )[0]
+
+    def handle_mouse(self,event):
+        if self.state == True:
+            event.dict['pos'] = (event.dict['pos'][0] - self.parentpos[0] - self.x,
+                                 event.dict['pos'][1] - self.parentpos[1] - self.y)
+        if (0 < event.dict['pos'][0] < self.width and
+            0 < event.dict['pos'][1] < self.height and
+            event.type == pygame.MOUSEBUTTONUP):
+            if self.checked:
+                self.checked =False
+            else:
+                self.checked = True
+            self.state = True
+            return self,False
+        self.state = False
+        return False,False
+
+    def draw(self):
+        if self.checked:
+            return self.surface_checked
+        else:
+            return self.surface
+
+    def get_value(self):
+        return self.checked
+    def set_value(self, value):
+        self.checked = value
+
 class Button(Label):
     posy = 0
-    def setSize(self, (w,h)):
+    def set_size(self, (w,h)):
         if self.width < w:
             # a nice effect to unstick the text from the left
             self.indent = 20*config.general['WIDTH']/800
         self.height = h
         self.width = w
         #center the text
-        self.posy = self.height/2-get_scale(self.surface)[1]/2
+        self.posy = self.height/2-self.surface_text.get_height()/2
+        #   self.posy = 0
     def draw(self):
         #TODO : a @memoize function, and a config file with the color
         if self.state == True:
@@ -541,7 +599,7 @@ class Button(Label):
                     os.sep+
                     config.general['THEME']+
                     os.sep+
-                    'back_button_hover.png', scale=(self.width, self.height))[0], self.surface, (self.indent, self.posy))
+                    'back_button_hover.png', scale=(self.width, self.height))[0], self.surface_text, (self.indent, self.posy))
         else:
             return loaders.image_layer(loaders.image(
                     config.sys_data_dir+
@@ -550,7 +608,7 @@ class Button(Label):
                     os.sep+
                     config.general['THEME']+
                     os.sep+
-                    'back_button.png', scale=(self.width, self.height))[0], self.surface, (self.indent, self.posy))
+                    'back_button.png', scale=(self.width, self.height))[0], self.surface_text, (self.indent, self.posy))
     def handle_mouse(self,event):
         if event.type == pygame.MOUSEBUTTONUP:
             self.state = False
@@ -574,9 +632,9 @@ class ImageButton(Image):
                     image)[0])
                     
         self.init()
-        self.setSize((size[0], size[1]))
+        self.set_size((size[0], size[1]))
         self.state = False
-    def setSize(self, (w,h)):
+    def set_size(self, (w,h)):
         self.height = h
         self.width = w
         self.surface = loaders.image(
@@ -603,32 +661,33 @@ class ImageButton(Image):
         else:
             return self.surface
 class Spinner(HBox):
-    def __init__(self, values):
+    def __init__(self, values, width=100):
         self.parentpos = (0,0)
         self.extend = False
         self.values = values
         self.orientation = True
-        self.init()
         self.index = 0
+        self.center_width = width
+        self.init()
         self.state = False
         self.height = optimize_size((250,30))[1]
-        self.width = optimize_size((25,30))[0] + optimize_size((25,30))[0] + optimize_size((100,30))[0]
+        self.width = optimize_size((25,30))[0]*2 + optimize_size((self.center_width,30))[0]
     def init(self):
         self.surface = pygame.Surface((self.width,self.height))
         self.widgets = []
         self.left_arrow = ImageButton("gui" + os.sep + config.general['THEME'] + os.sep + "spinner_left.png",
             "gui" + os.sep + config.general['THEME'] + os.sep + "spinner_left_hover.png")
-        self.left_arrow.setSize(optimize_size((25,30)))
+        self.left_arrow.set_size(optimize_size((25,30)))
         self.add(self.left_arrow)
-        self.center = Label(self.values[0],
+        self.center = Label(self.values[self.index],
             background="gui" + os.sep + config.general['THEME'] + os.sep + "spinner_center.png",
-            height=optimize_size((100,30))[1],
-            width=optimize_size((100,30))[0],
+            height=optimize_size((self.center_width,30))[1],
+            width=optimize_size((self.center_width,30))[0],
             margin=optimize_size((10,0))[0])
         self.add(self.center)
         self.right_arrow = ImageButton("gui" + os.sep + config.general['THEME'] + os.sep + "spinner_right.png",
             "gui" + os.sep + config.general['THEME'] + os.sep + "spinner_right_hover.png")
-        self.right_arrow.setSize(optimize_size((25,30)))
+        self.right_arrow.set_size(optimize_size((25,30)))
         self.add(self.right_arrow)
         self.update_pos()
         self.update_size()
@@ -659,10 +718,19 @@ class Spinner(HBox):
             return False, self
         self.state = False
         return (False,False)
-    def getValue(self):
+    def get_value(self):
         return self.values[self.index]
     def getIndex(self):
         return self.index
+    def setIndex(self, index):
+        self.index=index
+        self.text = self.values[self.index]
+        self.center.setText(self.text)
+    def set_value(self, value):
+        try:
+            self.setIndex(self.values.index(value))
+        except:
+            pass
         
 #these functions are used to handle the others screen resolutions
 #FIXME : maybe they could go to loaders ?
@@ -670,5 +738,5 @@ def optimize_size(size):
     size = (size[0]*config.general['WIDTH']/800, size[1]*config.general['HEIGHT']/480)
     return size
 def get_scale(surface):
-    size = (surface.get_width()*config.general['WIDTH']/800, surface.get_height()*config.general['HEIGHT']/480)
+    size = (surface.get_width()*800/config.general['WIDTH'], surface.get_height()*480/config.general['HEIGHT'])
     return size
