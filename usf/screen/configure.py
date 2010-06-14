@@ -17,27 +17,19 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
-# Our modules
-from config import Config
-config = Config()
-
-class Screen(object):
-    def __init__(self, name, screen):
-        self.name = name
-        self.screen = screen
-        self.init()
-        self.widget.update_size()
-        self.widget.update_pos()
-    def add(self, widget):
-        self.widget = widget
-        #define the position and the size of the top-level widget
-        self.widget.set_size((config.general['WIDTH'],config.general['HEIGHT']))
-        self.widget.x = 0
-        self.widget.y = 0
-    def update(self):
-        self.screen.blit(self.widget.draw(), (0,0))
+from screen import Screen
+import widgets
+import copy
+class configure(Screen):
     def init(self):
-        pass
-    def callback(self, action):
-        pass
-        
+        self.add(widgets.HBox())
+        vbox = widgets.VBox()
+        self.widget.add(vbox, margin=300)
+        vbox.add(widgets.Button('Sounds and music'), margin=150, size=(220,50))
+        vbox.add(widgets.Button('Screen'), margin=10, size=(220,50))
+        vbox.add(widgets.Button('Keyboard'), margin=10, size=(220,50))
+    def callback(self,action):
+        if action.text == 'Sounds and music':
+            return "goto:sound"
+        if action.text == 'Screen':
+            return "goto:screen_screen"

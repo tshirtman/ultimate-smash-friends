@@ -17,27 +17,41 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
-# Our modules
+from screen import Screen
+import widgets
 from config import Config
+import pygame
 config = Config()
 
-class Screen(object):
-    def __init__(self, name, screen):
-        self.name = name
-        self.screen = screen
-        self.init()
-        self.widget.update_size()
-        self.widget.update_pos()
-    def add(self, widget):
-        self.widget = widget
-        #define the position and the size of the top-level widget
-        self.widget.set_size((config.general['WIDTH'],config.general['HEIGHT']))
-        self.widget.x = 0
-        self.widget.y = 0
-    def update(self):
-        self.screen.blit(self.widget.draw(), (0,0))
+class screen_screen(Screen):
     def init(self):
-        pass
-    def callback(self, action):
-        pass
+        self.add(widgets.HBox())
+        vbox = widgets.VBox()
+        self.resolution = widgets.Spinner(['800x480', '1200x720', '1600x960'], 170)
+        self.fullscreen = widgets.CheckBox()
         
+        if config.general['FULLSCREEN']:
+            self.fullscreen.set_value(True)
+        self.resolution.set_value(str(config.general['WIDTH']) + 'x'
+                                    + str(config.general['HEIGHT']))
+        
+        vbox.add(widgets.Label('Screen resolution :'), margin=150)
+        vbox.add(self.resolution, margin=10)
+        fullscreen_hbox = widgets.HBox()
+        
+        fullscreen_hbox.add(widgets.Label('Fullscreen :'))
+        fullscreen_hbox.add(self.fullscreen, margin=50)
+        vbox.add(fullscreen_hbox, margin=25)
+        self.widget.add(vbox, margin=220)
+        
+    def callback(self,action):
+        if action == self.resolution:
+            value = action.get_value()
+            config.general['WIDTH'] = int(value.split('x')[0])
+            config.general['HEIGHT'] = int(value.split('x')[1])
+        if action == self.fullscreen:
+            pygame.display.toggle_fullscreen()
+            if config.general['FULLSCREEN']:
+                config.general['FULLSCREEN'] = False
+            else:
+                config.general['FULLSCREEN'] = True

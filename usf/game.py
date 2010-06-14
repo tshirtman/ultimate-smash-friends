@@ -32,7 +32,7 @@ import animations, entity, timed_event
 from level import Level
 from controls import Controls
 from config import Config
-from widgets import game_font
+from skin import game_font
 
 from debug_utils import draw_rect
 

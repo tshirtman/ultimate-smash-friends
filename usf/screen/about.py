@@ -17,39 +17,17 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
-import os, time
-from os.path import join
-from xml.etree.ElementTree import ElementTree
-import pygame
-from pygame.locals import *
-from pygame.color import Color
-from pygame.font import Font
-
-from os import stat
-from sys import prefix
-import loaders
-from config import Config
-
-config = Config()
-
-#theme support
-from skin import Skin
-skin = Skin()
-class Widget (object):
-    """
-    This class is the base of all other widget.
-    """
-
-    def __init__(self):
+from screen import Screen
+import widgets
+import copy
+class about(Screen):
+    def init(self):
+        self.add(widgets.HBox())
+        vbox = widgets.VBox()
+        self.widget.add(vbox, margin=250)
+        lt = widgets.LongText('CREDITS', height=460, width=450)
+        par = widgets.Paragraph()
+        par.setText(lt)
+        vbox.add(par, margin=10)
+    def callback(self,action):
         pass
-    def draw(self, surface):
-        pass
-        
-class Container(object):
-    pass
-class HBox(object):
-    pass
-class VBox(object):
-    pass
-class Label(object):
-    pass

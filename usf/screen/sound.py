@@ -17,27 +17,28 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
-# Our modules
+from screen import Screen
+import widgets
 from config import Config
+
 config = Config()
 
-class Screen(object):
-    def __init__(self, name, screen):
-        self.name = name
-        self.screen = screen
-        self.init()
-        self.widget.update_size()
-        self.widget.update_pos()
-    def add(self, widget):
-        self.widget = widget
-        #define the position and the size of the top-level widget
-        self.widget.set_size((config.general['WIDTH'],config.general['HEIGHT']))
-        self.widget.x = 0
-        self.widget.y = 0
-    def update(self):
-        self.screen.blit(self.widget.draw(), (0,0))
+class sound(Screen):
     def init(self):
-        pass
-    def callback(self, action):
-        pass
+        self.add(widgets.HBox())
+        vbox = widgets.VBox()
+        self.widget.add(vbox, margin=220)
+        vbox.add(widgets.Label('Sound'), margin=150)
+        sound = widgets.Slider('sound_slider')
+        vbox.add(sound, margin=10, size=(360,40))
+        vbox.add(widgets.Label('Music'), margin=10)
+        music = widgets.Slider('music_slider')
+        vbox.add(music, margin=10, size=(360,40))
         
+        music.set_value(config.audio['MUSIC_VOLUME'])
+        sound.set_value(config.audio['SOUND_VOLUME'])
+    def callback(self,action):
+        if action.text == 'music_slider':
+            config.audio['MUSIC_VOLUME'] = action.get_value()
+        if action.text == 'sound_slider':
+            config.audio['SOUND_VOLUME'] = action.get_value()
