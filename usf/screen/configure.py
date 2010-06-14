@@ -31,3 +31,5 @@ class configure(Screen):
     def callback(self,action):
         if action.text == 'Sounds and music':
             return "goto:sound"
+        if action.text == 'Screen':
+            return "goto:screen_screen"

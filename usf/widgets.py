@@ -334,21 +334,30 @@ class LongText(Widget):
     def handle_mouse(self,event):
         if (event.type == pygame.MOUSEBUTTONUP or event.type == pygame.MOUSEBUTTONDOWN):
             if event.dict['button'] == 4:
-                if self.scroll > 0:
+                if self.scroll > 20:
                     self.scroll -= 20
+                else:
+                    self.scroll = 0
             elif event.dict['button'] == 5:
-                if self.scroll < self.text_height * len(self.text)-self.width:
+                if self.scroll < (self.text_height * len(self.text)-self.width)-20:
                     self.scroll += 20
-            print self.scroll*100/self.getTextHeight()
+                else:
+                    self.scroll = self.text_height * len(self.text)-self.width
+                    
+            #update the scrollbar
             self.slider.setValue(self.scroll*100/self.getTextHeight())
         return (False,False)
+        
     def getTextHeight(self):
+        """
+        Get the height of all the text
+        """
         return self.text_height * len(self.text)-self.width
 class Paragraph(HBox):
     def setText(self, widget):
         self.widgets = []
         self.add(widget)
-        self.add(SliderParagraph('a'), size=(20,self.height))
+        self.add(SliderParagraph('a'), size=(25,self.height))
         self.widgets[0].slider = self.widgets[1]
         self.widgets[1].slider = self.widgets[0]
     def draw(self):
@@ -369,12 +378,14 @@ class SliderParagraph(Widget):
         self.height =0
         self.width = 0
     def init(self):
+        print 180*self.width/34
+        print self.width
         self.background= loaders.image(config.sys_data_dir + os.sep + 'gui' + os.sep + config.general['THEME'] + os.sep + 'sliderh_background.png',
             scale=optimize_size((self.width,self.height)))[0]
         self.center= loaders.image(config.sys_data_dir + os.sep + 'gui' + os.sep + config.general['THEME'] + os.sep + 'sliderh_center.png',
-            scale=optimize_size((self.width,self.width*6)))[0]
-        self.center_hover= loaders.image(config.sys_data_dir + os.sep + 'gui' + os.sep + config.general['THEME'] + os.sep + 'sliderh_center.png',
-            scale=optimize_size((self.width,self.width*6)))[0]
+            scale=optimize_size((self.width,180*self.width/34)))[0]
+        self.center_hover= loaders.image(config.sys_data_dir + os.sep + 'gui' + os.sep + config.general['THEME'] + os.sep + 'sliderh_center_hover.png',
+            scale=optimize_size((self.width,180*self.width/34)))[0]
     def handle_mouse(self,event):
         if self.state == True:
             event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0]-self.x,
@@ -385,11 +396,11 @@ class SliderParagraph(Widget):
             if event.type == pygame.MOUSEBUTTONUP:
                 self.state = False
                 return False, False
-            elif event.type == pygame.MOUSEMOTION and y -self.space >0 and y - self.space + self.width*6 < self.height:
+            elif event.type == pygame.MOUSEMOTION and y -self.space >0 and y - self.space + 180*self.width/34 < self.height:
                 self.value = y - self.space
             elif event.type == pygame.MOUSEMOTION  and y -self.space >0:
-                self.value = self.height-self.width*6
-            elif event.type == pygame.MOUSEMOTION  and y - self.space + self.width*6 < self.height:
+                self.value = self.height-180*self.width/34
+            elif event.type == pygame.MOUSEMOTION  and y - self.space + 180*self.width/34 < self.height:
                 self.value = 0
             
             textheight = self.slider.getTextHeight()
@@ -408,11 +419,11 @@ class SliderParagraph(Widget):
         self.state = False
         return (False,False)
     def getValue(self):
-        return self.value*100/(self.height - self.width*6)
+        return self.value*100/(self.height - 180*self.width/34)
+        
     def setValue(self, value):
-        print value
-        self.value = value*(self.height - self.width*6)/100
-        print self.value
+        self.value = value*(self.height - 180*self.width/34)/100
+        
     def draw(self):
         if self.state:
             return loaders.image_layer(self.background, self.center_hover, (0,self.value))
