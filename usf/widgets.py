@@ -437,15 +437,15 @@ class Slider(Widget):
         self.init()
         self.index = 0
         self.state = False
-        self.height = optimize_size((250,30))[1]
-        self.width = optimize_size((25,30))[0] + optimize_size((25,30))[0] + optimize_size((100,30))[0]
+        self.height = optimize_size((250,25))[1]
+        self.width = optimize_size((25,25))[0] + optimize_size((25,25))[0] + optimize_size((100,25))[0]
     def init(self):
         self.background= loaders.image(config.sys_data_dir + os.sep + 'gui' + os.sep + config.general['THEME'] + os.sep + 'slider_background.png',
-            scale=optimize_size((self.width,self.height)))[0]
+            scale=(self.width,self.height))[0]
         self.center= loaders.image(config.sys_data_dir + os.sep + 'gui' + os.sep + config.general['THEME'] + os.sep + 'slider_center.png',
-            scale=optimize_size((self.height,self.height)))[0]
+            scale=(self.height,self.height))[0]
         self.center_hover= loaders.image(config.sys_data_dir + os.sep + 'gui' + os.sep + config.general['THEME'] + os.sep + 'slider_center_hover.png',
-            scale=optimize_size((self.height,self.height)))[0]
+            scale=(self.height,self.height))[0]
             
     def handle_mouse(self,event):
         if self.state == True:
@@ -465,7 +465,7 @@ class Slider(Widget):
                 self.value = 0
             return self, self
         if 0 < x < self.width and 0 < y < self.height:
-            if self.value-self.height < x and x < self.value + self.height:
+            if self.value < x and x < self.value + self.height:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     #to adjust the position of the slider
                     self.space = x - self.value

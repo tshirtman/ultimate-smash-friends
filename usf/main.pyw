@@ -192,6 +192,7 @@ class Main(object):
         The main game loop, take care of the state of the game/menu.
 
         """
+        pygame.mouse.set_visible(False)
         while (True):
             # update the fps counter
             self.clock.tick()

@@ -73,6 +73,7 @@ class Gui(object):
         self.state = "menu"
         self.background_scale = (config.general['WIDTH'],
             config.general['HEIGHT'])
+        self.cursor = loaders.image(config.sys_data_dir + os.sep + 'cursor.png')[0]
     def update(self, first, second, third):
         #FIXME : it sould be in main.pyw
         time.sleep(1.00/float(config.general['MAX_FPS']))
@@ -103,6 +104,12 @@ class Gui(object):
             )[0], (0,0))
             
         self.screens[self.screen_current].update()
+        
+        #update the mouse position
+        x, y = pygame.mouse.get_pos()
+        #x += self.cursor.get_height()
+        #y += self.cursor.get_width()
+        self.screen.blit(self.cursor, (x, y))
         
         #if we have a game instance and the state is menu...
         if self.game != None and self.state != "ingame":
