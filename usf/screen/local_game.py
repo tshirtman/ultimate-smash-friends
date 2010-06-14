@@ -136,12 +136,18 @@ class local_game(Screen):
                                  + self.game_data['character_file'][0].replace('characters' + os.sep, "")
                                  + "-portrait.png", size=(50,50)))
             self.player_spinner.append(widgets.Spinner(self.character))
-            
-            self.player_vbox[i/2].add(widgets.Label("Player " + str(i+1)), margin=20)
+            #FIXME : it is very dirty
+            if len(self.player_vbox[i/2].widgets) > 0:
+                self.player_vbox[i/2].add(widgets.Label("Player " + str(i+1)), margin=20)
+            else:
+                self.player_vbox[i/2].add(widgets.Label("Player " + str(i+1)), margin=80)
             self.player_vbox[i/2].add(self.player_spinner[-1])
             self.player_vbox[i/2].add(self.portraits[-1], margin_left=50, margin=5)
-            self.player_vbox[i/2].add(widgets.Label("AI :"), margin=10)
-            self.player_vbox[i/2].add(self.checkboxes_ai[-1])
+            hbox = widgets.HBox()
+            #this is very bad for performance
+            hbox.add(widgets.Label("AI :"))
+            hbox.add(self.checkboxes_ai[-1], margin=10)
+            self.player_vbox[i/2].add(hbox, margin=10)
         for vbox in self.player_vbox:
             self.widget.add(vbox, size=(200,50), margin=50)
         self.player_vbox[1].add(self.w_launch, margin=20, size=(250,50))

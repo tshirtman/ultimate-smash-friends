@@ -24,10 +24,10 @@ class about(Screen):
     def init(self):
         self.add(widgets.HBox())
         vbox = widgets.VBox()
-        self.widget.add(vbox, margin=250)
-        lt = widgets.LongText('CREDITS', height=460, width=450)
+        self.widget.add(vbox, margin=175)
+        lt = widgets.LongText('CREDITS', height=300, width=450)
         par = widgets.Paragraph()
         par.setText(lt)
-        vbox.add(par, margin=10)
+        vbox.add(par, margin=150)
     def callback(self,action):
         pass

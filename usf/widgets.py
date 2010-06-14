@@ -352,11 +352,13 @@ class LongText(Widget):
         Get the height of all the text
         """
         return self.text_height * len(self.text)-self.width
+
+
 class Paragraph(HBox):
     def setText(self, widget):
         self.widgets = []
         self.add(widget)
-        self.add(SliderParagraph(''), size=(25,460))
+        self.add(SliderParagraph(''), size=(25,300))
         self.widgets[0].slider = self.widgets[1]
         self.widgets[1].slider = self.widgets[0]
         
