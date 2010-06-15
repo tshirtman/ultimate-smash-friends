@@ -181,7 +181,6 @@ class local_game(Screen):
         """
         players = []
         for i in range(0, len(self.players)):
-            print i
             if self.players[i] != 0:
                 file_name = self.game_data['character_file'][self.players[i]]
                 if self.checkboxes_ai[i].get_value():
