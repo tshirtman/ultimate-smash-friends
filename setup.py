@@ -77,7 +77,7 @@ setup(name='ultimate-smash-friends',
                    'Programming Language :: Python',
                    'Topic :: Games/Entertainment :: Arcade'
                   ],
-      packages=['usf'],
+      packages=['usf', 'usf.screen'],
       scripts=scripts,
       requires=['pygame (>=1.6)', 'python (>=2.5)'],
       data_files=(data + doc + config + icon)
