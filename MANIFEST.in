@@ -1,5 +1,6 @@
 include *.txt
 include *.cfg
+include usf/main.pyw
 include ultimate-smash-friends.desktop
 recursive-include data *
 recursive-include doc *

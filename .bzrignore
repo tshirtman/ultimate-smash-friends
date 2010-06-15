@@ -12,3 +12,5 @@ MANIFEST
 .project
 .pydevproject
 usf/.project
+dist
+build
