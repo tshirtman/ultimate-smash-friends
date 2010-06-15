@@ -61,7 +61,7 @@ scripts = ['ultimate-smash-friends',
                'utils/xml_text_extractor.py']
 
 setup(name='ultimate-smash-friends',
-      version='0.1.1',
+      version='0.1.2',
       description=('A 2d arcade fight game, based on the gameplay of super '
                    'smash bros, from nintendo.'),
       author='Gabriel Pettier',
