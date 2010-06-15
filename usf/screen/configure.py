@@ -33,3 +33,5 @@ class configure(Screen):
             return "goto:sound"
         if action.text == 'Screen':
             return "goto:screen_screen"
+        if action.text == 'Keyboard':
+            return "goto:keyboard"

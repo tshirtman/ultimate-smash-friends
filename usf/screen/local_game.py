@@ -179,14 +179,15 @@ class local_game(Screen):
         game with level and characters selected.
 
         """
+        players = []
+        for i in range(0, len(self.players)):
+            print i
+            if self.players[i] != 0:
+                file_name = self.game_data['character_file'][self.players[i]]
+                if self.checkboxes_ai[i].get_value():
+                    file_name = file_name.replace("characters/", "characters/AI")
+                players.append(file_name)
 
-        players = [
-        self.game_data['character_file'][p]
-        for p in self.players if p != 0
-        ]
-        for i in range(0,len(players)):
-            if self.checkboxes_ai[i].get_value():
-                players[i] = players[i].replace("characters/", "characters/AI")
         if len(players) > 1:
             game = Game(
                 self.screen,

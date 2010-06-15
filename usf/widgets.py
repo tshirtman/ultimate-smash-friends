@@ -48,22 +48,29 @@ class Widget (object):
     margin = 0
     margin_left = 0
     parentpos = (0,0)
+    text = ""
+    widget_id = ""
+
     #this function can be rewritten in the others widgets to have a custom argument lists
     def __init__(self):
         self.init()
     #this function can be rewritten in the others widget if the surface isn't empty
+
     def init(self):
         self.surface = pygame.Surface((self.width,self.height))
+
     def draw(self):
         #empty the surface
         self.surface = self.surface.convert().convert_alpha()
         return self.surface
     #this function is used to resize a widget
+
     def set_size(self, (w,h)):
         self.height = h
         self.width = w
         self.init()
     #this function is used for mosue events
+
     def handle_mouse(self,event):
         try:
             self.widgets
@@ -72,20 +79,32 @@ class Widget (object):
         #print event.dict['pos']
         x = event.dict['pos'][0]
         y = event.dict['pos'][1]
+
         for widget in self.widgets:
             if widget.x < x < widget.x+widget.width and widget.y < y < widget.y+widget.height:
-                #print 'widget: ' + str(widget) + ' x: ' + str(widget.x) + ' width: ' + str(widget.width) + ' y: ' + str(widget.y) + ' height: ' + str(widget.height)
                 event.dict['pos'] = (x-widget.x, y-widget.y)
                 return widget.handle_mouse(event)
-                break
         
         return (False,False)
+
     def align(self,align):
         pass
+
     def update_pos(self):
         pass
+
     def update_size(self):
         pass
+
+    def handle_keys(self,event):
+        return False, False
+
+    def set_id(self, value):
+        self.widget_id = value
+
+    def get_id(self):
+        return self.widget_id
+
 class Container(Widget):
     #this function is used to update the container size after adding a widget
     def update_size(self):
@@ -625,6 +644,8 @@ class Button(Label):
                 return False,self
             self.state = False
             return False,False
+            
+            
 class ImageButton(Image):
     def __init__(self, image, image_hover):
         #save the path to scale it later -> maybe it is bad for performance, FIXME
@@ -735,7 +756,73 @@ class Spinner(HBox):
             self.setIndex(self.values.index(value))
         except:
             pass
-        
+
+
+class KeyboardWidget(Widget):
+
+    def __init__(self, value):
+        self.value = value
+        exec("self.letter = pygame.key.name(pygame." + self.value + ").upper()")
+        self.font =  pygame.font.Font(
+            config.sys_data_dir +
+            os.sep +
+            "gui" +os.sep + config.general['THEME'] + os.sep +
+            "font.otf", optimize_size((100, 25))[1])
+        self.set_size(optimize_size((35, 35)))
+        self.state = False
+        self.focus = False
+
+    def init(self):
+        self.background = loaders.image(config.sys_data_dir +
+            os.sep + "gui" + os.sep + config.general['THEME'] + os.sep
+            + "keyboard.png", scale=(self.width,self.height))[0]
+        self.background_hover = loaders.image(config.sys_data_dir +
+            os.sep + "gui" + os.sep + config.general['THEME'] + os.sep
+            + "keyboard_hover.png", scale=(self.width,self.height))[0]
+
+    def set_size(self, (w, h)):
+        self.height = h
+        self.width = w
+        self.init()
+
+    def draw(self):
+        if self.state or self.focus:
+            return loaders.image_layer(self.background_hover,
+                loaders.text(self.letter, self.font))
+        else:
+            return loaders.image_layer(self.background,
+                loaders.text(self.letter, self.font))
+
+    def handle_mouse(self,event):
+        if self.focus:
+            return False, self
+        if event.type == pygame.MOUSEBUTTONUP:
+            self.state = False
+            self.focus = True
+            return False,self
+        if self.state == True:
+            event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0]-self.x, event.dict['pos'][1] - self.parentpos[1]-self.y)
+        if 0 < event.dict['pos'][0] < self.width and 0 < event.dict['pos'][1] < self.height:
+            self.state = True
+            return False,self
+        self.state = False
+        return False,False
+
+    def handle_keys(self, event):
+        if self.focus:
+            if event.type == pygame.KEYDOWN:
+                self.letter = pygame.key.name(event.dict['key']).upper()
+                self.value = config.reverse_keymap(event.dict['key'])
+                self.focus = False
+                self.state = False
+                return self, False
+            return self, False
+        return False, False
+
+    def get_value(self):
+        return self.value
+
+
 #these functions are used to handle the others screen resolutions
 #FIXME : maybe they could go to loaders ?
 def optimize_size(size):

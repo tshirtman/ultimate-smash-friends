@@ -57,7 +57,7 @@ class Gui(object):
         self.screens = {}
         self.screen_history = []
         #TODO : Use a config file
-        screens = ['main_screen', 'configure', 'about', 'local_game', 'resume', 'sound', 'screen_screen']
+        screens = ['main_screen', 'configure', 'about', 'local_game', 'resume', 'sound', 'screen_screen', 'keyboard']
         for name in screens:
             exec("import screen." + name)
             exec('scr = screen.' + name + '.' + name + "('"+ name +"',self.screen)")
@@ -141,8 +141,18 @@ class Gui(object):
         This function handles keyboard event which are send from the update function.
         """
         #TODO : a complete navigation system with the keyboard.
-        if event.dict['key'] == pygame.K_ESCAPE:
-            self.screen_back()
+        if self.focus:
+            (query, focus) = self.focus.handle_keys(event)
+            if focus == False:
+                self.focus = False
+            if  query != False:
+                reply = self.screens[self.screen_current].callback(query)
+                self.handle_reply(reply)
+        if self.focus == False or (not reply and not query):
+            if event.dict['key'] == pygame.K_ESCAPE:
+                self.screen_back()
+        #remove the event for performance, maybe it is useless
+        del(event)
                 
     def handle_reply(self,reply):
         #print type(reply)
