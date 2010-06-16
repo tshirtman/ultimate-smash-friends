@@ -18,7 +18,7 @@
 ################################################################################
 
 from screen import Screen
-import widgets
+from usf import widgets
 import copy
 class about(Screen):
     def init(self):

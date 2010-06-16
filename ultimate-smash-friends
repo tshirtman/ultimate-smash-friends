@@ -1,1 +1,3 @@
-usf/main.pyw
+#!/usr/bin/env python
+from usf import main
+main.Main()

@@ -18,12 +18,12 @@
 ################################################################################
 
 from screen import Screen
-from config import Config
+from usf.config import Config
 config = Config()
 
-import widgets, entity_skin
+from usf import widgets, entity_skin
 import copy, os
-from game import Game
+from usf.game import Game
 class local_game(Screen):
     name_pl1 = 0
     name_pl2 = 0

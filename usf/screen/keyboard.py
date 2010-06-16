@@ -18,9 +18,9 @@
 ################################################################################
 
 from screen import Screen
-import widgets
+from usf import widgets
 import copy
-from config import Config
+from usf.config import Config
 config = Config()
 
 

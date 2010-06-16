@@ -18,7 +18,7 @@
 ################################################################################
 
 # Our modules
-from config import Config
+from usf.config import Config
 config = Config()
 
 class Screen(object):

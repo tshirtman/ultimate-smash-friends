@@ -18,7 +18,7 @@
 ################################################################################
 
 from screen import Screen
-import widgets
+from usf import widgets
 import copy
 import pygame
 class resume(Screen):
