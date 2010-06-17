@@ -17,60 +17,46 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
+import os
+from xml.etree.ElementTree import ElementTree
+
 import pygame
 from pygame.locals import USEREVENT, QUIT
-from math import sin, cos
-from time import time
-import os
-import time
-import xml.dom.minidom
-import logging
-import thread
-# Our modules
 
+# Our modules
 from config import Config
 
-config = Config()
-
-import controls
-import loaders
+sys_data_dir = Config().sys_data_dir
+general = Config().general
 
 #translation
 import translation
 
 class Skin (object):
-    dialog = {}
-    color = None
-    background = []
-    background_duration = []
     def __init__(self):
-        xml_file = xml.dom.minidom.parse(config.sys_data_dir+
-            os.sep+
-            'gui'+
-            os.sep+ config.general['THEME'] + os.sep + "theme.xml").getElementsByTagName("theme")[0]
+        self.dialog = {}
         self.color = pygame.color.Color("white")
-        for node in xml_file.childNodes:
-            try:
-                if node.tagName == "color":
-                    self.color = pygame.color.Color(str(node.getAttribute("value")))
-                elif node.tagName == "dialog":
-                    self.dialog['sizex'] = int(node.getAttribute("sizex"))*config.general['WIDTH']/100
-                    self.dialog['sizey'] = int(node.getAttribute("sizey"))*config.general['HEIGHT']/100
-                    self.dialog['posx'] = int(node.getAttribute("posx"))*config.general['WIDTH']/100
-                    self.dialog['posy'] = int(node.getAttribute("posy"))*config.general['HEIGHT']/100
-                elif node.tagName == "background":
-                    for child_node in node.childNodes:
-                        try:
-                            if child_node.tagName == "img":
-                                self.background.append(child_node.getAttribute("src"))
-                                self.background_duration.append(float(child_node.getAttribute("time")))
-                        except:
-                            pass
-            except:
-                pass
+        self.background = []
+        self.background_duration = []
+        xml_file = ElementTree().parse(os.path.join(sys_data_dir, 
+                                                    "gui", general["THEME"],
+                                                    "theme.xml"))
+
+        if xml_file.find("color") is not None:
+            self.color = pygame.color.Color(xml_file.find("color").attrib["value"])
+            
+        if xml_file.find("dialog") is not None:
+            self.dialog["sizex"] = int(xml_file.find("dialog").attrib["sizex"])*general["WIDTH"]/100
+            self.dialog["sizey"] = int(xml_file.find("dialog").attrib["sizey"])*general["HEIGHT"]/100
+            self.dialog["posx"] = int(xml_file.find("dialog").attrib["posx"])*general["WIDTH"]/100
+            self.dialog["posy"] = int(xml_file.find("dialog").attrib["posy"])*general["HEIGHT"]/100
+
+        if xml_file.find("background") is not None:
+            img = xml_file.find("background").find("img")
+            self.background.append(img.attrib["src"])
+            self.background.append(img.attrib["time"])
+
 pygame.font.init()
-game_font = pygame.font.Font(
-            config.sys_data_dir +
-            os.sep +
-            "gui" +os.sep + config.general['THEME'] + os.sep +
-            "font.otf", config.general['HEIGHT']/25)
+game_font = pygame.font.Font(os.path.join(sys_data_dir, "gui", 
+                                          general["THEME"], "font.otf"),
+                             general["HEIGHT"]/25) 
