@@ -30,6 +30,7 @@
 
 ==Sound
     remaxim
+    Michel Baradari
 
 ==Translation
     edge_one (Spanish)
