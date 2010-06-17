@@ -47,13 +47,14 @@ class local_game(Screen):
         files.sort()
         for file in files:
             try:
-                self.game_data['character_file'].append("characters" + os.sep + file)
-                self.character.append(entity_skin.Entity_skin(
-                            os.path.join(
-                                'characters',
-                                file
-                                )
-                            ).name)
+                if file != "none":
+                    self.game_data['character_file'].append("characters" + os.sep + file)
+                    self.character.append(entity_skin.Entity_skin(
+                                os.path.join(
+                                    'characters',
+                                    file
+                                    )
+                                ).name)
                 #logging.debug( "character "+file+" created.")
             except OSError, e:
                 if e.errno is 20:
