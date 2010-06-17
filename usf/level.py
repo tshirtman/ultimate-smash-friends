@@ -311,6 +311,11 @@ class Level ( object ):
                         server
                         )
                     )
+        self.water_blocs = []
+        for block in xml.findall('water'):
+            nums = block.attrib['coords'].split(' ')
+            nums = [ int(i) for i in nums ]
+            self.water_blocs.append(pygame.Rect(nums))
 
         for block in xml.findall('vector-block'):
             texture = block.attrib['texture']
