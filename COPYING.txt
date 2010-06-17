@@ -1,3 +1,16 @@
+The Ultimate Smash Friends code is released under GNU GPL (see full text below).
+Ultimate Smash Friends data files (image, sounds, music, etc.) are released under
+CC-BY-SA 3.0 and various licenses, see 'License.txt' files through the various data
+subdirectories. If there is no 'License.txt' file, the data is under CC-BY-SA 3.0 .
+The others data files are released under a mixture of the following licenses :
+
+GPL
+Creative-Commons-Attribution
+Creative-Commons-By
+CC-BY-SA-NC
+CC-BY-SA 3.0
+________________________________________________________
+
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
