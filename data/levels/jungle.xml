@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map 
-	name="jungle"
+	name="Jungle"
 	background="jungle-background.png"
 	foreground="jungle-foreground.png"
 	middle="jungle-middle.png"
 	>
 	<block coords="0 443 167 77" ></block>
 	<block coords="330 227 125 69" ></block>
-	<block coords="493 392 173 93" ></block>
+	<!--<water coords="493 482 125 69" ></water>-->
+	<block coords="493 392 233 32" />
 	<block coords="762 435 149 85" ></block>
     <moving-block
     texture="pod-jungle.png"

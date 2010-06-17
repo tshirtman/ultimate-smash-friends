@@ -242,6 +242,14 @@ class Entity (object):
             pass
         return vector
 
+    def get_env_collision(self, blocks):
+        entity_rect = self.foot_collision_rect()
+        
+        for block in blocks:   
+            if entity_rect.colliderect(block) == 1:
+                return 5
+        return 1
+
     def update_floor_vector(self, level_moving_parts):
         """
         When the entity is on one (or more) moving (horizontaly) floors, the
@@ -467,6 +475,10 @@ class Entity (object):
                 game.level.vector_blocs
                 )
 
+        environnement_friction = self.get_env_collision(
+                game.level.water_blocs
+                )
+
         self.vector = [
         self.vector[0] + environnement_vector[0],
         self.vector[1] + environnement_vector[1]
@@ -482,8 +494,8 @@ class Entity (object):
             self.vector[1] += float(config.general['GRAVITY']) * dt
 
         # Application of air friction.
-        self.vector[0] -= config.general['AIR_FRICTION'] * self.vector[0] * dt
-        self.vector[1] -= config.general['AIR_FRICTION'] * self.vector[1] * dt
+        self.vector[0] -= config.general['AIR_FRICTION'] * environnement_friction * self.vector[0] * dt
+        self.vector[1] -= config.general['AIR_FRICTION'] * environnement_friction * self.vector[1] * dt
 
         # apply the vector to entity.
         self.move ((self.vector[0] * dt, self.vector[1] * dt), 'vector')
