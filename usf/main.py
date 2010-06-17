@@ -83,7 +83,7 @@ class Main(object):
                 self.game = Game(self.screen, self.level, self.players)
                 self.state = "game"
                 self.menu = Gui(self.screen)
-                self.menu.goto_screen('ingame.usfgui')
+                self.menu.handle_reply('goto:resume')
 
             else:
                 """self.screen.blit(
