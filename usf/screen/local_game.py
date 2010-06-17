@@ -24,15 +24,20 @@ config = Config()
 from usf import widgets, entity_skin
 import copy, os
 from usf.game import Game
+
+
 class local_game(Screen):
     name_pl1 = 0
     name_pl2 = 0
     name_pl3 = 0
     name_pl4 = 0
     players = [0,0,0,0]
+
     def init(self):
         self.game_data = {}
         self.game_data['character_file'] = []
+        
+        #create a character file to have the [?] image
         self.game_data['character_file'].append("characters" + os.sep + 'none')
         self.character = []
         self.character.append("None")
@@ -82,54 +87,16 @@ class local_game(Screen):
                 #logging.debug(file+" is not a valid level.")
                 raise
                 pass
+        
         self.add(widgets.HBox())
-        """
-        pl12 = widgets.VBox()
-        pl23 = widgets.VBox()
-        """
-        """
-        self.widget.add(pl12, margin=100)
-        
-        
-        self.widget.add(pl23, margin=20)
-        """
-        """
-        self.pl1 = widgets.Spinner(self.character)
-        self.pl2 = widgets.Spinner(self.character)
-        self.pl3 = widgets.Spinner(self.character)
-        self.pl4 = widgets.Spinner(self.character)
-        """
-        """
-        self.img1 = widgets.Image(self.game_data['character_file'][0] + os.sep +
-            self.game_data['character_file'][0].replace('characters' + os.sep, "") + "-portrait.png", size=(50,50))
-        self.img2 = widgets.Image(self.game_data['character_file'][0] + os.sep +
-            self.game_data['character_file'][0].replace('characters' + os.sep, "") + "-portrait.png", size=(50,50))
-        self.img3 = widgets.Image(self.game_data['character_file'][0] + os.sep +
-            self.game_data['character_file'][0].replace('characters' + os.sep, "") + "-portrait.png", size=(50,50))
-        self.img4 = widgets.Image(self.game_data['character_file'][0] + os.sep +
-            self.game_data['character_file'][0].replace('characters' + os.sep, "") + "-portrait.png", size=(50,50))
-        """
             
         self.w_launch = widgets.Button("Launch the game")
-        """
-        pl12.add(widgets.Label("Player 1"), margin=150)
-        pl12.add(self.pl1)
-        pl12.add(self.img1, margin_left=50, margin=5)
-        pl12.add(widgets.Label("Player 2"), margin=20)
-        pl12.add(self.pl2)
-        pl12.add(self.img2, margin_left=50, margin=5)
-        pl23.add(widgets.Label("Player 2"), margin=150)
-        pl23.add(self.pl3)
-        pl23.add(self.img3, margin_left=50, margin=5)
-        pl23.add(widgets.Label("Player 3"), margin=20)
-        pl23.add(self.pl4)
-        pl23.add(self.img4, margin_left=50, margin=5)
-        pl23.add(self.w_launch, size=(200,50), margin=20)
-        """
+        
         self.checkboxes_ai = []
         self.portraits = []
         self.player_spinner = []
         self.player_vbox = [widgets.VBox(), widgets.VBox()]
+
         for i in range(0,4):
             self.checkboxes_ai.append(widgets.CheckBox())
             self.portraits.append(widgets.Image(self.game_data['character_file'][0]
@@ -149,6 +116,8 @@ class local_game(Screen):
             hbox.add(widgets.Label("AI :"))
             hbox.add(self.checkboxes_ai[-1], margin=10)
             self.player_vbox[i/2].add(hbox, margin=10)
+
+        #adding the two box which contains the spinner and the name of the characters
         for vbox in self.player_vbox:
             self.widget.add(vbox, size=(200,50), margin=50)
         self.player_vbox[1].add(self.w_launch, margin=20, size=(250,50))
@@ -162,15 +131,17 @@ class local_game(Screen):
         self.widget.add(level_box, margin=40)
         level_box.add(self.level_name)
         level_box.add(self.level_image, size=(200,120), margin=5)
-        
+
     def callback(self,action):
         if action in self.player_spinner :
             player_number = self.player_spinner.index(action)
             self.players[player_number] = action.getIndex()
             self.portraits[player_number].setImage(self.game_data['character_file'][action.getIndex()] + os.sep +
                 self.game_data['character_file'][action.getIndex()].replace('characters' + os.sep, "") + "-portrait.png")
+
         if action == self.level_name :
             self.level_image.setImage("gui" + os.sep + "image" + os.sep + self.game_data['level_name'][action.getIndex()] + ".png")
+
         if action == self.w_launch:
             return self.launch_game()
 
