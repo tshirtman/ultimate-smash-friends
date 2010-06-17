@@ -25,11 +25,11 @@ class configure(Screen):
         self.add(widgets.HBox())
         vbox = widgets.VBox()
         self.widget.add(vbox, margin=300)
-        vbox.add(widgets.Button('Sounds and music'), margin=150, size=(220,50))
+        vbox.add(widgets.Button('Audio'), margin=150, size=(220,50))
         vbox.add(widgets.Button('Screen'), margin=10, size=(220,50))
         vbox.add(widgets.Button('Keyboard'), margin=10, size=(220,50))
     def callback(self,action):
-        if action.text == 'Sounds and music':
+        if action.text == 'Audio':
             return "goto:sound"
         if action.text == 'Screen':
             return "goto:screen_screen"
