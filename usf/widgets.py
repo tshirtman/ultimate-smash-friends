@@ -37,10 +37,13 @@ skin = Skin()
 
 #module to load image
 import loaders
+
+
 class Widget (object):
     """
     This class is the base of all other widget.
     """
+
     width = 0
     height = 0
     x =0
@@ -106,8 +109,14 @@ class Widget (object):
         return self.widget_id
 
 class Container(Widget):
-    #this function is used to update the container size after adding a widget
+    """
+    This widget is never used directly, it is used to be a base for the HBox and VBox widget
+    """
+
     def update_size(self):
+        """
+        This function is used to update the container size after adding a widget.
+        """
         sizex = 0
         sizey = 0
         for widget in self.widgets:
@@ -126,8 +135,11 @@ class Container(Widget):
             widget.init()
         self.width = sizex
         self.height = sizey
-    #updating the position of all widgets in the container
+
     def update_pos(self):
+        """
+        updating the position of all widgets in the container
+        """
         posx = 0
         posy = 0
         for widget in self.widgets:
@@ -144,13 +156,20 @@ class Container(Widget):
             widget.parentpos = (self.parentpos[0] + self.x, self.parentpos[1] + self.y)
             widget.update_size()
             widget.update_pos()
+
     def draw(self):
+        """
+        This method draw all widgets surfaces in a surface and return it
+        """
         self.surface = self.surface.convert().convert_alpha()
         for widget in self.widgets:
             self.surface.blit(widget.draw(),(widget.x,widget.y))
         return self.surface
-    #this function is used to add a widget in the conatiner
+
     def add(self, widget, *args, **kwargs):
+        """
+        This function is used to add a widget in the conatiner
+        """
         self.widgets.append(widget)
         if 'size' in kwargs:
             widget.set_size((optimize_size(kwargs['size'])[0], optimize_size(kwargs['size'])[1]))
@@ -165,24 +184,35 @@ class Container(Widget):
             widget.align(kwargs['align'])
         self.update_size()
         self.update_pos()
-        #widget.parentpos = (self.parentpos[0] + self.x, self.parentpos[1] + self.y)
     
-            
-            
+
 class HBox(Container):
+    """
+    A widget which is able to contain others widgets and align them horizontally
+    """
+
     def __init__(self):
         self.init()
         self.widgets = []
         self.orientation = True
-        
-        
+
+
 class VBox(Container):
+    """
+    A widget which is able to contain others widgets and align them vertically
+    """
+
     def __init__(self):
         self.init()
         self.widgets = []
         self.orientation = False
-        
+
+    
 class Tab(VBox):
+    """
+    /!\ This widget isn't finished at all
+    TODO
+    """
     def __init__(self):
         self.init()
         self.widgets = []
@@ -191,6 +221,7 @@ class Tab(VBox):
         self.add(self.tab)
         self.tab_list = []
         self.tab_content = []
+
     def add_tab(self, tab, box):
         self.tab.add(tab)
         self.tab_list.append(tab)
@@ -202,17 +233,17 @@ class Tab(VBox):
             print self.widgets.index(box_content)
         self.update_pos()
         self.update_size()
+
     def handle_mouse(self,event):
         try:
             self.widgets
         except:
             self.widgets = []
-        #print event.dict['pos']
+
         x = event.dict['pos'][0]
         y = event.dict['pos'][1]
         for widget in self.widgets:
             if widget.x < x < widget.x+widget.width and widget.y < y < widget.y+widget.height:
-                #print 'widget: ' + str(widget) + ' x: ' + str(widget.x) + ' width: ' + str(widget.width) + ' y: ' + str(widget.y) + ' height: ' + str(widget.height)
                 event.dict['pos'] = (x-widget.x, y-widget.y)
                 if widget == self.tab:
                     for wid in widget.widgets:
@@ -229,7 +260,13 @@ class Tab(VBox):
                 break
         
         return (False,False)
+
+
 class TabBar(HBox):
+    """
+    Used in the Tab widget
+    """
+
     def handle_mouse(self,event):
         try:
             self.widgets
@@ -243,11 +280,16 @@ class TabBar(HBox):
                 return widget
                 break
 class Label(Widget):
-    indent = 0
+    """
+    A simple label widget
+    """
+
     def init(self):
         pass
+
     def __init__(self, text, *args, **kwargs):
         self.text = text
+        self.indent = 0
         self.state = False
         #self.init()
         self.surface_text  = loaders.text( _(self.text),game_font)
@@ -270,10 +312,14 @@ class Label(Widget):
         else:
             self.background = None
             self.surface = self.surface_text
+
     def draw(self):
-        #TODO : a @memoize function, and a config file with the color
         return self.surface
+
     def setText(self,text):
+        """
+        Change the text of the widget
+        """
         self.text = text
         self.surface_text  = game_font.render(
             _(self.text),
@@ -284,13 +330,18 @@ class Label(Widget):
             self.surface = loaders.image_layer(self.background,self.surface_text,(self.txtmargin,0))
         else:
             self.surface = self.surface_text
+
           
 class LongText(Widget):
+    """
+    This widget is used with the Paragraph widget, it support a long text
+    with break line whereas Label support only one line
+    """
+
     def __init__(self, text, *args, **kwargs):
         self.text = open(config.sys_data_dir + os.sep + 'text' + os.sep + text, 'r').readlines()
         
         self.text_height = loaders.text("", game_font).get_height()
-        
         
         #the width of the biggest line of the file
         self.max_width = 0
@@ -311,14 +362,10 @@ class LongText(Widget):
             self.width = self.max_width
         if "margin" in kwargs:
             self.txtmargin= kwargs['margin']
-        #self.init()
+
         self.surface = pygame.Surface((self.width,self.height))
-        #this surface will be draw into self.surface with a special position to scroll
-        #self.surface.blit(self.text_surface, (0,0))
         self.text_surface = pygame.Surface((self.max_width, self.text_height * len(self.text)))
         
-        #self.surface = self.surface.convert().convert_alpha()
-        #self.text_surface = self.text_surface.convert().convert_alpha()
         
         self.text_surface.fill((0,0,0))
         self.text_surface.set_colorkey((0,0,0))
@@ -336,19 +383,17 @@ class LongText(Widget):
         
         #this variable will be used for scroll
         self.scroll = 0
+
     def init(self):
         pass
-        
+
     def draw(self):
         #empty the surface:
         self.surface.fill((0,0,0))
         self.surface.set_colorkey((0,0,0))
-        
         self.surface.blit(self.text_surface, (0,-self.scroll))
-        
         return self.surface
-        
-        
+
     def handle_mouse(self,event):
         if (event.type == pygame.MOUSEBUTTONUP or event.type == pygame.MOUSEBUTTONDOWN):
             if event.dict['button'] == 4:
@@ -365,30 +410,32 @@ class LongText(Widget):
             #update the scrollbar
             self.slider.set_value(self.scroll*100/self.getTextHeight())
         return (False,False)
-        
+
     def getTextHeight(self):
         """
-        Get the height of all the text
+        Get the height of all the text.
         """
         return self.text_height * len(self.text)-self.width
 
 
 class Paragraph(HBox):
+
     def setText(self, widget):
         self.widgets = []
         self.add(widget)
         self.add(SliderParagraph(''), size=(25,300))
         self.widgets[0].slider = self.widgets[1]
         self.widgets[1].slider = self.widgets[0]
-        
+
     def draw(self):
         self.surface = self.surface.convert().convert_alpha()
         for widget in self.widgets:
             self.surface.blit(widget.draw(),(widget.x,widget.y))
         return self.surface
-        
-        
+
+
 class SliderParagraph(Widget):
+
     def __init__(self, text):
         self.text = text
         self.parentpos = (0,0)
@@ -400,6 +447,7 @@ class SliderParagraph(Widget):
         self.state = False
         self.height =0
         self.width = 0
+
     def init(self):
         self.background= loaders.image(config.sys_data_dir + os.sep + 'gui' + os.sep + config.general['THEME'] + os.sep + 'sliderh_background.png',
             scale=(self.width, self.height))[0]
@@ -407,6 +455,7 @@ class SliderParagraph(Widget):
             scale=(self.width, 180*self.width/34))[0]
         self.center_hover= loaders.image(config.sys_data_dir + os.sep + 'gui' + os.sep + config.general['THEME'] + os.sep + 'sliderh_center_hover.png',
             scale=(self.width, 180*self.width/34))[0]
+
     def handle_mouse(self,event):
         if self.state == True:
             event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0]-self.x,
@@ -439,6 +488,7 @@ class SliderParagraph(Widget):
             return False, False
         self.state = False
         return (False,False)
+
     def get_value(self):
         return self.value*100/(self.height - 180*self.width/34)
         
@@ -450,6 +500,8 @@ class SliderParagraph(Widget):
             return loaders.image_layer(self.background, self.center_hover, (0,self.value))
         else:
             return loaders.image_layer(self.background, self.center, (0,self.value))
+
+
 class Slider(Widget):
     def __init__(self, text):
         self.text = text
@@ -463,11 +515,14 @@ class Slider(Widget):
         self.height = optimize_size((250,25))[1]
         self.width = optimize_size((25,25))[0] + optimize_size((25,25))[0] + optimize_size((100,25))[0]
     def init(self):
-        self.background= loaders.image(config.sys_data_dir + os.sep + 'gui' + os.sep + config.general['THEME'] + os.sep + 'slider_background.png',
+        self.background= loaders.image(join(config.sys_data_dir, 'gui',
+                config.general['THEME'], 'slider_background.png'),
             scale=(self.width,self.height))[0]
-        self.center= loaders.image(config.sys_data_dir + os.sep + 'gui' + os.sep + config.general['THEME'] + os.sep + 'slider_center.png',
+        self.center= loaders.image(join(config.sys_data_dir, 'gui',
+                config.general['THEME'], 'slider_center.png'),
             scale=(self.height,self.height))[0]
-        self.center_hover= loaders.image(config.sys_data_dir + os.sep + 'gui' + os.sep + config.general['THEME'] + os.sep + 'slider_center_hover.png',
+        self.center_hover= loaders.image(join(config.sys_data_dir, 'gui',
+                config.general['THEME'], 'slider_center_hover.png'),
             scale=(self.height,self.height))[0]
             
     def handle_mouse(self,event):
@@ -510,14 +565,16 @@ class Slider(Widget):
             return loaders.image_layer(self.background, self.center_hover, (self.value,0))
         else:
             return loaders.image_layer(self.background, self.center, (self.value,0))
-            
-            
 
-    
-    
+
 class Image(Widget):
+    """
+    An image widget which can be used as a base for others widgets like buttons
+    """
+
     def init(self):
         pass
+
     def __init__(self, image, *args, **kwargs):
         #save the path to scale it later -> maybe it is bad for performance, FIXME
         self.path = image
@@ -532,7 +589,14 @@ class Image(Widget):
         self.init()
         self.set_size((size[0], size[1]))
         self.state = True
+
     def set_size(self, (w,h)):
+        """
+        Set the size of the image.
+        /!\ The width and the height have to be the real value
+        (not the value only for 800x480)
+        """
+
         self.height = h
         self.width = w
         self.surface = loaders.image(
@@ -540,12 +604,17 @@ class Image(Widget):
                     os.sep+
                     self.path, scale=(w,h)
                     )[0]
+
     def draw(self):
-        #empty the surface
         return self.surface
+
     def setImage(self,path):
+        """
+        With this method, you can change the image. 'config.sys_data_dir' will be added to 'path'
+        """
         self.path = path
         self.set_size((self.width,self.height))
+
         
 class CheckBox(Widget):
     def __init__(self):
