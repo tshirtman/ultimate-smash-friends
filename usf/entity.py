@@ -247,7 +247,11 @@ class Entity (object):
         
         for block in blocks:   
             if entity_rect.colliderect(block) == 1:
+                if not self.in_water:
+                    loaders.track(os.path.join(config.sys_data_dir, "sounds", "splash1.wav")).play()
+                self.in_water = True
                 return 5
+        self.in_water = False
         return 1
 
     def update_floor_vector(self, level_moving_parts):
