@@ -7,8 +7,8 @@
 	>
 	<block coords="0 443 167 77" ></block>
 	<block coords="330 227 125 69" ></block>
-	<block coords="493 492 125 69" ></block>
-	<!--<water coords="493 392 173 93" />-->
+	<!--<block coords="493 492 125 69" ></block>-->
+	<block coords="493 392 173 93" />
 	<block coords="762 435 149 85" ></block>
     <moving-block
     texture="pod-jungle.png"

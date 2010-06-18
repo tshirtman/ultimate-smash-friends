@@ -38,6 +38,8 @@ skin = Skin()
 #module to load image
 import loaders
 
+#module to load fonts
+from font import font
 
 class Widget (object):
     """
