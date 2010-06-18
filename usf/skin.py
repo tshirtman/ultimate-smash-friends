@@ -55,8 +55,3 @@ class Skin (object):
             img = xml_file.find("background").find("img")
             self.background.append(img.attrib["src"])
             self.background.append(img.attrib["time"])
-
-pygame.font.init()
-game_font = pygame.font.Font(os.path.join(sys_data_dir, "gui", 
-                                          general["THEME"], "font.otf"),
-                             general["HEIGHT"]/25) 

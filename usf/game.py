@@ -32,7 +32,10 @@ import animations, entity, timed_event
 from level import Level
 from controls import Controls
 from config import Config
-from skin import game_font
+#module to load fonts
+from font import fonts
+#remove game_font
+game_font = fonts['sans']['normal']
 
 from debug_utils import draw_rect
 

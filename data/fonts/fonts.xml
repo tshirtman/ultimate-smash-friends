@@ -1,2 +1,4 @@
 <fonts>
+    <font name="sans" file="DejaVuSans.ttf" size="25" theme="font.otf"/>
+    <font name="mono" file="DejaVuSansMono.ttf" size="25" theme="font_mono.otf"/>
 </fonts>

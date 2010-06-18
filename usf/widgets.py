@@ -32,14 +32,16 @@ from config import Config
 config = Config()
 
 #theme support
-from skin import Skin, game_font
+from skin import Skin
 skin = Skin()
 
 #module to load image
 import loaders
 
 #module to load fonts
-from font import font
+from font import fonts
+#remove game_font
+game_font = fonts['sans']['normal']
 
 class Widget (object):
     """
@@ -294,7 +296,7 @@ class Label(Widget):
         self.indent = 0
         self.state = False
         #self.init()
-        self.surface_text  = loaders.text( _(self.text),game_font)
+        self.surface_text  = loaders.text(self.text, fonts['sans']['normal'])
 
         if "height" in kwargs:
             self.height = kwargs['height']
@@ -309,7 +311,8 @@ class Label(Widget):
         else:
             margin = 0
         if "background" in kwargs:
-            self.background = loaders.image(config.sys_data_dir + os.sep + kwargs['background'],scale=(self.width,self.height))[0]
+            self.background = loaders.image(join(config.sys_data_dir, kwargs['background']),
+                scale=(self.width,self.height))[0]
             self.surface = loaders.image_layer(self.background,self.surface_text,(self.txtmargin,0))
         else:
             self.background = None
@@ -451,8 +454,10 @@ class SliderParagraph(Widget):
         self.width = 0
 
     def init(self):
-        self.background= loaders.image(config.sys_data_dir + os.sep + 'gui' + os.sep + config.general['THEME'] + os.sep + 'sliderh_background.png',
-            scale=(self.width, self.height))[0]
+        self.background= loaders.image(join(config.sys_data_dir, 'gui',
+                                            config.general['THEME'],
+                                            'sliderh_background.png'),
+                                       scale=(self.width, self.height))[0]
         self.center= loaders.image(config.sys_data_dir + os.sep + 'gui' + os.sep + config.general['THEME'] + os.sep + 'sliderh_center.png',
             scale=(self.width, 180*self.width/34))[0]
         self.center_hover= loaders.image(config.sys_data_dir + os.sep + 'gui' + os.sep + config.general['THEME'] + os.sep + 'sliderh_center_hover.png',
@@ -505,6 +510,7 @@ class SliderParagraph(Widget):
 
 
 class Slider(Widget):
+
     def __init__(self, text):
         self.text = text
         self.parentpos = (0,0)
@@ -516,6 +522,7 @@ class Slider(Widget):
         self.state = False
         self.height = optimize_size((250,25))[1]
         self.width = optimize_size((25,25))[0] + optimize_size((25,25))[0] + optimize_size((100,25))[0]
+
     def init(self):
         self.background= loaders.image(join(config.sys_data_dir, 'gui',
                 config.general['THEME'], 'slider_background.png'),
@@ -619,6 +626,7 @@ class Image(Widget):
 
         
 class CheckBox(Widget):
+
     def __init__(self):
         #save the path to scale it later -> maybe it is bad 
         #for performance, FIXME
@@ -834,11 +842,7 @@ class KeyboardWidget(Widget):
     def __init__(self, value):
         self.value = value
         exec("self.letter = pygame.key.name(pygame." + self.value + ").upper()")
-        self.font =  pygame.font.Font(
-            config.sys_data_dir +
-            os.sep +
-            "gui" +os.sep + config.general['THEME'] + os.sep +
-            "font.otf", optimize_size((100, 25))[1])
+        self.font =  fonts['mono']['normal']
         self.set_size(optimize_size((35, 35)))
         self.state = False
         self.focus = False
