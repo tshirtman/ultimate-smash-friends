@@ -26,18 +26,18 @@ class main_screen(Screen):
         self.add(widgets.HBox())
         vbox = widgets.VBox()
         self.widget.add(vbox, margin=300)
-        vbox.add(widgets.Button('Local game'), margin=150, size=(180,50))
-        vbox.add(widgets.Button('Configure'), margin=10, size=(180,50))
-        vbox.add(widgets.Button('Credits'), margin=10, size=(180,50))
-        vbox.add(widgets.Button('Quit'), margin=10, size=(180,50))
+        vbox.add(widgets.Button(_('Local game')), margin=150, size=(180,50))
+        vbox.add(widgets.Button(_('Configure')), margin=10, size=(180,50))
+        vbox.add(widgets.Button(_('Credits')), margin=10, size=(180,50))
+        vbox.add(widgets.Button(_('Quit')), margin=10, size=(180,50))
 
     def callback(self,action):
-        if action.text == 'Local game':
+        if action.text == _('Local game'):
             return 'goto:local_game'
-        if action.text == 'Configure':
+        if action.text == _('Configure'):
             return 'goto:configure'
-        if action.text == 'Credits':
+        if action.text == _('Credits'):
             return 'goto:about'
-        if action.text == 'Quit':
+        if action.text == _('Quit'):
             pygame.event.post( pygame.event.Event(pygame.QUIT) )
             

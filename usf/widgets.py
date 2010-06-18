@@ -683,13 +683,12 @@ class CheckBox(Widget):
 class Button(Label):
     posy = 0
     def set_size(self, (w,h)):
-        if self.width < w:
-            # a nice effect to unstick the text from the left
-            self.indent = 20*config.general['WIDTH']/800
         self.height = h
         self.width = w
-        #center the text
+        #center the text vertically
         self.posy = self.height/2-self.surface_text.get_height()/2
+        #center the text horizontally
+        self.posx = self.width/2-self.surface_text.get_width()/2
         #   self.posy = 0
     def draw(self):
         #TODO : a @memoize function, and a config file with the color
@@ -701,7 +700,7 @@ class Button(Label):
                     os.sep+
                     config.general['THEME']+
                     os.sep+
-                    'back_button_hover.png', scale=(self.width, self.height))[0], self.surface_text, (self.indent, self.posy))
+                    'back_button_hover.png', scale=(self.width, self.height))[0], self.surface_text, (self.posx, self.posy))
         else:
             return loaders.image_layer(loaders.image(
                     config.sys_data_dir+
@@ -710,7 +709,7 @@ class Button(Label):
                     os.sep+
                     config.general['THEME']+
                     os.sep+
-                    'back_button.png', scale=(self.width, self.height))[0], self.surface_text, (self.indent, self.posy))
+                    'back_button.png', scale=(self.width, self.height))[0], self.surface_text, (self.posx, self.posy))
     def handle_mouse(self,event):
         if event.type == pygame.MOUSEBUTTONUP:
             self.state = False
