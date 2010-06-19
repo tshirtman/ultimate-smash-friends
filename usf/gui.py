@@ -149,6 +149,8 @@ class Gui(object):
         This function handles keyboard event which are send from the update function.
         """
         #TODO : a complete navigation system with the keyboard.
+        reply = False
+        query = False
         if self.focus:
             (query, focus) = self.focus.handle_keys(event)
             if focus == False:
@@ -156,7 +158,7 @@ class Gui(object):
             if  query != False:
                 reply = self.screens[self.screen_current].callback(query)
                 self.handle_reply(reply)
-        if self.focus == False or (not reply and not query):
+        if self.focus == False and (not reply and not query):
             if event.dict['key'] == pygame.K_ESCAPE:
                 self.handle_reply("goto:back")
         #remove the event for performance, maybe it is useless
@@ -166,43 +168,48 @@ class Gui(object):
         #print type(reply)
         if type(reply) == str:
             if reply.split(':')[0] == 'goto':
+                animation = True
                 old_surface = self.screens[self.screen_current].widget.draw()
                 oldy = self.screens[self.screen_current].widget.y
                 indent_title = self.screens[self.screen_current].indent_title
                 name = self.screens[self.screen_current].name
                 if reply.split(':')[1] == 'back':
-                    self.screen_back()
+                    animation = self.screen_back()
                 else:
                     self.screen_history.append(self.screen_current)
                     self.screen_current = reply.split(':')[1]
-                new_surface = self.screens[self.screen_current].widget.draw()
+                if animation:
+                    new_surface = self.screens[self.screen_current].widget.draw()
 
-                text = loaders.text(name, fonts['mono']['10']).convert()
-                text.fill(pygame.color.Color("black"))
-                text.set_colorkey(pygame.color.Color("black"))
-                text.blit(loaders.text(name, fonts['mono']['10']), (0,0))
-                for i in range(0, 10):
-                    time.sleep(1.00/float(config.general['MAX_FPS']))
-                    self.screen.blit(self.background, (0,0))
-                    text.set_alpha( (i*(- 1) + 10) *250/10)
-                    self.screen.blit(text, (indent_title,10))
-                    self.screen.blit(old_surface, (optimize_size((i*8*10, 0))[0],oldy))
-                    pygame.display.update()
+                    text = loaders.text(name, fonts['mono']['10']).convert()
+                    text.fill(pygame.color.Color("black"))
+                    text.set_colorkey(pygame.color.Color("black"))
+                    text.blit(loaders.text(name, fonts['mono']['10']), (0,0))
 
-                text = loaders.text(self.screens[self.screen_current].name, fonts['mono']['10']).convert()
-                text.fill(pygame.color.Color("black"))
-                text.set_colorkey(pygame.color.Color("black"))
-                text.blit(loaders.text(self.screens[self.screen_current].name, fonts['mono']['10']), (0,0))
-                for i in range(0, 10):
-                    time.sleep(1.00/float(config.general['MAX_FPS']))
-                    self.screen.blit(self.background, (0,0))
-                    text.set_alpha(i*250/10)
-                    self.screen.blit(text, (self.screens[self.screen_current].indent_title,10))
-                    self.screen.blit(new_surface, 
-                        (optimize_size((i*8*10-800, 0))[0],
-                        self.screens[self.screen_current].widget.y))
-                    pygame.display.update()
-                
+                    for i in range(0, 10):
+                        time.sleep(1.00/float(config.general['MAX_FPS']))
+                        self.screen.blit(self.background, (0,0))
+                        text.set_alpha( (i*(- 1) + 10) *250/10)
+                        self.screen.blit(text, (indent_title,10))
+                        self.screen.blit(old_surface, (optimize_size((i*8*10, 0))[0],oldy))
+                        pygame.display.update()
+
+                    text = loaders.text(self.screens[self.screen_current].name, fonts['mono']['10']).convert()
+                    text.fill(pygame.color.Color("black"))
+                    text.set_colorkey(pygame.color.Color("black"))
+                    text.blit(loaders.text(self.screens[self.screen_current].name, fonts['mono']['10']), (0,0))
+
+                    for i in range(0, 10):
+                        time.sleep(1.00/float(config.general['MAX_FPS']))
+                        self.screen.blit(self.background, (0,0))
+                        text.set_alpha(i*250/10)
+                        self.screen.blit(text, (self.screens[self.screen_current].indent_title,10))
+                        self.screen.blit(new_surface, 
+                            (optimize_size((i*8*10-800, 0))[0],
+                            self.screens[self.screen_current].widget.y))
+                        pygame.display.update()
+                    pygame.event.clear()
+
         elif reply != None:
             if reply == True:
                 self.state = "menu"
@@ -214,6 +221,8 @@ class Gui(object):
         if len(self.screen_history) > 0:
             self.screen_current = self.screen_history[-1]
             del self.screen_history[-1]
+            return True
+        return False
         
 
 
