@@ -473,7 +473,7 @@ class SliderParagraph(Widget):
 
     def handle_mouse(self,event):
         if self.state == True:
-            event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0]-self.x,
+            event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0] - self.x,
                                 event.dict['pos'][1] - self.parentpos[1] - self.parentpos[1] - self.y)
         x = event.dict['pos'][0]
         y = event.dict['pos'][1]
@@ -544,7 +544,7 @@ class Slider(Widget):
             
     def handle_mouse(self,event):
         if self.state == True:
-            event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0]-self.x,
+            event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0] - self.x,
                                 event.dict['pos'][1] - self.parentpos[1] - self.y)
         x = event.dict['pos'][0]
         y = event.dict['pos'][1]
@@ -772,7 +772,10 @@ class ImageButton(Image):
             return self.surface_hover
         else:
             return self.surface
+
+
 class Spinner(HBox):
+
     def __init__(self, values, width=100):
         self.parentpos = (0,0)
         self.extend = False
@@ -784,6 +787,7 @@ class Spinner(HBox):
         self.state = False
         self.height = optimize_size((250,30))[1]
         self.width = optimize_size((25,30))[0]*2 + optimize_size((self.center_width,30))[0]
+
     def init(self):
         self.surface = pygame.Surface((self.width,self.height))
         self.widgets = []
@@ -803,9 +807,10 @@ class Spinner(HBox):
         self.add(self.right_arrow, margin = 0)
         self.update_pos()
         self.update_size()
-    def handle_mouse(self,event):
-        if self.state == True:
-            event.dict['pos'] =(event.dict['pos'][0] - self.x,
+
+    def handle_mouse(self, event):
+        if self.state:
+            event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0] - self.x,
                                 event.dict['pos'][1] - self.parentpos[1] - self.y)
         x = event.dict['pos'][0]
         y = event.dict['pos'][1]
@@ -830,14 +835,18 @@ class Spinner(HBox):
             return False, self
         self.state = False
         return (False,False)
+
     def get_value(self):
         return self.values[self.index]
+
     def getIndex(self):
         return self.index
+
     def setIndex(self, index):
         self.index=index
         self.text = self.values[self.index]
         self.center.setText(self.text)
+
     def set_value(self, value):
         try:
             self.setIndex(self.values.index(value))
