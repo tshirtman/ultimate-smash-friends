@@ -18,7 +18,9 @@
 ################################################################################
 
 import pygame
+from usf import loaders
 
+config = loaders.get_config()
 
 class Widget (object):
     """

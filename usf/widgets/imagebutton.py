@@ -18,9 +18,12 @@
 ################################################################################
 
 import pygame
+import os
+
 from widget import Widget, get_scale, optimize_size
 from usf import loaders
 from usf.font import fonts
+config = loaders.get_config()
 
 from image import Image
 

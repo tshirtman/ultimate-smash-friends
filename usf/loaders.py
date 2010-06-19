@@ -183,3 +183,6 @@ def track(name):
         print "Unable to initialize audio."
         return None
 
+@memoize
+def get_config():
+    return Config()

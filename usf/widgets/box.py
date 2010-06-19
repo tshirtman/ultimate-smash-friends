@@ -23,8 +23,7 @@ from button import Button
 
 from usf import loaders
 from usf.font import fonts
-from usf.config import Config
-config = Config()
+config = loaders.get_config()
 
 class Container(Widget):
     """

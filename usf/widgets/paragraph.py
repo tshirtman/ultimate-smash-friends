@@ -18,9 +18,13 @@
 ################################################################################
 
 import pygame
+import os
+from os.path import join
+
 from widget import Widget, get_scale, optimize_size
 from usf import loaders
 from usf.font import fonts
+config = loaders.get_config()
 
 from box import HBox
 
@@ -33,15 +37,15 @@ class LongText(Widget):
     def __init__(self, text, *args, **kwargs):
         self.text = open(config.sys_data_dir + os.sep + 'text' + os.sep + text, 'r').readlines()
         
-        self.text_height = loaders.text("", game_font).get_height()
+        self.text_height = loaders.text("", fonts['mono']['normal']).get_height()
         
         #the width of the biggest line of the file
         self.max_width = 0
         for i in range(0, len(self.text)):
             self.text[i] = self.text[i].rstrip()
             #print self.text[i]
-            if self.max_width < loaders.text(self.text[i], game_font).get_width():
-                self.max_width = loaders.text(self.text[i], game_font).get_width()
+            if self.max_width < loaders.text(self.text[i], fonts['mono']['normal']).get_width():
+                self.max_width = loaders.text(self.text[i], fonts['mono']['normal']).get_width()
         #print self.text
         if "height" in kwargs:
             self.height = optimize_size((0,kwargs['height']))[1]
@@ -68,7 +72,7 @@ class LongText(Widget):
         #we draw a line under another to have a space between the lines
         text_space = 0
         for text in self.text:
-            self.text_surface.blit(loaders.text(text, game_font), (0,text_space))
+            self.text_surface.blit(loaders.text(text, fonts['mono']['normal']), (0,text_space))
             #increase the space between the lines
             text_space += self.text_height
         self.surface.blit(self.text_surface, (0,0))

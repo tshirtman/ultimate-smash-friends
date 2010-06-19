@@ -18,9 +18,12 @@
 ################################################################################
 
 import pygame
+from os.path import join
+
 from widget import Widget, get_scale, optimize_size
 from usf import loaders
 from usf.font import fonts
+config = loaders.get_config()
 
 
 class Label(Widget):
@@ -66,7 +69,7 @@ class Label(Widget):
         Change the text of the widget
         """
         self.text = text
-        self.surface_text  = game_font.render(
+        self.surface_text  = fonts['sans']['normal'].render(
             _(self.text),
             True,
             pygame.color.Color("white")
