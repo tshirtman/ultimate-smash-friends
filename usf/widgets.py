@@ -41,7 +41,7 @@ import loaders
 #module to load fonts
 from font import fonts
 #remove game_font
-game_font = fonts['sans']['normal']
+game_font = fonts['sans']['25']
 
 
 class Widget (object):
@@ -176,13 +176,20 @@ class Container(Widget):
         This function is used to add a widget in the conatiner
         """
         self.widgets.append(widget)
-        if 'size' in kwargs:
-            widget.set_size((optimize_size(kwargs['size'])[0], optimize_size(kwargs['size'])[1]))
-        if 'margin' in kwargs:
-            if self.orientation:
-                widget.margin = kwargs['margin']*config.general['WIDTH']/800
+        if 'size' in kwargs or type(widget) == Button:
+            if 'size' in kwargs:
+                size = kwargs['size']
             else:
-                widget.margin = kwargs['margin']*config.general['HEIGHT']/480
+                size = (220,50)
+            widget.set_size((optimize_size(size)[0], optimize_size(size)[1]))
+        if 'margin' in kwargs:
+            margin = kwargs['margin']
+        else:
+            margin = optimize_size((0, 10))[1]
+        if self.orientation:
+            widget.margin = margin*config.general['WIDTH']/800
+        else:
+            widget.margin = margin*config.general['HEIGHT']/480
         if 'margin_left' in kwargs:
             widget.margin_left = kwargs['margin_left']*config.general['WIDTH']/800
         if 'align' in kwargs:
@@ -297,7 +304,7 @@ class Label(Widget):
         self.indent = 0
         self.state = False
         #self.init()
-        self.surface_text  = loaders.text(self.text, fonts['sans']['normal'])
+        self.surface_text  = loaders.text(self.text, fonts['sans']['25'])
 
         if "height" in kwargs:
             self.height = kwargs['height']
@@ -782,17 +789,17 @@ class Spinner(HBox):
         self.left_arrow = ImageButton("gui" + os.sep + config.general['THEME'] + os.sep + "spinner_left.png",
             "gui" + os.sep + config.general['THEME'] + os.sep + "spinner_left_hover.png")
         self.left_arrow.set_size(optimize_size((25,30)))
-        self.add(self.left_arrow)
+        self.add(self.left_arrow, margin = 0)
         self.center = Label(self.values[self.index],
             background="gui" + os.sep + config.general['THEME'] + os.sep + "spinner_center.png",
             height=optimize_size((self.center_width,30))[1],
             width=optimize_size((self.center_width,30))[0],
             margin=optimize_size((10,0))[0])
-        self.add(self.center)
+        self.add(self.center, margin = 0)
         self.right_arrow = ImageButton("gui" + os.sep + config.general['THEME'] + os.sep + "spinner_right.png",
             "gui" + os.sep + config.general['THEME'] + os.sep + "spinner_right_hover.png")
         self.right_arrow.set_size(optimize_size((25,30)))
-        self.add(self.right_arrow)
+        self.add(self.right_arrow, margin = 0)
         self.update_pos()
         self.update_size()
     def handle_mouse(self,event):
@@ -842,7 +849,7 @@ class KeyboardWidget(Widget):
     def __init__(self, value):
         self.value = value
         exec("self.letter = pygame.key.name(pygame." + self.value + ").upper()")
-        self.font =  fonts['mono']['normal']
+        self.font =  fonts['mono']['25']
         self.set_size(optimize_size((35, 35)))
         self.state = False
         self.focus = False

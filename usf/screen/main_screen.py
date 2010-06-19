@@ -23,13 +23,13 @@ import copy
 import pygame
 class main_screen(Screen):
     def init(self):
-        self.add(widgets.HBox())
+        self.set_name("main menu")
+        self.add(widgets.VBox())
         vbox = widgets.VBox()
-        self.widget.add(vbox, margin=290)
-        vbox.add(widgets.Button(_('Local game')), margin=150, size=(220,50))
-        vbox.add(widgets.Button(_('Configure')), margin=10, size=(220,50))
-        vbox.add(widgets.Button(_('Credits')), margin=10, size=(220,50))
-        vbox.add(widgets.Button(_('Quit')), margin=10, size=(220,50))
+        self.widget.add(widgets.Button(_('Local game')), margin=50, margin_left=290)
+        self.widget.add(widgets.Button(_('Configure')), margin_left=290)
+        self.widget.add(widgets.Button(_('Credits')), margin_left=290)
+        self.widget.add(widgets.Button(_('Quit')), margin_left=290)
 
     def callback(self,action):
         if action.text == _('Local game'):
