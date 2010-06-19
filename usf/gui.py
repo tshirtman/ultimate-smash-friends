@@ -81,6 +81,8 @@ class Gui(object):
                         self.skin.background[0],
                         scale=self.background_scale
                         )[0]
+        self.update_youhere()
+
     def update(self, first, second, third):
         #FIXME : it sould be in main.pyw
         time.sleep(1.00/float(config.general['MAX_FPS']))
@@ -112,6 +114,8 @@ class Gui(object):
             
         self.screens[self.screen_current].update()
         
+        #draw the '> you are here :' dialog
+        #self.screen.blit(self.here, (10, 10))
         #update the mouse position
         x, y = pygame.mouse.get_pos()
         #x += self.cursor.get_height()
@@ -208,6 +212,7 @@ class Gui(object):
                             (optimize_size((i*8*10-800, 0))[0],
                             self.screens[self.screen_current].widget.y))
                         pygame.display.update()
+                    self.update_youhere()
                     pygame.event.clear()
 
         elif reply != None:
@@ -223,7 +228,13 @@ class Gui(object):
             del self.screen_history[-1]
             return True
         return False
-        
+
+    def update_youhere(self):
+        screen_list = ""
+        for screen in self.screen_history :
+            screen_list += screen + "/"
+        screen_list += self.screen_current + "/"
+        self.here = loaders.text("> " + _("you are here :") + screen_list, fonts['mono']['30'])
 
 
 

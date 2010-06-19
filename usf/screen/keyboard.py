@@ -29,9 +29,8 @@ config = Config()
 class keyboard(Screen):
 
     def init(self):
-        self.add(widgets.HBox())
-        vbox = widgets.VBox()
-        self.widget.add(vbox, margin=75)
+        self.add(widgets.VBox())
+
         action_ = ['A', 'B', 'Shield']
         hbox = widgets.HBox()
         hbox.add(widgets.Label(" "), size=(80,20))
@@ -42,7 +41,7 @@ class keyboard(Screen):
         hbox.add(widgets.Label('B'), size=(30,40), margin=40, align="center")
         hbox.add(widgets.Label('A'), size=(30,40), margin=40, align="center")
         hbox.add(widgets.Label(_("Shield")), size=(60,40), margin=10, align="center")
-        vbox.add(hbox, margin=100)
+        self.widget.add(hbox, margin_left=80, margin=20)
         action_ = ['Left', 'Right', 'Up', 'Down', 'A', 'B', 'Shield']
         #one repetition by players
         for i in range (0, 4):
@@ -52,7 +51,7 @@ class keyboard(Screen):
                 w = widgets.KeyboardWidget(config.keyboard['PL' + str(i + 1) + '_' + action.upper()])
                 w.set_id('PL' + str(i + 1) + '_' + action.upper())
                 hbox.add(w, size=(40,40), margin=30)
-            vbox.add(hbox)
+            self.widget.add(hbox, margin_left=80)
 
     def callback(self,action):
         if type(action) == widgets.KeyboardWidget:

@@ -50,7 +50,7 @@ class FontList(object):
             self.list[font.get('name')] = Font(font.get('name'), int(font.get('size')), font_file)
 
     def __getitem__(self, item):
-        if self.list[item]:
+        if self.list.has_key(item):
             return self.list[item]
         else:
             print "No font named" + str(item)

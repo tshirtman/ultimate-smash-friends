@@ -105,7 +105,7 @@ class Container(Widget):
         if 'margin_left' in kwargs:
             widget.margin_left = kwargs['margin_left']*config.general['WIDTH']/800
         if 'align' in kwargs:
-            widget.align(kwargs['align'])
+            widget.set_align(kwargs['align'])
         self.update_size()
         self.update_pos()
     

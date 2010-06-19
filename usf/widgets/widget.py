@@ -73,7 +73,7 @@ class Widget (object):
         
         return (False,False)
 
-    def align(self,align):
+    def set_align(self,align):
         pass
 
     def update_pos(self):
