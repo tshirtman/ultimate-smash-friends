@@ -41,7 +41,7 @@ import loaders
 #from widgets import (HBox, VBox, Label)
 from skin import Skin
 #import game
-        
+from widgets import optimize_size 
 
 class Gui(object):
     """
@@ -71,6 +71,16 @@ class Gui(object):
         self.background_scale = (config.general['WIDTH'],
             config.general['HEIGHT'])
         self.cursor = loaders.image(config.sys_data_dir + os.sep + 'cursor.png')[0]
+        self.background = loaders.image(
+                        config.sys_data_dir+
+                        os.sep+
+                        "gui"+
+                        os.sep +
+                        config.general['THEME']+
+                        os.sep+
+                        self.skin.background[0],
+                        scale=self.background_scale
+                        )[0]
     def update(self, first, second, third):
         #FIXME : it sould be in main.pyw
         time.sleep(1.00/float(config.general['MAX_FPS']))
@@ -148,7 +158,7 @@ class Gui(object):
                 self.handle_reply(reply)
         if self.focus == False or (not reply and not query):
             if event.dict['key'] == pygame.K_ESCAPE:
-                self.screen_back()
+                self.handle_reply("goto:back")
         #remove the event for performance, maybe it is useless
         del(event)
                 
@@ -156,11 +166,27 @@ class Gui(object):
         #print type(reply)
         if type(reply) == str:
             if reply.split(':')[0] == 'goto':
+                old_surface = self.screens[self.screen_current].widget.draw()
+                oldy = self.screens[self.screen_current].widget.y
                 if reply.split(':')[1] == 'back':
                     self.screen_back()
                 else:
                     self.screen_history.append(self.screen_current)
                     self.screen_current = reply.split(':')[1]
+                new_surface = self.screens[self.screen_current].widget.draw()
+                for i in range(0, 10):
+                    time.sleep(1.00/float(config.general['MAX_FPS']))
+                    self.screen.blit(self.background, (0,0))
+                    self.screen.blit(old_surface, (optimize_size((i*8*10, 0))[0],oldy))
+                    pygame.display.update()
+                for i in range(0, 10):
+                    time.sleep(1.00/float(config.general['MAX_FPS']))
+                    self.screen.blit(self.background, (0,0))
+                    self.screen.blit(new_surface, 
+                        (optimize_size((i*8*10-800, 0))[0],
+                        self.screens[self.screen_current].widget.y))
+                    pygame.display.update()
+                
         elif reply != None:
             if reply == True:
                 self.state = "menu"
