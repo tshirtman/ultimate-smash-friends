@@ -474,7 +474,7 @@ class SliderParagraph(Widget):
     def handle_mouse(self,event):
         if self.state == True:
             event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0]-self.x,
-                                event.dict['pos'][1] - self.parentpos[1]-self.y)
+                                event.dict['pos'][1] - self.parentpos[1] - self.parentpos[1] - self.y)
         x = event.dict['pos'][0]
         y = event.dict['pos'][1]
         if self.state == True:
@@ -545,7 +545,7 @@ class Slider(Widget):
     def handle_mouse(self,event):
         if self.state == True:
             event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0]-self.x,
-                                event.dict['pos'][1] - self.y)
+                                event.dict['pos'][1] - self.parentpos[1] - self.y)
         x = event.dict['pos'][0]
         y = event.dict['pos'][1]
         if self.state == True:
@@ -724,7 +724,7 @@ class Button(Label):
             return self,False
         else:
             if self.state == True:
-                event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0]-self.x, event.dict['pos'][1] -self.y)
+                event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0]-self.x, event.dict['pos'][1] - self.parentpos[1] - self.y)
             if 0 < event.dict['pos'][0] < self.width and 0 < event.dict['pos'][1] < self.height:
                 self.state = True
                 return False,self
@@ -760,7 +760,8 @@ class ImageButton(Image):
                     )[0]
     def handle_mouse(self,event):
         if self.state == True:
-            event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0]-self.x, event.dict['pos'][1] - self.parentpos[1]-self.y)
+            event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0]-self.x, event.dict['pos'][1] - self.parentpos[1] - self.y)
+            print event.dict['pos']
         if 0 < event.dict['pos'][0] < self.width and 0 < event.dict['pos'][1] < self.height:
             self.state = True
             return False,self
@@ -804,8 +805,8 @@ class Spinner(HBox):
         self.update_size()
     def handle_mouse(self,event):
         if self.state == True:
-            event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0]-self.x,
-                                event.dict['pos'][1] - self.parentpos[1]-self.y)
+            event.dict['pos'] =(event.dict['pos'][0] - self.x,
+                                event.dict['pos'][1] - self.parentpos[1] - self.y)
         x = event.dict['pos'][0]
         y = event.dict['pos'][1]
         self.left_arrow.state = False
@@ -883,7 +884,7 @@ class KeyboardWidget(Widget):
             self.focus = True
             return False,self
         if self.state == True:
-            event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0]-self.x, event.dict['pos'][1] - self.parentpos[1]-self.y)
+            event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0]-self.x, event.dict['pos'][1] - self.parentpos[1] - self.y)
         if 0 < event.dict['pos'][0] < self.width and 0 < event.dict['pos'][1] < self.height:
             self.state = True
             return False,self

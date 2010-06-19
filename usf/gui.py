@@ -121,8 +121,8 @@ class Gui(object):
         """
         This function handles mouse event which are send from the update function.
         """
-        event.dict['pos'] = (event.dict['pos'][0], event.dict['pos'][1]-self.screens[self.screen_current].widget.y)
         if self.focus == False:
+            event.dict['pos'] = (event.dict['pos'][0], event.dict['pos'][1]-self.screens[self.screen_current].widget.y)
             (query, self.focus) = self.screens[self.screen_current].widget.handle_mouse(event)
         else:
             (query, focus) = self.focus.handle_mouse(event)

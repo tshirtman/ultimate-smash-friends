@@ -119,18 +119,18 @@ class local_game(Screen):
 
         #adding the two box which contains the spinner and the name of the characters
         for vbox in self.player_vbox:
-            self.widget.add(vbox, size=(200,50), margin=50)
-        self.player_vbox[1].add(self.w_launch, margin=20, size=(250,50))
+            self.widget.add(vbox, size=(200,50))
         
         
         #level elements
         self.level_name = widgets.Spinner(self.game_data['level_name'])
         self.level_image = widgets.Image('gui'+ os.sep + 'image' + os.sep + 'BiX_level.png')
         level_box = widgets.VBox()
-        level_box.add(widgets.Label("Level"), margin=150)
+        level_box.add(widgets.Label("Level"), margin=50)
         self.widget.add(level_box, margin=40)
         level_box.add(self.level_name)
         level_box.add(self.level_image, size=(200,120), margin=5)
+        level_box.add(self.w_launch, margin=20, size=(250,50))
 
     def callback(self,action):
         if action in self.player_spinner :
