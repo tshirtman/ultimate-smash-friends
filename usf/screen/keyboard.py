@@ -17,6 +17,8 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
+from os.path import join
+
 from screen import Screen
 from usf import widgets
 import copy
@@ -30,12 +32,18 @@ class keyboard(Screen):
         self.add(widgets.HBox())
         vbox = widgets.VBox()
         self.widget.add(vbox, margin=75)
-        action_ = ['Left', 'Right', 'Up', 'Down', 'A', 'B', 'Shield'    ]
+        action_ = ['A', 'B', 'Shield']
         hbox = widgets.HBox()
         hbox.add(widgets.Label(" "), size=(80,20))
-        for action in action_:
-            hbox.add(widgets.Label(action), size=(80,50))
+        hbox.add(widgets.Image(join('gui', config.general['THEME'], 'left.png')), size=(40,30), margin=30)
+        hbox.add(widgets.Image(join('gui', config.general['THEME'], 'right.png')), size=(40,30), margin=30)
+        hbox.add(widgets.Image(join('gui', config.general['THEME'], 'top.png')), size=(40,30), margin=30)
+        hbox.add(widgets.Image(join('gui', config.general['THEME'], 'bottom.png')), size=(40,30), margin=30)
+        hbox.add(widgets.Label('B'), size=(30,40), margin=40, align="center")
+        hbox.add(widgets.Label('A'), size=(30,40), margin=40, align="center")
+        hbox.add(widgets.Label(_("Shield")), size=(60,40), margin=10, align="center")
         vbox.add(hbox, margin=100)
+        action_ = ['Left', 'Right', 'Up', 'Down', 'A', 'B', 'Shield']
         #one repetition by players
         for i in range (0, 4):
             hbox = widgets.HBox()
@@ -43,13 +51,9 @@ class keyboard(Screen):
             for action in action_:
                 w = widgets.KeyboardWidget(config.keyboard['PL' + str(i + 1) + '_' + action.upper()])
                 w.set_id('PL' + str(i + 1) + '_' + action.upper())
-                hbox.add(w, size=(40,40), margin=10)
+                hbox.add(w, size=(40,40), margin=30)
             vbox.add(hbox)
 
     def callback(self,action):
-        if action.text == 'Sounds and music':
-            return "goto:sound"
-        if action.text == 'Screen':
-            return "goto:screen_screen" 
         if type(action) == widgets.KeyboardWidget:
             config.keyboard[action.get_id()] = action.get_value()
