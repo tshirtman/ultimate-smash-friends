@@ -38,6 +38,7 @@ class Label(Widget):
         self.text = text
         self.indent = 0
         self.state = False
+        self.txtmargin = 0
         #self.init()
         self.surface_text  = loaders.text(self.text, fonts['sans']['25'])
 
@@ -53,10 +54,12 @@ class Label(Widget):
             self.txtmargin= kwargs['margin']
         else:
             margin = 0
+        if "align" in kwargs and kwargs['align'] == "center":
+            self.indent = self.width/2-self.surface_text.get_width()/2
         if "background" in kwargs:
             self.background = loaders.image(join(config.sys_data_dir, kwargs['background']),
                 scale=(self.width,self.height))[0]
-            self.surface = loaders.image_layer(self.background,self.surface_text,(self.txtmargin,0))
+            self.surface = loaders.image_layer(self.background,self.surface_text,(self.txtmargin+self.indent,0))
         else:
             self.background = None
             self.surface = self.surface_text
@@ -75,6 +78,6 @@ class Label(Widget):
             pygame.color.Color("white")
             )
         if self.background != None:
-            self.surface = loaders.image_layer(self.background,self.surface_text,(self.txtmargin,0))
+            self.surface = loaders.image_layer(self.background,self.surface_text,(self.txtmargin+self.indent,0))
         else:
             self.surface = self.surface_text

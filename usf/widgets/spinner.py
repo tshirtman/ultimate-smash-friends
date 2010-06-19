@@ -56,7 +56,7 @@ class Spinner(HBox):
             background="gui" + os.sep + config.general['THEME'] + os.sep + "spinner_center.png",
             height=optimize_size((self.center_width,30))[1],
             width=optimize_size((self.center_width,30))[0],
-            margin=optimize_size((10,0))[0])
+            align="center")
         self.add(self.center, margin = 0)
         self.right_arrow = ImageButton("gui" + os.sep + config.general['THEME'] + os.sep + "spinner_right.png",
             "gui" + os.sep + config.general['THEME'] + os.sep + "spinner_right_hover.png")
