@@ -23,11 +23,9 @@ import copy
 import pygame
 class resume(Screen):
     def init(self):
-        self.add(widgets.HBox())
-        vbox = widgets.VBox()
-        self.widget.add(vbox, margin=300)
-        vbox.add(widgets.Button('Resume'), margin=170, size=(180,50))
-        vbox.add(widgets.Button('Quit the game'), margin=10, size=(180,50))
+        self.add(widgets.VBox())
+        self.widget.add(widgets.Button('Resume'), margin=50, margin_left=290)
+        self.widget.add(widgets.Button('Quit the game'), margin_left=290)
     def callback(self,action):
         if action.text == 'Resume':
             return True

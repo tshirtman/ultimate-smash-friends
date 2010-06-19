@@ -22,12 +22,10 @@ from usf import widgets
 import copy
 class configure(Screen):
     def init(self):
-        self.add(widgets.HBox())
-        vbox = widgets.VBox()
-        self.widget.add(vbox, margin=290)
-        vbox.add(widgets.Button('Audio'), margin=150, size=(220,50))
-        vbox.add(widgets.Button('Screen'), margin=10, size=(220,50))
-        vbox.add(widgets.Button('Keyboard'), margin=10, size=(220,50))
+        self.add(widgets.VBox())
+        self.widget.add(widgets.Button('Audio'), margin=50, margin_left=290)
+        self.widget.add(widgets.Button('Screen'), margin_left=290)
+        self.widget.add(widgets.Button('Keyboard'), margin_left=290)
     def callback(self,action):
         if action.text == 'Audio':
             return "goto:sound"
