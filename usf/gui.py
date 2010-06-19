@@ -42,7 +42,7 @@ import loaders
 from skin import Skin
 #import game
 from widgets import optimize_size 
-
+from font import fonts
 class Gui(object):
     """
     Main class of the GUI. Init and maintain all menus and widgets.
@@ -168,20 +168,36 @@ class Gui(object):
             if reply.split(':')[0] == 'goto':
                 old_surface = self.screens[self.screen_current].widget.draw()
                 oldy = self.screens[self.screen_current].widget.y
+                indent_title = self.screens[self.screen_current].indent_title
+                name = self.screens[self.screen_current].name
                 if reply.split(':')[1] == 'back':
                     self.screen_back()
                 else:
                     self.screen_history.append(self.screen_current)
                     self.screen_current = reply.split(':')[1]
                 new_surface = self.screens[self.screen_current].widget.draw()
+
+                text = loaders.text(name, fonts['mono']['10']).convert()
+                text.fill(pygame.color.Color("black"))
+                text.set_colorkey(pygame.color.Color("black"))
+                text.blit(loaders.text(name, fonts['mono']['10']), (0,0))
                 for i in range(0, 10):
                     time.sleep(1.00/float(config.general['MAX_FPS']))
                     self.screen.blit(self.background, (0,0))
+                    text.set_alpha( (i*(- 1) + 10) *250/10)
+                    self.screen.blit(text, (indent_title,10))
                     self.screen.blit(old_surface, (optimize_size((i*8*10, 0))[0],oldy))
                     pygame.display.update()
+
+                text = loaders.text(self.screens[self.screen_current].name, fonts['mono']['10']).convert()
+                text.fill(pygame.color.Color("black"))
+                text.set_colorkey(pygame.color.Color("black"))
+                text.blit(loaders.text(self.screens[self.screen_current].name, fonts['mono']['10']), (0,0))
                 for i in range(0, 10):
                     time.sleep(1.00/float(config.general['MAX_FPS']))
                     self.screen.blit(self.background, (0,0))
+                    text.set_alpha(i*250/10)
+                    self.screen.blit(text, (self.screens[self.screen_current].indent_title,10))
                     self.screen.blit(new_surface, 
                         (optimize_size((i*8*10-800, 0))[0],
                         self.screens[self.screen_current].widget.y))

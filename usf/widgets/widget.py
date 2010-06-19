@@ -92,8 +92,10 @@ class Widget (object):
         return self.widget_id
 #these functions are used to handle the others screen resolutions
 #FIXME : maybe they could go to loaders ?
+width = config.general['WIDTH']
+height = config.general['HEIGHT']
 def optimize_size(size):
-    size = (size[0]*config.general['WIDTH']/800, size[1]*config.general['HEIGHT']/480)
+    size = (size[0]*width/800, size[1]*height/480)
     return size
 def get_scale(surface):
     size = (surface.get_width()*800/config.general['WIDTH'], surface.get_height()*480/config.general['HEIGHT'])
