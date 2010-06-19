@@ -25,18 +25,18 @@ config = Config()
 import xml.etree.ElementTree as xml
 from os.path import join
 from os import stat
-
+from loaders import memoize
 #library import
 import pygame
 
 pygame.font.init()
+@memoize
 class FontList(object):
 
     def __init__(self):
         self.list = {}
         font_xml = xml.parse(join(config.sys_data_dir, "fonts", "fonts.xml"))
         for font in font_xml.findall("font"):
-            print font.get("file")
 
             #use theme fonts
             try:

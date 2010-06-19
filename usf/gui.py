@@ -41,9 +41,6 @@ import loaders
 #from widgets import (HBox, VBox, Label)
 from skin import Skin
 #import game
-
-#translation
-#import translation
         
 
 class Gui(object):
@@ -124,6 +121,7 @@ class Gui(object):
         """
         This function handles mouse event which are send from the update function.
         """
+        event.dict['pos'] = (event.dict['pos'][0], event.dict['pos'][1]-self.screens[self.screen_current].widget.y)
         if self.focus == False:
             (query, self.focus) = self.screens[self.screen_current].widget.handle_mouse(event)
         else:

@@ -20,24 +20,34 @@
 # Our modules
 from usf.config import Config
 config = Config()
+from usf.font import fonts
+from usf import loaders
 
 class Screen(object):
+
     def __init__(self, name, screen):
         self.name = name
         self.screen = screen
         self.init()
         self.widget.update_size()
         self.widget.update_pos()
+
     def add(self, widget):
         self.widget = widget
         #define the position and the size of the top-level widget
         self.widget.set_size((config.general['WIDTH'],config.general['HEIGHT']))
         self.widget.x = 0
-        self.widget.y = 0
+        self.widget.y = 0*config.general['HEIGHT']/480
+        self.widget.update_size()
+        self.widget.update_pos()
+
     def update(self):
-        self.screen.blit(self.widget.draw(), (0,0))
+        self.screen.blit(loaders.text(self.name, fonts['sans']['normal']), (0,0))
+        self.screen.blit(self.widget.draw(), (0,self.widget.y))
+
     def init(self):
         pass
+
     def callback(self, action):
         pass
         

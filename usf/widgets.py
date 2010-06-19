@@ -43,6 +43,7 @@ from font import fonts
 #remove game_font
 game_font = fonts['sans']['normal']
 
+
 class Widget (object):
     """
     This class is the base of all other widget.
@@ -537,7 +538,7 @@ class Slider(Widget):
     def handle_mouse(self,event):
         if self.state == True:
             event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0]-self.x,
-                                event.dict['pos'][1] - self.parentpos[1]-self.y)
+                                event.dict['pos'][1] - self.y)
         x = event.dict['pos'][0]
         y = event.dict['pos'][1]
         if self.state == True:
@@ -716,7 +717,7 @@ class Button(Label):
             return self,False
         else:
             if self.state == True:
-                event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0]-self.x, event.dict['pos'][1] - self.parentpos[1]-self.y)
+                event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0]-self.x, event.dict['pos'][1] -self.y)
             if 0 < event.dict['pos'][0] < self.width and 0 < event.dict['pos'][1] < self.height:
                 self.state = True
                 return False,self
