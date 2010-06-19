@@ -43,7 +43,7 @@ class keyboard(Screen):
             for action in action_:
                 w = widgets.KeyboardWidget(config.keyboard['PL' + str(i + 1) + '_' + action.upper()])
                 w.set_id('PL' + str(i + 1) + '_' + action.upper())
-                hbox.add(w, size=(70,35), margin=10)
+                hbox.add(w, size=(40,40), margin=10)
             vbox.add(hbox)
 
     def callback(self,action):

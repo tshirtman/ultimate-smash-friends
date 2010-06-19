@@ -32,7 +32,7 @@ class KeyboardWidget(Widget):
         self.value = value
         exec("self.letter = pygame.key.name(pygame." + self.value + ").upper()")
         self.font =  fonts['mono']['25']
-        self.set_size(optimize_size((35, 35)))
+        #self.set_size(optimize_size((35, 35)))
         self.state = False
         self.focus = False
 
@@ -43,6 +43,15 @@ class KeyboardWidget(Widget):
         self.background_hover = loaders.image(config.sys_data_dir +
             os.sep + "gui" + os.sep + config.general['THEME'] + os.sep
             + "keyboard_hover.png", scale=(self.width,self.height))[0]
+        text = loaders.text(self.letter, self.font)
+        if text.get_width() > self.width:
+            text = pygame.transform.scale(text, (self.width, self.width*text.get_height()/text.get_width()))
+        posx = self.width/2 - text.get_width()/2
+        posy = self.height/2 - text.get_height()/2
+        self.surface = loaders.image_layer(self.background_hover,
+                text, (posx,posy))
+        self.surface_hover = loaders.image_layer(self.background,
+                text, (posx,posy))
 
     def set_size(self, (w, h)):
         self.height = h
@@ -51,11 +60,9 @@ class KeyboardWidget(Widget):
 
     def draw(self):
         if self.state or self.focus:
-            return loaders.image_layer(self.background_hover,
-                loaders.text(self.letter, self.font))
+            return self.surface
         else:
-            return loaders.image_layer(self.background,
-                loaders.text(self.letter, self.font))
+            return self.surface_hover
 
     def handle_mouse(self,event):
         if self.focus:
@@ -79,6 +86,7 @@ class KeyboardWidget(Widget):
                 self.value = config.reverse_keymap(event.dict['key'])
                 self.focus = False
                 self.state = False
+                self.init()
                 return self, False
             return self, False
         return False, False
