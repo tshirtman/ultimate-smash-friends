@@ -186,7 +186,7 @@ class Gui(object):
                     self.screen_current = reply.split(':')[1]
                 if animation:
 
-                    self.transition_slide(old_screen,
+                    self.transition_fading(old_screen,
                         old_surface,
                         self.screens[self.screen_current],
                         self.screens[self.screen_current].widget.draw())
@@ -237,6 +237,37 @@ class Gui(object):
             self.screen.blit(new_surface, 
                 (optimize_size((i*8*10-800, 0))[0],
                 self.screens[self.screen_current].widget.y))
+
+            pygame.display.update()
+
+    def transition_fading(self, old_screen, old_surface, new_screen, new_surface):
+
+        text = get_text_transparent(old_screen.name)
+        back = self.background.copy().convert()
+
+        for i in range(0, 5):
+            time.sleep(1.00/float(config.general['MAX_FPS']))
+            self.screen.blit(self.background, (0,0))
+            text.set_alpha( (i*(- 1) + 5) *250/5)
+            self.screen.blit(text, (old_screen.indent_title,10))
+            
+            back.set_alpha(i *250/5)
+            self.screen.blit(old_surface, (old_screen.widget.x,old_screen.widget.y))
+            self.screen.blit(back, (0, 0))
+
+            pygame.display.update()
+
+        text = get_text_transparent(new_screen.name)
+
+        for i in range(0, 5):
+            time.sleep(1.00/float(config.general['MAX_FPS']))
+            self.screen.blit(self.background, (0,0))
+            text.set_alpha(i*250/5)
+            self.screen.blit(text, (self.screens[self.screen_current].indent_title,10))
+            
+            back.set_alpha( (i*(- 1) + 5) *250/5)
+            self.screen.blit(new_surface, (old_screen.widget.x,old_screen.widget.y))
+            self.screen.blit(back, (0, 0))
 
             pygame.display.update()
 
