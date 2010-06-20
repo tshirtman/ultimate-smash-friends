@@ -427,13 +427,14 @@ class Entity (object):
                     ,
                     int(self.place[1]*zoom)*(SIZE[1]/480.0)+coords[1]
                     )
-            surface.blit(
-                      loaders.image(
+            skin_image = loaders.image(
                           self.entity_skin.animation.image,
                           reversed=self.reversed,
                           lighten=self.lighten,
                           zoom=zoom
-                          )[0],
+                          )
+            surface.blit(
+                  skin_image[0],
                   real_coords
                   )
 
@@ -446,12 +447,36 @@ class Entity (object):
                             )
 
                 shield_coords = (
-                    int(self.place[0]*zoom)*(SIZE[0]/800.0)+coords[0]+\
-                    .5*(self.rect[2]-image[1][2])
-                    ,
-                    int(self.place[1]*zoom)*(SIZE[1]/480.0)+coords[1]+\
-                    .5*(self.rect[3]-image[1][3]) - .25*self.rect[3]
+                    (
+                     int(self.place[0]*zoom)*(SIZE[0]/800.0)+coords[0]
+                     #+ int(.5 * skin_image[1][2]) * (SIZE[0]/800.0)
+                     + self.entity_skin.shield_center[0] * zoom* (SIZE[0]/800.0)
+                     - int(.5 * image[1][2] * zoom) * (SIZE[0]/800.0)
                     )
+                    ,
+                    (
+                     int(self.place[1]*zoom)*(SIZE[1]/480.0)+coords[1]
+                     #+ int(.5 * skin_image[1][3]) * (SIZE[1]/480.0)
+                     + self.entity_skin.shield_center[1]*zoom*(SIZE[1]/480.0)
+                     - int(.5 * image[1][3] * zoom) * (SIZE[1]/480.0)
+                    )
+                    )
+                '''
+                    (
+                    int(self.place[0] * zoom) * (SIZE[0] / 800.0) +
+                    coords[0] + .5 * self.rect[2] * zoom * (SIZE[0] / 800.0) +
+                    self.entity_skin.shield_center[0] - 0.5 * image[1][2] +
+                    0
+                    )
+                    ,
+                    (
+                    int(self.place[1] * zoom) * (SIZE[1] / 480.0) +
+                    coords[1] + .5 * self.rect[3] * zoom * (SIZE[1] / 480.0) +
+                    self.entity_skin.shield_center[1] - 0.5*image[1][3] +
+                    0
+                    )
+                    )
+                '''
 
                 surface.blit(image[0], shield_coords)
 

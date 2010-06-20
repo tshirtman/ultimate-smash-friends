@@ -3,6 +3,7 @@
     name="BiX"
     image="BiX_hit1.png"
     hardshape="16 24 56 74"
+    shield_center="28 28"
     creator="necroluckyboy"
     weight="1"
     auto-reverse="True"

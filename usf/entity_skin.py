@@ -109,6 +109,20 @@ class Entity_skin (object):
                 ]
                 )
 
+        if 'shield_center' in attribs:
+            self.shield_center = [
+            int(i) for i in
+            attribs['shield_center'].split(' ')
+            ]
+        else:
+            logging.warning('warning, character '+self.name+' has no attribute\
+shield_center, guessing from hardshape')
+            self.shield_center = (
+                self.hardshape[0] + .5 * self.hardshape[2]
+                ,
+                self.hardshape[1] + .5 * self.hardshape[3]
+            )
+
         for movement in a.findall('movement'):
             frames = []
             events = []
