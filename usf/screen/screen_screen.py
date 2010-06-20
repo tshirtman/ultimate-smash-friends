@@ -46,7 +46,7 @@ class screen_screen(Screen):
         self.widget.add(widgets.Label('Zoom sharpness :'), margin=25, margin_left=290)
         zoom = widgets.Slider('zoom_sharpness')
         self.widget.add(zoom, margin=10, margin_left=290, size=(220, 30))
-        zoom.set_value(config.general['ZOOM_SHARPNESS'])
+        zoom.set_value(config.general['ZOOM_SHARPNESS']/5)
         
     def callback(self,action):
         if action == self.resolution:
