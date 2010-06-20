@@ -79,6 +79,7 @@ class LongText(Widget):
         
         #this variable will be used for scroll
         self.scroll = 0
+        #self.background = loaders.image
 
     def init(self):
         pass
@@ -87,6 +88,7 @@ class LongText(Widget):
         #empty the surface:
         self.surface.fill((0,0,0))
         self.surface.set_colorkey((0,0,0))
+        #self.surface.blit(self.background, (0,0))
         self.surface.blit(self.text_surface, (0,-self.scroll))
         return self.surface
 
