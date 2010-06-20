@@ -25,15 +25,13 @@ config = Config()
 
 class sound(Screen):
     def init(self):
-        self.add(widgets.HBox())
-        vbox = widgets.VBox()
-        self.widget.add(vbox, margin=220)
-        vbox.add(widgets.Label('Sound'), margin=150)
+        self.add(widgets.VBox())
+        self.widget.add(widgets.Label('Sound'), margin=50, margin_left=290)
         sound = widgets.Slider('sound_slider')
-        vbox.add(sound, margin=10, size=(360,40))
-        vbox.add(widgets.Label('Music'), margin=10)
+        self.widget.add(sound, margin=10, size=(220,30), margin_left=290)
+        self.widget.add(widgets.Label('Music'), margin_left=290)
         music = widgets.Slider('music_slider')
-        vbox.add(music, margin=10, size=(360,40))
+        self.widget.add(music, size=(220,30), margin_left=290)
         
         music.set_value(config.audio['MUSIC_VOLUME'])
         sound.set_value(config.audio['SOUND_VOLUME'])

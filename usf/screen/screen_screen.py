@@ -39,13 +39,13 @@ class screen_screen(Screen):
         self.widget.add(self.resolution, margin=10, margin_left=290)
         fullscreen_hbox = widgets.HBox()
         
-        fullscreen_hbox.add(widgets.Label('Fullscreen :'))
+        fullscreen_hbox.add(widgets.Label('Fullscreen :'), margin=0)
         fullscreen_hbox.add(self.fullscreen, margin=50)
         self.widget.add(fullscreen_hbox, margin=25, margin_left=290)
         
-        self.widget.add(widgets.Label('Zoom sharpness :'), margin=50, margin_left=290)
+        self.widget.add(widgets.Label('Zoom sharpness :'), margin=25, margin_left=290)
         zoom = widgets.Slider('zoom_sharpness')
-        self.widget.add(zoom, margin=10, margin_left=290, size=(220, 40))
+        self.widget.add(zoom, margin=10, margin_left=290, size=(220, 30))
         zoom.set_value(config.general['ZOOM_SHARPNESS'])
         
     def callback(self,action):
@@ -60,6 +60,6 @@ class screen_screen(Screen):
             else:
                 config.general['FULLSCREEN'] = True
         if action.text == 'zoom_sharpness':
-            config.general['ZOOM_SHARPNESS'] = action.get_value()
+            config.general['ZOOM_SHARPNESS'] = (action.get_value()+1)*5
 
 
