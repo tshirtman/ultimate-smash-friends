@@ -23,7 +23,7 @@ import copy
 import pygame
 class main_screen(Screen):
     def init(self):
-        self.set_name("main menu")
+        self.set_name("ultimate smash friends")
         self.add(widgets.VBox())
         vbox = widgets.VBox()
         self.widget.add(widgets.Button(_('Local game')), margin=50, margin_left=290)
