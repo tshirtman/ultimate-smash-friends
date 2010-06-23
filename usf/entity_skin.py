@@ -118,8 +118,7 @@ class Entity_skin (object):
             logging.warning('warning, character '+self.name+' has no attribute\
 shield_center, guessing from hardshape')
             self.shield_center = (
-                self.hardshape[0] + .5 * self.hardshape[2]
-                ,
+                self.hardshape[0] + .5 * self.hardshape[2],
                 self.hardshape[1] + .5 * self.hardshape[3]
             )
 

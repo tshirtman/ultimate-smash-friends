@@ -395,7 +395,7 @@ class Entity (object):
                     points = self.update_points()
         self.place = [int(self.place[0]), int(self.place[1])]
 
-    def draw(self, coords, zoom, surface):
+    def draw(self, coords, zoom, surface, debug_params=dict()):
         """
         Draw the entity on the surface(i.e: the screen), applying coordinates
         offsets and zoom scaling as necessary, implementation depends on the
@@ -447,19 +447,18 @@ class Entity (object):
                             )
 
                 shield_coords = (
-                    (
-                     int(self.place[0]*zoom)*(SIZE[0]/800.0)+coords[0]
+                     coords[0] + int (
+                     self.place[0]
                      #+ int(.5 * skin_image[1][2]) * (SIZE[0]/800.0)
-                     + self.entity_skin.shield_center[0] * zoom* (SIZE[0]/800.0)
-                     - int(.5 * image[1][2] * zoom) * (SIZE[0]/800.0)
-                    )
-                    ,
-                    (
-                     int(self.place[1]*zoom)*(SIZE[1]/480.0)+coords[1]
+                     + self.entity_skin.shield_center[0]
+                     - .5 * image[1][2]
+                    ) * zoom * (SIZE[0]/800.0)
+                    , coords[1] + int (
+                     self.place[1]
                      #+ int(.5 * skin_image[1][3]) * (SIZE[1]/480.0)
-                     + self.entity_skin.shield_center[1]*zoom*(SIZE[1]/480.0)
-                     - int(.5 * image[1][3] * zoom) * (SIZE[1]/480.0)
-                    )
+                     + self.entity_skin.shield_center[1]
+                     - .5 * image[1][3]
+                    ) * zoom * (SIZE[1]/480.0)
                     )
                 '''
                     (
@@ -479,6 +478,19 @@ class Entity (object):
                 '''
 
                 surface.blit(image[0], shield_coords)
+
+            if 'hardshape' in debug_params:
+                draw_rect(
+                    surface,
+                    pygame.Rect(
+                    real_coords[0]+self.entity_skin.hardshape[0]*zoom*SIZE[0]/800.0,
+                    real_coords[1]+self.entity_skin.hardshape[1]*zoom*SIZE[1]/480.0,
+                    self.entity_skin.hardshape[2]*zoom*SIZE[0]/800.0,
+                    self.entity_skin.hardshape[3]*zoom*SIZE[1]/480.0
+                    )
+                    ,
+                pygame.Color(255, 0, 0, 127)
+                )
 
 
     def update_physics(self, dt, game):

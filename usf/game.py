@@ -39,8 +39,6 @@ game_font = fonts['sans']['normal']
 
 from debug_utils import draw_rect
 
-from debug_utils import draw_rect
-
 config = Config()
 
 SIZE = (config.general['WIDTH'],
@@ -217,7 +215,7 @@ class Game (object):
         )
         for entity in self.players+self.items:
             entity.present and entity.draw(
-                self.level_place, self.zoom, self.screen
+                self.level_place, self.zoom, self.screen, debug_params=debug_params
                 )
 
         self.level.draw_after_players(
@@ -501,7 +499,7 @@ class Game (object):
                             )
                         )
             if player.lives <= 0:
-                #logging.debug("player's DEAD")
+                logging.debug("player's DEAD")
                 player.present = False
 
     def update(self, debug_params={}):

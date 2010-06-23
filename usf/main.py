@@ -219,6 +219,7 @@ class Main(object):
                         debug_params={
                             #'controls': self.controls,
                             #'action':None,
+                            #'hardshape': None,
                             }
                         )
                     self.menu.load = False
