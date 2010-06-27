@@ -427,6 +427,19 @@ class Entity (object):
                     ,
                     int(self.place[1]*zoom)*(SIZE[1]/480.0)+coords[1]
                     )
+            if 'hardshape' in debug_params:
+                draw_rect(
+                    surface,
+                    pygame.Rect(
+                    real_coords[0]+self.entity_skin.hardshape[0]*zoom*SIZE[0]/800.0,
+                    real_coords[1]+self.entity_skin.hardshape[1]*zoom*SIZE[1]/480.0,
+                    self.entity_skin.hardshape[2]*zoom*SIZE[0]/800.0,
+                    self.entity_skin.hardshape[3]*zoom*SIZE[1]/480.0
+                    )
+                    ,
+                pygame.Color(255, 0, 0, 127)
+                )
+
             skin_image = loaders.image(
                           self.entity_skin.animation.image,
                           reversed=self.reversed,
@@ -478,19 +491,6 @@ class Entity (object):
                 '''
 
                 surface.blit(image[0], shield_coords)
-
-            if 'hardshape' in debug_params:
-                draw_rect(
-                    surface,
-                    pygame.Rect(
-                    real_coords[0]+self.entity_skin.hardshape[0]*zoom*SIZE[0]/800.0,
-                    real_coords[1]+self.entity_skin.hardshape[1]*zoom*SIZE[1]/480.0,
-                    self.entity_skin.hardshape[2]*zoom*SIZE[0]/800.0,
-                    self.entity_skin.hardshape[3]*zoom*SIZE[1]/480.0
-                    )
-                    ,
-                pygame.Color(255, 0, 0, 127)
-                )
 
 
     def update_physics(self, dt, game):

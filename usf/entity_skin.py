@@ -28,7 +28,7 @@ import timed_event
 from config import Config
 
 config = Config()
-SIZE = (config.general['WIDTH'], 
+SIZE = (config.general['WIDTH'],
         config.general['HEIGHT'])
 
 # different in python 2.4 and 2.5
@@ -182,7 +182,9 @@ shield_center, guessing from hardshape')
                             frame.attrib['time'],
                             ('hardshape' in frame.attrib
                              and frame.attrib ['hardshape']
-                             or loaders.image(image, nodisplay=server)[1]),
+                             #or loaders.image(image, nodisplay=server)[1]
+                             or self.hardshape
+                             ),
                             name=frame.attrib['image']
                             )
                         )
@@ -221,8 +223,12 @@ shield_center, guessing from hardshape')
                 if anim_name+'_upgraded' in self.animations:
                     self.current_animation = anim_name+'_upgraded'
                 else:
-                    logging.debug(self.name+' character has no upgraded \
-version of '+anim_name+' falling back to normal version')
+                    logging.debug(self.name+
+                        ' character has no upgraded '
+                        'version of '
+                        +anim_name
+                        +' falling back to normal version'
+                        )
                     self.current_animation = anim_name
             else:
                 self.current_animation = anim_name
@@ -288,4 +294,5 @@ version of '+anim_name+' falling back to normal version')
             self.animation_change = False
             self.animation.start(t)
         self.animation.update(t, reversed, server)
+        self.hardshape = self.animation.hardshape
 

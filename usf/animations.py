@@ -48,8 +48,19 @@ class Frame (object):
         self.time = int(gametime)
         if type(hardshape) is str:
             self.hardshape = pygame.Rect([int(i) for i in hardshape.split(' ')])
-        else:
+        elif type(hardshape) is pygame.Rect:
             self.hardshape = hardshape
+        else:
+            log.error('incorrect type for hardshape: ', hardshape)
+
+        self.hardshape_reverse = (
+            loaders.image(self.image)[1][2]
+                - self.hardshape[0] - self.hardshape[2],
+            self.hardshape[1],
+            self.hardshape[2],
+            self.hardshape[3]
+            )
+
         self.agressivpoints = []
         self.agressivpoints_reverse = []
 
@@ -106,8 +117,10 @@ class PreciseTimedAnimation(Sprite):
                self.image = frame.image
                if reversed:
                    self.agressivpoints = frame.agressivpoints_reverse
+                   self.hardshape = frame.hardshape_reverse
                else:
                    self.agressivpoints = frame.agressivpoints
-               self.hardshape = frame.hardshape
+                   self.hardshape = frame.hardshape
+
        self.rect = loaders.image(self.image, nodisplay=server)[1]
 
