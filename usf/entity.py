@@ -308,7 +308,7 @@ class Entity (object):
         Method:
         Generation of a contact test circle (only 8 points actualy).
         Then we test points of this circle and modify entity vector based on
-        points that gets collided, moving the entity in the right direction to
+        points that gets collided, moving the entity in the right dihardshape to
         get out of each collision.
 
         """
@@ -559,7 +559,7 @@ class Entity (object):
         if not self.present:
             return
 
-        self.rect[2:] = self.entity_skin.animation.rect[2:]
+        self.rect[2:] = self.entity_skin.animation.hardshape[2:]
         self.rect[:2] = self.place[0] - self.rect[2]/2, self.place[1]
 
         # Update animation of entity
