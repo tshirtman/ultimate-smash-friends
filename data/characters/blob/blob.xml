@@ -2,9 +2,9 @@
 <character
     name="Blob"
     image="blob-portrait.png"
-    hardshape="1 2 16 57"
+    hardshape="10 2 60 57"
     creator="Samoht"
-    weight=""
+        weight=""
     auto-reverse="False"
     age="Not Disclosed"
     Description="A green Blob.">

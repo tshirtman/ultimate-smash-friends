@@ -2,7 +2,7 @@
 <character
     name="Boogy"
     image="smash-straight-5.png"
-    hardshape="1 211 60 60"
+    hardshape="1 21 60 60"
     creator="tshirtman"
     weight="1"
     auto-reverse="True"
