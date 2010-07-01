@@ -44,7 +44,7 @@ class keyboard(Screen):
         self.widget.add(hbox, margin_left=80, margin=20)
         action_ = ['Left', 'Right', 'Up', 'Down', 'A', 'B', 'Shield']
         #one repetition by players
-        for i in range (0, 4):
+        for i in xrange (4):
             hbox = widgets.HBox()
             hbox.add(widgets.Label('Player ' + str(i + 1)), size=(80,50))
             for action in action_:
