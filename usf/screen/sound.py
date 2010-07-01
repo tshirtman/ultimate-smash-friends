@@ -35,8 +35,12 @@ class sound(Screen):
         
         music.set_value(config.audio['MUSIC_VOLUME'])
         sound.set_value(config.audio['SOUND_VOLUME'])
+        self.widget.add(widgets.Button(_('Back')), margin_left=20, margin=30)
+
     def callback(self,action):
         if action.text == 'music_slider':
             config.audio['MUSIC_VOLUME'] = action.get_value()
         if action.text == 'sound_slider':
             config.audio['SOUND_VOLUME'] = action.get_value()
+        if action.text == _('Back'):
+            return "goto:back"
