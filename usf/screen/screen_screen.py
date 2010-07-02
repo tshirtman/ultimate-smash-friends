@@ -47,6 +47,7 @@ class screen_screen(Screen):
         zoom = widgets.Slider('zoom_sharpness')
         self.widget.add(zoom, margin=10, margin_left=290, size=(220, 30))
         zoom.set_value(config.general['ZOOM_SHARPNESS']/5)
+        self.widget.add(widgets.Button(_('Back')), margin_left=20, margin=30)
         
     def callback(self,action):
         if action == self.resolution:
@@ -61,5 +62,7 @@ class screen_screen(Screen):
                 config.general['FULLSCREEN'] = True
         if action.text == 'zoom_sharpness':
             config.general['ZOOM_SHARPNESS'] = (action.get_value()+1)*5
+        if action.text == _('Back'):
+            return "goto:back"
 
 

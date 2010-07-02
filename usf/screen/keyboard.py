@@ -44,7 +44,7 @@ class keyboard(Screen):
         self.widget.add(hbox, margin_left=80, margin=20)
         action_ = ['Left', 'Right', 'Up', 'Down', 'A', 'B', 'Shield']
         #one repetition by players
-        for i in range (0, 4):
+        for i in xrange (4):
             hbox = widgets.HBox()
             hbox.add(widgets.Label('Player ' + str(i + 1)), size=(80,50))
             for action in action_:
@@ -52,7 +52,10 @@ class keyboard(Screen):
                 w.set_id('PL' + str(i + 1) + '_' + action.upper())
                 hbox.add(w, size=(40,40), margin=30)
             self.widget.add(hbox, margin_left=80)
+        self.widget.add(widgets.Button(_('Back')), margin_left=20, margin=30)
 
     def callback(self,action):
         if type(action) == widgets.KeyboardWidget:
             config.keyboard[action.get_id()] = action.get_value()
+        if action.text == _('Back'):
+            return "goto:back"

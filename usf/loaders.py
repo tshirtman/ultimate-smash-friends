@@ -101,6 +101,7 @@ def image(name, *args, **kwargs):
         else:
            # this mean this version of pygame is to old to use the effect
            # above, an equivalent method would be a good thing
+           logging.warning('pygame version < 1.9 no alpha blend.')
            pass #nothing for the moment 
 
     elif 'scale' in kwargs and kwargs['scale'] is not None:
