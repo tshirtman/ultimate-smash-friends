@@ -2,7 +2,7 @@
 <character
     name="Sorlo"
     image="sorlo-portrait.png"
-    hardshape="16 24 56 74"
+    hardshape="12 5 30 53"
     creator="doudoulolita"
     weight="1"
     auto-reverse="True"
