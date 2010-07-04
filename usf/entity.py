@@ -291,30 +291,30 @@ class Entity (object):
         for i in range(Entity.nb_points):
             points.append((
                     Entity.list_sin_cos[i][0] * shape[2]
-                    + shape[2]/2 + self.place[0] + x,
+                    + shape[2]/2 + self.place[0] + shape[0] + x,
                             #don't divide width by 2
                     Entity.list_sin_cos[i][1] * shape[3] / 2
-                    + shape[3]/2 + self.place[1] + y
+                    + shape[3]/2 + self.place[1] + shape[1] + y
                     ))
 
         return points
 
     def worldCollide(self, game):
         """
-        This test collision of the entity with the map (game.level.map),
-        the character.
+        This test collision of the entity with the map (game.level.map).
 
         Method:
         Generation of a contact test circle (only 8 points actualy).
         Then we test points of this circle and modify entity vector based on
-        points that gets collided, moving the entity in the right dihardshape to
+        points that gets collided, moving the entity in the right direction to
         get out of each collision.
 
         """
 
         # this test should optimise most of situations.
-        if game.level.collide_rect(self.entity_skin.hardshape[:2],
-                                   self.entity_skin.hardshape[2:]) != -1:
+        #if game.level.collide_rect(self.entity_skin.hardshape[:2],
+                                   #self.entity_skin.hardshape[2:]) != -1:
+        if game.level.collide_rect(self.rect[:2], self.rect[2:]) != -1:
             points = self.update_points()
             self.onGround = False
 
@@ -335,7 +335,9 @@ class Entity (object):
             # it's horizontal speed is lowered
             if (game.level.collide_point(points[self.TOP_LEFT])
             or game.level.collide_point(points[self.TOP_RIGHT])):
-                self.vector[1] = -math.fabs(self.vector[1]/2)
+                self.vector[1] = -math.fabs(
+                    self.vector[1] * config.general['BOUNCE']
+                    )
                 self.onGround = True
                 self.vector[0] /= 2
                 while (game.level.collide_point(points[self.TOP_LEFT])
@@ -347,7 +349,9 @@ class Entity (object):
             # uppers points collide, the entity bounce down.
             if (game.level.collide_point(points[self.BOTTOM_RIGHT])
             or game.level.collide_point(points[self.BOTTOM_LEFT])):
-                self.vector[1] = int(-self.vector[1] / 2)
+                self.vector[1] = int(
+                    -self.vector[1] * config.general['BOUNCE']
+                    )
                 self.vector[0] /= 2
                 while (game.level.collide_point(points[self.BOTTOM_RIGHT])
                 or game.level.collide_point(points[self.BOTTOM_LEFT])):
