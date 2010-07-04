@@ -16,4 +16,10 @@
 	<block coords="949 455 42 70" ></block>
 	<block coords="378 507 65 89" ></block>
 	<block coords="339 710 39 38" ></block>
+
+	<entry-point coords="200 100"></entry-point>
+	<entry-point coords="400 100"></entry-point>
+	<entry-point coords="600 100"></entry-point>
+	<entry-point coords="850 100"></entry-point>
+	<entry-point coords="1100 100"></entry-point>
 </map>
