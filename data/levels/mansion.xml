@@ -42,4 +42,13 @@
         <block coords="1283 325 149 59" ></block>
         <block coords="1144 74 22 138" ></block>
         <block coords="1050 70 19 72" ></block>
+        
+        <entry-point coords="1100 0"></entry-point>
+        <entry-point coords="750 200"></entry-point>
+        <entry-point coords="500 300"></entry-point>
+        <entry-point coords="1450 100"></entry-point>
+        <entry-point coords="1250 400"></entry-point>
+        <entry-point coords="130 100"></entry-point>
+        <entry-point coords="130 800"></entry-point>
+        <entry-point coords="220 500"></entry-point>
 </map>

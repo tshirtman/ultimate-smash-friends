@@ -49,4 +49,9 @@
     <block coords="196 414 372 27" ></block>
     <block coords="375 230 201 30" ></block>
     <block coords="570 327 155 38" ></block>
+
+....<entry-point coords="130 100"></entry-point>
+....<entry-point coords="300 100"></entry-point>
+....<entry-point coords="500 100"></entry-point>
+....<entry-point coords="650 100"></entry-point>
 </map>

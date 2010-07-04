@@ -29,4 +29,10 @@
         time="28000"
         ></pattern>
     </moving-block>
+
+    <entry-point coords="60 100"></entry-point>
+    <entry-point coords="380 100"></entry-point>
+    <entry-point coords="850 100"></entry-point>
+    <entry-point coords="530 100"></entry-point>
+    <entry-point coords="610 100"></entry-point>
 </map>

@@ -9,4 +9,10 @@
 	<block coords="343 241 190 44" ></block>
 	<block coords="594 419 229 47" ></block>
 	<block coords="542 108 286 46" ></block>
+
+	<entry-point coords="120 100"></entry-point>
+	<entry-point coords="240 100"></entry-point>
+	<entry-point coords="430 100"></entry-point>
+	<entry-point coords="600 100"></entry-point>
+	<entry-point coords="710 200"></entry-point>
 </map>
