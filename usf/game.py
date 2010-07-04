@@ -273,7 +273,7 @@ class Game (object):
                          num*SIZE[1] / 4
                         )
                         )
-            if 'action' in debug_params:
+            if debug_params.get('actions', False):
                 # displays current key movement of player, usefull for debuging
                 self.screen.blit(
                         self.font.render(
@@ -286,7 +286,7 @@ class Game (object):
                          num*SIZE[1] / 4
                         )
                         )
-            if 'controls' in debug_params:
+            if debug_params.get('controls', False):
                 # displays current key sequence of player, usefull for debuging
                 self.screen.blit(
                         self.font.render(
@@ -441,6 +441,13 @@ class Game (object):
                                                 point[1][0]**2 + point[1][1]**2
                                                 )/config.general['SHIELD_SOLIDITY']
                             pl.shield['power'] = max(0, pl.shield['power'])
+                            if (
+                            pl.shield['date'] < time.time() - config.general['POWER_SHIELD_TIME']
+                            ):
+                                pl.percents += math.sqrt( point[1][0]**2\
+                                                     +point[1][1]**2)/(30 * (100 -
+                                                     pl.armor )) / 2
+
                         else:
                             if entity.reversed != pl.reversed:
                                 pl.vector = [-point[1][0]*(1+pl.percents),

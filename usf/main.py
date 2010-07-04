@@ -217,9 +217,10 @@ class Main(object):
                 if self.state == 'game':
                     self.game.draw(
                         debug_params={
-                            #'controls': self.controls,
-                            #'action':None,
-                            #'hardshape': None,
+                            'controls': config.debug['CONTROLS'] and self.controls,
+                            'action': config.debug['ACTIONS'],
+                            'hardshape': config.debug['HARDSHAPES'],
+                            'footrect': config.debug['FOOTRECT'],
                             }
                         )
                     self.menu.load = False

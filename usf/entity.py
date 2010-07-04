@@ -84,7 +84,7 @@ class Entity (object):
         self.num = num
         self.upgraded = False
         self.lighten = False
-        self.shield = { 'on': False, 'power': 1.0 }
+        self.shield = { 'on': False, 'power': 1.0, 'date': 0 }
         self.place = place
         self.carried_by = carried_by
         # the 'center' of the entity is at the bottom middle.
@@ -426,7 +426,7 @@ class Entity (object):
                     ,
                     int(self.place[1]*zoom)*(SIZE[1]/480.0)+coords[1]
                     )
-            if 'hardshape' in debug_params:
+            if debug_params.get('hardshape', False):
                 draw_rect(
                     surface,
                     pygame.Rect(
@@ -438,7 +438,8 @@ class Entity (object):
                     ,
                 pygame.Color(255, 0, 0, 127)
                 )
-            if 'footrect' in debug_params:
+
+            if debug_params.get('footrect', False):
                 r = self.foot_collision_rect()
                 draw_rect(
                     surface,
