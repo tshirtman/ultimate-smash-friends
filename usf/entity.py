@@ -205,7 +205,6 @@ class Entity (object):
         Test the collision of the entity with the 1 pixel wide point at (x,y).
 
         """
-        #FIXME test on hardshape at place would be better than size at place
         return self.rect.collidelist( [pygame.Rect(x,y,1,1), ] )
 
     def foot_collision_rect(self):
@@ -244,8 +243,8 @@ class Entity (object):
 
     def get_env_collision(self, blocks):
         entity_rect = self.foot_collision_rect()
-        
-        for block in blocks:   
+
+        for block in blocks:
             if entity_rect.colliderect(block) == 1:
                 if not self.in_water:
                     loaders.track(os.path.join(config.sys_data_dir, "sounds", "splash1.wav")).play()
@@ -438,6 +437,19 @@ class Entity (object):
                     )
                     ,
                 pygame.Color(255, 0, 0, 127)
+                )
+            if 'footrect' in debug_params:
+                r = self.foot_collision_rect()
+                draw_rect(
+                    surface,
+                    pygame.Rect(
+                    coords[0]+r[0]*zoom*SIZE[0]/800.0,
+                    coords[1]+r[1]*zoom*SIZE[1]/480.0,
+                    r[2]*zoom*SIZE[0]/800.0,
+                    r[3]*zoom*SIZE[1]/480.0
+                    )
+                    ,
+                pygame.Color(255, 255, 0, 127)
                 )
 
             skin_image = loaders.image(
