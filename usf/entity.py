@@ -422,8 +422,7 @@ class Entity (object):
 
         if self.visible == True:
             real_coords = (
-                    int(self.place[0]*zoom)*(SIZE[0]/800.0)+coords[0]
-                    ,
+                    int(self.place[0]*zoom)*(SIZE[0]/800.0)+coords[0] ,
                     int(self.place[1]*zoom)*(SIZE[1]/480.0)+coords[1]
                     )
             if debug_params.get('hardshape', False):
