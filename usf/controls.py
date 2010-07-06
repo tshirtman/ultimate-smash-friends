@@ -221,7 +221,8 @@ class Controls (object):
                                     player.shield['on'] = False
 
                                 elif "_LEFT" in self.keys[key]:
-                                    player.walking_vector[0] = 0
+                                    if player.reversed:
+                                        player.walking_vector[0] = 0
                                     if player.entity_skin.current_animation == "walk":
                                         player.entity_skin.change_animation(
                                                 "static",
@@ -229,7 +230,8 @@ class Controls (object):
                                                 params={'entity': player}
                                                 )
                                 elif "_RIGHT" in self.keys[key]:
-                                    player.walking_vector[0] = 0
+                                    if not player.reversed:
+                                        player.walking_vector[0] = 0
                                     if player.entity_skin.current_animation == "walk":
                                         player.entity_skin.change_animation(
                                                 "static",
