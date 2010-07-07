@@ -242,10 +242,10 @@ class Entity (object):
         return vector
 
     def get_env_collision(self, blocks):
-        entity_rect = self.foot_collision_rect()
+        rect = self.foot_collision_rect()
 
         for block in blocks:
-            if entity_rect.colliderect(block) == 1:
+            if rect.colliderect(block) == 1:
                 if not self.in_water:
                     loaders.track(os.path.join(config.sys_data_dir, "sounds", "splash1.wav")).play()
                 self.in_water = True
@@ -264,10 +264,10 @@ class Entity (object):
         ones that collides, their horizontal movement.
 
         """
-        entity_rect = self.foot_collision_rect()
+        rect = self.foot_collision_rect()
         vector = [0,0]
         for part in level_moving_parts:
-            if entity_rect.collidelist(part.collide_rects)!= -1:
+            if rect.collidelist(part.collide_rects)!= -1:
                 vector = [
                 vector[0]+part.get_movement()[0],
                 vector[1]+part.get_movement()[1]
@@ -287,7 +287,6 @@ class Entity (object):
         shape = self.entity_skin.animation.hardshape
 
         points = []
-        #center = pygame.Rect(x+shape.)
         for i in range(Entity.nb_points):
             points.append((
                     Entity.list_sin_cos[i][0] * shape[2]
@@ -312,8 +311,6 @@ class Entity (object):
         """
 
         # this test should optimise most of situations.
-        #if game.level.collide_rect(self.entity_skin.hardshape[:2],
-                                   #self.entity_skin.hardshape[2:]) != -1:
         if game.level.collide_rect(self.rect[:2], self.rect[2:]) != -1:
             points = self.update_points()
             self.onGround = False
@@ -349,9 +346,10 @@ class Entity (object):
             # uppers points collide, the entity bounce down.
             if (game.level.collide_point(points[self.BOTTOM_RIGHT])
             or game.level.collide_point(points[self.BOTTOM_LEFT])):
-                self.vector[1] = int(
-                    -self.vector[1] * config.general['BOUNCE']
-                    )
+                if self.vector[1] < 0:
+                    self.vector[1] = int(
+                        -self.vector[1] * config.general['BOUNCE']
+                        )
                 self.vector[0] /= 2
                 while (game.level.collide_point(points[self.BOTTOM_RIGHT])
                 or game.level.collide_point(points[self.BOTTOM_LEFT])):
