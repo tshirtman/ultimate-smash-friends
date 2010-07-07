@@ -27,6 +27,7 @@ import logging
 import entity_skin
 import loaders
 import timed_event
+from font import fonts
 
 from config import Config
 
@@ -455,6 +456,14 @@ class Entity (object):
                     ,
                 pygame.Color(255, 255, 0, 127)
                 )
+            if debug_params.get('current_animation', False):
+                surface.blit(
+                    loaders.text(self.entity_skin.current_animation, fonts['mono']['5']),
+                    (
+                     real_coords[0],
+                     real_coords[1]
+                    )
+                    )
 
             skin_image = loaders.image(
                           self.entity_skin.animation.image,

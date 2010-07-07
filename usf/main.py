@@ -221,6 +221,8 @@ class Main(object):
                             'action': config.debug['ACTIONS'],
                             'hardshape': config.debug['HARDSHAPES'],
                             'footrect': config.debug['FOOTRECT'],
+                            'current_animation':
+                            config.debug['CURRENT_ANIMATION'],
                             }
                         )
                     self.menu.load = False
