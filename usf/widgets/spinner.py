@@ -81,11 +81,13 @@ class Spinner(HBox):
                         widget.state = True
                         if event.type == pygame.MOUSEBUTTONUP:
                             if widget == self.right_arrow:
-                                if self.index < len(self.values)-1:
-                                    self.index +=1
+                                self.index +=1
+                                if self.index > len(self.values)-1:
+                                    self.index =0
                             else:
-                                if self.index > 0:
-                                    self.index -=1
+                                self.index -=1
+                                if self.index < 0:
+                                    self.index =len(self.values)-1
                             self.text = self.values[self.index]
                             self.center.setText(self.text)
                             return (self,False)
