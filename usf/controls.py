@@ -196,10 +196,22 @@ class Controls (object):
                                 player.walking_vector[0] = 0
 
                             elif "_LEFT" in the_key:
+                                if player.onGround:
+                                    player.entity_skin.change_animation(
+                                        'walk',
+                                        game_instance,
+                                        params={'entity': player}
+                                        )
                                 player.walking_vector[0] = config.general['WALKSPEED']
                                 player.reversed = True
 
                             elif "_RIGHT" in the_key:
+                                if player.onGround:
+                                    player.entity_skin.change_animation(
+                                        'walk',
+                                        game_instance,
+                                        params={'entity': player}
+                                        )
                                 player.walking_vector[0] = config.general['WALKSPEED']
                                 player.reversed = False
                         #test sequences
