@@ -40,7 +40,11 @@ from ai import AI
 
 class Sequence (object):
     """
-    Used to bind an animation of a player to a sequence of key.
+    Used to bind a character animation to a sequence of key of a player.
+    condition allow to restrict the avaiability of the animation to certain
+    current animation (the player can only double jump if he is already jumping
+    for example)
+
     """
     def __init__(self, player, keys, action, condition=None):
         self.player = player
@@ -49,17 +53,18 @@ class Sequence (object):
         self.condition = condition
 
     def compare(self, seq, game_instance):
-        if self.condition == ""\
-        or len(game_instance.players) > self.player\
-            and game_instance.players[self.player].entity_skin.current_animation\
-            in self.condition :
+        if(
+            not self.condition
+            or game_instance.players[self.player].entity_skin.current_animation
+                in self.condition
+          ):
             keyseq = [i[0] for i in seq]
             return self.keys == keyseq[-len(self.keys):]
         else:
             return False
 
     def __str__():
-        return [str(i) for i in self.keys]
+        return [ str(i) for i in self.keys ]
 
 class Controls (object):
     """
@@ -166,7 +171,9 @@ class Controls (object):
                     elif self.keys[key] == "TOGGLE_FULLSCREEN":
                         pygame.display.toggle_fullscreen()
 
-                    if( len(game_instance.players) > numplayer and not game_instance.players[numplayer].ai):
+                    if (len(game_instance.players) > numplayer
+                        and not game_instance.players[numplayer].ai):
+
                         for player in game_instance.players:
                             pl = "PL"+str(player.num)
                             the_key = self.keys[key]
@@ -179,7 +186,11 @@ class Controls (object):
                                 )
                             ):
                                 player.shield['on'] = True
-                                #player.entity_skin.change_animation('static')
+                                player.entity_skin.change_animation(
+                                    'static',
+                                    game_instance,
+                                    params={ 'entity': player }
+                                    )
                                 player.walking_vector[0] = 0
 
                             elif "_LEFT" in the_key:
@@ -199,7 +210,8 @@ class Controls (object):
                                          i.action,
                                          game_instance,
                                          params={
-                                         'entity':game_instance.players[i.player]
+                                         'entity':
+                                         game_instance.players[i.player]
                                          }
                                         )
 
