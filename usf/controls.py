@@ -63,6 +63,19 @@ class Sequence (object):
         else:
             return False
 
+    def remove(self, seq):
+        """
+        remove self.keys keys from sequence, so each sequence is only activated
+        one time.
+
+        """
+        i = 0
+        while seq and i < len(self.keys):
+            if seq.pop(0) != self.keys[i]:
+                i = 0
+            else:
+                i += 1
+
     def __str__():
         return [ str(i) for i in self.keys ]
 
@@ -194,10 +207,22 @@ class Controls (object):
                                 player.walking_vector[0] = 0
 
                             elif "_LEFT" in the_key:
+                                if player.onGround:
+                                    player.entity_skin.change_animation(
+                                        'walk',
+                                        game_instance,
+                                        params={'entity': player}
+                                        )
                                 player.walking_vector[0] = config.general['WALKSPEED']
                                 player.reversed = True
 
                             elif "_RIGHT" in the_key:
+                                if player.onGround:
+                                    player.entity_skin.change_animation(
+                                        'walk',
+                                        game_instance,
+                                        params={'entity': player}
+                                        )
                                 player.walking_vector[0] = config.general['WALKSPEED']
                                 player.reversed = False
                         #test sequences
@@ -214,6 +239,7 @@ class Controls (object):
                                          game_instance.players[i.player]
                                          }
                                         )
+                                    i.remove(sequence)
 
         elif state is KEYUP:
             if isinstance(game_instance,  game.NetworkClientGame):
