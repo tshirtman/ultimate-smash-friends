@@ -459,8 +459,13 @@ class PlayerStaticOnGround(TimedEvent):
         return not self.params['entity'].onGround
 
     def __del__(self):
+        if tuple(self.params['entity'].walking_vector) != (0, 0):
+            anim = 'walk'
+        else:
+            anim = 'static'
+
         self.params['entity'].entity_skin.change_animation(
-                'static',
+                anim,
                 self.params['world']
                 )
 

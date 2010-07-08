@@ -30,7 +30,7 @@ A. Source Archive
 
    5. Uninstall
       a. If installed by using step 3 above:
-	 # cat install_files | xargs rm -rf 
+         # cat install_files | xargs rm -rf 
       b. If not, simply delete the ultimate-smash-friends folder
 
 * We highly recommend that you use your distributions package manager to install USF or run locally,
@@ -56,12 +56,12 @@ B. Debian File
 C. Arch Linux PKGBUILD
    1. Download PKGBUILD
       $ wget -c http://download.tuxfamily.org/usf/release/beta/PKGBUILD
-   
+
    2. Build and Install Ultimate Smash Friends Package*
       $ makepkg -si
 
    3. Run
-      $ ultimate-smash-friends.pyw 
+      $ ultimate-smash-friends.pyw
 
    4. Uninstall
       # pacman -Rsn usf-bzr
@@ -91,7 +91,7 @@ A. Source Archive
    5. Uninstall
       ** from a command prompt **
       a. If installed by using step 3 above:
-	 # cat install_files | xargs rm -rf 
+         # cat install_files | xargs rm -rf 
       b. If not, simply delete the ultimate-smash-friends folder
 
 * We highly recommend that you use method B (below) to install USF or run locally,
@@ -102,7 +102,7 @@ B. Executibles
   1. Install Dependencies
      Python - http://python.org/download/ (version 2.6.5 recommended)
      Pygame - http://pygame.org/download.shtml (version 1.9.1 for python 2.6 recommended)
-  
+
   2. Install Ultimate Smash Friends
      http://usf.tuxfamily.org/wiki/Download#Windows (version 0.0.8 recommended)
 

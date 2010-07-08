@@ -37,6 +37,7 @@ config = Config()
 
 import game
 from ai import AI
+
 class Sequence (object):
     """
     Used to bind an animation of a player to a sequence of key.
@@ -136,8 +137,8 @@ class Controls (object):
                             USEREVENT,
                             player = int(self.keys[key].split('_')[0][-1]),
                             key = self.keys[key].split('_')[1]
-                                          )
-                                        )
+                            )
+                        )
         return ret
 
     def handle_game_key( self, state, key, game_instance ):
@@ -192,18 +193,19 @@ class Controls (object):
                         for sequence in self.player_sequences:
                             for i in self.sequences:
                                 if i.compare( sequence, game_instance ):
-                                    game_instance.players[i.player].entity_skin.change_animation\
-                                            (
-                                              i.action,
-                                              game_instance,
-                                              params={
-                                                        'entity':game_instance.players[i.player]
-                                                     }
-                                            )
+                                    game_instance.players[
+                                        i.player
+                                        ].entity_skin.change_animation(
+                                         i.action,
+                                         game_instance,
+                                         params={
+                                         'entity':game_instance.players[i.player]
+                                         }
+                                        )
 
         elif state is KEYUP:
             if isinstance(game_instance,  game.NetworkClientGame):
-                game_instance.client.send(key,'up')
+                game_instance.client.send(key, 'up')
 
             elif isinstance(game_instance, game.NetworkServerGame):
                 pass
@@ -266,13 +268,12 @@ class Controls (object):
         for sequence in self.player_sequences:
             for i in self.sequences:
                 if i.compare( sequence, game_instance ):
-                    game_instance.players[i.player].entity_skin.change_animation\
-                            (
-                              i.action,
-                              game_instance,
-                              params={
-                                        'entity':game_instance.players[i.player]
-                                     }
+                    game_instance.players[i.player].entity_skin.change_animation(
+                         i.action,
+                         game_instance,
+                         params={
+                         'entity':game_instance.players[i.player]
+                         }
                         )
         if isinstance(game_instance, game.NetworkServerGame):
             while True:
