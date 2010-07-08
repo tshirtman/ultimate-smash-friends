@@ -58,6 +58,19 @@ class Sequence (object):
         else:
             return False
 
+    def remove(self, seq):
+        """
+        remove self.keys keys from sequence, so each sequence is only activated
+        one time.
+
+        """
+        i = 0
+        while seq and i < len(self.keys):
+            if seq.pop(0) != self.keys[i]:
+                i = 0
+            else:
+                i += 1
+
     def __str__():
         return [str(i) for i in self.keys]
 
@@ -202,6 +215,7 @@ class Controls (object):
                                          'entity':game_instance.players[i.player]
                                          }
                                         )
+                                    i.remove(sequence)
 
         elif state is KEYUP:
             if isinstance(game_instance,  game.NetworkClientGame):
