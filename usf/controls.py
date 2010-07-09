@@ -55,7 +55,8 @@ class Sequence (object):
     def compare(self, seq, game_instance):
         if(
             not self.condition
-            or game_instance.players[self.player].entity_skin.current_animation
+            or len(game_instance.players) > self.player
+            and game_instance.players[self.player].entity_skin.current_animation
                 in self.condition
           ):
             keyseq = [i[0] for i in seq]
