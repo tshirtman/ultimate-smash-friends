@@ -7,55 +7,53 @@
     weight="1"
     auto-reverse="True"
     age=""
-    Description=""> <!-- toutes les infos ne sont pas indispensables ;)-->
+    Description=""> <!-- you don't need to set everything, name and image
+    are importants ;)-->
 
-    <!-- chaque mouvement contient plusieurs frame, a une durée, et peut lancer
-         des actions scriptés en python si déplacements et images ne suffisent pas
-         (introduction d'un objet par exemple, action sur joueurs autre que
-         frappe...)
+    <!-- Each movement has a at least one frame, a lenght, and can trigger
+    scripted action (in python) if movments and pictures are not enought
+    (creation of an object for example, action on player other than hitting)
 
-        les différents mouvements supportés actuellement sont
-        static: quand on ne fait rien
-        walk: marche normale
-        hit: coup simple, en avant
-        roll: quand on avance une fois baissé
-        jump: quand on saute une fois
-        scnd-jump: quand on saute une deuxieme fois
-        kick: en général un coup de pied, mais un simple coup quoi!
-        kick-jumping: un kick quand on est en l'air
-        specialhit: un coup plus spécial, de préférence original a ce perso
-        smash-up: des coups un peu plus lent et puissant dans les directions
-        smash-down:
-        smash-straight: (devant si on fait en arrière le perso se retourne et
-                         fait en avant)
-        smash-up-jumping: un smash vers le haut mais quand on est déjà en train
-                        de sauter (fait sauter plus haut en tappant, peut
-                        servir de "triple
-                        saut").
-        special2: un autre coup spécial.
-        take: le perso a mal... :( (animation brève)
+    The movements currently supported are:
+    static: character is not doing anything
+    walk: basic walk
+    hit: basic action to injure another character
+    roll: when you go forward, when crouched
+    jump: when you go up
+    scnd-jump: when you are already jumping, you can do a double jump
+    kick: a simple action like hit, but generaly done with foot
+    kick-jumping: you can kick during a jump /!\ not sure if currently used :$
+    specialhit: a more special hit, preferabily specific to character
+    smash-up: a slower but more powerfull upward
+    smash-down: same, downward
+    smash-straight: same, left or right…
+    smash-up-jumping: like the smash upward, but activated only if the player
+                        smash-up when jumping (or double jumping)
+    special2: another special hit for the character.
+    take: activated when the character is hit.
 
-        -->
+    -->
     <movement name="static"
     duration="1"
     repeat="-1"
     >
-        <!-- une frame contient un temps, celui de l'animation ou elle est
-             lancé, et l'image qu'elle affiche, elle peut aussi redéfinir la
-             zone "dure" (hardshape) du personage pour cette image.
-             Elle peut définir un vecteur appliqué
-             pendant la frame au personnage (en
-             pixels/secondes).
-             Elle peut définir un ou plusieurs points
-             "aggressifs" qui seront des points de
-             contacts pendant un mouvement de coup,
-             avec un vecteur indiquand la direction et
-             la puissance du coup.
+        <!-- A vertex will be added at the player movment after the delay
+        specified
+        -->
+        <vector
+        time="100"
+        vector="0,1500">
+        </vector>
+
+        <!-- A frame define a time (delay between start of animation and
+        display of the frame), it can also overload character hardshape and it
+        can define a number of agressive points, those points will be tested
+        for collision with other entities, when collision happens, the vertex
+        will be used to canculate projection and damages to the entity.
         -->
         <frame
         time="0"
         image="BiX_hit1.png"
-        vector="(0,0)"
         >
             <agressiv-point
             coords="0,0"
@@ -67,7 +65,7 @@
     duration="100"
     repeat="0"
     >
-        <!-- a remplir ;) -->
+        <!-- TODO;) -->
     </movement>
     <movement name="walk"
     duration="450"
@@ -95,88 +93,82 @@
     duration="2000"
     repeat="0"
     >
-        <!--
-            un event est une action scripté en python, on donne le nom de la
-            fonction et une période, la période permet de limiter le temps de
-            l'action:
-            0 signifie pas de limite temporaire (donc commencer tout
-            de suite pour le premier, et se termine d'une autre façon pour le
-            deuxieme)
-            si différent de 0 le premier indique le délais avant début,
-            si différent de 0 le deuxieme indique la durée.
+        <!-- An event is a python scripted action, (defined in timed_event.py,
+        as a class), the period param allow to set a delay before start (0 = no
+        delay) and a duration (0 = infinite or shutdown another way).
         -->
 
         <event
         action="PlayerStaticOnGround"
         period="0,0"
         > </event>
-        <!-- a remplir ;) -->
+        <!-- TODO;) -->
     </movement>
     <movement name="smash-straight"
     duration="1000"
     repeat="0"
     >
-        <!-- a remplir ;) -->
+        <!-- TODO;) -->
     </movement>
     <movement name="hit"
     duration="500"
     repeat="0"
     >
-        <!-- a remplir ;) -->
+        <!-- TODO;) -->
     </movement>
     <movement name="smash-up-jumping"
     duration="2500"
     repeat="0"
     >
-        <!-- a remplir ;) -->
+        <!-- TODO;) -->
     </movement>
     <movement name="smash-up"
     duration="1000"
     repeat="0"
     >
-        <!-- a remplir ;) -->
+        <!-- TODO;) -->
     </movement>
     <movement name="smash-down"
     duration="1000"
     repeat="0"
     >
-        <!-- a remplir ;) -->
+        <!-- TODO;) -->
     </movement>
     <movement name="specialhit"
     duration="1000"
     repeat="0"
     hardshape="0 0 157 40"
     >
-        <!-- a remplir ;) -->
+        <!-- TODO;) -->
     </movement>
     <movement name="pick"
     duration="700"
     repeat="0"
     >
-        <!-- a remplir ;) -->
+        <!-- TODO;) -->
     </movement>
     <movement name="roll"
     duration="500"
     repeat="0"
     >
-        <!-- a remplir ;) -->
+        <!-- TODO;) -->
     </movement>
     <movement name="special2"
     duration="500"
     repeat="0"
     >
-        <!-- a remplir ;) -->
+        <!-- TODO;) -->
     </movement>
     <movement name="kick"
     duration="500"
     repeat="0"
     >
-        <!-- a remplir ;) -->
+        <!-- TODO;) -->
     </movement>
     <movement name="kick-jumping"
     duration="500"
     repeat="0"
     >
-        <!-- a remplir ;) -->
+        <!-- TODO;) -->
     </movement>
 </character>
