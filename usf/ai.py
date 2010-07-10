@@ -92,7 +92,8 @@ class AI(object):
         if self.block is not None:
             self.goto()
 
-        if self.enemy_position[0][0] - self.enemy_width[0] < self.iam.place[0] :
+        #if the ennemy is at left
+        if self.enemy_position[0][0] < self.iam.place[0] :
             self.iam.reversed = True
         else :
             self.iam.reversed = False
@@ -102,41 +103,45 @@ class AI(object):
 
     def goto(self):
         #if i am on the same block :
-        if (self.block.right+80 > self.iam.place[0] and
-            self.block.left-80 < self.iam.place[0] and
-            self.block.top-80 < self.iam.place[1] and
-            self.block.top+80 > self.iam.place[1]):
+        if not(self.enemy_position[0][0] - self.iam.place[0] <= self.enemy_width and 
+            self.enemy_position[0][0] - self.iam.place[0] > 0):
+            if (self.block.right+80 > self.iam.place[0] and
+                self.block.left-80 < self.iam.place[0] and
+                self.block.top-80 < self.iam.place[1] and
+                self.block.top+80 > self.iam.place[1]):
 
-            #self.game.notif.append([time.time(), "I am on your block"])
-            self.iam.walking_vector[0] = config.general['WALKSPEED']
-            self.walk = True
+                #self.game.notif.append([time.time(), "I am on your block"])
+                self.iam.walking_vector[0] = config.general['WALKSPEED']
+                self.walk = True
 
-            if self.enemy_position[0][0] - self.enemy_width[0] < self.iam.place[0] - self.iam.rect[2]:
-                #self.game.notif.append([time.time(), "I am on your right"])
-                self.sequences_ai.append(("PL"+ str(self.num+1) + "_LEFT",time.time()))
-            elif(self.enemy_position[0][0] +  - self.enemy_width[0] >
-                 self.iam.place[0] + self.iam.rect[2]):
-                #self.game.notif.append([time.time(), "I am on your left"])
-                self.sequences_ai.append(("PL"+ str(self.num+1) + "_RIGHT",time.time()))
+                if self.enemy_position[0][0] < self.iam.place[0] - self.iam.rect[2]:
+                    #self.game.notif.append([time.time(), "I am on your right"])
+                    self.sequences_ai.append(("PL"+ str(self.num+1) + "_LEFT",time.time()))
+                elif(self.enemy_position[0][0] > self.iam.place[0] + self.iam.rect[2]):
+                    #self.game.notif.append([time.time(), "I am on your left"])
+                    self.sequences_ai.append(("PL"+ str(self.num+1) + "_RIGHT",time.time()))
 
-            #to jump over another block
-            for block in self.game.level.map:
-                if ( ((block.right < self.iam.place[0] and
-                       block.right >self.enemy_position[0][0]) or
-                      (block.left < self.iam.place[0] and
-                       block.left >self.enemy_position[0][0])
-                     ) and
-                     ((block.top < self.iam.place[1] and
-                       block.bottom > self.iam.place[1]) or
-                      (block.bottom-100 < self.iam.place[1] and
-                       block.top-100 > self.iam.place[1])
-                     )
-                   ):
-                   #self.game.notif.append([time.time(), "I jump"])
-                   self.sequences_ai.append(("PL"+ str(self.num+1) + "_UP",time.time()))
-                   self.wait_time = time.time()
+                #to jump over another block
+                for block in self.game.level.map:
+                    if ( ((block.right < self.iam.place[0] and
+                           block.right >self.enemy_position[0][0]) or
+                          (block.left < self.iam.place[0] and
+                           block.left >self.enemy_position[0][0])
+                         ) and
+                         ((block.top < self.iam.place[1] and
+                           block.bottom > self.iam.place[1]) or
+                          (block.bottom-100 < self.iam.place[1] and
+                           block.top-100 > self.iam.place[1])
+                         )
+                       ):
+                       #self.game.notif.append([time.time(), "I jump"])
+                       self.sequences_ai.append(("PL"+ str(self.num+1) + "_UP",time.time()))
+                       self.wait_time = time.time()
 
-        elif self.wait_time +1.5 < time.time():
+            elif self.wait_time +1.5 < time.time():
+                self.walk = False
+                self.iam.walking_vector[0] = 0
+        else:
             self.walk = False
             self.iam.walking_vector[0] = 0
 
