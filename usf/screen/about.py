@@ -24,6 +24,6 @@ class about(Screen):
     def init(self):
         self.add(widgets.VBox())
         par = widgets.Paragraph('CREDITS')
-        self.widget.add(par, size=(400, 300))
+        self.widget.add(par, size=(400, 300), margin=10, margin_left=200)
     def callback(self,action):
         pass

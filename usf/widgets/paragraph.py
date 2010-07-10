@@ -35,8 +35,8 @@ class Paragraph(Widget):
         self.defil = 0
         self.state = False
         self.slider_y = 0
-        self.widgets = []
-        self.orientation = True
+        self.hover = False
+
         self.text = open(join(config.sys_data_dir, 'text', path), 'r').readlines()
         self.text_height = loaders.text("", fonts['mono']['normal']).get_height()
         self.init()
@@ -77,7 +77,7 @@ class Paragraph(Widget):
                           (self.pos_slider, 0))
 
         #the slider center
-        if self.state:
+        if self.hover:
             slider_center = "sliderh_center_hover.png"
         else:
             slider_center = "sliderh_center.png"
@@ -94,9 +94,11 @@ class Paragraph(Widget):
         x = event.dict['pos'][0]
         y = event.dict['pos'][1]
         if self.state == True:
+            print event.dict['pos']
             #relative position
-            x -= self.parentpos[0]-self.x
-            y -= self.parentpos[1] - self.y
+            x += - self.parentpos[0] - self.x
+            y += - self.parentpos[1] - self.y
+            print (x,y)
 
         if event.type == pygame.MOUSEBUTTONUP:
             self.state = False
@@ -112,28 +114,41 @@ class Paragraph(Widget):
                 if 0 <= self.defil + 5 <= 100:
                     self.defil += 5
 
-            #left click
-            if event.dict['button'] == 1:
-                if (self.pos_slider < event.dict['pos'][0] < self.width and
-                    self.slider_y < event.dict['pos'][1] < self.slider_y + self.height_slider):
-                    self.diff_pointer_slider = event.dict['pos'][1] - self.slider_y
+        #left click or mouse hover
+        if((event.type == pygame.MOUSEBUTTONDOWN and event.dict['button'] == 1) or
+            event.type == pygame.MOUSEMOTION):
+            if (self.pos_slider < event.dict['pos'][0] < self.width and
+                self.slider_y < event.dict['pos'][1] < self.slider_y + self.height_slider):
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    self.diff_pointer_slider = y - self.slider_y
                     self.state = True
-                    return False,self
-
-            self.state = False
-            self.update_defil()
-            return False,False
+                    print "nohover"
+                print "hover"
+                self.hover = True
+                #return False,self
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                self.state = False
+                #self.update_defil()
+                return False,False
+            elif not self.state:
+                self.hover = False
 
         #if the mouse move the slider
-        elif self.state and event.type == pygame.MOUSEMOTION:
+        if self.state and (event.type == pygame.MOUSEMOTION or
+                           event.type == pygame.MOUSEBUTTONDOWN):
             y -= self.diff_pointer_slider
-            if 0 < y < self.height:
-                self.defil = y * 100 / self.height
-            elif y < 0:
+            print y
+            if 0 <= y <= (self.height - self.height_slider):
+                self.defil = y * 100 / (self.height - self.height_slider)
+            elif y <= 0:
                 self.defil = 0
             else:
                 self.defil = 100
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                print self.defil
             self.update_defil();
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                print self.slider_y
             return False,self
 
         return False,False
