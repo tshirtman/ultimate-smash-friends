@@ -142,6 +142,8 @@ class AI(object):
                 self.walk = False
                 self.iam.walking_vector[0] = 0
         else:
+            print self.enemy_position[0][0] - self.iam.place[0] <= self.enemy_width
+            print self.enemy_position[0][0] - self.iam.place[0]
             self.walk = False
             self.iam.walking_vector[0] = 0
 
