@@ -34,6 +34,7 @@ class AI(object):
     position = []
     block = None
     wait_time = 0
+
     def update_enemy (self) :
         """
         This function update the information about different enemys
@@ -43,12 +44,14 @@ class AI(object):
         self.enemy_position = []
         self.enemy_distance = []
         self.enemy_distanceh = []
+        self.enemy_width = []
 
         for pl in [pl for pl in self.game.players if pl is not self.iam] :
             self.enemy_number.append (pl.num)
             self.enemy_position.append (pl.place)
             self.enemy_distance.append (self.iam.dist (pl))
             self.enemy_distanceh.append (pl.place[1]- self.iam.place[1])
+            self.enemy_width.append(pl.entity_skin.animation.hardshape[2])
 
     def calculate_height(self):
         self.global_height = False
@@ -68,19 +71,12 @@ class AI(object):
         self.choose_strategy()
 
     def choose_strategy(self):
-        """if(self.iam.place[0] <self.enemy_position[0][0]):
-            self.sequences_ai.append(("PL"+ str(self.num) + "_RIGHT",time.time()))
-            self.iam.walking_vector[0] = config.general['WALKSPEED']
-            self.iam.reversed = False
-        if(self.iam.place[0] >self.enemy_position[0][0]):
-            self.sequences_ai.append(("PL"+ str(self.num) + "_LEFT",time.time()))
-            self.iam.walking_vector[0] = config.general['WALKSPEED']
-            self.iam.reversed = True"""
         aix = self.iam.place[0]/8
         aiy = self.iam.place[1]/8
         enx = self.enemy_position[0][0]/8
         eny = self.enemy_position[0][1]/8
         self.block = None
+
         for block in self.game.level.map:
             #FIXME : Improve this code using hardshape
             if (block.right+80 > self.enemy_position[0][0] and
@@ -92,34 +88,15 @@ class AI(object):
                 break
             else:
                 pygame.draw.line(self.game.screen, pygame.Color("green"), (block.left/8,block.top/8), (block.right/8,block.top/8))
+
         if self.block is not None:
             self.goto()
-        """
-        pygame.draw.line(self.game.screen, pygame.Color("red"), (aix,aiy), (enx,eny))
-        pygame.draw.line(self.game.screen, pygame.Color("red"), (aix,aiy), (aix,aiy-self.jump_height/8))
-        pygame.draw.line(self.game.screen, pygame.Color("red"), (aix,aiy), (aix+config.general['WALKSPEED']/8,aiy))
 
-        #for pos in self.position:
-        #    pygame.draw.line(self.game.screen, pygame.Color("orange"), (pos[0]/8,pos[1]/8), (pos[0]/8,pos[1]/8))"""
-        #pygame.display.update()
-        if self.enemy_position[0][0] < self.iam.place[0] :
+        if self.enemy_position[0][0] - self.enemy_width[0] < self.iam.place[0] :
             self.iam.reversed = True
         else :
             self.iam.reversed = False
-        """if self.wait_for.split(":")[1] == "mesure2" :
-            if self.iam.place[1] - self.start_event  > self.max_height :
-                self.max_height = self.iam.place[1] - self.start_event
-            elif self.max_height_verif is 0:
-                print "max_height ="
-                self.max_height_verif = self.max_height
-                print self.max_height_verif
-        anim = self.iam.entity_skin.current_animation
-        #print anim
-        if anim == self.wait_for.split(":")[0] :
-            if self.wait_for.split(":")[1] == "mesure" :
-                self.sequences_ai.append(("PL"+ str(self.num+1) + "_UP",time.time()))
-                self.start_event = self.iam.place[1]
-                self.wait_for = "static:mesure2"""
+
         if self.enemy_distance[0] < 100 :
             self.sequences_ai.append(("PL"+ str(self.num+1) + "_B",time.time()))
 
@@ -129,16 +106,19 @@ class AI(object):
             self.block.left-80 < self.iam.place[0] and
             self.block.top-80 < self.iam.place[1] and
             self.block.top+80 > self.iam.place[1]):
+
             #self.game.notif.append([time.time(), "I am on your block"])
             self.iam.walking_vector[0] = config.general['WALKSPEED']
             self.walk = True
-            if self.enemy_position[0][0] < self.iam.place[0] - self.iam.rect[2]:
+
+            if self.enemy_position[0][0] - self.enemy_width[0] < self.iam.place[0] - self.iam.rect[2]:
                 #self.game.notif.append([time.time(), "I am on your right"])
                 self.sequences_ai.append(("PL"+ str(self.num+1) + "_LEFT",time.time()))
-            elif self.enemy_position[0][0] > self.iam.place[0] +\
-            self.iam.rect[2]:
+            elif(self.enemy_position[0][0] +  - self.enemy_width[0] >
+                 self.iam.place[0] + self.iam.rect[2]):
                 #self.game.notif.append([time.time(), "I am on your left"])
                 self.sequences_ai.append(("PL"+ str(self.num+1) + "_RIGHT",time.time()))
+
             #to jump over another block
             for block in self.game.level.map:
                 if ( ((block.right < self.iam.place[0] and
@@ -155,6 +135,7 @@ class AI(object):
                    #self.game.notif.append([time.time(), "I jump"])
                    self.sequences_ai.append(("PL"+ str(self.num+1) + "_UP",time.time()))
                    self.wait_time = time.time()
+
         elif self.wait_time +1.5 < time.time():
             self.walk = False
             self.iam.walking_vector[0] = 0
