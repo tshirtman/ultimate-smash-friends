@@ -28,175 +28,60 @@ config = loaders.get_config()
 
 from box import HBox
 
-class LongText(Widget):
-    """
-    This widget is used with the Paragraph widget, it support a long text
-    with break line whereas Label support only one line
-    """
 
-    def __init__(self, text, *args, **kwargs):
-        self.text = open(config.sys_data_dir + os.sep + 'text' + os.sep + text, 'r').readlines()
-        
+class Paragraph(Widget):
+
+    def __init__(self, path):
+        self.defil = 0
+        self.state = False
+        self.widgets = []
+        self.orientation = True
+        self.text = open(config.sys_data_dir + os.sep + 'text' + os.sep + path, 'r').readlines()
         self.text_height = loaders.text("", fonts['mono']['normal']).get_height()
-        
-        #the width of the biggest line of the file
-        self.max_width = 0
-        for i in range(0, len(self.text)):
-            self.text[i] = self.text[i].rstrip()
-            #print self.text[i]
-            if self.max_width < loaders.text(self.text[i], fonts['mono']['normal']).get_width():
-                self.max_width = loaders.text(self.text[i], fonts['mono']['normal']).get_width()
-        #print self.text
-        if "height" in kwargs:
-            self.height = optimize_size((0,kwargs['height']))[1]
-        else:
-            #if there isn't any specified height, we keep the height of all the lines
-            self.height = self.text_height * len(self.text)
-        if "width" in kwargs:
-            self.width = optimize_size((kwargs['width'],0))[0]
-        else:
-            self.width = self.max_width
-        if "margin" in kwargs:
-            self.txtmargin= kwargs['margin']
-
-        self.surface = pygame.Surface((self.width,self.height))
-        self.text_surface = pygame.Surface((self.max_width, self.text_height * len(self.text)))
-        
-        
-        self.text_surface.fill((0,0,0))
-        self.text_surface.set_colorkey((0,0,0))
-        self.surface.fill((0,0,0))
-        self.surface.set_colorkey((0,0,0))
-
-
-        #we draw a line under another to have a space between the lines
-        text_space = 0
-        for text in self.text:
-            self.text_surface.blit(loaders.text(text, fonts['mono']['normal']), (0,text_space))
-            #increase the space between the lines
-            text_space += self.text_height
-        self.surface.blit(self.text_surface, (0,0))
-        
-        #this variable will be used for scroll
-        self.scroll = 0
-        #self.background = loaders.image
+        self.init()
 
     def init(self):
-        pass
-
-    def draw(self):
-        #empty the surface:
-        self.surface.fill((0,0,0))
-        self.surface.set_colorkey((0,0,0))
-        #self.surface.blit(self.background, (0,0))
-        self.surface.blit(self.text_surface, (0,-self.scroll))
-        return self.surface
-
-    def handle_mouse(self,event):
-        if (event.type == pygame.MOUSEBUTTONUP or event.type == pygame.MOUSEBUTTONDOWN):
-            if event.dict['button'] == 4:
-                if self.scroll > 20:
-                    self.scroll -= 20
-                else:
-                    self.scroll = 0
-            elif event.dict['button'] == 5:
-                if self.scroll < (self.text_height * len(self.text)-self.width)-20:
-                    self.scroll += 20
-                else:
-                    self.scroll = self.text_height * len(self.text)-self.width
-                    
-            #update the scrollbar
-            self.slider.set_value(self.scroll*100/self.getTextHeight())
-        return (False,False)
-
-    def getTextHeight(self):
-        """
-        Get the height of all the text.
-        """
-        return self.text_height * len(self.text)-self.width
-
-
-class Paragraph(HBox):
-
-    def setText(self, widget):
-        self.widgets = []
-        self.add(widget)
-        self.add(SliderParagraph(''), size=(25,300))
-        self.widgets[0].slider = self.widgets[1]
-        self.widgets[1].slider = self.widgets[0]
+        self.surface = pygame.surface.Surface((self.width, self.height))
+        self.surface_text = pygame.surface.Surface((self.width, len(self.text)*self.text_height))
+        for i in range(len(self.text)):
+            self.surface_text.blit(loaders.text(self.text[i], fonts['mono']['normal']), (0, self.text_height*i  ))
 
     def draw(self):
         self.surface = self.surface.convert().convert_alpha()
-        for widget in self.widgets:
-            self.surface.blit(widget.draw(),(widget.x,widget.y))
+        self.surface.blit(self.surface_text, (0,-(self.defil*(self.surface_text.get_height()-self.height)/100)))
+        self.surface.blit(loaders.image(join(config.sys_data_dir, "gui", config.general['THEME'], "sliderh_background.png"), scale=(self.width/10, self.height))[0], (self.width/10*9, 0))
+        self.surface.blit(loaders.image(join(config.sys_data_dir, "gui", config.general['THEME'], "sliderh_background.png"), scale=(self.width/10, self.height/5))[0], (self.width/10*9, self.defil*(self.height - self.height/5)/100))
         return self.surface
-
-
-class SliderParagraph(Widget):
-
-    def __init__(self, text):
-        self.text = text
-        self.parentpos = (0,0)
-        self.extend = False
-        self.value = 0
-        self.orientation = False
-        self.init()
-        self.index = 0
-        self.state = False
-        self.height =0
-        self.width = 0
-
-    def init(self):
-        self.background= loaders.image(join(config.sys_data_dir, 'gui',
-                                            config.general['THEME'],
-                                            'sliderh_background.png'),
-                                       scale=(self.width, self.height))[0]
-        self.center= loaders.image(config.sys_data_dir + os.sep + 'gui' + os.sep + config.general['THEME'] + os.sep + 'sliderh_center.png',
-            scale=(self.width, 180*self.width/34))[0]
-        self.center_hover= loaders.image(config.sys_data_dir + os.sep + 'gui' + os.sep + config.general['THEME'] + os.sep + 'sliderh_center_hover.png',
-            scale=(self.width, 180*self.width/34))[0]
 
     def handle_mouse(self,event):
         if self.state == True:
-            event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0] - self.x,
-                                event.dict['pos'][1] - self.parentpos[1] - self.parentpos[1] - self.y)
+            #relative position
+            event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0]-self.x,
+                        event.dict['pos'][1] - self.parentpos[1] - self.y)
         x = event.dict['pos'][0]
         y = event.dict['pos'][1]
-        if self.state == True:
-            if event.type == pygame.MOUSEBUTTONUP:
-                self.state = False
-                return False, False
-            elif event.type == pygame.MOUSEMOTION and y -self.space >0 and y - self.space + 180*self.width/34 < self.height:
-                self.value = y - self.space
-            elif event.type == pygame.MOUSEMOTION  and y -self.space >0:
-                self.value = self.height-180*self.width/34
-            elif event.type == pygame.MOUSEMOTION  and y - self.space + 180*self.width/34 < self.height:
-                self.value = 0
-            
-            textheight = self.slider.getTextHeight()
-            scroll = self.get_value()
-            self.slider.scroll = textheight*scroll/100
-            return self, self
-        if 0 < x < self.width and 0 < y < self.height:
-            if self.value-self.height < y and y < self.value + self.height:
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    #to adjust the position of the slider
-                    self.space = y - self.value
-                    
+        if event.type == pygame.MOUSEBUTTONUP:
+            self.state = False
+            return self,False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.dict['button'] == 4:
+                if 0 <= self.defil - 5 <= 100:
+                    self.defil -= 5
+            if event.dict['button'] == 5:
+                if 0 <= self.defil + 5 <= 100:
+                    self.defil += 5
+            if event.dict['button'] == 1:
+                if self.width/10*9 < event.dict['pos'][0] < self.width and 0 < event.dict['pos'][1] < self.height:
                     self.state = True
-                    return self, self
-            return False, False
-        self.state = False
-        return (False,False)
-
-    def get_value(self):
-        return self.value*100/(self.height - 180*self.width/34)
-        
-    def set_value(self, value):
-        self.value = value*(self.height - 180*self.width/34)/100
-        
-    def draw(self):
-        if self.state:
-            return loaders.image_layer(self.background, self.center_hover, (0,self.value))
-        else:
-            return loaders.image_layer(self.background, self.center, (0,self.value))
+                    return False,self
+            self.state = False
+            return False,False
+        elif self.state and event.type == pygame.MOUSEMOTION:
+            if 0 < y < self.height:
+                self.defil = y * 100 / self.height
+            elif y < 0:
+                self.defil = 0
+            else:
+                self.defil = 100
+            return False,self
+        return False,False
