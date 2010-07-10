@@ -25,10 +25,13 @@ class resume(Screen):
     def init(self):
         self.add(widgets.VBox())
         self.widget.add(widgets.Button('Resume'), margin=50, margin_left=290)
+        self.widget.add(widgets.Button(_('Configure')), margin_left=290)
         self.widget.add(widgets.Button('Quit the game'), margin_left=290)
     def callback(self,action):
         if action.text == 'Resume':
             return True
         if action.text == 'Quit the game':
             return 'goto:main_screen'
+        if action.text == _('Configure'):
+            return 'goto:configure'
             
