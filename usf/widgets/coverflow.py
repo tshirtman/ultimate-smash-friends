@@ -1,5 +1,5 @@
 ################################################################################
-# copyright 2010 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
+# copyright 2010 Lucas Baudin <xapantu@gmail.com>                              #
 #                                                                              #
 # This file is part of Ultimate Smash Friends.                                 #
 #                                                                              #
@@ -17,21 +17,13 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
-from screen import Screen
-from usf import widgets
-import copy
 import pygame
-class resume(Screen):
-    def init(self):
-        self.add(widgets.VBox())
-        self.widget.add(widgets.Button('Resume'), margin=50, margin_left=290)
-        self.widget.add(widgets.Button(_('Configure')), margin_left=290)
-        self.widget.add(widgets.Button('Quit the game'), margin_left=290)
-    def callback(self,action):
-        if action.text == 'Resume':
-            return True
-        if action.text == 'Quit the game':
-            return 'goto:main_screen'
-        if action.text == _('Configure'):
-            return 'goto:configure'
-            
+import os
+
+from widget import Widget, get_scale, optimize_size
+from usf import loaders
+from usf.font import fonts
+config = loaders.get_config()
+
+class Coverflow(Widget):
+    pass

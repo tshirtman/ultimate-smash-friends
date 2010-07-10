@@ -22,12 +22,10 @@ from usf import widgets
 import copy
 class about(Screen):
     def init(self):
-        self.add(widgets.HBox())
-        vbox = widgets.VBox()
-        self.widget.add(vbox, margin=175)
-        lt = widgets.LongText('CREDITS', height=300, width=450)
-        par = widgets.Paragraph()
-        par.setText(lt)
-        vbox.add(par, margin=150)
+        self.add(widgets.VBox())
+        par = widgets.Paragraph('CREDITS')
+        self.widget.add(par, size=(490, 300), margin=10, margin_left=225)
+        self.widget.add(widgets.Button(_('Back')), size=(150, 40), margin_left=20, margin=20)
     def callback(self,action):
-        pass
+        if action.text == _('Back'):
+            return "goto:back"
