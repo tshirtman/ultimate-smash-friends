@@ -47,21 +47,21 @@ class Paragraph(Widget):
     def init(self):
         #the slider (at left)
         self.width_slider = self.width/20
-        self.height_slider = self.height/4
+        self.height_slider = self.height/2.5
         self.pos_slider = self.width/20*19
         
         #the main surface
         self.surface = pygame.surface.Surface((self.width, self.height))
         
         #create the surface whiwh will contain _all_ the text
-        self.surface_text = pygame.surface.Surface((self.width - self.width_slider,
+        self.surface_text = pygame.surface.Surface((self.width - self.width_slider*2,
                                                     len(self.text)*self.text_height))
         #draw all the text into the surface
         for i in range(len(self.text)):
             self.text[i] = self.text[i].replace('\n', "")
             self.surface_text.blit(loaders.text(self.text[i],
                                                 fonts['mono']['normal']),
-                                   (0, self.text_height*i  ))
+                                   (10, self.text_height*i  ))
 
     def draw(self):
         #clear the surface
@@ -96,7 +96,7 @@ class Paragraph(Widget):
                                              "gui",
                                              config.general['THEME'],
                                              "paragraph_foreground.png"),
-                                        scale=(self.width - self.width_slider, self.height))[0],
+                                        scale=(self.width - self.width_slider*2, self.height))[0],
                           (0, 0))
         return self.surface
 
