@@ -512,7 +512,7 @@ class Entity (object):
                     fonts['mono']['25']),
                     (
                      real_coords[0],
-                     real_coords[1]+self.entity_skin.animation.rect[3]
+                     real_coords[1]+self.entity_skin.animation.rect[3]/2
                     ),
                     )
 

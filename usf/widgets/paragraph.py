@@ -28,14 +28,17 @@ config = loaders.get_config()
 
 from box import HBox
 
+import time
 
 class Paragraph(Widget):
 
+    animation_speed = 0.022
     def __init__(self, path):
         self.defil = 0
         self.state = False
         self.slider_y = 0
         self.hover = False
+        self.auto_scroll = True
 
         self.text = open(join(config.sys_data_dir, 'text', path), 'r').readlines()
         self.text_height = loaders.text("", fonts['mono']['normal']).get_height()
@@ -47,22 +50,24 @@ class Paragraph(Widget):
     def init(self):
         #the slider (at left)
         self.width_slider = self.width/20
-        self.height_slider = self.height/4
+        self.height_slider = self.height/2.5
         self.pos_slider = self.width/20*19
         
         #the main surface
         self.surface = pygame.surface.Surface((self.width, self.height))
         
         #create the surface whiwh will contain _all_ the text
-        self.surface_text = pygame.surface.Surface((self.width - self.width_slider,
+        self.surface_text = pygame.surface.Surface((self.width - self.width_slider*2,
                                                     len(self.text)*self.text_height))
         #draw all the text into the surface
         for i in range(len(self.text)):
+            self.text[i] = self.text[i].replace('\n', "")
             self.surface_text.blit(loaders.text(self.text[i],
                                                 fonts['mono']['normal']),
-                                   (0, self.text_height*i  ))
+                                   (10, self.text_height*i  ))
 
     def draw(self):
+        #clear the surface
         self.surface = self.surface.convert().convert_alpha()
         #draw the text
         self.surface.blit(self.surface_text,
@@ -88,17 +93,29 @@ class Paragraph(Widget):
                                              slider_center),
                                         scale=(self.width_slider, self.height_slider))[0],
                           (self.pos_slider, self.slider_y))
+
+        #foreground
+        self.surface.blit(loaders.image(join(config.sys_data_dir,
+                                             "gui",
+                                             config.general['THEME'],
+                                             "paragraph_foreground.png"),
+                                        scale=(self.width - self.width_slider*2, self.height))[0],
+                          (0, 0))
+        self.start_anim()
         return self.surface
 
     def handle_mouse(self,event):
         x = event.dict['pos'][0]
         y = event.dict['pos'][1]
+        
+        #to disable auto scrolling
+        if event.type != pygame.MOUSEMOTION:
+            self.auto_scroll = False
+
         if self.state == True:
-            print event.dict['pos']
             #relative position
             x += - self.parentpos[0] - self.x
             y += - self.parentpos[1] - self.y
-            print (x,y)
 
         if event.type == pygame.MOUSEBUTTONUP:
             self.state = False
@@ -113,6 +130,7 @@ class Paragraph(Widget):
             if event.dict['button'] == 5:
                 if 0 <= self.defil + 5 <= 100:
                     self.defil += 5
+            self.update_defil()
 
         #left click or mouse hover
         if((event.type == pygame.MOUSEBUTTONDOWN and event.dict['button'] == 1) or
@@ -122,8 +140,6 @@ class Paragraph(Widget):
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.diff_pointer_slider = y - self.slider_y
                     self.state = True
-                    print "nohover"
-                print "hover"
                 self.hover = True
                 #return False,self
             elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -137,20 +153,20 @@ class Paragraph(Widget):
         if self.state and (event.type == pygame.MOUSEMOTION or
                            event.type == pygame.MOUSEBUTTONDOWN):
             y -= self.diff_pointer_slider
-            print y
             if 0 <= y <= (self.height - self.height_slider):
                 self.defil = y * 100 / (self.height - self.height_slider)
             elif y <= 0:
                 self.defil = 0
             else:
                 self.defil = 100
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                print self.defil
             self.update_defil();
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                print self.slider_y
             return False,self
 
         return False,False
+
+    def animation(self):
+        if self.defil < 100 and self.auto_scroll:
+            self.defil += 0.15
+            self.update_defil()
 
 

@@ -85,7 +85,7 @@ class Gui(object):
 
     def update(self, first, second, third):
         #FIXME : it sould be in main.pyw
-        time.sleep(1.00/float(config.general['MAX_FPS']))
+        time.sleep(1.00/float(config.general['GUI_FPS']))
         while(True):
             event = pygame.event.poll()
             if event.type == pygame.QUIT:
