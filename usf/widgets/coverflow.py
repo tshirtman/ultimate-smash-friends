@@ -134,7 +134,9 @@ class Coverflow(Widget):
                 if self.center_size[0] > self.sizey(137):
                     w = self.center_size[0] - self.sizex(10)
                     h = self.center_size[1] * w / self.center_size[0]
+                    self.advance += self.sizex(5)
                 else:
+                    print self.advance
                     self.anim_state = "slide"
                     w = self.sizey(137)
                     h = self.sizey(86)
@@ -143,12 +145,12 @@ class Coverflow(Widget):
                 self.load_main_frame()
             elif self.anim_state == "slide":
                 if self.sens:
-                    if self.advance < self.frame.get_width():
+                    if self.advance < self.frame.get_width() - self.sizex(30):
                         self.advance +=10
                     else:
                         self.anim_state = "change"
                 else:
-                    if self.advance > - self.frame.get_width():
+                    if self.advance > - (self.frame.get_width() - self.sizex(30)):
                         self.advance -=10
                     else:
                         self.anim_state = "change"
@@ -157,18 +159,19 @@ class Coverflow(Widget):
                     self.next()
                 else:
                     self.previous()
-                self.advance = 0
+                self.advance = 30
                 self.anim_state = "end"
             elif self.anim_state == "end":
                 if self.center_size[0] < self.sizey(195):
                     w = self.center_size[0] + self.sizex(10)
                     h = self.center_size[1] * w / self.center_size[0]
+                    self.advance -= self.sizex(5)
                 else:
-                    self.anim_state = "slide"
                     w = self.sizex(195)
                     h = self.sizey(120)
                     self.in_anim = False
                     self.state = ""
+                    self.advance = 0
                 self.posy_center = self.sizey(125) - h/2
                 self.center_size = (w, h)
                 self.load_main_frame()
