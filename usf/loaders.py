@@ -169,10 +169,10 @@ def image_layer(first, second, pos=(0,0)):
     return surface
 
 @memoize
-def text(text_send, font):
+def text(text_send, font, r=240, g=240, b=240, a=250):
     return font.render(text_send.decode('utf-8'),
             True,
-            pygame.color.Color("white"))
+            pygame.color.Color(r, g, b, a))
 @memoize
 def track(name):
     try:
