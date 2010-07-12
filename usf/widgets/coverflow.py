@@ -131,7 +131,7 @@ class Coverflow(Widget):
     def animation(self):
         if self.in_anim:
             if self.anim_state == "start":
-                if self.center_size[0] > self.sizey(137):
+                if self.center_size[0] - self.sizex(10) > self.sizey(137):
                     w = self.center_size[0] - self.sizex(10)
                     h = self.center_size[1] * w / self.center_size[0]
                     self.advance += self.sizex(5)
@@ -145,7 +145,7 @@ class Coverflow(Widget):
                 self.load_main_frame()
             elif self.anim_state == "slide":
                 if self.sens:
-                    if self.advance < self.frame.get_width() - self.sizex(30):
+                    if self.advance < self.frame.get_width() + self.sizex(30):
                         self.advance +=10
                     else:
                         self.anim_state = "change"

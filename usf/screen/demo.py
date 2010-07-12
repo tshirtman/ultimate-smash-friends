@@ -28,7 +28,7 @@ class demo(Screen):
     def init(self):
         self.add(widgets.VBox())
         basename = join(config.sys_data_dir, "test", "")
-        self.widget.add(widgets.Coverflow([["First",  basename + "1.png"],
+        self.widget.add(widgets.Coverflow([["First",  join(config.sys_data_dir, "items", "item-heal.png")],
                                            ["Second", basename + "2.png"],
                                            ["Third", basename + "3.png"],
                                            ["Fourth", basename + "4.png"],
