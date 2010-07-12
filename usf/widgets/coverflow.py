@@ -27,7 +27,8 @@ config = loaders.get_config()
 
 class Coverflow(Widget):
 
-    def __init__(self):
+    def __init__(self, values):
+        self.values = values
         self.init()
 
     def init(self):
@@ -42,7 +43,7 @@ class Coverflow(Widget):
                                                 "gui",
                                                 config.general['THEME'],
                                                 "coverflow",
-                                                "main_frame.png"),
+                                                "frame.png"),
                                         scale=(self.sizex(195), self.sizey(120)))[0]
 
         self.frame = loaders.image(os.path.join(config.sys_data_dir,
@@ -53,24 +54,43 @@ class Coverflow(Widget):
                                         scale=(self.sizex(137), self.sizey(86)))[0]
 
         self.surface = pygame.surface.Surface((self.width, self.height))
+        self.index = 0
+        self.previous()
 
     def draw(self):
         self.surface = self.surface.convert().convert_alpha()
-        self.surface.blit(self.main_frame, (self.width/2 - self.main_frame.get_width()/2, self.sizey(60)))
-        
-        #right frame
-        self.surface.blit(self.frame, (self.width/2 - self.main_frame.get_width()/2 - self.frame.get_width(), self.sizey(82)))
+        pos = self.width/2 - self.frame.get_width()/2
 
-        #left frame
-        self.surface.blit(self.frame, (self.width/2 + self.main_frame.get_width()/2, self.sizey(82)))
+        #main frame
+        self.surface.blit(self.main_frame, (pos, self.sizey(60)))
+        self.surface.blit(loaders.image(self.values[self.index][1],
+                                       scale=(self.main_frame.get_width(), self.main_frame.get_height())
+                                       )[0],
+                         (pos, self.sizey(60)))
+        pos += self.main_frame.get_width()
 
-        #right right frame
-        self.surface.blit(self.frame, (self.width/2 - self.main_frame.get_width()/2 - self.frame.get_width()*2, self.sizey(82)))
+        for i in range(self.index + 1, len(self.values)):
+            self.surface.blit(self.frame, (pos, self.sizey(82)))
+            self.surface.blit(loaders.image(self.values[i][1], scale=(self.frame.get_width(), self.frame.get_height()))[0],
+                 (pos, self.sizey(82)))
+            pos += self.frame.get_width()
+        #we need 3 image at right at least
+        if (self.index + 1) - len(self.values) < 3:
+            for i in range(0, 3 - (len(self.values) - (self.index + 1))):
+                self.surface.blit(self.frame, (pos, self.sizey(82)))
+                self.surface.blit(loaders.image(self.values[i][1], scale=(self.frame.get_width(), self.frame.get_height()))[0],
+                     (pos, self.sizey(82)))
+                pos += self.frame.get_width()
 
-        #left left frame
-        self.surface.blit(self.frame, (self.width/2 + self.main_frame.get_width()/2 + self.frame.get_width(), self.sizey(82)))
-        
-        self.surface.blit(self.foreground, (0, 0))
+        #at left now
+        pos = self.width/2 - self.frame.get_width()/2 - self.frame.get_width()*3
+        for i in range(self.index - 3, self.index):
+            self.surface.blit(self.frame, (pos, self.sizey(82)))
+            self.surface.blit(loaders.image(self.values[i][1], scale=(self.frame.get_width(), self.frame.get_height()))[0],
+                 (pos, self.sizey(82)))
+            pos += self.frame.get_width()
+
+        self.surface.blit(self.foreground, (0,0))
         return self.surface
     
     def sizex(self, x):
@@ -78,3 +98,14 @@ class Coverflow(Widget):
 
     def sizey(self, y):
         return y*self.height/340
+    
+    def next(self):
+        if self.index - 1 > 0:
+            self.index -= 1
+        else:
+            self.index = len(self.values) - 1
+    def previous(self):
+        if self.index + 1 < len(self.values) - 1:
+            self.index += 1
+        else:
+            self.index = 0

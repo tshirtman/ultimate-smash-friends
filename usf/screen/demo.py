@@ -19,9 +19,18 @@
 
 from screen import Screen
 from usf import widgets
+from usf import loaders
+from os.path import join
+config = loaders.get_config()
 
 class demo(Screen):
 
     def init(self):
         self.add(widgets.VBox())
-        self.widget.add(widgets.Coverflow(), size=(800, 340))
+        basename = join(config.sys_data_dir, "test", "")
+        self.widget.add(widgets.Coverflow([["First",  basename + "1.png"],
+                                           ["Second", basename + "2.png"],
+                                           ["Third", basename + "3.png"],
+                                           ["Fourth", basename + "4.png"],
+                                           ["Fifth", basename + "5.png"],
+                                           ["Sixth", basename + "6.png"]]), size=(800, 340))
