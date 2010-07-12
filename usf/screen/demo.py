@@ -1,5 +1,5 @@
 ################################################################################
-# copyright 2010 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
+# copyright 2009 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
 #                                                                              #
 # This file is part of Ultimate Smash Friends.                                 #
 #                                                                              #
@@ -19,28 +19,9 @@
 
 from screen import Screen
 from usf import widgets
-import copy
-import pygame
-class main_screen(Screen):
-    def init(self):
-        self.set_name("ultimate smash friends")
-        self.add(widgets.VBox())
-        vbox = widgets.VBox()
-        self.widget.add(widgets.Button(_('Local game')), margin=50, margin_left=290)
-        self.widget.add(widgets.Button(_('Configure')), margin_left=290)
-        self.widget.add(widgets.Button(_('Credits')), margin_left=290)
-        self.widget.add(widgets.Button(_('Demo')), margin_left=290)
-        self.widget.add(widgets.Button(_('Quit')), margin_left=290)
 
-    def callback(self,action):
-        if action.text == _('Local game'):
-            return 'goto:local_game'
-        if action.text == _('Configure'):
-            return 'goto:configure'
-        if action.text == _('Credits'):
-            return 'goto:about'
-        if action.text == _('Demo'):
-            return 'goto:demo'
-        if action.text == _('Quit'):
-            pygame.event.post( pygame.event.Event(pygame.QUIT) )
-            
+class demo(Screen):
+
+    def init(self):
+        self.add(widgets.VBox())
+        self.widget.add(widgets.Coverflow(), size=(800, 340))

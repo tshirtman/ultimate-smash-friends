@@ -26,4 +26,55 @@ from usf.font import fonts
 config = loaders.get_config()
 
 class Coverflow(Widget):
-    pass
+
+    def __init__(self):
+        self.init()
+
+    def init(self):
+        self.foreground = loaders.image(os.path.join(config.sys_data_dir,
+                                                "gui",
+                                                config.general['THEME'],
+                                                "coverflow",
+                                                "foreground.png"),
+                                        scale=(self.width, self.height))[0]
+
+        self.main_frame = loaders.image(os.path.join(config.sys_data_dir,
+                                                "gui",
+                                                config.general['THEME'],
+                                                "coverflow",
+                                                "main_frame.png"),
+                                        scale=(self.sizex(195), self.sizey(120)))[0]
+
+        self.frame = loaders.image(os.path.join(config.sys_data_dir,
+                                                "gui",
+                                                config.general['THEME'],
+                                                "coverflow",
+                                                "frame.png"),
+                                        scale=(self.sizex(137), self.sizey(86)))[0]
+
+        self.surface = pygame.surface.Surface((self.width, self.height))
+
+    def draw(self):
+        self.surface = self.surface.convert().convert_alpha()
+        self.surface.blit(self.main_frame, (self.width/2 - self.main_frame.get_width()/2, self.sizey(60)))
+        
+        #right frame
+        self.surface.blit(self.frame, (self.width/2 - self.main_frame.get_width()/2 - self.frame.get_width(), self.sizey(82)))
+
+        #left frame
+        self.surface.blit(self.frame, (self.width/2 + self.main_frame.get_width()/2, self.sizey(82)))
+
+        #right right frame
+        self.surface.blit(self.frame, (self.width/2 - self.main_frame.get_width()/2 - self.frame.get_width()*2, self.sizey(82)))
+
+        #left left frame
+        self.surface.blit(self.frame, (self.width/2 + self.main_frame.get_width()/2 + self.frame.get_width(), self.sizey(82)))
+        
+        self.surface.blit(self.foreground, (0, 0))
+        return self.surface
+    
+    def sizex(self, x):
+        return x*self.width/800
+
+    def sizey(self, y):
+        return y*self.height/340

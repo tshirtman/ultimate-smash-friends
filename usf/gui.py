@@ -54,7 +54,7 @@ class Gui(object):
         self.screens = {}
         self.screen_history = []
         #TODO : Use a config file
-        screens = ['main_screen', 'configure', 'about', 'local_game', 'resume', 'sound', 'screen_screen', 'keyboard']
+        screens = ['main_screen', 'configure', 'about', 'local_game', 'resume', 'sound', 'screen_screen', 'keyboard', "demo"]
         for name in screens:
             exec("import screen." + name)
             exec('scr = screen.' + name + '.' + name + "('"+ name +"',self.screen)")
