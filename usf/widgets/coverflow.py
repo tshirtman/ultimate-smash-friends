@@ -82,7 +82,8 @@ class Coverflow(Widget):
             self.draw_right()
             self.draw_left()
             reflection = pygame.transform.flip(self.surface, False, True)
-            reflection.set_alpha(20)
+            reflection.set_colorkey(pygame.color.Color("black"))
+            #reflection.set_alpha(20)
             self.surface.blit(reflection, (0, self.sizey(100)))
             self.surface.blit(self.text, (self.width/2 - self.text.get_width()/4, self.sizey(30)))
 
