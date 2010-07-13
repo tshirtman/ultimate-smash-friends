@@ -32,7 +32,9 @@ class Coverflow(Widget):
         self.values = values
         for value in self.values:
             value.append((0,0))
+            value.append(0)
         self.in_anim = False
+        self.anim_state = ""
         self.advance = 0
         self.init()
 
@@ -62,9 +64,10 @@ class Coverflow(Widget):
             img = loaders.image(value[1])[0]
             #keep ratio
             if img.get_height() > img.get_width():
-                value[2] = (img.get_height() * self.frame.get_width() / img.get_width(), self.frame.get_width())
+                value[2] = (self.frame.get_width() - self.sizex(25), img.get_height() * (self.frame.get_width()  - self.sizex(25))/ img.get_width())
             else:
-                value[2] = (self.frame.get_height(), img.get_width() * self.frame.get_height() / img.get_height())
+                value[2] = (img.get_width() * (self.frame.get_height()- self.sizex(25)) / img.get_height() , self.frame.get_height() - self.sizey(25))
+            value[3] = (self.frame.get_width()/2 - value[2][0]/2, self.frame.get_height()/2 - value[2][1]/2)
                 
 
     def draw(self):
@@ -76,20 +79,20 @@ class Coverflow(Widget):
         self.surface.blit(loaders.image(self.values[self.index][1],
                                        scale=self.center_image
                                        )[0],
-                         (pos, self.posy_center))
+                         (pos + self.center_image_indent[0], self.posy_center  + self.center_image_indent[1]))
         pos += self.main_frame.get_width()
 
         for i in range(self.index + 1, len(self.values)):
             self.surface.blit(self.frame, (pos, self.sizey(82)))
             self.surface.blit(loaders.image(self.values[i][1], scale=self.values[i][2])[0],
-                 (pos, self.sizey(82)))
+                 (pos + self.values[i][3][0], self.sizey(82) + self.values[i][3][1]))
             pos += self.frame.get_width()
         #we need 3 image at right at least
         if (self.index + 1) - len(self.values) < 3:
             for i in range(0, 3 - (len(self.values) - (self.index + 1))):
                 self.surface.blit(self.frame, (pos, self.sizey(82)))
                 self.surface.blit(loaders.image(self.values[i][1], scale=self.values[i][2])[0],
-                     (pos, self.sizey(82)))
+                     (pos + self.values[i][3][0], self.sizey(82) + self.values[i][3][1]))
                 pos += self.frame.get_width()
 
         #at left now
@@ -97,9 +100,12 @@ class Coverflow(Widget):
         for i in range(self.index - 3, self.index):
             self.surface.blit(self.frame, (pos, self.sizey(82)))
             self.surface.blit(loaders.image(self.values[i][1], scale=self.values[i][2])[0],
-                 (pos, self.sizey(82)))
+                 (pos + self.values[i][3][0], self.sizey(82) + self.values[i][3][1]))
             pos += self.frame.get_width()
 
+        reflection = pygame.transform.flip(self.surface, False, True)
+        reflection.set_alpha(20)
+        self.surface.blit(reflection, (0, self.sizey(100)))
         self.surface.blit(self.foreground, (0,0))
         self.start_anim()
         return self.surface
@@ -108,7 +114,7 @@ class Coverflow(Widget):
         return x*self.width/800
 
     def sizey(self, y):
-        return y*self.height/340
+        return y*self.height/275
     
     def next(self):
         if self.index - 1 >= 0:
@@ -186,6 +192,8 @@ class Coverflow(Widget):
                 self.posy_center = self.sizey(125) - h/2
                 self.center_size = (w, h)
                 self.load_main_frame()
+            elif self.anim_state == "":
+                self.in_anim = False
                 
             
     def load_main_frame(self):
@@ -199,6 +207,8 @@ class Coverflow(Widget):
         img = loaders.image(self.values[self.index][1])[0]
         #keep ratio
         if img.get_height() > img.get_width():
-            self.center_image = (img.get_height() * self.main_frame.get_width() / img.get_width(), self.main_frame.get_width())
+            self.center_image = (self.main_frame.get_width() - self.sizex(25), img.get_height() * (self.main_frame.get_width() - self.sizex(25)) / img.get_width())
         else:
-            self.center_image = (self.main_frame.get_height(), img.get_width() * self.main_frame.get_height() / img.get_height())
+            self.center_image = (img.get_width() * (self.main_frame.get_height() - self.sizey(25)) / img.get_height(), (self.main_frame.get_height()- self.sizey(25)))
+        self.center_image_indent = (self.main_frame.get_width()/2 - self.center_image[0]/2,
+                                    self.main_frame.get_height()/2 - self.center_image[1]/2)

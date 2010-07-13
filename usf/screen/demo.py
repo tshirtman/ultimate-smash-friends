@@ -33,4 +33,4 @@ class demo(Screen):
                                            ["Third", basename + "3.png"],
                                            ["Fourth", basename + "4.png"],
                                            ["Fifth", basename + "5.png"],
-                                           ["Sixth", basename + "6.png"]]), size=(800, 340))
+                                           ["Sixth", basename + "6.png"]]), size=(800, 275))
