@@ -10,7 +10,7 @@
 #                                                                              #
 # Ultimate Smash Friends is distributed in the hope that it will be useful, but#
 # WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or#
-# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for    #
+# FITNESS FOR A PARTICULAR PURself.posE.  See the GNU General Public License for    #
 # more details.                                                                #
 #                                                                              #
 # You should have received a copy of the GNU General Public License along with #
@@ -77,37 +77,10 @@ class Coverflow(Widget):
             size = self.surface.get_size()
             del self.surface
             self.surface = pygame.surface.Surface(size)
-            pos = self.width/2 - self.main_frame.get_width()/2 + self.advance
-
-            #main frame
-            self.surface.blit(self.main_frame, (pos, self.posy_center))
-            self.surface.blit(loaders.image(self.values[self.index][1],
-                                           scale=self.center_image
-                                           )[0],
-                             (pos + self.center_image_indent[0], self.posy_center  + self.center_image_indent[1]))
-            pos += self.main_frame.get_width()
-
-            for i in range(self.index + 1, len(self.values)):
-                self.surface.blit(self.frame, (pos, self.sizey(82)))
-                self.surface.blit(loaders.image(self.values[i][1], scale=self.values[i][2])[0],
-                     (pos + self.values[i][3][0], self.sizey(82) + self.values[i][3][1]))
-                pos += self.frame.get_width()
-            #we need 3 image at right at least
-            if (self.index + 1) - len(self.values) < 3:
-                for i in range(0, 3 - (len(self.values) - (self.index + 1))):
-                    self.surface.blit(self.frame, (pos, self.sizey(82)))
-                    self.surface.blit(loaders.image(self.values[i][1], scale=self.values[i][2])[0],
-                         (pos + self.values[i][3][0], self.sizey(82) + self.values[i][3][1]))
-                    pos += self.frame.get_width()
-
-            #at left now
-            pos = self.width/2 - self.main_frame.get_width()/2 - self.frame.get_width()*3 + self.advance
-            for i in range(self.index - 3, self.index):
-                self.surface.blit(self.frame, (pos, self.sizey(82)))
-                self.surface.blit(loaders.image(self.values[i][1], scale=self.values[i][2])[0],
-                     (pos + self.values[i][3][0], self.sizey(82) + self.values[i][3][1]))
-                pos += self.frame.get_width()
-
+            self.pos = self.width/2 - self.main_frame.get_width()/2 + self.advance
+            self.draw_main()
+            self.draw_right()
+            self.draw_left()
             reflection = pygame.transform.flip(self.surface, False, True)
             reflection.set_alpha(20)
             self.surface.blit(reflection, (0, self.sizey(100)))
@@ -118,6 +91,32 @@ class Coverflow(Widget):
             if self.in_anim:
                 self.start_anim()
         return self.surface
+
+    def draw_main(self):
+            #main frame
+            self.surface.blit(self.main_frame, (self.pos, self.posy_center))
+            self.surface.blit(loaders.image(self.values[self.index][1],
+                                           scale=self.center_image
+                                           )[0],
+                             (self.pos + self.center_image_indent[0], self.posy_center  + self.center_image_indent[1]))
+            self.pos += self.main_frame.get_width()
+
+    def draw_right(self):
+        
+        for i in range(self.index - len(self.values) + 1, self.index - len(self.values) + 4):
+            self.surface.blit(self.frame, (self.pos, self.sizey(82)))
+            self.surface.blit(loaders.image(self.values[i][1], scale=self.values[i][2])[0],
+                 (self.pos + self.values[i][3][0], self.sizey(82) + self.values[i][3][1]))
+            self.pos += self.frame.get_width()
+
+    def draw_left(self):
+            #at left now
+            self.pos = self.width/2 - self.main_frame.get_width()/2 - self.frame.get_width()*3 + self.advance
+            for i in range(self.index - 3, self.index):
+                self.surface.blit(self.frame, (self.pos, self.sizey(82)))
+                self.surface.blit(loaders.image(self.values[i][1], scale=self.values[i][2])[0],
+                     (self.pos + self.values[i][3][0], self.sizey(82) + self.values[i][3][1]))
+                self.pos += self.frame.get_width()
     
     def sizex(self, x):
         return x*self.width/800
