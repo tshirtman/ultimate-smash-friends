@@ -27,7 +27,7 @@ config = loaders.get_config()
 
 class Coverflow(Widget):
 
-    animation_speed = 1.0/50.0
+    animation_speed = 1.0/40.0
     def __init__(self, values):
         self.values = values
         for value in self.values:
@@ -154,7 +154,7 @@ class Coverflow(Widget):
         if self.in_anim:
             if self.anim_state == "start":
                 if self.center_size[0] - self.sizex(10) > self.sizey(137):
-                    w = self.center_size[0] - self.sizex(10)
+                    w = self.center_size[0] - self.sizex(30)
                     h = self.center_size[1] * w / self.center_size[0]
                     #self.advance += self.sizex(5)
                     self.text.set_alpha(self.text.get_alpha() - 50)
@@ -168,14 +168,14 @@ class Coverflow(Widget):
                 self.load_main_frame()
             elif self.anim_state == "slide":
                 if self.sens:
-                    if self.advance < self.frame.get_width():
-                        self.advance +=10
+                    if self.advance + 30 < self.frame.get_width():
+                        self.advance +=30
                     else:
                         self.advance = self.frame.get_width()
                         self.anim_state = "change"
                 else:
-                    if self.advance > - (self.frame.get_width()):
-                        self.advance -=10
+                    if self.advance - 30 > - (self.frame.get_width()):
+                        self.advance -=30
                     else:
                         self.advance = - self.frame.get_width()
                         self.anim_state = "change"
