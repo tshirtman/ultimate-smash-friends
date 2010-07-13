@@ -59,7 +59,7 @@ class Coverflow(Widget):
 
     def draw(self):
         self.surface = self.surface.convert().convert_alpha()
-        pos = self.width/2 - self.frame.get_width()/2 + self.advance
+        pos = self.width/2 - self.main_frame.get_width()/2 + self.advance
 
         #main frame
         self.surface.blit(self.main_frame, (pos, self.posy_center))
@@ -83,7 +83,7 @@ class Coverflow(Widget):
                 pos += self.frame.get_width()
 
         #at left now
-        pos = self.width/2 - self.frame.get_width()/2 - self.frame.get_width()*3 + self.advance
+        pos = self.width/2 - self.main_frame.get_width()/2 - self.frame.get_width()*3 + self.advance
         for i in range(self.index - 3, self.index):
             self.surface.blit(self.frame, (pos, self.sizey(82)))
             self.surface.blit(loaders.image(self.values[i][1], scale=(self.frame.get_width(), self.frame.get_height()))[0],
@@ -134,7 +134,7 @@ class Coverflow(Widget):
                 if self.center_size[0] - self.sizex(10) > self.sizey(137):
                     w = self.center_size[0] - self.sizex(10)
                     h = self.center_size[1] * w / self.center_size[0]
-                    self.advance += self.sizex(5)
+                    #self.advance += self.sizex(5)
                 else:
                     print self.advance
                     self.anim_state = "slide"
@@ -145,27 +145,29 @@ class Coverflow(Widget):
                 self.load_main_frame()
             elif self.anim_state == "slide":
                 if self.sens:
-                    if self.advance < self.frame.get_width() + self.sizex(30):
+                    if self.advance < self.frame.get_width():
                         self.advance +=10
                     else:
+                        self.advance = self.frame.get_width()
                         self.anim_state = "change"
                 else:
-                    if self.advance > - (self.frame.get_width() - self.sizex(30)):
+                    if self.advance > - (self.frame.get_width()):
                         self.advance -=10
                     else:
+                        self.advance = - self.frame.get_width()
                         self.anim_state = "change"
             elif self.anim_state == "change":
                 if self.sens:
                     self.next()
                 else:
                     self.previous()
-                self.advance = 30
+                self.advance = 0
                 self.anim_state = "end"
             elif self.anim_state == "end":
                 if self.center_size[0] < self.sizey(195):
                     w = self.center_size[0] + self.sizex(10)
                     h = self.center_size[1] * w / self.center_size[0]
-                    self.advance -= self.sizex(5)
+                    #self.advance -= self.sizex(5)
                 else:
                     w = self.sizex(195)
                     h = self.sizey(120)
