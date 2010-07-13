@@ -19,7 +19,7 @@
 
 import pygame
 import os
-
+import time
 from widget import Widget, get_scale, optimize_size
 from usf import loaders
 from usf.font import fonts
@@ -149,6 +149,7 @@ class Coverflow(Widget):
         return False, False
         
     def launch_anim(self, sens):
+        self.last_c_update = time.time()
         self.anim_state = "start"
         self.last_index = self.index
         self.in_anim = True
@@ -201,14 +202,15 @@ class Coverflow(Widget):
                     w = self.sizex(195)
                     h = self.sizey(120)
                     self.text.set_alpha(250)
-                    self.in_anim = False
-                    self.state = ""
+                    #self.in_anim = False
+                    self.anim_state = ""
                     self.advance = 0
                 self.posy_center = self.sizey(125) - h/2
                 self.center_size = (w, h)
                 self.load_main_frame()
                 self.need_update = True
             elif self.anim_state == "":
+                print time.time() - self.last_c_update
                 self.in_anim = False
                 self.need_update = True
                 
