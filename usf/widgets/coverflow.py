@@ -189,7 +189,7 @@ class Coverflow(Widget):
                 self.anim_state = "end"
             elif self.anim_state == "end":
                 if self.center_size[0] < self.sizey(195):
-                    w = self.center_size[0] + self.sizex(10)
+                    w = self.center_size[0] + self.sizex(20)
                     h = self.center_size[1] * w / self.center_size[0]
                     #self.advance -= self.sizex(5)
                     self.text.set_alpha(self.text.get_alpha() + 50)
