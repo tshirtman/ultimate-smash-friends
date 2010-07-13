@@ -58,6 +58,7 @@ class Coverflow(Widget):
 
         self.surface = pygame.surface.Surface((self.width, self.height))
         self.index = 0
+        self.text = self.get_text_transparent(self.values[self.index][0])
         self.previous()
         self.load_main_frame()
         for value in self.values:
@@ -106,6 +107,8 @@ class Coverflow(Widget):
         reflection = pygame.transform.flip(self.surface, False, True)
         reflection.set_alpha(20)
         self.surface.blit(reflection, (0, self.sizey(100)))
+        self.surface.blit(self.text, (self.width/2 - self.text.get_width()/4, self.sizey(30)))
+
         self.surface.blit(self.foreground, (0,0))
         self.start_anim()
         return self.surface
@@ -121,11 +124,14 @@ class Coverflow(Widget):
             self.index -= 1
         else:
             self.index = len(self.values) - 1
+        self.text = self.get_text_transparent(self.values[self.index][0])
+
     def previous(self):
         if self.index + 1 <= len(self.values) - 1:
             self.index += 1
         else:
             self.index = 0
+        self.text = self.get_text_transparent(self.values[self.index][0])
     
     def handle_mouse(self, event):
         if not self.in_anim:
@@ -151,8 +157,10 @@ class Coverflow(Widget):
                     w = self.center_size[0] - self.sizex(10)
                     h = self.center_size[1] * w / self.center_size[0]
                     #self.advance += self.sizex(5)
+                    self.text.set_alpha(self.text.get_alpha() - 50)
                 else:
                     self.anim_state = "slide"
+                    self.text.set_alpha(0)
                     w = self.sizey(137)
                     h = self.sizey(86)
                 self.posy_center = self.sizey(125) - h/2
@@ -176,6 +184,7 @@ class Coverflow(Widget):
                     self.next()
                 else:
                     self.previous()
+                self.text.set_alpha(0)
                 self.advance = 0
                 self.anim_state = "end"
             elif self.anim_state == "end":
@@ -183,9 +192,11 @@ class Coverflow(Widget):
                     w = self.center_size[0] + self.sizex(10)
                     h = self.center_size[1] * w / self.center_size[0]
                     #self.advance -= self.sizex(5)
+                    self.text.set_alpha(self.text.get_alpha() + 50)
                 else:
                     w = self.sizex(195)
                     h = self.sizey(120)
+                    self.text.set_alpha(250)
                     self.in_anim = False
                     self.state = ""
                     self.advance = 0
@@ -212,3 +223,10 @@ class Coverflow(Widget):
             self.center_image = (img.get_width() * (self.main_frame.get_height() - self.sizey(25)) / img.get_height(), (self.main_frame.get_height()- self.sizey(25)))
         self.center_image_indent = (self.main_frame.get_width()/2 - self.center_image[0]/2,
                                     self.main_frame.get_height()/2 - self.center_image[1]/2)
+    
+    def get_text_transparent(self, name):
+        text = loaders.text(name, fonts['mono']['10']).convert()
+        text.fill(pygame.color.Color("black"))
+        text.set_colorkey(pygame.color.Color("black"))
+        text.blit(loaders.text(name, fonts['mono']['22']), (0,0))
+        return text

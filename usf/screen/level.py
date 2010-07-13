@@ -21,16 +21,33 @@ from screen import Screen
 from usf import widgets
 from usf import loaders
 from os.path import join
+import os
 config = loaders.get_config()
 
-class demo(Screen):
+class level(Screen):
 
     def init(self):
         self.add(widgets.VBox())
         basename = join(config.sys_data_dir, "test", "")
-        self.widget.add(widgets.Coverflow([["First",  join(config.sys_data_dir, "items", "item-heal.png")],
-                                           ["Second", basename + "2.png"],
-                                           ["Third", basename + "3.png"],
-                                           ["Fourth", basename + "4.png"],
-                                           ["Fifth", basename + "5.png"],
-                                           ["Sixth", basename + "6.png"]]), size=(800, 275))
+        
+        coverflow_data = []
+        #create a level image for every directory in the level directory.
+        files = os.listdir(
+                os.path.join(
+                    config.sys_data_dir,
+                    'levels'
+                    )
+                )
+        files.sort()
+        for file in files:
+            try:
+                if '.xml' in file :
+                    coverflow_data.append([])
+                    coverflow_data[-1].append(file.replace(".xml",""))
+                    coverflow_data[-1].append(join(config.sys_data_dir, "gui", "image", file.replace(".xml","") + ".png"))
+            except :
+                #logging.debug(file+" is not a valid level.")
+                raise
+                pass
+
+        self.widget.add(widgets.Coverflow(coverflow_data), size=(800, 275))
