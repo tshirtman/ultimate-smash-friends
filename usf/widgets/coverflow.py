@@ -27,7 +27,7 @@ config = loaders.get_config()
 
 class Coverflow(Widget):
 
-    animation_speed = 1.0/40.0
+    animation_speed = 1.0/30.0
     def __init__(self, values):
         self.values = values
         for value in self.values:
@@ -69,48 +69,52 @@ class Coverflow(Widget):
             else:
                 value[2] = (img.get_width() * (self.frame.get_height()- self.sizex(25)) / img.get_height() , self.frame.get_height() - self.sizey(25))
             value[3] = (self.frame.get_width()/2 - value[2][0]/2, self.frame.get_height()/2 - value[2][1]/2)
+        self.need_update = True
                 
 
     def draw(self):
-        self.surface = self.surface.convert().convert_alpha()
-        pos = self.width/2 - self.main_frame.get_width()/2 + self.advance
+        if self.in_anim or self.need_update:
+            self.surface = self.surface.convert().convert_alpha()
+            pos = self.width/2 - self.main_frame.get_width()/2 + self.advance
 
-        #main frame
-        self.surface.blit(self.main_frame, (pos, self.posy_center))
-        self.surface.blit(loaders.image(self.values[self.index][1],
-                                       scale=self.center_image
-                                       )[0],
-                         (pos + self.center_image_indent[0], self.posy_center  + self.center_image_indent[1]))
-        pos += self.main_frame.get_width()
+            #main frame
+            self.surface.blit(self.main_frame, (pos, self.posy_center))
+            self.surface.blit(loaders.image(self.values[self.index][1],
+                                           scale=self.center_image
+                                           )[0],
+                             (pos + self.center_image_indent[0], self.posy_center  + self.center_image_indent[1]))
+            pos += self.main_frame.get_width()
 
-        for i in range(self.index + 1, len(self.values)):
-            self.surface.blit(self.frame, (pos, self.sizey(82)))
-            self.surface.blit(loaders.image(self.values[i][1], scale=self.values[i][2])[0],
-                 (pos + self.values[i][3][0], self.sizey(82) + self.values[i][3][1]))
-            pos += self.frame.get_width()
-        #we need 3 image at right at least
-        if (self.index + 1) - len(self.values) < 3:
-            for i in range(0, 3 - (len(self.values) - (self.index + 1))):
+            for i in range(self.index + 1, len(self.values)):
+                self.surface.blit(self.frame, (pos, self.sizey(82)))
+                self.surface.blit(loaders.image(self.values[i][1], scale=self.values[i][2])[0],
+                     (pos + self.values[i][3][0], self.sizey(82) + self.values[i][3][1]))
+                pos += self.frame.get_width()
+            #we need 3 image at right at least
+            if (self.index + 1) - len(self.values) < 3:
+                for i in range(0, 3 - (len(self.values) - (self.index + 1))):
+                    self.surface.blit(self.frame, (pos, self.sizey(82)))
+                    self.surface.blit(loaders.image(self.values[i][1], scale=self.values[i][2])[0],
+                         (pos + self.values[i][3][0], self.sizey(82) + self.values[i][3][1]))
+                    pos += self.frame.get_width()
+
+            #at left now
+            pos = self.width/2 - self.main_frame.get_width()/2 - self.frame.get_width()*3 + self.advance
+            for i in range(self.index - 3, self.index):
                 self.surface.blit(self.frame, (pos, self.sizey(82)))
                 self.surface.blit(loaders.image(self.values[i][1], scale=self.values[i][2])[0],
                      (pos + self.values[i][3][0], self.sizey(82) + self.values[i][3][1]))
                 pos += self.frame.get_width()
 
-        #at left now
-        pos = self.width/2 - self.main_frame.get_width()/2 - self.frame.get_width()*3 + self.advance
-        for i in range(self.index - 3, self.index):
-            self.surface.blit(self.frame, (pos, self.sizey(82)))
-            self.surface.blit(loaders.image(self.values[i][1], scale=self.values[i][2])[0],
-                 (pos + self.values[i][3][0], self.sizey(82) + self.values[i][3][1]))
-            pos += self.frame.get_width()
+            reflection = pygame.transform.flip(self.surface, False, True)
+            reflection.set_alpha(20)
+            self.surface.blit(reflection, (0, self.sizey(100)))
+            self.surface.blit(self.text, (self.width/2 - self.text.get_width()/4, self.sizey(30)))
 
-        reflection = pygame.transform.flip(self.surface, False, True)
-        reflection.set_alpha(20)
-        self.surface.blit(reflection, (0, self.sizey(100)))
-        self.surface.blit(self.text, (self.width/2 - self.text.get_width()/4, self.sizey(30)))
-
-        self.surface.blit(self.foreground, (0,0))
-        self.start_anim()
+            self.surface.blit(self.foreground, (0,0))
+            self.need_update = False
+            if self.in_anim:
+                self.start_anim()
         return self.surface
     
     def sizex(self, x):
@@ -168,14 +172,14 @@ class Coverflow(Widget):
                 self.load_main_frame()
             elif self.anim_state == "slide":
                 if self.sens:
-                    if self.advance + 30 < self.frame.get_width():
-                        self.advance +=30
+                    if self.advance + 40 < self.frame.get_width():
+                        self.advance +=40
                     else:
                         self.advance = self.frame.get_width()
                         self.anim_state = "change"
                 else:
-                    if self.advance - 30 > - (self.frame.get_width()):
-                        self.advance -=30
+                    if self.advance - 40 > - (self.frame.get_width()):
+                        self.advance -=40
                     else:
                         self.advance = - self.frame.get_width()
                         self.anim_state = "change"
@@ -189,7 +193,7 @@ class Coverflow(Widget):
                 self.anim_state = "end"
             elif self.anim_state == "end":
                 if self.center_size[0] < self.sizey(195):
-                    w = self.center_size[0] + self.sizex(20)
+                    w = self.center_size[0] + self.sizex(30)
                     h = self.center_size[1] * w / self.center_size[0]
                     #self.advance -= self.sizex(5)
                     self.text.set_alpha(self.text.get_alpha() + 50)
@@ -203,8 +207,10 @@ class Coverflow(Widget):
                 self.posy_center = self.sizey(125) - h/2
                 self.center_size = (w, h)
                 self.load_main_frame()
+                self.need_update = True
             elif self.anim_state == "":
                 self.in_anim = False
+                self.need_update = True
                 
             
     def load_main_frame(self):
