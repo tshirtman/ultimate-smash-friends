@@ -45,7 +45,7 @@ class KeyboardWidget(Widget):
             + "keyboard_hover.png", scale=(self.width,self.height))[0]
         text = loaders.text(self.letter, self.font)
         if text.get_width() > self.width:
-            text = pygame.transform.scale(text, (self.width, self.width*text.get_height()/text.get_width()))
+            text = pygame.transform.smoothscale(text, (self.width, self.width*text.get_height()/text.get_width()))
         posx = self.width/2 - text.get_width()/2
         posy = self.height/2 - text.get_height()/2
         self.surface = loaders.image_layer(self.background_hover,
