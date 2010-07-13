@@ -151,7 +151,6 @@ class Coverflow(Widget):
         return False, False
         
     def launch_anim(self, sens):
-        self.last_c_update = time.time()
         self.anim_state = "start"
         self.last_index = self.index
         self.in_anim = True
@@ -211,7 +210,6 @@ class Coverflow(Widget):
                 self.load_main_frame()
                 self.need_update = True
             elif self.anim_state == "":
-                print time.time() - self.last_c_update
                 self.in_anim = False
                 self.need_update = True
                 
