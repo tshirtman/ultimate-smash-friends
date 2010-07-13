@@ -96,7 +96,10 @@ class Widget (object):
         return self.widget_id
         
     def start_anim(self):
-        if(self.last_animation + self.animation_speed <= time.time()):
+        if self.animation_speed == True:
+            self.animation()
+
+        elif(self.last_animation + self.animation_speed <= time.time()):
             self.last_animation = time.time()
             self.animation()
         

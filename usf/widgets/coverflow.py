@@ -27,7 +27,7 @@ config = loaders.get_config()
 
 class Coverflow(Widget):
 
-    animation_speed = 1.0/30.0
+    animation_speed = True
     def __init__(self, values):
         self.values = values
         for value in self.values:
@@ -74,7 +74,9 @@ class Coverflow(Widget):
 
     def draw(self):
         if self.in_anim or self.need_update:
-            self.surface = self.surface.convert().convert_alpha()
+            size = self.surface.get_size()
+            del self.surface
+            self.surface = pygame.surface.Surface(size)
             pos = self.width/2 - self.main_frame.get_width()/2 + self.advance
 
             #main frame
