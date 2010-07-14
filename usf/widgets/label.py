@@ -77,6 +77,9 @@ class Label(Widget):
         self.init()
 
     def get_text(self):
+        """
+        Get the current text of the widget.
+        """
         return self.text
 
 

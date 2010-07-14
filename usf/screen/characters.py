@@ -103,9 +103,9 @@ class characters(Screen):
     def callback(self,action):
         if action in self.player_spinner :
             player_number = self.player_spinner.index(action)
-            self.players[player_number] = action.getIndex()
-            self.portraits[player_number].setImage(self.game_data['character_file'][action.getIndex()] + os.sep +
-                self.game_data['character_file'][action.getIndex()].replace('characters' + os.sep, "") + "-portrait.png")
+            self.players[player_number] = action.get_index()
+            self.portraits[player_number].setImage(self.game_data['character_file'][action.get_index()] + os.sep +
+                self.game_data['character_file'][action.get_index()].replace('characters' + os.sep, "") + "-portrait.png")
 
         if action.text == _("Next"):
             return 'goto:level'
