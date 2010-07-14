@@ -454,14 +454,6 @@ class Entity (object):
                     ,
                 pygame.Color(255, 255, 0, 127)
                 )
-            if debug_params.get('current_animation', False):
-                surface.blit(
-                    loaders.text(self.entity_skin.current_animation, fonts['mono']['5']),
-                    (
-                     real_coords[0],
-                     real_coords[1]
-                    )
-                    )
 
             skin_image = loaders.image(
                           self.entity_skin.animation.image,
@@ -512,8 +504,17 @@ class Entity (object):
                     )
                     )
                 '''
-
                 surface.blit(image[0], shield_coords)
+
+            if debug_params.get('current_animation', False):
+                surface.blit(
+                    loaders.text(self.entity_skin.current_animation,
+                    fonts['mono']['25']),
+                    (
+                     real_coords[0],
+                     real_coords[1]+self.entity_skin.animation.rect[3]/2
+                    ),
+                    )
 
 
     def update_physics(self, dt, game):

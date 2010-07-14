@@ -18,6 +18,8 @@
 ################################################################################
 
 import pygame
+import time
+
 from usf import loaders
 
 config = loaders.get_config()
@@ -36,7 +38,9 @@ class Widget (object):
     parentpos = (0,0)
     text = ""
     widget_id = ""
-
+    animation_speed = 1.0
+    last_animation = 0.0
+    
     #this function can be rewritten in the others widgets to have a custom argument lists
     def __init__(self):
         self.init()
@@ -90,6 +94,19 @@ class Widget (object):
 
     def get_id(self):
         return self.widget_id
+        
+    def start_anim(self):
+        if self.animation_speed == True:
+            self.animation()
+
+        elif(self.last_animation + self.animation_speed <= time.time()):
+            self.last_animation = time.time()
+            self.animation()
+        
+    def animation(self):
+        pass
+
+
 #these functions are used to handle the others screen resolutions
 #FIXME : maybe they could go to loaders ?
 width = config.general['WIDTH']

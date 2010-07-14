@@ -54,7 +54,7 @@ class Gui(object):
         self.screens = {}
         self.screen_history = []
         #TODO : Use a config file
-        screens = ['main_screen', 'configure', 'about', 'local_game', 'resume', 'sound', 'screen_screen', 'keyboard']
+        screens = ['main_screen', 'configure', 'about', 'local_game', 'resume', 'sound', 'screen_screen', 'keyboard', "level"]
         for name in screens:
             exec("import screen." + name)
             exec('scr = screen.' + name + '.' + name + "('"+ name +"',self.screen)")
@@ -85,7 +85,7 @@ class Gui(object):
 
     def update(self, first, second, third):
         #FIXME : it sould be in main.pyw
-        time.sleep(1.00/float(config.general['MAX_FPS']))
+        time.sleep(1.00/float(config.general['GUI_FPS']))
         while(True):
             event = pygame.event.poll()
             if event.type == pygame.QUIT:

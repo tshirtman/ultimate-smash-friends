@@ -1,5 +1,5 @@
 ################################################################################
-# copyright 2010 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
+# copyright 2009 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
 #                                                                              #
 # This file is part of Ultimate Smash Friends.                                 #
 #                                                                              #
@@ -19,28 +19,35 @@
 
 from screen import Screen
 from usf import widgets
-import copy
-import pygame
-class main_screen(Screen):
-    def init(self):
-        self.set_name("ultimate smash friends")
-        self.add(widgets.VBox())
-        vbox = widgets.VBox()
-        self.widget.add(widgets.Button(_('Local game')), margin=50, margin_left=290)
-        self.widget.add(widgets.Button(_('Configure')), margin_left=290)
-        self.widget.add(widgets.Button(_('Credits')), margin_left=290)
-        self.widget.add(widgets.Button(_('Level')), margin_left=290)
-        self.widget.add(widgets.Button(_('Quit')), margin_left=290)
+from usf import loaders
+from os.path import join
+import os
+config = loaders.get_config()
 
-    def callback(self,action):
-        if action.text == _('Local game'):
-            return 'goto:local_game'
-        if action.text == _('Configure'):
-            return 'goto:configure'
-        if action.text == _('Credits'):
-            return 'goto:about'
-        if action.text == _('Level'):
-            return 'goto:level'
-        if action.text == _('Quit'):
-            pygame.event.post( pygame.event.Event(pygame.QUIT) )
-            
+class level(Screen):
+
+    def init(self):
+        self.add(widgets.VBox())
+        basename = join(config.sys_data_dir, "test", "")
+        
+        coverflow_data = []
+        #create a level image for every directory in the level directory.
+        files = os.listdir(
+                os.path.join(
+                    config.sys_data_dir,
+                    'levels'
+                    )
+                )
+        files.sort()
+        for file in files:
+            try:
+                if '.xml' in file :
+                    coverflow_data.append([])
+                    coverflow_data[-1].append(file.replace(".xml",""))
+                    coverflow_data[-1].append(join(config.sys_data_dir, "gui", "image", file.replace(".xml","") + ".png"))
+            except :
+                #logging.debug(file+" is not a valid level.")
+                raise
+                pass
+
+        self.widget.add(widgets.Coverflow(coverflow_data), size=(800, 275))

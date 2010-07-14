@@ -28,14 +28,17 @@ config = loaders.get_config()
 
 from box import HBox
 
+import time
 
 class Paragraph(Widget):
 
+    animation_speed = 0.022
     def __init__(self, path):
         self.defil = 0
         self.state = False
         self.slider_y = 0
         self.hover = False
+        self.auto_scroll = True
 
         self.text = open(join(config.sys_data_dir, 'text', path), 'r').readlines()
         self.text_height = loaders.text("", fonts['mono']['normal']).get_height()
@@ -98,11 +101,17 @@ class Paragraph(Widget):
                                              "paragraph_foreground.png"),
                                         scale=(self.width - self.width_slider*2, self.height))[0],
                           (0, 0))
+        self.start_anim()
         return self.surface
 
     def handle_mouse(self,event):
         x = event.dict['pos'][0]
         y = event.dict['pos'][1]
+        
+        #to disable auto scrolling
+        if event.type != pygame.MOUSEMOTION:
+            self.auto_scroll = False
+
         if self.state == True:
             #relative position
             x += - self.parentpos[0] - self.x
@@ -154,5 +163,10 @@ class Paragraph(Widget):
             return False,self
 
         return False,False
+
+    def animation(self):
+        if self.defil < 100 and self.auto_scroll:
+            self.defil += 0.15
+            self.update_defil()
 
 
