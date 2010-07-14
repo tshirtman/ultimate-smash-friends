@@ -25,7 +25,7 @@ class about(Screen):
         self.add(widgets.VBox())
         par = widgets.Paragraph('CREDITS')
         self.widget.add(par, size=(490, 300), margin=10, margin_left=225)
-        self.widget.add(widgets.Button(_('Back')), size=(150, 40), margin_left=20, margin=20)
+        self.widget.add(widgets.Button(_('Back')), size=(150, 40), margin_left=20, margin=55)
     def callback(self,action):
         if action.text == _('Back'):
             return "goto:back"

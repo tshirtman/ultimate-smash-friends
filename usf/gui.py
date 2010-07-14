@@ -37,6 +37,7 @@ config = Config()
 #from game import Game
 #import controls
 import loaders
+from game import Game
 # Gui modules
 #from widgets import (HBox, VBox, Label)
 from skin import Skin
@@ -54,7 +55,7 @@ class Gui(object):
         self.screens = {}
         self.screen_history = []
         #TODO : Use a config file
-        screens = ['main_screen', 'configure', 'about', 'local_game', 'resume', 'sound', 'screen_screen', 'keyboard', "level"]
+        screens = ['main_screen', 'configure', 'about', 'local_game', 'resume', 'sound', 'screen_screen', 'keyboard', "level", "characters"]
         for name in screens:
             exec("import screen." + name)
             exec('scr = screen.' + name + '.' + name + "('"+ name +"',self.screen)")
@@ -125,8 +126,6 @@ class Gui(object):
         #if we have a game instance and the state is menu...
         if self.game != None and self.state != "ingame":
             self.state = "ingame"
-            self.screen_current = 'resume'
-            self.screen_history = []
             return True, self.game
             
         return False, None
@@ -192,13 +191,22 @@ class Gui(object):
                         self.screens[self.screen_current].widget.draw())
                     #self.update_youhere()
                     pygame.event.clear()
+            if reply.split(':')[0] == 'game':
+                if reply.split(':')[1] == "new":
+                    self.game = self.launch_game()
+                    self.screen_current = 'resume'
+                    self.screen_history = []
+                    self.state = "menu"
+                if reply.split(':')[1] == "continue":
+                    self.screen_current = 'resume'
+                    self.screen_history = []
+                    self.state = "menu"
+                if reply.split(':')[1] == "stop":
+                    self.state = "menu"
+                    self.game = None
+                    self.screen_current = 'main_screen'
+                    self.screen_history = []
 
-        elif reply != None:
-            if reply == True:
-                self.state = "menu"
-            else:
-                self.state = "menu"
-                self.game = reply
 
     def screen_back(self):
         if len(self.screen_history) > 0:
@@ -270,6 +278,33 @@ class Gui(object):
             self.screen.blit(back, (0, 0))
 
             pygame.display.update()
+
+    def launch_game(self):
+        """
+        Function to launch the game, use precedant user choices to initiate the
+        game with level and characters selected.
+
+        """
+        players = []
+        for i in range(0, len(self.screens["characters"].players)):
+            if self.screens["characters"].players[i] != 0:
+                file_name = self.screens["characters"].game_data['character_file'][self.screens["characters"].players[i]]
+                if self.screens["characters"].checkboxes_ai[i].get_value():
+                    file_name = file_name.replace("characters/", "characters/AI")
+                players.append(file_name)
+
+        if len(players) > 1:
+            game = Game(
+                self.screen,
+                self.screens["level"].get_level(),
+                players
+            )
+
+            #thread.start_new_thread(self.loading, ())
+            #self.goto_screen("ingame.usfgui", False)
+            #self.state="game"
+            return game
+
 
 def get_text_transparent(name):
     text = loaders.text(name, fonts['mono']['10']).convert()

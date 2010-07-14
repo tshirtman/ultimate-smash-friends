@@ -239,3 +239,6 @@ class Coverflow(Widget):
         text.set_colorkey(pygame.color.Color("black"))
         text.blit(loaders.text(name, fonts['mono']['22']), (0,0))
         return text
+    
+    def get_value(self):
+        return self.values[self.index][0]

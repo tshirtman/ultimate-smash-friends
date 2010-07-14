@@ -29,9 +29,9 @@ class resume(Screen):
         self.widget.add(widgets.Button('Quit the game'), margin_left=290)
     def callback(self,action):
         if action.text == 'Resume':
-            return True
+            return "game:continue"
         if action.text == 'Quit the game':
-            return 'goto:main_screen'
+            return 'game:stop'
         if action.text == _('Configure'):
             return 'goto:configure'
             
