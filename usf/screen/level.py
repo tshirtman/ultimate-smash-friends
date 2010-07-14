@@ -17,12 +17,17 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
+#standard imports
+from os.path import join
+import os
+
+#our modules
 from screen import Screen
 from usf import widgets
 from usf import loaders
-from os.path import join
-import os
+#config
 config = loaders.get_config()
+
 
 class level(Screen):
 
@@ -44,11 +49,15 @@ class level(Screen):
                 if '.xml' in file :
                     coverflow_data.append([])
                     coverflow_data[-1].append(file.replace(".xml",""))
-                    coverflow_data[-1].append(join(config.sys_data_dir, "gui", "image", file.replace(".xml","") + ".png"))
+                    coverflow_data[-1].append(join(config.sys_data_dir,
+                                                   "gui",
+                                                   "image",
+                                                   file.replace(".xml","") + ".png"))
             except :
                 #logging.debug(file+" is not a valid level.")
                 raise
                 pass
+
         self.coverflow = widgets.Coverflow(coverflow_data)
         self.widget.add(self.coverflow, size=(800, 275))
         self.widget.add(widgets.Button(_('Go !')), margin_left=290)

@@ -26,7 +26,7 @@ config = Config()
 class screen_screen(Screen):
     def init(self):
         self.add(widgets.VBox())
-        self.set_name("screen configuration")
+        self.set_name(_("screen configuration"))
         self.resolution = widgets.Spinner(['800x480', '1200x720', '1600x960'], 170)
         self.fullscreen = widgets.CheckBox()
         
@@ -35,15 +35,15 @@ class screen_screen(Screen):
         self.resolution.set_value(str(config.general['WIDTH']) + 'x'
                                     + str(config.general['HEIGHT']))
         
-        self.widget.add(widgets.Label('Screen resolution :'), margin=50, margin_left=290)
+        self.widget.add(widgets.Label(_('Screen resolution (requires a restart):')), margin=50, margin_left=290)
         self.widget.add(self.resolution, margin=10, margin_left=290)
         fullscreen_hbox = widgets.HBox()
         
-        fullscreen_hbox.add(widgets.Label('Fullscreen :'), margin=0)
+        fullscreen_hbox.add(widgets.Label(_('Fullscreen :')), margin=0)
         fullscreen_hbox.add(self.fullscreen, margin=50)
         self.widget.add(fullscreen_hbox, margin=25, margin_left=290)
         
-        self.widget.add(widgets.Label('Zoom sharpness :'), margin=25, margin_left=290)
+        self.widget.add(widgets.Label(_('Zoom sharpness :')), margin=25, margin_left=290)
         zoom = widgets.Slider('zoom_sharpness')
         self.widget.add(zoom, margin=10, margin_left=290, size=(220, 30))
         zoom.set_value(config.general['ZOOM_SHARPNESS']/5)

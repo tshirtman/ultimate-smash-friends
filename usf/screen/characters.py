@@ -26,6 +26,7 @@ import copy, os
 from usf.game import Game
 from os.path import join
 
+
 class characters(Screen):
     name_pl1 = 0
     name_pl2 = 0
