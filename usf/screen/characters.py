@@ -80,11 +80,11 @@ class characters(Screen):
             self.portraits.append(widgets.Image(self.game_data['character_file'][0]
                                  + os.sep
                                  + self.game_data['character_file'][0].replace('characters' + os.sep, "")
-                                 + "-portrait.png", size=(50,50)))
+                                 + "-portrait.png"))
             self.player_spinner.append(widgets.Spinner(self.character))
             self.player_vbox[i].add(widgets.Label("Player " + str(i+1)))
             self.player_vbox[i].add(self.player_spinner[-1])
-            self.player_vbox[i].add(self.portraits[-1], margin_left=50, margin=5)
+            self.player_vbox[i].add(self.portraits[-1], margin_left=50, margin=5, size=(50,50))
             hbox = widgets.HBox()
             #this is very bad for performance
             hbox.add(widgets.Label("AI :"))

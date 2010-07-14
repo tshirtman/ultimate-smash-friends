@@ -52,6 +52,9 @@ class Coverflow(Widget):
         self.init()
 
     def init(self):
+        """
+        This method load the coverflow elements: the frame, the image...
+        """
         self.center_size = (self.sizex(195), self.sizey(120))
         self.posy_center = self.sizey(60)
         self.foreground = loaders.image(os.path.join(config.sys_data_dir,
@@ -90,11 +93,11 @@ class Coverflow(Widget):
                         self.frame.get_height()/2 - value[2][1]/2)
         self.need_update = True
 
-    """
-    Draw the widget, the surface will be redrawed if the widget is animated.
-    You can force redrawing by set need_update to True.
-    """
     def draw(self):
+        """
+        Draw the widget, the surface will be redrawed if the widget is animated.
+        You can force redrawing by set need_update to True.
+        """
         if self.in_anim or self.need_update:
             size = self.surface.get_size()
             del self.surface
@@ -116,23 +119,23 @@ class Coverflow(Widget):
                 self.start_anim()
         return self.surface
 
-    """
-    Draw the selected image, it is bigger than the other and in the center
-    """
     def draw_main(self):
-            #main frame
-            self.surface.blit(self.main_frame, (self.pos, self.posy_center))
-            self.surface.blit(loaders.image(self.values[self.index][1],
-                                           scale=self.center_image
-                                           )[0],
-                             (self.pos + self.center_image_indent[0],
-                              self.posy_center  + self.center_image_indent[1]))
-            self.pos += self.main_frame.get_width()
+        """
+        Draw the selected image, it is bigger than the other and in the center
+        """
+        #main frame
+        self.surface.blit(self.main_frame, (self.pos, self.posy_center))
+        self.surface.blit(loaders.image(self.values[self.index][1],
+                                       scale=self.center_image
+                                       )[0],
+                         (self.pos + self.center_image_indent[0],
+                          self.posy_center  + self.center_image_indent[1]))
+        self.pos += self.main_frame.get_width()
 
-    """
-    Draw three small image at right.
-    """
     def draw_right(self):
+        """
+        Draw three small image at right.
+        """
         for i in range(self.index - len(self.values) + 1,
                        self.index - len(self.values) + 4):
             self.surface.blit(self.frame, (self.pos, self.sizey(82)))
@@ -140,42 +143,42 @@ class Coverflow(Widget):
                  (self.pos + self.values[i][3][0], self.sizey(82) + self.values[i][3][1]))
             self.pos += self.frame.get_width()
 
-    """
-    Draw three small image at left.
-    """
     def draw_left(self):
-            #at left now
-            self.pos = self.width/2 - self.main_frame.get_width()/2 - self.frame.get_width()*3 + self.advance
-            for i in range(self.index - 3, self.index):
-                self.surface.blit(self.frame, (self.pos, self.sizey(82)))
-                self.surface.blit(loaders.image(self.values[i][1], scale=self.values[i][2])[0],
-                     (self.pos + self.values[i][3][0], self.sizey(82) + self.values[i][3][1]))
-                self.pos += self.frame.get_width()
+        """
+        Draw three small image at left.
+        """
+        #at left now
+        self.pos = self.width/2 - self.main_frame.get_width()/2 - self.frame.get_width()*3 + self.advance
+        for i in range(self.index - 3, self.index):
+            self.surface.blit(self.frame, (self.pos, self.sizey(82)))
+            self.surface.blit(loaders.image(self.values[i][1], scale=self.values[i][2])[0],
+                 (self.pos + self.values[i][3][0], self.sizey(82) + self.values[i][3][1]))
+            self.pos += self.frame.get_width()
 
-    """
-    Select the next item.
-    """
     def next(self):
+        """
+        Select the next item.
+        """
         if self.index - 1 >= 0:
             self.index -= 1
         else:
             self.index = len(self.values) - 1
         self.text = self.get_text_transparent(self.values[self.index][0])
 
-    """
-    Select the previous item.
-    """
     def previous(self):
+        """
+        Select the previous item.
+        """
         if self.index + 1 <= len(self.values) - 1:
             self.index += 1
         else:
             self.index = 0
         self.text = self.get_text_transparent(self.values[self.index][0])
 
-    """
-    This function handle all mouse events which are on the widget.
-    """
     def handle_mouse(self, event):
+        """
+        This function handle all mouse events which are on the widget.
+        """
         if not self.in_anim:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x = event.dict['pos'][0]
@@ -285,17 +288,17 @@ class Coverflow(Widget):
     
     def get_value(self):
         return self.values[self.index][0]
-        
-    """
-    This method is used to get the real size of an element. All size in the code above
-    are for a widget size = 800*275. So, if the size is different, this function modify it.
-    This function is used for the x axis. Use sizey for y axis.
-    """
+
     def sizex(self, x):
+        """
+        This method is used to get the real size of an element. All size in the code above
+        are for a widget size = 800*275. So, if the size is different, this function modify it.
+        This function is used for the x axis. Use sizey for y axis.
+        """
         return x*self.width/800
 
-    """
-    Same as sizex, but for the y axis.
-    """
     def sizey(self, y):
+        """
+        Same as sizex, but for the y axis.
+        """
         return y*self.height/275

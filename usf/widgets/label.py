@@ -32,25 +32,31 @@ class Label(Widget):
     """
 
     def init(self):
-        pass
+        self.surface_text  = fonts['sans']['normal'].render(
+            _(self.text),
+            True,
+            pygame.color.Color("white")
+            )
+        if self.align == "center":
+            self.indent = self.width/2-self.surface_text.get_width()/2
+        try:
+            self.background = loaders.image(join(config.sys_data_dir, self.background_path),
+                scale=(self.width,self.height))[0]
+            self.surface = loaders.image_layer(self.background,self.surface_text,(self.txtmargin+self.indent,0))
+        except AttributeError:
+            self.surface = self.surface_text
 
     def __init__(self, text, *args, **kwargs):
         self.text = text
         self.indent = 0
         self.state = False
         self.txtmargin = 0
-        #self.init()
         self.align = ""
         self.surface_text  = loaders.text(self.text, fonts['sans']['25'])
 
-        if "height" in kwargs:
-            self.height = kwargs['height']
-        else:
-            self.height = self.surface_text.get_height()
-        if "width" in kwargs:
-            self.width = kwargs['width']
-        else:
-            self.width = self.surface_text.get_width()
+        self.height = self.surface_text.get_height()
+        self.width = self.surface_text.get_width()
+
         if "margin" in kwargs:
             self.txtmargin= kwargs['margin']
         else:
@@ -59,31 +65,18 @@ class Label(Widget):
             self.align = "center"
             self.indent = self.width/2-self.surface_text.get_width()/2
         if "background" in kwargs:
-            self.background = loaders.image(join(config.sys_data_dir, kwargs['background']),
-                scale=(self.width,self.height))[0]
-            self.surface = loaders.image_layer(self.background,self.surface_text,(self.txtmargin+self.indent,0))
-        else:
-            self.background = None
-            self.surface = self.surface_text
+            self.background_path = kwargs['background']
+            
+        self.init()
 
-    def draw(self):
-        return self.surface
-
-    def setText(self,text):
+    def set_text(self,text):
         """
-        Change the text of the widget
+        Change the text of the widget.
         """
         self.text = text
-        self.surface_text  = fonts['sans']['normal'].render(
-            _(self.text),
-            True,
-            pygame.color.Color("white")
-            )
-        if self.align == "center":
-            self.indent = self.width/2-self.surface_text.get_width()/2
-        if self.background != None:
-            self.surface = loaders.image_layer(self.background,self.surface_text,(self.txtmargin+self.indent,0))
-        else:
-            self.surface = self.surface_text
+        self.init()
+
+    def get_text(self):
+        return self.text
 
 

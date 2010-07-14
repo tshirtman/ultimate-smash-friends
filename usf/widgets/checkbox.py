@@ -17,26 +17,26 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
+#standards imports
 import pygame
 import os
+from os.path import join
 
+#our modules
 from widget import Widget, get_scale, optimize_size
 from usf import loaders
 from usf.font import fonts
+
 config = loaders.get_config()
 
 
 class CheckBox(Widget):
+    """
+    A checkbox widget.
+    """
 
     def __init__(self):
-        #save the path to scale it later -> maybe it is bad 
-        #for performance, FIXME
-        self.path = 'gui'  + os.sep + config.general['THEME'] \
-                     + os.sep + 'checkbox_empty.png' 
-        self.path_checked = 'gui'  + os.sep + config.general['THEME'] \
-                     + os.sep + 'checkbox_full.png'
-        self.init()
-        self.set_size((optimize_size((25,25))[0], optimize_size((25,25))[1]))
+        self.set_size(optimize_size((25,25)))
         self.state = False
         self.checked = False
 
@@ -44,15 +44,22 @@ class CheckBox(Widget):
         pass
         
     def set_size(self, (w,h)):
+        """
+        Set the size of the widget.
+        """
         self.height = h
         self.width = w
-        self.surface = loaders.image(config.sys_data_dir +  os.sep + self.path,
-                    scale=(w, h)
-                    )[0]
-        self.surface_checked = loaders.image(config.sys_data_dir + os.sep +
-                    self.path_checked,
-                    scale=(w, h)
-                    )[0]
+        self.surface = loaders.image(join(config.sys_data_dir,
+                                                  'gui',
+                                                  config.general['THEME'],
+                                                  'checkbox_empty.png'),
+                                             scale=(w, h))[0]
+
+        self.surface_checked = loaders.image(join(config.sys_data_dir,
+                                                  'gui',
+                                                  config.general['THEME'],
+                                                  'checkbox_full.png'),
+                                             scale=(w, h))[0]
 
     def handle_mouse(self,event):
         if self.state == True:
@@ -71,12 +78,23 @@ class CheckBox(Widget):
         return False,False
 
     def draw(self):
+        """
+        Draw the checkbox.
+        """
         if self.checked:
             return self.surface_checked
         else:
             return self.surface
 
     def get_value(self):
+        """
+        Get the value of the checkbox, it returns a boolean.
+        (true of checked and false if unchecked)
+        """
         return self.checked
+
     def set_value(self, value):
+        """
+        Set the value of the checkbox, it must be a boolean.
+        """
         self.checked = value

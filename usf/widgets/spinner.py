@@ -54,10 +54,8 @@ class Spinner(HBox):
         self.add(self.left_arrow, margin = 0)
         self.center = Label(self.values[self.index],
             background="gui" + os.sep + config.general['THEME'] + os.sep + "spinner_center.png",
-            height=optimize_size((self.center_width,30))[1],
-            width=optimize_size((self.center_width,30))[0],
             align="center")
-        self.add(self.center, margin = 0)
+        self.add(self.center, margin = 0, size=optimize_size((self.center_width,30)))
         self.right_arrow = ImageButton("gui" + os.sep + config.general['THEME'] + os.sep + "spinner_right.png",
             "gui" + os.sep + config.general['THEME'] + os.sep + "spinner_right_hover.png")
         self.right_arrow.set_size(optimize_size((25,30)))
@@ -89,7 +87,7 @@ class Spinner(HBox):
                                 if self.index < 0:
                                     self.index =len(self.values)-1
                             self.text = self.values[self.index]
-                            self.center.setText(self.text)
+                            self.center.set_text(self.text)
                             return (self,False)
             return False, self
         self.state = False
@@ -104,7 +102,7 @@ class Spinner(HBox):
     def setIndex(self, index):
         self.index=index
         self.text = self.values[self.index]
-        self.center.setText(self.text)
+        self.center.set_text(self.text)
 
     def set_value(self, value):
         try:

@@ -102,7 +102,7 @@ class local_game(Screen):
             self.portraits.append(widgets.Image(self.game_data['character_file'][0]
                                  + os.sep
                                  + self.game_data['character_file'][0].replace('characters' + os.sep, "")
-                                 + "-portrait.png", size=(50,50)))
+                                 + "-portrait.png"))
             self.player_spinner.append(widgets.Spinner(self.character))
             #FIXME : it is very dirty
             if len(self.player_vbox[i/2].widgets) > 0:
@@ -110,7 +110,7 @@ class local_game(Screen):
             else:
                 self.player_vbox[i/2].add(widgets.Label("Player " + str(i+1)), margin=80)
             self.player_vbox[i/2].add(self.player_spinner[-1])
-            self.player_vbox[i/2].add(self.portraits[-1], margin_left=50, margin=5)
+            self.player_vbox[i/2].add(self.portraits[-1], margin_left=50, margin=5, size=(50,50))
             hbox = widgets.HBox()
             #this is very bad for performance
             hbox.add(widgets.Label("AI :"))
