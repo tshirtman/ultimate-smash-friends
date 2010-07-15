@@ -69,19 +69,7 @@ class Gui(object):
         self.image = 0
         self.focus = False
         self.state = "menu"
-        self.background_scale = (config.general['WIDTH'],
-            config.general['HEIGHT'])
         self.cursor = loaders.image(config.sys_data_dir + os.sep + 'cursor.png')[0]
-        self.background = loaders.image(
-                        config.sys_data_dir+
-                        os.sep+
-                        "gui"+
-                        os.sep +
-                        config.general['THEME']+
-                        os.sep+
-                        self.skin.background[0],
-                        scale=self.background_scale
-                        )[0]
         self.update_youhere()
 
     def update(self, first, second, third):
@@ -102,16 +90,7 @@ class Gui(object):
             else:
                 break
         #draw background
-        self.screen.blit(loaders.image(
-            config.sys_data_dir+
-            os.sep+
-            "gui"+
-            os.sep +
-            config.general['THEME']+
-            os.sep+
-            self.skin.background[0],
-            scale=self.background_scale
-            )[0], (0,0))
+        self.screen.blit(self.skin.get_background(), (0,0))
             
         self.screens[self.screen_current].update()
         
@@ -251,11 +230,11 @@ class Gui(object):
     def transition_fading(self, old_screen, old_surface, new_screen, new_surface):
 
         text = get_text_transparent(old_screen.name)
-        back = self.background.copy().convert()
+        back = self.skin.get_background().convert()
 
         for i in range(0, 5):
             time.sleep(1.00/float(config.general['MAX_FPS']))
-            self.screen.blit(self.background, (0,0))
+            self.screen.blit(self.skin.get_background(), (0,0))
             text.set_alpha( (i*(- 1) + 5) *250/5)
             self.screen.blit(text, (old_screen.indent_title,10))
             
@@ -269,7 +248,7 @@ class Gui(object):
 
         for i in range(0, 5):
             time.sleep(1.00/float(config.general['MAX_FPS']))
-            self.screen.blit(self.background, (0,0))
+            self.screen.blit(self.skin.get_background(), (0,0))
             text.set_alpha(i*250/5)
             self.screen.blit(text, (self.screens[self.screen_current].indent_title,10))
             
