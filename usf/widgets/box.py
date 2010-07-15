@@ -27,7 +27,7 @@ config = loaders.get_config()
 
 class Container(Widget):
     """
-    This widget is never used directly, it is used to be a base for the HBox and VBox widget
+    This widget is never used directly, it is used to be a base for the HBox and VBox widget.
     """
 
     def update_size(self):
@@ -108,11 +108,26 @@ class Container(Widget):
             widget.set_align(kwargs['align'])
         self.update_size()
         self.update_pos()
+
+    def handle_mouse(self,event):
+        """
+        This function is used for mouse events.
+        """
+        #print event.dict['pos']
+        x = event.dict['pos'][0]
+        y = event.dict['pos'][1]
+
+        for widget in self.widgets:
+            if widget.x < x < widget.x+widget.width and widget.y < y < widget.y+widget.height:
+                event.dict['pos'] = (x-widget.x, y-widget.y)
+                return widget.handle_mouse(event)
+        
+        return (False,False)
     
 
 class HBox(Container):
     """
-    A widget which is able to contain others widgets and align them horizontally
+    A widget which is able to contain others widgets and align them horizontally.
     """
 
     def __init__(self):
@@ -123,7 +138,7 @@ class HBox(Container):
 
 class VBox(Container):
     """
-    A widget which is able to contain others widgets and align them vertically
+    A widget which is able to contain others widgets and align them vertically.
     """
 
     def __init__(self):

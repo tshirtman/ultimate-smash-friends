@@ -41,41 +41,39 @@ class Widget (object):
     animation_speed = 1.0
     last_animation = 0.0
     
-    #this function can be rewritten in the others widgets to have a custom argument lists
     def __init__(self):
+        """
+        This function can be rewritten in the others widgets to
+        have a custom argument lists.
+        """
         self.init()
-    #this function can be rewritten in the others widget if the surface isn't empty
 
     def init(self):
+        """
+        This function can be rewritten in the others widget if the surface
+        isn't empty.
+        """
         self.surface = pygame.Surface((self.width,self.height))
 
     def draw(self):
-        #empty the surface
-        self.surface = self.surface.convert().convert_alpha()
+        """
+        Return the widget surface. This fonction is often overrided.
+        """
         return self.surface
-    #this function is used to resize a widget
 
     def set_size(self, (w,h)):
+        """    
+        This function is used to resize a widget.
+        """
         self.height = h
         self.width = w
         self.init()
-    #this function is used for mosue events
 
     def handle_mouse(self,event):
-        try:
-            self.widgets
-        except:
-            self.widgets = []
-        #print event.dict['pos']
-        x = event.dict['pos'][0]
-        y = event.dict['pos'][1]
-
-        for widget in self.widgets:
-            if widget.x < x < widget.x+widget.width and widget.y < y < widget.y+widget.height:
-                event.dict['pos'] = (x-widget.x, y-widget.y)
-                return widget.handle_mouse(event)
-        
-        return (False,False)
+        """
+        This function is used for mouse events.
+        """
+        return False,False
 
     def set_align(self,align):
         pass

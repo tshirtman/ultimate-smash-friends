@@ -24,9 +24,10 @@ config = Config()
 from usf import widgets, entity_skin
 import copy, os
 from usf.game import Game
+from os.path import join
 
 
-class local_game(Screen):
+class characters(Screen):
     name_pl1 = 0
     name_pl2 = 0
     name_pl3 = 0
@@ -41,7 +42,6 @@ class local_game(Screen):
         self.game_data['character_file'].append("characters" + os.sep + 'none')
         self.character = []
         self.character.append("None")
-        self.game_data['level_name'] = []
         #create a character for every directory in the characters directory.
         files = os.listdir(
                 os.path.join(
@@ -53,120 +53,63 @@ class local_game(Screen):
         for file in files:
             try:
                 if file != "none":
-                    self.game_data['character_file'].append("characters" + os.sep + file)
+                    self.game_data['character_file'].append(join("characters", file))
                     self.character.append(entity_skin.Entity_skin(
-                                os.path.join(
+                                    join(
                                     'characters',
                                     file
                                     )
                                 ).name)
-                #logging.debug( "character "+file+" created.")
             except OSError, e:
                 if e.errno is 20:
                     pass
                 else:
                     raise
             except IOError, e:
-                #logging.debug(file+" is not a valid character directory.", 3)
-                #raise
-                #logging.debug(e)
                 pass
-        #create a level image for every directory in the level directory.
-        files = os.listdir(
-                os.path.join(
-                    config.sys_data_dir,
-                    'levels'
-                    )
-                )
-        files.sort()
-        for file in files:
-            try:
-                if '.xml' in file :
-                    self.game_data['level_name'].append(file.replace(".xml",""))
-            except :
-                #logging.debug(file+" is not a valid level.")
-                raise
-                pass
-        
-        self.add(widgets.HBox())
-            
-        self.w_launch = widgets.Button("Launch the game")
+
+        self.add(widgets.VBox())
         
         self.checkboxes_ai = []
         self.portraits = []
         self.player_spinner = []
-        self.player_vbox = [widgets.VBox(), widgets.VBox()]
+        self.player_vbox = [widgets.VBox(), widgets.VBox(), widgets.VBox(), widgets.VBox()]
 
         for i in range(0,4):
             self.checkboxes_ai.append(widgets.CheckBox())
             self.portraits.append(widgets.Image(self.game_data['character_file'][0]
                                  + os.sep
                                  + self.game_data['character_file'][0].replace('characters' + os.sep, "")
-                                 + "-portrait.png", size=(50,50)))
+                                 + "-portrait.png"))
             self.player_spinner.append(widgets.Spinner(self.character))
-            #FIXME : it is very dirty
-            if len(self.player_vbox[i/2].widgets) > 0:
-                self.player_vbox[i/2].add(widgets.Label("Player " + str(i+1)), margin=20)
-            else:
-                self.player_vbox[i/2].add(widgets.Label("Player " + str(i+1)), margin=80)
-            self.player_vbox[i/2].add(self.player_spinner[-1])
-            self.player_vbox[i/2].add(self.portraits[-1], margin_left=50, margin=5)
+            self.player_vbox[i].add(widgets.Label("Player " + str(i+1)))
+            self.player_vbox[i].add(self.player_spinner[-1])
+            self.player_vbox[i].add(self.portraits[-1], margin_left=50, margin=5, size=(50,50))
             hbox = widgets.HBox()
             #this is very bad for performance
             hbox.add(widgets.Label("AI :"))
             hbox.add(self.checkboxes_ai[-1], margin=10)
-            self.player_vbox[i/2].add(hbox, margin=10)
+            self.player_vbox[i].add(hbox)
 
+        
+        hbox = widgets.HBox()
         #adding the two box which contains the spinner and the name of the characters
         for vbox in self.player_vbox:
-            self.widget.add(vbox, size=(200,50))
-        
-        
-        #level elements
-        self.level_name = widgets.Spinner(self.game_data['level_name'])
-        self.level_image = widgets.Image('gui'+ os.sep + 'image' + os.sep + 'BiX_level.png')
-        level_box = widgets.VBox()
-        level_box.add(widgets.Label("Level"), margin=50)
-        self.widget.add(level_box, margin=40)
-        level_box.add(self.level_name)
-        level_box.add(self.level_image, size=(200,120), margin=5)
-        level_box.add(self.w_launch, margin=20, size=(250,50))
+            hbox.add(vbox, margin=40)
+        self.widget.add(hbox, margin=50)
+        self.widget.add(widgets.Button(_("Next")), margin_left=290, margin=83)
+        self.widget.add(widgets.Button(_('Back')), size=(150, 40), margin_left=20, margin=20)
 
     def callback(self,action):
         if action in self.player_spinner :
             player_number = self.player_spinner.index(action)
-            self.players[player_number] = action.getIndex()
-            self.portraits[player_number].setImage(self.game_data['character_file'][action.getIndex()] + os.sep +
-                self.game_data['character_file'][action.getIndex()].replace('characters' + os.sep, "") + "-portrait.png")
+            self.players[player_number] = action.get_index()
+            self.portraits[player_number].setImage(self.game_data['character_file'][action.get_index()] + os.sep +
+                self.game_data['character_file'][action.get_index()].replace('characters' + os.sep, "") + "-portrait.png")
 
-        if action == self.level_name :
-            self.level_image.setImage("gui" + os.sep + "image" + os.sep + self.game_data['level_name'][action.getIndex()] + ".png")
+        if action.text == _("Next"):
+            return 'goto:level'
 
-        if action == self.w_launch:
-            return self.launch_game()
+        if action.text == _('Back'):
+            return "goto:back"
 
-    def launch_game(self):
-        """
-        Function to launch the game, use precedant user choices to initiate the
-        game with level and characters selected.
-
-        """
-        players = []
-        for i in range(0, len(self.players)):
-            if self.players[i] != 0:
-                file_name = self.game_data['character_file'][self.players[i]]
-                if self.checkboxes_ai[i].get_value():
-                    file_name = file_name.replace("characters/", "characters/AI")
-                players.append(file_name)
-
-        if len(players) > 1:
-            game = Game(
-                self.screen,
-                self.game_data['level_name'][self.level_name.getIndex()],
-                players
-            )
-
-            #thread.start_new_thread(self.loading, ())
-            #self.goto_screen("ingame.usfgui", False)
-            #self.state="game"
-            return game

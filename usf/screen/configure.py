@@ -20,19 +20,31 @@
 from screen import Screen
 from usf import widgets
 import copy
+
+
 class configure(Screen):
     def init(self):
         self.add(widgets.VBox())
-        self.widget.add(widgets.Button('Audio'), margin=50, margin_left=290)
-        self.widget.add(widgets.Button('Screen'), margin_left=290)
-        self.widget.add(widgets.Button('Keyboard'), margin_left=290)
-        self.widget.add(widgets.Button(_('Back')), margin_left=20, margin=100)
+        self.widget.add(widgets.Button(_('Audio')),
+                        margin=50,
+                        margin_left=290)
+
+        self.widget.add(widgets.Button(_('Screen')),
+                        margin_left=290)
+
+        self.widget.add(widgets.Button(_('Keyboard')),
+                        margin_left=290)
+    
+        self.widget.add(widgets.Button(_('Back')),
+                        margin_left=20,
+                        margin=100)
+
     def callback(self,action):
-        if action.text == 'Audio':
+        if action.text == _('Audio'):
             return "goto:sound"
-        if action.text == 'Screen':
+        if action.text == _('Screen'):
             return "goto:screen_screen"
-        if action.text == 'Keyboard':
+        if action.text == _('Keyboard'):
             return "goto:keyboard"
         if action.text == _('Back'):
             return "goto:back"

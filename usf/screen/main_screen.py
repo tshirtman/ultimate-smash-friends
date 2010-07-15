@@ -29,18 +29,15 @@ class main_screen(Screen):
         self.widget.add(widgets.Button(_('Local game')), margin=50, margin_left=290)
         self.widget.add(widgets.Button(_('Configure')), margin_left=290)
         self.widget.add(widgets.Button(_('Credits')), margin_left=290)
-        self.widget.add(widgets.Button(_('Level')), margin_left=290)
         self.widget.add(widgets.Button(_('Quit')), margin_left=290)
 
     def callback(self,action):
         if action.text == _('Local game'):
-            return 'goto:local_game'
+            return 'goto:characters'
         if action.text == _('Configure'):
             return 'goto:configure'
         if action.text == _('Credits'):
             return 'goto:about'
-        if action.text == _('Level'):
-            return 'goto:level'
         if action.text == _('Quit'):
             pygame.event.post( pygame.event.Event(pygame.QUIT) )
             

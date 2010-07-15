@@ -10,27 +10,40 @@
 #                                                                              #
 # Ultimate Smash Friends is distributed in the hope that it will be useful, but#
 # WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or#
-# FITNESS FOR A PARTICULAR PURself.posE.  See the GNU General Public License for    #
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for    #
 # more details.                                                                #
 #                                                                              #
 # You should have received a copy of the GNU General Public License along with #
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
+#standard imports
 import pygame
 import os
 import time
+
+#our module
 from widget import Widget, get_scale, optimize_size
 from usf import loaders
 from usf.font import fonts
 config = loaders.get_config()
 
-class Coverflow(Widget):
 
+class Coverflow(Widget):
+    """
+    The coverflow widget is used to display many image and choose one of
+    the them.
+    It should be big, about 800 * 275. This widget is animated and requires
+    a lot of CPU.
+    """
+    #the animation() function wil be called to each frame
+    #FIXME: the animation speed souldn't depend of the computer
     animation_speed = True
+
     def __init__(self, values):
         self.values = values
         for value in self.values:
+            #adding (false) size for the image, there will be updated later
             value.append((0,0))
             value.append(0)
         self.in_anim = False
@@ -39,6 +52,9 @@ class Coverflow(Widget):
         self.init()
 
     def init(self):
+        """
+        This method load the coverflow elements: the frame, the image...
+        """
         self.center_size = (self.sizex(195), self.sizey(120))
         self.posy_center = self.sizey(60)
         self.foreground = loaders.image(os.path.join(config.sys_data_dir,
@@ -65,14 +81,23 @@ class Coverflow(Widget):
             img = loaders.image(value[1])[0]
             #keep ratio
             if img.get_height() > img.get_width():
-                value[2] = (self.frame.get_width() - self.sizex(25), img.get_height() * (self.frame.get_width()  - self.sizex(25))/ img.get_width())
+                value[2] = (self.frame.get_width() - self.sizex(25),
+                            img.get_height() * (self.frame.get_width() -
+                                self.sizex(25)) / img.get_width())
             else:
-                value[2] = (img.get_width() * (self.frame.get_height()- self.sizex(25)) / img.get_height() , self.frame.get_height() - self.sizey(25))
-            value[3] = (self.frame.get_width()/2 - value[2][0]/2, self.frame.get_height()/2 - value[2][1]/2)
+                value[2] = (img.get_width() * (self.frame.get_height() -
+                                self.sizex(25)) / img.get_height(),
+                            self.frame.get_height() - self.sizey(25))
+
+            value[3] = (self.frame.get_width()/2 - value[2][0]/2,
+                        self.frame.get_height()/2 - value[2][1]/2)
         self.need_update = True
-                
 
     def draw(self):
+        """
+        Draw the widget, the surface will be redrawed if the widget is animated.
+        You can force redrawing by set need_update to True.
+        """
         if self.in_anim or self.need_update:
             size = self.surface.get_size()
             del self.surface
@@ -85,7 +110,8 @@ class Coverflow(Widget):
             reflection.set_colorkey(pygame.color.Color("black"))
             #reflection.set_alpha(20)
             self.surface.blit(reflection, (0, self.sizey(100)))
-            self.surface.blit(self.text, (self.width/2 - self.text.get_width()/4, self.sizey(30)))
+            self.surface.blit(self.text, (self.width/2 - self.text.get_width()/4,
+                                          self.sizey(30)))
 
             self.surface.blit(self.foreground, (0,0))
             self.need_update = False
@@ -94,38 +120,45 @@ class Coverflow(Widget):
         return self.surface
 
     def draw_main(self):
-            #main frame
-            self.surface.blit(self.main_frame, (self.pos, self.posy_center))
-            self.surface.blit(loaders.image(self.values[self.index][1],
-                                           scale=self.center_image
-                                           )[0],
-                             (self.pos + self.center_image_indent[0], self.posy_center  + self.center_image_indent[1]))
-            self.pos += self.main_frame.get_width()
+        """
+        Draw the selected image, it is bigger than the other and in the center
+        """
+        #main frame
+        self.surface.blit(self.main_frame, (self.pos, self.posy_center))
+        self.surface.blit(loaders.image(self.values[self.index][1],
+                                       scale=self.center_image
+                                       )[0],
+                         (self.pos + self.center_image_indent[0],
+                          self.posy_center  + self.center_image_indent[1]))
+        self.pos += self.main_frame.get_width()
 
     def draw_right(self):
-        
-        for i in range(self.index - len(self.values) + 1, self.index - len(self.values) + 4):
+        """
+        Draw three small image at right.
+        """
+        for i in range(self.index - len(self.values) + 1,
+                       self.index - len(self.values) + 4):
             self.surface.blit(self.frame, (self.pos, self.sizey(82)))
             self.surface.blit(loaders.image(self.values[i][1], scale=self.values[i][2])[0],
                  (self.pos + self.values[i][3][0], self.sizey(82) + self.values[i][3][1]))
             self.pos += self.frame.get_width()
 
     def draw_left(self):
-            #at left now
-            self.pos = self.width/2 - self.main_frame.get_width()/2 - self.frame.get_width()*3 + self.advance
-            for i in range(self.index - 3, self.index):
-                self.surface.blit(self.frame, (self.pos, self.sizey(82)))
-                self.surface.blit(loaders.image(self.values[i][1], scale=self.values[i][2])[0],
-                     (self.pos + self.values[i][3][0], self.sizey(82) + self.values[i][3][1]))
-                self.pos += self.frame.get_width()
-    
-    def sizex(self, x):
-        return x*self.width/800
+        """
+        Draw three small image at left.
+        """
+        #at left now
+        self.pos = self.width/2 - self.main_frame.get_width()/2 - self.frame.get_width()*3 + self.advance
+        for i in range(self.index - 3, self.index):
+            self.surface.blit(self.frame, (self.pos, self.sizey(82)))
+            self.surface.blit(loaders.image(self.values[i][1], scale=self.values[i][2])[0],
+                 (self.pos + self.values[i][3][0], self.sizey(82) + self.values[i][3][1]))
+            self.pos += self.frame.get_width()
 
-    def sizey(self, y):
-        return y*self.height/275
-    
     def next(self):
+        """
+        Select the next item.
+        """
         if self.index - 1 >= 0:
             self.index -= 1
         else:
@@ -133,13 +166,19 @@ class Coverflow(Widget):
         self.text = self.get_text_transparent(self.values[self.index][0])
 
     def previous(self):
+        """
+        Select the previous item.
+        """
         if self.index + 1 <= len(self.values) - 1:
             self.index += 1
         else:
             self.index = 0
         self.text = self.get_text_transparent(self.values[self.index][0])
-    
+
     def handle_mouse(self, event):
+        """
+        This function handle all mouse events which are on the widget.
+        """
         if not self.in_anim:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x = event.dict['pos'][0]
@@ -225,17 +264,41 @@ class Coverflow(Widget):
                                         scale=self.center_size)[0]
         
         img = loaders.image(self.values[self.index][1])[0]
-        #keep ratio
+
+        #keep the image ratio
         if img.get_height() > img.get_width():
-            self.center_image = (self.main_frame.get_width() - self.sizex(25), img.get_height() * (self.main_frame.get_width() - self.sizex(25)) / img.get_width())
+            self.center_image = (self.main_frame.get_width() - self.sizex(25),
+                                 img.get_height() * (self.main_frame.get_width() -
+                                    self.sizex(25)) / img.get_width())
         else:
-            self.center_image = (img.get_width() * (self.main_frame.get_height() - self.sizey(25)) / img.get_height(), (self.main_frame.get_height()- self.sizey(25)))
+            self.center_image = (img.get_width() * (self.main_frame.get_height() -
+                                    self.sizey(25)) / img.get_height(),
+                                 self.main_frame.get_height()- self.sizey(25))
+        
         self.center_image_indent = (self.main_frame.get_width()/2 - self.center_image[0]/2,
                                     self.main_frame.get_height()/2 - self.center_image[1]/2)
     
     def get_text_transparent(self, name):
         text = loaders.text(name, fonts['mono']['10']).convert()
+        #FIXME: the colorkey should be in a skin configuration file
         text.fill(pygame.color.Color("black"))
         text.set_colorkey(pygame.color.Color("black"))
         text.blit(loaders.text(name, fonts['mono']['22']), (0,0))
         return text
+    
+    def get_value(self):
+        return self.values[self.index][0]
+
+    def sizex(self, x):
+        """
+        This method is used to get the real size of an element. All size in the code above
+        are for a widget size = 800*275. So, if the size is different, this function modify it.
+        This function is used for the x axis. Use sizey for y axis.
+        """
+        return x*self.width/800
+
+    def sizey(self, y):
+        """
+        Same as sizex, but for the y axis.
+        """
+        return y*self.height/275

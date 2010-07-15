@@ -17,23 +17,36 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
+#standards imports
 import pygame
 import os
+import logging
 from os.path import join
 
+#our modules
 from widget import Widget, get_scale, optimize_size
 from imagebutton import ImageButton
 from label import Label
 from usf import loaders
 from usf.font import fonts
-config = loaders.get_config()
-
 from box import HBox
+
+config = loaders.get_config()
 
 
 class Spinner(HBox):
-
+    """
+    A spinner widget. (which could be called "select" too)
+    It looks like this:
+    <- text ->
+    
+    It can be used to select an option (like a character, a game
+    mode, etc...).
+    """
     def __init__(self, values, width=100):
+        """
+        values is an array of string. Each string is an option.
+        """
         self.parentpos = (0,0)
         self.extend = False
         self.values = values
@@ -54,10 +67,8 @@ class Spinner(HBox):
         self.add(self.left_arrow, margin = 0)
         self.center = Label(self.values[self.index],
             background="gui" + os.sep + config.general['THEME'] + os.sep + "spinner_center.png",
-            height=optimize_size((self.center_width,30))[1],
-            width=optimize_size((self.center_width,30))[0],
             align="center")
-        self.add(self.center, margin = 0)
+        self.add(self.center, margin = 0, size=optimize_size((self.center_width,30)))
         self.right_arrow = ImageButton("gui" + os.sep + config.general['THEME'] + os.sep + "spinner_right.png",
             "gui" + os.sep + config.general['THEME'] + os.sep + "spinner_right_hover.png")
         self.right_arrow.set_size(optimize_size((25,30)))
@@ -89,26 +100,42 @@ class Spinner(HBox):
                                 if self.index < 0:
                                     self.index =len(self.values)-1
                             self.text = self.values[self.index]
-                            self.center.setText(self.text)
+                            self.center.set_text(self.text)
                             return (self,False)
             return False, self
         self.state = False
         return (False,False)
 
     def get_value(self):
+        """
+        Get the current value of the spinner.
+        """
         return self.values[self.index]
 
-    def getIndex(self):
+    def get_index(self):
+        """
+        Get the index (the range of the current value).
+        """
         return self.index
 
-    def setIndex(self, index):
-        self.index=index
-        self.text = self.values[self.index]
-        self.center.setText(self.text)
+    def set_index(self, index):
+        """
+        Set the index (the range of the current value) of the spinner.
+        """
+        try:
+            self.index=index
+            self.text = self.values[self.index]
+            self.center.set_text(self.text)
+        except IndexError:
+            logging.warning("Not enough value in the spinner: " + str(value))
 
     def set_value(self, value):
+        """
+        Set the value of the spinner. The value must be in the array that was passed
+        in the __init__ function.
+        """
         try:
-            self.setIndex(self.values.index(value))
+            self.set_index(self.values.index(value))
         except:
-            pass
+            logging.warning("No entry named: " + str(value))
 

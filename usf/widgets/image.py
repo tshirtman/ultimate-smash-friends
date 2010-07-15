@@ -28,25 +28,22 @@ config = loaders.get_config()
 
 class Image(Widget):
     """
-    An image widget which can be used as a base for others widgets like buttons
+    An image widget which can be used as a base for others widgets like
+    buttons.
     """
 
     def init(self):
-        pass
-
-    def __init__(self, image, *args, **kwargs):
-        #save the path to scale it later -> maybe it is bad for performance, FIXME
-        self.path = image
-        if "size" in kwargs:
-            size = optimize_size(kwargs['size'])
-        else:
-            size = get_scale(loaders.image(
+        self.surface = loaders.image(
                     config.sys_data_dir+
                     os.sep+
-                    image)[0])
-                    
+                    self.path, scale=(self.width,self.height)
+                    )[0]
+
+    def __init__(self, image):
+        #save the path to scale it later
+        self.path = image
+
         self.init()
-        self.set_size((size[0], size[1]))
         self.state = True
 
     def set_size(self, (w,h)):
@@ -58,20 +55,16 @@ class Image(Widget):
 
         self.height = h
         self.width = w
-        self.surface = loaders.image(
-                    config.sys_data_dir+
-                    os.sep+
-                    self.path, scale=(w,h)
-                    )[0]
 
     def draw(self):
         return self.surface
 
     def setImage(self,path):
         """
-        With this method, you can change the image. 'config.sys_data_dir' will be added to 'path'
+        With this method, you can change the image.
+        'config.sys_data_dir' will be added to 'path'
         """
         self.path = path
-        self.set_size((self.width,self.height))
-
+        #reload the image
+        self.init()
         
