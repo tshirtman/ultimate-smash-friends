@@ -17,22 +17,29 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
+#standards imports
 import pygame
-import os
 from os.path import join
 
+#our modules
 from widget import Widget, get_scale, optimize_size
+from box import HBox
 from usf import loaders
 from usf.font import fonts
+
+#config
 config = loaders.get_config()
 
-from box import HBox
 
-import time
 
 class Paragraph(Widget):
+    """
+    A simple paragraph widget. It reads a text which is in the
+    data/text directory. It include a scroll bar but doesn't support
+    (yet) auto word wrap.
+    """
 
-    animation_speed = 0.022
+    animation_speed = 1/30.0
     def __init__(self, path):
         self.defil = 0
         self.state = False
@@ -45,6 +52,9 @@ class Paragraph(Widget):
         self.init()
 
     def update_defil(self):
+        """
+        Update the position of the scroll bar.
+        """
         self.slider_y = self.defil*(self.height - self.height_slider)/100
 
     def init(self):
@@ -68,7 +78,8 @@ class Paragraph(Widget):
 
     def draw(self):
         #clear the surface
-        self.surface = self.surface.convert().convert_alpha()
+        del(self.surface)
+        self.surface = pygame.surface.Surface((self.width,self.height))
         #draw the text
         self.surface.blit(self.surface_text,
                           (0, -(self.defil*(self.surface_text.get_height()-self.height)/100)))
@@ -114,8 +125,8 @@ class Paragraph(Widget):
 
         if self.state == True:
             #relative position
-            x += - self.parentpos[0] - self.x
-            y += - self.parentpos[1] - self.y
+            x -= self.parentpos[0] + self.x
+            y -= self.parentpos[1] + self.y
 
         if event.type == pygame.MOUSEBUTTONUP:
             self.state = False
@@ -126,10 +137,14 @@ class Paragraph(Widget):
             if event.dict['button'] == 4:
                 if 0 <= self.defil - 5 <= 100:
                     self.defil -= 5
+                else:
+                    self.defil = 0
             #scroll button (down)
             if event.dict['button'] == 5:
                 if 0 <= self.defil + 5 <= 100:
                     self.defil += 5
+                else:
+                    self.defil = 100
             self.update_defil()
 
         #left click or mouse hover
@@ -165,6 +180,11 @@ class Paragraph(Widget):
         return False,False
 
     def animation(self):
+        """
+        This function is used for auto scroll.
+        It is called by the start_anim method which is in the
+        Widget class.
+        """
         if self.defil < 100 and self.auto_scroll:
             self.defil += 0.15
             self.update_defil()
