@@ -34,6 +34,7 @@ config = Config()
 
 INVALID = (-5000,-5000)
 ORIGIN = (0,0)
+TAB = '    '
 
 def adj_up(tup):
     """
@@ -1167,37 +1168,62 @@ class USFLevelEditor(object):
         f = open(self.pyHandle.xml_file, "w")
         f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
         f.write('<map\n')
-        f.write('    name="' + self.level_property_entry["name"].get_text() + '"\n')
-        f.write('    background="' + self.level_property_entry["background"].get_text() + '"\n')
-        f.write('    foreground="' + self.level_property_entry["foreground"].get_text() + '"\n')
-        f.write('    middle="' + self.level_property_entry["level"].get_text() + '"\n')
-        f.write('    margins="">\n')
+        f.write(TAB + 'name="' + self.level_property_entry["name"].get_text() + '"\n')
+        f.write(TAB + 'background="' + self.level_property_entry["background"].get_text() + '"\n')
+        f.write(TAB + 'foreground="' + self.level_property_entry["foreground"].get_text() + '"\n')
+        f.write(TAB + 'middle="' + self.level_property_entry["level"].get_text() + '"\n')
+        f.write(TAB + 'margins="' + str(self.pyHandle.level.border[0]) + ',' + 
+                                    str(self.pyHandle.level.border[1]) + ',' + 
+                                    str(self.pyHandle.level.border[2]) + ',' +
+                                    str(self.pyHandle.level.border[3]) + '">\n')
+
         f.write('\n')
         for entry_point in self.pyHandle.level.entrypoints:
-            f.write('    <entry-point coords="'+str(entry_point[0])+' '+str(entry_point[1])+'"></entry-point>\n')
+            f.write(TAB + '<entry-point coords="' + str(entry_point[0]) + ' '
+                        +str(entry_point[1])+'"></entry-point>\n')
+                        
         f.write('\n')
         for block in self.pyHandle.level.map:
-            f.write('    <block coords="'+str(block[0])+' '+str(block[1])+' '+str(block[2])+' '+str(block[3])+'"></block>\n')
+            f.write(TAB + '<block coords="' + str(block[0]) + ' ' + 
+                        str(block[1]) + ' ' + str(block[2]) + ' ' + 
+                        str(block[3])+'"></block>\n')
+                        
         f.write('\n')
         for water in self.pyHandle.level.water_blocs:
-            f.write('    <water coords="'+str(block[0])+' '+str(block[1])+' '+str(block[2])+' '+str(block[3])+'"></water>\n')
+            f.write(TAB + '<water coords="' + str(block[0]) + ' ' + 
+                        str(block[1]) + ' ' + str(block[2]) + ' ' + 
+                        str(block[3])+'"></water>\n')
+                        
         f.write('\n')
         for mov in self.pyHandle.level.moving_blocs:
-            f.write('    <moving-block\n        texture="'+mov.texture.split(os.sep)[-1]+'">\n')
+            f.write(TAB + '<moving-block\n' + TAB * 2 + 'texture="' + 
+                        mov.texture.split(os.sep)[-1]+'">\n')
+                        
             for rect in mov.rects:
-                f.write('        <rect coords="'+str(rect[0])+' '+str(rect[1])+' '+str(rect[2])+' '+str(rect[3])+'"><rect>\n')
+                f.write(TAB + '<rect coords="' + str(rect[0]) + ' ' + 
+                            str(rect[1]) + ' ' + str(rect[2]) + ' ' + 
+                            str(rect[3])+'"></rect>\n')
+                            
             for pat in mov.patterns:
-                f.write('        <pattern\n')
-                f.write('            position="'+str(pat["position"][0])+' '+str(pat["position"][1])+'"\n')
-                f.write('            time="'+str(pat["time"])+'">\n')
-            f.write('    </moving-block>\n\n')
+                f.write(TAB * 2 + '<pattern\n')
+                f.write(TAB * 3 + 'position="' + str(pat["position"][0]) + ' ' +
+                            str(pat["position"][1]) + '"\n')
+                f.write(TAB * 3 + 'time="' + str(pat["time"]) + '"></pattern>\n')
+                
+            f.write(TAB + '</moving-block>\n\n')
+            
         for vec in self.pyHandle.level.vector_blocs:
-            f.write('    <vector-block\n        texture="'+vec.texture.split(os.sep)[-1]+'"\n')
-            f.write('        vector="'+str(vec.vector[0])+' '+str(vec.vector[1])+'"\n')
-            f.write('        relative="'+str(vec.relative and 1 or 0)+'">\n')
+            f.write(TAB + '<vector-block\n' + TAB * 2 + 'texture="' + 
+                    vec.texture.split(os.sep)[-1] + '"\n')
+                    
+            f.write(TAB * 2 + 'vector="' + str(vec.vector[0]) + ' ' + 
+                    str(vec.vector[1])+'"\n')
+                    
+            f.write(TAB * 2 + 'relative="'+str(vec.relative and 1 or 0)+'">\n')
+            
             for rect in vec.rects:
-                f.write('        <rect coords="'+str(rect[0])+' '+str(rect[1])+' '+str(rect[2])+' '+str(rect[3])+'"><rect>\n')
-            f.write('    </vector-block>\n')
+                f.write(TAB * 2 + '<rect coords="'+str(rect[0])+' '+str(rect[1])+' '+str(rect[2])+' '+str(rect[3])+'"></rect>\n')
+            f.write(TAB + '</vector-block>\n')
         f.write('</map>\n')
         f.close()
 
