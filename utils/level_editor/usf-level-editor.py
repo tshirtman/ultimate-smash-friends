@@ -40,13 +40,13 @@ def adj_up(tup):
     """
     Adjusts a tuple up according to the ORIGIN.
     """
-    return [tup[i]+ORIGIN[i] for i in range(2)]
+    return [tup[i] + ORIGIN[i] for i in range(2)]
 
 def adj_down(tup):
     """
     Adjusts a tuple down according to the ORIGIN.
     """
-    return tuple([tup[i]-ORIGIN[i] for i in range(2)])
+    return tuple([tup[i] - ORIGIN[i] for i in range(2)])
 
 class Tools(object):
     """
@@ -67,6 +67,7 @@ class Tools(object):
                         "select":self.show_select_tool,
                         "delete":self.show_delete_tool,
                         }
+
         self.vbox = None
         self.ok_cb = ok_callback
         self.cancel_cb = cancel_callback
@@ -79,8 +80,10 @@ class Tools(object):
         self.adj = []
         for i in range(10):
             self.adj.append(gtk.Adjustment(0, -5000, 5000, 1, 10, 0))
+
         if self.bin.get_child() != None:
             self.bin.remove(self.bin.get_child())
+
         self.bin.set_label("Element Properties")
         self.vbox = gtk.VBox()
         self.bin.add(self.vbox)
@@ -255,7 +258,7 @@ class Tools(object):
 
         self.format_labels()
 
-        if block != None:
+        if block is not None:
             self.x_entry.set_value(block[0])
             self.y_entry.set_value(block[1])
             self.w_entry.set_value(block[2])
@@ -277,7 +280,7 @@ class Tools(object):
 
         self.format_labels()
 
-        if block != None:
+        if block is not None:
             self.x_entry.set_value(block.patterns[0]["position"][0])
             self.y_entry.set_value(block.patterns[0]["position"][1])
             self.w_entry.set_value(block.rects[0][2])
@@ -285,7 +288,8 @@ class Tools(object):
             self.tex_entry.set_text(block.texture)
 
             for p in block.patterns:
-                self.model.append([p["position"][0], p["position"][1], p["time"]])
+                self.model.append([p["position"][0], p["position"][1],
+                                   p["time"]])
 
         self.vbox.show_all()
 
@@ -307,7 +311,7 @@ class Tools(object):
 
         self.format_labels()
 
-        if block != None:
+        if block is not None:
             self.x_entry.set_value(block.position[0])
             self.y_entry.set_value(block.position[1])
             self.w_entry.set_value(block.rects[0][2])
@@ -330,7 +334,7 @@ class Tools(object):
 
         self.format_labels()
 
-        if pt != None:
+        if pt is not None:
             self.x_entry.set_value(pt[0])
             self.y_entry.set_value(pt[1])
 
@@ -348,7 +352,7 @@ class Tools(object):
 
         self.format_labels()
 
-        if block != None:
+        if block is not None:
             self.x_entry.set_value(block[0])
             self.y_entry.set_value(block[1])
             self.w_entry.set_value(block[2])
@@ -356,7 +360,7 @@ class Tools(object):
 
         self.vbox.show_all()
 
-    def show_select_tool(self, block=None):
+    def show_select_tool(self):
         """
         Sets up the GUI to show select tool properties.
         """
@@ -367,7 +371,7 @@ class Tools(object):
         self.vbox.add(label)
         self.vbox.show_all()
 
-    def show_delete_tool(self, block=None):
+    def show_delete_tool(self):
         """
         Sets up the GUI to show delete tool properties.
         """
@@ -392,23 +396,21 @@ class PygameHandler(object):
         self.level = level.Level(self.xml_file)
 
         self.parts = {
-                    "block":{"visible":True, "colour":pygame.Color("#FF0000")},
-                    "moving":{"visible":True, "colour":pygame.Color("#FFFF00")},
-                    "water":{"visible":True, "colour":pygame.Color("#0000FF")},
-                    "vector":{"visible":True, "colour":pygame.Color("#00FF00")},
-                    "entry":{"visible":True, "colour":pygame.Color("#FF00FF")},
-                    }
+                   "block":{"visible":True, "colour":pygame.Color("#FF0000")},
+                   "moving":{"visible":True, "colour":pygame.Color("#FFFF00")},
+                   "water":{"visible":True, "colour":pygame.Color("#0000FF")},
+                   "vector":{"visible":True, "colour":pygame.Color("#00FF00")},
+                   "entry":{"visible":True, "colour":pygame.Color("#FF00FF")},
+                     }
 
         self.surface = pygame.display.set_mode(level.SIZE)
         self.tool = "block"
         self.start_pt = INVALID
         self.widget = widget
         self.secondary = False
-        self.texture = os.path.join(
-                                    config.sys_data_dir,
+        self.texture = os.path.join(config.sys_data_dir,
                                     "levels",
-                                    "emptyPod.png"
-                                    )
+                                    "emptyPod.png")
 
     def set_level_property(self, property, value):
         """
@@ -416,12 +418,16 @@ class PygameHandler(object):
         """
         if property == "background":
             self.level.background = value
+
         elif property == "foreground":
            self.level.foreground = value
+
         elif property == "level":
             self.level.level = value
+
         elif property == "name":
             self.level.name = value
+
         else:
             print "Invalid property."
 
@@ -438,11 +444,8 @@ class PygameHandler(object):
         pygame.draw.line(arrow, colour, (0,20), (10,10), 2)
         arrow.set_colorkey(pygame.Color("#FFFFFE"))
 
-        angle=math.degrees(math.atan2(-(
-                                        from_pt[1]-to_pt[1]),
-                                        from_pt[0]-to_pt[0]
-                                        )
-                                    )+180
+        angle=math.degrees(math.atan2(-(from_pt[1]-to_pt[1]),
+                                        from_pt[0]-to_pt[0]))+180
 
         final_arrow = pygame.transform.rotate(arrow,angle)
         surface.blit(final_arrow, final_arrow.get_rect(center=to_pt))
@@ -456,16 +459,12 @@ class PygameHandler(object):
         self.level.draw_level(self.surface, ORIGIN, 1)
 
         for block in self.level.moving_blocs:
-            self.surface.blit(
-                            loaders.image(block.texture, 1)[0],
-                            adj_up(block.patterns[0]["position"])
-                            )
+            self.surface.blit(loaders.image(block.texture, 1)[0],
+                              adj_up(block.patterns[0]["position"]))
 
         for block in self.level.vector_blocs:
-            self.surface.blit(
-                            loaders.image(block.texture, 1)[0],
-                            adj_up(block.position)
-                            )
+            self.surface.blit(loaders.image(block.texture, 1)[0],
+                              adj_up(block.position))
 
         self.level.draw_foreground(self.surface, ORIGIN, 1)
 
@@ -477,115 +476,84 @@ class PygameHandler(object):
         #Draw water blocks
         if self.parts["water"]["visible"]:
             for water_block in self.level.water_blocs:
-                pygame.draw.rect(
-                                overlay,
-                                self.parts["water"]["colour"],
-                                water_block.move(ORIGIN)
-                                )
+                pygame.draw.rect(overlay,
+                                 self.parts["water"]["colour"],
+                                 water_block.move(ORIGIN))
 
         #Draw solid blocks
         if self.parts["block"]["visible"]:
             for block in self.level.map:
-                pygame.draw.rect(
-                                overlay,
-                                self.parts["block"]["colour"],
-                                block.move(ORIGIN)
-                                )
+                pygame.draw.rect(overlay,
+                                 self.parts["block"]["colour"],
+                                 block.move(ORIGIN))
 
         #Draw moving blocks
         if self.parts["moving"]["visible"]:
             for moving_block in self.level.moving_blocs:
-                #moving_block.patterns.sort(key=lambda item:item["time"])
+                # Sort the patterns?
+                # moving_block.patterns.sort(key=lambda item:item["time"])
                 for rect in moving_block.rects:
-                    pygame.draw.rect(
-                                    overlay,
-                                    self.parts["moving"]["colour"],
-                                    rect.move(
-                                            moving_block.patterns[0]["position"]
-                                            ).move(ORIGIN)
-                                    )
+                    pygame.draw.rect(overlay, self.parts["moving"]["colour"],
+                                     rect.move(
+                                        moving_block.patterns[0]["position"]
+                                              ).move(ORIGIN))
 
-                colour = tuple(
-                            [max(i-100,0) for i in self.parts["moving"]["colour"]]
-                            )
+                colour = tuple([max(i-100,0) for i in
+                               self.parts["moving"]["colour"]])
 
                 for i in range(len(moving_block.patterns)):
-                    self.draw_arrow(
-                                    overlay,
-                                    colour,
+                    self.draw_arrow(overlay, colour,
                                     adj_up(
                                         moving_block.patterns[i-1]["position"]
-                                        ),
+                                          ),
                                     adj_up(
-                                        moving_block.patterns[i]["position"]
-                                        )
-                                    )
+                                        moving_block.patterns[i]["position"]))
 
         #Draw vector blocks
         if self.parts["vector"]["visible"]:
             for vector_block in self.level.vector_blocs:
                 for rect in vector_block.rects:
-                    pygame.draw.rect(
-                                    overlay,
-                                    self.parts["vector"]["colour"],
-                                    rect.move(
-                                            vector_block.position
-                                            ).move(ORIGIN)
-                                    )
+                    pygame.draw.rect(overlay, self.parts["vector"]["colour"],
+                                     rect.move(vector_block.position).move(
+                                        ORIGIN))
 
-                colour = tuple(
-                            [max(i-100,0) for i in self.parts["vector"]["colour"]]
-                            )
+                colour = tuple([max(i-100,0) for i in \
+                               self.parts["vector"]["colour"]])
 
-                self.draw_arrow(
-                                overlay,
+                self.draw_arrow(overlay,
                                 colour,
                                 adj_up(vector_block.position),
-                                tuple(
-                                    [vector_block.position[i] +
-                                    vector_block.vector[i] +
-                                    ORIGIN[i] for i in range(2)]
-                                    )
-                                )
+                                tuple([vector_block.position[i] +
+                                      vector_block.vector[i] +
+                                      ORIGIN[i] for i in range(2)]))
 
         #Draw entry points
         if self.parts["entry"]["visible"]:
             for entry_point in self.level.entrypoints:
-                pygame.draw.rect(
-                                overlay,
-                                self.parts["entry"]["colour"],
-                                pygame.Rect(
-                                            entry_point,
-                                            (10,10)
-                                            ).move(ORIGIN)
-                                )
+                pygame.draw.rect(overlay,
+                                 self.parts["entry"]["colour"],
+                                 pygame.Rect(entry_point, (10,10)).move(
+                                    ORIGIN))
 
         #Draw tool stuff
         pointer = self.widget.get_pointer()
 
         if not self.secondary:
-            if (self.start_pt != INVALID and
-                (self.tool in ["block", "water", "vector", "moving"])):
-                pygame.draw.rect(
-                                overlay,
-                                self.parts[self.tool]["colour"],
-                                pygame.Rect(
-                                            self.start_pt,
-                                            (pointer[0]-self.start_pt[0],
-                                            pointer[1]-self.start_pt[1])
-                                            )
-                                )
+            if self.start_pt != INVALID and \
+               self.tool in ["block", "water", "vector", "moving"]:
+                pygame.draw.rect(overlay,
+                                 self.parts[self.tool]["colour"],
+                                 pygame.Rect(self.start_pt,
+                                             (pointer[0]-self.start_pt[0],
+                                              pointer[1]-self.start_pt[1])))
 
             if self.tool in ["vector", "moving"] and self.start_pt != INVALID:
-                self.surface.blit(loaders.image(self.texture, 1)[0], self.start_pt)
+                self.surface.blit(loaders.image(self.texture, 1)[0], 
+                                  self.start_pt)
         else:
             if self.tool in ["vector", "moving"]:
-                self.draw_arrow(
-                                overlay,
-                                self.parts[self.tool]["colour"],
-                                self.start_pt,
-                                pointer
-                                )
+                self.draw_arrow(overlay, self.parts[self.tool]["colour"],
+                                self.start_pt, pointer)
 
         #TODO margins and layers
         self.surface.blit(overlay, (0,0))
@@ -599,11 +567,8 @@ class USFLevelEditor(object):
         """
         Initializes the GUI and pygame surface.
         """
-        glade_file = os.path.join(
-                                config.sys_data_dir,
-                                "glade",
-                                "usf_level_editor.glade"
-                                )
+        glade_file = os.path.join(config.sys_data_dir, "glade",
+                                  "usf_level_editor.glade")
 
         self.wTree = gtk.glade.XML(glade_file, "mainWindow")
         self.window = self.wTree.get_widget("mainWindow")
@@ -612,21 +577,19 @@ class USFLevelEditor(object):
 
         #connect signals
         if self.window:
-            signals = {
-                        "delete-event": self.callback_quit,
-                        "menu_file_open": self.callback_menu_file_open,
-                        "menu_file_new": self.callback_menu_file_new,
-                        "menu_file_quit": self.callback_quit,
-                        "menu_file_save": self.callback_menu_file_save,
-                        "menu_file_save_as": self.callback_menu_file_save_as,
-                        "alpha_change": self.callback_alpha_change,
-                        "visible_toggle":self.callback_visible_toggle,
-                        "colour_change": self.callback_colour_change,
-                        "select_tool": self.callback_select_tool,
-                        "png_load": self.callback_level_properties_change,
-                        "pygame_press": self.callback_pygame_press,
-                        "pygame_release": self.callback_pygame_release,
-                        }
+            signals = {"delete-event": self.callback_quit,
+                       "menu_file_open": self.callback_menu_file_open,
+                       "menu_file_new": self.callback_menu_file_new,
+                       "menu_file_quit": self.callback_quit,
+                       "menu_file_save": self.callback_menu_file_save,
+                       "menu_file_save_as": self.callback_menu_file_save_as,
+                       "alpha_change": self.callback_alpha_change,
+                       "visible_toggle":self.callback_visible_toggle,
+                       "colour_change": self.callback_colour_change,
+                       "select_tool": self.callback_select_tool,
+                       "png_load": self.callback_level_properties_change,
+                       "pygame_press": self.callback_pygame_press,
+                       "pygame_release": self.callback_pygame_release,}
             self.wTree.signal_autoconnect(signals)
 
         #XML viewer
@@ -649,8 +612,7 @@ class USFLevelEditor(object):
                         "foreground":self.wTree.get_widget("foreground_entry"),
                         "background":self.wTree.get_widget("background_entry"),
                         "level":self.wTree.get_widget("level_entry"),
-                        "name":self.wTree.get_widget("name_entry"),
-                        }
+                        "name":self.wTree.get_widget("name_entry"),}
 
         #pygame stuff
         self.pygame_widget = self.wTree.get_widget("pygame")
@@ -663,12 +625,10 @@ class USFLevelEditor(object):
         self.pyHandle = PygameHandler(self.pygame_widget)
         self.resize_viewport()
 
-        self.tools = Tools(
-                            self.wTree.get_widget("tools"),
-                            self.callback_accept_tool,
-                            self.callback_cancel_tool,
-                            self.callback_texture_load
-                            )
+        self.tools = Tools(self.wTree.get_widget("tools"),
+                           self.callback_accept_tool,
+                           self.callback_cancel_tool,
+                           self.callback_texture_load)
 
         self.tools.show_block_tool()
         self.current_entity = [None, None]
@@ -687,13 +647,9 @@ class USFLevelEditor(object):
                 )
 
         file_loader = gtk.FileChooserDialog(
-                                opener and "Open..." or "Save As...",
-                                None,
-                                opener and
-                                    gtk.FILE_CHOOSER_ACTION_OPEN or
-                                    gtk.FILE_CHOOSER_ACTION_SAVE,
-                                buttons
-                                )
+                                opener and "Open..." or "Save As...", None,
+                                opener and gtk.FILE_CHOOSER_ACTION_OPEN or
+                                    gtk.FILE_CHOOSER_ACTION_SAVE, buttons)
 
         file_loader.set_current_folder(os.sep.join([".", "data", "levels"]))
         return file_loader
@@ -720,10 +676,7 @@ class USFLevelEditor(object):
         front = pygame.image.load(self.pyHandle.level.foreground).get_size()
         level.SIZE = tuple([int(i*1.5) for i in max(mid, front)])
 
-        ORIGIN = (
-                (level.SIZE[0] - mid[0]) / 2,
-                (level.SIZE[1] - mid[1]) / 2
-                )
+        ORIGIN = ((level.SIZE[0] - mid[0]) / 2, (level.SIZE[1] - mid[1]) / 2)
         self.pyHandle.surface = pygame.display.set_mode(level.SIZE)
         self.pygame_widget.set_size_request(level.SIZE[0], level.SIZE[1])
 
@@ -731,7 +684,8 @@ class USFLevelEditor(object):
         """
         Handles the opening of a level.
         """
-        #TODO:if file is already open and it is not saved show 'are you sure' dialog
+        #TODO:if file is already open and it is 
+        # not saved show 'are you sure' dialog
         file_loader = self.create_file_loader(True)
         self.attach_filter(file_loader, "All XML files", ["text/xml"])
 
@@ -740,10 +694,10 @@ class USFLevelEditor(object):
 
             self.pyHandle.xml_file = file_loader.get_filename()
             self.pyHandle.level = level.Level(
-                file_loader.get_filename().split(os.sep)[-1].split(os.extsep)[0]
-                )
+              file_loader.get_filename().split(os.sep)[-1].split(os.extsep)[0])
 
-            self.window.set_title("USF Level Editor: " + self.pyHandle.level.name)
+            self.window.set_title("USF Level Editor: " +
+                                  self.pyHandle.level.name)
             self.xml_buffer.set_text(file.read())
             file.close()
 
@@ -751,18 +705,16 @@ class USFLevelEditor(object):
 
             #toolbar updates
             self.level_property_entry["background"].set_text(
-                            self.pyHandle.level.background.split(os.sep)[-1]
-                            )
+                            self.pyHandle.level.background.split(os.sep)[-1])
 
             self.level_property_entry["level"].set_text(
-                            self.pyHandle.level.level.split(os.sep)[-1]
-                            )
+                            self.pyHandle.level.level.split(os.sep)[-1])
 
             self.level_property_entry["foreground"].set_text(
-                        self.pyHandle.level.foreground.split(os.sep)[-1]
-                        )
+                            self.pyHandle.level.foreground.split(os.sep)[-1])
 
-            self.level_property_entry["name"].set_text(self.pyHandle.level.name)
+            self.level_property_entry["name"].set_text(
+                            self.pyHandle.level.name)
 
         file_loader.destroy()
         self.tools.mapping[self.pyHandle.tool]
@@ -772,9 +724,8 @@ class USFLevelEditor(object):
         Adjusts the transparency of the overlay according
         to the transparency scale widget.
         """
-        self.pyHandle.alpha = int(
-            self.wTree.get_widget("alphaScale").get_adjustment().get_value() / 100.0 * 255
-            )
+        self.pyHandle.alpha = int(self.wTree.get_widget(
+                    "alphaScale").get_adjustment().get_value() / 100.0 * 255)
 
     def callback_menu_file_new(self, *args, **kwargs):
         """
@@ -827,18 +778,12 @@ class USFLevelEditor(object):
             self.attach_filter(file_loader, "All PNG files", ["image/png"])
 
             if file_loader.run() == gtk.RESPONSE_OK:
-                self.level_property_entry[
-                                    args[0].get_name().split("_")[0]
-                                    ].set_text(
-                                        file_loader.get_filename().split(
-                                            os.sep
-                                            )[-1]
-                                        )
+                self.level_property_entry[args[0].get_name().split("_")[0]]. \
+                         set_text(file_loader.get_filename().split(os.sep)[-1])
 
                 self.pyHandle.set_level_property(
                                             args[0].get_name().split("_")[0],
-                                            file_loader.get_filename()
-                                            )
+                                            file_loader.get_filename())
 
             file_loader.destroy()
             self.resize_viewport()
@@ -847,9 +792,8 @@ class USFLevelEditor(object):
         """
         Handles pygame visibility according to GUI check button changes.
         """
-        self.pyHandle.parts[
-                        args[0].get_name().split("_")[0]
-                        ]["visible"] = args[0].get_active()
+        self.pyHandle.parts[args[0].get_name().split("_")[0]]["visible"] = \
+                                                        args[0].get_active()
 
     def callback_colour_change(self, *args, **kwargs):
         """
@@ -857,12 +801,10 @@ class USFLevelEditor(object):
         """
         colour_widget = args[0].get_color()
 
-        self.pyHandle.parts[
-            args[0].get_name().split("_")[0]]["colour"] = pygame.Color(
-                                    int(colour_widget.red / 65535.0 * 255),
-                                    int(colour_widget.green / 65535.0 * 255),
-                                    int(colour_widget.blue / 65535.0 * 255)
-                                    )
+        self.pyHandle.parts[args[0].get_name().split("_")[0]]["colour"] = \
+                        pygame.Color(int(colour_widget.red / 65535.0 * 255),
+                                     int(colour_widget.green / 65535.0 * 255),
+                                     int(colour_widget.blue / 65535.0 * 255))
 
     def callback_select_tool(self, *args, **kwargs):
         """
@@ -900,65 +842,40 @@ class USFLevelEditor(object):
                                                 self.tools.x_entry.get_value(),
                                                 self.tools.y_entry.get_value(),
                                                 self.tools.w_entry.get_value(),
-                                                self.tools.h_entry.get_value()
-                                                )
+                                                self.tools.h_entry.get_value())
         elif self.pyHandle.tool == "entry":
-            self.current_entity[1] = (
-                                    self.tools.x_entry.get_value(),
-                                    self.tools.y_entry.get_value()
-                                    )
+            self.current_entity[1] = (self.tools.x_entry.get_value(),
+                                      self.tools.y_entry.get_value())
         elif self.pyHandle.tool == "moving":
             it = self.tools.model.get_iter_root()
 
-            pat = [{
-                    "time":int(self.tools.model.get_value(it, 2)),
-                    "position":[
-                                int(self.tools.model.get_value(it, 0)),
-                                int(self.tools.model.get_value(it, 1))
-                                ]
-                    }]
+            pat = [{"time":int(self.tools.model.get_value(it, 2)),
+                    "position":[int(self.tools.model.get_value(it, 0)),
+                                int(self.tools.model.get_value(it, 1))]}]
 
             while self.tools.model.iter_next(it) != None:
                 it = self.tools.model.iter_next(it)
 
-                pat.append({
-                            "time":int(self.tools.model.get_value(it, 2)),
-                            "position":[
-                                        int(self.tools.model.get_value(it, 0)),
-                                        int(self.tools.model.get_value(it, 1))
-                                        ]
-                            })
+                pat.append({"time":int(self.tools.model.get_value(it, 2)),
+                            "position":[int(self.tools.model.get_value(it, 0)),
+                                        int(self.tools.model.get_value(it, 1))]
+                                       })
 
             self.current_entity[1] = level.MovingPart(
-                        [pygame.Rect(
-                            (0, 0),
-                            (self.tools.w_entry.get_value(),
-                            self.tools.h_entry.get_value())
-                            )
-                        ],
-                        self.tools.tex_entry.get_text().split(os.sep)[-1],
-                        pat
-                        )
+                        [pygame.Rect((0, 0), (self.tools.w_entry.get_value(),
+                                             self.tools.h_entry.get_value()))],
+                        self.tools.tex_entry.get_text().split(os.sep)[-1], pat)
 
         elif self.pyHandle.tool == "vector":
             self.current_entity[1] = level.VectorBloc(
-                        [pygame.Rect(
-                            (0, 0),
-                            (self.tools.w_entry.get_value(),
-                            self.tools.h_entry.get_value())
-                            )
-                        ],
-                        (
-                            self.tools.x_entry.get_value(),
-                            self.tools.y_entry.get_value()
-                        ),
-                        (
-                            self.tools.vec_x_entry.get_value(),
-                            self.tools.vec_y_entry.get_value()
-                        ),
-                        self.tools.rel_check.get_active(),
-                        self.tools.tex_entry.get_text().split(os.sep)[-1]
-                        )
+                        [pygame.Rect((0, 0), (self.tools.w_entry.get_value(),
+                                             self.tools.h_entry.get_value()))],
+                         (self.tools.x_entry.get_value(),
+                          self.tools.y_entry.get_value()),
+                         (self.tools.vec_x_entry.get_value(),
+                          self.tools.vec_y_entry.get_value()),
+                         self.tools.rel_check.get_active(),
+                         self.tools.tex_entry.get_text().split(os.sep)[-1])
 
         self.current_entity[0].append(self.current_entity[1])
 
@@ -992,39 +909,29 @@ class USFLevelEditor(object):
         pointer = adj_down(self.pygame_widget.get_pointer())
         self.pyHandle.start_pt = adj_down(self.pyHandle.start_pt)
 
-        rect = pygame.Rect(
-                            self.pyHandle.start_pt,
-                            (
-                                pointer[0]-self.pyHandle.start_pt[0],
-                                pointer[1]-self.pyHandle.start_pt[1]
-                            )
-                            )
+        rect = pygame.Rect(self.pyHandle.start_pt,
+                           (pointer[0]-self.pyHandle.start_pt[0],
+                            pointer[1]-self.pyHandle.start_pt[1]))
 
         if self.pyHandle.tool == "entry":
             self.pyHandle.level.entrypoints.append(pointer)
 
-            self.current_entity = [
-                                self.pyHandle.level.entrypoints,
-                                self.pyHandle.level.entrypoints[-1]
-                                ]
+            self.current_entity = [self.pyHandle.level.entrypoints,
+                                   self.pyHandle.level.entrypoints[-1]]
 
             self.tools.show_entry_tool(self.pyHandle.level.entrypoints[-1])
         elif self.pyHandle.tool == "block":
             self.pyHandle.level.map.append(rect)
 
-            self.current_entity = [
-                                self.pyHandle.level.map,
-                                self.pyHandle.level.map[-1]
-                                ]
+            self.current_entity = [self.pyHandle.level.map,
+                                   self.pyHandle.level.map[-1]]
 
             self.tools.show_block_tool(self.pyHandle.level.map[-1])
         elif self.pyHandle.tool == "water":
             self.pyHandle.level.water_blocs.append(rect)
 
-            self.current_entity = [
-                                self.pyHandle.level.water_blocs,
-                                self.pyHandle.level.water_blocs[-1]
-                                ]
+            self.current_entity = [self.pyHandle.level.water_blocs,
+                                   self.pyHandle.level.water_blocs[-1]]
 
             self.tools.show_water_tool(self.pyHandle.level.water_blocs[-1])
         elif self.pyHandle.tool == "vector":
@@ -1035,30 +942,28 @@ class USFLevelEditor(object):
             if self.pyHandle.secondary:
                 self.pyHandle.level.vector_blocs.remove(self.current_entity[1])
 
-                bloc = level.VectorBloc(
-                                self.current_entity[1].rects,
-                                self.current_entity[1].position,
-                                rect.size,
-                                self.tools.rel_check.get_active(),
-                                self.tools.tex_entry.get_text().split(os.sep)[-1]
-                                )
+                bloc = level.VectorBloc(self.current_entity[1].rects,
+                                        self.current_entity[1].position,
+                                        rect.size,
+                                        self.tools.rel_check.get_active(),
+                                        self.tools.tex_entry.get_text().split(
+                                            os.sep)[-1])
 
                 self.pyHandle.start_pt = INVALID
                 self.pyHandle.secondary = False
             else:
-                bloc = level.VectorBloc(
-                                [pygame.Rect((0,0),rect.size)],
-                                rect.topleft,
-                                (0,0),
-                                self.tools.rel_check.get_active(),
-                                self.tools.tex_entry.get_text().split(os.sep)[-1]
-                                )
+                bloc = level.VectorBloc([pygame.Rect((0,0),rect.size)],
+                                        rect.topleft, (0,0),
+                                        self.tools.rel_check.get_active(),
+                                        self.tools.tex_entry.get_text().split(
+                                            os.sep)[-1])
 
                 self.pyHandle.secondary = True
                 self.pyHandle.start_pt = adj_up(self.pyHandle.start_pt)
 
             self.pyHandle.level.vector_blocs.append(bloc)
-            self.current_entity = [self.pyHandle.level.vector_blocs, self.pyHandle.level.vector_blocs[-1]]
+            self.current_entity = [self.pyHandle.level.vector_blocs,
+                                   self.pyHandle.level.vector_blocs[-1]]
             self.tools.show_vector_tool(self.pyHandle.level.vector_blocs[-1])
         elif self.pyHandle.tool == "moving":
             bloc = None
@@ -1070,39 +975,38 @@ class USFLevelEditor(object):
 
                 self.current_entity[1].patterns.append({
                         "time":self.current_entity[1].patterns[-1]["time"]+100,
-                        "position":list(pointer)
-                        })
+                        "position":list(pointer)})
 
-                bloc = level.MovingPart(
-                                self.current_entity[1].rects,
-                                self.tools.tex_entry.get_text().split(os.sep)[-1],
-                                self.current_entity[1].patterns
-                                )
+                bloc = level.MovingPart(self.current_entity[1].rects,
+                                        self.tools.tex_entry.get_text().split(
+                                            os.sep)[-1],
+                                        self.current_entity[1].patterns)
 
                 self.pyHandle.start_pt = adj_up(pointer)
             else:
-                bloc = level.MovingPart(
-                                    [pygame.Rect((0,0),rect.size)],
-                                    self.tools.tex_entry.get_text().split(os.sep)[-1],
-                                    [{"time":1, "position":list(rect.topleft)}]
-                                    )
+                bloc = level.MovingPart([pygame.Rect((0,0),rect.size)],
+                                        self.tools.tex_entry.get_text().split(
+                                            os.sep)[-1],
+                                        [{"time":1,
+                                          "position":list(rect.topleft)}])
 
                 self.pyHandle.secondary = True
                 self.pyHandle.start_pt = adj_up(self.pyHandle.start_pt)
 
             self.pyHandle.level.moving_blocs.append(bloc)
-            self.current_entity = [self.pyHandle.level.moving_blocs, self.pyHandle.level.moving_blocs[-1]]
+            self.current_entity = [self.pyHandle.level.moving_blocs,
+                                   self.pyHandle.level.moving_blocs[-1]]
             self.tools.show_moving_tool(self.pyHandle.level.moving_blocs[-1])
         elif self.pyHandle.tool == "delete":
             delete = self.find(pointer)
 
-            if delete != None:
+            if delete is not None:
                 delete[0].remove(delete[1])
 
         elif self.pyHandle.tool == "select":
             select = self.find(pointer)
 
-            if select != None:
+            if select is not None:
                 self.current_entity = [select[0], select[1]]
                 self.pyHandle.tool = select[2]
                 self.tools.mapping[select[2]](select[1])
@@ -1128,33 +1032,32 @@ class USFLevelEditor(object):
                 return (self.pyHandle.level.map, block, "block")
 
         for vector in self.pyHandle.level.vector_blocs:
-            if pygame.Rect(vector.position, vector.rects[0].size).collidepoint(pt):
+            if pygame.Rect(vector.position,
+                           vector.rects[0].size).collidepoint(pt):
                 return (self.pyHandle.level.vector_blocs, vector, "vector")
 
         for moving in self.pyHandle.level.moving_blocs:
-            if pygame.Rect(
-                        moving.patterns[0]["position"],
-                        moving.rects[0].size
-                        ).collidepoint(pt):
+            if pygame.Rect(moving.patterns[0]["position"],
+                           moving.rects[0].size).collidepoint(pt):
                 return (self.pyHandle.level.moving_blocs, moving, "moving")
 
         return None
 
     def update(self):
         """
-        Performs what is needed for each iteration i.e. the body of the main loop.
+        Performs what is needed for each iteration
+        i.e. the body of the main loop.
         """
         self.pyHandle.draw()
         pointer = self.pygame_widget.get_pointer()
 
         sb = self.wTree.get_widget("statusBar")
-        if sb != None:
-            if (pointer[0] in range(level.SIZE[0]) and
-                pointer[1] in range(level.SIZE[1])):
+        if sb is not None:
+            if pointer[0] in range(level.SIZE[0]) and \
+               pointer[1] in range(level.SIZE[1]):
                 p = adj_down(pointer)
-                sb.push(
-                    sb.get_context_id("SB"),
-                    "x: " + str(p[0]) + " y: " + str(p[1]))
+                sb.push(sb.get_context_id("SB"), "x: " + str(p[0]) + " y: " +
+                        str(p[1]))
             else:
                 sb.push(sb.get_context_id("SB"), "x: - y: -")
 
@@ -1168,61 +1071,68 @@ class USFLevelEditor(object):
         f = open(self.pyHandle.xml_file, "w")
         f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
         f.write('<map\n')
-        f.write(TAB + 'name="' + self.level_property_entry["name"].get_text() + '"\n')
-        f.write(TAB + 'background="' + self.level_property_entry["background"].get_text() + '"\n')
-        f.write(TAB + 'foreground="' + self.level_property_entry["foreground"].get_text() + '"\n')
-        f.write(TAB + 'middle="' + self.level_property_entry["level"].get_text() + '"\n')
-        f.write(TAB + 'margins="' + str(self.pyHandle.level.border[0]) + ',' + 
-                                    str(self.pyHandle.level.border[1]) + ',' + 
-                                    str(self.pyHandle.level.border[2]) + ',' +
-                                    str(self.pyHandle.level.border[3]) + '">\n')
+        f.write(TAB + 'name="' +
+                self.level_property_entry["name"].get_text() + '"\n')
+        f.write(TAB + 'background="' +
+                self.level_property_entry["background"].get_text() + '"\n')
+        f.write(TAB + 'foreground="' +
+                self.level_property_entry["foreground"].get_text() + '"\n')
+        f.write(TAB + 'middle="' +
+                self.level_property_entry["level"].get_text() + '"\n')
+        f.write(TAB + 'margins="' + str(self.pyHandle.level.border[0]) + ',' +
+                str(self.pyHandle.level.border[1]) + ',' +
+                str(self.pyHandle.level.border[2]) + ',' +
+                str(self.pyHandle.level.border[3]) + '">\n')
 
         f.write('\n')
         for entry_point in self.pyHandle.level.entrypoints:
-            f.write(TAB + '<entry-point coords="' + str(entry_point[0]) + ' '
-                        +str(entry_point[1])+'"></entry-point>\n')
-                        
+            f.write(TAB + '<entry-point coords="' + str(entry_point[0]) + ' ' +
+                    str(entry_point[1]) + '"></entry-point>\n')
+
         f.write('\n')
         for block in self.pyHandle.level.map:
-            f.write(TAB + '<block coords="' + str(block[0]) + ' ' + 
-                        str(block[1]) + ' ' + str(block[2]) + ' ' + 
-                        str(block[3])+'"></block>\n')
-                        
+            f.write(TAB + '<block coords="' + str(block[0]) + ' ' +
+                    str(block[1]) + ' ' + str(block[2]) + ' ' +
+                    str(block[3]) + '"></block>\n')
+
         f.write('\n')
         for water in self.pyHandle.level.water_blocs:
-            f.write(TAB + '<water coords="' + str(block[0]) + ' ' + 
-                        str(block[1]) + ' ' + str(block[2]) + ' ' + 
-                        str(block[3])+'"></water>\n')
-                        
+            f.write(TAB + '<water coords="' + str(block[0]) + ' ' +
+                    str(block[1]) + ' ' + str(block[2]) + ' ' +
+                    str(block[3])+'"></water>\n')
+
         f.write('\n')
         for mov in self.pyHandle.level.moving_blocs:
-            f.write(TAB + '<moving-block\n' + TAB * 2 + 'texture="' + 
-                        mov.texture.split(os.sep)[-1]+'">\n')
-                        
+            f.write(TAB + '<moving-block\n' + TAB * 2 + 'texture="' +
+                    mov.texture.split(os.sep)[-1]+'">\n')
+
             for rect in mov.rects:
-                f.write(TAB + '<rect coords="' + str(rect[0]) + ' ' + 
-                            str(rect[1]) + ' ' + str(rect[2]) + ' ' + 
-                            str(rect[3])+'"></rect>\n')
-                            
+                f.write(TAB + '<rect coords="' + str(rect[0]) + ' ' +
+                        str(rect[1]) + ' ' + str(rect[2]) + ' ' +
+                        str(rect[3])+'"></rect>\n')
+
             for pat in mov.patterns:
                 f.write(TAB * 2 + '<pattern\n')
-                f.write(TAB * 3 + 'position="' + str(pat["position"][0]) + ' ' +
-                            str(pat["position"][1]) + '"\n')
-                f.write(TAB * 3 + 'time="' + str(pat["time"]) + '"></pattern>\n')
-                
+                f.write(TAB * 3 + 'position="' + str(pat["position"][0]) +
+                        ' ' + str(pat["position"][1]) + '"\n')
+                f.write(TAB * 3 + 'time="' + str(pat["time"]) +
+                        '"></pattern>\n')
+
             f.write(TAB + '</moving-block>\n\n')
-            
+
         for vec in self.pyHandle.level.vector_blocs:
-            f.write(TAB + '<vector-block\n' + TAB * 2 + 'texture="' + 
+            f.write(TAB + '<vector-block\n' + TAB * 2 + 'texture="' +
                     vec.texture.split(os.sep)[-1] + '"\n')
-                    
-            f.write(TAB * 2 + 'vector="' + str(vec.vector[0]) + ' ' + 
+
+            f.write(TAB * 2 + 'vector="' + str(vec.vector[0]) + ' ' +
                     str(vec.vector[1])+'"\n')
-                    
+
             f.write(TAB * 2 + 'relative="'+str(vec.relative and 1 or 0)+'">\n')
-            
+
             for rect in vec.rects:
-                f.write(TAB * 2 + '<rect coords="'+str(rect[0])+' '+str(rect[1])+' '+str(rect[2])+' '+str(rect[3])+'"></rect>\n')
+                f.write(TAB * 2 + '<rect coords="' + str(rect[0]) + ' ' +
+                        str(rect[1]) + ' ' + str(rect[2]) + ' ' +
+                        str(rect[3]) + '"></rect>\n')
             f.write(TAB + '</vector-block>\n')
         f.write('</map>\n')
         f.close()
