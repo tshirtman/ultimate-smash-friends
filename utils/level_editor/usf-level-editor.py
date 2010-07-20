@@ -53,177 +53,91 @@ class Tools(object):
     This class is responsible for displayinh the properties of different
     elements depending on the selected tool.
     """
-    def __init__(self, widget, ok_callback, cancel_callback, texture_callback):
+    def __init__(self, widget_tree):
         """
         Initialises some class variables.
         """
-        self.bin = widget
-        self.mapping = {
-                        "block":self.show_block_tool,
+        self.x_entry = widget_tree.get_widget("x_position")
+        self.y_entry = widget_tree.get_widget("y_position")
+        self.w_entry = widget_tree.get_widget("width")
+        self.h_entry = widget_tree.get_widget("height")
+        self.vec_x_entry = widget_tree.get_widget("x_vector")
+        self.vec_y_entry = widget_tree.get_widget("y_vector")
+        self.tex_entry = widget_tree.get_widget("texture")
+        self.rel_check = widget_tree.get_widget("relative_checkbox")
+        self.patterns_treeview = widget_tree.get_widget("patterns_treeview")
+        
+        self.pos_group = widget_tree.get_widget("pos_group")
+        self.size_group = widget_tree.get_widget("size_group")
+        self.vector_group = widget_tree.get_widget("vector_group")
+        self.texture_group = widget_tree.get_widget("texture_group")
+        self.rel_group = widget_tree.get_widget("rel_group")
+        self.pattern_group = widget_tree.get_widget("pattern_group")
+        self.button_group = widget_tree.get_widget("button_group")
+        self.none_group = widget_tree.get_widget("none_group")
+        
+        self.properties = widget_tree.get_widget("entity_properties")
+        
+        self.mapping = {"block":self.show_block_tool,
                         "entry":self.show_entry_tool,
                         "water":self.show_water_tool,
                         "moving":self.show_moving_tool,
                         "vector":self.show_vector_tool,
                         "select":self.show_select_tool,
-                        "delete":self.show_delete_tool,
-                        }
-
-        self.vbox = None
-        self.ok_cb = ok_callback
-        self.cancel_cb = cancel_callback
-        self.texture_cb = texture_callback
-
-    def clear(self):
-        """
-        Clears the entity properties container.
-        """
-        self.adj = []
-        for i in range(10):
-            self.adj.append(gtk.Adjustment(0, -5000, 5000, 1, 10, 0))
-
-        if self.bin.get_child() != None:
-            self.bin.remove(self.bin.get_child())
-
-        self.bin.set_label("Element Properties")
-        self.vbox = gtk.VBox()
-        self.bin.add(self.vbox)
-
-    def add_pos(self):
-        """
-        Add position entry boxes to the properties container.
-        """
-        x_label = gtk.Label("X Position: ")
-        y_label = gtk.Label("Y Position: ")
-        hbox1 = gtk.HBox()
-        hbox2 = gtk.HBox()
-
-        self.x_entry = gtk.SpinButton(self.adj[0], 1)
-        self.y_entry = gtk.SpinButton(self.adj[1], 1)
-        self.x_entry.set_width_chars(6)
-        self.y_entry.set_width_chars(6)
-
-        hbox1.add(x_label)
-        hbox1.add(self.x_entry)
-        self.vbox.add(hbox1)
-        hbox2.add(y_label)
-        hbox2.add(self.y_entry)
-        self.vbox.add(hbox2)
-
-    def add_size(self):
-        """
-        Add size entry boxes to the properties container.
-        """
-        w_label = gtk.Label("Width:  ")
-        h_label = gtk.Label("Height: ")
-        hbox1 = gtk.HBox()
-        hbox2 = gtk.HBox()
-
-        self.w_entry = gtk.SpinButton(self.adj[2], 1)
-        self.h_entry = gtk.SpinButton(self.adj[3], 1)
-        self.w_entry.set_width_chars(6)
-        self.h_entry.set_width_chars(6)
-
-        hbox1.add(w_label)
-        hbox1.add(self.w_entry)
-        self.vbox.add(hbox1)
-        hbox2.add(h_label)
-        hbox2.add(self.h_entry)
-        self.vbox.add(hbox2)
-
-    def add_vector(self):
-        """
-        Add vector entry boxes to the properties container.
-        """
-        vec_x_label = gtk.Label("X Vector: ")
-        vec_y_label = gtk.Label("Y Vector: ")
-        hbox1 = gtk.HBox()
-        hbox2 = gtk.HBox()
-
-        self.vec_x_entry = gtk.SpinButton(self.adj[4], 1)
-        self.vec_y_entry = gtk.SpinButton(self.adj[5], 1)
-        self.vec_x_entry.set_width_chars(6)
-        self.vec_y_entry.set_width_chars(6)
-
-        hbox1.add(vec_x_label)
-        hbox1.add(self.vec_x_entry)
-        self.vbox.add(hbox1)
-        hbox2.add(vec_y_label)
-        hbox2.add(self.vec_y_entry)
-        self.vbox.add(hbox2)
-
-    def add_texture(self):
-        """
-        Add texture entry boxes to the properties container.
-        """
-        hbox = gtk.HBox()
-        tex_label = gtk.Label("Texture: ")
-        self.tex_entry = gtk.Entry()
-        load_button = gtk.Button("...")
-
-        load_button.connect("clicked", self.texture_cb)
-
-        hbox.add(self.tex_entry)
-        hbox.add(load_button)
-        self.vbox.add(tex_label)
-        self.vbox.add(hbox)
-
-    def add_buttons(self):
-        """
-        Add an apply and cancel buttons to the properties container.
-        """
-        ok_button = gtk.Button("Apply")
-        cancel_button = gtk.Button("Cancel")
-        hbox = gtk.HBox()
-
-        ok_button.connect("clicked", self.ok_cb)
-        cancel_button.connect("clicked", self.cancel_cb)
-        hbox.set_spacing(3)
-
-        hbox.add(ok_button)
-        hbox.add(cancel_button)
-        self.vbox.add(hbox)
-
-    def add_table(self):
-        """
-        Add a table to the properties container.
-        """
-        scroll = gtk.ScrolledWindow()
+                        "delete":self.show_delete_tool,}
+                        
         self.model = gtk.ListStore(str, str, str)
-        table_label = gtk.Label("Patterns: ")
-        treeview = gtk.TreeView(self.model)
+        self.patterns_treeview.set_model(self.model)
 
-        treeview.set_property("height-request", 125)
+        self.patterns_treeview.set_property("height-request", 125)
+        
+        adj = []
+        for i in range(3):
+            adj.append(gtk.Adjustment(0, -5000, 5000, 1, 10, 0))
 
         x_cell = gtk.CellRendererSpin()
         x_cell.connect("edited", self.changed, self.model, 0)
         x_cell.set_property("editable", True)
-        x_cell.set_property("adjustment", self.adj[6])
+        x_cell.set_property("adjustment", adj[0])
 
         y_cell = gtk.CellRendererSpin()
         y_cell.connect("edited", self.changed, self.model, 1)
         y_cell.set_property("editable", True)
-        y_cell.set_property("adjustment", self.adj[7])
+        y_cell.set_property("adjustment", adj[1])
 
         t_cell = gtk.CellRendererSpin()
         t_cell.connect("edited", self.changed, self.model, 2)
         t_cell.set_property("editable", True)
-        t_cell.set_property("adjustment", self.adj[8])
+        t_cell.set_property("adjustment", adj[2])
 
-        x_col = gtk.TreeViewColumn("X", x_cell, text=0)
-        y_col = gtk.TreeViewColumn("Y", y_cell, text=1)
+        x_col = gtk.TreeViewColumn("X Pos", x_cell, text=0)
+        y_col = gtk.TreeViewColumn("Y Pos", y_cell, text=1)
         t_col = gtk.TreeViewColumn("Time", t_cell, text=2)
 
         x_col.set_min_width(50)
         y_col.set_min_width(50)
         t_col.set_min_width(50)
 
-        treeview.append_column(x_col)
-        treeview.append_column(y_col)
-        treeview.append_column(t_col)
+        self.patterns_treeview.append_column(x_col)
+        self.patterns_treeview.append_column(y_col)
+        self.patterns_treeview.append_column(t_col)
 
-        scroll.add(treeview)
-        self.vbox.add(table_label)
-        self.vbox.add(scroll)
+    def clear(self):
+        """
+        Clears the entity properties container.
+        """
+        for w in self.properties.get_children():
+            w.set_visible(False)
+            
+        for entry in [self.x_entry, self.y_entry, self.w_entry,
+                      self.h_entry, self.vec_x_entry, self.vec_x_entry]:
+            entry.set_value(0)
+            
+        self.tex_entry.set_text(os.path.join(config.sys_data_dir, 'levels',
+                                'emptyPod' + os.extsep + 'png'))
+                                
+        self.rel_check.set_active(False)
+        self.model.clear()
 
     def changed(self, *args, **kwargs):
         """
@@ -231,32 +145,14 @@ class Tools(object):
         """
         self.model.set_value(self.model.get_iter(args[1]), args[4], args[2])
 
-    def format_labels(self):
-        """
-        Formats all the labels to appear more to the right.
-        """
-        for w in self.vbox.get_children():
-            if isinstance(w, gtk.Label):
-                w.set_alignment(0.0, 0.5)
-                w.set_padding(5, 0)
-
-            if isinstance(w, gtk.Container):
-                for w1 in w.get_children():
-                    if isinstance(w1, gtk.Label):
-                        w1.set_alignment(0.0, 0.5)
-                        w1.set_padding(5, 0)
-
     def show_block_tool(self, block=None):
         """
         Sets up the GUI to show block properties.
         """
         self.clear()
-
-        self.add_pos()
-        self.add_size()
-        self.add_buttons()
-
-        self.format_labels()
+        self.pos_group.set_visible(True)
+        self.size_group.set_visible(True)
+        self.button_group.set_visible(True)
 
         if block is not None:
             self.x_entry.set_value(block[0])
@@ -264,21 +160,16 @@ class Tools(object):
             self.w_entry.set_value(block[2])
             self.h_entry.set_value(block[3])
 
-        self.vbox.show_all()
-
     def show_moving_tool(self, block=None):
         """
         Sets up the GUI to show moving block properties.
         """
         self.clear()
-
-        self.add_pos()
-        self.add_size()
-        self.add_texture()
-        self.add_table()
-        self.add_buttons()
-
-        self.format_labels()
+        self.pos_group.set_visible(True)
+        self.size_group.set_visible(True)
+        self.texture_group.set_visible(True)
+        self.pattern_group.set_visible(True)
+        self.button_group.set_visible(True)
 
         if block is not None:
             self.x_entry.set_value(block.patterns[0]["position"][0])
@@ -291,25 +182,17 @@ class Tools(object):
                 self.model.append([p["position"][0], p["position"][1],
                                    p["time"]])
 
-        self.vbox.show_all()
-
     def show_vector_tool(self, block=None):
         """
         Sets up the GUI to show vector block properties.
         """
         self.clear()
-
-        self.add_pos()
-        self.add_size()
-
-        self.rel_check = gtk.CheckButton("Relative")
-        self.vbox.add(self.rel_check)
-
-        self.add_vector()
-        self.add_texture()
-        self.add_buttons()
-
-        self.format_labels()
+        self.pos_group.set_visible(True)
+        self.size_group.set_visible(True)
+        self.vector_group.set_visible(True)
+        self.rel_group.set_visible(True)
+        self.texture_group.set_visible(True)
+        self.button_group.set_visible(True)
 
         if block is not None:
             self.x_entry.set_value(block.position[0])
@@ -321,36 +204,26 @@ class Tools(object):
             self.vec_y_entry.set_value(block.vector[1])
             self.tex_entry.set_text(block.texture)
 
-        self.vbox.show_all()
-
     def show_entry_tool(self, pt=None):
         """
         Sets up the GUI to show entry point properties.
         """
         self.clear()
-
-        self.add_pos()
-        self.add_buttons()
-
-        self.format_labels()
+        self.pos_group.set_visible(True)
+        self.button_group.set_visible(True)
 
         if pt is not None:
             self.x_entry.set_value(pt[0])
             self.y_entry.set_value(pt[1])
-
-        self.vbox.show_all()
 
     def show_water_tool(self, block=None):
         """
         Sets up the GUI to show water block properties.
         """
         self.clear()
-
-        self.add_pos()
-        self.add_size()
-        self.add_buttons()
-
-        self.format_labels()
+        self.pos_group.set_visible(True)
+        self.size_group.set_visible(True)
+        self.button_group.set_visible(True)
 
         if block is not None:
             self.x_entry.set_value(block[0])
@@ -358,29 +231,19 @@ class Tools(object):
             self.w_entry.set_value(block[2])
             self.h_entry.set_value(block[3])
 
-        self.vbox.show_all()
-
     def show_select_tool(self):
         """
         Sets up the GUI to show select tool properties.
         """
         self.clear()
-
-        label = gtk.Label("No properties for this tool")
-
-        self.vbox.add(label)
-        self.vbox.show_all()
+        self.none_group.set_visible(True)
 
     def show_delete_tool(self):
         """
         Sets up the GUI to show delete tool properties.
         """
         self.clear()
-
-        label = gtk.Label("No properties for this tool")
-
-        self.vbox.add(label)
-        self.vbox.show_all()
+        self.none_group.set_visible(True)
 
 class PygameHandler(object):
     """
@@ -428,8 +291,8 @@ class PygameHandler(object):
         elif property == "name":
             self.level.name = value
 
-        else:
-            print "Invalid property."
+        elif property == "border":
+            self.level.border = value
 
     def draw_arrow(self, surface, colour, from_pt, to_pt):
         """
@@ -589,7 +452,10 @@ class USFLevelEditor(object):
                        "select_tool": self.callback_select_tool,
                        "png_load": self.callback_level_properties_change,
                        "pygame_press": self.callback_pygame_press,
-                       "pygame_release": self.callback_pygame_release,}
+                       "pygame_release": self.callback_pygame_release,
+                       "texture_load": self.callback_texture_load,
+                       "tools_accept": self.callback_accept_tool,
+                       "tools_cancel": self.callback_cancel_tool,}
             self.wTree.signal_autoconnect(signals)
 
         #XML viewer
@@ -609,10 +475,14 @@ class USFLevelEditor(object):
         view.show()
 
         self.level_property_entry = {
-                        "foreground":self.wTree.get_widget("foreground_entry"),
-                        "background":self.wTree.get_widget("background_entry"),
-                        "level":self.wTree.get_widget("level_entry"),
-                        "name":self.wTree.get_widget("name_entry"),}
+                        "foreground":self.wTree.get_widget("level_foreground"),
+                        "background":self.wTree.get_widget("level_background"),
+                        "level":self.wTree.get_widget("level_level"),
+                        "name":self.wTree.get_widget("level_name"),
+                        "left_margin":self.wTree.get_widget("left_margin"),
+                        "top_margin":self.wTree.get_widget("top_margin"),
+                        "right_margin":self.wTree.get_widget("right_margin"),
+                        "bottom_margin":self.wTree.get_widget("bottom_margin"),}
 
         #pygame stuff
         self.pygame_widget = self.wTree.get_widget("pygame")
@@ -625,10 +495,7 @@ class USFLevelEditor(object):
         self.pyHandle = PygameHandler(self.pygame_widget)
         self.resize_viewport()
 
-        self.tools = Tools(self.wTree.get_widget("tools"),
-                           self.callback_accept_tool,
-                           self.callback_cancel_tool,
-                           self.callback_texture_load)
+        self.tools = Tools(self.wTree)
 
         self.tools.show_block_tool()
         self.current_entity = [None, None]
@@ -715,6 +582,18 @@ class USFLevelEditor(object):
 
             self.level_property_entry["name"].set_text(
                             self.pyHandle.level.name)
+                            
+            self.level_property_entry["left_margin"].set_value(
+                            int(self.pyHandle.level.border[0]))
+                            
+            self.level_property_entry["top_margin"].set_value(
+                            int(self.pyHandle.level.border[1]))
+                            
+            self.level_property_entry["right_margin"].set_value(
+                            int(self.pyHandle.level.border[2]))
+                            
+            self.level_property_entry["bottom_margin"].set_value(
+                            int(self.pyHandle.level.border[3]))
 
         file_loader.destroy()
         self.tools.mapping[self.pyHandle.tool]
@@ -771,8 +650,16 @@ class USFLevelEditor(object):
         Changes level properties according to values entered in the
         Level Properties section of the GUI.
         """
-        if args[0].get_name() == "name_entry":
-            self.pyHandle.py_set_properties("name", args.get_text())
+        if args[0].get_name() == "level_name":
+            self.pyHandle.set_level_property("name", args[0].get_text())
+
+        elif args[0].get_name().endswith("margin"):
+            self.pyHandle.set_level_property("border",
+                 (int(self.level_property_entry["left_margin"].get_value()),
+                  int(self.level_property_entry["top_margin"].get_value()),
+                  int(self.level_property_entry["right_margin"].get_value()),
+                  int(self.level_property_entry["bottom_margin"].get_value())))
+
         else:
             file_loader = self.create_file_loader(True)
             self.attach_filter(file_loader, "All PNG files", ["image/png"])
@@ -782,7 +669,7 @@ class USFLevelEditor(object):
                          set_text(file_loader.get_filename().split(os.sep)[-1])
 
                 self.pyHandle.set_level_property(
-                                            args[0].get_name().split("_")[0],
+                                            args[0].get_name().split("_")[-1],
                                             file_loader.get_filename())
 
             file_loader.destroy()
