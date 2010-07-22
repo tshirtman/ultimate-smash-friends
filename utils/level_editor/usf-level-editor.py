@@ -274,6 +274,7 @@ class PygameHandler(object):
         self.texture = os.path.join(config.sys_data_dir,
                                     "levels",
                                     "emptyPod.png")
+        self.current_entity = [None, None]
 
     def set_level_property(self, property, value):
         """
@@ -498,7 +499,7 @@ class USFLevelEditor(object):
         self.tools = Tools(self.wTree)
 
         self.tools.show_block_tool()
-        self.current_entity = [None, None]
+        #self.current_entity = [None, None]
 
         self.cancel = False
 
@@ -722,16 +723,16 @@ class USFLevelEditor(object):
         """
         Applies changes made in the entity properties container.
         """
-        self.current_entity[0].remove(self.current_entity[1])
+        self.pyHandle.current_entity[0].remove(self.pyHandle.current_entity[1])
 
         if self.pyHandle.tool in ["block", "water"]:
-            self.current_entity[1] = pygame.Rect(
+            self.pyHandle.current_entity[1] = pygame.Rect(
                                                 self.tools.x_entry.get_value(),
                                                 self.tools.y_entry.get_value(),
                                                 self.tools.w_entry.get_value(),
                                                 self.tools.h_entry.get_value())
         elif self.pyHandle.tool == "entry":
-            self.current_entity[1] = (self.tools.x_entry.get_value(),
+            self.pyHandle.current_entity[1] = (self.tools.x_entry.get_value(),
                                       self.tools.y_entry.get_value())
         elif self.pyHandle.tool == "moving":
             it = self.tools.model.get_iter_root()
@@ -748,13 +749,13 @@ class USFLevelEditor(object):
                                         int(self.tools.model.get_value(it, 1))]
                                        })
 
-            self.current_entity[1] = level.MovingPart(
+            self.pyHandle.current_entity[1] = level.MovingPart(
                         [pygame.Rect((0, 0), (self.tools.w_entry.get_value(),
                                              self.tools.h_entry.get_value()))],
                         self.tools.tex_entry.get_text().split(os.sep)[-1], pat)
 
         elif self.pyHandle.tool == "vector":
-            self.current_entity[1] = level.VectorBloc(
+            self.pyHandle.current_entity[1] = level.VectorBloc(
                         [pygame.Rect((0, 0), (self.tools.w_entry.get_value(),
                                              self.tools.h_entry.get_value()))],
                          (self.tools.x_entry.get_value(),
@@ -764,13 +765,13 @@ class USFLevelEditor(object):
                          self.tools.rel_check.get_active(),
                          self.tools.tex_entry.get_text().split(os.sep)[-1])
 
-        self.current_entity[0].append(self.current_entity[1])
+        self.pyHandle.current_entity[0].append(self.pyHandle.current_entity[1])
 
     def callback_cancel_tool(self, *args, **kwargs):
         """
         Cancels any changes made to the properties.
         """
-        self.tools.mapping[self.pyHandle.tool](self.current_entity[1])
+        self.tools.mapping[self.pyHandle.tool](self.pyHandle.current_entity[1])
 
     def callback_pygame_press(self, *args, **kwargs):
         """
@@ -819,21 +820,21 @@ class USFLevelEditor(object):
         if self.pyHandle.tool == "entry":
             self.pyHandle.level.entrypoints.append(pointer)
 
-            self.current_entity = [self.pyHandle.level.entrypoints,
+            self.pyHandle.current_entity = [self.pyHandle.level.entrypoints,
                                    self.pyHandle.level.entrypoints[-1]]
 
             self.tools.show_entry_tool(self.pyHandle.level.entrypoints[-1])
         elif self.pyHandle.tool == "block":
             self.pyHandle.level.map.append(rect)
 
-            self.current_entity = [self.pyHandle.level.map,
+            self.pyHandle.current_entity = [self.pyHandle.level.map,
                                    self.pyHandle.level.map[-1]]
 
             self.tools.show_block_tool(self.pyHandle.level.map[-1])
         elif self.pyHandle.tool == "water":
             self.pyHandle.level.water_blocs.append(rect)
 
-            self.current_entity = [self.pyHandle.level.water_blocs,
+            self.pyHandle.current_entity = [self.pyHandle.level.water_blocs,
                                    self.pyHandle.level.water_blocs[-1]]
 
             self.tools.show_water_tool(self.pyHandle.level.water_blocs[-1])
@@ -843,10 +844,10 @@ class USFLevelEditor(object):
                 self.tools.tex_entry.set_text(self.pyHandle.texture)
 
             if self.pyHandle.secondary:
-                self.pyHandle.level.vector_blocs.remove(self.current_entity[1])
+                self.pyHandle.level.vector_blocs.remove(self.pyHandle.current_entity[1])
 
-                bloc = level.VectorBloc(self.current_entity[1].rects,
-                                        self.current_entity[1].position,
+                bloc = level.VectorBloc(self.pyHandle.current_entity[1].rects,
+                                        self.pyHandle.current_entity[1].position,
                                         rect.size,
                                         self.tools.rel_check.get_active(),
                                         self.tools.tex_entry.get_text().split(
@@ -865,7 +866,7 @@ class USFLevelEditor(object):
                 self.pyHandle.start_pt = adj_up(self.pyHandle.start_pt)
 
             self.pyHandle.level.vector_blocs.append(bloc)
-            self.current_entity = [self.pyHandle.level.vector_blocs,
+            self.pyHandle.current_entity = [self.pyHandle.level.vector_blocs,
                                    self.pyHandle.level.vector_blocs[-1]]
             self.tools.show_vector_tool(self.pyHandle.level.vector_blocs[-1])
         elif self.pyHandle.tool == "moving":
@@ -874,16 +875,16 @@ class USFLevelEditor(object):
                 self.tools.tex_entry.set_text(self.pyHandle.texture)
 
             if self.pyHandle.secondary:
-                self.pyHandle.level.moving_blocs.remove(self.current_entity[1])
+                self.pyHandle.level.moving_blocs.remove(self.pyHandle.current_entity[1])
 
-                self.current_entity[1].patterns.append({
-                        "time":self.current_entity[1].patterns[-1]["time"]+100,
+                self.pyHandle.current_entity[1].patterns.append({
+                        "time":self.pyHandle.current_entity[1].patterns[-1]["time"]+100,
                         "position":list(pointer)})
 
-                bloc = level.MovingPart(self.current_entity[1].rects,
+                bloc = level.MovingPart(self.pyHandle.current_entity[1].rects,
                                         self.tools.tex_entry.get_text().split(
                                             os.sep)[-1],
-                                        self.current_entity[1].patterns)
+                                        self.pyHandle.current_entity[1].patterns)
 
                 self.pyHandle.start_pt = adj_up(pointer)
             else:
@@ -897,7 +898,7 @@ class USFLevelEditor(object):
                 self.pyHandle.start_pt = adj_up(self.pyHandle.start_pt)
 
             self.pyHandle.level.moving_blocs.append(bloc)
-            self.current_entity = [self.pyHandle.level.moving_blocs,
+            self.pyHandle.current_entity = [self.pyHandle.level.moving_blocs,
                                    self.pyHandle.level.moving_blocs[-1]]
             self.tools.show_moving_tool(self.pyHandle.level.moving_blocs[-1])
         elif self.pyHandle.tool == "delete":
@@ -910,8 +911,7 @@ class USFLevelEditor(object):
             select = self.find(pointer)
 
             if select is not None:
-                self.current_entity = [select[0], select[1]]
-                self.pyHandle.tool = select[2]
+                self.pyHandle.current_entity = [select[0], select[1]]
                 self.tools.mapping[select[2]](select[1])
 
         if self.pyHandle.tool not in ["vector", "moving"]:
@@ -924,25 +924,25 @@ class USFLevelEditor(object):
         """
         for entry in self.pyHandle.level.entrypoints:
             if pygame.Rect(entry, (10,10)).collidepoint(pt):
-                return (self.pyHandle.level.entrypoints, entry, "entry")
+                return [self.pyHandle.level.entrypoints, entry, "entry"]
 
         for water in self.pyHandle.level.water_blocs:
             if water.collidepoint(pt):
-                return (self.pyHandle.level.water_blocs, water, "water")
+                return [self.pyHandle.level.water_blocs, water, "water"]
 
         for block in self.pyHandle.level.map:
             if block.collidepoint(pt):
-                return (self.pyHandle.level.map, block, "block")
+                return [self.pyHandle.level.map, block, "block"]
 
         for vector in self.pyHandle.level.vector_blocs:
             if pygame.Rect(vector.position,
                            vector.rects[0].size).collidepoint(pt):
-                return (self.pyHandle.level.vector_blocs, vector, "vector")
+                return [self.pyHandle.level.vector_blocs, vector, "vector"]
 
         for moving in self.pyHandle.level.moving_blocs:
             if pygame.Rect(moving.patterns[0]["position"],
                            moving.rects[0].size).collidepoint(pt):
-                return (self.pyHandle.level.moving_blocs, moving, "moving")
+                return [self.pyHandle.level.moving_blocs, moving, "moving"]
 
         return None
 
