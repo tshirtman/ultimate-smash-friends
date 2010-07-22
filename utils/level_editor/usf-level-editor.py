@@ -66,7 +66,7 @@ class Tools(object):
         self.tex_entry = widget_tree.get_widget("texture")
         self.rel_check = widget_tree.get_widget("relative_checkbox")
         self.patterns_treeview = widget_tree.get_widget("patterns_treeview")
-        
+
         self.pos_group = widget_tree.get_widget("pos_group")
         self.size_group = widget_tree.get_widget("size_group")
         self.vector_group = widget_tree.get_widget("vector_group")
@@ -75,9 +75,9 @@ class Tools(object):
         self.pattern_group = widget_tree.get_widget("pattern_group")
         self.button_group = widget_tree.get_widget("button_group")
         self.none_group = widget_tree.get_widget("none_group")
-        
+
         self.properties = widget_tree.get_widget("entity_properties")
-        
+
         self.mapping = {"block":self.show_block_tool,
                         "entry":self.show_entry_tool,
                         "water":self.show_water_tool,
@@ -85,12 +85,12 @@ class Tools(object):
                         "vector":self.show_vector_tool,
                         "select":self.show_select_tool,
                         "delete":self.show_delete_tool,}
-                        
+
         self.model = gtk.ListStore(str, str, str)
         self.patterns_treeview.set_model(self.model)
 
         self.patterns_treeview.set_property("height-request", 125)
-        
+
         adj = []
         for i in range(3):
             adj.append(gtk.Adjustment(0, -5000, 5000, 1, 10, 0))
@@ -128,14 +128,14 @@ class Tools(object):
         """
         for w in self.properties.get_children():
             w.set_visible(False)
-            
+
         for entry in [self.x_entry, self.y_entry, self.w_entry,
                       self.h_entry, self.vec_x_entry, self.vec_x_entry]:
             entry.set_value(0)
-            
+
         self.tex_entry.set_text(os.path.join(config.sys_data_dir, 'levels',
                                 'emptyPod' + os.extsep + 'png'))
-                                
+
         self.rel_check.set_active(False)
         self.model.clear()
 
@@ -411,7 +411,7 @@ class PygameHandler(object):
                                               pointer[1]-self.start_pt[1])))
 
             if self.tool in ["vector", "moving"] and self.start_pt != INVALID:
-                self.surface.blit(loaders.image(self.texture, 1)[0], 
+                self.surface.blit(loaders.image(self.texture, 1)[0],
                                   self.start_pt)
         else:
             if self.tool in ["vector", "moving"]:
@@ -551,7 +551,7 @@ class USFLevelEditor(object):
         """
         Handles the opening of a level.
         """
-        #TODO:if file is already open and it is 
+        #TODO:if file is already open and it is
         # not saved show 'are you sure' dialog
         file_loader = self.create_file_loader(True)
         self.attach_filter(file_loader, "All XML files", ["text/xml"])
@@ -582,16 +582,16 @@ class USFLevelEditor(object):
 
             self.level_property_entry["name"].set_text(
                             self.pyHandle.level.name)
-                            
+
             self.level_property_entry["left_margin"].set_value(
                             int(self.pyHandle.level.border[0]))
-                            
+
             self.level_property_entry["top_margin"].set_value(
                             int(self.pyHandle.level.border[1]))
-                            
+
             self.level_property_entry["right_margin"].set_value(
                             int(self.pyHandle.level.border[2]))
-                            
+
             self.level_property_entry["bottom_margin"].set_value(
                             int(self.pyHandle.level.border[3]))
 
@@ -776,7 +776,18 @@ class USFLevelEditor(object):
         """
         Changes drawing states according to the user input and tool selected.
         """
-        if not self.pyHandle.secondary:
+        if args[1].button == 1:
+            self.left = True
+        elif args[1].button == 3:
+            self.right = True
+            self.pyHandle.secondary = False
+            self.pyHandle.start_pt = INVALID
+            self.cancel = True
+            return
+        else:
+            return
+
+        if not self.pyHandle.secondary and not self.cancel:
             if self.pyHandle.tool not in ["entry", "select", "delete"]:
                 self.pyHandle.start_pt = self.pygame_widget.get_pointer()
 
@@ -784,14 +795,19 @@ class USFLevelEditor(object):
         """
         Updates the level according to user modifications and input.
         """
-        if self.cancel:
-            self.cancel = False
-
-        if args[1].button == 3:
-            self.pyHandle.secondary = False
-            self.pyHandle.start_pt = INVALID
-            self.cancel = True
+        if args[1].button == 1:
+            self.left = False
+        elif args[1].button == 3:
+            self.right = False
+        else:
             return
+
+        if self.cancel:
+            if self.left or self.right:
+                return
+            else:
+                self.cancel = False
+                return
 
         pointer = adj_down(self.pygame_widget.get_pointer())
         self.pyHandle.start_pt = adj_down(self.pyHandle.start_pt)
