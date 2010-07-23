@@ -519,8 +519,11 @@ class USFLevelEditor(object):
                                 opener and gtk.FILE_CHOOSER_ACTION_OPEN or
                                     gtk.FILE_CHOOSER_ACTION_SAVE, buttons)
 
+        if not opener:
+            file_loader.set_do_overwrite_confirmation(True)
         file_loader.set_current_folder(os.sep.join([config.sys_data_dir,
                                        'levels']))
+
         return file_loader
 
     def attach_filter(self, widget, title, types):
@@ -559,43 +562,55 @@ class USFLevelEditor(object):
         self.attach_filter(file_loader, "All XML files", ["text/xml"])
 
         if file_loader.run() == gtk.RESPONSE_OK:
-            file = open(file_loader.get_filename())
+            try:
+                file = open(file_loader.get_filename())
 
-            self.pyHandle.xml_file = file_loader.get_filename()
-            self.pyHandle.level = level.Level(
-              file_loader.get_filename().split(os.sep)[-1].split(os.extsep)[0])
+                self.pyHandle.xml_file = file_loader.get_filename()
+                self.pyHandle.level = level.Level(
+                  file_loader.get_filename().split(os.sep)[-1].split(os.extsep)[0])
 
-            self.window.set_title("USF Level Editor: " +
-                                  self.pyHandle.level.name)
-            self.xml_buffer.set_text(file.read())
-            file.close()
+                self.window.set_title("USF Level Editor: " +
+                                      self.pyHandle.level.name)
+                self.xml_buffer.set_text(file.read())
+                file.close()
 
-            self.resize_viewport()
+                self.resize_viewport()
 
-            #toolbar updates
-            self.level_property_entry["background"].set_text(
-                            self.pyHandle.level.background.split(os.sep)[-1])
+                #toolbar updates
+                self.level_property_entry["background"].set_text(
+                                self.pyHandle.level.background.split(os.sep)[-1])
 
-            self.level_property_entry["level"].set_text(
-                            self.pyHandle.level.level.split(os.sep)[-1])
+                self.level_property_entry["level"].set_text(
+                                self.pyHandle.level.level.split(os.sep)[-1])
 
-            self.level_property_entry["foreground"].set_text(
-                            self.pyHandle.level.foreground.split(os.sep)[-1])
+                self.level_property_entry["foreground"].set_text(
+                                self.pyHandle.level.foreground.split(os.sep)[-1])
 
-            self.level_property_entry["name"].set_text(
-                            self.pyHandle.level.name)
+                self.level_property_entry["name"].set_text(
+                                self.pyHandle.level.name)
 
-            self.level_property_entry["left_margin"].set_value(
-                            int(self.pyHandle.level.border[0]))
+                self.level_property_entry["left_margin"].set_value(
+                                int(self.pyHandle.level.border[0]))
 
-            self.level_property_entry["top_margin"].set_value(
-                            int(self.pyHandle.level.border[1]))
+                self.level_property_entry["top_margin"].set_value(
+                                int(self.pyHandle.level.border[1]))
 
-            self.level_property_entry["right_margin"].set_value(
-                            int(self.pyHandle.level.border[2]))
+                self.level_property_entry["right_margin"].set_value(
+                                int(self.pyHandle.level.border[2]))
 
-            self.level_property_entry["bottom_margin"].set_value(
-                            int(self.pyHandle.level.border[3]))
+                self.level_property_entry["bottom_margin"].set_value(
+                                int(self.pyHandle.level.border[3]))
+            except:
+                dialog = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR,
+                   gtk.BUTTONS_OK, "Could not load file " +
+                   file_loader.get_filename().split(os.sep)[-1] +
+                   ". Make sure the file " +
+                   "is in the 'levels' folder and is a valid USF level file.")
+
+                dialog.set_title("Error loading file")
+
+                if dialog.run() == gtk.RESPONSE_OK:
+                    dialog.destroy()
 
         file_loader.destroy()
         self.tools.mapping[self.pyHandle.tool]
@@ -645,9 +660,9 @@ class USFLevelEditor(object):
         if file_saver.run() == gtk.RESPONSE_OK:
             self.pyHandle.xml_file = file_saver.get_filename()
             valid = True
-            
+
         file_saver.destroy()
-        
+
         if valid:
             self.callback_menu_file_save(None)
 
@@ -671,12 +686,28 @@ class USFLevelEditor(object):
             self.attach_filter(file_loader, "All PNG files", ["image/png"])
 
             if file_loader.run() == gtk.RESPONSE_OK:
-                self.level_property_entry[args[0].get_name().split("_")[0]]. \
-                         set_text(file_loader.get_filename().split(os.sep)[-1])
+                try:
+                    loaders.image(os.path.join(config.sys_data_dir,
+                                               "levels",
+                                               file_loader.get_filename().split(os.sep)[-1]))
 
-                self.pyHandle.set_level_property(
-                                            args[0].get_name().split("_")[-1],
-                                            file_loader.get_filename())
+                    self.level_property_entry[args[0].get_name().split("_")[0]]. \
+                             set_text(file_loader.get_filename().split(os.sep)[-1])
+
+                    self.pyHandle.set_level_property(
+                                                args[0].get_name().split("_")[0],
+                                                file_loader.get_filename())
+                except:
+                    dialog = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR,
+                                gtk.BUTTONS_OK, "Could not load file " +
+                                file_loader.get_filename().split(os.sep)[-1] +
+                                ". Make sure the file " +
+                                "is in the 'levels' folder and is a valid image file.")
+
+                    dialog.set_title("Invalid file")
+
+                    if dialog.run() == gtk.RESPONSE_OK:
+                        dialog.destroy()
 
             file_loader.destroy()
             self.resize_viewport()
@@ -718,8 +749,24 @@ class USFLevelEditor(object):
         self.attach_filter(file_loader, "All PNG files", ["image/png"])
 
         if file_loader.run() == gtk.RESPONSE_OK:
-            self.tools.tex_entry.set_text(file_loader.get_filename())
-            self.pyHandle.texture = file_loader.get_filename()
+            try:
+                loaders.image(os.path.join(config.sys_data_dir,
+                                           "levels",
+                                           file_loader.get_filename().split(os.sep)[-1]))
+
+                self.tools.tex_entry.set_text(file_loader.get_filename())
+                self.pyHandle.texture = file_loader.get_filename()
+            except:
+                dialog = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR,
+                                gtk.BUTTONS_OK, "Could not load file " +
+                                file_loader.get_filename().split(os.sep)[-1] +
+                                ". Make sure the file " +
+                                "is in the 'levels' folder and is a valid image file.")
+
+                    dialog.set_title("Invalid file")
+
+                    if dialog.run() == gtk.RESPONSE_OK:
+                        dialog.destroy()
 
         file_loader.destroy()
         self.resize_viewport()
