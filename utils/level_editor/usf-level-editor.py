@@ -519,7 +519,8 @@ class USFLevelEditor(object):
                                 opener and gtk.FILE_CHOOSER_ACTION_OPEN or
                                     gtk.FILE_CHOOSER_ACTION_SAVE, buttons)
 
-        file_loader.set_current_folder(os.sep.join([".", "data", "levels"]))
+        file_loader.set_current_folder(os.sep.join([config.sys_data_dir,
+                                       'levels']))
         return file_loader
 
     def attach_filter(self, widget, title, types):
@@ -639,12 +640,16 @@ class USFLevelEditor(object):
         """
         file_saver = self.create_file_loader(False)
         self.attach_filter(file_saver, "All XML files", ["text/xml"])
+        valid = False
 
         if file_saver.run() == gtk.RESPONSE_OK:
             self.pyHandle.xml_file = file_saver.get_filename()
-
+            valid = True
+            
         file_saver.destroy()
-        self.callback_menu_file_save(None)
+        
+        if valid:
+            self.callback_menu_file_save(None)
 
     def callback_level_properties_change(self, *args, **kwargs):
         """
