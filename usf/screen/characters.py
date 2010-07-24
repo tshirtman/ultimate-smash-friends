@@ -87,7 +87,8 @@ class characters(Screen):
             self.player_vbox[i].add(self.portraits[-1], margin_left=50, margin=5, size=(50,50))
             hbox = widgets.HBox()
             #this is very bad for performance
-            hbox.add(widgets.Label("AI :"))
+            #I18N
+            hbox.add(widgets.Label(_("AI :")))
             hbox.add(self.checkboxes_ai[-1], margin=10)
             self.player_vbox[i].add(hbox)
 

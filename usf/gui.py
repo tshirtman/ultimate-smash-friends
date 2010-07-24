@@ -44,6 +44,7 @@ from skin import Skin
 #import game
 from widgets import optimize_size 
 from font import fonts
+
 class Gui(object):
     """
     Main class of the GUI. Init and maintain all menus and widgets.
@@ -72,9 +73,7 @@ class Gui(object):
         self.cursor = loaders.image(config.sys_data_dir + os.sep + 'cursor.png')[0]
         self.update_youhere()
 
-    def update(self, first, second, third):
-        #FIXME : it sould be in main.pyw
-        time.sleep(1.00/float(config.general['GUI_FPS']))
+    def update(self, clock):
         while(True):
             event = pygame.event.poll()
             if event.type == pygame.QUIT:
@@ -95,7 +94,7 @@ class Gui(object):
         self.screens[self.screen_current].update()
         
         #draw the '> you are here :' dialog
-        #self.screen.blit(self.here, (10, 10))
+        self.screen.blit(loaders.text("FPS: " + str(clock.get_fps()), fonts["mono"]["37"]), (10, 10))
         #update the mouse position
         x, y = pygame.mouse.get_pos()
         #x += self.cursor.get_height()

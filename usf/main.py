@@ -25,7 +25,7 @@ import os
 import sys
 from optparse import OptionParser
 import logging
-
+import time
 # our modules
 from config import Config
 config = Config()
@@ -195,6 +195,7 @@ class Main(object):
         pygame.mouse.set_visible(False)
         while (True):
             # update the fps counter
+            start_loop = pygame.time.get_ticks()
             self.clock.tick()
 
             # poll controls and update informations on current state of the UI
@@ -203,8 +204,7 @@ class Main(object):
             if self.state == "menu":
                 # return of the menu update function may contain a new game
                 # instance to switch to.
-                newgame, game_ = self.menu.update(self.state, self.game, 
-                                                  self.controls)
+                newgame, game_ = self.menu.update(self.clock)
                 if newgame:
                     if game_ is not self.game:
                         #logging.debug('new game')
@@ -237,6 +237,15 @@ class Main(object):
                 logging.debug('fps = '+str(self.clock.get_fps()))
                 pygame.quit()
                 break
+            if self.state == "menu":
+                #FIXME
+                max_fps = 1000/config.general["MAX_GUI_FPS"]
+                if pygame.time.get_ticks() < max_fps + start_loop:
+                    pygame.time.wait(max_fps + start_loop - pygame.time.get_ticks())
+                """
+                if pygame.time.get_ticks() - (start_loop + 1.0/float(config.general["MAX_GUI_FPS"])) > 0:
+                    pygame.time.wait(int(pygame.time.get_ticks() - (start_loop + 1.0/float(config.general["MAX_GUI_FPS"]))))
+                """
 
     def author(self):
         if 'CREDITS' not in os.listdir(os.path.join(config.sys_data_dir)):
