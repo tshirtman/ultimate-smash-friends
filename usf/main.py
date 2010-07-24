@@ -214,7 +214,7 @@ class Main(object):
                     self.state = 'game'
             else:
                 self.state = self.game.update()
-                if self.state == 'game':
+                if self.state in ['game', 'victory']:
                     self.game.draw(
                         debug_params={
                             'controls': config.debug['CONTROLS'] and self.controls,
@@ -230,8 +230,14 @@ class Main(object):
                     self.menu.screen_current = "main_screen"
 
             pygame.display.update()
+            
+            if self.menu.screen_current == 'about':
+                music_state = 'credits'
+            else:
+                music_state = self.state
+
             if config.audio['MUSIC']:
-                self.music.update(self.state)
+                self.music.update(music_state)
             # verify there is not a QUIT event waiting for us, in case of we
             # have to quit.
             self.ended = pygame.event.get(QUIT)

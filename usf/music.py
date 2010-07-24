@@ -69,11 +69,11 @@ class Music (object):
         if self.current_track is not None:
             if config.audio['MUSIC_VOLUME'] != self.music_volume:
                 self.current_track.set_volume(config.audio['MUSIC_VOLUME']/100.0)
-        else:
-            if state != self.previous_state:
-                self.change_music(self.playlists[state])
-            elif self.current_track and time.time() - self.time_begin + 4 > self.current_track.get_length():
-                self.change_music(self.playlists[state])
+
+        if (state != self.previous_state or
+           (self.current_track and time.time() - self.time_begin
+            + 4 > self.current_track.get_length()) or self.current_track is None):
+            self.change_music(self.playlists[state])
 
         self.music_volume = config.audio['MUSIC_VOLUME']
         self.previous_state = state

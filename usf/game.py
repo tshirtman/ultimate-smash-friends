@@ -557,7 +557,8 @@ class Game (object):
             if item.lives <= 0:
                 del(self.items[self.items.index(item)])
 
-        if len([player for player in self.players if player.lives > 0]) <= 1:
+        players_left = len([player for player in self.players if player.lives > 0])
+        if players_left <= 1:
             # there is only one player left then the game need to end after a
             # short animation
             #decount time
@@ -572,6 +573,9 @@ class Game (object):
             del(self.events)
             self.ingame=False
             return 'menu'
+
+        if players_left == 1:
+            return 'victory'
 
         return "game"
 
