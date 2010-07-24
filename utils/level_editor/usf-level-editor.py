@@ -133,8 +133,8 @@ class Tools(object):
                       self.h_entry, self.vec_x_entry, self.vec_x_entry]:
             entry.set_value(0)
 
-        self.tex_entry.set_text(os.path.join(config.sys_data_dir, 'levels',
-                                'emptyPod' + os.extsep + 'png'))
+        self.tex_entry.set_text(os.path.join(config.sys_data_dir, 
+                                '../utils/level_editor/emptyPod.png'))
 
         self.rel_check.set_active(False)
         self.model.clear()
@@ -255,7 +255,8 @@ class PygameHandler(object):
         Initialises class variables.
         """
         self.alpha = 128
-        self.xml_file = "emptyLevel/emptyLevel"
+        self.xml_file = os.path.join(config.sys_data_dir, 
+                                "../utils/level_editor/emptyLevel")
         self.level = level.Level(self.xml_file)
 
         self.parts = {
@@ -272,8 +273,7 @@ class PygameHandler(object):
         self.widget = widget
         self.secondary = False
         self.texture = os.path.join(config.sys_data_dir,
-                                    "levels",
-                                    "emptyPod.png")
+                                    "../utils/level_editor/emptyPod.png")
         self.current_entity = [None, None]
 
     def set_level_property(self, property, value):
@@ -627,7 +627,8 @@ class USFLevelEditor(object):
         """
         """
         #TODO: saving???
-        self.pyHandle.xml_file = "emptyLevel/emptyLevel"
+        self.pyHandle.xml_file = os.path.join(config.sys_data_dir, 
+                                "../utils/level_editor/emptyLevel")
         self.pyHandle.level = level.Level(self.pyHandle.xml_file)
         self.resize_viewport()
 
@@ -644,7 +645,8 @@ class USFLevelEditor(object):
         """
         Saves the current level.
         """
-        if self.pyHandle.xml_file == "emptyLevel/emptyLevel":
+        if self.pyHandle.xml_file == os.path.join(config.sys_data_dir, 
+                                "../utils/level_editor/emptyLevel"):
             self.callback_menu_file_save_as(None, None)
         else:
             self.save()
@@ -763,9 +765,9 @@ class USFLevelEditor(object):
                                 ". Make sure the file " +
                                 "is in the 'levels' folder and is a valid image file.")
 
-                    dialog.set_title("Invalid file")
+                dialog.set_title("Invalid file")
 
-                    if dialog.run() == gtk.RESPONSE_OK:
+                if dialog.run() == gtk.RESPONSE_OK:
                         dialog.destroy()
 
         file_loader.destroy()
@@ -892,8 +894,16 @@ class USFLevelEditor(object):
             self.tools.show_water_tool(self.pyHandle.level.water_blocs[-1])
         elif self.pyHandle.tool == "vector":
             bloc = None
-            if self.tools.tex_entry.get_text() == "":
-                self.tools.tex_entry.set_text(self.pyHandle.texture)
+            texture = self.tools.tex_entry.get_text()
+            
+            if texture == "":
+                texture = self.pyHandle.texture
+            elif not texture.endswith("../utils/level_editor/emptyPod.png"):
+                texture = texture.split(os.sep)[-1]
+
+            self.tools.tex_entry.set_text(texture)
+            #self.tools.tex_entry.set_text(self.pyHandle.texture)
+            #self.tools.tex_entry.get_text().split(os.sep)[-1]
 
             if self.pyHandle.secondary:
                 self.pyHandle.level.vector_blocs.remove(self.pyHandle.current_entity[1])
@@ -902,8 +912,7 @@ class USFLevelEditor(object):
                                         self.pyHandle.current_entity[1].position,
                                         rect.size,
                                         self.tools.rel_check.get_active(),
-                                        self.tools.tex_entry.get_text().split(
-                                            os.sep)[-1])
+                                        texture)
 
                 self.pyHandle.start_pt = INVALID
                 self.pyHandle.secondary = False
@@ -911,8 +920,7 @@ class USFLevelEditor(object):
                 bloc = level.VectorBloc([pygame.Rect((0,0),rect.size)],
                                         rect.topleft, (0,0),
                                         self.tools.rel_check.get_active(),
-                                        self.tools.tex_entry.get_text().split(
-                                            os.sep)[-1])
+                                        texture)
 
                 self.pyHandle.secondary = True
                 self.pyHandle.start_pt = adj_up(self.pyHandle.start_pt)
@@ -923,8 +931,14 @@ class USFLevelEditor(object):
             self.tools.show_vector_tool(self.pyHandle.level.vector_blocs[-1])
         elif self.pyHandle.tool == "moving":
             bloc = None
-            if self.tools.tex_entry.get_text() == "":
-                self.tools.tex_entry.set_text(self.pyHandle.texture)
+            texture = self.tools.tex_entry.get_text()
+            
+            if texture == "":
+                texture = self.pyHandle.texture
+            elif not texture.endswith("../utils/level_editor/emptyPod.png"):
+                texture = texture.split(os.sep)[-1]
+
+            self.tools.tex_entry.set_text(texture)
 
             if self.pyHandle.secondary:
                 self.pyHandle.level.moving_blocs.remove(self.pyHandle.current_entity[1])
@@ -934,15 +948,13 @@ class USFLevelEditor(object):
                         "position":list(pointer)})
 
                 bloc = level.MovingPart(self.pyHandle.current_entity[1].rects,
-                                        self.tools.tex_entry.get_text().split(
-                                            os.sep)[-1],
+                                        texture,
                                         self.pyHandle.current_entity[1].patterns)
 
                 self.pyHandle.start_pt = adj_up(pointer)
             else:
                 bloc = level.MovingPart([pygame.Rect((0,0),rect.size)],
-                                        self.tools.tex_entry.get_text().split(
-                                            os.sep)[-1],
+                                        texture,
                                         [{"time":1,
                                           "position":list(rect.topleft)}])
 
