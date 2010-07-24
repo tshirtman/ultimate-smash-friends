@@ -226,6 +226,8 @@ class Main(object):
                             }
                         )
                     self.menu.load = False
+                else:
+                    self.menu.screen_current = "main_screen"
 
             pygame.display.update()
             if config.audio['MUSIC']:
