@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<character
+    name="Firefox"
+    image="firefox_static.png"
+    hardshape="0 0 46 70"
+    shield_center="28 28"
+    creator="yeKcim"
+    weight="1"
+    auto-reverse="True"
+    age=""
+    Description=""> 
+    <movement name="static"
+    duration="1"
+    repeat="-1"
+    >
+        <frame
+        time="0"
+        image="firefox_static.png"
+        vector="(0,0)"
+        >
+        </frame>
+
+    </movement>
+ <movement name="walk"
+    duration="600"
+    repeat="-1"
+    >
+        <frame
+        time="0"
+        image="firefox_walk1.png"
+        > </frame>
+        <frame
+        time="75"
+        image="firefox_walk2.png"
+        > </frame>
+        <frame
+        time="150"
+        image="firefox_walk3.png"
+        > </frame>
+        <frame
+        time="225"
+        image="firefox_walk4.png"
+        > </frame>
+        <frame
+        time="300"
+        image="firefox_walk5.png"
+        > </frame>
+        <frame
+        time="375"
+        image="firefox_walk4.png"
+        > </frame>
+        <frame
+        time="450"
+        image="firefox_walk3.png"
+        > </frame>
+        <frame
+        time="525"
+        image="firefox_walk2.png"
+        > </frame>
+	</movement>
+<movement name="jump"
+    duration="1500"
+    repeat="0"
+    >
+        <event
+        period="150,0"
+        action="PlayerStaticOnGround"
+        ></event>
+        <vector
+        time="100"
+        vector="0,1500"
+        ></vector>
+        <frame
+        time="0"
+        image="firefox_jump1.png"
+        > </frame>
+        <frame
+        time="75"
+        image="firefox_jump2.png"
+        > </frame>
+        <frame
+        time="150"
+        image="firefox_jump3.png"
+        > </frame>
+        <frame
+        time="225"
+        image="firefox_jump4.png"
+        > </frame>
+        <frame
+        time="1100"
+        image="firefox_jump3.png"
+        > </frame>
+        <frame
+        time="1150"
+        image="firefox_jump2.png"
+        > </frame>
+        <frame
+        time="1200"
+        image="firefox_static.png"
+        > </frame>
+    </movement>
+</character>
