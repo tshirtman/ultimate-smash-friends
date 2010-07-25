@@ -94,7 +94,6 @@ class Gui(object):
         self.screens[self.screen_current].update()
         
         #draw the '> you are here :' dialog
-        self.screen.blit(loaders.text("FPS: " + str(clock.get_fps()), fonts["mono"]["37"]), (10, 10))
         #update the mouse position
         x, y = pygame.mouse.get_pos()
         #x += self.cursor.get_height()

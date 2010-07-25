@@ -23,10 +23,13 @@ from usf.config import Config
 import pygame
 config = Config()
 
+
 class screen_screen(Screen):
+
     def init(self):
         self.add(widgets.VBox())
         self.set_name(_("screen configuration"))
+        #FIXME : this sould be done automatically
         self.resolution = widgets.Spinner(['800x480', '1200x720', '1600x960'], 170)
         self.fullscreen = widgets.CheckBox()
         
@@ -35,18 +38,31 @@ class screen_screen(Screen):
         self.resolution.set_value(str(config.general['WIDTH']) + 'x'
                                     + str(config.general['HEIGHT']))
         
-        self.widget.add(widgets.Label(_('Screen resolution (requires a restart):')), margin=50, margin_left=290)
+        self.widget.add(widgets.Label(_('Screen resolution (requires a restart):')),
+                        margin=50,
+                        margin_left=290)
         self.widget.add(self.resolution, margin=10, margin_left=290)
         fullscreen_hbox = widgets.HBox()
         
-        fullscreen_hbox.add(widgets.Label(_('Fullscreen :')), margin=0)
+        fullscreen_hbox.add(widgets.Label(_('Fullscreen:')), margin=0)
         fullscreen_hbox.add(self.fullscreen, margin=50)
         self.widget.add(fullscreen_hbox, margin=25, margin_left=290)
         
-        self.widget.add(widgets.Label(_('Zoom sharpness :')), margin=25, margin_left=290)
+        self.widget.add(widgets.Label(_('Zoom sharpness:')), margin=25, margin_left=290)
         zoom = widgets.Slider('zoom_sharpness')
         self.widget.add(zoom, margin=10, margin_left=290, size=(220, 30))
         zoom.set_value(config.general['ZOOM_SHARPNESS']/5)
+
+        self.fps = widgets.CheckBox()
+        
+        if config.general['SHOW_FPS']:
+            self.fps.set_value(True)
+        fps_hbox = widgets.HBox()
+        
+        fps_hbox.add(widgets.Label(_('Show FPS:')), margin=0)
+        fps_hbox.add(self.fps, margin=50)
+        self.widget.add(fps_hbox, margin=25, margin_left=290)
+
         self.widget.add(widgets.Button(_('Back')), margin_left=20, margin=30)
         
     def callback(self,action):
@@ -60,6 +76,11 @@ class screen_screen(Screen):
                 config.general['FULLSCREEN'] = False
             else:
                 config.general['FULLSCREEN'] = True
+        if action == self.fps:
+            if config.general['SHOW_FPS']:
+                config.general['SHOW_FPS'] = False
+            else:
+                config.general['SHOW_FPS'] = True
         if action.text == 'zoom_sharpness':
             config.general['ZOOM_SHARPNESS'] = (action.get_value()+1)*5
         if action.text == _('Back'):

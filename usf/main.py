@@ -38,6 +38,7 @@ from gui import Gui
 from gui import Gui
 from controls import Controls
 import loaders, music
+from font import fonts
 
 #logging.basicConfig(filename=config['LOG_FILENAME'],level=logging.DEBUG)
 
@@ -228,7 +229,9 @@ class Main(object):
                     self.menu.load = False
                 else:
                     self.menu.screen_current = "main_screen"
-
+            #FPS counter
+            if config.general["SHOW_FPS"]:
+                self.screen.blit(loaders.text("FPS: " + str(self.clock.get_fps()), fonts["mono"]["37"]), (10, 10))
             pygame.display.update()
             
             if self.menu.screen_current == 'about':
