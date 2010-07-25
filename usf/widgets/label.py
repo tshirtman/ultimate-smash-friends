@@ -32,11 +32,7 @@ class Label(Widget):
     """
 
     def init(self):
-        self.surface_text  = fonts['sans']['normal'].render(
-            _(self.text),
-            True,
-            pygame.color.Color("white")
-            )
+        self.surface_text  = loaders.text(self.text, fonts['sans']['25'])
         if self.align == "center":
             self.indent = self.width/2-self.surface_text.get_width()/2
         try:
