@@ -22,7 +22,7 @@
 
     </movement>
  <movement name="walk"
-    duration="600"
+    duration="900"
     repeat="-1"
     >
         <frame
@@ -30,31 +30,31 @@
         image="firefox_walk1.png"
         > </frame>
         <frame
-        time="75"
+        time="125"
         image="firefox_walk2.png"
         > </frame>
         <frame
-        time="150"
+        time="250"
         image="firefox_walk3.png"
-        > </frame>
-        <frame
-        time="225"
-        image="firefox_walk4.png"
-        > </frame>
-        <frame
-        time="300"
-        image="firefox_walk5.png"
         > </frame>
         <frame
         time="375"
         image="firefox_walk4.png"
         > </frame>
         <frame
-        time="450"
+        time="500"
+        image="firefox_walk5.png"
+        > </frame>
+        <frame
+        time="625"
+        image="firefox_walk4.png"
+        > </frame>
+        <frame
+        time="750"
         image="firefox_walk3.png"
         > </frame>
         <frame
-        time="525"
+        time="825"
         image="firefox_walk2.png"
         > </frame>
 	</movement>
