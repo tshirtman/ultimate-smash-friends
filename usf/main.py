@@ -38,6 +38,7 @@ from gui import Gui
 from gui import Gui
 from controls import Controls
 import loaders, music
+from font import fonts
 
 #logging.basicConfig(filename=config['LOG_FILENAME'],level=logging.DEBUG)
 
@@ -214,7 +215,7 @@ class Main(object):
                     self.state = 'game'
             else:
                 self.state = self.game.update()
-                if self.state == 'game':
+                if self.state in ['game', 'victory']:
                     self.game.draw(
                         debug_params={
                             'controls': config.debug['CONTROLS'] and self.controls,
@@ -228,10 +229,18 @@ class Main(object):
                     self.menu.load = False
                 else:
                     self.menu.screen_current = "main_screen"
-
+            #FPS counter
+            if config.general["SHOW_FPS"]:
+                self.screen.blit(loaders.text("FPS: " + str(self.clock.get_fps()), fonts["mono"]["37"]), (10, 10))
             pygame.display.update()
+            
+            if self.menu.screen_current == 'about':
+                music_state = 'credits'
+            else:
+                music_state = self.state
+
             if config.audio['MUSIC']:
-                self.music.update(self.state)
+                self.music.update(music_state)
             # verify there is not a QUIT event waiting for us, in case of we
             # have to quit.
             self.ended = pygame.event.get(QUIT)
