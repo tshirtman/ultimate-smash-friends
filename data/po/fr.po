@@ -7,131 +7,165 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate-Smash-Friends\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-01-09 17:03+0100\n"
-"PO-Revision-Date: 2010-01-13 15:50+0100\n"
-"Last-Translator: xapantu <xapantu@users.sourceforge.net>\n"
+"POT-Creation-Date: 2010-07-24 14:56+0200\n"
+"PO-Revision-Date: 2010-07-24 14:05+0000\n"
+"Last-Translator: xapantu <Unknown>\n"
 "Language-Team: English\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2010-07-25 04:16+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
-#: strings.py:1
-msgid "Choose the level :"
-msgstr "Choisis un niveau :"
+#: game.py:308
+msgid " WON!"
+msgstr " A GAGNÉ !"
 
-#: strings.py:2
-msgid "Go !"
-msgstr "Jouer !"
+#: game.py:323
+msgid "OOPS... DRAW!!!"
+msgstr "OUPS, ERREUR..."
 
-#: strings.py:4
-msgid "Choose characters : "
-msgstr "Choisis les personnages :"
+#: gui.py:200
+msgid "you are here :"
+msgstr "vous êtes ici :"
 
-#: strings.py:5
-msgid "Next"
-msgstr "Suivant"
+#: screen/about.py:34 screen/about.py:40 screen/screen_screen.py:50
+#: screen/screen_screen.py:65 screen/characters.py:102
+#: screen/characters.py:114 screen/keyboard.py:60 screen/keyboard.py:65
+#: screen/sound.py:38 screen/sound.py:45 screen/configure.py:39
+#: screen/configure.py:50 screen/level.py:64 screen/level.py:73
+msgid "Back"
+msgstr "Retour"
 
-#: strings.py:6
-msgid "Up"
-msgstr "Haut"
+#: screen/main_screen.py:29 screen/main_screen.py:35
+msgid "Local game"
+msgstr "Jeu local"
 
-#: strings.py:7
-msgid "Down"
-msgstr "Bas"
-
-#: strings.py:8
-msgid "Left"
-msgstr "Gauche"
-
-#: strings.py:9
-msgid "Right"
-msgstr "Droite"
-
-#: strings.py:10
-msgid "Resume game"
-msgstr "Reprendre le jeu"
-
-#: strings.py:11
-msgid "Quit game"
-msgstr "Quitter le jeu"
-
-#: strings.py:12
-msgid "Ultimate Smash Friends"
-msgstr "Ultimate Smash Friends"
-
-#: strings.py:13
+#: screen/main_screen.py:30 screen/main_screen.py:37 screen/resume.py:28
+#: screen/resume.py:36
 msgid "Configure"
 msgstr "Options"
 
-#: strings.py:14
-msgid "Local game"
-msgstr "Jeu local "
-
-#: strings.py:15
+#: screen/main_screen.py:31 screen/main_screen.py:39
 msgid "Credits"
 msgstr "A propos"
 
-#: strings.py:16
+#: screen/main_screen.py:32 screen/main_screen.py:41
 msgid "Quit"
 msgstr "Quitter"
 
-#: strings.py:17
-msgid "Sounds configuration"
-msgstr "Configuration du son"
+#: screen/screen_screen.py:29
+msgid "screen configuration"
+msgstr "configuration de l'affichage"
 
-#: strings.py:18
-msgid "Sounds"
-msgstr "Sons"
+#: screen/screen_screen.py:38
+msgid "Screen resolution (requires a restart):"
+msgstr "Résolution (nécessite un redémarrage):"
 
-#: strings.py:19
-msgid "+"
-msgstr "+"
+#: screen/screen_screen.py:42
+msgid "Fullscreen :"
+msgstr "Plein écran :"
 
-#: strings.py:20
-msgid "-"
-msgstr "-"
+#: screen/screen_screen.py:46
+msgid "Zoom sharpness :"
+msgstr "Qualité du zoom :"
 
-#: strings.py:21
+#: screen/characters.py:91
+msgid "AI :"
+msgstr "IA :"
+
+#: screen/characters.py:101 screen/characters.py:111
+msgid "Next"
+msgstr "Suivant"
+
+#: screen/keyboard.py:47
+msgid "Shield"
+msgstr "Bouclier"
+
+#: screen/sound.py:29
+msgid "Sound and effects"
+msgstr "Sons et effets"
+
+#: screen/sound.py:32
 msgid "Music"
 msgstr "Musique"
 
-#: strings.py:22
-msgid "Screen configuration (requires restart)"
-msgstr "Configuration de l'affichage (nécessite un redémarrage)"
+#. I18N:option screen
+#: screen/configure.py:29 screen/configure.py:44
+msgid "Audio"
+msgstr "Audio"
 
-#: strings.py:23
-msgid "Quit ?"
-msgstr "Quitter ?"
-
-#: strings.py:24
-msgid "Yes"
-msgstr "Oui"
-
-#: strings.py:25
-msgid "No"
-msgstr "Non"
-
-#: strings.py:26
-msgid "Player 1"
-msgstr "Joueur 1"
-
-#: strings.py:27
-msgid "Player 2"
-msgstr "Joueur 2"
-
-#: strings.py:28
-msgid "Player 3"
-msgstr "Joueur 3"
-
-#: strings.py:29
-msgid "Player 4"
-msgstr "Joueur 4"
-
-#: strings.py:30
-msgid "Keyboard"
-msgstr "Clavier"
-
-#: strings.py:31
+#: screen/configure.py:33 screen/configure.py:46
 msgid "Screen"
 msgstr "Affichage"
 
+#: screen/configure.py:36 screen/configure.py:48
+msgid "Keyboard"
+msgstr "Clavier"
+
+#: screen/level.py:63 screen/level.py:70
+msgid "Go !"
+msgstr "Jouer !"
+
+#~ msgid "Right"
+#~ msgstr "Droite"
+
+#~ msgid "Resume game"
+#~ msgstr "Reprendre le jeu"
+
+#~ msgid "Down"
+#~ msgstr "Bas"
+
+#~ msgid "Left"
+#~ msgstr "Gauche"
+
+#~ msgid "Up"
+#~ msgstr "Haut"
+
+#~ msgid "Quit game"
+#~ msgstr "Quitter le jeu"
+
+#~ msgid "-"
+#~ msgstr "-"
+
+#~ msgid "Sounds configuration"
+#~ msgstr "Configuration du son"
+
+#~ msgid "+"
+#~ msgstr "+"
+
+#~ msgid "Sounds"
+#~ msgstr "Sons"
+
+#~ msgid "Player 3"
+#~ msgstr "Joueur 3"
+
+#~ msgid "Player 2"
+#~ msgstr "Joueur 2"
+
+#~ msgid "Player 4"
+#~ msgstr "Joueur 4"
+
+#~ msgid "Yes"
+#~ msgstr "Oui"
+
+#~ msgid "No"
+#~ msgstr "Non"
+
+#~ msgid "Player 1"
+#~ msgstr "Joueur 1"
+
+#~ msgid "Quit ?"
+#~ msgstr "Quitter ?"
+
+#~ msgid "Ultimate Smash Friends"
+#~ msgstr "Ultimate Smash Friends"
+
+#~ msgid "Choose the level :"
+#~ msgstr "Choisis un niveau :"
+
+#~ msgid "Choose characters : "
+#~ msgstr "Choisis les personnages : "
+
+#~ msgid "Screen configuration (requires restart)"
+#~ msgstr "Configuration de l'affichage (nécessite un redémarrage)"

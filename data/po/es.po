@@ -7,52 +7,129 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-22 11:01+0100\n"
-"PO-Revision-Date: 2009-12-28 21:10+0100\n"
-"Last-Translator: Rommel <youpi42@gmail.com>\n"
+"POT-Creation-Date: 2010-07-24 14:56+0200\n"
+"PO-Revision-Date: 2010-07-24 14:00+0000\n"
+"Last-Translator: Rommel <Unknown>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2010-07-25 04:16+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
-#: strings.py:1
-msgid "Quit ?"
-msgstr "¿ Dejar ?"
+#: game.py:308
+msgid " WON!"
+msgstr ""
 
-#: strings.py:2
-msgid "yes"
-msgstr "sí"
+#: game.py:323
+msgid "OOPS... DRAW!!!"
+msgstr ""
 
-#: strings.py:3
-msgid "no"
-msgstr "no"
+#: gui.py:200
+msgid "you are here :"
+msgstr ""
 
-#: strings.py:4
-#: strings.py:5
-msgid "Ultimate Smash Friends"
-msgstr "Ultimate Smash Friends"
+#: screen/about.py:34 screen/about.py:40 screen/screen_screen.py:50
+#: screen/screen_screen.py:65 screen/characters.py:102
+#: screen/characters.py:114 screen/keyboard.py:60 screen/keyboard.py:65
+#: screen/sound.py:38 screen/sound.py:45 screen/configure.py:39
+#: screen/configure.py:50 screen/level.py:64 screen/level.py:73
+msgid "Back"
+msgstr ""
 
-#: strings.py:6
-msgid "configure"
-msgstr "configurar"
+#: screen/main_screen.py:29 screen/main_screen.py:35
+msgid "Local game"
+msgstr "Juego local"
 
-#: strings.py:7
-msgid "local game"
-msgstr "juego local"
+#: screen/main_screen.py:30 screen/main_screen.py:37 screen/resume.py:28
+#: screen/resume.py:36
+msgid "Configure"
+msgstr "Configurar"
 
-#: strings.py:8
-msgid "credits"
-msgstr "créditos"
+#: screen/main_screen.py:31 screen/main_screen.py:39
+msgid "Credits"
+msgstr "Creditos"
 
-#: strings.py:9
-msgid "quit"
-msgstr "abandonar"
+#: screen/main_screen.py:32 screen/main_screen.py:41
+msgid "Quit"
+msgstr "Abandonar"
 
-#: strings.py:10
-msgid "Configure the game"
-msgstr "Configurar el juego"
+#: screen/screen_screen.py:29
+msgid "screen configuration"
+msgstr ""
 
-#: strings.py:11
+#: screen/screen_screen.py:38
+msgid "Screen resolution (requires a restart):"
+msgstr ""
+
+#: screen/screen_screen.py:42
+msgid "Fullscreen :"
+msgstr ""
+
+#: screen/screen_screen.py:46
+msgid "Zoom sharpness :"
+msgstr ""
+
+#: screen/characters.py:91
+msgid "AI :"
+msgstr ""
+
+#: screen/characters.py:101 screen/characters.py:111
+msgid "Next"
+msgstr "Siguiente"
+
+#: screen/keyboard.py:47
+msgid "Shield"
+msgstr ""
+
+#: screen/sound.py:29
+msgid "Sound and effects"
+msgstr ""
+
+#: screen/sound.py:32
+msgid "Music"
+msgstr "Música"
+
+#. I18N:option screen
+#: screen/configure.py:29 screen/configure.py:44
+msgid "Audio"
+msgstr ""
+
+#: screen/configure.py:33 screen/configure.py:46
+msgid "Screen"
+msgstr "Pantalla"
+
+#: screen/configure.py:36 screen/configure.py:48
+msgid "Keyboard"
+msgstr "Teclado"
+
+#: screen/level.py:63 screen/level.py:70
 msgid "Go !"
-msgstr "¡ ir ! "
+msgstr "¡ ir !"
 
+#~ msgid "Quit ?"
+#~ msgstr "¿ Dejar ?"
+
+#~ msgid "yes"
+#~ msgstr "sí"
+
+#~ msgid "no"
+#~ msgstr "no"
+
+#~ msgid "Ultimate Smash Friends"
+#~ msgstr "Ultimate Smash Friends"
+
+#~ msgid "configure"
+#~ msgstr "configurar"
+
+#~ msgid "local game"
+#~ msgstr "juego local"
+
+#~ msgid "credits"
+#~ msgstr "créditos"
+
+#~ msgid "quit"
+#~ msgstr "abandonar"
+
+#~ msgid "Configure the game"
+#~ msgstr "Configurar el juego"
