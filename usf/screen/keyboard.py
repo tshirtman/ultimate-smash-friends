@@ -30,6 +30,7 @@ class keyboard(Screen):
 
     def init(self):
         self.add(widgets.VBox())
+        self.set_name(_("keyboard"))
 
         hbox = widgets.HBox()
         hbox.add(widgets.Label(" "), size=(80,20))

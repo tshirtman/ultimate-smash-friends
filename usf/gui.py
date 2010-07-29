@@ -197,7 +197,7 @@ class Gui(object):
         for screen in self.screen_history :
             screen_list += screen + "/"
         screen_list += self.screen_current + "/"
-        self.here = loaders.text("> " + _("you are here :") + screen_list, fonts['mono']['30'])
+        self.here = loaders.text("> " + _("you are here:") + screen_list, fonts['mono']['30'])
 
     def transition_slide(self, old_screen, old_surface, new_screen, new_surface):
 
@@ -205,7 +205,7 @@ class Gui(object):
 
         for i in range(0, 10):
             time.sleep(1.00/float(config.general['MAX_FPS']))
-            self.screen.blit(self.background, (0,0))
+            self.screen.blit(self.skin.get_background().convert(), (0,0))
             text.set_alpha( (i*(- 1) + 10) *250/10)
             self.screen.blit(text, (old_screen.indent_title,10))
             self.screen.blit(old_surface, (optimize_size((i*8*10, 0))[0],old_screen.widget.y))
@@ -216,7 +216,7 @@ class Gui(object):
 
         for i in range(0, 10):
             time.sleep(1.00/float(config.general['MAX_FPS']))
-            self.screen.blit(self.background, (0,0))
+            self.screen.blit(self.skin.get_background().convert(), (0,0))
             text.set_alpha(i*250/10)
             self.screen.blit(text, (self.screens[self.screen_current].indent_title,10))
             self.screen.blit(new_surface, 
@@ -228,14 +228,15 @@ class Gui(object):
     def transition_fading(self, old_screen, old_surface, new_screen, new_surface):
 
         text = get_text_transparent(old_screen.name)
-        back = self.skin.get_background().convert()
 
         for i in range(0, 5):
+            back = self.skin.get_background().convert()
             time.sleep(1.00/float(config.general['MAX_FPS']))
             self.screen.blit(self.skin.get_background(), (0,0))
             text.set_alpha( (i*(- 1) + 5) *250/5)
             self.screen.blit(text, (old_screen.indent_title,10))
             
+            #back.set_alpha( (i*(- 1) + 5) *250/5)
             back.set_alpha(i *250/5)
             self.screen.blit(old_surface, (old_screen.widget.x,old_screen.widget.y))
             self.screen.blit(back, (0, 0))
@@ -245,11 +246,13 @@ class Gui(object):
         text = get_text_transparent(new_screen.name)
 
         for i in range(0, 5):
+            back = self.skin.get_background().convert()
             time.sleep(1.00/float(config.general['MAX_FPS']))
             self.screen.blit(self.skin.get_background(), (0,0))
             text.set_alpha(i*250/5)
             self.screen.blit(text, (self.screens[self.screen_current].indent_title,10))
             
+            #new_surface.set_alpha(i *250/5)
             back.set_alpha( (i*(- 1) + 5) *250/5)
             self.screen.blit(new_surface, (old_screen.widget.x,old_screen.widget.y))
             self.screen.blit(back, (0, 0))
