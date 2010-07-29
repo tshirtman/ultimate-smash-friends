@@ -27,7 +27,7 @@ from optparse import OptionParser
 import logging
 import time
 import threading
-
+import traceback
 # our modules
 from config import Config
 config = Config()
@@ -132,7 +132,7 @@ class Main(object):
                 try:
                     if not config.general["DEBUG"]:
                         self.lock.acquire()
-                        self.text_thread = "An error occured: " + str(e)
+                        self.text_thread = "An error occured:\n" + str(traceback.format_exc())
                         self.lock.release()
                         time.sleep(5)
                     self.lock.acquire()
@@ -315,23 +315,27 @@ class Main(object):
     """
 
     def loading(self):
-        while(True):
-            start_loop = pygame.time.get_ticks()
-            
-            self.lock.acquire()
+        try:
+            while(True):
+                start_loop = pygame.time.get_ticks()
+                
+                self.lock.acquire()
 
-            self.screen.fill(pygame.color.Color("black"))
-            x = self.screen.get_width()/2 - loaders.text(self.text_thread, fonts['mono']['normal']).get_width()/2
-            y = self.screen.get_height()/2 - loaders.text(self.text_thread, fonts['mono']['normal']).get_height()/2
-            self.screen.blit(loaders.text(self.text_thread, fonts['mono']['normal']), (x,y))
-            if self.stop_thread:
-                break
-            pygame.display.update()
+                self.screen.fill(pygame.color.Color("black"))
+                x = self.screen.get_width()/2 - loaders.paragraph(self.text_thread, fonts['mono']['normal']).get_width()/2
+                y = self.screen.get_height()/2 - loaders.paragraph(self.text_thread, fonts['mono']['normal']).get_height()/2
+                self.screen.blit(loaders.paragraph(self.text_thread, fonts['mono']['normal']), (x,y))
+                if self.stop_thread:
+                    break
+                pygame.display.update()
+                self.lock.release()
+
+                max_fps = 1000/config.general["MAX_GUI_FPS"]
+                if pygame.time.get_ticks() < max_fps + start_loop:
+                    pygame.time.wait(max_fps + start_loop - pygame.time.get_ticks())
+        except:
             self.lock.release()
-
-            max_fps = 1000/config.general["MAX_GUI_FPS"]
-            if pygame.time.get_ticks() < max_fps + start_loop:
-                pygame.time.wait(max_fps + start_loop - pygame.time.get_ticks())
+            raise
 
 if __name__ == '__main__':
     """
