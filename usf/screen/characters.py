@@ -1,5 +1,5 @@
 ################################################################################
-# copyright 2009 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
+# copyright 2010 Lucas Baudin <xapantu@gmail.com>                              #
 #                                                                              #
 # This file is part of Ultimate Smash Friends.                                 #
 #                                                                              #
@@ -22,7 +22,7 @@ from usf.config import Config
 config = Config()
 
 from usf import widgets, entity_skin
-import copy, os
+import os
 from usf.game import Game
 from os.path import join
 
@@ -38,13 +38,18 @@ class characters(Screen):
         self.game_data = {}
         self.game_data['character_file'] = []
         
+        #I18N: The title of the screen where players can choose their character.
+        self.set_name(_("characters"))
+
         #create a character file to have the [?] image
-        self.game_data['character_file'].append("characters" + os.sep + 'none')
+        self.game_data['character_file'].append(join('characters', 'none'))
         self.character = []
-        self.character.append("None")
+        #I18N: in the character screen, to select no character for this player
+        #I18N: (with the [?] icon)
+        self.character.append(_("None"))
         #create a character for every directory in the characters directory.
         files = os.listdir(
-                os.path.join(
+                join(
                     config.sys_data_dir,
                     'characters'
                     )
@@ -53,7 +58,10 @@ class characters(Screen):
         for file in files:
             try:
                 if file != "none":
-                    self.game_data['character_file'].append(join("characters", file))
+                    self.game_data['character_file'].append(join("characters",
+                                                                 file
+                                                                 )
+                                                            )
                     self.character.append(entity_skin.Entity_skin(
                                     join(
                                     'characters',
@@ -77,17 +85,23 @@ class characters(Screen):
 
         for i in range(0,4):
             self.checkboxes_ai.append(widgets.CheckBox())
-            self.portraits.append(widgets.Image(self.game_data['character_file'][0]
-                                 + os.sep
-                                 + self.game_data['character_file'][0].replace('characters' + os.sep, "")
-                                 + "-portrait.png"))
+            self.portraits.append(widgets.Image(
+                    join(
+                        self.game_data['character_file'][0],
+                        "portrait.png")
+                ))
             self.player_spinner.append(widgets.Spinner(self.character))
             self.player_vbox[i].add(widgets.Label(_("Player %s").replace("%s", str(i+1))))
             self.player_vbox[i].add(self.player_spinner[-1])
-            self.player_vbox[i].add(self.portraits[-1], margin_left=50, margin=5, size=(50,50))
+            self.player_vbox[i].add(self.portraits[-1],
+                margin_left=50,
+                margin=5,
+                size=(50,50))
+
+            #create a hbox to display "AI:" + the checkbox 
             hbox = widgets.HBox()
-            #this is very bad for performance
-            #I18N
+
+            #I18N: Artificial Intelligence
             hbox.add(widgets.Label(_("AI :")))
             hbox.add(self.checkboxes_ai[-1], margin=10)
             self.player_vbox[i].add(hbox)
@@ -98,15 +112,30 @@ class characters(Screen):
         for vbox in self.player_vbox:
             hbox.add(vbox, margin=40)
         self.widget.add(hbox, margin=50)
-        self.widget.add(widgets.Button(_("Next")), margin_left=290, margin=83)
-        self.widget.add(widgets.Button(_('Back')), size=(150, 40), margin_left=20, margin=20)
+        
+        #next button to go to the level screen
+        self.widget.add(widgets.Button(_("Next")),
+            margin_left=290,
+            margin=83)
+        
+        #back button to come back to main screen
+        self.widget.add(widgets.Button(_('Back')),
+            size=(150, 40),
+            margin_left=20,
+            margin=20)
 
     def callback(self,action):
         if action in self.player_spinner :
+            #get the index of the player
             player_number = self.player_spinner.index(action)
+    
             self.players[player_number] = action.get_index()
-            self.portraits[player_number].setImage(self.game_data['character_file'][action.get_index()] + os.sep +
-                self.game_data['character_file'][action.get_index()].replace('characters' + os.sep, "") + "-portrait.png")
+            #change the portrait
+            self.portraits[player_number].setImage(
+                        join(
+                        self.game_data['character_file'][action.get_index()],
+                        "portrait.png"
+                        ))
 
         if action.text == _("Next"):
             return 'goto:level'

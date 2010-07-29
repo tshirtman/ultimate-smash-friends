@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <character
     name="Sorlo"
-    image="sorlo-portrait.png"
+    image="portrait.png"
     hardshape="12 5 30 53"
     creator="doudoulolita"
     weight="1"

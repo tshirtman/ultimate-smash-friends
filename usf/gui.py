@@ -1,5 +1,5 @@
 ################################################################################
-# copyright 2009 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
+# copyright 2010 Lucas Baudin <xapantu@gmail.com>                              #
 #                                                                              #
 # This file is part of Ultimate Smash Friends                                  #
 #                                                                              #
@@ -19,51 +19,57 @@
 
 import pygame
 from pygame.locals import QUIT
-#from math import sin, cos
-#from time import time
+
 import os
 import time
-#import xml.dom.minidom
-#import logging
-#import thread
+
 # Our modules
 
 from config import Config
 
 config = Config()
 
-#import controls
-#import entity_skin
-#from game import Game
-#import controls
 import loaders
 from game import Game
-# Gui modules
-#from widgets import (HBox, VBox, Label)
+
 from skin import Skin
-#import game
+
 from widgets import optimize_size 
 from font import fonts
+
 
 class Gui(object):
     """
     Main class of the GUI. Init and maintain all menus and widgets.
 
     """
+
     def __init__(self, surface):
         self.screen = surface
         self.game = None
         self.screens = {}
         self.screen_history = []
         #TODO : Use a config file
-        screens = ['main_screen', 'configure', 'about', 'resume', 'sound', 'screen_screen', 'keyboard', "level", "characters"]
+        screens = ['main_screen',
+                   'configure',
+                   'about',
+                   'resume',
+                   'sound',
+                   'screen_screen',
+                   'keyboard',
+                   'level',
+                   'characters']
         for name in screens:
             exec("import screen." + name)
             exec('scr = screen.' + name + '.' + name + "('"+ name +"',self.screen)")
+
             #load all image
+            #I don't know why but if we update only one time the scree, the
+            #result is quite strange ?
             scr.update()
             scr.update()
             self.screens[name] = scr
+
         self.screen_current = 'main_screen'
         self.skin = Skin()
         self.last_event = time.time()
@@ -74,11 +80,15 @@ class Gui(object):
         self.update_youhere()
 
     def update(self, clock):
+        """
+        Update the GUI, it draws the mouse, and the menu.
+        """
         while(True):
             event = pygame.event.poll()
             if event.type == pygame.QUIT:
                 pygame.event.post( pygame.event.Event(QUIT) )
                 break
+
             elif event.type != pygame.NOEVENT:
                 if event.type == pygame.KEYDOWN:
                     self.handle_keys(event)
@@ -86,9 +96,11 @@ class Gui(object):
                     event.type == pygame.MOUSEBUTTONDOWN or
                     event.type == pygame.MOUSEMOTION) :
                     self.handle_mouse(event)
+
             else:
                 break
-        #draw background
+
+        #draw the background
         self.screen.blit(self.skin.get_background(), (0,0))
             
         self.screens[self.screen_current].update()
@@ -149,7 +161,25 @@ class Gui(object):
         del(event)
                 
     def handle_reply(self,reply):
-        #print type(reply)
+        """
+        This function handles the callback return by thz screens
+        with the function event_callback().
+        This callback needs to be a string; otherwise, it will be ignored.
+        
+        The reply can be:
+            goto:myscreen
+                where my screen is the name of the screen loaded in __init__()
+            goto:back
+                go to the last menu, it is usually used for a back button
+            game:new
+                to start a new game
+            game:continue
+                to resume the game, it is used in the in-game menu
+            game:stop
+                to stop the game, it is used to qui the game in the
+                in-game menu
+        """
+
         if type(reply) == str:
             if reply.split(':')[0] == 'goto':
                 animation = True
@@ -168,6 +198,7 @@ class Gui(object):
                         self.screens[self.screen_current].widget.draw())
                     #self.update_youhere()
                     pygame.event.clear()
+
             if reply.split(':')[0] == 'game':
                 if reply.split(':')[1] == "new":
                     self.game = self.launch_game()
@@ -186,6 +217,9 @@ class Gui(object):
 
 
     def screen_back(self):
+        """
+        Go to the last screen.
+        """
         if len(self.screen_history) > 0:
             self.screen_current = self.screen_history[-1]
             del self.screen_history[-1]
@@ -197,7 +231,8 @@ class Gui(object):
         for screen in self.screen_history :
             screen_list += screen + "/"
         screen_list += self.screen_current + "/"
-        self.here = loaders.text("> " + _("you are here:") + screen_list, fonts['mono']['30'])
+        self.here = loaders.text("> " + _("you are here:") + screen_list,
+            fonts['mono']['30'])
 
     def transition_slide(self, old_screen, old_surface, new_screen, new_surface):
 
@@ -207,8 +242,10 @@ class Gui(object):
             time.sleep(1.00/float(config.general['MAX_FPS']))
             self.screen.blit(self.skin.get_background().convert(), (0,0))
             text.set_alpha( (i*(- 1) + 10) *250/10)
-            self.screen.blit(text, (old_screen.indent_title,10))
-            self.screen.blit(old_surface, (optimize_size((i*8*10, 0))[0],old_screen.widget.y))
+            self.screen.blit(text,
+                (old_screen.indent_title,10))
+            self.screen.blit(old_surface,
+                (optimize_size((i*8*10, 0))[0], old_screen.widget.y))
 
             pygame.display.update()
 
@@ -289,6 +326,7 @@ class Gui(object):
 def get_text_transparent(name):
     text = loaders.text(name, fonts['mono']['10']).convert()
     text.fill(pygame.color.Color("black"))
+    #TODO: the colorkey should be a property of the skin
     text.set_colorkey(pygame.color.Color("black"))
     text.blit(loaders.text(name, fonts['mono']['10']), (0,0))
     return text

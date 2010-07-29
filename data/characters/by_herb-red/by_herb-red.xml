@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <character
-    name="Stick"
-    image="herb-portrait.png"
+    name="Herb Red"
+    image="portrait.png"
     hardshape="1 2 16 57"
     creator="Samoht"
     weight="1"
