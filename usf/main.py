@@ -26,6 +26,8 @@ import sys
 from optparse import OptionParser
 import logging
 import time
+import threading
+
 # our modules
 from config import Config
 config = Config()
@@ -56,7 +58,7 @@ class Main(object):
 
         """
 
-
+        self.lock = threading.Lock()
         self.game_type = ''
         self.level = None
         self.players = []
@@ -78,6 +80,8 @@ class Main(object):
 
         else:
             self.init_screen()
+            self.thread = threading.Thread(None, self.loading)
+            self.thread.run()
             self.init_sound()
 
             if len(self.players) > 1 and self.level is not None:
@@ -278,6 +282,18 @@ class Main(object):
         sys.exit(2)
     """
 
+    def loading(self):
+        start_loop = pygame.time.get_ticks()
+        
+        self.lock.acquire()
+
+        self.screen.blit(loaders.text("Loading...", fonts['mono']['normal']), (0,0))
+
+        self.lock.release()
+
+        max_fps = 1000/config.general["MAX_GUI_FPS"]
+        if pygame.time.get_ticks() < max_fps + start_loop:
+            pygame.time.wait(max_fps + start_loop - pygame.time.get_ticks())
 
 if __name__ == '__main__':
     """
