@@ -45,6 +45,10 @@ class Screen(object):
         self.screen.blit(loaders.text(self.name, fonts['mono']['10']), (self.indent_title,10))
         self.screen.blit(self.widget.draw(), (0,self.widget.y))
 
+    def load(self):
+        loaders.text(self.name, fonts['mono']['10'])
+        self.widget.draw()
+
     def init(self):
         pass
 
