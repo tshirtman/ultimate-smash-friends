@@ -43,6 +43,7 @@ class Music (object):
         self.playlists = {}
         self.music_volume = config.audio['MUSIC_VOLUME']
 
+        preload = ['credits.ogg']
         for plist in ['menu','game','credits','victory']:
             self.playlists[plist] = [
                                     os.path.join(
@@ -56,6 +57,16 @@ class Music (object):
                                     'ogg'))\
                                 if plist in file
                             ]
+            for file in os.listdir(os.path.join(
+                            config.sys_data_dir,
+                            'music',
+                            'ogg')):
+                if file in preload:
+                    loaders.track(os.path.join(
+                            config.sys_data_dir,
+                            'music',
+                            'ogg',
+                            file))
         self.current_track = None
         self.time_begin = 0
 

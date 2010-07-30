@@ -25,6 +25,8 @@ import copy
 class configure(Screen):
     def init(self):
         self.add(widgets.VBox())
+        self.set_name(_("configure"))
+
         #I18N:option screen
         self.widget.add(widgets.Button(_('Audio')),
                         margin=50,

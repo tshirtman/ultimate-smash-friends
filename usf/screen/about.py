@@ -1,5 +1,5 @@
 ################################################################################
-# copyright 2009 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
+# copyright 2010 Lucas Baudin <xapantu@gmail.com>                              #
 #                                                                              #
 # This file is part of Ultimate Smash Friends.                                 #
 #                                                                              #
@@ -19,11 +19,12 @@
 
 from screen import Screen
 from usf import widgets
-import copy
 
 
 class about(Screen):
+
     def init(self):
+        self.set_name(_("about"))
         self.add(widgets.VBox())
 
         self.widget.add(widgets.Paragraph('CREDITS'),

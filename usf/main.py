@@ -26,6 +26,8 @@ import sys
 from optparse import OptionParser
 import logging
 import time
+import threading
+import traceback
 # our modules
 from config import Config
 config = Config()
@@ -56,12 +58,14 @@ class Main(object):
 
         """
 
-
+        self.lock = threading.Lock()
+        self.stop_thread = False
         self.game_type = ''
         self.level = None
         self.players = []
         self.num = None
         self.address = None
+        self.text_thread = _("Loading...")
 
         self.parse_options()
 
@@ -78,37 +82,69 @@ class Main(object):
 
         else:
             self.init_screen()
-            self.init_sound()
+            try:
+                self.thread = threading.Thread(None, self.loading)
+                self.thread.start()
+                
+                self.lock.acquire()
+                self.text_thread = "Loading sounds and musics..."
+                self.lock.release()
 
-            if len(self.players) > 1 and self.level is not None:
-                self.game = Game(self.screen, self.level, self.players)
-                self.state = "game"
-                self.menu = Gui(self.screen)
-                self.menu.handle_reply('goto:resume')
+                self.init_sound()
 
-            else:
-                """self.screen.blit(
-                    self.game_font.render(
-                        "menus...",
-                        True,
-                        pygame.color.Color(
-                            "white"
-                            )
-                        ),
-                    (30, 4*SIZE[1]/5)
-                    )"""
+                if len(self.players) > 1 and self.level is not None:
+                    self.game = Game(self.screen, self.level, self.players)
+                    self.state = "game"
+                    self.menu = Gui(self.screen)
+                    self.menu.handle_reply('goto:resume')
 
-                pygame.display.update()
+                else:
+                    """self.screen.blit(
+                        self.game_font.render(
+                            "menus...",
+                            True,
+                            pygame.color.Color(
+                                "white"
+                                )
+                            ),
+                        (30, 4*SIZE[1]/5)
+                        )"""
+
+                    pygame.display.update()
 
 
-                self.menu = Gui(self.screen)
+                    self.lock.acquire()
+                    self.text_thread = "Loading GUI..."
+                    self.lock.release()
 
-                self.state = "menu"
+                    self.menu = Gui(self.screen)
 
-                self.game = None
-                self.level = None
+                    self.state = "menu"
 
-            self.go()
+                    self.game = None
+                    self.level = None
+
+                self.lock.acquire()
+                self.stop_thread = True
+                self.lock.release()
+                self.go()
+            except Exception, e:
+                try:
+                    if not config.general["DEBUG"]:
+                        self.lock.acquire()
+                        self.text_thread = "An error occured:\n" + str(traceback.format_exc())
+                        self.lock.release()
+                        time.sleep(5)
+                    self.lock.acquire()
+                    self.stop_thread = True
+                    self.lock.release()
+                    raise
+                except:
+                    self.lock.acquire()
+                    self.stop_thread = True
+                    self.lock.release()
+                    print e
+                    raise
 
     def parse_options(self):
         # set up the comand line parser and its options
@@ -278,6 +314,28 @@ class Main(object):
         sys.exit(2)
     """
 
+    def loading(self):
+        try:
+            while(True):
+                start_loop = pygame.time.get_ticks()
+                
+                self.lock.acquire()
+
+                self.screen.fill(pygame.color.Color("black"))
+                x = self.screen.get_width()/2 - loaders.paragraph(self.text_thread, fonts['mono']['normal']).get_width()/2
+                y = self.screen.get_height()/2 - loaders.paragraph(self.text_thread, fonts['mono']['normal']).get_height()/2
+                self.screen.blit(loaders.paragraph(self.text_thread, fonts['mono']['normal']), (x,y))
+                if self.stop_thread:
+                    break
+                pygame.display.update()
+                self.lock.release()
+
+                max_fps = 1000/config.general["MAX_GUI_FPS"]
+                if pygame.time.get_ticks() < max_fps + start_loop:
+                    pygame.time.wait(max_fps + start_loop - pygame.time.get_ticks())
+        except:
+            self.lock.release()
+            raise
 
 if __name__ == '__main__':
     """

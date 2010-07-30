@@ -173,6 +173,23 @@ def text(text_send, font, r=240, g=240, b=240, a=250):
     return font.render(text_send.decode('utf-8'),
             True,
             pygame.color.Color(r, g, b, a))
+
+@memoize
+def paragraph(text_send, font):
+    max_len = text("", font)
+    for texte in text_send.split('\n'):
+        if text(texte, font).get_width() > max_len.get_width():
+            max_len = text(texte, font)
+
+    text_re = pygame.surface.Surface((max_len.get_width(), len(text_send.split('\n'))*text("", font).get_height()))
+    
+    i = -1
+    for texte in text_send.split('\n'):
+        i += 1
+        surf = text(texte, font)
+        text_re.blit(surf, (text_re.get_width()/2 - surf.get_width()/2, i*surf.get_height()))
+    return text_re
+
 @memoize
 def track(name):
     try:

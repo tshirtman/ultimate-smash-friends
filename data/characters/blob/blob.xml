@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <character
     name="Blob"
-    image="blob-portrait.png"
+    image="portrait.png"
     hardshape="10 2 60 57"
     creator="Samoht"
     weight=""

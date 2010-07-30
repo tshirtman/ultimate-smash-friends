@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-24 14:56+0200\n"
+"POT-Creation-Date: 2010-07-29 17:26+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,15 +24,23 @@ msgstr ""
 msgid "OOPS... DRAW!!!"
 msgstr ""
 
-#: gui.py:200
-msgid "you are here :"
+#: gui.py:234
+msgid "you are here:"
 msgstr ""
 
-#: screen/about.py:34 screen/about.py:40 screen/screen_screen.py:50
-#: screen/screen_screen.py:65 screen/characters.py:102
-#: screen/characters.py:114 screen/keyboard.py:60 screen/keyboard.py:65
-#: screen/sound.py:38 screen/sound.py:45 screen/configure.py:39
-#: screen/configure.py:50 screen/level.py:64 screen/level.py:73
+#: main.py:68
+msgid "Loading..."
+msgstr ""
+
+#: screen/about.py:27
+msgid "about"
+msgstr ""
+
+#: screen/about.py:35 screen/about.py:41 screen/screen_screen.py:66
+#: screen/screen_screen.py:86 screen/characters.py:122
+#: screen/characters.py:143 screen/keyboard.py:61 screen/keyboard.py:66
+#: screen/sound.py:38 screen/sound.py:45 screen/configure.py:41
+#: screen/configure.py:52 screen/level.py:64 screen/level.py:73
 msgid "Back"
 msgstr ""
 
@@ -53,31 +61,56 @@ msgstr ""
 msgid "Quit"
 msgstr ""
 
-#: screen/screen_screen.py:29
+#: screen/screen_screen.py:31
 msgid "screen configuration"
 msgstr ""
 
-#: screen/screen_screen.py:38
+#: screen/screen_screen.py:41
 msgid "Screen resolution (requires a restart):"
 msgstr ""
 
-#: screen/screen_screen.py:42
-msgid "Fullscreen :"
+#: screen/screen_screen.py:47
+msgid "Fullscreen:"
 msgstr ""
 
-#: screen/screen_screen.py:46
-msgid "Zoom sharpness :"
+#: screen/screen_screen.py:51
+msgid "Zoom sharpness:"
 msgstr ""
 
-#: screen/characters.py:91
+#: screen/screen_screen.py:62
+msgid "Show FPS:"
+msgstr ""
+
+#. I18N: The title of the screen where players can choose their character.
+#: screen/characters.py:42
+msgid "characters"
+msgstr ""
+
+#. I18N: in the character screen, to select no character for this player
+#. I18N: (with the [?] icon)
+#: screen/characters.py:49
+msgid "None"
+msgstr ""
+
+#: screen/characters.py:94
+#, python-format
+msgid "Player %s"
+msgstr ""
+
+#. I18N: Artificial Intelligence
+#: screen/characters.py:105
 msgid "AI :"
 msgstr ""
 
-#: screen/characters.py:101 screen/characters.py:111
+#: screen/characters.py:117 screen/characters.py:140
 msgid "Next"
 msgstr ""
 
-#: screen/keyboard.py:47
+#: screen/keyboard.py:33
+msgid "keyboard"
+msgstr ""
+
+#: screen/keyboard.py:48
 msgid "Shield"
 msgstr ""
 
@@ -89,19 +122,27 @@ msgstr ""
 msgid "Music"
 msgstr ""
 
+#: screen/configure.py:28
+msgid "configure"
+msgstr ""
+
 #. I18N:option screen
-#: screen/configure.py:29 screen/configure.py:44
+#: screen/configure.py:31 screen/configure.py:46
 msgid "Audio"
 msgstr ""
 
-#: screen/configure.py:33 screen/configure.py:46
+#: screen/configure.py:35 screen/configure.py:48
 msgid "Screen"
 msgstr ""
 
-#: screen/configure.py:36 screen/configure.py:48
+#: screen/configure.py:38 screen/configure.py:50
 msgid "Keyboard"
 msgstr ""
 
 #: screen/level.py:63 screen/level.py:70
 msgid "Go !"
+msgstr ""
+
+#: translation.py:12
+msgid "translator-credits"
 msgstr ""
