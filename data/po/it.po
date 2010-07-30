@@ -1,16 +1,16 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Italian translation for ultimate-smash-friends
+# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# This file is distributed under the same license as the ultimate-smash-friends package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Ultimate-Smash-Friends\n"
-"Report-Msgid-Bugs-To: \n"
+"Project-Id-Version: ultimate-smash-friends\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2010-07-29 17:26+0200\n"
-"PO-Revision-Date: 2010-07-29 16:23+0000\n"
-"Last-Translator: xapantu <Unknown>\n"
-"Language-Team: English\n"
+"PO-Revision-Date: 2010-07-29 16:01+0000\n"
+"Last-Translator: Asphaltsnatch <Paul_fbg@hotmail.fr>\n"
+"Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,23 +19,23 @@ msgstr ""
 
 #: game.py:308
 msgid " WON!"
-msgstr " A GAGNÉ !"
+msgstr ""
 
 #: game.py:323
 msgid "OOPS... DRAW!!!"
-msgstr "OUPS, ERREUR..."
+msgstr ""
 
 #: gui.py:234
 msgid "you are here:"
-msgstr "vous êtes ici :"
+msgstr "siete qui"
 
 #: main.py:68
 msgid "Loading..."
-msgstr "Chargement..."
+msgstr "Caricamento..."
 
 #: screen/about.py:27
 msgid "about"
-msgstr "à propos"
+msgstr "Informazioni"
 
 #: screen/about.py:35 screen/about.py:41 screen/screen_screen.py:66
 #: screen/screen_screen.py:86 screen/characters.py:122
@@ -43,89 +43,89 @@ msgstr "à propos"
 #: screen/sound.py:38 screen/sound.py:45 screen/configure.py:41
 #: screen/configure.py:52 screen/level.py:64 screen/level.py:73
 msgid "Back"
-msgstr "Retour"
+msgstr ""
 
 #: screen/main_screen.py:29 screen/main_screen.py:35
 msgid "Local game"
-msgstr "Jeu local"
+msgstr "giocare localmente"
 
 #: screen/main_screen.py:30 screen/main_screen.py:37 screen/resume.py:28
 #: screen/resume.py:36
 msgid "Configure"
-msgstr "Options"
+msgstr "Configurazione"
 
 #: screen/main_screen.py:31 screen/main_screen.py:39
 msgid "Credits"
-msgstr "A propos"
+msgstr "Ringraziamenti"
 
 #: screen/main_screen.py:32 screen/main_screen.py:41
 msgid "Quit"
-msgstr "Quitter"
+msgstr "Uscita"
 
 #: screen/screen_screen.py:31
 msgid "screen configuration"
-msgstr "affichage"
+msgstr ""
 
 #: screen/screen_screen.py:41
 msgid "Screen resolution (requires a restart):"
-msgstr "Résolution (nécessite un redémarrage):"
+msgstr ""
 
 #: screen/screen_screen.py:47
 msgid "Fullscreen:"
-msgstr "Plein écran :"
+msgstr ""
 
 #: screen/screen_screen.py:51
 msgid "Zoom sharpness:"
-msgstr "Qualité du zoom :"
+msgstr ""
 
 #: screen/screen_screen.py:62
 msgid "Show FPS:"
-msgstr "Voir les FPS"
+msgstr "esporre \"frami per sicondi\""
 
 #. I18N: The title of the screen where players can choose their character.
 #: screen/characters.py:42
 msgid "characters"
-msgstr "joueurs"
+msgstr "caratteri"
 
 #. I18N: in the character screen, to select no character for this player
 #. I18N: (with the [?] icon)
 #: screen/characters.py:49
 msgid "None"
-msgstr "Aucun"
+msgstr ""
 
 #: screen/characters.py:94
 #, python-format
 msgid "Player %s"
-msgstr "Joueur %s"
+msgstr ""
 
 #. I18N: Artificial Intelligence
 #: screen/characters.py:105
 msgid "AI :"
-msgstr "IA :"
+msgstr "intelligenza artificiale"
 
 #: screen/characters.py:117 screen/characters.py:140
 msgid "Next"
-msgstr "Suivant"
+msgstr "Avanti"
 
 #: screen/keyboard.py:33
 msgid "keyboard"
-msgstr "clavier"
+msgstr ""
 
 #: screen/keyboard.py:48
 msgid "Shield"
-msgstr "Bouclier"
+msgstr ""
 
 #: screen/sound.py:29
 msgid "Sound and effects"
-msgstr "Sons et effets"
+msgstr ""
 
 #: screen/sound.py:32
 msgid "Music"
-msgstr "Musique"
+msgstr "Musica"
 
 #: screen/configure.py:28
 msgid "configure"
-msgstr "options"
+msgstr "configura"
 
 #. I18N:option screen
 #: screen/configure.py:31 screen/configure.py:46
@@ -134,93 +134,18 @@ msgstr "Audio"
 
 #: screen/configure.py:35 screen/configure.py:48
 msgid "Screen"
-msgstr "Affichage"
+msgstr "Screen"
 
 #: screen/configure.py:38 screen/configure.py:50
 msgid "Keyboard"
-msgstr "Clavier"
+msgstr ""
 
 #: screen/level.py:63 screen/level.py:70
 msgid "Go !"
-msgstr "Jouer !"
+msgstr "Andiamo !"
 
 #: translation.py:12
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  loquehumaine https://launchpad.net/~loquehumaine\n"
-"  viviun https://launchpad.net/~viviun\n"
-"  xapantu https://launchpad.net/~xapantu\n"
-"  xapantu https://launchpad.net/~xapantu-users"
-
-#~ msgid "Right"
-#~ msgstr "Droite"
-
-#~ msgid "Resume game"
-#~ msgstr "Reprendre le jeu"
-
-#~ msgid "Down"
-#~ msgstr "Bas"
-
-#~ msgid "Left"
-#~ msgstr "Gauche"
-
-#~ msgid "Up"
-#~ msgstr "Haut"
-
-#~ msgid "Quit game"
-#~ msgstr "Quitter le jeu"
-
-#~ msgid "-"
-#~ msgstr "-"
-
-#~ msgid "Sounds configuration"
-#~ msgstr "Configuration du son"
-
-#~ msgid "+"
-#~ msgstr "+"
-
-#~ msgid "Sounds"
-#~ msgstr "Sons"
-
-#~ msgid "Player 3"
-#~ msgstr "Joueur 3"
-
-#~ msgid "Player 2"
-#~ msgstr "Joueur 2"
-
-#~ msgid "Player 4"
-#~ msgstr "Joueur 4"
-
-#~ msgid "Yes"
-#~ msgstr "Oui"
-
-#~ msgid "No"
-#~ msgstr "Non"
-
-#~ msgid "Player 1"
-#~ msgstr "Joueur 1"
-
-#~ msgid "Quit ?"
-#~ msgstr "Quitter ?"
-
-#~ msgid "Ultimate Smash Friends"
-#~ msgstr "Ultimate Smash Friends"
-
-#~ msgid "Choose the level :"
-#~ msgstr "Choisis un niveau :"
-
-#~ msgid "Choose characters : "
-#~ msgstr "Choisis les personnages : "
-
-#~ msgid "Screen configuration (requires restart)"
-#~ msgstr "Configuration de l'affichage (nécessite un redémarrage)"
-
-#~ msgid "you are here :"
-#~ msgstr "vous êtes ici :"
-
-#~ msgid "Zoom sharpness :"
-#~ msgstr "Qualité du zoom :"
-
-#~ msgid "Fullscreen :"
-#~ msgstr "Plein écran :"
+"  Asphaltsnatch https://launchpad.net/~paul-fbg"
