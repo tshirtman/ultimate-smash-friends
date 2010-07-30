@@ -267,7 +267,7 @@ class Main(object):
                     self.menu.screen_current = "main_screen"
             #FPS counter
             if config.general["SHOW_FPS"]:
-                self.screen.blit(loaders.text("FPS: " + str(self.clock.get_fps()), fonts["mono"]["37"]), (10, 10))
+                self.screen.blit(loaders.text("FPS: " + str(self.clock.get_fps()), fonts["mono"]["38"]), (10, 5))
             pygame.display.update()
             
             if self.menu.screen_current == 'about':
