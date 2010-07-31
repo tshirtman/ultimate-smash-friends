@@ -131,16 +131,16 @@ class Config(object):
                 # see if files are installed on the system
                 stat(sys_data_dir)
 
-                user_config_dir = join(environ['APPDATA'], 
-                                       'Ultimate Smash Friends')
 
             except OSError:
                 # files aren't installed on the system so set user_config_dir
                 # to the parent directory of this module
-                user_config_dir = dirname(abspath(join(__file__, '..')))
+                user_config_dir = dirname(abspath(join(__file__, '..\..')))
                 sys_data_dir = join(user_config_dir, 'data')
                 sys_config_file = join(user_config_dir, 'system.cfg')
 
+            user_config_dir = join(environ['APPDATA'], 
+                                'Ultimate Smash Friends')
             user_config_file = join(user_config_dir, 'user.cfg')
             user_data_dir = join(user_config_dir, 'user_data')
 

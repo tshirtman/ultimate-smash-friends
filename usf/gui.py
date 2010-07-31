@@ -36,7 +36,7 @@ from skin import Skin
 
 from widgets import optimize_size 
 from font import fonts
-
+import screen
 
 class Gui(object):
     """

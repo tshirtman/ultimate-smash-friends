@@ -1,1 +1,10 @@
-from screen import *
+import usf.screen.main_screen 
+import usf.screen.configure 
+import usf.screen.about 
+import usf.screen.characters 
+import usf.screen.configure 
+import usf.screen.keyboard 
+import usf.screen.level 
+import usf.screen.resume 
+import usf.screen.screen_screen 
+import usf.screen.sound 

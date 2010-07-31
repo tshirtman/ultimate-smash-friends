@@ -6,20 +6,30 @@ from __future__ import with_statement
     http://wiki.python.org/moin/Distutils/Cookbook/AutoDataDiscovery
 
 """
+
 import sys, os, platform, imp
 from os import environ, sep
 from os.path import abspath, join, splitext, isdir, isfile
 from sys import exit
 from distutils.core import setup
+import py2exe
 
 OS = platform.system().lower()
+origIsSystemDLL = py2exe.build_exe.isSystemDLL
+def isSystemDLL(pathname):
+       if os.path.basename(pathname).lower() in ["sdl_ttf.dll", "libogg-0.dll"]:
+               return 0
+       return origIsSystemDLL(pathname)
+py2exe.build_exe.isSystemDLL = isSystemDLL
+OS = platform.system().lower()
 
+"""
 if OS == 'windows' or 'bdist_wininst' in sys.argv:
     print ('This script was not meant to be run under windows. If you want '
           'to create a package for windows, please install InnoSetup and use'
           'the included setup.iss script, thanks.')
     sys.exit(1)
-
+"""
 def files(path):
     """ Return all non-python-file filenames in path """
     result = []
@@ -39,10 +49,16 @@ def files(path):
         all_results.append([path, result])
     return all_results
 
-data = [(join('share', 'ultimate-smash-friends') + sep + item[0], item[1])
-        for item in files('data')]
-data.append((join('share', 'ultimate-smash-friends') + sep + 'data', ['CREDITS.txt']))
+if OS != 'windows':
+    data = [(join('share', 'ultimate-smash-friends') + sep + item[0], item[1])
+            for item in files('data')]
+    data.append((join('share', 'ultimate-smash-friends') + sep + 'data', ['CREDITS.txt']))
+else:
+    data = [(item[0], item[1])
+            for item in files('data')]
+    data.append('CREDITS.txt')
 
+    
 doc = [(join('share', 'doc', 'ultimate-smash-friends') +
        item[0].replace('doc', ''), item[1]) for item in files('doc')]
 doc[-1][-1].append('COPYING.txt')
@@ -61,14 +77,14 @@ scripts = ['ultimate-smash-friends',
                'utils/xml_text_extractor.py']
 
 setup(name='ultimate-smash-friends',
-      version='0.1.2',
+      version='0.1.3',
       description=('A 2d arcade fight game, based on the gameplay of super '
                    'smash bros, from nintendo.'),
       author='Gabriel Pettier',
       author_email='gabriel.pettier@gmail.com',
-      maintainer='Edwin Marshall (aspidites)',
-      maintainer_email='aspidites@inbox.com',
-      url='http://usf.tuxfamily.org',
+      maintainer='Lucas Baudin (xapantu)',
+      maintainer_email='xapantu@gmail.com',
+      url='http://usf.tuxfamily.org/',
       classifiers=['Development Status :: 2 - Pre-Alpha',
                    'Operating System :: OS Independent',
                    'Intended Audience :: End Users/Desktop',
@@ -77,8 +93,9 @@ setup(name='ultimate-smash-friends',
                    'Programming Language :: Python',
                    'Topic :: Games/Entertainment :: Arcade'
                   ],
-      packages=['usf', 'usf.screen'],
+      packages=['usf', 'usf.widgets', 'usf.screen'],
       scripts=scripts,
       requires=['pygame (>=1.6)', 'python (>=2.5)'],
-      data_files=(data + doc + config + icon)
+      data_files=(data + doc + config + icon),
+	  windows=[{"script" : "ultimate-smash-friends", "icon_resources" : [(1, "data/icon/icon.ico")]}]
      )

@@ -25,7 +25,7 @@ import logging
 
 from config import Config
 import loaders
-
+mixer.init()
 config = Config()
 
 class Music (object):
