@@ -12,16 +12,17 @@ from os import environ, sep
 from os.path import abspath, join, splitext, isdir, isfile
 from sys import exit
 from distutils.core import setup
-import py2exe
+OS = platform.system().lower()
+if OS == 'windows':
+    import py2exe
 
-OS = platform.system().lower()
-origIsSystemDLL = py2exe.build_exe.isSystemDLL
-def isSystemDLL(pathname):
-       if os.path.basename(pathname).lower() in ["sdl_ttf.dll", "libogg-0.dll"]:
-               return 0
-       return origIsSystemDLL(pathname)
-py2exe.build_exe.isSystemDLL = isSystemDLL
-OS = platform.system().lower()
+    origIsSystemDLL = py2exe.build_exe.isSystemDLL
+    def isSystemDLL(pathname):
+           if os.path.basename(pathname).lower() in ["sdl_ttf.dll", "libogg-0.dll"]:
+                   return 0
+           return origIsSystemDLL(pathname)
+    py2exe.build_exe.isSystemDLL = isSystemDLL
+    OS = platform.system().lower()
 
 """
 if OS == 'windows' or 'bdist_wininst' in sys.argv:
