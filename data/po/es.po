@@ -8,22 +8,22 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-07-29 17:26+0200\n"
-"PO-Revision-Date: 2010-07-30 09:11+0000\n"
-"Last-Translator: xapantu <Unknown>\n"
+"PO-Revision-Date: 2010-08-01 05:37+0000\n"
+"Last-Translator: Moritatux <Unknown>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-07-31 03:49+0000\n"
+"X-Launchpad-Export-Date: 2010-08-02 03:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: game.py:308
 msgid " WON!"
-msgstr ""
+msgstr " GANASTE!"
 
 #: game.py:323
 msgid "OOPS... DRAW!!!"
-msgstr ""
+msgstr "OOPS... EMPATE!!!"
 
 #: gui.py:234
 msgid "you are here:"
@@ -35,7 +35,7 @@ msgstr "Cargando..."
 
 #: screen/about.py:27
 msgid "about"
-msgstr ""
+msgstr "Acerca de"
 
 #: screen/about.py:35 screen/about.py:41 screen/screen_screen.py:66
 #: screen/screen_screen.py:86 screen/characters.py:122
@@ -64,7 +64,7 @@ msgstr "Abandonar"
 
 #: screen/screen_screen.py:31
 msgid "screen configuration"
-msgstr "visualización"
+msgstr "Configuración de pantalla"
 
 #: screen/screen_screen.py:41
 msgid "Screen resolution (requires a restart):"
@@ -76,32 +76,32 @@ msgstr "Pantalla completa:"
 
 #: screen/screen_screen.py:51
 msgid "Zoom sharpness:"
-msgstr ""
+msgstr "Zoom nitidez:"
 
 #: screen/screen_screen.py:62
 msgid "Show FPS:"
-msgstr ""
+msgstr "Mostrar FPS:"
 
 #. I18N: The title of the screen where players can choose their character.
 #: screen/characters.py:42
 msgid "characters"
-msgstr ""
+msgstr "caractéres"
 
 #. I18N: in the character screen, to select no character for this player
 #. I18N: (with the [?] icon)
 #: screen/characters.py:49
 msgid "None"
-msgstr ""
+msgstr "Ninguno"
 
 #: screen/characters.py:94
 #, python-format
 msgid "Player %s"
-msgstr ""
+msgstr "Jugador %s"
 
 #. I18N: Artificial Intelligence
 #: screen/characters.py:105
 msgid "AI :"
-msgstr ""
+msgstr "Al :"
 
 #: screen/characters.py:117 screen/characters.py:140
 msgid "Next"
@@ -113,11 +113,11 @@ msgstr "teclado"
 
 #: screen/keyboard.py:48
 msgid "Shield"
-msgstr ""
+msgstr "Escudo"
 
 #: screen/sound.py:29
 msgid "Sound and effects"
-msgstr ""
+msgstr "Sonidos y efectos"
 
 #: screen/sound.py:32
 msgid "Music"
@@ -130,7 +130,7 @@ msgstr "configurar"
 #. I18N:option screen
 #: screen/configure.py:31 screen/configure.py:46
 msgid "Audio"
-msgstr ""
+msgstr "Audio"
 
 #: screen/configure.py:35 screen/configure.py:48
 msgid "Screen"
@@ -150,6 +150,7 @@ msgstr ""
 "Launchpad Contributions:\n"
 "  Carlos Alberto Ospina https://launchpad.net/~atah\n"
 "  DiegoJ https://launchpad.net/~diegojromerolopez\n"
+"  Moritatux https://launchpad.net/~moritatux\n"
 "  edge_one https://launchpad.net/~ercl-rommel\n"
 "  xapantu https://launchpad.net/~xapantu"
 
