@@ -232,7 +232,7 @@ class ThrowBomb(TimedEvent):
 
 class ThrowFireBall(TimedEvent):
     """
-    Launch a fireball (bouncing) in front of the player.
+    Launch a fireball in front of the player.
 
     """
     def execute(self, deltatime):
@@ -280,10 +280,10 @@ class ThrowMiniGost(TimedEvent):
     def execute(self, deltatime):
         self.done = True
         self.params['world'].addItem(
-                                        'mini_gost',
-                                        place=(self.params['entity'].rect[0:2]),
-                                        vector=(1000, 50)
-                                    )
+                'mini_gost',
+                place=(self.params['entity'].rect[0:2]),
+                vector=(1000, 50)
+                )
 
     def condition(self):
         return True

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<item
+    name="fireball"
+    image="ball1.png"
+    creator="Redshrike"
+    weight=""
+    hardshape="0 0 30 30"
+    auto-reverse="True"
+    Description="">
+
+    <movement name="static"
+    duration="5000"
+    repeat="0"
+    >
+        <vector
+        time="0"
+        vector="100,0"
+        ></vector>
+        <event
+        action="DelItemEvent"
+        period="0,1000"
+        ></event>
+        <frame
+        time="0"
+        image="ball1.png"
+        > </frame>
+        <frame
+        time="300"
+        image="ball2.png"
+        > </frame>
+        <frame
+        time="600"
+        image="ball3.png"
+        > </frame>
+        <frame
+        time="900"
+        image="ball4.png"
+        > </frame>
+        <frame
+        time="1200"
+        image="ball5.png"
+        > </frame>
+    </movement>
+</item>
