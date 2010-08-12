@@ -271,7 +271,7 @@
     >
         <event
         period="600"
-        action="ThrowFireball"
+        action="ThrowFireBall"
         />
         <frame
         time="0"
@@ -423,7 +423,7 @@
             ></agressiv-point>
         </frame>
     </movement>
-    <movement name="static-upgraded"
+    <movement name="static_upgraded"
     duration="400"
     repeat="-1"
     >
@@ -444,7 +444,7 @@
         image="static4-upgraded.png"
         > </frame>
     </movement>
-    <movement name="take-upgraded"
+    <movement name="take_upgraded"
     duration="100"
     repeat="0"
     >
@@ -453,7 +453,7 @@
         image="take-upgraded.png"
         > </frame>
     </movement>
-    <movement name="walk-upgraded"
+    <movement name="walk_upgraded"
     duration="400"
     repeat="-1"
     >
@@ -474,7 +474,7 @@
         image="walk4-upgraded.png"
         > </frame>
     </movement>
-    <movement name="jump-upgraded"
+    <movement name="jump_upgraded"
     duration="0"
     repeat="0"
     >
@@ -513,7 +513,7 @@
         image="jump2-upgraded.png"
         > </frame>
     </movement>
-    <movement name="scnd-jump-upgraded"
+    <movement name="scnd-jump_upgraded"
     duration="0"
     repeat="0"
     >
@@ -538,7 +538,7 @@
         image="jump3-upgraded.png"
         > </frame>
     </movement>
-    <movement name="smash-straight-upgraded"
+    <movement name="smash-straight_upgraded"
     duration="1000"
     repeat="0"
     >
@@ -560,7 +560,7 @@
         image="smash-straight3-upgraded.png"
         > </frame>
     </movement>
-    <movement name="hit-upgraded"
+    <movement name="hit_upgraded"
     duration="500"
     repeat="0"
     >
@@ -678,7 +678,7 @@
             ></agressiv-point>
         </frame>
     </movement-->
-    <movement name="specialhit-upgraded"
+    <movement name="specialhit_upgraded"
     duration="1500"
     repeat="0"
     hardshape="0 0 157 40"
@@ -713,7 +713,7 @@
         image="special6-upgraded.png"
         > </frame>
     </movement>
-    <movement name="pick-upgraded"
+    <movement name="pick_upgraded"
     duration="200"
     repeat="0"
     >
@@ -771,7 +771,7 @@
         image="static1-upgraded.png"
         > </frame>
     </movement-->
-    <movement name="kick-upgraded"
+    <movement name="kick_upgraded"
     duration="500"
     repeat="0"
     >
@@ -806,7 +806,7 @@
             ></agressiv-point>
         </frame>
     </movement>
-    <movement name="kick-jumping-upgraded"
+    <movement name="kick-jumping_upgraded"
     duration="500"
     repeat="0"
     >
