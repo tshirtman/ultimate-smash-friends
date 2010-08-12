@@ -587,7 +587,7 @@ class Entity (object):
         self.rect[:2] = self.place[0] - self.rect[2]/2, self.place[1]
 
         # Update animation of entity
-        if self.entity_skin.update( t, self.reversed ) == 0:
+        if self.entity_skin.update( t, self.reversed, self.upgraded ) == 0:
             del(self)
 
         self.update_physics(dt, game)

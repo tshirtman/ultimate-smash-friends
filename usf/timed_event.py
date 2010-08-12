@@ -465,7 +465,7 @@ class PlayerStaticOnGround(TimedEvent):
             anim = 'static'
 
         self.params['entity'].entity_skin.change_animation(
-                anim,
+                anim+self.params['entity'].upgraded*'_upgraded',
                 self.params['world']
                 )
 

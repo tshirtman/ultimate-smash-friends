@@ -281,13 +281,13 @@ shield_center, guessing from hardshape')
 #animation.")
             pass
 
-    def update(self, t, reversed=False, server=False):
+    def update(self, t, reversed=False, upgraded=False, server=False):
         """
         Update the skin's animation if necessary.
 
         """
         if self.animation.playing == 0:
-            self.current_animation = "static"
+            self.current_animation = "static"+upgraded*'_upgraded'
             self.animation_change = True
         if self.animation_change:
             self.animation = self.animations[self.current_animation]
