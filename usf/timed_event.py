@@ -241,7 +241,7 @@ class ThrowFireBall(TimedEvent):
                 'fireball',
                 place=(self.params['entity'].rect[0:2]),
                 reversed=self.params['entity'].reversed,
-                vector=(100, -1000)
+                vector=(1000, -100)
                 )
 
     def condition(self):
