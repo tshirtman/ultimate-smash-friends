@@ -56,7 +56,8 @@ class Sequence (object):
         if(
             not self.condition
             or len(game_instance.players) > self.player
-            and game_instance.players[self.player].entity_skin.current_animation
+            and
+            game_instance.players[self.player].entity_skin.current_animation.replace('_upgraded','')
                 in self.condition
           ):
             keyseq = [i[0] for i in seq]
@@ -196,7 +197,8 @@ class Controls (object):
                             if player.shield['on']: break
                             if ("_SHIELD" in the_key and
                                 player.entity_skin.current_animation in (
-                                'static', 'walk'
+                                'static', 'static_upgraded',
+                                'walk', 'walk_upgraded'
                                 )
                             ):
                                 player.shield['on'] = True
@@ -264,7 +266,10 @@ class Controls (object):
                                 elif "_LEFT" in self.keys[key]:
                                     if player.reversed:
                                         player.walking_vector[0] = 0
-                                    if player.entity_skin.current_animation == "walk":
+                                    if (
+                                        player.entity_skin.current_animation in
+                                        ('walk', 'walk_upgraded')
+                                    ):
                                         player.entity_skin.change_animation(
                                                 "static",
                                                 game_instance,
@@ -273,7 +278,10 @@ class Controls (object):
                                 elif "_RIGHT" in self.keys[key]:
                                     if not player.reversed:
                                         player.walking_vector[0] = 0
-                                    if player.entity_skin.current_animation == "walk":
+                                    if (
+                                        player.entity_skin.current_animation in
+                                        ('walk', 'walk_upgraded')
+                                    ):
                                         player.entity_skin.change_animation(
                                                 "static",
                                                 game_instance,

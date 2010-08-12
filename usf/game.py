@@ -472,7 +472,7 @@ class Game (object):
         for player in self.players:
             for item in self.items:
                 if player.rect.collidelist([item.rect,]) != -1 \
-                and player.entity_skin.current_animation == "pick":
+                and "pick" in player.entity_skin.current_animation:
                         item.entity_skin.change_animation(
                                 'triger',
                                 self,

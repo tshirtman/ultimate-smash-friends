@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <character
-    name="Awesome Possym"
+    name="Xeon"
     image="portrait.png"
     hardshape="7 11 33 52"
     creator="Redshrike"
     weight="1"
     auto-reverse="True"
     age="Not Disclosed"
-    Description="A mysterious character based on sticks, with some awsome powers.">
+    Description="">
 
     <movement name="static"
     duration="300"
