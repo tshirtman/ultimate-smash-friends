@@ -226,7 +226,7 @@ shield_center, guessing from hardshape')
                     logging.debug(self.name+
                         ' character has no upgraded '
                         'version of '
-                        +anim_name
+                        + anim_name
                         +' falling back to normal version'
                         )
                     self.current_animation = anim_name
