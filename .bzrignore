@@ -15,5 +15,6 @@ usf/.project
 dist
 build
 pip-log.txt
+deb_dist
 
 usf.log
