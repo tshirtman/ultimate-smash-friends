@@ -41,4 +41,37 @@
         image="ball5.png"
         > </frame>
     </movement>
+    <movement name="static_upgraded"
+    duration="5000"
+    repeat="0"
+    >
+        <vector
+        time="0"
+        vector="100,0"
+        ></vector>
+        <event
+        action="DelItemEvent"
+        period="0,1000"
+        ></event>
+        <frame
+        time="0"
+        image="ball1-upgraded.png"
+        > </frame>
+        <frame
+        time="300"
+        image="ball2-upgraded.png"
+        > </frame>
+        <frame
+        time="600"
+        image="ball3-upgraded.png"
+        > </frame>
+        <frame
+        time="900"
+        image="ball4-upgraded.png"
+        > </frame>
+        <frame
+        time="1200"
+        image="ball5-upgraded.png"
+        > </frame>
+    </movement>
 </item>

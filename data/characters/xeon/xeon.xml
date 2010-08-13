@@ -269,10 +269,6 @@
     repeat="0"
     hardshape="0 0 157 40"
     >
-        <event
-        period="600"
-        action="ThrowFireball"
-        />
         <frame
         time="0"
         image="special1.png"
@@ -658,10 +654,6 @@
     repeat="0"
     hardshape="0 0 157 40"
     >
-        <event
-        period="600"
-        action="ThrowFireball"
-        />
         <frame
         time="0"
         image="special1-upgraded.png"
