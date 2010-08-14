@@ -14,7 +14,15 @@
     >
         <vector
         time="0"
-        vector="100,0"
+        vector="1000,0"
+        ></vector>
+        <vector
+        time="100"
+        vector="1000,0"
+        ></vector>
+        <vector
+        time="200"
+        vector="1000,0"
         ></vector>
         <event
         action="DelItemEvent"
@@ -23,23 +31,108 @@
         <frame
         time="0"
         image="ball1.png"
-        > </frame>
+        >
+            <agressiv-point
+            coords="5,2"
+            vector="150,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="9,5"
+            vector="150,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="5,9"
+            vector="150,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="2,5"
+            vector="150,-50"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="100"
+        image="ball2.png"
+        >
+            <agressiv-point
+            coords="5,2"
+            vector="150,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="9,5"
+            vector="150,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="5,9"
+            vector="150,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="2,5"
+            vector="150,-50"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="200"
+        image="ball3.png"
+        >
+            <agressiv-point
+            coords="5,2"
+            vector="150,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="9,5"
+            vector="150,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="5,9"
+            vector="150,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="2,5"
+            vector="150,-50"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="200"
+        image="ball4.png"
+        >
+            <agressiv-point
+            coords="5,2"
+            vector="150,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="9,5"
+            vector="150,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="5,9"
+            vector="150,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="2,5"
+            vector="150,-50"
+            ></agressiv-point>
+        </frame>
         <frame
         time="300"
-        image="ball2.png"
-        > </frame>
-        <frame
-        time="600"
-        image="ball3.png"
-        > </frame>
-        <frame
-        time="900"
-        image="ball4.png"
-        > </frame>
-        <frame
-        time="1200"
         image="ball5.png"
-        > </frame>
+        >
+            <agressiv-point
+            coords="5,2"
+            vector="150,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="9,5"
+            vector="150,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="5,9"
+            vector="150,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="2,5"
+            vector="150,-50"
+            ></agressiv-point>
+    </frame>
     </movement>
     <movement name="static_upgraded"
     duration="5000"
@@ -47,7 +140,15 @@
     >
         <vector
         time="0"
-        vector="100,0"
+        vector="1000,0"
+        ></vector>
+        <vector
+        time="100"
+        vector="1000,0"
+        ></vector>
+        <vector
+        time="200"
+        vector="1000,0"
         ></vector>
         <event
         action="DelItemEvent"
@@ -56,22 +157,107 @@
         <frame
         time="0"
         image="ball1-upgraded.png"
-        > </frame>
+        >
+            <agressiv-point
+            coords="5,2"
+            vector="150,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="9,5"
+            vector="150,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="5,9"
+            vector="150,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="2,5"
+            vector="150,-50"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="100"
+        image="ball2-upgraded.png"
+        >
+            <agressiv-point
+            coords="5,2"
+            vector="150,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="9,5"
+            vector="150,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="5,9"
+            vector="150,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="2,5"
+            vector="150,-50"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="200"
+        image="ball3-upgraded.png"
+        >
+            <agressiv-point
+            coords="5,2"
+            vector="150,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="9,5"
+            vector="150,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="5,9"
+            vector="150,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="2,5"
+            vector="150,-50"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="200"
+        image="ball4-upgraded.png"
+        >
+            <agressiv-point
+            coords="5,2"
+            vector="150,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="9,5"
+            vector="150,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="5,9"
+            vector="150,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="2,5"
+            vector="150,-50"
+            ></agressiv-point>
+        </frame>
         <frame
         time="300"
-        image="ball2-upgraded.png"
-        > </frame>
-        <frame
-        time="600"
-        image="ball3-upgraded.png"
-        > </frame>
-        <frame
-        time="900"
-        image="ball4-upgraded.png"
-        > </frame>
-        <frame
-        time="1200"
         image="ball5-upgraded.png"
-        > </frame>
+        >
+            <agressiv-point
+            coords="5,2"
+            vector="150,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="9,5"
+            vector="150,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="5,9"
+            vector="150,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="2,5"
+            vector="150,-50"
+            ></agressiv-point>
+        </frame>
     </movement>
 </item>

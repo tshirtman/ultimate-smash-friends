@@ -163,7 +163,13 @@ class Game (object):
                     )
                 )
 
-    def addItem(self, item='heal', place=(550,50), reversed=False,vector=(0,0)):
+    def addItem(
+        self,
+        item='heal',
+        place=(550,50),
+        reversed=False,
+        upgraded=False,
+        vector=(0,0)):
         """
         Insert an item into game.
 
@@ -179,7 +185,8 @@ class Game (object):
                         vector=vector,
                         reversed=reversed,
                         visible=True,
-                        present=True
+                        present=True,
+                        upgraded=upgraded,
                         )
                     )
 

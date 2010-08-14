@@ -74,7 +74,8 @@ class Entity (object):
     def __init__( self, num, game,
             entity_skinname='characters'+os.sep+'stick-tiny', place=(550,1),
             lives=3, carried_by=None, vector=[0,0], reversed=False,
-            server=False, number=None, visible=False, present=False
+            server=False, number=None, visible=False, present=False,
+            upgraded=False,
             ):
         if number is None:
             self.number = Entity.counter
@@ -83,7 +84,7 @@ class Entity (object):
             self.number = number
 
         self.num = num
-        self.upgraded = False
+        self.upgraded = upgraded
         self.lighten = False
         self.shield = { 'on': False, 'power': 1.0, 'date': 0 }
         self.place = place

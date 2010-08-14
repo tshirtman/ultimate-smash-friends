@@ -270,13 +270,12 @@
     hardshape="0 0 157 40"
     >
         <event
-        period="600"
+        period="700,0"
         action="ThrowFireBall"
         />
         <frame
         time="0"
         image="special1.png"
-        vector="10,0"
         > </frame>
         <frame
         time="200"
@@ -684,7 +683,7 @@
     hardshape="0 0 157 40"
     >
         <event
-        period="600"
+        period="700"
         action="ThrowFireball"
         />
         <frame

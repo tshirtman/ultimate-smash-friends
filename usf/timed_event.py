@@ -237,11 +237,15 @@ class ThrowFireBall(TimedEvent):
     """
     def execute(self, deltatime):
         self.done = True
+        entity = self.params['entity']
+        place = entity.place[0:2]
+        place[0] += entity.reversed and -entity.rect[2] or entity.rect[2]
+        place[1] += entity.rect[3]/2
         self.params['world'].addItem(
                 'fireball',
-                place=(self.params['entity'].rect[0:2]),
-                reversed=self.params['entity'].reversed,
-                vector=(1000, -100)
+                place=place,
+                reversed=entity.reversed,
+                upgraded=entity.upgraded,
                 )
 
     def condition(self):
