@@ -721,7 +721,7 @@
         image="pickup-upgraded.png"
         > </frame>
     </movement>
-    <movement name="roll"
+    <movement name="roll_upgraded"
     duration="500"
     repeat="0"
     >
