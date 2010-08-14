@@ -385,7 +385,7 @@ class Game (object):
             if len(present_players) == 1:
                 players_barycenter = present_players[0].rect[0:2]
                 precise_zoom = 1
-                self.zoom = int(precise_zoom * 0.70 *
+                self.zoom = int(precise_zoom *
                             config.general['ZOOM_SHARPNESS'])/(config.general['ZOOM_SHARPNESS']*
                             1.0 )
             # center the level around the barycenter of present players.
@@ -393,12 +393,12 @@ class Game (object):
                 ordered = sorted([ i.rect[0] for i in present_players ])
                 L = max(
                     SIZE[0],
-                    max(1, ordered[-1])- max(1, ordered[0])
+                    max(1, ordered[-1])- max(1, ordered[0]) * 1.25
                     )
 
                 ordered = sorted([ i.rect[1] for i in present_players ])
 
-                H = max( SIZE[1], ordered[-1], ordered[0])
+                H = max( SIZE[1], ordered[-1], ordered[0] * 1.25)
 
                 precise_zoom = min (
                         1.0*SIZE[0] / L,
@@ -410,7 +410,7 @@ class Game (object):
                 # image cache is more useful.
 
                 self.zoom = (
-                    int( precise_zoom * 0.70 * config.general['ZOOM_SHARPNESS'] )/
+                    int( precise_zoom * config.general['ZOOM_SHARPNESS'] )/
                     (config.general['ZOOM_SHARPNESS'] * 1.0)
                 )
 
@@ -426,6 +426,7 @@ class Game (object):
                  -(players_barycenter[0])*self.zoom+SIZE[0]/2 ,
                  -(players_barycenter[1])*self.zoom+SIZE[1]/2 
                  ]
+
     def update_physics(self):
         """
         all physical interaction here would probably better in a physics
