@@ -16,18 +16,22 @@
         <frame
         time="0"
         image="static1.png"
+        hardshape="7 11 33 52"
         > </frame>
         <frame
         time="100"
-        image="static2.png"
+        image="static3.png"
+        hardshape="9 12 33 52"
         > </frame>
         <frame
         time="200"
-        image="static3.png"
+        image="static2.png"
+        hardshape="8 11 33 52"
         > </frame>
         <frame
         time="300"
         image="static4.png"
+        hardshape="8 11 33 52"
         > </frame>
     </movement>
     <movement name="take"
