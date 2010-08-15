@@ -15,6 +15,8 @@ from pygame.locals import (
     K_RIGHT,
     K_SPACE,
     K_F5,
+    K_PLUS,
+    K_MINUS,
     )
 
 import sys, os
@@ -22,27 +24,40 @@ import time
 
 usf_root='../'
 
+try:
+    import inotifyx
+    fd = inotifyx.init()
+except:
+    print "no inotify, update manualy"
+    inotifyx = False
+
 sys.path.append(os.path.join(usf_root,'usf'))
 
 from entity_skin import Entity_skin
 from loaders import image
 
-def load(charname):
-    return Entity_skin(os.path.join(
-        usf_root, 'data', 'characters', charname
-        ))
-
 def main(charname):
 
     pygame.init()
     screen = pygame.display.set_mode((200,200))
-    entity_skin = load(charname)
+    path = os.path.join(
+        usf_root, 'data', 'characters', charname
+        )
+    entity_skin = Entity_skin(path)
+    if inotifyx:
+        wd = inotifyx.add_watch(fd, path, inotifyx.IN_MODIFY)
     anim = 1
+    display_hardshape = True
+    speed = 1.0
 
     bottom_center_hardshape = (100, 150)
     while True:
         # get key events
         pygame.event.pump()
+        if inotifyx and inotifyx.get_events(fd, 0):
+            print 
+            time.sleep(0.5)
+            entity_skin = Entity_skin(path)
         for event in pygame.event.get(
             [ KEYDOWN, KEYUP ]
             ):
@@ -50,11 +65,18 @@ def main(charname):
                 if event.key == K_ESCAPE:
                     return
                 elif event.key == K_F5:
-                    character = load(charname)
+                    entity_skin = Entity_skin(path)
+                    print "reloaded"
                 elif event.key == K_UP:
                     anim +=1
                 elif event.key == K_DOWN:
                     anim -=1
+                elif event.key == K_SPACE:
+                    display_hardshape = not display_hardshape
+                elif event.key == K_PLUS:
+                    speed *= 2
+                elif event.key == K_MINUS:
+                    speed /= 2
 
         animation = entity_skin.animations.keys()[
             anim % len(entity_skin.animations.keys())
@@ -63,8 +85,8 @@ def main(charname):
         # update screen
         screen.fill(pygame.Color('green'))
         img = filter(
-                    lambda f : f.time < (
-                        (time.time()*1000.0) %
+                    lambda f : f.time <= (
+                        (time.time()*1000.0*speed) %
                         entity_skin.animations[animation].duration
                         ),
                     entity_skin.animations[animation].frames
@@ -73,8 +95,18 @@ def main(charname):
             bottom_center_hardshape[0] - img.hardshape[0] - img.hardshape[2]/2,
             bottom_center_hardshape[1] - img.hardshape[1] - img.hardshape[3]/2
         )
+        screen.fill(
+            pygame.Color('red'),
+            pygame.Rect((
+                position[0]+img.hardshape[0],
+                position[1]+img.hardshape[1],
+                img.hardshape[2],
+                img.hardshape[3]
+            ))
+            )
         screen.blit(image(img.image)[0], position)
         pygame.display.flip()
+    inotifyx.rm_watch(wd)
 
 if __name__ == '__main__':
     main(sys.argv[1])
