@@ -37,7 +37,7 @@ def main(charname):
     pygame.init()
     screen = pygame.display.set_mode((200,200))
     entity_skin = load(charname)
-    anim = 0
+    anim = 1
 
     bottom_center_hardshape = (100, 150)
     while True:
@@ -46,14 +46,15 @@ def main(charname):
         for event in pygame.event.get(
             [ KEYDOWN, KEYUP ]
             ):
-            if event.key == K_ESCAPE:
-                return
-            elif event.key == K_F5:
-                character = load(charname)
-            elif event.key == K_UP:
-                animation +=1
-            elif event.key == K_DOWN:
-                animation -=1
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    return
+                elif event.key == K_F5:
+                    character = load(charname)
+                elif event.key == K_UP:
+                    anim +=1
+                elif event.key == K_DOWN:
+                    anim -=1
 
         animation = entity_skin.animations.keys()[
             anim % len(entity_skin.animations.keys())
@@ -63,12 +64,11 @@ def main(charname):
         screen.fill(pygame.Color('green'))
         img = filter(
                     lambda f : f.time < (
-                        (time.time()*1000) %
+                        (time.time()*1000.0) %
                         entity_skin.animations[animation].duration
                         ),
                     entity_skin.animations[animation].frames
                     )[-1]
-        print img
         position = (
             bottom_center_hardshape[0] - img.hardshape[0] - img.hardshape[2]/2,
             bottom_center_hardshape[1] - img.hardshape[1] - img.hardshape[3]/2

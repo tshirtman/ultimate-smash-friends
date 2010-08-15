@@ -65,7 +65,7 @@
         > </frame>
     </movement>
     <movement name="jump"
-    duration="0"
+    duration="1500"
     repeat="0"
     >
         <event
@@ -104,7 +104,7 @@
         > </frame>
     </movement>
     <movement name="scnd-jump"
-    duration="0"
+    duration="200"
     repeat="0"
     >
         <event
@@ -318,25 +318,30 @@
         <frame
         time="0"
         image="roll1.png"
+        hardshape="8 5 32 56"
         > </frame>
         <frame
         time="100"
         image="roll2.png"
+        hardshape="3 3 47 38"
         > </frame>
         <frame
         time="200"
         image="roll3.png"
         vector="50,0"
+        hardshape="2 2 35 43"
         > </frame>
         <frame
         time="300"
         image="roll4.png"
         vector="70,0"
+        hardshape="4 2 42 35"
         > </frame>
         <frame
         time="400"
         image="roll5.png"
         vector="70,0"
+        hardshape="6 3 36 46"
         > </frame>
     </movement>
     <!--movement name="special2"
@@ -478,7 +483,7 @@
         > </frame>
     </movement>
     <movement name="jump_upgraded"
-    duration="0"
+    duration="1500"
     repeat="0"
     >
         <event
@@ -517,7 +522,7 @@
         > </frame>
     </movement>
     <movement name="scnd-jump_upgraded"
-    duration="0"
+    duration="200"
     repeat="0"
     >
         <event
