@@ -36,7 +36,6 @@ except:
     Log().log("old version of pygame no BLEND_MAX")
     BLEND_MAX = None
 
-
 from config import Config
 
 config = Config()
