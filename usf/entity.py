@@ -425,6 +425,7 @@ class Entity (object):
                 )
 
         if self.visible == True:
+            #place = self.place
             real_coords = (
                     int(self.place[0]*zoom)*(SIZE[0]/800.0)+coords[0] ,
                     int(self.place[1]*zoom)*(SIZE[1]/480.0)+coords[1]
@@ -560,8 +561,10 @@ class Entity (object):
             self.vector[1] += float(config.general['GRAVITY']) * dt
 
         # Application of air friction.
-        self.vector[0] -= config.general['AIR_FRICTION'] * environnement_friction * self.vector[0] * dt
-        self.vector[1] -= config.general['AIR_FRICTION'] * environnement_friction * self.vector[1] * dt
+        F = config.general['AIR_FRICTION'] * environnement_friction
+
+        self.vector[0] -= (F * self.vector[0] * dt)
+        self.vector[1] -= (F * self.vector[1] * dt)
 
         # apply the vector to entity.
         self.move ((self.vector[0] * dt, self.vector[1] * dt), 'vector')
@@ -584,12 +587,17 @@ class Entity (object):
         if not self.present:
             return
 
-        self.rect[2:] = self.entity_skin.animation.hardshape[2:]
-        self.rect[:2] = self.place[0] - self.rect[2]/2, self.place[1]
-
         # Update animation of entity
         if self.entity_skin.update( t, self.reversed, self.upgraded ) == 0:
             del(self)
 
+        hardshape = self.entity_skin.animation.hardshape
+        self.rect[2:] = hardshape[2:]
+        #self.rect[:2] = self.place[0] - self.rect[2]/2, self.place[1]
+
+        self.rect[:2] = [
+            self.place[0] - hardshape[2]/2 - hardshape[0],
+            self.place[1] - hardshape[1]
+            ]
         self.update_physics(dt, game)
 
