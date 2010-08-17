@@ -211,8 +211,8 @@ class Entity (object):
 
     def foot_collision_rect(self):
         return pygame.Rect(
-                self.place[0]+self.entity_skin.animation.hardshape[0],
-                self.place[1]+
+                self.rect[0]+self.entity_skin.animation.hardshape[0],
+                self.rect[1]+
                     self.entity_skin.animation.hardshape[1]+
                     self.entity_skin.animation.hardshape[3],
                 self.entity_skin.animation.hardshape[2],
@@ -425,10 +425,10 @@ class Entity (object):
                 )
 
         if self.visible == True:
-            #place = self.place
+            place = self.rect[:2]
             real_coords = (
-                    int(self.place[0]*zoom)*(SIZE[0]/800.0)+coords[0] ,
-                    int(self.place[1]*zoom)*(SIZE[1]/480.0)+coords[1]
+                    int(place[0]*zoom)*(SIZE[0]/800.0)+coords[0] ,
+                    int(place[1]*zoom)*(SIZE[1]/480.0)+coords[1]
                     )
             if debug_params.get('hardshape', False):
                 draw_rect(
