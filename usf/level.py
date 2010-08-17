@@ -363,9 +363,9 @@ class Level ( object ):
                 ]
             )
 
-    def draw_before_players(self, surface, level_place, zoom):
+    def draw_before_players(self, surface, level_place, zoom, shapes=False):
         self.draw_background(surface)
-        self.draw_level( surface , level_place, zoom )
+        self.draw_level( surface , level_place, zoom, shapes)
         #logging.debug(self.level.moving_blocs)
         for block in self.moving_blocs:
             block.draw( surface, level_place, zoom)
@@ -390,12 +390,27 @@ class Level ( object ):
                     pygame.Color('grey')
                     )
 
+    def draw_debug_map(self, surface, level_place, zoom):
+        for rect in self.map:
+            draw_rect(
+                    surface,
+                    pygame.Rect(
+                        int(level_place[0]+(rect[0])*zoom),
+                        int(level_place[1]+(rect[1])*zoom),
+                        int(rect[2]*zoom),
+                        int(rect[3]*zoom)
+                        ),
+                    pygame.Color('green')
+                    )
+
     def draw_background(self, surface, coords=(0,0)):
         surface.blit( loaders.image(self.background,
             scale=SIZE)[0], coords )
 
-    def draw_level(self, surface, coords, zoom):
+    def draw_level(self, surface, coords, zoom, shapes=False):
         surface.blit( loaders.image(self.level, zoom=zoom)[0], coords)
+        if shapes:
+            self.draw_debug_map(surface, coords, zoom)
 
     def draw_foreground(self, surface, coords, zoom):
         surface.blit( loaders.image(self.foreground, zoom=zoom)[0], coords)

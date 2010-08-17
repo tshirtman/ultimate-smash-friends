@@ -260,6 +260,7 @@ class Main(object):
                             'footrect': config.debug['FOOTRECT'],
                             'current_animation':
                             config.debug['CURRENT_ANIMATION'],
+                            'levelshape': config.debug['LEVELSHAPES'],
                             }
                         )
                     self.menu.load = False

@@ -218,7 +218,8 @@ class Game (object):
         """
         self.center_zoom_camera()
         self.level.draw_before_players(
-            self.screen, self.level_place, self.zoom
+            self.screen, self.level_place, self.zoom,
+            'levelshape' in debug_params and debug_params['levelshape']
         )
         for entity in self.players+self.items:
             entity.present and entity.draw(
@@ -280,6 +281,7 @@ class Game (object):
                          num*SIZE[1] / 4
                         )
                         )
+
             if debug_params.get('actions', False):
                 # displays current key movement of player, usefull for debuging
                 self.screen.blit(
