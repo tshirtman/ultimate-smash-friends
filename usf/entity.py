@@ -202,7 +202,8 @@ class Entity (object):
         if self.reversed: x = -x
         self.place = self.place[0] + x, int (self.place[1] + y)
 
-        hardshape = self.entity_skin.animation.hardshape
+        hardshape = self.entity_skin.hardshape
+        self.rect[2:] = hardshape[2:]
         self.rect[:2] = [
             self.place[0] - hardshape[2]/2 - hardshape[0],
             self.place[1] - hardshape[1]
