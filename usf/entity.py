@@ -202,6 +202,12 @@ class Entity (object):
         if self.reversed: x = -x
         self.place = self.place[0] + x, int (self.place[1] + y)
 
+        hardshape = self.entity_skin.animation.hardshape
+        self.rect[:2] = [
+            self.place[0] - hardshape[2]/2 - hardshape[0],
+            self.place[1] - hardshape[1]
+            ]
+
     def collide_point(self, (x,y)):
         """
         Test the collision of the entity with the 1 pixel wide point at (x,y).
@@ -286,16 +292,15 @@ class Entity (object):
          4. .3   as long as you stay consistent, I hope I do :P).
 
          """
-        shape = self.entity_skin.animation.hardshape
 
         points = []
         for i in range(Entity.nb_points):
             points.append((
-                    Entity.list_sin_cos[i][0] * shape[2]
-                    + shape[2]/2 + self.place[0] + shape[0] + x,
+                    Entity.list_sin_cos[i][0] * self.rect[2] / 2
+                    + self.rect[2]/2 + self.rect[0] + x,
                             #don't divide width by 2
-                    Entity.list_sin_cos[i][1] * shape[3] / 2
-                    + shape[3]/2 + self.place[1] + shape[1] + y
+                    Entity.list_sin_cos[i][1] * self.rect[3] / 2
+                    + self.rect[3]/2 + self.rect[1] + y
                     ))
 
         return points
@@ -442,6 +447,18 @@ class Entity (object):
                     ,
                 pygame.Color(255, 0, 0, 127)
                 )
+                for i in self.update_points():
+                    #print i
+                    draw_rect(
+                        surface,
+                        pygame.Rect((
+                            int(i[0])+coords[0]*zoom,
+                            int(i[1])+coords[1]*zoom,
+                            2,
+                            2
+                            )),
+                        pygame.Color('blue')
+                        )
 
             if debug_params.get('footrect', False):
                 r = self.foot_collision_rect()
@@ -456,6 +473,7 @@ class Entity (object):
                     ,
                 pygame.Color(255, 255, 0, 127)
                 )
+
 
             skin_image = loaders.image(
                           self.entity_skin.animation.image,
@@ -591,13 +609,5 @@ class Entity (object):
         if self.entity_skin.update( t, self.reversed, self.upgraded ) == 0:
             del(self)
 
-        hardshape = self.entity_skin.animation.hardshape
-        self.rect[2:] = hardshape[2:]
-        #self.rect[:2] = self.place[0] - self.rect[2]/2, self.place[1]
-
-        self.rect[:2] = [
-            self.place[0] - hardshape[2]/2 - hardshape[0],
-            self.place[1] - hardshape[1]
-            ]
         self.update_physics(dt, game)
 
