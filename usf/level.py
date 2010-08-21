@@ -140,9 +140,9 @@ class MovingPart (Block):
 
     def update(self, level_time):
         """
-        Update the position of the moving bloc, based on time since the bigginig
-        of the game, calculating the percentage of time we are between two
-        positions. And update the coords of colliding rects.
+        Update the position of the moving bloc, based on time since the
+        bigining of the game, calculating the percentage of time we are
+        between two positions. And update the coords of colliding rects.
 
         """
         # [:] is necessary to get values, instead of copying the object

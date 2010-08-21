@@ -532,7 +532,10 @@ class Game (object):
         while deltatime < 1.0/config.general['MAX_FPS']:
             deltatime = time.time() - self.last_clock
 
-        self.gametime += deltatime
+        if deltatime < 1.0:
+            # #FIXME this is a workaround the bug allowing game to evolve
+            # while being "paused" but only works for pause > 1 second
+            self.gametime += deltatime
         #sys.stdout.write("\r"+str(self.gametime))
         #sys.stdout.flush()
 
