@@ -45,7 +45,7 @@ class Container(Widget):
                 sizey += widget.height
                 if sizex < widget.width:
                     sizex = widget.width
-            if type(self) == HBox:
+            if self.orientation:
                 sizex += widget.margin
             else:
                 sizey += widget.margin

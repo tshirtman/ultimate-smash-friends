@@ -29,7 +29,6 @@ class screen_screen(Screen):
     def init(self):
         self.add(widgets.VBox())
         self.set_name(_("screen configuration"))
-        #FIXME : this sould be done automatically
         modes = []
         for resolution in pygame.display.list_modes():
             modes.append(str(resolution[0]) + "x" + str(resolution[1]))
@@ -43,18 +42,17 @@ class screen_screen(Screen):
                                     + str(config.general['HEIGHT']))
         
         self.widget.add(widgets.Label(_('Screen resolution (requires a restart):')),
-                        margin=50,
-                        margin_left=290)
-        self.widget.add(self.resolution, margin=10, margin_left=290)
+                        margin=50)
+        self.widget.add(self.resolution, margin=10)
         fullscreen_hbox = widgets.HBox()
         
-        fullscreen_hbox.add(widgets.Label(_('Fullscreen:')), margin=0)
+        fullscreen_hbox.add(widgets.Label(_('Fullscreen:')))
         fullscreen_hbox.add(self.fullscreen, margin=50)
-        self.widget.add(fullscreen_hbox, margin=25, margin_left=290)
+        self.widget.add(fullscreen_hbox, margin=25)
         
-        self.widget.add(widgets.Label(_('Zoom sharpness:')), margin=25, margin_left=290)
+        self.widget.add(widgets.Label(_('Zoom sharpness:')), margin=25)
         zoom = widgets.Slider('zoom_sharpness')
-        self.widget.add(zoom, margin=10, margin_left=290, size=(220, 30))
+        self.widget.add(zoom, margin=10, size=(220, 30))
         zoom.set_value(config.general['ZOOM_SHARPNESS']/5)
 
         self.fps = widgets.CheckBox()
@@ -65,9 +63,9 @@ class screen_screen(Screen):
         
         fps_hbox.add(widgets.Label(_('Show FPS:')), margin=0)
         fps_hbox.add(self.fps, margin=50)
-        self.widget.add(fps_hbox, margin=25, margin_left=290)
+        self.widget.add(fps_hbox, margin=25)
 
-        self.widget.add(widgets.Button(_('Back')), margin_left=20, margin=30)
+        self.widget.add(widgets.Button(_('Back')), margin=30)
         
     def callback(self,action):
         if action == self.resolution:

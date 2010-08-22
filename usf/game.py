@@ -42,8 +42,6 @@ from debug_utils import draw_rect
 
 config = Config()
 
-SIZE = (config.general['WIDTH'],
-        config.general['HEIGHT'])
 
 if not pygame.font: logging.debug('Warning, fonts disabled')
 if not pygame.mixer: logging.debug('Warning, sound disabled')
@@ -67,7 +65,9 @@ class Game (object):
         level is the basename of the level in levels/
 
         """
-        self.notif = [[time.time(), "Notif"]]
+        self.SIZE = (config.general['WIDTH'],
+                config.general['HEIGHT'])
+        self.notif = []
         self.ingame = True
         self.ended = False
         self.type = 'local'
@@ -92,7 +92,7 @@ class Game (object):
 
         self.load_players(players_)
         if screen is not None:
-            self.icon_space = SIZE[0]/len(players_)
+            self.icon_space = self.SIZE[0]/len(players_)
 
         # various other initialisations
         self.last_clock = time.time()
@@ -136,7 +136,7 @@ class Game (object):
                             i+1,
                             self,
                             player.replace("AI", ""),
-                            ((i+1)*SIZE[0]/5,100)
+                            ((i+1)*self.SIZE[0]/5,100)
                             )
                         )
                 self.players[len(self.players)-1].ai = True
@@ -146,7 +146,7 @@ class Game (object):
                             i+1,
                             self,
                             player,
-                            ((i+1)*SIZE[0]/5,100)
+                            ((i+1)*self.SIZE[0]/5,100)
                             )
                         )
 
@@ -237,7 +237,7 @@ class Game (object):
                      player.entity_skin.image,
                         (
                         -0.5*self.icon_space+player.num*self.icon_space,
-                        SIZE[1]*.9
+                        self.SIZE[1]*.9
                         )
                     )
 
@@ -247,7 +247,7 @@ class Game (object):
                      pygame.color.Color("red")),
                         (
                         -0.5*self.icon_space+player.num*self.icon_space,
-                        SIZE[1]*.9
+                        self.SIZE[1]*.9
                         )
                     )
             # draw player's lives.
@@ -263,7 +263,7 @@ class Game (object):
                         (
                          -0.5*self.icon_space+player.num*\
                          self.icon_space+i*self.icon_space/40,
-                         SIZE[1]*.95
+                         self.SIZE[1]*.95
                         )
                         )
 
@@ -278,8 +278,8 @@ class Game (object):
                             pygame.color.Color('red')
                             ),
                         (
-                         SIZE[0] * 3 / 4,
-                         num*SIZE[1] / 4
+                         self.SIZE[0] * 3 / 4,
+                         num*self.SIZE[1] / 4
                         )
                         )
 
@@ -293,7 +293,7 @@ class Game (object):
                             ),
                         (
                          0,
-                         num*SIZE[1] / 4
+                         num*self.SIZE[1] / 4
                         )
                         )
             if debug_params.get('controls', False):
@@ -306,7 +306,7 @@ class Game (object):
                             ),
                         (
                          0,
-                         num*SIZE[1] / 4
+                         num*self.SIZE[1] / 4
                         )
                         )
 
@@ -316,8 +316,8 @@ class Game (object):
                                          player for player in self.players if
                                          player.lives > 0
                                         ][0].name.capitalize()+_(" WON!"), fonts["bold"][15], 0, 0, 0), (
-                                              SIZE[0]/2,
-                                              SIZE[1]/2)
+                                              self.SIZE[0]/2,
+                                              self.SIZE[1]/2)
                                             )
 
         if len([player for player in self.players if player.lives > 0]) == 0:
@@ -332,8 +332,8 @@ class Game (object):
                                             "30"
                                         )),
                                             (
-                                              SIZE[0]/2,
-                                              SIZE[1]/2
+                                              self.SIZE[0]/2,
+                                              self.SIZE[1]/2
                                             )
                                         )
         self.update_notif()
@@ -353,8 +353,8 @@ class Game (object):
                                 pygame.color.Color("black")
                                 ),
                             (
-                             SIZE[0]/4,
-                             self.notif.index(notif)*SIZE[1]/20
+                             self.SIZE[0]/4,
+                             self.notif.index(notif)*self.SIZE[1]/20
                             )
                             )
                 else:
@@ -368,8 +368,8 @@ class Game (object):
                                 pygame.color.Color("black")
                                 ),
                             (
-                             SIZE[0]/4,
-                             self.notif.index(notif)*SIZE[1]/20
+                             self.SIZE[0]/4,
+                             self.notif.index(notif)*self.SIZE[1]/20
                             )
                             )
                 else:
@@ -388,17 +388,17 @@ class Game (object):
             else:
                 ordered = sorted([ i.rect[0] for i in present_players ])
                 L = max(
-                    SIZE[0],
+                    self.SIZE[0],
                     max(1, ordered[-1])- max(1, ordered[0]) * 1.25
                     )
 
                 ordered = sorted([ i.rect[1] for i in present_players ])
 
-                H = max( SIZE[1], ordered[-1], ordered[0] * 1.25)
+                H = max( self.SIZE[1], ordered[-1], ordered[0] * 1.25)
 
                 precise_zoom = min (
-                        1.0*SIZE[0] / L,
-                        1.0*SIZE[1] / H
+                        1.0*self.SIZE[0] / L,
+                        1.0*self.SIZE[1] / H
                         )
 
                 # there is a trade between zoom sharpness and speed so we force
@@ -419,8 +419,8 @@ class Game (object):
             # calculate coordinates of top left corner of level
             # rect the barycenter of players at the center of the screen
             self.level_place = [
-                 -(players_barycenter[0])*self.zoom+SIZE[0]/2 ,
-                 -(players_barycenter[1])*self.zoom+SIZE[1]/2 
+                 -(players_barycenter[0])*self.zoom+self.SIZE[0]/2 ,
+                 -(players_barycenter[1])*self.zoom+self.SIZE[1]/2 
                  ]
 
     def update_physics(self):

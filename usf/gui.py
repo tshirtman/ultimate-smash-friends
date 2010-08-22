@@ -124,7 +124,7 @@ class Gui(object):
         This function handles mouse event which are send from the update function.
         """
         if self.focus == False:
-            event.dict['pos'] = (event.dict['pos'][0],
+            event.dict['pos'] = (event.dict['pos'][0] - self.screens[self.screen_current].widget.x,
                 event.dict['pos'][1] - self.screens[self.screen_current].widget.y)
 
             (query, self.focus) = self.screens[self.screen_current].widget.handle_mouse(event)
@@ -291,7 +291,7 @@ class Gui(object):
             
             #new_surface.set_alpha(i *250/5)
             back.set_alpha( (i*(- 1) + 5) *250/5)
-            self.screen.blit(new_surface, (old_screen.widget.x,old_screen.widget.y))
+            self.screen.blit(new_surface, (new_screen.widget.x,new_screen.widget.y))
             self.screen.blit(back, (0, 0))
 
             pygame.display.update()

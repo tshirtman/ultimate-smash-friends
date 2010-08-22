@@ -110,7 +110,6 @@ class Widget (object):
 width = config.general['WIDTH']
 height = config.general['HEIGHT']
 def optimize_size(size):
-    size = (size[0]*width/800, size[1]*height/480)
     return size
 def get_scale(surface):
     size = (surface.get_width()*800/config.general['WIDTH'], surface.get_height()*480/config.general['HEIGHT'])

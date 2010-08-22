@@ -62,16 +62,16 @@ class Font(object):
     def __init__(self, name, size, font_file, bold="", italic="", bolditalic=""):
         self.size = {}
         self.font_file = font_file
-        self.font = pygame.font.Font(font_file, config.general["HEIGHT"]/size)
+        self.font = pygame.font.Font(font_file, 480/size)
         if bold != "":
             self.bold = pygame.font.Font(bold,
-                config.general["HEIGHT"]/size)
+                480/size)
         if italic != "":
             self.italic = pygame.font.Font(italic,
-                config.general["HEIGHT"]/size)
+                480/size)
         if bolditalic != "":
             self.bolditalic = pygame.font.Font(bolditalic,
-                config.general["HEIGHT"]/size)
+                480/size)
 
     def __getitem__(self, item):
         if item == "normal":
@@ -83,7 +83,7 @@ class Font(object):
         if item == "bolditalic" and self.bolditalic:
             return self.bolditalic
         if not self.size.has_key(item):
-            self.size[item] = pygame.font.Font(self.font_file, config.general["HEIGHT"]/int(item))
+            self.size[item] = pygame.font.Font(self.font_file, 480/int(item))
         #print "No font named : " + str(item)
         
         return self.size[item]

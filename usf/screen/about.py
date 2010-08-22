@@ -28,13 +28,9 @@ class about(Screen):
         self.add(widgets.VBox())
 
         self.widget.add(widgets.Paragraph('CREDITS'),
-                        size=(490, 300),
-                        margin=10,
-                        margin_left=225)
+                        size=(490, 300))
 
         self.widget.add(widgets.Button(_('Back')),
-                        size=(150, 40),
-                        margin_left=20,
                         margin=55)
 
     def callback(self,action):

@@ -29,21 +29,20 @@ class Screen(object):
         self.set_name(name)
         self.screen = screen
         self.init()
-        self.widget.update_size()
-        self.widget.update_pos()
+        self.update_pos()
 
     def add(self, widget):
         self.widget = widget
         #define the position and the size of the top-level widget
         self.widget.set_size((config.general['WIDTH'],config.general['HEIGHT']))
         self.widget.x = 0
-        self.widget.y = 70*config.general['HEIGHT']/480
+        self.widget.y = 70
         self.widget.update_size()
         self.widget.update_pos()
 
     def update(self):
         self.screen.blit(loaders.text(self.name, fonts['mono']['15']), (self.indent_title,10))
-        self.screen.blit(self.widget.draw(), (0,self.widget.y))
+        self.screen.blit(self.widget.draw(), (self.widget.x,self.widget.y))
 
     def load(self):
         loaders.text(self.name, fonts['mono']['15'])
@@ -58,3 +57,12 @@ class Screen(object):
     def set_name(self, name):
         self.name = name.replace('_', ' ')  
         self.indent_title = config.general['WIDTH']/2 - loaders.text(self.name, fonts['mono']['15']).get_width()/2
+    
+    def update_pos(self):
+        self.widget.update_size()
+        self.widget.y = ((config.general['HEIGHT'] - 70) / 2 - self.widget.height/2)+70
+        print self.widget.width
+        self.widget.x = config.general['WIDTH']/2 - self.widget.width/2
+        self.widget.update_pos()
+        self.widget.update_size()
+        

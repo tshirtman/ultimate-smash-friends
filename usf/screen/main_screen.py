@@ -26,10 +26,10 @@ class main_screen(Screen):
         self.set_name("ultimate smash friends")
         self.add(widgets.VBox())
         vbox = widgets.VBox()
-        self.widget.add(widgets.Button(_('Local game')), margin=50, margin_left=290)
-        self.widget.add(widgets.Button(_('Configure')), margin_left=290)
-        self.widget.add(widgets.Button(_('Credits')), margin_left=290)
-        self.widget.add(widgets.Button(_('Quit')), margin_left=290)
+        self.widget.add(widgets.Button(_('Local game')))
+        self.widget.add(widgets.Button(_('Configure')))
+        self.widget.add(widgets.Button(_('Credits')))
+        self.widget.add(widgets.Button(_('Quit')))
 
     def callback(self,action):
         if action.text == _('Local game'):

@@ -212,7 +212,13 @@ class Main(object):
         self.state = ""
 
     def init_screen(self):
+        if (config.general['WIDTH'],
+                config.general['HEIGHT']) not in pygame.display.list_modes():
+            (config.general['WIDTH'], config.general['HEIGHT']) = pygame.display.list_modes()[0]
+            config.general['FULLSCREEN'] = True
+        SIZE = (config.general['WIDTH'], config.general['HEIGHT'])
         self.screen = pygame.display.set_mode(SIZE)
+        
         pygame.display.set_caption('Ultimate Smash Friends')
         icon = loaders.image(os.path.join(config.sys_data_dir, 'gui',
                                           'icon.png'))[0]

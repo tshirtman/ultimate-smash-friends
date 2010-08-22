@@ -26,8 +26,6 @@ import time
 from config import Config
 
 config = Config()
-SIZE = (config.general['WIDTH'], 
-        config.general['HEIGHT'])
 
 from debug_utils import draw_rect
 
@@ -208,6 +206,8 @@ class Level ( object ):
         self.moving_blocs = []
         self.vector_blocs = []
         self.map = []
+        self.SIZE = (config.general['WIDTH'], 
+            config.general['HEIGHT'])
         xml = ElementTree.ElementTree(
                 None,
                 os.path.join(
@@ -405,7 +405,7 @@ class Level ( object ):
 
     def draw_background(self, surface, coords=(0,0)):
         surface.blit( loaders.image(self.background,
-            scale=SIZE)[0], coords )
+            scale=self.SIZE)[0], coords )
 
     def draw_level(self, surface, coords, zoom, shapes=False):
         surface.blit( loaders.image(self.level, zoom=zoom)[0], coords)

@@ -28,19 +28,13 @@ class configure(Screen):
         self.set_name(_("configure"))
 
         #I18N:option screen
-        self.widget.add(widgets.Button(_('Audio')),
-                        margin=50,
-                        margin_left=290)
+        self.widget.add(widgets.Button(_('Audio')))
 
-        self.widget.add(widgets.Button(_('Screen')),
-                        margin_left=290)
+        self.widget.add(widgets.Button(_('Screen')))
 
-        self.widget.add(widgets.Button(_('Keyboard')),
-                        margin_left=290)
+        self.widget.add(widgets.Button(_('Keyboard')))
     
-        self.widget.add(widgets.Button(_('Back')),
-                        margin_left=20,
-                        margin=100)
+        self.widget.add(widgets.Button(_('Back')), margin=100)
 
     def callback(self,action):
         if action.text == _('Audio'):
