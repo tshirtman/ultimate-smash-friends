@@ -127,7 +127,6 @@ class Main(object):
                 self.lock.acquire()
                 self.stop_thread = True
                 self.lock.release()
-                self.go()
             except Exception, e:
                 try:
                     if not config.general["DEBUG"]:
@@ -145,6 +144,7 @@ class Main(object):
                     self.lock.release()
                     print e
                     raise
+            self.go()
 
     def parse_options(self):
         # set up the comand line parser and its options

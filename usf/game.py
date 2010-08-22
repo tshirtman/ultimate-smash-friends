@@ -28,6 +28,7 @@ import socket, threading, SocketServer
 # my modules import
 from loaders import image
 import animations, entity, timed_event
+import loaders
 
 from level import Level
 from controls import Controls
@@ -310,18 +311,11 @@ class Game (object):
                         )
 
         if len([player for player in self.players if player.lives > 0]) == 1:
-            self.screen.blit(game_font.render(
+            self.screen.blit(loaders.text(
                                         [
                                          player for player in self.players if
                                          player.lives > 0
-                                        ][0].name.capitalize()+_(" WON!"),
-                                        True,
-                                        pygame.color.Color("#"+
-                                            str(math.sin(self.ending/10)) [3:5]+
-                                            "50"+
-                                            str(math.sin(self.ending/10)) [3:5]+
-                                            "30"
-                                        )), (
+                                        ][0].name.capitalize()+_(" WON!"), fonts["bold"][15], 0, 0, 0), (
                                               SIZE[0]/2,
                                               SIZE[1]/2)
                                             )
