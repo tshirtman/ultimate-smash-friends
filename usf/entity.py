@@ -436,8 +436,8 @@ class Entity (object):
                 self.rect[1] - self.entity_skin.hardshape[1]
                 )
             real_coords = (
-                    int(place[0]*zoom)*(SIZE[0]/800.0)+coords[0] ,
-                    int(place[1]*zoom)*(SIZE[1]/480.0)+coords[1]
+                    int(place[0]*zoom)+coords[0] ,
+                    int(place[1]*zoom)+coords[1]
                     )
             if debug_params.get('hardshape', False):
                 draw_rect(

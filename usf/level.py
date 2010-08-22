@@ -58,8 +58,8 @@ class Block (object):
 
         """
         real_coords = (
-                int(self.position[0]*zoom)*(SIZE[0]/800.0)+coords[0],
-                int(self.position[1]*zoom)*(SIZE[1]/480.0)+coords[1]
+                int(self.position[0]*zoom)+coords[0],
+                int(self.position[1]*zoom)+coords[1]
                 )
 
         surface.blit(loaders.image(self.texture, zoom=zoom)[0], real_coords)
