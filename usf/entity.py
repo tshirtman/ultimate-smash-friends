@@ -193,6 +193,19 @@ class Entity (object):
 #        self.entity_skin.current_animation = animation
 #        self.entity_skin.animation.__start__time = starttime
 
+    def update_rect(self):
+        """
+        update entity rect using position and harshape place/size, necessary
+        when entity moved or animation frame changed.
+
+        """
+        hardshape = self.entity_skin.hardshape
+        self.rect[2:] = hardshape[2:]
+        self.rect[:2] = [
+            self.place[0] - hardshape[2]/2 - hardshape[0],
+            self.place[1] - hardshape[1]
+            ]
+
     def move(self,(x,y), _from=''):
         """
         move the entity relatively to his referencial (if he look left, moving
@@ -202,12 +215,7 @@ class Entity (object):
         if self.reversed: x = -x
         self.place = self.place[0] + x, int (self.place[1] + y)
 
-        hardshape = self.entity_skin.hardshape
-        self.rect[2:] = hardshape[2:]
-        self.rect[:2] = [
-            self.place[0] - hardshape[2]/2 - hardshape[0],
-            self.place[1] - hardshape[1]
-            ]
+        self.update_rect()
 
     def collide_point(self, (x,y)):
         """
@@ -329,7 +337,6 @@ class Entity (object):
                 and game.level.collide_point(points[self.UPPER_RIGHT]))\
             or (game.level.collide_point(points[self.LOWER_LEFT])
                 and game.level.collide_point(points[self.LOWER_RIGHT])):
-                #self.vector[1] = math.fabs(self.vector[1])
                 while game.level.collide_point(points[self.UPPER_LEFT])\
                 or game.level.collide_point(points[self.UPPER_RIGHT]):
                     self.move(( 0, -(abs(self.vector[1])/self.vector[1])))
@@ -501,33 +508,15 @@ class Entity (object):
                 shield_coords = (
                      coords[0] + int (
                      self.place[0]
-                     #+ int(.5 * skin_image[1][2]) * (SIZE[0]/800.0)
                      + self.entity_skin.shield_center[0]
                      - .5 * image[1][2]
                     ) * zoom * (SIZE[0]/800.0)
                     , coords[1] + int (
                      self.place[1]
-                     #+ int(.5 * skin_image[1][3]) * (SIZE[1]/480.0)
                      + self.entity_skin.shield_center[1]
                      - .5 * image[1][3]
                     ) * zoom * (SIZE[1]/480.0)
                     )
-                '''
-                    (
-                    int(self.place[0] * zoom) * (SIZE[0] / 800.0) +
-                    coords[0] + .5 * self.rect[2] * zoom * (SIZE[0] / 800.0) +
-                    self.entity_skin.shield_center[0] - 0.5 * image[1][2] +
-                    0
-                    )
-                    ,
-                    (
-                    int(self.place[1] * zoom) * (SIZE[1] / 480.0) +
-                    coords[1] + .5 * self.rect[3] * zoom * (SIZE[1] / 480.0) +
-                    self.entity_skin.shield_center[1] - 0.5*image[1][3] +
-                    0
-                    )
-                    )
-                '''
                 surface.blit(image[0], shield_coords)
 
             if debug_params.get('current_animation', False):
@@ -612,6 +601,8 @@ class Entity (object):
         # Update animation of entity
         if self.entity_skin.update( t, self.reversed, self.upgraded ) == 0:
             del(self)
+
+        self.update_rect()
 
         self.update_physics(dt, game)
 
