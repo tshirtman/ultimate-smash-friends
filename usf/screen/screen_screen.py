@@ -30,7 +30,11 @@ class screen_screen(Screen):
         self.add(widgets.VBox())
         self.set_name(_("screen configuration"))
         #FIXME : this sould be done automatically
-        self.resolution = widgets.Spinner(['800x480', '1200x720', '1600x960'], 170)
+        modes = []
+        for resolution in pygame.display.list_modes():
+            modes.append(str(resolution[0]) + "x" + str(resolution[1]))
+        modes.reverse()
+        self.resolution = widgets.Spinner(modes, 170)
         self.fullscreen = widgets.CheckBox()
         
         if config.general['FULLSCREEN']:

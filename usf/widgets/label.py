@@ -32,7 +32,7 @@ class Label(Widget):
     """
 
     def init(self):
-        self.surface_text  = loaders.text(self.text, fonts['sans']['25'])
+        self.surface_text  = loaders.text(self.text, fonts['sans']['normal'])
         if self.align == "center":
             self.indent = self.width/2-self.surface_text.get_width()/2
         try:
@@ -48,7 +48,7 @@ class Label(Widget):
         self.state = False
         self.txtmargin = 0
         self.align = ""
-        self.surface_text  = loaders.text(self.text, fonts['sans']['25'])
+        self.surface_text  = loaders.text(self.text, fonts['sans']['normal'])
 
         self.height = self.surface_text.get_height()
         self.width = self.surface_text.get_width()

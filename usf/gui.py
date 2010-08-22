@@ -324,11 +324,11 @@ class Gui(object):
 
 
 def get_text_transparent(name):
-    text = loaders.text(name, fonts['mono']['10']).convert()
+    text = loaders.text(name, fonts['mono']['15']).convert()
     text.fill(pygame.color.Color("black"))
     #TODO: the colorkey should be a property of the skin
     text.set_colorkey(pygame.color.Color("black"))
-    text.blit(loaders.text(name, fonts['mono']['10']), (0,0))
+    text.blit(loaders.text(name, fonts['mono']['15']), (0,0))
     return text
 
 """

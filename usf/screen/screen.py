@@ -42,11 +42,11 @@ class Screen(object):
         self.widget.update_pos()
 
     def update(self):
-        self.screen.blit(loaders.text(self.name, fonts['mono']['10']), (self.indent_title,10))
+        self.screen.blit(loaders.text(self.name, fonts['mono']['15']), (self.indent_title,10))
         self.screen.blit(self.widget.draw(), (0,self.widget.y))
 
     def load(self):
-        loaders.text(self.name, fonts['mono']['10'])
+        loaders.text(self.name, fonts['mono']['15'])
         self.widget.draw()
 
     def init(self):
@@ -57,4 +57,4 @@ class Screen(object):
         
     def set_name(self, name):
         self.name = name.replace('_', ' ')  
-        self.indent_title = config.general['WIDTH']/2 - loaders.text(self.name, fonts['mono']['10']).get_width()/2
+        self.indent_title = config.general['WIDTH']/2 - loaders.text(self.name, fonts['mono']['15']).get_width()/2
