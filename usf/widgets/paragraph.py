@@ -75,6 +75,7 @@ class Paragraph(Widget):
             self.surface_text.blit(loaders.text(self.text[i],
                                                 fonts['mono']['normal']),
                                    (10, self.text_height*i  ))
+        self.screen = pygame.display.get_surface()
 
     def draw(self):
         #clear the surface
@@ -113,7 +114,7 @@ class Paragraph(Widget):
                                         scale=(self.width - self.width_slider*2, self.height))[0],
                           (0, 0))
         self.start_anim()
-        return self.surface
+        self.screen.blit(self.surface, (self.parentpos[0] + self.x, self.parentpos[1] + self.y))
 
     def handle_mouse(self,event):
         x = event.dict['pos'][0]

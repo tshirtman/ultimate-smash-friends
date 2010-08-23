@@ -50,6 +50,7 @@ class Slider(Widget):
         self.center_hover= loaders.image(join(config.sys_data_dir, 'gui',
                 config.general['THEME'], 'slider_center_hover.png'),
             scale=(self.height,self.height))[0]
+        self.screen = pygame.display.get_surface()
             
     def handle_mouse(self,event):
         if self.state == True:
@@ -88,8 +89,9 @@ class Slider(Widget):
         
     def draw(self):
         if self.state:
-            return loaders.image_layer(self.background, self.center_hover, (self.value,0))
+            surf = loaders.image_layer(self.background, self.center_hover, (self.value,0))
         else:
-            return loaders.image_layer(self.background, self.center, (self.value,0))
+            surf = loaders.image_layer(self.background, self.center, (self.value,0))
+        self.screen.blit(surf, (self.parentpos[0] + self.x, self.parentpos[1] + self.y))
 
 

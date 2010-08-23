@@ -54,12 +54,13 @@ class Widget (object):
         isn't empty.
         """
         self.surface = pygame.Surface((self.width,self.height))
+        self.screen = pygame.display.get_surface()
 
     def draw(self):
         """
         Return the widget surface. This fonction is often overrided.
         """
-        return self.surface
+        self.screen.blit(self.surface, (self.parentpos[0] + self.x, self.parentpos[1] + self.y))
 
     def set_size(self, (w,h)):
         """    

@@ -42,7 +42,7 @@ class Screen(object):
 
     def update(self):
         self.screen.blit(loaders.text(self.name, fonts['mono']['15']), (self.indent_title,10))
-        self.screen.blit(self.widget.draw(), (self.widget.x,self.widget.y))
+        self.widget.draw()
 
     def load(self):
         loaders.text(self.name, fonts['mono']['15'])

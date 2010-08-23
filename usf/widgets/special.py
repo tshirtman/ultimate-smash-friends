@@ -52,6 +52,7 @@ class KeyboardWidget(Widget):
                 text, (posx,posy))
         self.surface_hover = loaders.image_layer(self.background,
                 text, (posx,posy))
+        self.screen = pygame.display.get_surface()
 
     def set_size(self, (w, h)):
         self.height = h
@@ -60,9 +61,9 @@ class KeyboardWidget(Widget):
 
     def draw(self):
         if self.state or self.focus:
-            return self.surface
+            self.screen.blit(self.surface, (self.parentpos[0] + self.x, self.parentpos[1] + self.y))
         else:
-            return self.surface_hover
+            self.screen.blit(self.surface_hover, (self.parentpos[0] + self.x, self.parentpos[1] + self.y))
 
     def handle_mouse(self,event):
         if self.focus:

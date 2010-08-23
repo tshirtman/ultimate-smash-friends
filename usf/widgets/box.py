@@ -78,10 +78,9 @@ class Container(Widget):
         """
         This method draw all widgets surfaces in a surface and return it
         """
-        self.surface = self.surface.convert().convert_alpha()
+        screen = pygame.display.get_surface()
         for widget in self.widgets:
-            self.surface.blit(widget.draw(),(widget.x,widget.y))
-        return self.surface
+            widget.draw()
 
     def add(self, widget, *args, **kwargs):
         """

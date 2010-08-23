@@ -38,6 +38,7 @@ class Image(Widget):
                     os.sep+
                     self.path, scale=(self.width,self.height)
                     )[0]
+        self.screen = pygame.display.get_surface()
 
     def __init__(self, image):
         #save the path to scale it later
@@ -56,8 +57,6 @@ class Image(Widget):
         self.height = h
         self.width = w
 
-    def draw(self):
-        return self.surface
 
     def setImage(self,path):
         """
