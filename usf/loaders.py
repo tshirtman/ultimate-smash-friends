@@ -39,8 +39,6 @@ except:
 from config import Config
 
 config = Config()
-SIZE = (config.general['WIDTH'],
-        config.general['HEIGHT'])
 
 from debug_utils import draw_rect
 
@@ -130,20 +128,16 @@ def image(name, *args, **kwargs):
             image = pygame.transform.smoothscale(
                     loaders.image(name, **kwargs)[0],
                     (
-                     int(loaders.image(name, *args, **kwargs)[1][2]*zoom*
-                         SIZE[0]/800.0),
-                     int(loaders.image(name, *args, **kwargs)[1][3]*zoom*
-                         SIZE[1]/480.0)
+                     int(loaders.image(name, *args, **kwargs)[1][2]*zoom),
+                     int(loaders.image(name, *args, **kwargs)[1][3]*zoom)
                     )
                     )
         else:
             image = pygame.transform.scale(
                     loaders.image(name, **kwargs)[0],
                     (
-                     int(loaders.image(name, *args, **kwargs)[1][2]*zoom*
-                         SIZE[0]/800.0),
-                     int(loaders.image(name, *args, **kwargs)[1][3]*zoom*
-                         SIZE[1]/480.0)
+                     int(loaders.image(name, *args, **kwargs)[1][2]*zoom),
+                     int(loaders.image(name, *args, **kwargs)[1][3]*zoom)
                     )
                     )
     else:

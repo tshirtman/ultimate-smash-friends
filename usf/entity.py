@@ -33,9 +33,6 @@ from config import Config
 
 config = Config()
 
-SIZE = (config.general['WIDTH'], 
-        config.general['HEIGHT'])
-
 from debug_utils import draw_rect
 
 class WrongEntityException(Exception):
@@ -443,10 +440,10 @@ class Entity (object):
                 draw_rect(
                     surface,
                     pygame.Rect(
-                    real_coords[0]+self.entity_skin.hardshape[0]*zoom*SIZE[0]/800.0,
-                    real_coords[1]+self.entity_skin.hardshape[1]*zoom*SIZE[1]/480.0,
-                    self.entity_skin.hardshape[2]*zoom*SIZE[0]/800.0,
-                    self.entity_skin.hardshape[3]*zoom*SIZE[1]/480.0
+                    real_coords[0]+self.entity_skin.hardshape[0]*zoom,
+                    real_coords[1]+self.entity_skin.hardshape[1]*zoom,
+                    self.entity_skin.hardshape[2]*zoom,
+                    self.entity_skin.hardshape[3]*zoom
                     )
                     ,
                 pygame.Color(255, 0, 0, 127)
@@ -469,10 +466,10 @@ class Entity (object):
                 draw_rect(
                     surface,
                     pygame.Rect(
-                    coords[0]+r[0]*zoom*SIZE[0]/800.0,
-                    coords[1]+r[1]*zoom*SIZE[1]/480.0,
-                    r[2]*zoom*SIZE[0]/800.0,
-                    r[3]*zoom*SIZE[1]/480.0
+                    coords[0]+r[0]*zoom,
+                    coords[1]+r[1]*zoom,
+                    r[2]*zoom,
+                    r[3]*zoom
                     )
                     ,
                 pygame.Color(255, 255, 0, 127)
@@ -501,33 +498,15 @@ class Entity (object):
                 shield_coords = (
                      coords[0] + int (
                      self.place[0]
-                     #+ int(.5 * skin_image[1][2]) * (SIZE[0]/800.0)
                      + self.entity_skin.shield_center[0]
                      - .5 * image[1][2]
-                    ) * zoom * (SIZE[0]/800.0)
+                    ) * zoom
                     , coords[1] + int (
                      self.place[1]
-                     #+ int(.5 * skin_image[1][3]) * (SIZE[1]/480.0)
                      + self.entity_skin.shield_center[1]
                      - .5 * image[1][3]
-                    ) * zoom * (SIZE[1]/480.0)
+                    ) * zoom
                     )
-                '''
-                    (
-                    int(self.place[0] * zoom) * (SIZE[0] / 800.0) +
-                    coords[0] + .5 * self.rect[2] * zoom * (SIZE[0] / 800.0) +
-                    self.entity_skin.shield_center[0] - 0.5 * image[1][2] +
-                    0
-                    )
-                    ,
-                    (
-                    int(self.place[1] * zoom) * (SIZE[1] / 480.0) +
-                    coords[1] + .5 * self.rect[3] * zoom * (SIZE[1] / 480.0) +
-                    self.entity_skin.shield_center[1] - 0.5*image[1][3] +
-                    0
-                    )
-                    )
-                '''
                 surface.blit(image[0], shield_coords)
 
             if debug_params.get('current_animation', False):
