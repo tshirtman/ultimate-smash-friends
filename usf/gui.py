@@ -190,6 +190,7 @@ class Gui(object):
                 else:
                     self.screen_history.append(self.screen_current)
                     self.screen_current = reply.split(':')[1]
+                """
                 if animation:
 
                     self.transition_fading(old_screen,
@@ -198,6 +199,7 @@ class Gui(object):
                         self.screens[self.screen_current].widget.draw())
                     #self.update_youhere()
                     pygame.event.clear()
+                """
 
             if reply.split(':')[0] == 'game':
                 if reply.split(':')[1] == "new":

@@ -39,17 +39,21 @@ class CheckBox(Widget):
         self.set_size(optimize_size((25,25)))
         self.state = False
         self.checked = False
-
-    def init(self):
-        pass
         
+    def init(self):
+        """
+        This function can be rewritten in the others widget if the surface
+        isn't empty.
+        """
+        self.screen = pygame.display.get_surface()
+
     def set_size(self, (w,h)):
         """
         Set the size of the widget.
         """
         self.height = h
         self.width = w
-        self.surface = loaders.image(join(config.sys_data_dir,
+        self.surface_static = loaders.image(join(config.sys_data_dir,
                                                   'gui',
                                                   config.general['THEME'],
                                                   'checkbox_empty.png'),
@@ -60,6 +64,7 @@ class CheckBox(Widget):
                                                   config.general['THEME'],
                                                   'checkbox_full.png'),
                                              scale=(w, h))[0]
+        self.surface = self.surface_static
 
     def handle_mouse(self,event):
         if self.state == True:
@@ -69,22 +74,16 @@ class CheckBox(Widget):
             0 < event.dict['pos'][1] < self.height and
             event.type == pygame.MOUSEBUTTONUP):
             if self.checked:
-                self.checked =False
+                self.checked = False
+                self.surface = self.surface_static
             else:
                 self.checked = True
+                self.surface = self.surface_checked
             self.state = True
             return self,False
+        self.surface = self.surface_static
         self.state = False
         return False,False
-
-    def draw(self):
-        """
-        Draw the checkbox.
-        """
-        if self.checked:
-            return self.surface_checked
-        else:
-            return self.surface
 
     def get_value(self):
         """

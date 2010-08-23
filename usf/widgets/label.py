@@ -41,6 +41,7 @@ class Label(Widget):
             self.surface = loaders.image_layer(self.background,self.surface_text,(self.txtmargin+self.indent,0))
         except AttributeError:
             self.surface = self.surface_text
+        self.screen = pygame.display.get_surface()
 
     def __init__(self, text, *args, **kwargs):
         self.text = text

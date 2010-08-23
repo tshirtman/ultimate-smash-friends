@@ -58,7 +58,7 @@ class Button(Label):
         """
         #mouse over
         if self.state == True:
-            return loaders.image_layer(loaders.image(join(config.sys_data_dir,
+            surf = loaders.image_layer(loaders.image(join(config.sys_data_dir,
                                                           'gui',
                                                           config.general['THEME'],
                                                           'back_button_hover.png'),
@@ -68,13 +68,14 @@ class Button(Label):
 
         #normal
         else:
-            return loaders.image_layer(loaders.image(join(config.sys_data_dir,
+            surf = loaders.image_layer(loaders.image(join(config.sys_data_dir,
                                                           'gui',
                                                           config.general['THEME'],
                                                           'back_button.png'),
                                                      scale=(self.width, self.height))[0],
                                        self.surface_text,
                                        (self.posx, self.posy))
+        self.screen.blit(surf, (self.parentpos[0] + self.x, self.parentpos[1] + self.y))
 
     def handle_mouse(self,event):
         """

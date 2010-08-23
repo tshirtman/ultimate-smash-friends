@@ -29,6 +29,10 @@ from image import Image
 
 
 class ImageButton(Image):
+
+    def init(self):
+        self.screen = pygame.display.get_surface()
+    
     def __init__(self, image, image_hover):
         #save the path to scale it later -> maybe it is bad for performance, FIXME
         self.path = image
@@ -41,10 +45,11 @@ class ImageButton(Image):
         self.init()
         self.set_size((size[0], size[1]))
         self.state = False
+
     def set_size(self, (w,h)):
         self.height = h
         self.width = w
-        self.surface = loaders.image(
+        self.surface_static = loaders.image(
                     config.sys_data_dir+
                     os.sep+
                     self.path, scale=(w,h)
@@ -54,17 +59,17 @@ class ImageButton(Image):
                     os.sep+
                     self.path_hover, scale=(w,h)
                     )[0]
+        self.surface = self.surface_static
+    
     def handle_mouse(self,event):
         if self.state == True:
             event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0]-self.x, event.dict['pos'][1] - self.parentpos[1] - self.y)
             print event.dict['pos']
         if 0 < event.dict['pos'][0] < self.width and 0 < event.dict['pos'][1] < self.height:
             self.state = True
+            self.surface = self.surface_hover
             return False,self
-        self.state = False
+        self.surface = self.surface_static
         return False,False
-    def draw(self):
-        if self.state == True:
-            return self.surface_hover
-        else:
-            return self.surface
+
+
