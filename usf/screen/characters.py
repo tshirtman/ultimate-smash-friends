@@ -138,7 +138,12 @@ class characters(Screen):
                         ))
 
         if action.text == _("Next"):
-            return 'goto:level'
+            i  = 0
+            for player in self.players:
+                if player !=0:
+                    i += 1
+            if i > 1:
+                return 'goto:level'
 
         if action.text == _('Back'):
             return "goto:back"

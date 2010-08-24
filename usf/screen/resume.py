@@ -24,9 +24,9 @@ from usf import widgets
 class resume(Screen):
     def init(self):
         self.add(widgets.VBox())
-        self.widget.add(widgets.Button('Resume'), margin=50, margin_left=290)
-        self.widget.add(widgets.Button(_('Configure')), margin_left=290)
-        self.widget.add(widgets.Button('Quit the game'), margin_left=290)
+        self.widget.add(widgets.Button('Resume'))
+        self.widget.add(widgets.Button(_('Configure')))
+        self.widget.add(widgets.Button('Quit the game'))
 
     def callback(self,action):
         if action.text == 'Resume':

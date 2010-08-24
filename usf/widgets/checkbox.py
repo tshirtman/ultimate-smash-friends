@@ -81,7 +81,6 @@ class CheckBox(Widget):
                 self.surface = self.surface_checked
             self.state = True
             return self,False
-        self.surface = self.surface_static
         self.state = False
         return False,False
 

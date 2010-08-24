@@ -83,6 +83,12 @@ class Gui(object):
         """
         Update the GUI, it draws the mouse, and the menu.
         """
+
+        #draw the background
+        self.screen.blit(self.skin.get_background(), (0,0))
+            
+        self.screens[self.screen_current].update()
+        
         while(True):
             event = pygame.event.poll()
             if event.type == pygame.QUIT:
@@ -99,12 +105,6 @@ class Gui(object):
 
             else:
                 break
-
-        #draw the background
-        self.screen.blit(self.skin.get_background(), (0,0))
-            
-        self.screens[self.screen_current].update()
-        
         #draw the '> you are here :' dialog
         #update the mouse position
         x, y = pygame.mouse.get_pos()
