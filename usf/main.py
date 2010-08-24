@@ -37,7 +37,6 @@ SIZE = (config.general['WIDTH'],
 
 from game import Game, NetworkServerGame, NetworkClientGame
 from gui import Gui
-from gui import Gui
 from controls import Controls
 import loaders, music
 from font import fonts
@@ -85,7 +84,7 @@ class Main(object):
             try:
                 self.thread = threading.Thread(None, self.loading)
                 self.thread.start()
-                
+
                 self.lock.acquire()
                 self.text_thread = "Loading sounds and musics..."
                 self.lock.release()

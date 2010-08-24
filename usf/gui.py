@@ -66,8 +66,8 @@ class Gui(object):
             #load all image
             #I don't know why but if we update only one time the scree, the
             #result is quite strange ?
-            scr.load()
-            scr.load()
+            #scr.load()
+            #scr.load()
             self.screens[name] = scr
 
         self.screen_current = 'main_screen'
