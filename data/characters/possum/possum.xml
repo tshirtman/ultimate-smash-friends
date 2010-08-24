@@ -16,17 +16,17 @@
         <frame
         time="0"
         image="static1.png"
-        hardshape="8 11 33 52"
+        hardshape="8 10 33 52"
         > </frame>
         <frame
         time="150"
         image="static2.png"
-        hardshape="6 11 33 52"
+        hardshape="6 10 33 52"
         > </frame>
         <frame
         time="300"
         image="static3.png"
-        hardshape="7 11 33 52"
+        hardshape="7 10 33 52"
         > </frame>
         <frame
         time="450"
@@ -439,18 +439,22 @@
         <frame
         time="0"
         image="static1-upgraded.png"
+        hardshape="7 13 33 52"
         > </frame>
         <frame
-        time="100"
+        time="150"
         image="static2-upgraded.png"
-        > </frame>
-        <frame
-        time="200"
-        image="static3-upgraded.png"
+        hardshape="6 12 33 52"
         > </frame>
         <frame
         time="300"
+        image="static3-upgraded.png"
+        hardshape="7 12 33 52"
+        > </frame>
+        <frame
+        time="450"
         image="static4-upgraded.png"
+        hardshape="8 14 33 50"
         > </frame>
     </movement>
     <movement name="take_upgraded"

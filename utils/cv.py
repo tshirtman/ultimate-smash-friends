@@ -93,7 +93,7 @@ def main(charname):
                     )[-1]
         position = (
             bottom_center_hardshape[0] - img.hardshape[0] - img.hardshape[2]/2,
-            bottom_center_hardshape[1] - img.hardshape[1] - img.hardshape[3]/2
+            bottom_center_hardshape[1] - img.hardshape[1] - img.hardshape[3]
         )
         screen.fill(
             pygame.Color('red'),
