@@ -61,8 +61,7 @@ class Coverflow(Widget):
                                                 "gui",
                                                 config.general['THEME'],
                                                 "coverflow",
-                                                "foreground.png"),
-                                        scale=(self.width, self.height))[0]
+                                                "foreground.png"))[0]
         
 
         self.frame = loaders.image(os.path.join(config.sys_data_dir,
@@ -92,6 +91,7 @@ class Coverflow(Widget):
             value[3] = (self.frame.get_width()/2 - value[2][0]/2,
                         self.frame.get_height()/2 - value[2][1]/2)
         self.need_update = True
+        self.screen = pygame.display.get_surface()
 
     def draw(self):
         """
@@ -117,7 +117,7 @@ class Coverflow(Widget):
             self.need_update = False
             if self.in_anim:
                 self.start_anim()
-        return self.surface
+        self.screen.blit(self.surface, (self.parentpos[0] + self.x, self.parentpos[1] + self.y))
 
     def draw_main(self):
         """
