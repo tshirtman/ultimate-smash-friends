@@ -49,6 +49,7 @@ def main(charname):
     anim = 1
     display_hardshape = True
     speed = 1.0
+    font = pygame.font.Font(pygame.font.get_default_font(), 12)
 
     bottom_center_hardshape = (100, 150)
     while True:
@@ -105,6 +106,14 @@ def main(charname):
             ))
             )
         screen.blit(image(img.image)[0], position)
+        screen.blit(
+            font.render(
+                animation +'   '+ str(img.time),
+                True,
+                pygame.Color('white')
+                ),
+            (10,10)
+            )
         pygame.display.flip()
     inotifyx.rm_watch(wd)
 
