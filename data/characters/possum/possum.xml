@@ -41,6 +41,7 @@
         <frame
         time="0"
         image="take.png"
+        hardshape="8 11 33 50"
         > </frame>
     </movement>
     <movement name="walk"
@@ -50,18 +51,22 @@
         <frame
         time="0"
         image="walk1.png"
+        hardshape="8 11 33 50"
         > </frame>
         <frame
         time="100"
         image="walk2.png"
+        hardshape="8 11 33 50"
         > </frame>
         <frame
         time="200"
         image="walk3.png"
+        hardshape="10 11 33 50"
         > </frame>
         <frame
         time="300"
         image="walk4.png"
+        hardshape="8 10 33 50"
         > </frame>
     </movement>
     <movement name="jump"
@@ -310,6 +315,7 @@
         <frame
         time="0"
         image="pickup.png"
+        hardshape="8 11 33 48"
         > </frame>
     </movement>
     <movement name="roll"
@@ -373,14 +379,17 @@
         <frame
         time="0"
         image="kick1.png"
+        hardshape="8 9 33 52"
         > </frame>
         <frame
         time="100"
         image="kick2.png"
+        hardshape="5 11 33 52"
         > </frame>
         <frame
         time="200"
         image="kick3.png"
+        hardshape="2 12 33 52"
         >
             <agressiv-point
             coords="44,35"
@@ -390,10 +399,12 @@
         <frame
         time="300"
         image="kick2.png"
+        hardshape="5 11 33 52"
         > </frame>
         <frame
         time="400"
         image="kick3.png"
+        hardshape="2 12 33 52"
         >
             <agressiv-point
             coords="44,35"
