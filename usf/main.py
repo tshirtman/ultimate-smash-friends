@@ -28,6 +28,7 @@ import logging
 import time
 import threading
 import traceback
+from exceptions import AttributeError
 # our modules
 from config import Config
 config = Config()
@@ -41,7 +42,18 @@ from controls import Controls
 import loaders, music
 from font import fonts
 
-#logging.basicConfig(filename=config['LOG_FILENAME'],level=logging.DEBUG)
+try:
+    logging.basicConfig(
+        filename=config.debug['LOG_FILENAME'],
+        level=config.debug['LOG_LEVEL'] and eval('logging.'+config.debug['LOG_LEVEL'])
+        or logging.FATAL
+        )
+except AttributeError:
+    logging.basicConfig(
+        filename=config.debug['LOG_FILENAME'],
+        level = logging.WARNING
+        )
+    logging.debug('Bad logging level in user.cfg!')
 
 class Main(object):
     """
