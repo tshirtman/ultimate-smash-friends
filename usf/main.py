@@ -53,7 +53,7 @@ except AttributeError:
         filename=config.debug['LOG_FILENAME'],
         level = logging.WARNING
         )
-    logging.debug('Bad logging level in user.cfg!')
+    logging.error('Bad logging level in user.cfg!')
 
 class Main(object):
     """
