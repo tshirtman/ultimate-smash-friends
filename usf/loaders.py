@@ -175,7 +175,7 @@ def paragraph(text_send, font):
             max_len = text(texte, font)
 
     text_re = pygame.surface.Surface((max_len.get_width(), len(text_send.split('\n'))*text("", font).get_height()))
-    
+
     i = -1
     for texte in text_send.split('\n'):
         i += 1
