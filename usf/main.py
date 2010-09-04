@@ -110,19 +110,7 @@ class Main(object):
                     self.menu.handle_reply('goto:resume')
 
                 else:
-                    """self.screen.blit(
-                        self.game_font.render(
-                            "menus...",
-                            True,
-                            pygame.color.Color(
-                                "white"
-                                )
-                            ),
-                        (30, 4*SIZE[1]/5)
-                        )"""
-
                     pygame.display.update()
-
 
                     self.lock.acquire()
                     self.text_thread = "Loading GUI..."
