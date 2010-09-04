@@ -51,7 +51,7 @@ class Skin (object):
 
         if xml_file.find("color") is not None:
             self.color = pygame.color.Color(xml_file.find("color").attrib["value"])
-            
+
         if xml_file.find("dialog") is not None:
             self.dialog["sizex"] = int(xml_file.find("dialog").attrib["sizex"])*general["WIDTH"]/100
             self.dialog["sizey"] = int(xml_file.find("dialog").attrib["sizey"])*general["HEIGHT"]/100
@@ -60,7 +60,7 @@ class Skin (object):
 
         for node in xml_file.findall("layer"):
             self.layer.append(Layer(node))
-    
+
     def get_background(self):
         del self.surface
         self.surface = pygame.surface.Surface((config.general['WIDTH'], config.general['HEIGHT']))
@@ -69,7 +69,7 @@ class Skin (object):
         return self.surface
 
 class Layer(object):
-    
+
     def __init__(self, node):
         self.last_update = 0
         self.current = 0
@@ -83,7 +83,7 @@ class Layer(object):
         for frame in node.findall("frame"):
             self.frame.append([float(frame.attrib["time"]),
                           (int(frame.attrib["x"]), int(frame.attrib["y"]))])
-    
+
     def get_image(self):
         if self.last_update + self.frame[self.current][0] < time.time():
             self.last_update = time.time()
@@ -92,6 +92,6 @@ class Layer(object):
             else:
                 self.current = 0
         return self.background
-    
+
     def get_pos(self):
         return self.frame[self.current][1]
