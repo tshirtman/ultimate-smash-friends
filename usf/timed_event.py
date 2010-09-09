@@ -401,6 +401,10 @@ class DropPlayer(TimedEvent):
     def __del__(self):
         self.params['entity'].visible = True
         self.params['entity'].present = True
+        self.params['entity'].entity_skin.change_animation(
+            'static',
+            self.params['world']
+            )
         self.params['world'].events.append(
                 InvinciblePlayer(
                     (None,
