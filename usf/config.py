@@ -21,6 +21,7 @@
 from __future__ import with_statement
 
 from os import environ, makedirs, stat, sep
+import os
 from os.path import join, dirname, abspath
 from sys import prefix
 
@@ -145,29 +146,43 @@ class Config(object):
             user_data_dir = join(user_config_dir, 'user_data')
 
         elif OS == 'linux':
-            try:
-                sys_data_dir = join(prefix, 'share', 'ultimate-smash-friends',
-                                    'data')
-                sys_config_file = join(sep, 'etc', 'ultimate-smash-friends',
-                                       'system.cfg')
+            sys_data_dir = ""
+            #for the devlopment version
+            #"./data/", "./system.cfg"
+            
+            #if someone launch launch main.py directly
+            #"../data/", "../system.cfg"
+            
+            #an easier way to create a mod
+            #"../usf-data/", "./system.cfg"
+            
+            #standard use
+            #"/usr/share/ultimate-smash-friends/data/", "/etc/ultimate-smash-friends/system.cfg"
 
-                # see if files are installed on the system
-                stat(sys_data_dir)
-
-                # if XDG_CONFIG_HOME is defined, use it as the user config dir
-                if 'XDG_CONFIG_HOME' in environ.keys():
-                    user_config_dir = join(environ['XDG_CONFIG_HOME'],
-                                      'ultimate-smash-friends')
-                else:
-                    user_config_dir = join(environ['HOME'], '.config',
-                                      'ultimate-smash-friends')
-
-            except OSError:
-                # files aren't installed on the system so set user_config_dir to the
-                # parent directory of this module
-                user_config_dir = dirname(abspath(join(__file__, '..')))
-                sys_data_dir = join(user_config_dir, 'data')
-                sys_config_file = join(user_config_dir, 'system.cfg')
+            for datadir in [("../usf-data/", "./"),
+                ("./data/", "./system.cfg"),
+                ("../data/", "../system.cfg"),
+                ("/usr/share/ultimate-smash-friends/data/",
+                    "/etc/ultimate-smash-friends/system.cfg")]:
+                try:
+                    stat(datadir[0])
+                    sys_data_dir = datadir[0]
+                    
+                    if 'XDG_CONFIG_HOME' in environ.keys():
+                        user_config_dir = join(environ['XDG_CONFIG_HOME'],
+                                          'ultimate-smash-friends')
+                    else:
+                        user_config_dir = join(environ['HOME'], '.config',
+                                          'ultimate-smash-friends')
+                    sys_config_file = datadir[1]
+                    break
+                except OSError:
+                    pass
+                    #logging.debug("Can't use " + datadir[0] + " as data folder.")
+            if sys_data_dir == "":
+                logging.error("Error: no valid data directory - aborting")
+                logging.error("Current dir: " + os.getcwd())
+                exit(-1)
 
             user_config_file = join(user_config_dir, 'user.cfg')
             user_data_dir = join(user_config_dir, 'user_data')
