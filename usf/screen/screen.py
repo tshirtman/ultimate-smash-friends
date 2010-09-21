@@ -61,7 +61,7 @@ class Screen(object):
     def update_pos(self):
         self.widget.update_size()
         self.widget.y = ((config.general['HEIGHT'] - 70) / 2 - self.widget.height/2)+70
-        print self.widget.width
+        #print self.widget.width
         self.widget.x = config.general['WIDTH']/2 - self.widget.width/2
         self.widget.update_pos()
         self.widget.update_size()

@@ -19,12 +19,14 @@
 # along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.#
 ################################################################################
 
+import logging
+import os
+
+
 from pygame.locals import QUIT
 import pygame
-import os
 import sys
 from optparse import OptionParser
-import logging
 import time
 import threading
 import traceback
@@ -45,8 +47,7 @@ from font import fonts
 try:
     logging.basicConfig(
         filename=config.debug['LOG_FILENAME'],
-        level=config.debug['LOG_LEVEL'] and eval('logging.'+config.debug['LOG_LEVEL'])
-        or logging.FATAL
+        level=eval('logging.'+config.debug['LOG_LEVEL'])
         )
 except AttributeError:
     logging.basicConfig(
@@ -54,6 +55,12 @@ except AttributeError:
         level = logging.WARNING
         )
     logging.error('Bad logging level in user.cfg!')
+
+logging.debug("User config file: " + config.user_config_file)
+logging.debug("User config dir: " + config.user_config_dir)
+logging.debug("User data dir: " + config.user_data_dir)
+logging.debug("System config file: " + config.sys_config_file)
+logging.debug("System data dir: " + config.sys_data_dir)
 
 class Main(object):
     """
