@@ -39,7 +39,7 @@ A. Archive sources.
 
 * Nous recommandons fortement l'utilisation des paquets de votre distribution
   pour installer USF ou y jouer localement. Mais si aucun paquet n'est
-  disponible pour vitre distribution, et que vous voulez vous en charger, ceci
+  disponible pour votre distribution, et que vous voulez vous en charger, ceci
   est probablement votre meilleur option.
 
 B. Fichier Debian
@@ -74,7 +74,58 @@ C. Arch Linux PKGBUILD
 * L'option -s installera automatiquement les dépendances.
 
 == Windows ==
-  à faire.
+A. Archive source
+  1. Installation des dépendances
+     Python - http://python.org/download/ (version 2.6.5 recommandée)
+     Pygame - http://pygame.org/download.shtml (version 1.9.1 pour python 2.6 recommandée)
+
+   2. Téléchargement et décompression de l'archive
+      http://download.tuxfamily.org/usf/release/beta/ultimate-smash-friends-0.0.8.zip
+      Clic droit puis `extraire ici'
+
+   3. Installer Ultimate Smash Friends (optionel)*
+      ** depuis la ligne de commande **
+      a. Pour tout les utilisateurs
+         # python setup.py --record install_files
+      b. Ou pour l'utilisateur actuel
+         $ python setup.py --record install_files --home=~
+
+   4. Jouer
+      Double cliquez sur ultimate-smash-friends.pyw
+
+   5. Désinstallation
+      ** depuis la ligne de commande **
+      a. Si vous avez installé avec la méthode 3
+         # cat install_files | xargs rm -rf 
+      b. Sinon, supprimez simplement le dossier ultimate-smash-friends
+
+* Nous recommandons fortement l'installation via la méthode B (ci-dessous),
+  Mais si aucun paquet n'est disponible pour vitre distribution,
+  et que vous voulez vous rendre le jeu accessible à d'autre utilisateurs,
+  ceci est probablement votre meilleur option.
+
+B. Exécutable
+  1. Installation des dépendances
+     Python - http://python.org/download/ (version 2.6.5 recommandée)
+     Pygame - http://pygame.org/download.shtml (version 1.9.1 pour python 2.6 recommandée)
+
+  2. Installer Ultimate Smash Friends
+     http://usf.tuxfamily.org/wiki/Download#Windows (version 0.0.8 recommandée)
+
+  3. Jouer
+     Double cliquez sur ultimate-smash-friends.pyw (situé dans C:\Program Files\Ultimate Smash Friends)
+
+  4. Désinstallation 
+     Lancez `Ajout et suppression de programmes' depuis le `Panneau de configuration'
 
 == Mac OS X ==
-  à faire.
+A. Archive Source
+  en cours de rédaction
+
+B. Image DMG
+  1. Installer Ultimate Smash Friends
+     Ouvrez l'image .dmg et faites glisser l'application `Ultimate Smash Friends'
+     dans le dossier `Applications'.
+     
+  2. Jouer
+     Lancez le programme située dans `/Applications/Ultimate Smash Friends'.

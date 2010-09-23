@@ -112,5 +112,14 @@ B. Executibles
   4. Uninstall 
      Launch 'Add or Remove Programs' from 'Control Panel'
 
-== Mac OS X ++
-  Stub
+== Mac OS X ==
+A. Source Archive
+  comming soon
+
+B. DMG Image
+  1. Install Ultimate Smash Friends
+     Open the .dmg image and drag the `Ultimate Smash Friends' application in the
+     `Applications' folder.
+     
+  2. Run
+     Launch the program located in `/Applications/Ultimate Smash Friends'.

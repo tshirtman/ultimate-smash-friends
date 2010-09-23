@@ -145,7 +145,7 @@ class Config(object):
             user_config_file = join(user_config_dir, 'user.cfg')
             user_data_dir = join(user_config_dir, 'user_data')
 
-        elif OS == 'linux':
+        else:
             sys_data_dir = ""
             #for the devlopment version
             #"./data/", "./system.cfg"

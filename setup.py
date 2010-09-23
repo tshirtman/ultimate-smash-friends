@@ -11,38 +11,25 @@ import sys, os, platform, imp
 from os import environ, sep
 from os.path import abspath, join, splitext, isdir, isfile
 from sys import exit
-from distutils.core import setup
 OS = platform.system().lower()
-if OS == 'windows':
+
+if OS == 'darwin':
+    from setuptools import setup
+elif OS == 'windows':
+    from distutils.core import setup
     import py2exe
+else:
+    from distutils.core import setup
 
-    origIsSystemDLL = py2exe.build_exe.isSystemDLL
-    def isSystemDLL(pathname):
-           if os.path.basename(pathname).lower() in ["sdl_ttf.dll", "libogg-0.dll"]:
-                   return 0
-           return origIsSystemDLL(pathname)
-    py2exe.build_exe.isSystemDLL = isSystemDLL
-    OS = platform.system().lower()
-
-"""
-if OS == 'windows' or 'bdist_wininst' in sys.argv:
-    print ('This script was not meant to be run under windows. If you want '
-          'to create a package for windows, please install InnoSetup and use'
-          'the included setup.iss script, thanks.')
-    sys.exit(1)
-"""
 def files(path):
-    """ Return all non-python-file filenames in path """
+    """Return all non-python-file filenames in path"""
     result = []
     all_results = []
     module_suffixes = [info[0] for info in imp.get_suffixes()]
     ignore_dirs = ['cvs']
     for item in os.listdir(path):
         name = join(path, item)
-        if (
-            isfile(name) and
-            splitext(item)[1] not in module_suffixes
-            ):
+        if isfile(name) and splitext(item)[1] not in module_suffixes:
             result.append(name)
         elif isdir(name) and item.lower() not in ignore_dirs:
             all_results.extend(files(name))
@@ -50,53 +37,106 @@ def files(path):
         all_results.append([path, result])
     return all_results
 
-if OS != 'windows':
-    data = [(join('share', 'ultimate-smash-friends') + sep + item[0], item[1])
-            for item in files('data')]
-    data.append((join('share', 'ultimate-smash-friends') + sep + 'data', ['CREDITS.txt']))
-else:
-    data = [(item[0], item[1])
-            for item in files('data')]
-    data.append('CREDITS.txt')
+def isSystemDLL(pathname):
+    if os.path.basename(pathname).lower() in ["sdl_ttf.dll", "libogg-0.dll"]:
+        return 0
+    return origIsSystemDLL(pathname)
 
+if OS == 'windows':
+    origIsSystemDLL = py2exe.build_exe.isSystemDLL
+    py2exe.build_exe.isSystemDLL = isSystemDLL
     
-doc = [(join('share', 'doc', 'ultimate-smash-friends') +
+    DATA = [(item[0], item[1]) for item in files('data')]
+    DATA.append('CREDITS.txt')
+elif OS == 'darwin':
+    DATA = [(item[0], item[1]) for item in files('data')]
+    DATA.append('CREDITS.txt')
+else:
+    DATA = [(join('share', 'ultimate-smash-friends') + sep + item[0], item[1])
+            for item in files('data')]
+    DATA.append((join('share', 'ultimate-smash-friends') + sep + 'data', ['CREDITS.txt']))
+
+NAME = 'ultimate-smash-friends'
+VERSION = '0.1.3'
+
+DOC = [(join('share', 'doc', 'ultimate-smash-friends') +
        item[0].replace('doc', ''), item[1]) for item in files('doc')]
-doc[-1][-1].append('COPYING.txt')
-doc[-1][-1].append('CREDITS.txt')
-doc[-1][-1].append('README.txt')
-doc[-1][-1].append('README.fr.txt')
+DOC[-1][-1].append('COPYING.txt')
+DOC[-1][-1].append('CREDITS.txt')
+DOC[-1][-1].append('README.txt')
+DOC[-1][-1].append('README.fr.txt')
 
-config = [(sep + join('etc', 'ultimate-smash-friends'), ['system.cfg'])]
+CONFIG = [(sep + join('etc', 'ultimate-smash-friends'), ['system.cfg'])]
 
-icon = [(join('share', 'applications'), 
+ICON = [(join('share', 'applications'), 
               ['ultimate-smash-friends.desktop'])]
 
-scripts = ['ultimate-smash-friends',
-               'viewer.pyw', 'utils/togimpmap.py', 
-               'utils/tolevel.py', 
-               'utils/xml_text_extractor.py']
+SCRIPTS = ['ultimate-smash-friends',
+           'viewer.pyw', 'utils/togimpmap.py', 
+           'utils/tolevel.py', 
+           'utils/xml_text_extractor.py']
 
-setup(name='ultimate-smash-friends',
-      version='0.1.3',
-      description=('A 2d arcade fight game, based on the gameplay of super '
-                   'smash bros, from nintendo.'),
-      author='Gabriel Pettier',
-      author_email='gabriel.pettier@gmail.com',
-      maintainer='Lucas Baudin (xapantu)',
-      maintainer_email='xapantu@gmail.com',
-      url='http://usf.tuxfamily.org/',
-      classifiers=['Development Status :: 2 - Pre-Alpha',
-                   'Operating System :: OS Independent',
-                   'Intended Audience :: End Users/Desktop',
-                   'License :: OSI Approved :: GNU General Public License (GPL)',
-                   'Natural Language :: English',
-                   'Programming Language :: Python',
-                   'Topic :: Games/Entertainment :: Arcade'
-                  ],
-      packages=['usf', 'usf.widgets', 'usf.screen'],
-      scripts=scripts,
-      requires=['pygame (>=1.6)', 'python (>=2.5)'],
-      data_files=(data + doc + config + icon),
-	  windows=[{"script" : "ultimate-smash-friends", "icon_resources" : [(1, "data/icon/icon.ico")]}]
-     )
+if OS == 'darwin':
+    SCRIPTS[0] = 'ultimate-smash-friends.py'
+
+    PLIST = dict(
+        CFBundleName=NAME,
+        CFBundleShortVersionString=VERSION,
+        CFBundleGetInfoString=' '.join([NAME, VERSION]),
+        CFBundleExecutable=NAME,
+        CFBundleIdentifier='org.pythonmac.ultimate-smash-friends'
+    )
+
+    OPTIONS = {'argv_emulation': True}
+
+    setup(name=NAME,
+          version=VERSION,
+          description=('A 2d arcade fight game, based on the gameplay of super '
+                       'smash bros, from nintendo.'),
+          author='Gabriel Pettier',
+          author_email='gabriel.pettier@gmail.com',
+          maintainer='Lucas Baudin (xapantu)',
+          maintainer_email='xapantu@gmail.com',
+          url='http://usf.tuxfamily.org/',
+          classifiers=['Development Status :: 2 - Pre-Alpha',
+                       'Operating System :: OS Independent',
+                       'Intended Audience :: End Users/Desktop',
+                       'License :: OSI Approved :: GNU General Public License (GPL)',
+                       'Natural Language :: English',
+                       'Programming Language :: Python',
+                       'Topic :: Games/Entertainment :: Arcade'
+                      ],
+          app=[
+            dict(script='ultimate-smash-friends.py', plist=PLIST),
+          ],
+          packages=['usf', 'usf.widgets', 'usf.screen'],
+          scripts=SCRIPTS,
+          requires=['pygame (>=1.6)', 'python (>=2.5)'],
+          data_files=(DATA + DOC + CONFIG + ICON),
+          setup_requires=['py2app'],
+          options={'py2app': OPTIONS}
+         )
+else:
+    setup(name=NAME,
+          version=VERSION,
+          description=('A 2d arcade fight game, based on the gameplay of super '
+                       'smash bros, from nintendo.'),
+          author='Gabriel Pettier',
+          author_email='gabriel.pettier@gmail.com',
+          maintainer='Lucas Baudin (xapantu)',
+          maintainer_email='xapantu@gmail.com',
+          url='http://usf.tuxfamily.org/',
+          classifiers=['Development Status :: 2 - Pre-Alpha',
+                       'Operating System :: OS Independent',
+                       'Intended Audience :: End Users/Desktop',
+                       'License :: OSI Approved :: GNU General Public License (GPL)',
+                       'Natural Language :: English',
+                       'Programming Language :: Python',
+                       'Topic :: Games/Entertainment :: Arcade'
+                      ],
+          packages=['usf', 'usf.widgets', 'usf.screen'],
+          scripts=SCRIPTS,
+          requires=['pygame (>=1.6)', 'python (>=2.5)'],
+          data_files=(DATA + DOC + CONFIG + ICON),
+	      windows=[{"script" : "ultimate-smash-friends", "icon_resources" : [(1, "data/icon/icon.ico")]}]
+         )
