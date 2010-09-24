@@ -114,7 +114,23 @@ B. Executibles
 
 == Mac OS X ==
 A. Source Archive
-  comming soon
+  1. Install Dependencies
+     Python - http://python.org/download/ (version 2.6.6 recommended)
+     Pygame - http://pygame.org/download.shtml (version 1.9.1 for python 2.6 recommended)
+     Py2app - http://pypi.python.org/pypi/py2app/#downloads
+
+  2. Rename the main script
+     Py2app crash if the main script have no extension. In order to prevent this crash,
+     rename the file `ultimate-smash-friends' in `ultimate-smash-friends.py'.
+
+  3. Build Ultimate Smash Friends
+     sudo python setup.py py2app
+
+  4. Change the permissions
+     sudo chown -R <Your username>:staff dist/
+
+  5. Run
+     Double-click on the application located in the `dist' folder.
 
 B. DMG Image
   1. Install Ultimate Smash Friends

@@ -120,7 +120,23 @@ B. Exécutable
 
 == Mac OS X ==
 A. Archive Source
-  en cours de rédaction
+  1. Installation des dépendances
+     Python - http://python.org/download/ (version 2.6.6 recommandée)
+     Pygame - http://pygame.org/download.shtml (version 1.9.1 pour python 2.6 recommandée)
+     Py2app - http://pypi.python.org/pypi/py2app/#downloads
+
+  2. Renommer le script principal
+     Py2app plante si le script principal n'a pas d'extension. Pour éviter cela,
+     renommez le fichier `ultimate-smash-friends' en `ultimate-smash-friends.py'.
+
+  3. Installer Ultimate Smash Friends
+     sudo python setup.py py2app
+
+  4. Changer les permissions
+     sudo chown -R <Your username>:staff dist/
+
+  5. Jouer
+     Double cliquez sur l'application située dans le dossier `dist'.
 
 B. Image DMG
   1. Installer Ultimate Smash Friends
