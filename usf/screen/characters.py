@@ -84,6 +84,7 @@ class characters(Screen):
         self.player_vbox = [widgets.VBox(), widgets.VBox(), widgets.VBox(), widgets.VBox()]
 
         for i in range(0,4):
+            #self.checkboxes_ai.append(widgets.TextCheckBox(_("AI :")))
             self.checkboxes_ai.append(widgets.CheckBox())
             self.portraits.append(widgets.Image(
                     join(
@@ -94,7 +95,7 @@ class characters(Screen):
             self.player_vbox[i].add(widgets.Label(_("Player %s").replace("%s", str(i+1))))
             self.player_vbox[i].add(self.player_spinner[-1])
             self.player_vbox[i].add(self.portraits[-1],
-                margin_left=50,
+                margin_left=65,
                 margin=5,
                 size=(50,50))
 
@@ -102,15 +103,16 @@ class characters(Screen):
             hbox = widgets.HBox()
 
             #I18N: Artificial Intelligence
-            hbox.add(widgets.Label(_("AI :")))
+            hbox.add(self.checkboxes_ai[-1], margin=10, size=(150, 40))
             hbox.add(self.checkboxes_ai[-1], margin=10)
             self.player_vbox[i].add(hbox)
+            #self.player_vbox[i].add(self.checkboxes_ai[-1], margin_left=(180-self.checkboxes_ai[-1].width)/2)
 
         
         hbox = widgets.HBox()
         #adding the two box which contains the spinner and the name of the characters
         for vbox in self.player_vbox:
-            hbox.add(vbox, margin=40)
+            hbox.add(vbox, margin=20)
         self.widget.add(hbox, margin=50)
         
         #next button to go to the level screen
@@ -120,8 +122,7 @@ class characters(Screen):
         
         #back button to come back to main screen
         self.widget.add(widgets.Button(_('Back')),
-            size=(150, 40),
-            margin_left=20,
+            margin_left=290,
             margin=20)
 
     def callback(self,action):

@@ -11,3 +11,4 @@ from usf.widgets.spinner import *
 from usf.widgets.tab import *
 from usf.widgets.widget import *
 from usf.widgets.coverflow import *
+from usf.widgets.checkbox_text import *
