@@ -91,7 +91,7 @@ A. Source Archive
    5. Uninstall
       ** from a command prompt **
       a. If installed by using step 3 above:
-         # cat install_files | xargs rm -rf 
+         # cat install_files | xargs rm -rf
       b. If not, simply delete the ultimate-smash-friends folder
 
 * We highly recommend that you use method B (below) to install USF or run locally,
@@ -136,6 +136,7 @@ B. DMG Image
   1. Install Ultimate Smash Friends
      Open the .dmg image and drag the `Ultimate Smash Friends' application in the
      `Applications' folder.
-     
+
   2. Run
      Launch the program located in `/Applications/Ultimate Smash Friends'.
+

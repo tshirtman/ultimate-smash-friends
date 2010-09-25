@@ -142,6 +142,6 @@ B. Image DMG
   1. Installer Ultimate Smash Friends
      Ouvrez l'image .dmg et faites glisser l'application `Ultimate Smash Friends'
      dans le dossier `Applications'.
-     
+
   2. Jouer
      Lancez le programme située dans `/Applications/Ultimate Smash Friends'.
