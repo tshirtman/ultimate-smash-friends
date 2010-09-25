@@ -20,7 +20,6 @@
 from screen import Screen
 from usf import widgets
 
-
 class about(Screen):
 
     def init(self):

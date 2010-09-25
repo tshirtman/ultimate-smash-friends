@@ -47,7 +47,7 @@ class Paragraph(Widget):
         self.hover = False
         self.auto_scroll = True
 
-        self.text = open(join(config.sys_data_dir, 'text', path), 'r').readlines()
+        self.text = open(join(config.sys_data_dir, path), 'r').readlines()
         self.text_height = loaders.text("", fonts['mono']['normal']).get_height()
         self.init()
 
