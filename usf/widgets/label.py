@@ -35,10 +35,13 @@ class Label(Widget):
         self.surface_text  = loaders.text(self.text, fonts['sans']['normal'])
         if self.align == "center":
             self.indent = self.width/2-self.surface_text.get_width()/2
+
+        self.horizontal_indent = self.height/2-self.surface_text.get_height()/2
+
         try:
             self.background = loaders.image(join(config.sys_data_dir, self.background_path),
                 scale=(self.width,self.height))[0]
-            self.surface = loaders.image_layer(self.background,self.surface_text,(self.txtmargin+self.indent,0))
+            self.surface = loaders.image_layer(self.background,self.surface_text,(self.txtmargin+self.indent, self.horizontal_indent))
         except AttributeError:
             self.surface = self.surface_text
         self.screen = pygame.display.get_surface()
@@ -46,6 +49,7 @@ class Label(Widget):
     def __init__(self, text, *args, **kwargs):
         self.text = text
         self.indent = 0
+        self.horizontal_indent = 0
         self.state = False
         self.txtmargin = 0
         self.align = ""

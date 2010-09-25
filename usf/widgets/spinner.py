@@ -61,17 +61,17 @@ class Spinner(HBox):
     def init(self):
         self.surface = pygame.Surface((self.width,self.height))
         self.widgets = []
-        self.left_arrow = ImageButton("gui" + os.sep + config.general['THEME'] + os.sep + "spinner_left.png",
-            "gui" + os.sep + config.general['THEME'] + os.sep + "spinner_left_hover.png")
-        self.left_arrow.set_size(optimize_size((25,30)))
+        self.left_arrow = ImageButton(join("gui", config.general['THEME'], "spinner_left.png"),
+            join("gui", config.general['THEME'], "spinner_left_hover.png"))
+        self.left_arrow.set_size((37,45))
         self.add(self.left_arrow, margin = 0)
         self.center = Label(self.values[self.index],
             background="gui" + os.sep + config.general['THEME'] + os.sep + "spinner_center.png",
             align="center")
-        self.add(self.center, margin = 0, size=optimize_size((self.center_width,30)))
-        self.right_arrow = ImageButton("gui" + os.sep + config.general['THEME'] + os.sep + "spinner_right.png",
-            "gui" + os.sep + config.general['THEME'] + os.sep + "spinner_right_hover.png")
-        self.right_arrow.set_size(optimize_size((25,30)))
+        self.add(self.center, margin = 0, size=(self.center_width,45))
+        self.right_arrow = ImageButton(join("gui", config.general['THEME'], "spinner_right.png"),
+            join("gui", config.general['THEME'], "spinner_right_hover.png"))
+        self.right_arrow.set_size((37,45))
         self.add(self.right_arrow, margin = 0)
         self.update_pos()
         self.update_size()
