@@ -333,35 +333,3 @@ def get_text_transparent(name):
     text.blit(loaders.text(name, fonts['mono']['15']), (0,0))
     return text
 
-"""
-class Dialog(object):
-    state = False
-    image = None
-    def __init__(self, screen, name):
-        global skin
-        self.background = loaders.image(
-            config.sys_data_dir+
-            os.sep+
-            'gui'+
-            os.sep+
-            config.general['THEME']+
-            os.sep+
-            "background-dialog.png", scale=(skin.dialog['sizex'], skin.dialog['sizey'])
-            )[0]
-        self.background.set_alpha(150)
-        self.screen = screen
-    def draw(self):
-        self.screen.blit(self.tmp_screen, (0,0))
-        self.screen.blit(self.background, (skin.dialog['posx'], skin.dialog['posy']))
-    def show(self):
-        if self.state is False:
-            self.state = True
-            self.tmp_screen = self.screen.copy()
-            cache = pygame.Surface((config.general['WIDTH'], config.general['HEIGHT']))
-            cache.fill(pygame.color.Color("black"))
-            cache.set_alpha(100)
-            self.tmp_screen.blit(cache, (0,0))
-        else:
-            self.state = False
-            self.tmp_screen = None
-"""

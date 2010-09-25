@@ -219,9 +219,9 @@ class Main(object):
 
     def init_screen(self):
         if (config.general['WIDTH'],
-                config.general['HEIGHT']) not in pygame.display.list_modes():
-            (config.general['WIDTH'], config.general['HEIGHT']) = pygame.display.list_modes()[0]
-            config.general['FULLSCREEN'] = True
+                config.general['HEIGHT']) == (0,0):
+            (config.general['WIDTH'], config.general['HEIGHT']) = (800, 600)
+            config.general['FULLSCREEN'] = False
         SIZE = (config.general['WIDTH'], config.general['HEIGHT'])
         self.screen = pygame.display.set_mode(SIZE)
         
