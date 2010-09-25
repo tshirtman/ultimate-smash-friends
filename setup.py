@@ -138,5 +138,5 @@ else:
           scripts=SCRIPTS,
           requires=['pygame (>=1.6)', 'python (>=2.5)'],
           data_files=(DATA + DOC + CONFIG + ICON),
-	      windows=[{"script" : "ultimate-smash-friends", "icon_resources" : [(1, "data/icon/icon.ico")]}]
+              windows=[{"script" : "ultimate-smash-friends", "icon_resources" : [(1, "data/icon/icon.ico")]}]
          )
