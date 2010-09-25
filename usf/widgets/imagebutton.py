@@ -72,4 +72,15 @@ class ImageButton(Image):
         self.surface = self.surface_static
         return False,False
 
+    def draw(self):
+        """
+        Return the widget surface. This fonction is often overrided.
+        """
+        if self.state:
+            self.screen.blit(self.surface_hover, (self.parentpos[0] + self.x,
+                                                   self.parentpos[1] + self.y))
+        else:
+            self.screen.blit(self.surface, (self.parentpos[0] + self.x,
+                                                   self.parentpos[1] + self.y))
+
 
