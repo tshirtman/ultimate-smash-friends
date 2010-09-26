@@ -183,6 +183,7 @@ class Gui(object):
         if type(reply) == str:
             if reply.split(':')[0] == 'goto':
                 animation = True
+                loaders.track(os.path.join(config.sys_data_dir, "sounds", "mouseClick2.wav")).play()
                 old_screen = self.screens[self.screen_current]
                 old_surface = self.screens[self.screen_current].widget.draw()
                 if reply.split(':')[1] == 'back':

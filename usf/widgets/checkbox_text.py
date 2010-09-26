@@ -89,22 +89,26 @@ class TextCheckBox(HBox):
         self.init()
 
     def handle_mouse(self,event):
-        if self.state == True:
-            event.dict['pos'] = (event.dict['pos'][0] - self.parentpos[0] - self.x,
-                                 event.dict['pos'][1] - self.parentpos[1] - self.y)
-        if (0 < event.dict['pos'][0] < self.width and
-            0 < event.dict['pos'][1] < self.height and
-            event.type == pygame.MOUSEBUTTONUP):
+        if event.type == pygame.MOUSEBUTTONUP:
             if self.checked:
                 self.checked = False
-                self.check.setImage(join("gui", config.general['THEME'], "checkbox_empty_right.png"))
             else:
                 self.checked = True
-                self.check.setImage(join("gui", config.general['THEME'], "checkbox_full_right.png"))
-            self.state = True
+            self.update_image()
             return self,False
-        self.state = False
-        return False,False
+        else:
+            x = event.dict['pos'][0]
+            y = event.dict['pos'][1]
+            if self.state == True:
+                x -= self.parentpos[0] + self.x
+                y -= self.parentpos[1] + self.y
+            if 0 < x < self.width and 0 < y < self.height:
+                self.update_image()
+                self.state = True
+                return False,self
+            self.state = False
+            self.update_image()
+            return False,False
 
     def get_value(self):
         """
@@ -118,3 +122,22 @@ class TextCheckBox(HBox):
         Set the value of the checkbox, it must be a boolean.
         """
         self.checked = value
+
+    def update_image(self):
+        if self.state:
+            self.left_border.setImage(join("gui", config.general['THEME'], "checkbox_left_hover.png"))
+            self.center.background_path = join("gui", config.general['THEME'], "checkbox_center_hover.png")
+            if self.checked:
+                self.check.setImage(join("gui", config.general['THEME'], "checkbox_full_right_hover.png"))
+            else:
+                self.check.setImage(join("gui", config.general['THEME'], "checkbox_empty_right_hover.png"))
+            self.center.init()
+        
+        else:
+            self.left_border.setImage(join("gui", config.general['THEME'], "checkbox_left.png"))
+            self.center.background_path = join("gui", config.general['THEME'], "checkbox_center.png")
+            if self.checked:
+                self.check.setImage(join("gui", config.general['THEME'], "checkbox_full_right.png"))
+            else:
+                self.check.setImage(join("gui", config.general['THEME'], "checkbox_empty_right.png"))
+            self.center.init()
