@@ -159,7 +159,7 @@ class Config(object):
             #standard use
             #"/usr/share/ultimate-smash-friends/data/", "/etc/ultimate-smash-friends/system.cfg"
 
-            for datadir in [("../usf-data/", "./"),
+            for datadir in [("../usf-data/", "./system.cfg"),
                 ("./data/", "./system.cfg"),
                 ("../data/", "../system.cfg"),
                 ("/usr/share/ultimate-smash-friends/data/",
