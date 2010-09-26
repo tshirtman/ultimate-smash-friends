@@ -147,6 +147,7 @@ class Gui(object):
         #TODO : a complete navigation system with the keyboard.
         reply = False
         query = False
+        print self.focus
         if self.focus:
             (query, focus) = self.focus.handle_keys(event)
             if focus == False:
@@ -157,6 +158,16 @@ class Gui(object):
         if self.focus == False and (not reply and not query):
             if event.dict['key'] == pygame.K_ESCAPE:
                 self.handle_reply("goto:back")
+            else:
+                (query, focus) = self.screens[self.screen_current].widget.handle_keys(event)
+                if focus == False:
+                    self.focus = False
+                else:
+                    self.focus = focus
+                if  query != False:
+                    reply = self.screens[self.screen_current].callback(query)
+                    self.handle_reply(reply)
+
         #remove the event for performance, maybe it is useless
         del(event)
                 

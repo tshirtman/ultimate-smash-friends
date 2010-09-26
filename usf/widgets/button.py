@@ -96,4 +96,16 @@ class Button(Label):
                 return False,self
             self.state = False
             return False,False
+    
+    
+    def handle_keys(self,event):
+        if (event.dict["key"] == pygame.K_DOWN or event.dict["key"] == pygame.K_UP) and not self.state:
+            self.state = True
+            return False,self
+        
+        if event.dict["key"] == pygame.K_RETURN:
+            return self, self
+        
+        self.state = False
+        return False, False
 

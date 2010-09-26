@@ -47,6 +47,7 @@ class Label(Widget):
         self.screen = pygame.display.get_surface()
 
     def __init__(self, text, *args, **kwargs):
+        self.properties["focusable"] = False
         self.text = text
         self.indent = 0
         self.horizontal_indent = 0

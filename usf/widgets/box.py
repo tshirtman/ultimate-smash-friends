@@ -86,6 +86,7 @@ class Container(Widget):
         """
         This function is used to add a widget in the conatiner
         """
+        self.current_focus = -1
         self.widgets.append(widget)
         if 'size' in kwargs or type(widget) == Button:
             if 'size' in kwargs:
@@ -124,6 +125,32 @@ class Container(Widget):
                 return widget.handle_mouse(event)
         
         return (False,False)
+
+    def handle_keys(self,event):
+        """
+        This function is used for keyboard events.
+        """
+
+        if event.dict["key"] == pygame.K_DOWN and self.current_focus + 1 < len(self.widgets):
+            self.current_focus += 1
+        if event.dict["key"] == pygame.K_UP and self.current_focus > 0:
+            self.current_focus -= 1
+        
+        callback = self.widgets[self.current_focus].handle_keys(event)
+        if callback[1] == False:
+            attempt = 0
+            while(attempt < len(self.widgets)):
+                attempt += 1
+                if event.dict["key"] == pygame.K_DOWN and self.current_focus + 1 < len(self.widgets):
+                    self.current_focus += 1
+                if event.dict["key"] == pygame.K_UP and self.current_focus > 0:
+                    self.current_focus -= 1
+                callback = self.widgets[self.current_focus].handle_keys(event)
+                if callback[1] != False:
+                    break
+            return callback
+        
+        return callback
     
 
 class HBox(Container):
