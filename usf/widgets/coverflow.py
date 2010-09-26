@@ -264,7 +264,6 @@ class Coverflow(Widget):
             return False,self
         
         if event.dict["key"] == pygame.K_RETURN:
-            self.update_image()
             return self, self
         
         if not self.in_anim and (event.dict["key"] == pygame.K_LEFT or event.dict["key"] == pygame.K_RIGHT):
