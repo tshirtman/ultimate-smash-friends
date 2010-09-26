@@ -31,7 +31,8 @@ class screen_screen(Screen):
         self.set_name(_("screen configuration"))
         modes = []
         for resolution in pygame.display.list_modes():
-            modes.append(str(resolution[0]) + "x" + str(resolution[1]))
+            if resolution[0] >= 800:
+                modes.append(str(resolution[0]) + "x" + str(resolution[1]))
         modes.reverse()
         self.resolution = widgets.Spinner(modes, 170)
         self.fullscreen = widgets.CheckBox()
