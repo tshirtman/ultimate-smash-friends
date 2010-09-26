@@ -29,6 +29,7 @@ class Container(Widget):
     """
     This widget is never used directly, it is used to be a base for the HBox and VBox widget.
     """
+    focusable = True
 
     def update_size(self):
         """
@@ -131,26 +132,7 @@ class Container(Widget):
         This function is used for keyboard events.
         """
 
-        if event.dict["key"] == pygame.K_DOWN and self.current_focus + 1 < len(self.widgets):
-            self.current_focus += 1
-        if event.dict["key"] == pygame.K_UP and self.current_focus > 0:
-            self.current_focus -= 1
-        
-        callback = self.widgets[self.current_focus].handle_keys(event)
-        if callback[1] == False:
-            attempt = 0
-            while(attempt < len(self.widgets)):
-                attempt += 1
-                if event.dict["key"] == pygame.K_DOWN and self.current_focus + 1 < len(self.widgets):
-                    self.current_focus += 1
-                if event.dict["key"] == pygame.K_UP and self.current_focus > 0:
-                    self.current_focus -= 1
-                callback = self.widgets[self.current_focus].handle_keys(event)
-                if callback[1] != False:
-                    break
-            return callback
-        
-        return callback
+
     
 
 class HBox(Container):

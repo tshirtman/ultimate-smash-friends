@@ -85,7 +85,7 @@ class Gui(object):
         """
 
         #draw the background
-        self.screen.blit(self.skin.get_background(), (0,0))
+        self.skin.get_background()
             
         self.screens[self.screen_current].update()
         
@@ -159,7 +159,7 @@ class Gui(object):
             if event.dict['key'] == pygame.K_ESCAPE:
                 self.handle_reply("goto:back")
             else:
-                (query, focus) = self.screens[self.screen_current].widget.handle_keys(event)
+                (query, focus) = self.screens[self.screen_current].handle_keys(event)
                 if focus == False:
                     self.focus = False
                 else:
@@ -254,7 +254,7 @@ class Gui(object):
 
         for i in range(0, 10):
             time.sleep(1.00/float(config.general['MAX_FPS']))
-            self.screen.blit(self.skin.get_background().convert(), (0,0))
+            self.skin.get_background()
             text.set_alpha( (i*(- 1) + 10) *250/10)
             self.screen.blit(text,
                 (old_screen.indent_title,10))
@@ -267,7 +267,7 @@ class Gui(object):
 
         for i in range(0, 10):
             time.sleep(1.00/float(config.general['MAX_FPS']))
-            self.screen.blit(self.skin.get_background().convert(), (0,0))
+            self.skin.get_background()
             text.set_alpha(i*250/10)
             self.screen.blit(text, (self.screens[self.screen_current].indent_title,10))
             self.screen.blit(new_surface, 

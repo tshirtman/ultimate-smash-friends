@@ -35,36 +35,27 @@ class screen_screen(Screen):
                 modes.append(str(resolution[0]) + "x" + str(resolution[1]))
         modes.reverse()
         self.resolution = widgets.Spinner(modes, 170)
-        self.fullscreen = widgets.CheckBox()
-        
-        if config.general['FULLSCREEN']:
-            self.fullscreen.set_value(True)
         self.resolution.set_value(str(config.general['WIDTH']) + 'x'
                                     + str(config.general['HEIGHT']))
         
-        self.widget.add(widgets.Label(_('Screen resolution (requires a restart):')),
-                        margin=50)
-        self.widget.add(self.resolution, margin=10)
-        fullscreen_hbox = widgets.HBox()
+        self.widget.add(widgets.Label(_('Screen resolution (requires a restart):')))
+        self.widget.add(self.resolution)
         
-        fullscreen_hbox.add(widgets.Label(_('Fullscreen:')))
-        fullscreen_hbox.add(self.fullscreen, margin=50)
-        self.widget.add(fullscreen_hbox, margin=25)
+        self.fullscreen = widgets.TextCheckBox(_('Fullscreen:'))
         
+        if config.general['FULLSCREEN']:
+            self.fullscreen.set_value(True)
+        self.widget.add(self.fullscreen)
         self.widget.add(widgets.Label(_('Zoom sharpness:')), margin=25)
         zoom = widgets.Slider('zoom_sharpness')
         self.widget.add(zoom, margin=10, size=(220, 30))
         zoom.set_value(config.general['ZOOM_SHARPNESS']/5)
 
-        self.fps = widgets.CheckBox()
+        self.fps = widgets.TextCheckBox(_('Show FPS:'))
         
         if config.general['SHOW_FPS']:
             self.fps.set_value(True)
-        fps_hbox = widgets.HBox()
-        
-        fps_hbox.add(widgets.Label(_('Show FPS:')), margin=0)
-        fps_hbox.add(self.fps, margin=50)
-        self.widget.add(fps_hbox, margin=25)
+        self.widget.add(self.fps, margin=25)
 
         self.widget.add(widgets.Button(_('Back')), margin=30)
         

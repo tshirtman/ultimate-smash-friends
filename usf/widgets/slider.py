@@ -29,6 +29,7 @@ config = loaders.get_config()
 class Slider(Widget):
 
     def __init__(self, text):
+        self.focusable = False
         self.text = text
         self.keyboard = False
         self.space = 0

@@ -22,10 +22,12 @@ from usf.config import Config
 config = Config()
 from usf.font import fonts
 from usf import loaders
+import pygame
 
 class Screen(object):
 
     def __init__(self, name, screen):
+        self.current_focus = -1
         self.set_name(name)
         self.screen = screen
         self.init()
@@ -41,7 +43,12 @@ class Screen(object):
         self.widget.update_pos()
 
     def update(self):
-        self.screen.blit(loaders.text(self.name, fonts['mono']['15']), (self.indent_title,10))
+        #draw the title of the screen
+        self.screen.blit(loaders.text(self.name, fonts['mono']['15']),
+                         (self.indent_title,10)
+                        )
+        
+        #draw all the others widgets
         self.widget.draw()
 
     def load(self):
@@ -56,13 +63,84 @@ class Screen(object):
         
     def set_name(self, name):
         self.name = name.replace('_', ' ')  
-        self.indent_title = config.general['WIDTH']/2 - loaders.text(self.name, fonts['mono']['15']).get_width()/2
+        
+        #center the title
+        self.indent_title = (config.general['WIDTH']/2 -
+                     loaders.text(self.name, fonts['mono']['15']).get_width()/2)
     
     def update_pos(self):
         self.widget.update_size()
+        #center the main container (and all the widgets which are in it)
+        #verticaly
         self.widget.y = ((config.general['HEIGHT'] - 70) / 2 - self.widget.height/2)+70
-        #print self.widget.width
+
+        #center it horizontaly
         self.widget.x = config.general['WIDTH']/2 - self.widget.width/2
+
         self.widget.update_pos()
-        self.widget.update_size()
         
+    def check_widgets(self, widgets):
+        for widget in widgets:
+            if widget.focusable:
+                try:
+                    self.check_widgets(widget.widgets)
+                except AttributeError:
+                    self.widgets_known.append(widget)
+
+            else:
+                self.widgets_known.append(widget)
+                
+
+    def handle_keys(self, event):
+        #remumber all widgets that needs to be focusable (= all widgets - boxes)
+        try:
+            self.widgets_known
+        except:
+            self.widgets_known = []
+            self.check_widgets(self.widget.widgets)
+        
+        #increase the index of the focused widget and define in wich sens we
+        #have to find a focusable widget
+        sens = True
+        if(event.dict["key"] == pygame.K_DOWN and
+           self.current_focus + 1 < len(self.widgets_known)):
+            self.current_focus += 1
+            sens = True
+
+        if(event.dict["key"] == pygame.K_UP and
+           self.current_focus > 0):
+            self.current_focus -= 1
+            sens = False
+
+        #find a focusable widget, and select it
+        attempt = 0
+        while(attempt < len(self.widgets_known)):
+            #send the event to widget
+            callback = self.widgets_known[self.current_focus].handle_keys(event)
+            
+            #if he wants the event
+            if callback[1] != False:
+                return callback
+            
+            #if it doesn't want it:
+            attempt += 1
+            
+            #trying another widget:
+            
+            #if the users pressed UP
+            if sens:
+                if self.current_focus + 1 < len(self.widgets_known):
+                    self.current_focus += 1
+                else:
+                    self.current_focus = 0
+            
+            #if he pressed DOWN
+            else:
+                if self.current_focus > 0:
+                    self.current_focus -= 1
+                else:
+                    self.current_focus += 1
+        
+        #this shouldn't happen, excepted if there is no focusable widget
+        #in the screen (and it shoudn't happen, since there is back, at least)
+        return False,False

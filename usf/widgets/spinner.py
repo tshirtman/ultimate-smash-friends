@@ -47,6 +47,7 @@ class Spinner(HBox):
         """
         values is an array of string. Each string is an option.
         """
+        self.focusable = False
         self.parentpos = (0,0)
         self.extend = False
         self.values = values
@@ -54,6 +55,7 @@ class Spinner(HBox):
         self.index = 0
         self.center_width = width
         self.init()
+        self.text = values[0]
         self.state = False
         self.height = optimize_size((250,30))[1]
         self.width = optimize_size((25,30))[0]*2 + optimize_size((self.center_width,30))[0]
@@ -127,7 +129,7 @@ class Spinner(HBox):
             self.text = self.values[self.index]
             self.center.set_text(self.text)
         except IndexError:
-            logging.warning("Not enough value in the spinner: " + str(value))
+            logging.warning("Not enough value in the spinner: " + str(index))
 
     def set_value(self, value):
         """
@@ -139,3 +141,24 @@ class Spinner(HBox):
         except:
             logging.warning("No entry named: " + str(value))
 
+    def handle_keys(self,event):
+        if (event.dict["key"] == pygame.K_DOWN or event.dict["key"] == pygame.K_UP) and not self.state:
+            self.state = True
+            self.right_arrow.state = True
+            self.left_arrow.state = True
+            return False,self
+        
+        if event.dict["key"] == pygame.K_RIGHT:
+            if self.get_index() + 1 < len(self.values):
+                self.set_index(self.get_index() + 1)
+            return self, self
+
+        if event.dict["key"] == pygame.K_LEFT:
+            if self.get_index() > 0:
+                self.set_index(self.get_index() - 1)
+            return self, self
+        
+        self.right_arrow.state = False
+        self.left_arrow.state = False
+        self.state = False
+        return False, False

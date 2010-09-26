@@ -41,6 +41,7 @@ class Widget (object):
     animation_speed = 1.0
     last_animation = 0.0
     properties = {"focusable": True}
+    focusable = False
     
     def __init__(self):
         """

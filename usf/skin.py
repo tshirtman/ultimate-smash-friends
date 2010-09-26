@@ -62,11 +62,8 @@ class Skin (object):
             self.layer.append(Layer(node))
 
     def get_background(self):
-        del self.surface
-        self.surface = pygame.surface.Surface((config.general['WIDTH'], config.general['HEIGHT']))
         for layer in self.layer:
-            self.surface.blit(layer.get_image(), layer.get_pos())
-        return self.surface
+            pygame.display.get_surface().blit(layer.get_image(), layer.get_pos())
 
 class Layer(object):
 
