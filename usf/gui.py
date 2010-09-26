@@ -147,7 +147,7 @@ class Gui(object):
         #TODO : a complete navigation system with the keyboard.
         reply = False
         query = False
-        print self.focus
+
         if self.focus:
             (query, focus) = self.focus.handle_keys(event)
             if focus == False:

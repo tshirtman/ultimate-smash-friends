@@ -30,6 +30,8 @@ class Slider(Widget):
 
     def __init__(self, text):
         self.text = text
+        self.keyboard = False
+        self.space = 0
         self.parentpos = (0,0)
         self.extend = False
         self.value = 0
@@ -53,32 +55,36 @@ class Slider(Widget):
         self.screen = pygame.display.get_surface()
             
     def handle_mouse(self,event):
-        if self.state == True:
-            event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0] - self.x,
-                                event.dict['pos'][1] - self.parentpos[1] - self.y)
-        x = event.dict['pos'][0]
-        y = event.dict['pos'][1]
-        if self.state == True:
-            if event.type == pygame.MOUSEBUTTONUP:
-                self.state = False
+        if not self.keyboard:
+            if self.state == True:
+                event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0] - self.x,
+                                    event.dict['pos'][1] - self.parentpos[1] - self.y)
+            x = event.dict['pos'][0]
+            y = event.dict['pos'][1]
+            if self.state == True:
+                if event.type == pygame.MOUSEBUTTONUP:
+                    self.state = False
+                    return False, False
+                elif event.type == pygame.MOUSEMOTION and x -self.space >0 and x - self.space + self.height < self.width:
+                    self.value = x - self.space
+                elif event.type == pygame.MOUSEMOTION  and x -self.space >0:
+                    self.value = self.width-self.height
+                elif event.type == pygame.MOUSEMOTION  and x - self.space + self.height < self.width:
+                    self.value = 0
+                return self, self
+            if 0 < x < self.width and 0 < y < self.height:
+                if self.value < x and x < self.value + self.height:
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        #to adjust the position of the slider
+                        self.space = x - self.value
+                        
+                        self.state = True
+                        return self, self
                 return False, False
-            elif event.type == pygame.MOUSEMOTION and x -self.space >0 and x - self.space + self.height < self.width:
-                self.value = x - self.space
-            elif event.type == pygame.MOUSEMOTION  and x -self.space >0:
-                self.value = self.width-self.height
-            elif event.type == pygame.MOUSEMOTION  and x - self.space + self.height < self.width:
-                self.value = 0
-            return self, self
-        if 0 < x < self.width and 0 < y < self.height:
-            if self.value < x and x < self.value + self.height:
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    #to adjust the position of the slider
-                    self.space = x - self.value
-                    
-                    self.state = True
-                    return self, self
-            return False, False
-        self.state = False
+            self.state = False
+        else:
+            self.state = False
+            self.keyboard = False
         return (False,False)
         
     def get_value(self):
@@ -93,5 +99,28 @@ class Slider(Widget):
         else:
             surf = loaders.image_layer(self.background, self.center, (self.value,0))
         self.screen.blit(surf, (self.parentpos[0] + self.x, self.parentpos[1] + self.y))
+
+    def handle_keys(self,event):
+        self.keyboard = True
+        if (event.dict["key"] == pygame.K_DOWN or event.dict["key"] == pygame.K_UP) and not self.state:
+            self.state = True
+            return False,self
+        
+        if event.dict["key"] == pygame.K_LEFT:
+            if self.get_value() > 10:
+                self.set_value(self.get_value() - 10)
+            else:
+                self.set_value(0)
+            return self, self
+
+        if event.dict["key"] == pygame.K_RIGHT:
+            if self.get_value() < 90:
+                self.set_value(self.get_value() + 10)
+            else:
+                self.set_value(100)
+            return self, self
+        
+        self.state = False
+        return False, False
 
 
