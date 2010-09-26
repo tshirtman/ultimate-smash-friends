@@ -92,7 +92,7 @@ class Container(Widget):
                 size = kwargs['size']
             else:
                 size = (220,50)
-            widget.set_size((optimize_size(size)[0], optimize_size(size)[1]))
+            widget.set_size((size[0], size[1]))
         if 'margin' in kwargs:
             margin = kwargs['margin']
         else:
@@ -102,9 +102,11 @@ class Container(Widget):
         else:
             widget.margin = margin*config.general['HEIGHT']/480
         if 'margin_left' in kwargs:
-            widget.margin_left = kwargs['margin_left']*config.general['WIDTH']/800
+            widget.margin_left = kwargs['margin_left']
         if 'align' in kwargs:
-            widget.set_align(kwargs['align'])
+            if not self.orientation and kwargs['align'] == "center":
+                widget.margin_left = self.width/2 - size[0]/2
+            #widget.set_align(kwargs['align'])
         self.update_size()
         self.update_pos()
 

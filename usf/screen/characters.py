@@ -116,13 +116,13 @@ class characters(Screen):
         
         #next button to go to the level screen
         self.widget.add(widgets.Button(_("Next")),
-            margin_left=290,
-            margin=83)
+            margin=83,
+            align="center")
         
         #back button to come back to main screen
         self.widget.add(widgets.Button(_('Back')),
-            margin_left=290,
-            margin=20)
+            margin=20,
+            align="center")
 
     def callback(self,action):
         if action in self.player_spinner :
