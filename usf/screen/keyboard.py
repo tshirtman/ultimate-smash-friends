@@ -46,7 +46,7 @@ class keyboard(Screen):
         hbox.add(widgets.Label('B'), size=(30,40), margin=40, align="center")
         hbox.add(widgets.Label('A'), size=(30,40), margin=40, align="center")
         hbox.add(widgets.Label(_("Shield")), size=(60,40), margin=10, align="center")
-        self.widget.add(hbox, margin_left=80, margin=20)
+        self.widget.add(hbox)
         action_ = ['Left', 'Right', 'Up', 'Down', 'A', 'B', 'Shield']
     
         #one repetition by players
@@ -57,8 +57,10 @@ class keyboard(Screen):
                 w = widgets.KeyboardWidget(config.keyboard['PL' + str(i + 1) + '_' + action.upper()])
                 w.set_id('PL' + str(i + 1) + '_' + action.upper())
                 hbox.add(w, size=(40,40), margin=30)
-            self.widget.add(hbox, margin_left=80)
-        self.widget.add(widgets.Button(_('Back')), margin_left=20, margin=30)
+            self.widget.add(hbox)
+        self.widget.add(widgets.Button(_('Back')), align="center")
+        
+        self.widget.update_pos()
 
     def callback(self,action):
         if type(action) == widgets.KeyboardWidget:
