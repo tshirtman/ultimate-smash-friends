@@ -48,6 +48,7 @@ class TextCheckBox(HBox):
         self.widgets = []
         self.state = False
         self.checked = False
+        self.focusable = False
         
     def init(self):
         """
@@ -174,3 +175,21 @@ class TextCheckBox(HBox):
                                          config.general['THEME'],
                                          "checkbox_empty_right.png"))
             self.center.init()
+
+    def handle_keys(self,event):
+        if (event.dict["key"] == pygame.K_DOWN or event.dict["key"] == pygame.K_UP) and not self.state:
+            self.state = True
+            self.update_image()
+            return False,self
+        
+        if event.dict["key"] == pygame.K_RETURN:
+            if self.checked:
+                self.checked = False
+            else:
+                self.checked = True
+            self.update_image()
+            return self, self
+        
+        self.state = False
+        self.update_image()
+        return False, False
