@@ -50,6 +50,9 @@ class Coverflow(Widget):
         self.anim_state = ""
         self.advance = 0
         self.init()
+        
+        #compatibility with the others widget only
+        self.state = False
 
     def init(self):
         """
@@ -255,6 +258,25 @@ class Coverflow(Widget):
                 self.need_update = True
                 
             
+    def handle_keys(self,event):
+        if (event.dict["key"] == pygame.K_DOWN or event.dict["key"] == pygame.K_UP) and not self.state:
+            self.state = True
+            return False,self
+        
+        if event.dict["key"] == pygame.K_RETURN:
+            self.update_image()
+            return self, self
+        
+        if not self.in_anim and (event.dict["key"] == pygame.K_LEFT or event.dict["key"] == pygame.K_RIGHT):
+            if event.dict["key"] == pygame.K_LEFT:
+                self.launch_anim(True)
+            if event.dict["key"] == pygame.K_RIGHT:
+                self.launch_anim(False)
+            return self,self
+            
+        self.state = False
+        return False, False
+
     def load_main_frame(self):
         self.main_frame = loaders.image(os.path.join(config.sys_data_dir,
                                                 "gui",
