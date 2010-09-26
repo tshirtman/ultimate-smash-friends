@@ -62,6 +62,7 @@ class Skin (object):
             self.layer.append(Layer(node))
 
     def get_background(self):
+        pygame.display.get_surface().fill(pygame.color.Color("black"))
         for layer in self.layer:
             pygame.display.get_surface().blit(layer.get_image(), layer.get_pos())
 
