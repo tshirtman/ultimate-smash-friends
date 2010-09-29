@@ -61,7 +61,7 @@ class level(Screen):
                             )
                         )
             except :
-                logging.debug(file+" is not a valid level.")
+                logging.debug(str(file) +" is not a valid level.")
                 pass
 
         self.coverflow = widgets.Coverflow(coverflow_data)

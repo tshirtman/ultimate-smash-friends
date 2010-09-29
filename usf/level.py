@@ -113,15 +113,29 @@ class MovingPart (Block):
     time( % maxtime)).
 
     """
-    def __init__(self, rects, texture, patterns, server=False):
+    def __init__(self, rects, texture, patterns, server=False, levelname="biglevel"):
         Block.__init__(self)
         #logging.debug('moving block created')
         self.rects = rects
-        self.texture = os.path.join(
-                config.sys_data_dir,
-                "levels",
-                texture
-                )
+        try:
+            self.texture = os.path.join(
+                    config.sys_data_dir,
+                    "levels",
+                    levelname,
+                    texture
+                    )
+            loaders.image(self.texture)
+        except pygame.error:
+            logging.debug("No texture found here: " + str(file))
+            try:
+                self.texture = os.path.join(
+                        config.sys_data_dir,
+                        "levels",
+                        "common",
+                        texture
+                        )
+            except pygame.error:
+                logging.error("Can't load the texture: " + str(file))
         self.patterns = patterns
         self.position = self.patterns[0]['position']
 
@@ -236,12 +250,16 @@ class Level ( object ):
                     attribs['middle']
                     )
 
-        self.foreground = os.path.join(
-                    config.sys_data_dir,
-                    'levels',
-                    levelname,
-                    attribs['foreground']
-                    )
+        if 'foreground' in attribs:
+            self.foreground = os.path.join(
+                        config.sys_data_dir,
+                        'levels',
+                        levelname,
+                        attribs['foreground']
+                        )
+        else:
+            self.foreground = False
+                        
 
         tmp = pygame.image.load(self.level)
         self.rect = pygame.Rect(0,0, *tmp.get_size())
@@ -312,7 +330,8 @@ class Level ( object ):
                         rects,
                         texture,
                         patterns,
-                        server
+                        server,
+                        levelname
                         )
                     )
         self.water_blocs = []
@@ -417,7 +436,8 @@ class Level ( object ):
             self.draw_debug_map(surface, coords, zoom)
 
     def draw_foreground(self, surface, coords, zoom):
-        surface.blit( loaders.image(self.foreground, zoom=zoom)[0], coords)
+        if self.foreground:
+            surface.blit( loaders.image(self.foreground, zoom=zoom)[0], coords)
 
     def update(self, time):
         for block in self.moving_blocs:
