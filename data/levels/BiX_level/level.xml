@@ -2,7 +2,6 @@
 <map
     name="Bix World"
     background="BiX_level_fond.png"
-    foreground="maryoland-foreground.png"
     middle="BiX_level-middle.png"
     margins="550,500,550,450"
     >
