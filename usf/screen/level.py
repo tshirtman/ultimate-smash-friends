@@ -20,7 +20,7 @@
 #standard imports
 from os.path import join
 import os
-
+import logging
 #our modules
 from screen import Screen
 from usf import widgets
@@ -46,16 +46,22 @@ class level(Screen):
         files.sort()
         for file in files:
             try:
-                if '.xml' in file :
+                if 'level.xml' in os.listdir(os.path.join(
+                            config.sys_data_dir,
+                            "levels",
+                            file)) :
                     coverflow_data.append([])
-                    coverflow_data[-1].append(file.replace(".xml",""))
-                    coverflow_data[-1].append(join(config.sys_data_dir,
-                                                   "gui",
-                                                   "image",
-                                                   file.replace(".xml","") + ".png"))
+                    coverflow_data[-1].append(file)
+                    coverflow_data[-1].append(
+                        join(
+                            config.sys_data_dir,
+                            "levels",
+                            file,
+                            "screenshot.png"
+                            )
+                        )
             except :
-                #logging.debug(file+" is not a valid level.")
-                raise
+                logging.debug(file+" is not a valid level.")
                 pass
 
         self.coverflow = widgets.Coverflow(coverflow_data)

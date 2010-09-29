@@ -213,7 +213,8 @@ class Level ( object ):
                 os.path.join(
                     config.sys_data_dir,
                     'levels',
-                    levelname+os.extsep+'xml'
+                    levelname,
+                    'level.xml'
                     )
                 )
 
@@ -224,18 +225,21 @@ class Level ( object ):
         self.background = os.path.join(
                     config.sys_data_dir,
                     'levels',
+                    levelname,
                     attribs['background']
                     )
 
         self.level = os.path.join(
                     config.sys_data_dir,
                     'levels',
+                    levelname,
                     attribs['middle']
                     )
 
         self.foreground = os.path.join(
                     config.sys_data_dir,
                     'levels',
+                    levelname,
                     attribs['foreground']
                     )
 
