@@ -80,7 +80,6 @@ def main(charname):
                     speed *= 2
                 elif event.key == K_MINUS or event.key == K_KP_MINUS:
                     speed /= 2
-                print pygame.key.name(event.key)
 
         animation = entity_skin.animations.keys()[
             anim % len(entity_skin.animations.keys())
