@@ -289,10 +289,14 @@
     duration="500"
     repeat="0"
     >
-        <frame
+        <!--<frame
         time="0"
         image="BiX_kick1.png"
         hardshape="1 9 16 67"
+        > </frame>-->
+        <frame
+        time="0"
+        image="BiX_kick1.png"
         > </frame>
         <frame
         time="200"
