@@ -17,6 +17,8 @@ from pygame.locals import (
     K_F5,
     K_PLUS,
     K_MINUS,
+    K_KP_PLUS,
+    K_KP_MINUS,
     )
 
 import sys, os
@@ -74,10 +76,11 @@ def main(charname):
                     anim -=1
                 elif event.key == K_SPACE:
                     display_hardshape = not display_hardshape
-                elif event.key == K_PLUS:
+                elif event.key == K_PLUS or event.key == K_KP_PLUS:
                     speed *= 2
-                elif event.key == K_MINUS:
+                elif event.key == K_MINUS or event.key == K_KP_MINUS:
                     speed /= 2
+                print pygame.key.name(event.key)
 
         animation = entity_skin.animations.keys()[
             anim % len(entity_skin.animations.keys())
