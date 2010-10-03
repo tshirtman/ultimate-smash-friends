@@ -40,6 +40,27 @@
         hardshape="8 11 33 50"
         > </frame>
     </movement>
+    <movement name="fire"
+    duration="400"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="fire1.png"
+        > </frame>
+        <frame
+        time="100"
+        image="fire2.png"
+        > </frame>
+        <frame
+        time="200"
+        image="fire3.png"
+        > </frame>
+        <frame
+        time="300"
+        image="fire4.png"
+        > </frame>
+    </movement>
     <movement name="walk"
     duration="400"
     repeat="-1"
