@@ -349,17 +349,14 @@
         <frame
         time="0"
         image="kick1.png"
-        hardshape="8 9 33 52"
         > </frame>
         <frame
         time="100"
         image="kick2.png"
-        hardshape="5 11 33 52"
         > </frame>
         <frame
         time="200"
         image="kick3.png"
-        hardshape="2 12 33 52"
         >
             <agressiv-point
             coords="44,35"
@@ -369,12 +366,10 @@
         <frame
         time="300"
         image="kick2.png"
-        hardshape="5 11 33 52"
         > </frame>
         <frame
         time="400"
         image="kick3.png"
-        hardshape="2 12 33 52"
         >
             <agressiv-point
             coords="44,35"
