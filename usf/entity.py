@@ -435,10 +435,16 @@ class Entity (object):
                 )
 
         if self.visible == True:
-            place = (
-                self.rect[0] - self.entity_skin.hardshape[0],
-                self.rect[1] - self.entity_skin.hardshape[1]
-                )
+            if not self.reversed:
+                place = (
+                    self.rect[0] - self.entity_skin.hardshape[0],
+                    self.rect[1] - self.entity_skin.hardshape[1]
+                    )
+            else:
+                place = (
+                    self.rect[0],
+                    self.rect[1] - self.entity_skin.hardshape[1]
+                    )
             real_coords = (
                     int(place[0]*zoom)+coords[0] ,
                     int(place[1]*zoom)+coords[1]
