@@ -392,13 +392,13 @@ class Game (object):
                             1.0 )
             # center the level around the barycenter of present players.
             else:
-                ordered = sorted([ i.rect[0] for i in present_players ])
+                ordered = sorted([ i.place[0] for i in present_players ])
                 L = max(
                     self.SIZE[0],
                     max(1, ordered[-1])- max(1, ordered[0]) * 1.25
                     )
 
-                ordered = sorted([ i.rect[1] for i in present_players ])
+                ordered = sorted([ i.place[1] for i in present_players ])
 
                 H = max( self.SIZE[1], ordered[-1], ordered[0] * 1.25)
 
@@ -417,8 +417,8 @@ class Game (object):
                 )
 
                 players_barycenter = (
-                    sum( i.rect[0] for i in present_players ) / len(present_players),
-                    sum( i.rect[1] for i in present_players ) / len(present_players)
+                    sum( i.place[0] for i in present_players ) / len(present_players),
+                    sum( i.place[1] for i in present_players ) / len(present_players)
                     )
 
             #logging.debug(( self.zoom, lower - upper, rightwing - leftist))
