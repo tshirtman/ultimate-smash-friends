@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <character
-    name="Awesome Possum"
+    name="Sorlo"
     image="portrait.png"
-    hardshape="7 11 33 52"
+    hardshape="5 10 40 61"
     creator="Redshrike"
     weight="1"
     auto-reverse="True"
@@ -10,13 +10,24 @@
     Description="">
 
     <movement name="static"
-    duration="600"
+    duration="750"
     repeat="-1"
     >
         <frame
         time="0"
         image="static1.png"
-        hardshape="5 10 40 61"
+        > </frame>
+        <frame
+        time="300"
+        image="static2.png"
+        > </frame>
+        <frame
+        time="450"
+        image="static3.png"
+        > </frame>
+        <frame
+        time="600"
+        image="static2.png"
         > </frame>
     </movement>
     <movement name="take"
@@ -121,23 +132,20 @@
         </frame>
     </movement>
     <movement name="hit"
-    duration="700"
+    duration="375"
     repeat="0"
     >
         <frame
         time="0"
         image="hit1.png"
-        hardshape="8 11 33 52"
         > </frame>
         <frame
-        time="100"
+        time="75"
         image="hit2.png"
-        hardshape="8 11 33 52"
         > </frame>
         <frame
-        time="200"
+        time="150"
         image="hit3.png"
-        hardshape="4 11 33 52"
         >
             <agressiv-point
             coords="50,38"
@@ -145,19 +153,13 @@
             ></agressiv-point>
         </frame>
         <frame
-        time="300"
+        time="225"
         image="hit2.png"
-        hardshape="8 11 33 52"
         > </frame>
         <frame
-        time="400"
-        image="hit3.png"
-        hardshape="4 11 33 52"
+        time="300"
+        image="hit1.png"
         >
-            <agressiv-point
-            coords="50,38"
-            vector="300,-30"
-            ></agressiv-point>
         </frame>
     </movement>
     <!--movement name="smash-up-jumping"
@@ -278,13 +280,12 @@
         > </frame>
     </movement>
     <movement name="pick"
-    duration="300"
+    duration="500"
     repeat="0"
     >
         <frame
         time="0"
         image="pickup.png"
-        hardshape="8 11 33 48"
         > </frame>
     </movement>
     <movement name="roll"
@@ -412,6 +413,7 @@
             ></agressiv-point>
         </frame>
     </movement>
+    <!--
     <movement name="static_upgraded"
     duration="400"
     repeat="-1"
@@ -584,89 +586,6 @@
             ></agressiv-point>
         </frame>
     </movement>
-    <!--movement name="smash-up-jumping"
-    duration="0"
-    repeat="0"
-    >
-        <event
-        period="150,0"
-        action="PlayerStaticOnGround"
-        > </event>
-        <vector
-        time="100"
-        vector="0,1500"
-        ></vector>
-        <frame
-        time="0"
-        image="smash-up1-upgraded.png"
-        vector="0,70"
-        > </frame>
-        <frame
-        time="300"
-        image="smash-up2-upgraded.png"
-        vector="0,70"
-        > <agressiv-point
-            coords="48,20"
-            vector="100,-800"
-            ></agressiv-point>
-        </frame>
-        <frame
-        time="700"
-        image="smash-up1-upgraded.png"
-        > </frame>
-    </movement>
-    <movement name="smash-up"
-    duration="1000"
-    repeat="0"
-    >
-        <frame
-        time="0"
-        image="smash-up1-upgraded.png"
-        > </frame>
-        <frame
-        time="300"
-        image="smash-up2-upgraded.png"
-        > <agressiv-point
-            coords="48,20"
-            vector="100,-800"
-            ></agressiv-point>
-        </frame>
-        <frame
-        time="700"
-        image="smash-up1-upgraded.png"
-        > </frame>
-    </movement>
-    <movement name="smash-down"
-    duration="1000"
-    repeat="0"
-    >
-        <frame
-        time="0"
-        image="smash-down1-upgraded.png"
-        > </frame>
-        <frame
-        time="100"
-        image="smash-down2-upgraded.png"
-        > </frame>
-        <frame
-        time="200"
-        image="smash-down3-upgraded.png"
-        > </frame>
-        <frame
-        time="300"
-        image="smash-down4-upgraded.png"
-        > </frame>
-        <frame
-        time="400"
-        image="smash-down5-upgraded.png"
-        vector="0,-50"
-        hardshape= "8 0 22 48"
-        > <agressiv-point
-            coords="28,41"
-            vector="300,-10"
-            ></agressiv-point>
-        </frame>
-    </movement-->
     <movement name="specialhit_upgraded"
     duration="1500"
     repeat="0"
@@ -744,27 +663,6 @@
         hardshape="6 3 36 46"
         > </frame>
     </movement>
-    <!--movement name="special2"
-    duration="500"
-    repeat="0"
-    >
-        <event
-        period = "500,0"
-        action = "ThrowBomb"
-        > </event>
-        <frame
-        time="0"
-        image="take1-upgraded.png"
-        > </frame>
-        <frame
-        time="200"
-        image="roll1-upgraded.png"
-        > </frame>
-        <frame
-        time="300"
-        image="static1-upgraded.png"
-        > </frame>
-    </movement-->
     <movement name="kick_upgraded"
     duration="500"
     repeat="0"
@@ -830,5 +728,5 @@
             vector="30,-10"
             ></agressiv-point>
         </frame>
-    </movement>
+    </movement>-->
 </character>
