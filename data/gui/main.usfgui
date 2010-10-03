@@ -1,9 +1,0 @@
-<gui>
-  <label value="Ultimate Smash Friends" sizex="0" sizey="0" posx="30" posy="30" id="label" />
-  <button value="Configure" posx="40" posy="40" sizey="10" sizex="20" id="configure" action="goto:configure.usfgui" />
-  <button value="Local game" posx="40" posy="53" sizey="10" sizex="20" id="local" action="goto:characters.usfgui" />
-  <button value="Credits" posx="40" posy="66" sizey="10" sizex="20" id="credits" action="goto:credits.usfgui" />
-  <!--<button value="Demo" posx="40" posy="105" sizey="8" sizex="20" id="cover" action="goto:demo.usfgui" />-->
-  <button value="Quit" posx="40" posy="79" sizey="10" sizex="20" id="exit" action="goto:quit.usfgui" />
-  <parent>quit.usfgui</parent>
-</gui>
