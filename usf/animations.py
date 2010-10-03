@@ -45,6 +45,7 @@ class Frame (object):
 
         """
         self.image = image
+        self.bullet = None
         self.time = int(gametime)
         if type(hardshape) is str:
             self.hardshape = pygame.Rect([int(i) for i in hardshape.split(' ')])
@@ -67,6 +68,9 @@ class Frame (object):
     def addAgressivPoint(self, (x,y),(v,j)):
         self.agressivpoints.append(((x,y),(v,j)))
         self.agressivpoints_reverse.append(((self.hardshape[2] - x,y),(v,j)))
+
+    def addBullet(self, image):
+        self.bullet = image
 
 class EmptyAnimationException(Exception):
     pass

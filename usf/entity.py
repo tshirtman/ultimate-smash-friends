@@ -72,7 +72,7 @@ class Entity (object):
             entity_skinname='characters'+os.sep+'stick-tiny', place=(550,1),
             lives=3, carried_by=None, vector=[0,0], reversed=False,
             server=False, number=None, visible=False, present=False,
-            upgraded=False,
+            upgraded=False, physic=True
             ):
         if number is None:
             self.number = Entity.counter
@@ -80,6 +80,7 @@ class Entity (object):
         else:
             self.number = number
 
+        self.physic = physic
         self.num = num
         self.upgraded = upgraded
         self.lighten = False
@@ -324,7 +325,7 @@ class Entity (object):
         """
 
         # this test should optimise most of situations.
-        if game.level.collide_rect(self.rect[:2], self.rect[2:]) != -1:
+        if game.level.collide_rect(self.rect[:2], self.rect[2:]) != -1 and self.physic:
             points = self.update_points()
             self.onGround = False
 
@@ -406,6 +407,10 @@ class Entity (object):
                     and self.reversed):
                     self.move(( -1, 0), "wall, pushed back")
                     points = self.update_points()
+        elif not self.physic:
+            points = self.update_points()
+            if game.level.collide_point(points[self.TOP_LEFT]):
+                self.place = [-10, -10]
         self.place = [int(self.place[0]), int(self.place[1])]
 
     def draw(self, coords, zoom, surface, debug_params=dict()):
@@ -571,14 +576,18 @@ class Entity (object):
         ]
 
         # Gravity
-        if self.gravity :#and not self.onGround:
+        if self.gravity and self.physic:#and not self.onGround:
             self.vector[1] += float(config.general['GRAVITY']) * dt
+        elif not self.physic:
+            #FIXME : it is a bit hackish
+            self.vector[1] += -0.00001
 
         # Application of air friction.
         F = config.general['AIR_FRICTION'] * environnement_friction
 
-        self.vector[0] -= (F * self.vector[0] * dt)
-        self.vector[1] -= (F * self.vector[1] * dt)
+        if self.physic: #and not a bullet
+            self.vector[0] -= (F * self.vector[0] * dt)
+            self.vector[1] -= (F * self.vector[1] * dt)
 
         # apply the vector to entity.
         self.move ((self.vector[0] * dt, self.vector[1] * dt), 'vector')

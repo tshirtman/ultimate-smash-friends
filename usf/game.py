@@ -170,11 +170,16 @@ class Game (object):
         place=(550,50),
         reversed=False,
         upgraded=False,
-        vector=(0,0)):
+        vector=(0,0),
+        bullet=False):
         """
         Insert an item into game.
 
         """
+        if bullet:
+            physic=False
+        else:
+            physic=True
         try:
             os.listdir(os.path.join( config.sys_data_dir, 'items', item))
             self.items.append(
@@ -188,6 +193,7 @@ class Game (object):
                         visible=True,
                         present=True,
                         upgraded=upgraded,
+                        physic=physic
                         )
                     )
 

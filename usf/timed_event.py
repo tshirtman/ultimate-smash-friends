@@ -292,6 +292,28 @@ class ThrowMiniGost(TimedEvent):
     def condition(self):
         return True
 
+class LaunchBullet(TimedEvent):
+    """
+    Launch a fireball in front of the player.
+
+    """
+    def execute(self, deltatime):
+        self.done = True
+        entity = self.params['entity']
+        place = entity.place[0:2]
+        place[0] += entity.reversed and -entity.rect[2] or entity.rect[2]
+        place[1] += entity.rect[3]/2
+        self.params['world'].addItem(
+                'bullet',
+                place=place,
+                reversed=entity.reversed,
+                upgraded=entity.upgraded,
+                bullet=True
+                )
+
+    def condition(self):
+        return True
+
 class InvinciblePlayer(TimedEvent):
     """
     The target player is invincible and half invisible during this event.
@@ -509,4 +531,5 @@ event_names = {
     'UpgradePlayer' : UpgradePlayer,
     'ThrowFireBall' : ThrowFireBall,
     'Bounce' : Bounce,
+    'LaunchBullet' : LaunchBullet,
 }

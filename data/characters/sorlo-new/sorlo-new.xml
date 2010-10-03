@@ -44,6 +44,10 @@
     duration="400"
     repeat="0"
     >
+        <event
+        action="LaunchBullet"
+        period="0,0"
+        > </event>
         <frame
         time="0"
         image="fire1.png"
@@ -55,7 +59,8 @@
         <frame
         time="200"
         image="fire3.png"
-        > </frame>
+        > 
+        </frame>
         <frame
         time="300"
         image="fire4.png"
@@ -183,89 +188,6 @@
         >
         </frame>
     </movement>
-    <!--movement name="smash-up-jumping"
-    duration="0"
-    repeat="0"
-    >
-        <event
-        period="150,0"
-        action="PlayerStaticOnGround"
-        > </event>
-        <vector
-        time="100"
-        vector="0,1500"
-        ></vector>
-        <frame
-        time="0"
-        image="smash-up1.png"
-        vector="0,70"
-        > </frame>
-        <frame
-        time="300"
-        image="smash-up2.png"
-        vector="0,70"
-        > <agressiv-point
-            coords="48,20"
-            vector="100,-800"
-            ></agressiv-point>
-        </frame>
-        <frame
-        time="700"
-        image="smash-up1.png"
-        > </frame>
-    </movement>
-    <movement name="smash-up"
-    duration="1000"
-    repeat="0"
-    >
-        <frame
-        time="0"
-        image="smash-up1.png"
-        > </frame>
-        <frame
-        time="300"
-        image="smash-up2.png"
-        > <agressiv-point
-            coords="48,20"
-            vector="100,-800"
-            ></agressiv-point>
-        </frame>
-        <frame
-        time="700"
-        image="smash-up1.png"
-        > </frame>
-    </movement>
-    <movement name="smash-down"
-    duration="1000"
-    repeat="0"
-    >
-        <frame
-        time="0"
-        image="smash-down1.png"
-        > </frame>
-        <frame
-        time="100"
-        image="smash-down2.png"
-        > </frame>
-        <frame
-        time="200"
-        image="smash-down3.png"
-        > </frame>
-        <frame
-        time="300"
-        image="smash-down4.png"
-        > </frame>
-        <frame
-        time="400"
-        image="smash-down5.png"
-        vector="0,-50"
-        hardshape= "8 0 22 48"
-        > <agressiv-point
-            coords="28,41"
-            vector="300,-10"
-            ></agressiv-point>
-        </frame>
-    </movement-->
     <movement name="specialhit"
     duration="1500"
     repeat="0"
