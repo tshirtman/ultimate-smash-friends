@@ -85,8 +85,8 @@ class Font(object):
         if not self.size.has_key(item):
             self.size[item] = pygame.font.Font(self.font_file, 480/int(item))
         #print "No font named : " + str(item)
-        
+
         return self.size[item]
-            
+
 fonts = FontList()
 
