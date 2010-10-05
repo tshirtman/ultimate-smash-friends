@@ -303,11 +303,8 @@ class Entity (object):
         points = []
         for i in range(Entity.nb_points):
             points.append((
-                    Entity.list_sin_cos[i][0] * self.rect[2] / 2
-                    + self.rect[2]/2 + self.rect[0] + x,
-                            #don't divide width by 2
-                    Entity.list_sin_cos[i][1] * self.rect[3] / 2
-                    + self.rect[3]/2 + self.rect[1] + y
+                    Entity.list_sin_cos[i][0] * self.entity_skin.hardshape[2] / 2 + self.entity_skin.hardshape[2]/2 + self.entity_skin.hardshape[0] + self.rect[0] + x,
+                    Entity.list_sin_cos[i][1] * self.entity_skin.hardshape[3] / 2 + self.entity_skin.hardshape[3]/2 + self.entity_skin.hardshape[0] + self.rect[1] + y
                     ))
 
         return points
@@ -455,6 +452,7 @@ class Entity (object):
                     int(place[1]*zoom)+coords[1]
                     )
             if debug_params.get('hardshape', False):
+                print "drawing hardshapes"
                 draw_rect(
                     surface,
                     pygame.Rect(
