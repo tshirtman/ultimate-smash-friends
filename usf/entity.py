@@ -452,7 +452,7 @@ class Entity (object):
                     int(place[1]*zoom)+coords[1]
                     )
             if debug_params.get('hardshape', False):
-                print "drawing hardshapes"
+                #print "drawing hardshapes"
                 draw_rect(
                     surface,
                     pygame.Rect(
