@@ -304,7 +304,7 @@ class Entity (object):
         for i in range(Entity.nb_points):
             points.append((
                     Entity.list_sin_cos[i][0] * self.entity_skin.hardshape[2] / 2 + self.entity_skin.hardshape[2]/2 + self.entity_skin.hardshape[0] + self.rect[0] + x,
-                    Entity.list_sin_cos[i][1] * self.entity_skin.hardshape[3] / 2 + self.entity_skin.hardshape[3]/2 + self.entity_skin.hardshape[0] + self.rect[1] + y
+                    Entity.list_sin_cos[i][1] * self.rect[3] / 2 + self.rect[3]/2 + self.rect[1] + y
                     ))
 
         return points
