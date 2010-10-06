@@ -139,7 +139,7 @@
         image="jump7.png"
         > </frame>
     </movement>
-    <movement name="smash-straight"
+    <!--<movement name="smash-straight"
     duration="1000"
     repeat="0"
     >
@@ -156,7 +156,7 @@
             vector="500,-300"
             ></agressiv-point>
         </frame>
-    </movement>
+    </movement>-->
     <movement name="hit"
     duration="375"
     repeat="0"
@@ -188,7 +188,7 @@
         >
         </frame>
     </movement>
-    <movement name="specialhit"
+    <!--<movement name="specialhit"
     duration="1500"
     repeat="0"
     hardshape="0 0 157 40"
@@ -221,7 +221,7 @@
         time="700"
         image="special6.png"
         > </frame>
-    </movement>
+    </movement>-->
     <movement name="pick"
     duration="500"
     repeat="0"
@@ -231,7 +231,7 @@
         image="pickup.png"
         > </frame>
     </movement>
-    <movement name="roll"
+    <!--<movement name="roll"
     duration="500"
     repeat="0"
     >
@@ -263,7 +263,7 @@
         vector="70,0"
         hardshape="6 3 36 46"
         > </frame>
-    </movement>
+    </movement>-->
     <!--movement name="special2"
     duration="500"
     repeat="0"
@@ -320,6 +320,7 @@
             ></agressiv-point>
         </frame>
     </movement>
+    <!--
     <movement name="kick-jumping"
     duration="500"
     repeat="0"
@@ -350,7 +351,7 @@
             vector="30,-10"
             ></agressiv-point>
         </frame>
-    </movement>
+    </movement>-->
     <!--
     <movement name="static_upgraded"
     duration="400"
