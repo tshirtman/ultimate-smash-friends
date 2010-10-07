@@ -38,7 +38,7 @@ def run():
             y = cos(((t*1.232)+a)*.453464) * 100. + 240.
                         
             screen.blit(pingball, (x, y))
-            #screen.blit(pingball_subpixel.at(x,y), (x+320, y))
+            screen.blit(pingball_subpixel.at(x,y), (x+320, y))
         
        
         pygame.display.update() 
