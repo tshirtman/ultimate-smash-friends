@@ -26,7 +26,7 @@ from widget import Widget, get_scale, optimize_size
 from box import HBox
 from usf import loaders
 from usf.font import fonts
-
+from usf.subpixel.subpixelsurface import *
 #config
 config = loaders.get_config()
 
@@ -69,18 +69,26 @@ class Paragraph(Widget):
         #create the surface whiwh will contain _all_ the text
         self.surface_text = pygame.surface.Surface((self.width - self.width_slider*2,
                                                     len(self.text)*self.text_height))
+
         #draw all the text into the surface
         for i in range(len(self.text)):
             self.text[i] = self.text[i].replace('\n', "")
             self.surface_text.blit(loaders.text(self.text[i],
                                                 fonts['mono']['normal']),
                                    (10, self.text_height*i  ))
+        
         self.screen = pygame.display.get_surface()
+        self.slider = SubPixelSurface(loaders.image(join(config.sys_data_dir,
+                                             "gui",
+                                             config.general['THEME'],
+                                             "sliderh_center.png"),
+                                        scale=(self.width_slider, self.height_slider))[0], x_level=4)  
 
     def draw(self):
         #clear the surface
-        del(self.surface)
-        self.surface = pygame.surface.Surface((self.width,self.height))
+        
+        self.surface.fill(pygame.color.Color("black"))
+        self.surface.set_colorkey(pygame.color.Color("black"))
         #draw the text
         self.surface.blit(self.surface_text,
                           (0, -(self.defil*(self.surface_text.get_height()-self.height)/100)))
@@ -99,11 +107,7 @@ class Paragraph(Widget):
         else:
             slider_center = "sliderh_center.png"
 
-        self.surface.blit(loaders.image(join(config.sys_data_dir,
-                                             "gui",
-                                             config.general['THEME'],
-                                             slider_center),
-                                        scale=(self.width_slider, self.height_slider))[0],
+        self.surface.blit(self.slider.at(self.pos_slider, self.slider_y),
                           (self.pos_slider, self.slider_y))
 
         #foreground
