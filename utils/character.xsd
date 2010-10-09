@@ -1,41 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- this xsd is used to check correctness of characters definition files -->
 
-<xsd:schema xmnls:xsd="http://www.w3.org/2001/XMLSchema">
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 <xsd:element name="character" type="typeCharacter"/>
 
 <xsd:complexType name="typeCharacter">
-<xsd:sequence>
-<xsd:element name="movement" type="typeMovement" max/>
-</xsd:sequence>
-<xsd:attribute type="xsd:string" name="name"/>
-<xsd:attribute type="xsd:string" name="image"/>
-<xsd:attribute type="xsd:string" name="hardshape"/>
-<xsd:attribute type="xsd:string" name="creator"/>
-<xsd:attribute type="xsd:string" name="weight"/>
-<xsd:attribute type="xsd:string" name="auto-reverse"/>
-<xsd:attribute type="xsd:string" name="age"/>
-<xsd:attribute type="xsd:string" name="description"/>
+    <xsd:sequence>
+            <xsd:element name="movement" type="typeMovement" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute type="xsd:string" name="name"/>
+    <xsd:attribute type="xsd:string" name="image"/>
+    <xsd:attribute type="xsd:string" name="hardshape"/>
+    <xsd:attribute type="xsd:string" name="creator"/>
+    <xsd:attribute type="xsd:string" name="weight"/>
+    <xsd:attribute type="xsd:string" name="auto-reverse"/>
+    <xsd:attribute type="xsd:string" name="age"/>
+    <xsd:attribute type="xsd:string" name="description"/>
 </xsd:complexType>
 
 <xsd:complexType name="typeMovement">
-<xsd:any>
-<xsd:element name="frame" type="typeFrame" maxOccurence=""/>
-<xsd:element name="vector" type="typeVector" maxOccurence=""/>
-<xsd:element name="sound" type="typeSound" maxOccurence=""/>
-<xsd:element name="event" type="typeEvent" maxOccurence=""/>
-</xsd:any>
-<xsd:attribute name="duration"/>
-<xsd:attribute name="repeat"/>
+    <xsd:sequence>
+        <xsd:element name="frame" type="typeFrame" maxOccurs="unbounded"/>
+        <xsd:element name="vector" type="typeVector" maxOccurs="unbounded"/>
+        <xsd:element name="sound" type="typeSound" maxOccurs="unbounded"/>
+        <xsd:element name="event" type="typeEvent" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="duration"/>
+    <xsd:attribute name="repeat"/>
 </xsd:complexType>
 
 <xsd:complexType name="typeFrame">
-<xsd:attribute name="time"/>
-<xsd:attribute name="image"/>
+    <xsd:sequence>
+        <xsd:element name="agressiv-point" type="typeAgressiv-point"/>
+    </xsd:sequence>
+    <xsd:attribute name="time"/>
+    <xsd:attribute name="image"/>
 </xsd:complexType>
 
-<xsd:complexType name="typeVector">
+<xsd:simpleType name="typeVector">
+    <xsd:attribute name="time"/>
+    <xsd:attribute name="vector"/>
+</xsd:simpleType>
 
+
+<xsd:simpleType name="typeEvent">
+    <xsd:attribute name="period"/>
+    <xsd:attribute name="action"/>
+</xsd:simpleType>
+
+<xsd:complexType name="typeAgressiv-point">
+    <xsd:attribute name="coords"/>
+    <xsd:attribute name="vector"/>
 </xsd:complexType>
 
 </xsd:schema>
