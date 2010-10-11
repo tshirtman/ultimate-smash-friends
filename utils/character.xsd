@@ -25,13 +25,15 @@
         <xsd:element name="sound" type="typeSound" maxOccurs="unbounded"/>
         <xsd:element name="event" type="typeEvent" maxOccurs="unbounded"/>
     </xsd:sequence>
+    <xsd:attribute name="name"/>
     <xsd:attribute name="duration"/>
     <xsd:attribute name="repeat"/>
 </xsd:complexType>
 
 <xsd:complexType name="typeFrame">
     <xsd:sequence>
-        <xsd:element name="agressiv-point" type="typeAgressiv-point"/>
+        <xsd:element name="agressiv-point" type="typeAgressiv-point"
+        minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
     <xsd:attribute name="time"/>
     <xsd:attribute name="image"/>
