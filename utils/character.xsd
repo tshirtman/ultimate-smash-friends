@@ -37,20 +37,24 @@
     <xsd:attribute name="image"/>
 </xsd:complexType>
 
-<xsd:simpleType name="typeVector">
+<xsd:complexType name="typeVector">
     <xsd:attribute name="time"/>
     <xsd:attribute name="vector"/>
-</xsd:simpleType>
+</xsd:complexType>
 
 
-<xsd:simpleType name="typeEvent">
+<xsd:complexType name="typeEvent">
     <xsd:attribute name="period"/>
     <xsd:attribute name="action"/>
-</xsd:simpleType>
+</xsd:complexType>
 
 <xsd:complexType name="typeAgressiv-point">
     <xsd:attribute name="coords"/>
     <xsd:attribute name="vector"/>
+</xsd:complexType>
+
+<xsd:complexType name="typeSound">
+    <xsd:attribute name="file"/>
 </xsd:complexType>
 
 </xsd:schema>
