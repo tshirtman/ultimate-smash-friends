@@ -239,6 +239,12 @@ class Game (object):
 
         # draw players portraits at bottom of screen
         for num, player in enumerate(self.players):
+            self.screen.blit(loaders.image(os.path.join(
+                config.sys_data_dir,
+                "misc",
+                "hud.png"
+                ))[0], (25,config.general["WIDTH"])
+            )
             self.screen.blit(
                      player.entity_skin.image,
                         (

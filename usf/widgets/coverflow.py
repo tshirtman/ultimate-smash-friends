@@ -64,7 +64,7 @@ class Coverflow(Widget):
                                                 "gui",
                                                 config.general['THEME'],
                                                 "coverflow",
-                                                "foreground.png"))[0]
+                                                "foreground.png"), scale=(config.general["WIDTH"], config.general["HEIGHT"]))[0]
         
 
         self.frame = loaders.image(os.path.join(config.sys_data_dir,
@@ -101,61 +101,61 @@ class Coverflow(Widget):
         Draw the widget, the surface will be redrawed if the widget is animated.
         You can force redrawing by set need_update to True.
         """
-        if self.in_anim or self.need_update:
-            size = self.surface.get_size()
-            del self.surface
-            self.surface = pygame.surface.Surface(size)
-            self.pos = self.width/2 - self.main_frame.get_width()/2 + self.advance
-            self.draw_main()
-            self.draw_right()
-            self.draw_left()
-            reflection = pygame.transform.flip(self.surface, False, True)
-            reflection.set_colorkey(pygame.color.Color("black"))
-            #reflection.set_alpha(20)
-            self.surface.blit(reflection, (0, self.sizey(100)))
-            self.surface.blit(self.text, (self.width/2 - self.text.get_width()/4,
-                                          self.sizey(30)))
+        size = self.surface.get_size()
+        x, y = (self.parentpos[0] + self.x, self.parentpos[1] + self.y)
+        self.pos = self.width/2 - self.main_frame.get_width()/2 + self.advance
+        self.draw_main()
+        self.draw_right()
+        self.draw_left()
+        reflection = pygame.transform.flip(self.surface, False, True)
+        reflection.set_colorkey(pygame.color.Color("black"))
+        #reflection.set_alpha(20)
+        self.screen.blit(reflection, (0, self.sizey(100)))
+        self.screen.blit(self.text, (x +self.width/2 - self.text.get_width()/4,
+                                      y + self.sizey(30)))
 
-            self.surface.blit(self.foreground, (0,0))
-            self.need_update = False
-            if self.in_anim:
-                self.start_anim()
-        self.screen.blit(self.surface, (self.parentpos[0] + self.x, self.parentpos[1] + self.y))
+        self.screen.blit(self.foreground, (0,0))
+        self.need_update = False
+        if self.in_anim:
+            self.start_anim()
 
     def draw_main(self):
         """
         Draw the selected image, it is bigger than the other and in the center
         """
+        x, y = (self.parentpos[0] + self.x, self.parentpos[1] + self.y)
         #main frame
-        self.surface.blit(self.main_frame, (self.pos, self.posy_center))
-        self.surface.blit(loaders.image(self.values[self.index][1],
+        self.screen.blit(self.main_frame, (x + self.pos, y + self.posy_center))
+        self.screen.blit(loaders.image(self.values[self.index][1],
                                        scale=self.center_image
                                        )[0],
-                         (self.pos + self.center_image_indent[0],
-                          self.posy_center  + self.center_image_indent[1]))
+                         (x + self.pos + self.center_image_indent[0],
+                          y + self.posy_center  + self.center_image_indent[1]))
         self.pos += self.main_frame.get_width()
 
     def draw_right(self):
         """
         Draw three small image at right.
         """
+        x, y = (self.parentpos[0] + self.x, self.parentpos[1] + self.y)
         for i in range(self.index - len(self.values) + 1,
                        self.index - len(self.values) + 4):
-            self.surface.blit(self.frame, (self.pos, self.sizey(82)))
-            self.surface.blit(loaders.image(self.values[i][1], scale=self.values[i][2])[0],
-                 (self.pos + self.values[i][3][0], self.sizey(82) + self.values[i][3][1]))
+            self.screen.blit(self.frame, (x + self.pos, y + self.sizey(82)))
+            self.screen.blit(loaders.image(self.values[i][1], scale=self.values[i][2])[0],
+                 (x + self.pos + self.values[i][3][0], y + self.sizey(82) + self.values[i][3][1]))
             self.pos += self.frame.get_width()
 
     def draw_left(self):
         """
         Draw three small image at left.
         """
+        x, y = (self.parentpos[0] + self.x, self.parentpos[1] + self.y)
         #at left now
         self.pos = self.width/2 - self.main_frame.get_width()/2 - self.frame.get_width()*3 + self.advance
         for i in range(self.index - 3, self.index):
-            self.surface.blit(self.frame, (self.pos, self.sizey(82)))
-            self.surface.blit(loaders.image(self.values[i][1], scale=self.values[i][2])[0],
-                 (self.pos + self.values[i][3][0], self.sizey(82) + self.values[i][3][1]))
+            self.screen.blit(self.frame, (x + self.pos, y + self.sizey(82)))
+            self.screen.blit(loaders.image(self.values[i][1], scale=self.values[i][2])[0],
+                 (x + self.pos + self.values[i][3][0], y + self.sizey(82) + self.values[i][3][1]))
             self.pos += self.frame.get_width()
 
     def next(self):

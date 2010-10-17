@@ -59,15 +59,18 @@ class Paragraph(Widget):
 
     def init(self):
         #the slider (at left)
-        self.width_slider = self.width/20
-        self.height_slider = self.height/2.5
+        self.width_slider = 34
+        self.height_slider = 125
         self.pos_slider = self.width/20*19
         
         #the main surface
         self.surface = pygame.surface.Surface((self.width, self.height))
         
         #create the surface whiwh will contain _all_ the text
-        self.surface_text = pygame.surface.Surface((self.width - self.width_slider*2,
+        width = self.width - self.width_slider*2
+        if width < 0:
+            width = 0
+        self.surface_text = pygame.surface.Surface((width,
                                                     len(self.text)*self.text_height))
 
         #draw all the text into the surface
@@ -83,23 +86,26 @@ class Paragraph(Widget):
                                              config.general['THEME'],
                                              "sliderh_center.png"),
                                         scale=(self.width_slider, self.height_slider))[0], x_level=4)  
+                                
 
     def draw(self):
         #clear the surface
-        
-        self.surface.fill(pygame.color.Color("black"))
-        self.surface.set_colorkey(pygame.color.Color("black"))
         #draw the text
-        self.surface.blit(self.surface_text,
-                          (0, -(self.defil*(self.surface_text.get_height()-self.height)/100)))
+        x = self.parentpos[0] + self.x
+        y = self.parentpos[1] + self.y
+        mask = pygame.surface.Surface((self.width, self.height))
+        mask.blit(self.surface_text, (0, -(self.defil*(self.surface_text.get_height()-self.height)/100)))
+        mask.set_colorkey(pygame.color.Color("black"))
+        self.screen.blit(mask, (x,y))
+        del mask
 
         #the slider background
-        self.surface.blit(loaders.image(join(config.sys_data_dir,
+        self.screen.blit(loaders.image(join(config.sys_data_dir,
                                              "gui",
                                              config.general['THEME'],
                                              "sliderh_background.png"),
                                         scale=(self.width_slider, self.height))[0],
-                          (self.pos_slider, 0))
+                          (x + self.pos_slider, y))
 
         #the slider center
         if self.hover:
@@ -107,18 +113,17 @@ class Paragraph(Widget):
         else:
             slider_center = "sliderh_center.png"
 
-        self.surface.blit(self.slider.at(self.pos_slider, self.slider_y),
-                          (self.pos_slider, self.slider_y))
+        self.screen.blit(self.slider.at(self.pos_slider, self.slider_y),
+                          (x + self.pos_slider, y + self.slider_y))
 
         #foreground
-        self.surface.blit(loaders.image(join(config.sys_data_dir,
+        self.screen.blit(loaders.image(join(config.sys_data_dir,
                                              "gui",
                                              config.general['THEME'],
                                              "paragraph_foreground.png"),
                                         scale=(self.width - self.width_slider*2, self.height))[0],
-                          (0, 0))
+                          (x, y))
         self.start_anim()
-        self.screen.blit(self.surface, (self.parentpos[0] + self.x, self.parentpos[1] + self.y))
 
     def handle_mouse(self,event):
         x = event.dict['pos'][0]

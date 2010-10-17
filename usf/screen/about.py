@@ -19,6 +19,7 @@
 
 from screen import Screen
 from usf import widgets
+from usf import loaders
 
 class about(Screen):
 
@@ -27,7 +28,7 @@ class about(Screen):
         self.add(widgets.VBox())
 
         self.widget.add(widgets.Paragraph('CREDITS'),
-                        size=(490, 300))
+                        size=(490*loaders.get_config().general["WIDTH"]/800, 300*loaders.get_config().general["HEIGHT"]/600))
 
         self.widget.add(widgets.Button(_('Back')),
                         margin=55)
