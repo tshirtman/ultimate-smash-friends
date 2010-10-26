@@ -237,14 +237,18 @@ class Game (object):
             self.screen, self.level_place, self.zoom
         )
 
+        #draw the background of the block where the lives are displayed
+        hud_height = 75*config.general["WIDTH"]/800
+        self.screen.blit(loaders.image(os.path.join(
+            config.sys_data_dir,
+            "misc",
+            "hud.png"
+            ), scale=(config.general["WIDTH"], hud_height))[0],
+          (0,config.general["HEIGHT"]-hud_height)
+        )
+        
         # draw players portraits at bottom of screen
         for num, player in enumerate(self.players):
-            self.screen.blit(loaders.image(os.path.join(
-                config.sys_data_dir,
-                "misc",
-                "hud.png"
-                ))[0], (25,config.general["WIDTH"])
-            )
             self.screen.blit(
                      player.entity_skin.image,
                         (
