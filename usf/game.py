@@ -94,6 +94,9 @@ class Game (object):
         if screen is not None:
             self.icon_space = self.SIZE[0]/len(players_)
 
+        #the optional progress bar for the players lives
+        self.progress_bar_size = (82.5*config.general["WIDTH"]/800, 12.5*config.general["WIDTH"]/800)
+
         # various other initialisations
         self.last_clock = time.time()
 
@@ -267,6 +270,36 @@ class Game (object):
                             self.SIZE[1]*.9
                             )
                         )
+            elif loaders.get_gconfig().get("game", "display_progress_bar_for_lives") == "y":
+                self.screen.blit(
+                        image(
+                            os.path.join(
+                                config.sys_data_dir,
+                                'misc',
+                                'progress_bar_bg.png'
+                                ),
+                            scale=self.progress_bar_size
+                            )[0],
+                        (
+                        -0.5*self.icon_space+player.num*self.icon_space,
+                        config.general["HEIGHT"]-25
+                        )
+                    )
+                if self.progress_bar_size[0] - self.progress_bar_size[0]*(player.percents*0.1+0.01) > 0:
+                    self.screen.blit(
+                            image(
+                                os.path.join(
+                                    config.sys_data_dir,
+                                    'misc',
+                                    'progress_bar.png'
+                                    ),
+                                scale=(self.progress_bar_size[0] - self.progress_bar_size[0]*(player.percents*0.1+0.01), self.progress_bar_size[1])
+                                )[0],
+                            (
+                            -0.5*self.icon_space+player.num*self.icon_space,
+                            config.general["HEIGHT"]-25
+                            )
+                        )
             # draw player's lives.
             for i in range(player.lives):
                 self.screen.blit(
@@ -278,9 +311,8 @@ class Game (object):
                                 )
                             )[0],
                         (
-                         -0.5*self.icon_space+player.num*\
-                         self.icon_space+i*self.icon_space/40,
-                         self.SIZE[1]*.95
+                        -0.5*self.icon_space+player.num*self.icon_space+30+i*self.icon_space/40,
+                        self.SIZE[1]*.9
                         )
                         )
 
@@ -478,7 +510,7 @@ class Game (object):
                                               point[1][1]*(1+pl.percents) ]
                             pl.percents += math.sqrt( point[1][0]**2\
                                                      +point[1][1]**2)/(30 * (100 -
-                                                     pl.armor ))
+                                                     pl.armor ))*10
 
                             pl.entity_skin.change_animation(
                                     "take",
