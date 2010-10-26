@@ -311,8 +311,8 @@ class Game (object):
                                 )
                             )[0],
                         (
-                        -0.5*self.icon_space+player.num*self.icon_space+30+i*self.icon_space/40,
-                        self.SIZE[1]*.9
+                        -0.5*self.icon_space+player.num*self.icon_space+32+i*self.icon_space/40,
+                        self.SIZE[1]*.9+10
                         )
                         )
 
