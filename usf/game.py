@@ -443,7 +443,7 @@ class Game (object):
 
                 ordered = sorted([ i.place[1] for i in present_players ])
 
-                H = max( self.SIZE[1], ordered[-1], ordered[0] * 1.25)
+                H = max( self.SIZE[1], ordered[-1] - ordered[0] * 1.25)
 
                 precise_zoom = min (
                         1.0*self.SIZE[0] / L,

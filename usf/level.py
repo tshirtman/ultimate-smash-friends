@@ -402,16 +402,17 @@ class Level ( object ):
 
     def draw_minimap(self, surface):
         for rect in self.map:
-            draw_rect(
-                    surface,
-                    pygame.Rect(
-                        (rect[0])/8,
-                        (rect[1])/8,
-                        rect[2]/8,
-                        rect[3]/8
-                        ),
-                    pygame.Color('grey')
-                    )
+            if loaders.get_gconfig().get("game", "minimap") == "y":
+                draw_rect(
+                        surface,
+                        pygame.Rect(
+                            (rect[0])/8,
+                            (rect[1])/8,
+                            rect[2]/8,
+                            rect[3]/8
+                            ),
+                        pygame.Color('grey')
+                        )
 
     def draw_debug_map(self, surface, level_place, zoom):
         for rect in self.map:
