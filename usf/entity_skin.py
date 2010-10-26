@@ -90,7 +90,7 @@ class Entity_skin (object):
                         config.sys_data_dir,
                         dir_name,
                         attribs['image']
-                        )
+                        ), scale=(30, 30)
                     )[0]
 
         self.weigh = attribs['weight']
