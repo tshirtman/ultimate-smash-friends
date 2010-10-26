@@ -257,15 +257,16 @@ class Game (object):
                         )
                     )
 
-            self.screen.blit(
-                     self.font.render(str(player.percents*10)[:3]+"%",
-                     True,
-                     pygame.color.Color("red")),
-                        (
-                        -0.5*self.icon_space+player.num*self.icon_space,
-                        self.SIZE[1]*.9
+            if loaders.get_gconfig().get("game", "displaylives") == "y" :
+                self.screen.blit(
+                         self.font.render(str(player.percents*10)[:3]+"%",
+                         True,
+                         pygame.color.Color("red")),
+                            (
+                            -0.5*self.icon_space+player.num*self.icon_space,
+                            self.SIZE[1]*.9
+                            )
                         )
-                    )
             # draw player's lives.
             for i in range(player.lives):
                 self.screen.blit(

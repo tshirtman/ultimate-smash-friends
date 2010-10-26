@@ -29,6 +29,7 @@ import logging
 import loaders
 import music
 import animations
+from ConfigParser import SafeConfigParser
 
 try:
     from pygame.locals import BLEND_MAX
@@ -197,3 +198,10 @@ def track(name):
 @memoize
 def get_config():
     return Config()
+
+@memoize
+def get_gconfig():
+    parser = SafeConfigParser()
+    parser.optionxform=str
+    parser.read(get_config().sys_data_dir + "game.cfg")
+    return parser
