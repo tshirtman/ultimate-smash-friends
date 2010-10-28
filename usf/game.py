@@ -441,7 +441,7 @@ class Game (object):
                 ordered = sorted([ i.place[0] for i in present_players ])
                 L = max(
                     self.SIZE[0],
-                    max(1, ordered[-1])- max(1, ordered[0]) * 1.25
+                    max(1, ordered[-1] + 100)- max(1, ordered[0] - 100) * 1.25
                     )
 
                 ordered = sorted([ i.place[1] for i in present_players ])
