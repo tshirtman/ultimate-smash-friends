@@ -96,7 +96,10 @@ class Game (object):
 
         #the optional progress bar for the players lives
         self.progress_bar_size = (82.5*config.general["WIDTH"]/800, 12.5*config.general["WIDTH"]/800)
+        self.progress_bar_x = config.general["HEIGHT"]-25*config.general["WIDTH"]/800
 
+        #we load the bool for smooth scrolling here, for a better performance
+        self.smooth_scrolling = loaders.get_gconfig().get("game", "smooth_scrolling") == "y"
         # various other initialisations
         self.last_clock = time.time()
 
@@ -282,7 +285,7 @@ class Game (object):
                             )[0],
                         (
                         -0.5*self.icon_space+player.num*self.icon_space,
-                        config.general["HEIGHT"]-25
+                        self.progress_bar_x
                         )
                     )
                 if self.progress_bar_size[0] - self.progress_bar_size[0]*(player.percents*0.1+0.01) > 0:
@@ -297,7 +300,7 @@ class Game (object):
                                 )[0],
                             (
                             -0.5*self.icon_space+player.num*self.icon_space,
-                            config.general["HEIGHT"]-25
+                        self.progress_bar_x
                             )
                         )
             # draw player's lives.
@@ -467,10 +470,15 @@ class Game (object):
             #logging.debug(( self.zoom, lower - upper, rightwing - leftist))
             # calculate coordinates of top left corner of level
             # rect the barycenter of players at the center of the screen
-            self.level_place = [
+            level_place = [
                  -(players_barycenter[0])*self.zoom+self.SIZE[0]/2 ,
                  -(players_barycenter[1])*self.zoom+self.SIZE[1]/2 
                  ]
+            if self.smooth_scrolling:
+                self.level_place[0] += (level_place[0] - self.level_place[0])/4
+                self.level_place[1] += (level_place[1] - self.level_place[1])/4
+            else:
+                self.level_place = level_place
 
     def update_physics(self):
         """
