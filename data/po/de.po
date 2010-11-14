@@ -8,18 +8,18 @@ msgstr ""
 "Project-Id-Version: ultimate-smash-friends\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2010-07-29 17:26+0200\n"
-"PO-Revision-Date: 2010-08-01 22:45+0000\n"
-"Last-Translator: Konstantin Renner <Unknown>\n"
+"PO-Revision-Date: 2010-11-13 23:02+0000\n"
+"Last-Translator: Max Strube <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-08-03 03:57+0000\n"
+"X-Launchpad-Export-Date: 2010-11-14 05:16+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: game.py:308
 msgid " WON!"
-msgstr " hat Gewonnen!"
+msgstr " GEWONNEN!"
 
 #: game.py:323
 msgid "OOPS... DRAW!!!"
@@ -27,7 +27,7 @@ msgstr "UNENTSCHIEDEN!!!"
 
 #: gui.py:234
 msgid "you are here:"
-msgstr "sie sind hier:"
+msgstr "Sie sind hier:"
 
 #: main.py:68
 msgid "Loading..."
@@ -52,15 +52,15 @@ msgstr "lokales Spiel"
 #: screen/main_screen.py:30 screen/main_screen.py:37 screen/resume.py:28
 #: screen/resume.py:36
 msgid "Configure"
-msgstr "Konfiguration"
+msgstr "Einstellungen"
 
 #: screen/main_screen.py:31 screen/main_screen.py:39
 msgid "Credits"
-msgstr ""
+msgstr "Dank an"
 
 #: screen/main_screen.py:32 screen/main_screen.py:41
 msgid "Quit"
-msgstr "Verlassen"
+msgstr "Beenden"
 
 #: screen/screen_screen.py:31
 msgid "screen configuration"
@@ -68,7 +68,7 @@ msgstr "Bildschirmeinstellungen"
 
 #: screen/screen_screen.py:41
 msgid "Screen resolution (requires a restart):"
-msgstr "Bildschirmauflösung (neustart notwendig)"
+msgstr "Bildschirmauflösung (Neustart notwendig)"
 
 #: screen/screen_screen.py:47
 msgid "Fullscreen:"
@@ -149,4 +149,5 @@ msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
 "  Konstantin Renner https://launchpad.net/~konsti\n"
+"  Max Strube https://launchpad.net/~maxstr\n"
 "  xapantu https://launchpad.net/~xapantu"
