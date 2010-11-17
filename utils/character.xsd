@@ -6,7 +6,7 @@
 
 <xsd:complexType name="typeCharacter">
     <xsd:sequence>
-            <xsd:element name="movement" type="typeMovement" maxOccurs="unbounded"/>
+        <xsd:element name="movement" type="typeMovement" maxOccurs="unbounded"/>
     </xsd:sequence>
     <xsd:attribute type="xsd:string" name="name"/>
     <xsd:attribute type="xsd:string" name="image"/>
@@ -19,12 +19,16 @@
 </xsd:complexType>
 
 <xsd:complexType name="typeMovement">
-    <xsd:sequence>
-        <xsd:element name="frame" type="typeFrame" maxOccurs="unbounded"/>
-        <xsd:element name="vector" type="typeVector" maxOccurs="unbounded"/>
-        <xsd:element name="sound" type="typeSound" maxOccurs="unbounded"/>
-        <xsd:element name="event" type="typeEvent" maxOccurs="unbounded"/>
-    </xsd:sequence>
+    <xsd:all>
+        <xsd:element name="event" type="typeEvent"
+        minOccurs="0"/>
+        <xsd:element name="frame" type="typeFrame"
+        minOccurs="1"/>
+        <xsd:element name="vector" type="typeVector"
+        minOccurs="0"/>
+        <xsd:element name="sound" type="typeSound"
+        minOccurs="0"/>
+    </xsd:all>
     <xsd:attribute name="name"/>
     <xsd:attribute name="duration"/>
     <xsd:attribute name="repeat"/>
@@ -37,6 +41,7 @@
     </xsd:sequence>
     <xsd:attribute name="time"/>
     <xsd:attribute name="image"/>
+    <xsd:attribute name="hardshape"/>
 </xsd:complexType>
 
 <xsd:complexType name="typeVector">

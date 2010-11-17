@@ -278,6 +278,7 @@ class Main(object):
                             'current_animation':
                             config.debug['CURRENT_ANIMATION'],
                             'levelshape': config.debug['LEVELSHAPES'],
+                            'levelmap': config.debug['LEVELMAP'],
                             }
                         )
                     self.menu.load = False

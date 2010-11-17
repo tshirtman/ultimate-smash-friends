@@ -259,7 +259,6 @@ class Level ( object ):
                         )
         else:
             self.foreground = False
-                        
 
         tmp = pygame.image.load(self.level)
         self.rect = pygame.Rect(0,0, *tmp.get_size())
@@ -396,7 +395,7 @@ class Level ( object ):
         for block in self.vector_blocs:
             block.draw( surface, level_place, zoom)
 
-    def draw_after_players(self, surface, level_place, zoom):
+    def draw_after_players(self, surface, level_place, zoom, levelmap=False):
         self.draw_foreground(surface, level_place, zoom)
         self.draw_minimap(surface)
 

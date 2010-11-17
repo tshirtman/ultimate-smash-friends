@@ -232,7 +232,7 @@ class Game (object):
         self.center_zoom_camera()
         self.level.draw_before_players(
             self.screen, self.level_place, self.zoom,
-            'levelshape' in debug_params and debug_params['levelshape']
+            'levelshape' in debug_params and debug_params['levelshape'],
         )
         for entity in self.players+self.items:
             entity.present and entity.draw(
@@ -240,7 +240,8 @@ class Game (object):
                 )
 
         self.level.draw_after_players(
-            self.screen, self.level_place, self.zoom
+            self.screen, self.level_place, self.zoom,
+            'levelmap' in debug_params and debug_params['levelmap'],
         )
 
         #draw the background of the block where the lives are displayed

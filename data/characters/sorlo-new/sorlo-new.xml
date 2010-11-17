@@ -7,7 +7,7 @@
     weight="1"
     auto-reverse="True"
     age="Not Disclosed"
-    Description="">
+    description="">
 
     <movement name="static"
     duration="750"
