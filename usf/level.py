@@ -397,7 +397,8 @@ class Level ( object ):
 
     def draw_after_players(self, surface, level_place, zoom, levelmap=False):
         self.draw_foreground(surface, level_place, zoom)
-        self.draw_minimap(surface)
+        if levelmap:
+            self.draw_minimap(surface)
 
     def draw_minimap(self, surface):
         for rect in self.map:
