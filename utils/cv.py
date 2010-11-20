@@ -48,7 +48,7 @@ def main(charname):
     entity_skin = Entity_skin(path)
     if inotifyx:
         wd = inotifyx.add_watch(fd, path, inotifyx.IN_MODIFY)
-    anim = 1
+    anim = 0
     display_hardshape = True
     speed = 1.0
     font = pygame.font.Font(pygame.font.get_default_font(), 12)
@@ -81,7 +81,19 @@ def main(charname):
                 elif event.key == K_MINUS or event.key == K_KP_MINUS:
                     speed /= 2
 
-        animation = entity_skin.animations.keys()[
+        animation = (
+            sorted(
+                filter(
+                    lambda x: 'upgraded' not in x,
+                    entity_skin.animations.keys()
+                    )
+                )+sorted(
+                filter(
+                    lambda x: 'upgraded' in x,
+                    entity_skin.animations.keys()
+                    )
+                )
+            )[
             anim % len(entity_skin.animations.keys())
         ]
         pygame.event.clear( [MOUSEMOTION, MOUSEBUTTONUP, MOUSEBUTTONDOWN] )
@@ -98,15 +110,25 @@ def main(charname):
             bottom_center_hardshape[0] - img.hardshape[0] - img.hardshape[2]/2,
             bottom_center_hardshape[1] - img.hardshape[1] - img.hardshape[3]
         )
-        screen.fill(
-            pygame.Color('red'),
-            pygame.Rect((
-                position[0]+img.hardshape[0],
-                position[1]+img.hardshape[1],
-                img.hardshape[2],
-                img.hardshape[3]
-            ))
-            )
+        if display_hardshape:
+            screen.fill(
+                pygame.Color('blue'),
+                pygame.Rect((
+                    position[0],
+                    position[1],
+                    image(img.image)[1][2],
+                    image(img.image)[1][3]
+                ))
+                )
+            screen.fill(
+                pygame.Color('red'),
+                pygame.Rect((
+                    position[0]+img.hardshape[0],
+                    position[1]+img.hardshape[1],
+                    img.hardshape[2],
+                    img.hardshape[3]
+                ))
+                )
         screen.blit(image(img.image)[0], position)
         screen.blit(
             font.render(
