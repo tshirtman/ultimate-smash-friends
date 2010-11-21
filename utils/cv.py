@@ -148,6 +148,13 @@ def main(charname):
             (10,10)
             )
         for i in img.agressivpoints:
+            pygame.draw.ellipse(
+                screen,
+                pygame.Color('red'),
+                pygame.Rect(
+                    position[0]+i[0][0]-1, position[1]+i[0][1]-1, 2, 2
+                    )
+                )
             pygame.draw.line(
                 screen,
                 pygame.Color('red'),
@@ -159,7 +166,7 @@ def main(charname):
                     position[0]+i[0][0]+i[1][0]/2,
                     position[1]+i[0][1]+i[1][1]/2,
                     ),
-                2
+                1
             )
 
         pygame.display.flip()
