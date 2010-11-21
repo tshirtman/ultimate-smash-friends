@@ -58,9 +58,15 @@ def main(charname):
         # get key events
         pygame.event.pump()
         if inotifyx and inotifyx.get_events(fd, 0):
-            print 
             time.sleep(0.5)
-            entity_skin = Entity_skin(path)
+            for i in range(3):
+                try:
+                    entity_skin = Entity_skin(path)
+                    break
+                except:
+                    pass
+            else:
+                print "doh!"
         for event in pygame.event.get(
             [ KEYDOWN, KEYUP ]
             ):
@@ -99,13 +105,16 @@ def main(charname):
         pygame.event.clear( [MOUSEMOTION, MOUSEBUTTONUP, MOUSEBUTTONDOWN] )
         # update screen
         screen.fill(pygame.Color('green'))
-        img = filter(
-                    lambda f : f.time <= (
-                        (time.time()*1000.0*speed) %
-                        entity_skin.animations[animation].duration
-                        ),
-                    entity_skin.animations[animation].frames
-                    )[-1]
+        try:
+            img = filter(
+                        lambda f : f.time <= (
+                            (time.time()*1000.0*speed) %
+                            entity_skin.animations[animation].duration
+                            ),
+                        entity_skin.animations[animation].frames
+                        )[-1]
+        except Exception, e:
+            print e
         position = (
             bottom_center_hardshape[0] - img.hardshape[0] - img.hardshape[2]/2,
             bottom_center_hardshape[1] - img.hardshape[1] - img.hardshape[3]
@@ -132,7 +141,7 @@ def main(charname):
         screen.blit(image(img.image)[0], position)
         screen.blit(
             font.render(
-                animation +'   '+ str(img.time),
+                str(anim)+': '+animation +'   '+ str(img.time),
                 True,
                 pygame.Color('white')
                 ),
