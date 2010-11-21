@@ -41,7 +41,7 @@ from loaders import image
 def main(charname):
 
     pygame.init()
-    screen = pygame.display.set_mode((200,200))
+    screen = pygame.display.set_mode((400,400))
     path = os.path.join(
         usf_root, 'data', 'characters', charname
         )
@@ -53,7 +53,7 @@ def main(charname):
     speed = 1.0
     font = pygame.font.Font(pygame.font.get_default_font(), 12)
 
-    bottom_center_hardshape = (100, 150)
+    bottom_center_hardshape = (200, 250)
     while True:
         # get key events
         pygame.event.pump()
@@ -121,7 +121,7 @@ def main(charname):
         )
         if display_hardshape:
             screen.fill(
-                pygame.Color('blue'),
+                pygame.Color('grey'),
                 pygame.Rect((
                     position[0],
                     position[1],
@@ -130,7 +130,7 @@ def main(charname):
                 ))
                 )
             screen.fill(
-                pygame.Color('red'),
+                pygame.Color('blue'),
                 pygame.Rect((
                     position[0]+img.hardshape[0],
                     position[1]+img.hardshape[1],
@@ -143,10 +143,25 @@ def main(charname):
             font.render(
                 str(anim)+': '+animation +'   '+ str(img.time),
                 True,
-                pygame.Color('white')
+                pygame.Color('red'),
                 ),
             (10,10)
             )
+        for i in img.agressivpoints:
+            pygame.draw.line(
+                screen,
+                pygame.Color('red'),
+                    (
+                    position[0]+i[0][0],
+                    position[1]+i[0][1],
+                    ),
+                    (
+                    position[0]+i[0][0]+i[1][0]/2,
+                    position[1]+i[0][1]+i[1][1]/2,
+                    ),
+                2
+            )
+
         pygame.display.flip()
     inotifyx.rm_watch(wd)
 
