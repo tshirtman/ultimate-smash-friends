@@ -30,7 +30,7 @@ Description="">
         > </frame>
     </movement>
     <movement name="take"
-    duration="100"
+    duration="200"
     repeat="0"
     >
         <frame
@@ -39,7 +39,7 @@ Description="">
         hardshape="4 11 33 50"
         > </frame>
         <frame
-        time="50"
+        time="100"
         image="take2.png"
         hardshape="4 9 33 50"
         > </frame>
@@ -152,7 +152,7 @@ Description="">
         hardshape= "8 20 22 48"
         >
             <agressiv-point
-            coords="59,33"
+            coords="74,46"
             vector="500,-300"
             ></agressiv-point>
         </frame>
@@ -162,7 +162,19 @@ Description="">
         hardshape= "8 20 22 48"
         >
             <agressiv-point
-            coords="59,33"
+            coords="79,49"
+            vector="500,-300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="94,49"
+            vector="500,-300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="109,49"
+            vector="500,-300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="124,49"
             vector="500,-300"
             ></agressiv-point>
         </frame>
@@ -172,7 +184,11 @@ Description="">
         hardshape= "8 20 22 48"
         >
             <agressiv-point
-            coords="59,33"
+            coords="89,49"
+            vector="500,-300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="79,49"
             vector="500,-300"
             ></agressiv-point>
         </frame>
@@ -197,7 +213,11 @@ Description="">
         hardshape="4 16 33 52"
         >
             <agressiv-point
-            coords="50,38"
+            coords="50,43"
+            vector="300,-30"
+            ></agressiv-point>
+            <agressiv-point
+            coords="60,48"
             vector="300,-30"
             ></agressiv-point>
         </frame>
@@ -212,12 +232,16 @@ Description="">
         hardshape="4 16 33 52"
         >
             <agressiv-point
-            coords="50,38"
+            coords="60,43"
+            vector="300,-30"
+            ></agressiv-point>
+            <agressiv-point
+            coords="70,48"
             vector="300,-30"
             ></agressiv-point>
         </frame>
         <frame
-        time="300"
+        time="500"
         image="hit4.png"
         hardshape="6 16 33 52"
         > </frame>
@@ -236,7 +260,7 @@ Description="">
         image="smash-up2.png"
         hardshape="5 24 30 43"
         > <agressiv-point
-            coords="48,20"
+            coords="38,20"
             vector="100,-800"
             ></agressiv-point>
         </frame>
@@ -244,36 +268,121 @@ Description="">
         time="300"
         image="smash-up3.png"
         hardshape="5 26 30 43"
-        > <agressiv-point
-            coords="48,20"
+        >
+            <agressiv-point
+            coords="38,20"
             vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,10"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,75"
+            vector="100,300"
             ></agressiv-point>
         </frame>
         <frame
         time="450"
         image="smash-up4.png"
         hardshape="5 50 30 43"
-        > <agressiv-point
-            coords="48,20"
+        >
+            <agressiv-point
+            coords="38,5"
             vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,10"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,20"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,30"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,85"
+            vector="100,300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,95"
+            vector="100,300"
             ></agressiv-point>
         </frame>
         <frame
         time="600"
         image="smash-up5.png"
         hardshape="5 70 30 43"
-        > <agressiv-point
-            coords="48,20"
+        >
+            <agressiv-point
+            coords="38,10"
             vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,20"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,30"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,40"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,50"
+            vector="100,-800"
+            ></agressiv-point>
+
+            <agressiv-point
+            coords="33,105"
+            vector="100,300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,120"
+            vector="100,300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,135"
+            vector="100,300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,152"
+            vector="100,300"
             ></agressiv-point>
         </frame>
         <frame
         time="750"
         image="smash-up6.png"
         hardshape="5 49 30 43"
-        > <agressiv-point
-            coords="48,20"
+        >
+            <agressiv-point
+            coords="38,10"
             vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,20"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,30"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,70"
+            vector="30,200"
+            ></agressiv-point>
+            <agressiv-point
+            coords="32,80"
+            vector="30,200"
+            ></agressiv-point>
+            <agressiv-point
+            coords="31,100"
+            vector="30,200"
             ></agressiv-point>
         </frame>
         <frame
@@ -281,8 +390,16 @@ Description="">
         image="smash-up7.png"
         hardshape="5 27 30 43"
         > <agressiv-point
-            coords="48,20"
-            vector="100,-800"
+            coords="38,10"
+            vector="100,-200"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,20"
+            vector="100,-300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,70"
+            vector="30,200"
             ></agressiv-point>
         </frame>
     </movement>
@@ -294,14 +411,34 @@ Description="">
         time="0"
         image="smash-down1.png"
         hardshape= "5 13 22 60"
-        > </frame>
+        > <agressiv-point
+            coords="28,41"
+            vector="0,200"
+            ></agressiv-point>
+         <agressiv-point
+            coords="38,51"
+            vector="0,200"
+            ></agressiv-point>
+         <agressiv-point
+            coords="33,61"
+            vector="0,200"
+            ></agressiv-point>
+        </frame>
         <frame
         time="400"
         image="smash-down2.png"
         vector="0,-50"
-        hardshape= "8 10 22 48"
+        hardshape= "8 10 22 38"
         > <agressiv-point
-            coords="28,41"
+            coords="35,41"
+            vector="300,-10"
+            ></agressiv-point>
+         <agressiv-point
+            coords="35,51"
+            vector="300,-10"
+            ></agressiv-point>
+         <agressiv-point
+            coords="35,61"
             vector="300,-10"
             ></agressiv-point>
         </frame>
@@ -438,22 +575,98 @@ Description="">
         time="500"
         image="special-6.png"
         hardshape="48 10 30 50"
-        > </frame>
+        >
+            <agressiv-point
+            coords="34,50"
+            vector="0,-100"
+            ></agressiv-point>
+            <agressiv-point
+            coords="92,50"
+            vector="0,-100"
+            ></agressiv-point>
+        </frame>
         <frame
         time="600"
         image="special-7.png"
         hardshape="51 10 30 50"
-        > </frame>
+        >
+            <agressiv-point
+            coords="20,50"
+            vector="0,-100"
+            ></agressiv-point>
+            <agressiv-point
+            coords="37,40"
+            vector="0,-100"
+            ></agressiv-point>
+            <agressiv-point
+            coords="95,40"
+            vector="0,-100"
+            ></agressiv-point>
+            <agressiv-point
+            coords="113,50"
+            vector="0,-100"
+            ></agressiv-point>
+        </frame>
         <frame
         time="700"
         image="special-8.png"
         hardshape="51 10 30 50"
-        > </frame>
+        >
+            <agressiv-point
+            coords="5,50"
+            vector="0,-100"
+            ></agressiv-point>
+            <agressiv-point
+            coords="20,50"
+            vector="0,-100"
+            ></agressiv-point>
+            <agressiv-point
+            coords="37,40"
+            vector="0,-100"
+            ></agressiv-point>
+            <agressiv-point
+            coords="95,40"
+            vector="0,-100"
+            ></agressiv-point>
+            <agressiv-point
+            coords="113,50"
+            vector="0,-100"
+            ></agressiv-point>
+            <agressiv-point
+            coords="125,50"
+            vector="0,-100"
+            ></agressiv-point>
+        </frame>
         <frame
         time="800"
         image="special-9.png"
         hardshape="51 10 30 50"
-        > </frame>
+        >
+            <agressiv-point
+            coords="5,50"
+            vector="-100,-100"
+            ></agressiv-point>
+            <agressiv-point
+            coords="20,50"
+            vector="-100,-150"
+            ></agressiv-point>
+            <agressiv-point
+            coords="37,40"
+            vector="-50,-200"
+            ></agressiv-point>
+            <agressiv-point
+            coords="95,40"
+            vector="50,-200"
+            ></agressiv-point>
+            <agressiv-point
+            coords="113,50"
+            vector="100,-150"
+            ></agressiv-point>
+            <agressiv-point
+            coords="125,50"
+            vector="100,-100"
+            ></agressiv-point>
+        </frame>
         <frame
         time="900"
         image="special-10.png"
@@ -481,26 +694,6 @@ Description="">
         > </frame>
     </movement>
     <movement name="static_upgraded"
-    duration="600"
-    repeat="-1"
-    >
-        <frame
-        time="0"
-        image="static1-upgraded.png"
-        hardshape="8 10 33 52"
-        > </frame>
-        <frame
-        time="150"
-        image="static2-upgraded.png"
-        hardshape="6 10 33 52"
-        > </frame>
-        <frame
-        time="300"
-        image="static3-upgraded.png"
-        hardshape="7 10 33 52"
-        > </frame>
-    </movement>
-    <movement name="static_upgraded"
     duration="450"
     repeat="-1"
     >
@@ -521,7 +714,7 @@ Description="">
         > </frame>
     </movement>
     <movement name="take_upgraded"
-    duration="100"
+    duration="200"
     repeat="0"
     >
         <frame
@@ -530,7 +723,7 @@ Description="">
         hardshape="4 11 33 50"
         > </frame>
         <frame
-        time="50"
+        time="100"
         image="take2-upgraded.png"
         hardshape="4 9 33 50"
         > </frame>
@@ -643,7 +836,7 @@ Description="">
         hardshape= "8 20 22 48"
         >
             <agressiv-point
-            coords="59,33"
+            coords="74,46"
             vector="500,-300"
             ></agressiv-point>
         </frame>
@@ -653,7 +846,19 @@ Description="">
         hardshape= "8 20 22 48"
         >
             <agressiv-point
-            coords="59,33"
+            coords="79,49"
+            vector="500,-300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="94,49"
+            vector="500,-300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="109,49"
+            vector="500,-300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="124,49"
             vector="500,-300"
             ></agressiv-point>
         </frame>
@@ -663,7 +868,11 @@ Description="">
         hardshape= "8 20 22 48"
         >
             <agressiv-point
-            coords="59,33"
+            coords="89,49"
+            vector="500,-300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="79,49"
             vector="500,-300"
             ></agressiv-point>
         </frame>
@@ -688,7 +897,11 @@ Description="">
         hardshape="4 16 33 52"
         >
             <agressiv-point
-            coords="50,38"
+            coords="50,43"
+            vector="300,-30"
+            ></agressiv-point>
+            <agressiv-point
+            coords="60,48"
             vector="300,-30"
             ></agressiv-point>
         </frame>
@@ -703,12 +916,16 @@ Description="">
         hardshape="4 16 33 52"
         >
             <agressiv-point
-            coords="50,38"
+            coords="60,43"
+            vector="300,-30"
+            ></agressiv-point>
+            <agressiv-point
+            coords="70,48"
             vector="300,-30"
             ></agressiv-point>
         </frame>
         <frame
-        time="300"
+        time="500"
         image="hit4-upgraded.png"
         hardshape="6 16 33 52"
         > </frame>
@@ -727,7 +944,7 @@ Description="">
         image="smash-up2-upgraded.png"
         hardshape="5 24 30 43"
         > <agressiv-point
-            coords="48,20"
+            coords="38,20"
             vector="100,-800"
             ></agressiv-point>
         </frame>
@@ -735,36 +952,121 @@ Description="">
         time="300"
         image="smash-up3-upgraded.png"
         hardshape="5 26 30 43"
-        > <agressiv-point
-            coords="48,20"
+        >
+            <agressiv-point
+            coords="38,20"
             vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,10"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,75"
+            vector="100,300"
             ></agressiv-point>
         </frame>
         <frame
         time="450"
         image="smash-up4-upgraded.png"
         hardshape="5 50 30 43"
-        > <agressiv-point
-            coords="48,20"
+        >
+            <agressiv-point
+            coords="38,5"
             vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,10"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,20"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,30"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,85"
+            vector="100,300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,95"
+            vector="100,300"
             ></agressiv-point>
         </frame>
         <frame
         time="600"
         image="smash-up5-upgraded.png"
         hardshape="5 70 30 43"
-        > <agressiv-point
-            coords="48,20"
+        >
+            <agressiv-point
+            coords="38,10"
             vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,20"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,30"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,40"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,50"
+            vector="100,-800"
+            ></agressiv-point>
+
+            <agressiv-point
+            coords="33,105"
+            vector="100,300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,120"
+            vector="100,300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,135"
+            vector="100,300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,152"
+            vector="100,300"
             ></agressiv-point>
         </frame>
         <frame
         time="750"
         image="smash-up6-upgraded.png"
         hardshape="5 49 30 43"
-        > <agressiv-point
-            coords="48,20"
+        >
+            <agressiv-point
+            coords="38,10"
             vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,20"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,30"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,70"
+            vector="30,200"
+            ></agressiv-point>
+            <agressiv-point
+            coords="32,80"
+            vector="30,200"
+            ></agressiv-point>
+            <agressiv-point
+            coords="31,100"
+            vector="30,200"
             ></agressiv-point>
         </frame>
         <frame
@@ -772,8 +1074,16 @@ Description="">
         image="smash-up7-upgraded.png"
         hardshape="5 27 30 43"
         > <agressiv-point
-            coords="48,20"
-            vector="100,-800"
+            coords="38,10"
+            vector="100,-200"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,20"
+            vector="100,-300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,70"
+            vector="30,200"
             ></agressiv-point>
         </frame>
     </movement>
@@ -785,14 +1095,34 @@ Description="">
         time="0"
         image="smash-down1-upgraded.png"
         hardshape= "5 13 22 60"
-        > </frame>
+        > <agressiv-point
+            coords="28,41"
+            vector="0,200"
+            ></agressiv-point>
+         <agressiv-point
+            coords="38,51"
+            vector="0,200"
+            ></agressiv-point>
+         <agressiv-point
+            coords="33,61"
+            vector="0,200"
+            ></agressiv-point>
+        </frame>
         <frame
         time="400"
         image="smash-down2-upgraded.png"
         vector="0,-50"
-        hardshape= "8 10 22 48"
+        hardshape= "8 10 22 38"
         > <agressiv-point
-            coords="28,41"
+            coords="35,41"
+            vector="300,-10"
+            ></agressiv-point>
+         <agressiv-point
+            coords="35,51"
+            vector="300,-10"
+            ></agressiv-point>
+         <agressiv-point
+            coords="35,61"
             vector="300,-10"
             ></agressiv-point>
         </frame>
@@ -929,22 +1259,98 @@ Description="">
         time="500"
         image="special-6-upgraded.png"
         hardshape="48 10 30 50"
-        > </frame>
+        >
+            <agressiv-point
+            coords="34,50"
+            vector="0,-100"
+            ></agressiv-point>
+            <agressiv-point
+            coords="92,50"
+            vector="0,-100"
+            ></agressiv-point>
+        </frame>
         <frame
         time="600"
         image="special-7-upgraded.png"
         hardshape="51 10 30 50"
-        > </frame>
+        >
+            <agressiv-point
+            coords="20,50"
+            vector="0,-100"
+            ></agressiv-point>
+            <agressiv-point
+            coords="37,40"
+            vector="0,-100"
+            ></agressiv-point>
+            <agressiv-point
+            coords="95,40"
+            vector="0,-100"
+            ></agressiv-point>
+            <agressiv-point
+            coords="113,50"
+            vector="0,-100"
+            ></agressiv-point>
+        </frame>
         <frame
         time="700"
         image="special-8-upgraded.png"
         hardshape="51 10 30 50"
-        > </frame>
+        >
+            <agressiv-point
+            coords="5,50"
+            vector="0,-100"
+            ></agressiv-point>
+            <agressiv-point
+            coords="20,50"
+            vector="0,-100"
+            ></agressiv-point>
+            <agressiv-point
+            coords="37,40"
+            vector="0,-100"
+            ></agressiv-point>
+            <agressiv-point
+            coords="95,40"
+            vector="0,-100"
+            ></agressiv-point>
+            <agressiv-point
+            coords="113,50"
+            vector="0,-100"
+            ></agressiv-point>
+            <agressiv-point
+            coords="125,50"
+            vector="0,-100"
+            ></agressiv-point>
+        </frame>
         <frame
         time="800"
         image="special-9-upgraded.png"
         hardshape="51 10 30 50"
-        > </frame>
+        >
+            <agressiv-point
+            coords="5,50"
+            vector="-100,-100"
+            ></agressiv-point>
+            <agressiv-point
+            coords="20,50"
+            vector="-100,-150"
+            ></agressiv-point>
+            <agressiv-point
+            coords="37,40"
+            vector="-50,-200"
+            ></agressiv-point>
+            <agressiv-point
+            coords="95,40"
+            vector="50,-200"
+            ></agressiv-point>
+            <agressiv-point
+            coords="113,50"
+            vector="100,-150"
+            ></agressiv-point>
+            <agressiv-point
+            coords="125,50"
+            vector="100,-100"
+            ></agressiv-point>
+        </frame>
         <frame
         time="900"
         image="special-10-upgraded.png"

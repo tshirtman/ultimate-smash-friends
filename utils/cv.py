@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# coding:utf-8
 import pygame
 from pygame import locals
 from pygame.locals import (
@@ -19,6 +20,7 @@ from pygame.locals import (
     K_MINUS,
     K_KP_PLUS,
     K_KP_MINUS,
+    K_p,
     )
 
 import sys, os
@@ -52,6 +54,8 @@ def main(charname):
     display_hardshape = True
     speed = 1.0
     font = pygame.font.Font(pygame.font.get_default_font(), 12)
+    pause = False
+    frame = 0
 
     bottom_center_hardshape = (200, 250)
     while True:
@@ -76,6 +80,16 @@ def main(charname):
                 elif event.key == K_F5:
                     entity_skin = Entity_skin(path)
                     print "reloaded"
+                elif event.key == K_p:
+                    if pause:
+                        print "normal mode"
+                    else:
+                        print "pause: frame mode, chose frame with ← and →"
+                    pause = not pause
+                elif event.key == K_RIGHT:
+                    frame +=1
+                elif event.key == K_LEFT:
+                    frame -=1
                 elif event.key == K_UP:
                     anim +=1
                 elif event.key == K_DOWN:
@@ -106,13 +120,17 @@ def main(charname):
         # update screen
         screen.fill(pygame.Color('green'))
         try:
-            img = filter(
-                        lambda f : f.time <= (
-                            (time.time()*1000.0*speed) %
-                            entity_skin.animations[animation].duration
-                            ),
-                        entity_skin.animations[animation].frames
-                        )[-1]
+            if not pause:
+                img = filter(
+                            lambda f : f.time <= (
+                                (time.time()*1000.0*speed) %
+                                entity_skin.animations[animation].duration
+                                ),
+                            entity_skin.animations[animation].frames
+                            )[-1]
+            else:
+                frame %= len(entity_skin.animations[animation].frames)
+                img = entity_skin.animations[animation].frames[frame]
         except Exception, e:
             print e
         position = (
@@ -172,5 +190,28 @@ def main(charname):
         pygame.display.flip()
     inotifyx.rm_watch(wd)
 
+
+def usage():
+    print "usage: cv.py character_name"
+    print """the character viewer has two mode of displaying: normal, and frame,
+    the 'p' key allow you to switch mode.
+
+    In both modes, the ↑ and ↓ keys allow you to chose the played animation.
+
+    In normal mode, the current animation is played over and over,
+        You can change speed of the animation with + (faster) and - (slower)
+
+    In frame mode the current frame is always displayed,
+        You can use the ← and → keys to chose the current frame.
+
+    I your system support inotify and your python installation contains the
+    inotifyx module, the character will be automagicaly reloaded when modified,
+    if not you can use ther F5 key to do so.
+"""
+
+
 if __name__ == '__main__':
-    main(sys.argv[1])
+    if len(sys.argv) != 2 or sys.argv[1] == "help":
+        usage()
+    else:
+        main(sys.argv[1])
