@@ -4,6 +4,7 @@
     background="tellara-background.png"
     foreground=""
     middle="tellara-foreground.png"
+    margins="1250,1250,1250,1250"
     >
     <entry-point
         coords="750 50">

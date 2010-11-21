@@ -4,6 +4,7 @@
 	background="pyramid-background.png"
 	foreground="pyramid-foreground.png"
 	middle="pyramid-middle.png"
+        margins="1250,1250,1250,1250"
 	>
 	<block coords="76 373 270 46" ></block>
 	<block coords="343 241 190 44" ></block>

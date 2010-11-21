@@ -4,7 +4,7 @@
     background="cave-background.png"
     foreground="cave-foreground.png"
     middle="cave-middle.png"
-    margins="250,250,250,250"
+    margins="1250,1250,1250,1250"
     >
     <block coords="176 54 124 57" ></block>
     <block coords="158 546 142 44" ></block>
@@ -17,7 +17,7 @@
     <block coords="813 158 172 45" ></block>
     <block coords="255 324 91 33" ></block>
     <block coords="15 281 90 69" ></block>
-    
+
     <entry-point coords="50 100"></entry-point>
     <entry-point coords="410 100"></entry-point>
     <entry-point coords="710 100"></entry-point>
