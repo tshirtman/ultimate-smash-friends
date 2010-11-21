@@ -70,7 +70,7 @@ Description="">
         > </frame>
     </movement>
     <movement name="jump"
-    duration="1500"
+    duration="15000"
     repeat="0"
     >
         <event
@@ -105,7 +105,7 @@ Description="">
         > </frame>
     </movement>
     <movement name="scnd-jump"
-    duration="200"
+    duration="2000"
     repeat="0"
     >
         <event
@@ -279,6 +279,175 @@ Description="">
         image="hit2.png"
         hardshape="8 16 33 52"
         > </frame>
+    </movement>
+    <movement name="smash-up-jumping"
+    duration="10000"
+    repeat="0"
+    >
+        <vector
+        time="100"
+        vector="0,800"
+        ></vector>
+        <vector
+        time="200"
+        vector="0,800"
+        ></vector>
+        <vector
+        time="300"
+        vector="0,800"
+        ></vector>
+        <frame
+        time="0"
+        image="smash-up1.png"
+        hardshape="5 20 30 43"
+        > </frame>
+        <frame
+        time="150"
+        image="smash-up2.png"
+        hardshape="5 24 30 43"
+        > <agressiv-point
+            coords="38,20"
+            vector="100,-800"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="300"
+        image="smash-up3.png"
+        hardshape="5 26 30 43"
+        >
+            <agressiv-point
+            coords="38,20"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,10"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,75"
+            vector="100,300"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="450"
+        image="smash-up4.png"
+        hardshape="5 50 30 43"
+        >
+            <agressiv-point
+            coords="38,5"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,10"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,20"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,30"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,85"
+            vector="100,300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,95"
+            vector="100,300"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="600"
+        image="smash-up5.png"
+        hardshape="5 70 30 43"
+        >
+            <agressiv-point
+            coords="38,10"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,20"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,30"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,40"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,50"
+            vector="100,-800"
+            ></agressiv-point>
+
+            <agressiv-point
+            coords="33,105"
+            vector="100,300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,120"
+            vector="100,300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,135"
+            vector="100,300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,152"
+            vector="100,300"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="750"
+        image="smash-up6.png"
+        hardshape="5 49 30 43"
+        >
+            <agressiv-point
+            coords="38,10"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,20"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,30"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,70"
+            vector="30,200"
+            ></agressiv-point>
+            <agressiv-point
+            coords="32,80"
+            vector="30,200"
+            ></agressiv-point>
+            <agressiv-point
+            coords="31,100"
+            vector="30,200"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="900"
+        image="smash-up7.png"
+        hardshape="5 27 30 43"
+        > <agressiv-point
+            coords="38,10"
+            vector="100,-200"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,20"
+            vector="100,-300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,70"
+            vector="30,200"
+            ></agressiv-point>
+        </frame>
     </movement>
     <movement name="smash-up"
     duration="1000"
@@ -788,7 +957,7 @@ Description="">
         > </frame>
     </movement>
     <movement name="jump_upgraded"
-    duration="1500"
+    duration="15000"
     repeat="0"
     >
         <event
@@ -823,7 +992,7 @@ Description="">
         > </frame>
     </movement>
     <movement name="scnd-jump_upgraded"
-    duration="200"
+    duration="20000"
     repeat="0"
     >
         <event
@@ -997,16 +1166,172 @@ Description="">
         image="hit2-upgraded.png"
         hardshape="8 16 33 52"
         > </frame>
-        <frame
-        time="500"
-        image="hit4-upgraded.png"
-        hardshape="6 16 33 52"
-        > </frame>
     </movement>
     <movement name="smash-up_upgraded"
     duration="1000"
     repeat="0"
     >
+        <frame
+        time="0"
+        image="smash-up1-upgraded.png"
+        hardshape="5 20 30 43"
+        > </frame>
+        <frame
+        time="150"
+        image="smash-up2-upgraded.png"
+        hardshape="5 24 30 43"
+        > <agressiv-point
+            coords="38,20"
+            vector="100,-800"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="300"
+        image="smash-up3-upgraded.png"
+        hardshape="5 26 30 43"
+        >
+            <agressiv-point
+            coords="38,20"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,10"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,75"
+            vector="100,300"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="450"
+        image="smash-up4-upgraded.png"
+        hardshape="5 50 30 43"
+        >
+            <agressiv-point
+            coords="38,5"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,10"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,20"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,30"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,85"
+            vector="100,300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,95"
+            vector="100,300"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="600"
+        image="smash-up5-upgraded.png"
+        hardshape="5 70 30 43"
+        >
+            <agressiv-point
+            coords="38,10"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,20"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,30"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,40"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,50"
+            vector="100,-800"
+            ></agressiv-point>
+
+            <agressiv-point
+            coords="33,105"
+            vector="100,300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,120"
+            vector="100,300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,135"
+            vector="100,300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,152"
+            vector="100,300"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="750"
+        image="smash-up6-upgraded.png"
+        hardshape="5 49 30 43"
+        >
+            <agressiv-point
+            coords="38,10"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,20"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,30"
+            vector="100,-800"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,70"
+            vector="30,200"
+            ></agressiv-point>
+            <agressiv-point
+            coords="32,80"
+            vector="30,200"
+            ></agressiv-point>
+            <agressiv-point
+            coords="31,100"
+            vector="30,200"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="900"
+        image="smash-up7-upgraded.png"
+        hardshape="5 27 30 43"
+        > <agressiv-point
+            coords="38,10"
+            vector="100,-200"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,20"
+            vector="100,-300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,70"
+            vector="30,200"
+            ></agressiv-point>
+        </frame>
+    </movement>
+    <movement name="smash-up-jumping_upgraded"
+    duration="10000"
+    repeat="0"
+    >
+        <vector
+        time="100"
+        vector="0,1200"
+        ></vector>
         <frame
         time="0"
         image="smash-up1-upgraded.png"
