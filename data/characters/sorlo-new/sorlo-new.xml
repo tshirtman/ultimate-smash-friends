@@ -193,7 +193,7 @@ Description="">
             ></agressiv-point>
         </frame>
     </movement>
-    <movement name="hit"
+    <movement name="kick"
     duration="700"
     repeat="0"
     >
@@ -244,6 +244,40 @@ Description="">
         time="500"
         image="hit4.png"
         hardshape="6 16 33 52"
+        > </frame>
+    </movement>
+    <movement name="hit"
+    duration="400"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="hit1.png"
+        hardshape="8 16 33 52"
+        > </frame>
+        <frame
+        time="100"
+        image="hit2.png"
+        hardshape="8 16 33 52"
+        > </frame>
+        <frame
+        time="200"
+        image="hit3.png"
+        hardshape="4 16 33 52"
+        >
+            <agressiv-point
+            coords="50,43"
+            vector="300,-30"
+            ></agressiv-point>
+            <agressiv-point
+            coords="60,48"
+            vector="300,-30"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="300"
+        image="hit2.png"
+        hardshape="8 16 33 52"
         > </frame>
     </movement>
     <movement name="smash-up"
@@ -877,7 +911,7 @@ Description="">
             ></agressiv-point>
         </frame>
     </movement>
-    <movement name="hit_upgraded"
+    <movement name="kick_upgraded"
     duration="700"
     repeat="0"
     >
@@ -924,6 +958,45 @@ Description="">
             vector="300,-30"
             ></agressiv-point>
         </frame>
+        <frame
+        time="500"
+        image="hit4-upgraded.png"
+        hardshape="6 16 33 52"
+        > </frame>
+    </movement>
+    <movement name="hit_upgraded"
+    duration="400"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="hit1-upgraded.png"
+        hardshape="8 16 33 52"
+        > </frame>
+        <frame
+        time="100"
+        image="hit2-upgraded.png"
+        hardshape="8 16 33 52"
+        > </frame>
+        <frame
+        time="200"
+        image="hit3-upgraded.png"
+        hardshape="4 16 33 52"
+        >
+            <agressiv-point
+            coords="50,43"
+            vector="300,-30"
+            ></agressiv-point>
+            <agressiv-point
+            coords="60,48"
+            vector="300,-30"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="300"
+        image="hit2-upgraded.png"
+        hardshape="8 16 33 52"
+        > </frame>
         <frame
         time="500"
         image="hit4-upgraded.png"
