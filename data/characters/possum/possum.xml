@@ -70,7 +70,7 @@
         > </frame>
     </movement>
     <movement name="jump"
-    duration="1500"
+    duration="15000"
     repeat="0"
     >
         <event
@@ -109,7 +109,7 @@
         > </frame>
     </movement>
     <movement name="scnd-jump"
-    duration="200"
+    duration="20000"
     repeat="0"
     >
         <event
@@ -192,7 +192,7 @@
         </frame>
     </movement>
     <!--movement name="smash-up-jumping"
-    duration="0"
+    duration="10000"
     repeat="0"
     >
         <event
@@ -413,7 +413,7 @@
         </frame>
     </movement>
     <movement name="kick-jumping"
-    duration="500"
+    duration="50000"
     repeat="0"
     >
         <event
@@ -499,7 +499,7 @@
         > </frame>
     </movement>
     <movement name="jump_upgraded"
-    duration="1500"
+    duration="15000"
     repeat="0"
     >
         <event
@@ -538,7 +538,7 @@
         > </frame>
     </movement>
     <movement name="scnd-jump_upgraded"
-    duration="200"
+    duration="20000"
     repeat="0"
     >
         <event
@@ -616,7 +616,7 @@
         </frame>
     </movement>
     <!--movement name="smash-up-jumping"
-    duration="0"
+    duration="10000"
     repeat="0"
     >
         <event
@@ -832,7 +832,7 @@
         </frame>
     </movement>
     <movement name="kick-jumping_upgraded"
-    duration="500"
+    duration="50000"
     repeat="0"
     >
         <event
