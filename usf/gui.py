@@ -176,7 +176,7 @@ class Gui(object):
         This function handles the callback return by thz screens
         with the function event_callback().
         This callback needs to be a string; otherwise, it will be ignored.
-        
+
         The reply can be:
             goto:myscreen
                 where my screen is the name of the screen loaded in __init__()
@@ -194,7 +194,9 @@ class Gui(object):
         if type(reply) == str:
             if reply.split(':')[0] == 'goto':
                 animation = True
-                loaders.track(os.path.join(config.sys_data_dir, "sounds", "mouseClick2.wav")).play()
+                sound = loaders.track(os.path.join(config.sys_data_dir, "sounds", "mouseClick2.wav"))
+                sound.set_volume(config.audio['SOUND_VOLUME']/100.0)
+                sound.play()
                 old_screen = self.screens[self.screen_current]
                 old_surface = self.screens[self.screen_current].widget.draw()
                 if reply.split(':')[1] == 'back':
