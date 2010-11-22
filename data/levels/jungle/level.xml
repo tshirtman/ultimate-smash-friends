@@ -4,7 +4,7 @@
         background="jungle-background.png"
         foreground="jungle-foreground.png"
         middle="jungle-middle.png"
-        margins="1250,1250,1250,1250"
+        margins="750,750,750,750"
         >
         <block coords="0 443 167 77" ></block>
         <block coords="330 227 125 69" ></block>

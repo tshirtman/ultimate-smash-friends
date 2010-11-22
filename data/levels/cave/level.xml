@@ -4,7 +4,7 @@
     background="cave-background.png"
     foreground="cave-foreground.png"
     middle="cave-middle.png"
-    margins="1250,1250,1250,1250"
+    margins="750,750,750,750"
     >
     <block coords="176 54 124 57" ></block>
     <block coords="158 546 142 44" ></block>
