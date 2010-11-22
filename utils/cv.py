@@ -21,6 +21,7 @@ from pygame.locals import (
     K_KP_PLUS,
     K_KP_MINUS,
     K_p,
+    K_s,
     )
 
 import sys, os
@@ -41,7 +42,6 @@ from entity_skin import Entity_skin
 from loaders import image
 
 def main(charname):
-
     pygame.init()
     screen = pygame.display.set_mode((400,400))
     path = os.path.join(
@@ -55,6 +55,7 @@ def main(charname):
     speed = 1.0
     font = pygame.font.Font(pygame.font.get_default_font(), 12)
     pause = False
+    shield = False
     frame = 0
 
     bottom_center_hardshape = (200, 250)
@@ -80,6 +81,8 @@ def main(charname):
                 elif event.key == K_F5:
                     entity_skin = Entity_skin(path)
                     print "reloaded"
+                elif event.key == K_s:
+                    shield = not shield
                 elif event.key == K_p:
                     if pause:
                         print "normal mode"
@@ -133,6 +136,8 @@ def main(charname):
                 img = entity_skin.animations[animation].frames[frame]
         except Exception, e:
             print e
+        # update the position of the up-left corner of image, so that the
+        # bottom-middle of the hardhape never moves (as in the game)
         position = (
             bottom_center_hardshape[0] - img.hardshape[0] - img.hardshape[2]/2,
             bottom_center_hardshape[1] - img.hardshape[1] - img.hardshape[3]
@@ -165,6 +170,36 @@ def main(charname):
                 ),
             (10,10)
             )
+
+        if shield:
+            pygame.draw.circle(
+                screen,
+                pygame.Color('red'),
+                (
+                    position[0] + img.hardshape[0] + entity_skin.shield_center[0],
+                    position[1] + img.hardshape[1] + entity_skin.shield_center[1]
+                ),
+                10
+            )
+
+            image_shield = image(
+                    os.path.sep.join(('..','data','misc','shield.png')),
+                    zoom=3
+                    )
+
+            screen.blit(
+                image_shield[0],
+                (
+                        position[0]
+                        + entity_skin.shield_center[0]
+                        - .5 * image_shield[1][2]
+                        ,
+                        position[1]
+                        + entity_skin.shield_center[1]
+                        - .5 * image_shield[1][3]
+                )
+                )
+
         for i in img.agressivpoints:
             pygame.draw.ellipse(
                 screen,
@@ -190,13 +225,16 @@ def main(charname):
         pygame.display.flip()
     inotifyx.rm_watch(wd)
 
-
 def usage():
     print "usage: cv.py character_name"
     print """the character viewer has two mode of displaying: normal, and frame,
-    the 'p' key allow you to switch mode.
 
-    In both modes, the ↑ and ↓ keys allow you to chose the played animation.
+    In both modes:
+        the ↑ and ↓ keys allow you to chose the played animation.
+        the space key allow to switch boxes (image size and hardshape) displays
+        the p key allow to switch mode (hint: pause)
+        the s key allow to switch shield display (only used with static
+        animation)
 
     In normal mode, the current animation is played over and over,
         You can change speed of the animation with + (faster) and - (slower)
