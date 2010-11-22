@@ -253,7 +253,7 @@ class Game (object):
             ), scale=(config.general["WIDTH"], hud_height))[0],
           (0,config.general["HEIGHT"]-hud_height)
         )
-        
+
         # draw players portraits at bottom of screen
         for num, player in enumerate(self.players):
             self.screen.blit(
@@ -493,8 +493,8 @@ class Game (object):
         # agressive point collision between entities players.
         for entity in self.players+self.items:
             for point in entity.entity_skin.animation.agressivpoints:
-                for pl in [ i for i in self.players+self.items\
-                                if i is not entity\
+                for pl in [ i for i in self.players+self.items
+                                if i is not entity
                                 and i.invincible is False ]:
                     if pl.collide_point([point[0][0]+entity.rect[0],
                                          point[0][1]+entity.rect[1]] )is not -1:

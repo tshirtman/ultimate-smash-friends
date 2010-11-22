@@ -245,15 +245,14 @@ class Controls (object):
                                     i.remove(sequence)
 
         elif state is KEYUP:
-            if isinstance(game_instance,  game.NetworkClientGame):
+            if isinstance(game_instance, game.NetworkClientGame):
                 game_instance.client.send(key, 'up')
 
             elif isinstance(game_instance, game.NetworkServerGame):
                 pass
             else:
                 try:
-                    numplayer = int(self.keys[key].split('_')\
-                                [0][-1])-1
+                    numplayer = int(self.keys[key].split('_')[0][-1])-1
                     if(not game_instance.players[numplayer].ai):
                         for player in game_instance.players:
                             if key not in self.keys : break
@@ -288,6 +287,7 @@ class Controls (object):
                                                 params={'entity': player}
                                                 )
                 except:
+                    # FIXME: OMGthisisSOwrong...
                     pass
         return ret
 
@@ -310,6 +310,7 @@ class Controls (object):
                             player.ai_ = AI()
                     i+=1
             except:
+                # FIXME: OMGthisisSOwrong...
                 pass
         #update sequence after AI
         for sequence in self.player_sequences:
