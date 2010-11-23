@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: ultimate-smash-friends\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2010-07-29 17:26+0200\n"
-"PO-Revision-Date: 2010-11-13 23:02+0000\n"
-"Last-Translator: Max Strube <Unknown>\n"
+"PO-Revision-Date: 2010-11-22 13:12+0000\n"
+"Last-Translator: cmdrhenner <cmdrhenner@gmail.com>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-14 05:16+0000\n"
+"X-Launchpad-Export-Date: 2010-11-23 05:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: game.py:308
@@ -105,7 +105,7 @@ msgstr "KI:"
 
 #: screen/characters.py:117 screen/characters.py:140
 msgid "Next"
-msgstr ""
+msgstr "Weiter"
 
 #: screen/keyboard.py:33
 msgid "keyboard"
@@ -113,7 +113,7 @@ msgstr "Tastatur"
 
 #: screen/keyboard.py:48
 msgid "Shield"
-msgstr ""
+msgstr "Schild"
 
 #: screen/sound.py:29
 msgid "Sound and effects"
@@ -150,4 +150,5 @@ msgstr ""
 "Launchpad Contributions:\n"
 "  Konstantin Renner https://launchpad.net/~konsti\n"
 "  Max Strube https://launchpad.net/~maxstr\n"
+"  cmdrhenner https://launchpad.net/~cmdrhenner\n"
 "  xapantu https://launchpad.net/~xapantu"
