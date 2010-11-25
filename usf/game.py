@@ -65,8 +65,11 @@ class Game (object):
         level is the basename of the level in levels/
 
         """
-        self.SIZE = (config.general['WIDTH'],
-                config.general['HEIGHT'])
+        self.SIZE = (
+            config.general['WIDTH'],
+            config.general['HEIGHT']
+            )
+
         self.notif = []
         self.ingame = True
         self.ended = False
@@ -146,6 +149,7 @@ class Game (object):
                             )
                         )
                 self.players[len(self.players)-1].ai = True
+
             else:
                 self.players.append(
                         entity.Entity(
