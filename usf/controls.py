@@ -323,6 +323,7 @@ class Controls (object):
                          'entity':game_instance.players[i.player]
                          }
                         )
+        # if this is a network server game
         if isinstance(game_instance, game.NetworkServerGame):
             while True:
                 k = game_instance.server.fetch()
@@ -348,7 +349,7 @@ class Controls (object):
 
             # clean sequences from outdated keys
             for index, sequence in enumerate(self.player_sequences):
-                limit_time = time.time()-.500
+                limit_time = time.time()-.5
                 # clean the entire sequence if the last key is outdated.
                 if sequence != [] and sequence[-1][1] < limit_time:
                     self.player_sequences[index] = []
