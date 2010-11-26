@@ -134,7 +134,7 @@ else:
                        'Programming Language :: Python',
                        'Topic :: Games/Entertainment :: Arcade'
                       ],
-          packages=['usf', 'usf.widgets', 'usf.screen'],
+          packages=['usf', 'usf.widgets', 'usf.screen', 'usf.subpixel'],
           scripts=SCRIPTS,
           requires=['pygame (>=1.6)', 'python (>=2.5)'],
           data_files=(DATA + DOC + CONFIG + ICON),
