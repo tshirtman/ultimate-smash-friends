@@ -82,6 +82,7 @@ if OS == 'windows':
     DATA = [(item[0], item[1]) for item in files('data')]
     DATA.append('CREDITS.txt')
     WINDOWS=[{"script" : "ultimate-smash-friends", "icon_resources" : [(1, "data/icon/icon.ico")]}]
+    APP = None
 
 elif OS == 'darwin':
     DATA = [(item[0], item[1]) for item in files('data')]
@@ -94,7 +95,7 @@ elif OS == 'darwin':
                  CFBundleExecutable=NAME,
                  CFBundleIdentifier='org.pythonmac.ultimate-smash-friends'
                 )
-    app=[dict(script='ultimate-smash-friends.py', plist=PLIST)]
+    APP = [dict(script='ultimate-smash-friends.py', plist=PLIST)]
     OPTIONS = {'argv_emulation': True}
     WINDOWS = None
 else:
@@ -102,9 +103,10 @@ else:
             for item in files('data')]
     DATA.append((join('share', 'ultimate-smash-friends') + sep + 'data', ['CREDITS.txt']))
     WINDOWS = None
+    APP = None
 
 setup(name=NAME, version=VERSION, description=DESCRIPTION, 
       author=AUTHOR, author_email=AUTHOR_EMAIL, 
       maintainer=MAINTAINER, maintainer_email=MAINTAINER_EMAIL, url=URL,
       classsifiers=CLASSIFIERS, packages=PACKAGES, scripts=SCRIPTS, 
-      requires=REQUIRES, data_files=DATA, windows=WINDOWS)
+      requires=REQUIRES, data_files=DATA, windows=WINDOWS, app=APP)
