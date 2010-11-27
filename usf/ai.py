@@ -35,6 +35,27 @@ class AI(object):
     block = None
     wait_time = 0
 
+    def escape_routine(self, entity):
+        # this routine should decide what action to do next if the AI try to
+        # escape from another entity
+        pass
+
+    def fight_routine(self, entity):
+        # this routine should decide what action to do next if the AI try to
+        # fight with an entity
+        pass
+
+    def find_routine(self, entity):
+        # this routine should decide what action to do next if the AI try to
+        # go to the place of an entity
+        pass
+
+
+    def forward_position(self, t):
+        # this function should return the position of the player t milliseconds
+        # forward in the future, if it persist in it's current movement.
+        pass
+
     def update_enemy (self) :
         """
         This function update the information about different enemys
