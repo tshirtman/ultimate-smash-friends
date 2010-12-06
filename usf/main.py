@@ -133,7 +133,7 @@ class Main(object):
                 self.lock.acquire()
                 self.stop_thread = True
                 self.lock.release()
-            except Exception, e:
+            except Exception as e:
                 try:
                     if not config.general["DEBUG"]:
                         self.lock.acquire()
@@ -148,7 +148,7 @@ class Main(object):
                     self.lock.acquire()
                     self.stop_thread = True
                     self.lock.release()
-                    print e
+                    logging.debug(e)
                     raise
             self.go()
 
@@ -315,14 +315,13 @@ class Main(object):
 
     def author(self):
         if 'CREDITS' not in os.listdir(os.path.join(config.sys_data_dir)):
-            print config.sys_data_dir
-            print '\n'.join(os.listdir(os.path.join(config.sys_data_dir)))
-            print "plop?"
+            logging.info(config.sys_data_dir)
+            logging.info('\n'.join(os.listdir(os.path.join(config.sys_data_dir))))
             logging.debug(config.sys_data_dir+'/CREDITS file not found')
             #sys.exit(0)
         else:
             author_file = open(os.path.join(config.sys_data_dir,'CREDITS'))
-            print author_file.read()
+            logging.info(author_file.read())
             author_file.close()
             #sys.exit(2)
 

@@ -226,7 +226,7 @@ class Entity (object):
         return pygame.Rect(
                 self.rect[0]+self.entity_skin.animation.hardshape[0],
                 self.rect[1]+
-                    self.entity_skin.animation.hardshape[1]+
+                    #self.entity_skin.animation.hardshape[1]+
                     self.entity_skin.animation.hardshape[3],
                 self.entity_skin.animation.hardshape[2],
                 15
@@ -574,7 +574,7 @@ class Entity (object):
         ]
 
         # Gravity
-        if self.gravity and self.physic:#and not self.onGround:
+        if self.gravity and self.physic and not self.onGround:
             self.vector[1] += float(config.general['GRAVITY']) * dt
         elif not self.physic:
             #FIXME : it is a bit hackish
@@ -583,7 +583,7 @@ class Entity (object):
         # Application of air friction.
         F = config.general['AIR_FRICTION'] * environnement_friction
 
-        if self.physic: #and not a bullet
+        if self.physic: #FIXME: and not a bullet
             self.vector[0] -= (F * self.vector[0] * dt)
             self.vector[1] -= (F * self.vector[1] * dt)
 

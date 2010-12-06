@@ -53,7 +53,7 @@ class FontList(object):
         if self.list.has_key(item):
             return self.list[item]
         else:
-            print "No font named" + str(item)
+            logging.info("No font named" + str(item))
             return self.list['sans']
 
 
@@ -84,7 +84,7 @@ class Font(object):
             return self.bolditalic
         if not self.size.has_key(item):
             self.size[item] = pygame.font.Font(self.font_file, 480/int(item))
-        #print "No font named : " + str(item)
+        #logging.info("No font named : " + str(item))
 
         return self.size[item]
 

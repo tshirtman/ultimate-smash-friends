@@ -689,7 +689,7 @@ class ThreadedTCPRequestHandler(SocketServer.BaseRequestHandler):
                 self.request.send(response)
         except:
             raise
-            print "client quit"
+            logging.info("client quit")
 
 class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     pass
@@ -763,7 +763,7 @@ class NetworkServerGame(Game):
         # Exit the server thread when the main thread terminates
         server_thread.setDaemon(True)
         server_thread.start()
-        print "Server loop running in thread:", server_thread.getName()
+        logging.info("Server loop running in thread:", server_thread.getName())
 
         # choose level
 
@@ -785,7 +785,7 @@ class NetworkServerGame(Game):
         As we are in server mode, there will be no drawing.
 
         """
-        print self.gamestring
+        logging.info(self.gamestring)
         pass
 
     def update(self, debug_params={}):
@@ -817,7 +817,7 @@ class NetworkClientGame(Game):
         for i in range(10):
             sock.send(message+" "+str(i))
             response = sock.recv(1024)
-            print "Received: %s" % response
+            logging.info("Received: %s" % response)
             time.sleep(1)
 
         sock.close()

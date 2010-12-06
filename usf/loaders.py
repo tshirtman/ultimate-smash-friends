@@ -192,7 +192,7 @@ def track(name):
         return pygame.mixer.Sound(name)
     except (pygame.error):
         # no sound
-        print "Unable to initialize audio."
+        logging.info("Unable to initialize audio.")
         return None
 
 @memoize
