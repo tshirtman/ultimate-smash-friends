@@ -115,8 +115,11 @@ class Entity_skin (object):
             attribs['shield_center'].split(' ')
             ]
         else:
-            logging.warning('warning, character '+self.name+' has no attribute\
-shield_center, guessing from hardshape')
+            logging.warning(
+                'warning, entity '+self.name+' has no attribute shield_center'+
+                ', guessing from hardshape'
+                )
+
             self.shield_center = (
                 self.hardshape[0] + .5 * self.hardshape[2],
                 self.hardshape[1] + .5 * self.hardshape[3]

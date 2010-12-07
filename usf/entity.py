@@ -303,9 +303,15 @@ class Entity (object):
         points = []
         for i in range(Entity.nb_points):
             points.append((
-                    Entity.list_sin_cos[i][0] * self.entity_skin.hardshape[2] / 2 + self.entity_skin.hardshape[2]/2 + self.entity_skin.hardshape[0] + self.rect[0] + x,
-                    Entity.list_sin_cos[i][1] * self.rect[3] / 2 + self.rect[3]/2 + self.rect[1] + y
-                    ))
+                Entity.list_sin_cos[i][0] * self.entity_skin.hardshape[2] / 2 +
+                self.entity_skin.hardshape[2]/2 +
+                self.entity_skin.hardshape[0] +
+                self.rect[0] + x,
+
+                Entity.list_sin_cos[i][1] * self.rect[3] / 2 +
+                self.rect[3]/2 +
+                self.rect[1] + y
+                ))
 
         return points
 
@@ -322,21 +328,10 @@ class Entity (object):
         """
 
         # this test should optimise most of situations.
-        if game.level.collide_rect(self.rect[:2], self.rect[2:]) != -1 and self.physic:
+        if (game.level.collide_rect(self.rect[:2], self.rect[2:]) != -1 and
+            self.physic):
             points = self.update_points()
             self.onGround = False
-
-            #first test if the entity hit fast enought that the middle points
-            #touched
-            if (game.level.collide_point(points[self.UPPER_LEFT])
-                and game.level.collide_point(points[self.UPPER_RIGHT]))\
-            or (game.level.collide_point(points[self.LOWER_LEFT])
-                and game.level.collide_point(points[self.LOWER_RIGHT])):
-                while game.level.collide_point(points[self.UPPER_LEFT])\
-                or game.level.collide_point(points[self.UPPER_RIGHT]):
-                    self.move(( 0, -(abs(self.vector[1])/self.vector[1])))
-                    points = self.update_points()
-
 
             # if one of the two lowers points collide, the entity bounce up and
             # it's horizontal speed is lowered
