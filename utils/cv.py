@@ -176,8 +176,10 @@ def main(charname):
                 screen,
                 pygame.Color('red'),
                 (
-                    position[0] + img.hardshape[0] + entity_skin.shield_center[0],
-                    position[1] + img.hardshape[1] + entity_skin.shield_center[1]
+                    int(position[0] + img.hardshape[0] +
+                    entity_skin.shield_center[0]),
+                    int(position[1] + img.hardshape[1] +
+                    entity_skin.shield_center[1])
                 ),
                 10
             )
