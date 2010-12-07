@@ -508,12 +508,12 @@ class Entity (object):
 
                 shield_coords = (
                      coords[0] + int (
-                     self.place[0]
+                     self.rect[0]
                      + self.entity_skin.shield_center[0]
                      - .5 * image[1][2]
                     ) * zoom
                     , coords[1] + int (
-                     self.place[1]
+                     self.rect[1]
                      + self.entity_skin.shield_center[1]
                      - .5 * image[1][3]
                     ) * zoom
