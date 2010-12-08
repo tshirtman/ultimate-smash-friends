@@ -195,7 +195,6 @@ class Main(object):
             launch_character_creator()
         """
 
-
         if options.level:
             self.level = options.level
 
@@ -229,7 +228,7 @@ class Main(object):
 
         SIZE = (config.general['WIDTH'], config.general['HEIGHT'])
         self.screen = pygame.display.set_mode(SIZE)
-        
+
         pygame.display.set_caption('Ultimate Smash Friends')
         icon = loaders.image(os.path.join(config.sys_data_dir, 'icon',
                                           'icon_50.png'))[0]
@@ -288,7 +287,7 @@ class Main(object):
             if config.general["SHOW_FPS"]:
                 self.screen.blit(loaders.text("FPS: " + str(self.clock.get_fps()), fonts["mono"]["38"]), (10, 5))
             pygame.display.update()
-            
+
             if self.menu.screen_current == 'about':
                 music_state = 'credits'
             else:
@@ -308,10 +307,6 @@ class Main(object):
                 max_fps = 1000/config.general["MAX_GUI_FPS"]
                 if pygame.time.get_ticks() < max_fps + start_loop:
                     pygame.time.wait(max_fps + start_loop - pygame.time.get_ticks())
-                """
-                if pygame.time.get_ticks() - (start_loop + 1.0/float(config.general["MAX_GUI_FPS"])) > 0:
-                    pygame.time.wait(int(pygame.time.get_ticks() - (start_loop + 1.0/float(config.general["MAX_GUI_FPS"]))))
-                """
 
     def author(self):
         if 'CREDITS' not in os.listdir(os.path.join(config.sys_data_dir)):
@@ -336,7 +331,7 @@ class Main(object):
         try:
             while(True):
                 start_loop = pygame.time.get_ticks()
-                
+
                 self.lock.acquire()
 
                 self.screen.fill(pygame.color.Color("black"))

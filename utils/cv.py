@@ -26,6 +26,7 @@ from pygame.locals import (
 
 import sys, os
 import time
+import logging
 
 usf_root='../'
 
@@ -33,7 +34,10 @@ try:
     import inotifyx
     fd = inotifyx.init()
 except:
-    print "no inotify, update manualy"
+    logging.warning(
+        "inotifyx module not present on your system, install it or use F5 "+
+        "to update display manualy"
+        )
     inotifyx = False
 
 sys.path.append(os.path.join(usf_root,'usf'))
@@ -176,10 +180,8 @@ def main(charname):
                 screen,
                 pygame.Color('red'),
                 (
-                    int(position[0] + img.hardshape[0] +
-                    entity_skin.shield_center[0]),
-                    int(position[1] + img.hardshape[1] +
-                    entity_skin.shield_center[1])
+                    position[0] + img.hardshape[0] + entity_skin.shield_center[0],
+                    position[1] + img.hardshape[1] + entity_skin.shield_center[1]
                 ),
                 10
             )
