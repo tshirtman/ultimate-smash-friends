@@ -45,12 +45,25 @@ sys.path.append(os.path.join(usf_root,'usf'))
 from entity_skin import Entity_skin
 from loaders import image
 
+def create_character_xml(path):
+    """ create a stub xml character """
+    #TODO!
+    pass
+
 def main(charname):
     pygame.init()
     screen = pygame.display.set_mode((400,400))
     path = os.path.join(
         usf_root, 'data', 'characters', charname
         )
+    if os.path.exists(path):
+        if not os.path.exists(
+            os.path.join(path,path.split(os.path.sep)[-1])+".xml"
+            ):
+            create_character_xml(path)
+    else:
+        logging.error("no directory of this name in characters.")
+
     entity_skin = Entity_skin(path)
     if inotifyx:
         wd = inotifyx.add_watch(fd, path, inotifyx.IN_MODIFY)
