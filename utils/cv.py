@@ -65,23 +65,22 @@ shield_center="20 40"
 >''')
     regex = re.compile('(.*?)-?([0-9]+).png')
     regex2 = re.compile('(.*?)-?([0-9]+)-upgraded.png')
-    for image in os.listdir(path):
-        res = regex.findall(image)
+    for file in os.listdir(path):
+        res = regex.findall(file)
         if res:
             basename, number = res[0]
             if basename not in movements:
                 movements[basename] = []
-            movements[basename].append((int(number or 0), image))
-        res = regex2.findall(image)
+            movements[basename].append((int(number or 0), file))
+        res = regex2.findall(file)
         if res:
             basename, number = res[0]
             basename += "-upgraded"
             if basename not in movements:
                 movements[basename] = []
-            movements[basename].append((int(number or 0), image))
+            movements[basename].append((int(number or 0), file))
 
     for movement in movements:
-        print movement
         m = movements[movement]
         m.sort(cmp=lambda x,y : cmp(x[0],y[0]))
         f.write('''
@@ -98,11 +97,12 @@ shield_center="20 40"
 
         t = 0
         for frame in m:
+            i = image(os.path.join(path, frame[1]))
             f.write('''
         <frame
         time="'''+str(t)+'''"
         image="'''+str(frame[1])+'''"
-        hardshape="10 10 10 10"
+        hardshape="'''+' '.join(map(str, i[1]))+'''"
         />''')
             t += 150
 
