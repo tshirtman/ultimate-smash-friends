@@ -27,6 +27,7 @@ from pygame.locals import (
 import sys, os
 import time
 import logging
+import re
 
 usf_root='../'
 
@@ -48,7 +49,51 @@ from loaders import image
 def create_character_xml(path):
     """ create a stub xml character """
     #TODO!
-    pass
+    movements={}
+    f = open(os.path.join(path, path.split(os.path.sep)[-1])+".xml",'w')
+    f.write('''<?xml version="1.0" encoding="UTF-8"?>
+<character
+name="'''+path.split(os.path.sep)[-1]+'''"
+image="portrait.png"
+hardshape="10 10 10 10"
+creator=""
+weight="1"
+auto-reverse="True"
+age=""
+Description=""
+shield_center="20 40"
+>''')
+    regex = re.compile('(.*?)-?([0-9]+).png')
+    for image in os.listdir(path):
+        res = regex.findall(image)
+        if res:
+            basename, number = res[0]
+            if basename not in movements:
+                movements[basename] = []
+            movements[basename].append((int(number or 0), image))
+
+    for movement in movements:
+        print movement
+        m = movements[movement]
+        m.sort(cmp=lambda x,y : cmp(x[0],y[0]))
+        f.write('<movement name="'+movement+'''"
+        duration="'''+str(len(m)*150)+'''"
+        repeat="-1"
+        >\n''')
+
+        t = 0
+        for frame in m:
+            f.write('''<frame
+            time="'''+str(t)+'''"
+            image="'''+str(frame[1])+'''"
+            hardshape="10 10 10 10"
+            />
+            ''')
+            t += 150
+
+        f.write('''</movement>''')
+    f.write("</character>")
+    f.close()
 
 def main(charname):
     pygame.init()
