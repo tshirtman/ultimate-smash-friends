@@ -64,10 +64,18 @@ Description=""
 shield_center="20 40"
 >''')
     regex = re.compile('(.*?)-?([0-9]+).png')
+    regex2 = re.compile('(.*?)-?([0-9]+)-upgraded.png')
     for image in os.listdir(path):
         res = regex.findall(image)
         if res:
             basename, number = res[0]
+            if basename not in movements:
+                movements[basename] = []
+            movements[basename].append((int(number or 0), image))
+        res = regex2.findall(image)
+        if res:
+            basename, number = res[0]
+            basename += "-upgraded"
             if basename not in movements:
                 movements[basename] = []
             movements[basename].append((int(number or 0), image))
