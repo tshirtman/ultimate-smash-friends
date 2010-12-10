@@ -84,23 +84,33 @@ shield_center="20 40"
         print movement
         m = movements[movement]
         m.sort(cmp=lambda x,y : cmp(x[0],y[0]))
-        f.write('<movement name="'+movement+'''"
-        duration="'''+str(len(m)*150)+'''"
-        repeat="-1"
-        >\n''')
+        f.write('''
+    <movement name="'''+movement+'''"
+    duration="'''+str(len(m)*150)+'''"
+    repeat="'''+(movement in ("walk", "static") and "-1" or "0")+'''"
+    >''')
+        if "jump" in movement:
+            f.write('''
+        <event
+        period="350,0"
+        action="PlayerStaticOnGround"
+        ></event>''')
 
         t = 0
         for frame in m:
-            f.write('''<frame
-            time="'''+str(t)+'''"
-            image="'''+str(frame[1])+'''"
-            hardshape="10 10 10 10"
-            />
-            ''')
+            f.write('''
+        <frame
+        time="'''+str(t)+'''"
+        image="'''+str(frame[1])+'''"
+        hardshape="10 10 10 10"
+        />''')
             t += 150
 
-        f.write('''</movement>''')
-    f.write("</character>")
+        f.write('''
+    </movement>''')
+    f.write('''
+</character>
+''')
     f.close()
 
 def main(charname):
