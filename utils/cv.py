@@ -86,7 +86,7 @@ shield_center="20 40"
         m.sort(cmp=lambda x,y : cmp(x[0],y[0]))
         f.write('''
     <movement name="'''+movement+'''"
-    duration="'''+str(len(m)*150)+'''"
+    duration="'''+str(len(m)*150+('jump' in movement and 30000))+'''"
     repeat="'''+(movement in ("walk", "static") and "-1" or "0")+'''"
     >''')
         if "jump" in movement:
