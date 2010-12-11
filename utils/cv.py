@@ -45,6 +45,8 @@ sys.path.append(os.path.join(usf_root,'usf'))
 
 from entity_skin import Entity_skin
 from loaders import image
+from config import Config
+config = Config()
 
 def create_character_xml(path):
     """ create a stub xml character """
@@ -115,7 +117,8 @@ shield_center="20 40"
 
 def main(charname):
     pygame.init()
-    screen = pygame.display.set_mode((400,400))
+    window_size = (400, 400)
+    screen = pygame.display.set_mode(window_size)
     path = os.path.join(
         usf_root, 'data', 'characters', charname
         )
@@ -138,7 +141,7 @@ def main(charname):
     shield = False
     frame = 0
 
-    bottom_center_hardshape = (200, 250)
+    bottom_center_hardshape = [window_size[0]/2, window_size[1]*2/3]
     while True:
         # get key events
         pygame.event.pump()
@@ -211,6 +214,12 @@ def main(charname):
                                 ),
                             entity_skin.animations[animation].frames
                             )[-1]
+                if "walk" in animation:
+                    bottom_center_hardshape[0] = int(
+                        time.time() * config.general['WALKSPEED']
+                        ) % window_size[0]
+                else:
+                    bottom_center_hardshape[0] = window_size[0]/2
             else:
                 frame %= len(entity_skin.animations[animation].frames)
                 img = entity_skin.animations[animation].frames[frame]
