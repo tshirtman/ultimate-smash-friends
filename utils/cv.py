@@ -140,6 +140,8 @@ def main(charname):
     pause = False
     shield = False
     frame = 0
+    mouse_click = False
+    mouse_xy = [0, 0]
 
     bottom_center_hardshape = [window_size[0]/2, window_size[1]*2/3]
     while True:
@@ -155,6 +157,27 @@ def main(charname):
                     pass
             else:
                 print "doh!"
+
+        if mouse_click and not pygame.mouse.get_pressed()[0]:
+            print "click released"
+            print """
+            <agressiv-point
+            coords="%s,%s"
+            vector="%s,%s"
+            ></agressiv-point>
+            """ % (
+                mouse_xy[0] - image_position[0],
+                mouse_xy[1] - image_position[1], 
+                2 * (pygame.mouse.get_pos()[0] - mouse_xy[0],
+                2 * (pygame.mouse.get_pos()[1] - mouse_xy[1])
+                )
+            mouse_click = False
+
+        if not mouse_click and pygame.mouse.get_pressed()[0]:
+            print "click pressed"
+            mouse_xy = pygame.mouse.get_pos()
+            mouse_click = True
+
         for event in pygame.event.get(
             [ KEYDOWN, KEYUP ]
             ):
@@ -225,9 +248,9 @@ def main(charname):
                 img = entity_skin.animations[animation].frames[frame]
         except Exception, e:
             print e
-        # update the position of the up-left corner of image, so that the
+        # update the image_position of the up-left corner of image, so that the
         # bottom-middle of the hardhape never moves (as in the game)
-        position = (
+        image_position = (
             bottom_center_hardshape[0] - img.hardshape[0] - img.hardshape[2]/2,
             bottom_center_hardshape[1] - img.hardshape[1] - img.hardshape[3]
         )
@@ -235,8 +258,8 @@ def main(charname):
             screen.fill(
                 pygame.Color('grey'),
                 pygame.Rect((
-                    position[0],
-                    position[1],
+                    image_position[0],
+                    image_position[1],
                     image(img.image)[1][2],
                     image(img.image)[1][3]
                 ))
@@ -244,13 +267,13 @@ def main(charname):
             screen.fill(
                 pygame.Color('blue'),
                 pygame.Rect((
-                    position[0]+img.hardshape[0],
-                    position[1]+img.hardshape[1],
+                    image_position[0]+img.hardshape[0],
+                    image_position[1]+img.hardshape[1],
                     img.hardshape[2],
                     img.hardshape[3]
                 ))
                 )
-        screen.blit(image(img.image)[0], position)
+        screen.blit(image(img.image)[0], image_position)
         screen.blit(
             font.render(
                 str(anim)+': '+animation +'   '+ str(img.time),
@@ -265,8 +288,8 @@ def main(charname):
                 screen,
                 pygame.Color('red'),
                 (
-                    position[0] + img.hardshape[0] + entity_skin.shield_center[0],
-                    position[1] + img.hardshape[1] + entity_skin.shield_center[1]
+                    image_position[0] + img.hardshape[0] + entity_skin.shield_center[0],
+                    image_position[1] + img.hardshape[1] + entity_skin.shield_center[1]
                 ),
                 10
             )
@@ -279,11 +302,11 @@ def main(charname):
             screen.blit(
                 image_shield[0],
                 (
-                        position[0]
+                        image_position[0]
                         + entity_skin.shield_center[0]
                         - .5 * image_shield[1][2]
                         ,
-                        position[1]
+                        image_position[1]
                         + entity_skin.shield_center[1]
                         - .5 * image_shield[1][3]
                 )
@@ -294,22 +317,30 @@ def main(charname):
                 screen,
                 pygame.Color('red'),
                 pygame.Rect(
-                    position[0]+i[0][0]-1, position[1]+i[0][1]-1, 2, 2
+                    image_position[0]+i[0][0]-1, image_position[1]+i[0][1]-1, 2, 2
                     )
                 )
             pygame.draw.line(
                 screen,
                 pygame.Color('red'),
                     (
-                    position[0]+i[0][0],
-                    position[1]+i[0][1],
+                    image_position[0]+i[0][0],
+                    image_position[1]+i[0][1],
                     ),
                     (
-                    position[0]+i[0][0]+i[1][0]/2,
-                    position[1]+i[0][1]+i[1][1]/2,
+                    image_position[0]+i[0][0]+i[1][0]/2,
+                    image_position[1]+i[0][1]+i[1][1]/2,
                     ),
                 1
             )
+        if mouse_click:
+            pygame.draw.line(
+                screen,
+                pygame.color.Color("red"),
+                mouse_xy,
+                pygame.mouse.get_pos(),
+                1
+                )
 
         pygame.display.flip()
     inotifyx.rm_watch(wd)
