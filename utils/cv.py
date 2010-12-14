@@ -5,23 +5,23 @@ from pygame import locals
 from pygame.locals import (
     KEYDOWN,
     KEYUP,
-    MOUSEMOTION,
-    MOUSEBUTTONUP,
-    MOUSEBUTTONDOWN,
-    USEREVENT,
-    K_ESCAPE,
-    K_UP,
     K_DOWN,
+    K_ESCAPE,
+    K_F5,
+    K_KP_MINUS,
+    K_KP_PLUS,
     K_LEFT,
+    K_MINUS,
+    K_PLUS,
     K_RIGHT,
     K_SPACE,
-    K_F5,
-    K_PLUS,
-    K_MINUS,
-    K_KP_PLUS,
-    K_KP_MINUS,
+    K_UP,
     K_p,
     K_s,
+    MOUSEBUTTONDOWN,
+    MOUSEBUTTONUP,
+    MOUSEMOTION,
+    USEREVENT,
     )
 
 import sys, os
@@ -167,7 +167,7 @@ def main(charname):
             ></agressiv-point>
             """ % (
                 mouse_xy[0] - image_position[0],
-                mouse_xy[1] - image_position[1], 
+                mouse_xy[1] - image_position[1],
                 2 * (pygame.mouse.get_pos()[0] - mouse_xy[0],
                 2 * (pygame.mouse.get_pos()[1] - mouse_xy[1])
                 )

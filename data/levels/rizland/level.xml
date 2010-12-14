@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map
+    name="rizland"
+    background="rizland-background.png"
+    foreground="rizland-foreground.png"
+    middle="rizland-middle.png"
+    margins="500,500,500,500"
+    >
+    <moving-block
+    texture="rizland-pod.png"
+    >
+        <rect
+        coords="0 0 128 42"
+        ></rect>
+        <pattern
+        position="1120 160"
+        time="1"
+        ></pattern>
+        <pattern
+        position="930 175"
+        time="26000"
+        ></pattern>
+        <pattern
+        position="740 180"
+        time="46000"
+        ></pattern>
+        <pattern
+        position="820 175"
+        time="76000"
+        ></pattern>
+        <pattern
+        position="1060 160"
+        time="96000"
+        ></pattern>
+    </moving-block>
+    <moving-block
+    texture="rizland-pod.png"
+    >
+        <rect
+        coords="0 0 128 42"
+        ></rect>
+        <pattern
+        position="0 140"
+        time="1"
+        ></pattern>
+        <pattern
+        position="300 255"
+        time="16000"
+        ></pattern>
+        <pattern
+        position="430 330"
+        time="26000"
+        ></pattern>
+        <pattern
+        position="555 370"
+        time="36000"
+        ></pattern>
+        <pattern
+        position="695 420"
+        time="46000"
+        ></pattern>
+        <pattern
+        position="700 320"
+        time="56000"
+        ></pattern>
+        <pattern
+        position="700 270"
+        time="66000"
+        ></pattern>
+        <pattern
+        position="350 290"
+        time="76000"
+        ></pattern>
+        <pattern
+        position="240 225"
+        time="86000"
+        ></pattern>
+        <pattern
+        position="30 180"
+        time="96000"
+        ></pattern>
+    </moving-block>
+    <block coords="430 160 300 80" ></block>
+    <block coords="850 310 300 80" ></block>
+    <block coords="128 420 300 80" ></block>
+    <block coords="595 540 300 80" ></block>
+
+
+</map>
