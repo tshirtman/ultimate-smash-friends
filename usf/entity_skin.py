@@ -49,7 +49,7 @@ class Entity_skin (object):
 
     """
     def __init__( self, dir_name="characters"+os.sep+"stick",
-    server=False, xml_from_str=None):
+    server=False, xml_from_str=None, keep_xml=False):
         """
         The dir_name is the relative path of the directory where the item/player
         is defined, the class search for an xml file of the same name as the
@@ -78,6 +78,9 @@ class Entity_skin (object):
                     None,
                     file
                     )
+        if keep_xml:
+            # keep this to use it for editors
+            self.xml = a
 
         attribs = a.getroot().attrib
 

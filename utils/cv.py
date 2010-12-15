@@ -168,7 +168,18 @@ def main(charname):
             """ % (
                 mouse_xy[0] - image_position[0],
                 mouse_xy[1] - image_position[1],
-                2 * (pygame.mouse.get_pos()[0] - mouse_xy[0],
+                2 * (pygame.mouse.get_pos()[0] - mouse_xy[0]),
+                2 * (pygame.mouse.get_pos()[1] - mouse_xy[1])
+                )
+
+            print """
+            <vector
+            time="%s"
+            vector="%s,%s"
+            ></agressiv-point>
+            """ % (
+                img.time,
+                2 * (pygame.mouse.get_pos()[0] - mouse_xy[0]),
                 2 * (pygame.mouse.get_pos()[1] - mouse_xy[1])
                 )
             mouse_click = False
@@ -222,9 +233,7 @@ def main(charname):
                     entity_skin.animations.keys()
                     )
                 )
-            )[
-            anim % len(entity_skin.animations.keys())
-        ]
+            )[anim % len(entity_skin.animations.keys())]
         pygame.event.clear( [MOUSEMOTION, MOUSEBUTTONUP, MOUSEBUTTONDOWN] )
         # update screen
         screen.fill(pygame.Color('green'))
