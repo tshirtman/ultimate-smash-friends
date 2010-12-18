@@ -159,15 +159,12 @@ class Main(object):
                 'If a level and at least two players are selected, a match is ' \
                 'launched immediately.'
 
-        version = '%prog 0.0.7'
+        version = '%prog 0.1.3'
 
         parser = OptionParser(usage=usage, version=version)
         parser.add_option('-a', '--authors', 
                           action='store_true', dest='author',
                           help='See authors of this game.')
-        parser.add_option('-c', '--character_creator',
-                          action='store_true', dest='character_creator',
-                          help='create new character')
         parser.add_option('-l', '--level',
                           action='store', dest='level', metavar='levelname',
                           help='select level by name')
@@ -189,11 +186,6 @@ class Main(object):
         # actually parse the command line options
         if options.author:
             self.author()
-
-        """ viewer is broken
-        if options.character_creator:
-            launch_character_creator()
-        """
 
         if options.level:
             self.level = options.level
