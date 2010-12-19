@@ -159,11 +159,13 @@ class Config(object):
             #standard use
             #"/usr/share/ultimate-smash-friends/data/", "/etc/ultimate-smash-friends/system.cfg"
 
-            for datadir in [("../usf-data/", "./system.cfg"),
+            for datadir in [
+                ("../usf-data/", "./system.cfg"),
                 ("./data/", "./system.cfg"),
                 ("../data/", "../system.cfg"),
                 ("/usr/share/ultimate-smash-friends/data/",
-                    "/etc/ultimate-smash-friends/system.cfg")]:
+                    "/etc/ultimate-smash-friends/system.cfg")
+                ]:
                 try:
                     stat(datadir[0])
                     sys_data_dir = datadir[0]

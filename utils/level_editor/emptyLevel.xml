@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<map 
-	name="Empty"
-	background="../../utils/level_editor/emptyLevel.png"
-	foreground="../../utils/level_editor/emptyLevel.png"
-	middle="../../utils/level_editor/emptyLevel.png"
-	margins="0,0,0,0">
-</map>

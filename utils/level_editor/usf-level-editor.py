@@ -26,11 +26,14 @@ except:
     print 'GTK, glade, gobject or gtksourceview not found'
     sys.exit(1)
 
-sys.path.append(os.path.join('..', '..'))
+sys.path.append(os.path.join('..'))
 
 from usf.config import Config
+print "hell"
 from usf import level
+print "hell"
 from usf import loaders
+print "hell"
 
 config = Config()
 
@@ -161,7 +164,7 @@ class Tools(object):
             entry.set_value(0)
 
         self.tex_entry.set_text(os.path.join(config.sys_data_dir,
-                                '../utils/level_editor/emptyPod.png'))
+                                'levels','common','pod.png'))
 
         self.rel_check.set_active(False)
         self.model.clear()
@@ -295,8 +298,9 @@ class PygameHandler(object):
         """
 
         self.alpha = 128
-        self.xml_file = os.path.join(config.sys_data_dir,
-                '../utils/level_editor/emptyLevel')
+        self.xml_file = os.path.join(
+            '..', '..', 'utils', 'level_editor', 'emptyLevel'
+            )
         self.level = level.Level(self.xml_file)
 
         self.parts = {
@@ -312,14 +316,14 @@ class PygameHandler(object):
                       )},
             }
 
-        self.surface = pygame.display.set_mode(level.SIZE)
+        self.surface = pygame.display.set_mode(self.level.SIZE)
         self.tool = 'block'
         self.start_pt = INVALID
         self.widget = widget
         self.secondary = False
         self.texture = os.path.join(config.sys_data_dir,
-                                    '../utils/level_editor/emptyPod.png'
-                                    )
+            'levels', 'common', 'pod.png'
+            )
         self.current_entity = [None, None]
 
     def set_level_property(self, property, value):
@@ -493,7 +497,6 @@ class USFLevelEditor(object):
         """
         Initializes the GUI and pygame surface.
         """
-
         glade_file = os.path.join(config.sys_data_dir, 'glade',
                                   'usf_level_editor.glade')
 
@@ -648,7 +651,7 @@ class USFLevelEditor(object):
 
                 self.pyHandle.xml_file = file_loader.get_filename()
                 self.pyHandle.level = \
-                    level.Level(file_loader.get_filename().split(os.sep)[-1].split(os.extsep)[0])
+                    level.Level(file_loader.get_filename().split(os.sep)[-2])
 
                 self.window.set_title('USF Level Editor: '
                         + self.pyHandle.level.name)
@@ -682,7 +685,8 @@ class USFLevelEditor(object):
 
                 self.level_property_entry['bottom_margin'
                         ].set_value(int(self.pyHandle.level.border[3]))
-            except:
+            except Exception, e:
+                logging.error(e)
                 dialog = gtk.MessageDialog(None, gtk.DIALOG_MODAL,
                         gtk.MESSAGE_ERROR, gtk.BUTTONS_OK,
                         'Could not load file '
@@ -1016,7 +1020,7 @@ class USFLevelEditor(object):
 
             if texture == '':
                 texture = self.pyHandle.texture
-            elif not texture.endswith('../utils/level_editor/emptyPod.png'
+            elif not texture.endswith('level_editor/emptyPod.png'
                     ):
                 texture = texture.split(os.sep)[-1]
 
@@ -1052,7 +1056,7 @@ class USFLevelEditor(object):
 
             if texture == '':
                 texture = self.pyHandle.texture
-            elif not texture.endswith('../utils/level_editor/emptyPod.png'
+            elif not texture.endswith('level_editor/emptyPod.png'
                     ):
                 texture = texture.split(os.sep)[-1]
 

@@ -143,6 +143,7 @@ def image(name, *args, **kwargs):
                     )
     else:
         try:
+            print "loading "+name
             image = pygame.image.load(name)
         except pygame.error, message:
             logging.debug('Cannot load image:'+str(name), 2)

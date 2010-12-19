@@ -1,39 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map 
-        name="Jungle"
-        background="jungle-background.png"
-        foreground="jungle-foreground.png"
-        middle="jungle-middle.png"
-        margins="750,750,750,750"
-        >
-        <block coords="0 443 167 77" ></block>
-        <block coords="330 227 125 69" ></block>
-        <!--<block coords="493 492 125 69" ></block>-->
-        <block coords="493 392 173 93" />
-        <block coords="762 435 149 85" ></block>
-    <moving-block
-    texture="pod-jungle.png"
-    >
-        <rect
-        coords="0 0 176 69"
-        ></rect>
-        <pattern
-        position="150 100"
-        time="1"
-        ></pattern>
-        <pattern
-        position="150 500"
-        time="20000"
-        ></pattern>
-        <pattern
-        position="150 100"
-        time="28000"
-        ></pattern>
-    </moving-block>
+<map
+    name="Jungle"
+    background="jungle-background.png"
+    foreground="jungle-foreground.png"
+    middle="jungle-middle.png"
+    margins="-750,0,0,0">
 
     <entry-point coords="60 100"></entry-point>
     <entry-point coords="380 100"></entry-point>
     <entry-point coords="850 100"></entry-point>
     <entry-point coords="530 100"></entry-point>
     <entry-point coords="610 100"></entry-point>
+
+    <block coords="0 443 167 77"></block>
+    <block coords="330 227 125 69"></block>
+    <block coords="493 392 173 93"></block>
+    <block coords="762 435 149 85"></block>
+    <block coords="-185 243 66 44"></block>
+    <block coords="-11 272 104 80"></block>
+    <block coords="-154 382 65 57"></block>
+
+
+    <moving-block
+        texture="pod-jungle.png">
+    <rect coords="0 0 176 69"></rect>
+        <pattern
+            position="150 100"
+            time="1"></pattern>
+        <pattern
+            position="150 500"
+            time="20000"></pattern>
+        <pattern
+            position="150 100"
+            time="28000"></pattern>
+    </moving-block>
+
+    <moving-block
+        texture="pod.png">
+    <rect coords="0 0 0 0"></rect>
+        <pattern
+            position="-140 -64"
+            time="1"></pattern>
+        <pattern
+            position="-212 181"
+            time="101"></pattern>
+        <pattern
+            position="280 -44"
+            time="201"></pattern>
+    </moving-block>
+
+    <moving-block
+        texture="pod.png">
+    <rect coords="0 0 139 78"></rect>
+        <pattern
+            position="181 315"
+            time="1"></pattern>
+        <pattern
+            position="126 210"
+            time="101"></pattern>
+        <pattern
+            position="208 47"
+            time="201"></pattern>
+        <pattern
+            position="282 204"
+            time="301"></pattern>
+    </moving-block>
+
 </map>
