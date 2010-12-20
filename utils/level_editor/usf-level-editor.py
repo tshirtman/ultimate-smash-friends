@@ -1009,9 +1009,10 @@ class USFLevelEditor(object):
         elif self.pyHandle.tool == 'water':
             self.pyHandle.level.water_blocs.append(rect)
 
-            self.pyHandle.current_entity = \
-                [self.pyHandle.level.water_blocs,
-                 self.pyHandle.level.water_blocs[-1]]
+            self.pyHandle.current_entity = [
+                self.pyHandle.level.water_blocs,
+                self.pyHandle.level.water_blocs[-1]
+                ]
 
             self.tools.show_water_tool(self.pyHandle.level.water_blocs[-1])
         elif self.pyHandle.tool == 'vector':
@@ -1020,35 +1021,42 @@ class USFLevelEditor(object):
 
             if texture == '':
                 texture = self.pyHandle.texture
-            elif not texture.endswith('level_editor/emptyPod.png'
-                    ):
-                texture = texture.split(os.sep)[-1]
+            else:
+                texture = os.path.sep.join((texture.split(os.sep)[-2:]))
 
             self.tools.tex_entry.set_text(texture)
 
             if self.pyHandle.secondary:
-                self.pyHandle.level.vector_blocs.remove(self.pyHandle.current_entity[1])
+                self.pyHandle.level.vector_blocs.remove(
+                    self.pyHandle.current_entity[1]
+                )
 
-                bloc = \
-                    level.VectorBloc(self.pyHandle.current_entity[1].rects,
-                        self.pyHandle.current_entity[1].position,
-                        rect.size, self.tools.rel_check.get_active(),
-                        texture)
+                bloc = level.VectorBloc(
+                    self.pyHandle.current_entity[1].rects,
+                    self.pyHandle.current_entity[1].position,
+                    rect.size, self.tools.rel_check.get_active(),
+                    texture
+                    )
 
                 self.pyHandle.start_pt = INVALID
                 self.pyHandle.secondary = False
             else:
-                bloc = level.VectorBloc([pygame.Rect((0, 0),
-                        rect.size)], rect.topleft, (0, 0),
-                        self.tools.rel_check.get_active(), texture)
+                bloc = level.VectorBloc(
+                    [pygame.Rect( (0, 0), rect.size)],
+                    rect.topleft,
+                    (0, 0),
+                    self.tools.rel_check.get_active(),
+                    texture
+                )
 
                 self.pyHandle.secondary = True
                 self.pyHandle.start_pt = adj_up(self.pyHandle.start_pt)
 
             self.pyHandle.level.vector_blocs.append(bloc)
-            self.pyHandle.current_entity = \
-                [self.pyHandle.level.vector_blocs,
-                 self.pyHandle.level.vector_blocs[-1]]
+            self.pyHandle.current_entity = [
+                self.pyHandle.level.vector_blocs,
+                self.pyHandle.level.vector_blocs[-1]
+                ]
             self.tools.show_vector_tool(self.pyHandle.level.vector_blocs[-1])
         elif self.pyHandle.tool == 'moving':
             bloc = None
@@ -1056,29 +1064,48 @@ class USFLevelEditor(object):
 
             if texture == '':
                 texture = self.pyHandle.texture
-            elif not texture.endswith('level_editor/emptyPod.png'
-                    ):
+            else:
                 texture = texture.split(os.sep)[-1]
 
             self.tools.tex_entry.set_text(texture)
 
             if self.pyHandle.secondary:
-                self.pyHandle.level.moving_blocs.remove(self.pyHandle.current_entity[1])
+                self.pyHandle.level.moving_blocs.remove(
+                    self.pyHandle.current_entity[1]
+                )
 
-                self.pyHandle.current_entity[1].patterns.append({'time'
-                        : self.pyHandle.current_entity[1].patterns[-1]['time'
-                        ] + 100, 'position': list(pointer)})
+                self.pyHandle.current_entity[1].patterns.append(
+                    {
+                        'time' :
+                            self.pyHandle.current_entity[1].patterns[-1]
+                            ['time'] + 100,
+                        'position': list(pointer)
+                    }
+                )
 
-                bloc = \
-                    level.MovingPart(self.pyHandle.current_entity[1].rects,
-                        texture,
-                        self.pyHandle.current_entity[1].patterns)
+                bloc = level.MovingPart(
+                    self.pyHandle.current_entity[1].rects,
+                    texture,
+                    self.pyHandle.current_entity[1].patterns
+                    )
 
                 self.pyHandle.start_pt = adj_up(pointer)
             else:
-                bloc = level.MovingPart([pygame.Rect((0, 0),
-                        rect.size)], texture, [{'time': 1, 'position'
-                        : list(rect.topleft)}])
+                bloc = level.MovingPart(
+                    [
+                        pygame.Rect(
+                            (0, 0),
+                            rect.size
+                            )
+                    ],
+                    texture,
+                    [
+                        {
+                            'time': 1,
+                            'position': list(rect.topleft)
+                        }
+                    ]
+                )
 
                 self.pyHandle.secondary = True
                 self.pyHandle.start_pt = adj_up(self.pyHandle.start_pt)
