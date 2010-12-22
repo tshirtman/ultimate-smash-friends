@@ -59,6 +59,9 @@ CLASSIFIERS = ['Development Status :: 2 - Pre-Alpha',
                'Programming Language :: Python',
                'Topic :: Games/Entertainment :: Arcade'
               ]
+DATA = [(item[0], item[1]) for item in files('data')]
+DATA.append('CREDITS.txt')
+DATA.append('system.cfg')
 DOC = [(join('share', 'doc', 'ultimate-smash-friends') +
        item[0].replace('doc', ''), item[1]) for item in files('doc')]
 DOC[-1][-1].append('COPYING.txt')
@@ -68,42 +71,37 @@ DOC[-1][-1].append('README.fr.txt')
 CONFIG = [(sep + join('etc', 'ultimate-smash-friends'), ['system.cfg'])]
 ICON = [(join('share', 'applications'), 
               ['ultimate-smash-friends.desktop'])]
+ICON_FILE = 'data/icon/icon.ico'
 SCRIPTS = ['ultimate-smash-friends',
            'viewer.pyw', 'utils/togimpmap.py', 
            'utils/tolevel.py', 
            'utils/xml_text_extractor.py'
           ]
 PACKAGES = ['usf', 'usf.widgets', 'usf.screen', 'usf.subpixel']
-REQUIRES = ['pygame (>=1.6)', 'python (>=2.5)']
+REQUIRES = ['pygame (>=1.6)', 'python (>=2.5)', 'numpy']
+APP = None
+WINDOWS = None
 
 if OS == 'windows':
     origIsSystemDLL = py2exe.build_exe.isSystemDLL
     py2exe.build_exe.isSystemDLL = isSystemDLL
-    DATA = [(item[0], item[1]) for item in files('data')]
-    DATA.append('CREDITS.txt')
-    WINDOWS=[{"script" : "ultimate-smash-friends", "icon_resources" : [(1, "data/icon/icon.ico")]}]
-    APP = None
-
+    WINDOWS = [{"script" : "ultimate-smash-friends", "icon_resources" : [(1, ICON_FILE)]}]
 elif OS == 'darwin':
-    DATA = [(item[0], item[1]) for item in files('data')]
-    DATA.append('CREDITS.txt')
     SCRIPTS[0] = 'ultimate-smash-friends.py'
-
-    PLIST = dict(CFBundleName=NAME,
-                 CFBundleShortVersionString=VERSION,
-                 CFBundleGetInfoString=' '.join([NAME, VERSION]),
+    PLIST = dict(CFBundleGetInfoString=' '.join([NAME, VERSION]),
                  CFBundleExecutable=NAME,
-                 CFBundleIdentifier='org.pythonmac.ultimate-smash-friends'
+                 CFBundleIconFile=ICON_FILE,
+                 CFBundleIdentifier='org.pythonmac.ultimate-smash-friends',
+                 CFBundleName=NAME,
+                 CFBundleShortVersionString=VERSION,
+                 NSHumanReadableCopyright='(C) usf-team GPLv3'
                 )
     APP = [dict(script='ultimate-smash-friends.py', plist=PLIST)]
     OPTIONS = {'argv_emulation': True}
-    WINDOWS = None
 else:
     DATA = [(join('share', 'ultimate-smash-friends') + sep + item[0], item[1])
             for item in files('data')]
     DATA.append((join('share', 'ultimate-smash-friends') + sep + 'data', ['CREDITS.txt']))
-    WINDOWS = None
-    APP = None
 
 setup(name=NAME, version=VERSION, description=DESCRIPTION, 
       author=AUTHOR, author_email=AUTHOR_EMAIL, 
