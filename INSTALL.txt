@@ -118,6 +118,7 @@ A. Source Archive
      Python - http://python.org/download/ (version 2.6.6 recommended)
      Pygame - http://pygame.org/download.shtml (version 1.9.1 for python 2.6 recommended)
      Py2app - http://pypi.python.org/pypi/py2app/#downloads
+     NumPy - http://sourceforge.net/projects/numpy/files/NumPy/1.5.1/numpy-1.5.1-py2.6-python.org-macosx10.3.dmg/download
 
   2. Rename the main script
      Py2app crash if the main script have no extension. In order to prevent this crash,

@@ -124,6 +124,7 @@ A. Archive Source
      Python - http://python.org/download/ (version 2.6.6 recommandée)
      Pygame - http://pygame.org/download.shtml (version 1.9.1 pour python 2.6 recommandée)
      Py2app - http://pypi.python.org/pypi/py2app/#downloads
+     NumPy - http://sourceforge.net/projects/numpy/files/NumPy/1.5.1/numpy-1.5.1-py2.6-python.org-macosx10.3.dmg/download
 
   2. Renommer le script principal
      Py2app plante si le script principal n'a pas d'extension. Pour éviter cela,
