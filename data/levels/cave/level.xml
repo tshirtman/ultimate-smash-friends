@@ -4,19 +4,7 @@
     background="cave-background.png"
     foreground="cave-foreground.png"
     middle="cave-middle.png"
-    margins="750,750,750,750"
-    >
-    <block coords="176 54 124 57" ></block>
-    <block coords="158 546 142 44" ></block>
-    <block coords="488 450 89 63" ></block>
-    <block coords="314 271 233 60" ></block>
-    <block coords="314 271 63 207" ></block>
-    <block coords="521 13 132 60" ></block>
-    <block coords="732 270 85 41" ></block>
-    <block coords="655 426 162 106" ></block>
-    <block coords="813 158 172 45" ></block>
-    <block coords="255 324 91 33" ></block>
-    <block coords="15 281 90 69" ></block>
+    margins="500,500,500,500">
 
     <entry-point coords="50 100"></entry-point>
     <entry-point coords="410 100"></entry-point>
@@ -24,4 +12,19 @@
     <entry-point coords="900 100"></entry-point>
     <entry-point coords="230 0"></entry-point>
     <entry-point coords="580 0"></entry-point>
+
+    <block coords="176 54 124 57"></block>
+    <block coords="158 546 142 44"></block>
+    <block coords="488 450 89 63"></block>
+    <block coords="314 271 233 60"></block>
+    <block coords="314 271 63 207"></block>
+    <block coords="521 13 132 60"></block>
+    <block coords="655 426 162 106"></block>
+    <block coords="813 158 172 45"></block>
+    <block coords="255 324 91 33"></block>
+    <block coords="15 281 90 69"></block>
+    <block coords="771 278 0 0"></block>
+    <block coords="680 250 120 41"></block>
+
+
 </map>
