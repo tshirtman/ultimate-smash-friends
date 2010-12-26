@@ -62,10 +62,10 @@ class Paragraph(Widget):
         self.width_slider = 34
         self.height_slider = 125
         self.pos_slider = self.width/20*19
-        
+
         #the main surface
         self.surface = pygame.surface.Surface((self.width, self.height))
-        
+
         #create the surface whiwh will contain _all_ the text
         width = self.width - self.width_slider*2
         if width < 0:
@@ -79,14 +79,14 @@ class Paragraph(Widget):
             self.surface_text.blit(loaders.text(self.text[i],
                                                 fonts['mono']['normal']),
                                    (10, self.text_height*i  ))
-        
+
         self.screen = pygame.display.get_surface()
         self.slider = SubPixelSurface(loaders.image(join(config.sys_data_dir,
                                              "gui",
                                              config.general['THEME'],
                                              "sliderh_center.png"),
-                                        scale=(self.width_slider, self.height_slider))[0], x_level=4)  
-                                
+                                        scale=(self.width_slider, self.height_slider))[0], x_level=4)
+
 
     def draw(self):
         #clear the surface
@@ -128,7 +128,7 @@ class Paragraph(Widget):
     def handle_mouse(self,event):
         x = event.dict['pos'][0]
         y = event.dict['pos'][1]
-        
+
         #to disable auto scrolling
         if event.type != pygame.MOUSEMOTION:
             self.auto_scroll = False
