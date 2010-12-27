@@ -95,7 +95,7 @@ class Controls (object):
         self.keys = dict([[locals.__dict__[config.keyboard[key]], key] 
                          for key in config.keyboard])
         self.sequences = []
-        self.player_sequences = [[],[],[],[]]
+        self.player_sequences = [[], [], [], []]
         sequences_file = open(os.path.join(
                     config.sys_data_dir,
                     'sequences'+os.extsep+'cfg')
@@ -298,20 +298,16 @@ class Controls (object):
 
         """
         if game_instance != None :
-            try:
-                i=0
-                for player in game_instance.players:
-                    if(player.ai):
-                        if player.ai_ != None:
-                            player.ai_.update( game_instance, i)
-                            for sequence_ai in player.ai_.sequences_ai:
-                                self.player_sequences[i].append(sequence_ai)
-                        else:
-                            player.ai_ = AI()
+            i=0
+            for player in game_instance.players:
+                if(player.ai):
+                    if player.ai_ != None:
+                        player.ai_.update( game_instance, i)
+                        for sequence_ai in player.ai_.sequences_ai:
+                            self.player_sequences[i].append(sequence_ai)
+                    else:
+                        player.ai_ = AI()
                     i+=1
-            except:
-                # FIXME: OMGthisisSOwrong...
-                pass
         #update sequence after AI
         for sequence in self.player_sequences:
             for i in self.sequences:

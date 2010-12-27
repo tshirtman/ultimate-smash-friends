@@ -54,7 +54,7 @@ except AttributeError:
         filename=config.debug['LOG_FILENAME'],
         level = logging.WARNING
         )
-    logging.error('Bad logging level in user.cfg!')
+    logging.error(_('Bad logging level in user.cfg!'))
 
 logging.debug("User config file: " + config.user_config_file)
 logging.debug("User config dir: " + config.user_config_dir)
