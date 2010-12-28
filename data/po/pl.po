@@ -1,0 +1,151 @@
+# Polish translation for ultimate-smash-friends
+# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# This file is distributed under the same license as the ultimate-smash-friends package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ultimate-smash-friends\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-07-29 17:26+0200\n"
+"PO-Revision-Date: 2010-12-28 02:01+0000\n"
+"Last-Translator: pp/bs <Unknown>\n"
+"Language-Team: Polish <pl@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2010-12-28 04:58+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#: game.py:308
+msgid " WON!"
+msgstr " WYGRYWA!"
+
+#: game.py:323
+msgid "OOPS... DRAW!!!"
+msgstr "OJEJ... REMIS!!!"
+
+#: gui.py:234
+msgid "you are here:"
+msgstr "jesteś tutaj:"
+
+#: main.py:68
+msgid "Loading..."
+msgstr "Ładowanie..."
+
+#: screen/about.py:27
+msgid "about"
+msgstr "informacje"
+
+#: screen/about.py:35 screen/about.py:41 screen/screen_screen.py:66
+#: screen/screen_screen.py:86 screen/characters.py:122
+#: screen/characters.py:143 screen/keyboard.py:61 screen/keyboard.py:66
+#: screen/sound.py:38 screen/sound.py:45 screen/configure.py:41
+#: screen/configure.py:52 screen/level.py:64 screen/level.py:73
+msgid "Back"
+msgstr "Wstecz"
+
+#: screen/main_screen.py:29 screen/main_screen.py:35
+msgid "Local game"
+msgstr "Gra lokalna"
+
+#: screen/main_screen.py:30 screen/main_screen.py:37 screen/resume.py:28
+#: screen/resume.py:36
+msgid "Configure"
+msgstr "Konfiguracja"
+
+#: screen/main_screen.py:31 screen/main_screen.py:39
+msgid "Credits"
+msgstr "Autorzy"
+
+#: screen/main_screen.py:32 screen/main_screen.py:41
+msgid "Quit"
+msgstr "Zakończ"
+
+#: screen/screen_screen.py:31
+msgid "screen configuration"
+msgstr "konfiguracja ekranu"
+
+#: screen/screen_screen.py:41
+msgid "Screen resolution (requires a restart):"
+msgstr "Rozdzielczość ekranu (wymaga restartu)"
+
+#: screen/screen_screen.py:47
+msgid "Fullscreen:"
+msgstr "Pełny ekran:"
+
+#: screen/screen_screen.py:51
+msgid "Zoom sharpness:"
+msgstr "Ostrość przybliżania:"
+
+#: screen/screen_screen.py:62
+msgid "Show FPS:"
+msgstr "Pokaż liczbę klatek/s:"
+
+#. I18N: The title of the screen where players can choose their character.
+#: screen/characters.py:42
+msgid "characters"
+msgstr "postacie"
+
+#. I18N: in the character screen, to select no character for this player
+#. I18N: (with the [?] icon)
+#: screen/characters.py:49
+msgid "None"
+msgstr "Brak"
+
+#: screen/characters.py:94
+#, python-format
+msgid "Player %s"
+msgstr "Gracz %s"
+
+#. I18N: Artificial Intelligence
+#: screen/characters.py:105
+msgid "AI :"
+msgstr "AI :"
+
+#: screen/characters.py:117 screen/characters.py:140
+msgid "Next"
+msgstr "Dalej"
+
+#: screen/keyboard.py:33
+msgid "keyboard"
+msgstr "klawiatura"
+
+#: screen/keyboard.py:48
+msgid "Shield"
+msgstr "Osłona"
+
+#: screen/sound.py:29
+msgid "Sound and effects"
+msgstr "Dźwięk / efekty"
+
+#: screen/sound.py:32
+msgid "Music"
+msgstr "Muzyka"
+
+#: screen/configure.py:28
+msgid "configure"
+msgstr "konfiguracja"
+
+#. I18N:option screen
+#: screen/configure.py:31 screen/configure.py:46
+msgid "Audio"
+msgstr "Dźwięk"
+
+#: screen/configure.py:35 screen/configure.py:48
+msgid "Screen"
+msgstr "Ekran"
+
+#: screen/configure.py:38 screen/configure.py:50
+msgid "Keyboard"
+msgstr "Klawiatura"
+
+#: screen/level.py:63 screen/level.py:70
+msgid "Go !"
+msgstr "Start !"
+
+#: translation.py:12
+msgid "translator-credits"
+msgstr ""
+"Launchpad Contributions:\n"
+"  pp/bs https://launchpad.net/~pawprok"
