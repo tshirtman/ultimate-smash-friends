@@ -56,14 +56,16 @@ class AI(object):
             bloc = entity.foot_collision_rect().collidelist(game.level.map)
             if bloc != -1:
                 for p in game.players:
-                    if p is entity: continue
-                    if p.foot_collision_rect().collidelist(game.level.map) == bloc:
-                       #print "on the same bloc than "+p.name
+                    if (
+                        p is not entity and
+                        p.foot_collision_rect().collidelist(game.level.map) == bloc
+                       ):
+                       print p.name, entity.name
+                       print "on the same bloc than "+p.name
                        targets.append((entity.dist(p), p))
-                       continue
 
-            targets.sort()
             if targets:
+                targets.sort()
                 entity.reversed = (targets[0][1].place[0] < entity.place[0])
                 if targets[0][0] > 100:#FIXME ugly hard value
                     entity.entity_skin.change_animation(
@@ -81,22 +83,45 @@ class AI(object):
                         )
                     entity.walking_vector[0] = 0
                     self.status = 'fighting'
+                    print "now fighting"
                     self.target = targets[0][1]
 
         elif self.status == 'fighting':
             target = self.target
-            if not entity.entity_skin.animation.playing:
+            if entity.entity_skin.current_animation == 'static':
                 entity.reversed = (target.place[0] < entity.place[0])
                 dist = entity.dist(target)
-                if dist < 50 and target.place[1] > entity.place[1] + 20:#FIXME ugly hardcoded value
-                    entity.entity_skin.change_animation('smash-up', game,params={'entity':entity})
+                if False:
+                    pass
+                elif dist < 50 and target.place[1] > entity.place[1] + 20:#FIXME ugly hardcoded value
+                    entity.entity_skin.change_animation(
+                        'smash-up',
+                        game,
+                        params={'entity':entity}
+                    )
                 elif dist < 50:
-                    entity.entity_skin.change_animation('hit', game, params={'entity':entity})
+                    entity.entity_skin.change_animation(
+                        'hit',
+                        game,
+                        params={'entity':entity}
+                    )
                 elif dist < 80:
-                    entity.entity_skin.change_animation('smash-straight',game, params={'entity':entity})
+                    entity.entity_skin.change_animation(
+                        'smash-straight',
+                        game,
+                        params={'entity':entity}
+                    )
                 elif target.place[1] > entity.place[1] + 100:#FIXME ugly hardcoded value
-                    entity.entity_skin.change_animation('smash-up-jumping',game, params={'entity':entity})
+                    entity.entity_skin.change_animation(
+                        'smash-up-jumping',
+                        game,
+                        params={'entity':entity}
+                    )
 
                 if dist > 100:
-                    self.status == 'searching'
+                    self.status = 'searching'
+                    print "now searching"
+        else:
+            print "WTF?"
+            self.status = 'searching'
 
