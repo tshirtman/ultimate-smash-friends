@@ -298,11 +298,10 @@ class Controls (object):
 
         """
         if game_instance != None :
-            i=0
-            for player in game_instance.players:
+            for i, player in enumerate(game_instance.players):
                 if(player.ai):
                     if player.ai_ != None:
-                        player.ai_.update( game_instance, i)
+                        player.ai_.update(game_instance, i)
                         for sequence_ai in player.ai_.sequences_ai:
                             self.player_sequences[i].append(sequence_ai)
                     else:
