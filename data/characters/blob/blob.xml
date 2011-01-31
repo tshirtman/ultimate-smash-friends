@@ -241,12 +241,12 @@ shield_center="20 40"
         <frame
         time="0"
         image="special1.png"
-        hardshape="0 0 30 35"
+        hardshape="5 0 20 36"
         />
         <frame
         time="150"
         image="special2.png"
-        hardshape="0 0 28 35"
+        hardshape="5 0 20 36"
         />
         <frame
         time="300"
@@ -256,12 +256,12 @@ shield_center="20 40"
         <frame
         time="450"
         image="special4.png"
-        hardshape="0 0 42 29"
+        hardshape="0 0 34 29"
         />
         <frame
         time="600"
         image="special5.png"
-        hardshape="0 0 54 27"
+        hardshape="0 0 34 27"
         />
         <frame
         time="750"
@@ -886,13 +886,18 @@ shield_center="20 40"
         >
 		<agressiv-point
 		coords="10,23"
-		vector="-2,118"
+		vector="-20,118"
 		></agressiv-point>
 
 		<agressiv-point
 		coords="41,21"
-		vector="2,118"
+		vector="20,118"
 		></agressiv-point>
+            <agressiv-point
+            coords="24,19"
+            vector="0,206"
+            ></agressiv-point>
+
 	</frame>
         <frame
         time="300"
@@ -901,13 +906,17 @@ shield_center="20 40"
 	>
 		<agressiv-point
 		coords="10,23"
-		vector="-2,118"
+		vector="-20,118"
 		></agressiv-point>
 
 		<agressiv-point
 		coords="41,21"
-		vector="2,118"
+		vector="20,118"
 		></agressiv-point>
+            <agressiv-point
+            coords="24,19"
+            vector="0,206"
+            ></agressiv-point>
 
 	</frame>
 
@@ -918,11 +927,11 @@ shield_center="20 40"
         >
 		<agressiv-point
 		coords="10,23"
-		vector="-2,118"
+		vector="-20,118"
 		></agressiv-point>
 		<agressiv-point
 		coords="41,21"
-		vector="2,118"
+		vector="20,118"
 		></agressiv-point>
 		<agressiv-point
 		coords="37,18"
@@ -932,6 +941,10 @@ shield_center="20 40"
 		coords="19,22"
 		vector="-122,-50"
 		></agressiv-point>
+            <agressiv-point
+            coords="24,19"
+            vector="0,206"
+            ></agressiv-point>
 
 	</frame>
         <frame
@@ -1135,7 +1148,7 @@ shield_center="20 40"
         />
     </movement>
     <movement name="scnd-jump"
-    duration="2000"
+    duration="20000"
     repeat="0"
     >
         <event
@@ -1149,42 +1162,42 @@ shield_center="20 40"
         <frame
         time="0"
         image="scnd-jump1.png"
-        hardshape="0 12 33 48"
+        hardshape="5 0 15 45"
         > </frame>
         <frame
         time="100"
         image="scnd-jump2.png"
-        hardshape="0 19 33 58"
+        hardshape="3 0 15 55"
         > </frame>
         <frame
         time="200"
         image="scnd-jump3.png"
-        hardshape="0 19 33 58"
+        hardshape="3 0 15 58"
         > </frame>
         <frame
         time="300"
         image="scnd-jump4.png"
-        hardshape="0 19 33 58"
+        hardshape="3 0 14 59"
         > </frame>
         <frame
         time="400"
         image="scnd-jump5.png"
-        hardshape="0 19 33 58"
+        hardshape="3 0 14 56"
         > </frame>
         <frame
         time="500"
         image="scnd-jump6.png"
-        hardshape="0 19 33 58"
+        hardshape="1 0 20 44"
         > </frame>
         <frame
         time="600"
         image="scnd-jump7.png"
-        hardshape="0 19 33 58"
+        hardshape="0 0 25 27"
         > </frame>
         <frame
         time="700"
         image="jump8.png"
-        hardshape="0 19 33 58"
+        hardshape="0 0 27 25"
         > </frame>
     </movement>
 
@@ -1248,7 +1261,7 @@ shield_center="20 40"
         <frame
         time="0"
         image="pick1.png"
-        hardshape="0 0 28 36"
+        hardshape="5 0 15 34"
         />
     </movement>
     <movement name="grab"
