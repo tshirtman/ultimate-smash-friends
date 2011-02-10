@@ -148,16 +148,22 @@ class Entity (object):
 
     def dist(self, entity):
         """
-        Return the distance to another entity. None if the entity is None.
+        Return the distance to a Rect or to another entity.
 
         """
-        if entity is not None:
+        if isinstance(entity, pygame.Rect):
+            return (
+                (self.place[0] - entity.centerx) ** 2 +
+                (self.place[1] - entity.centery) ** 2
+                ) ** .5
+
+        elif isinstance(entity, Entity):
             return (
                 (self.place[0] - entity.place[0]) ** 2 +
                 (self.place[1] - entity.place[1]) ** 2
                 ) ** .5
         else:
-            return None
+            raise ValueError("param 1 is neither a Rect or an Entity")
 
     def serialize(self):
         """

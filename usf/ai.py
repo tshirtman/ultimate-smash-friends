@@ -65,6 +65,7 @@ class AI(object):
                        targets.append((entity.dist(p), p))
 
             if targets:
+                "there is a target on the same bloc!"
                 targets.sort()
                 entity.reversed = (targets[0][1].place[0] < entity.place[0])
                 if targets[0][0] > 100:#FIXME ugly hard value
@@ -85,6 +86,16 @@ class AI(object):
                     self.status = 'fighting'
                     print "now fighting"
                     self.target = targets[0][1]
+
+            else:
+                "lets look on other blocs, by proxmity"
+                for bloc in sorted(game.level.map, lambda(x): entity.dist(x)):
+                    for player in game.players:
+                        if player.foot_collision_rect().collide(bloc):
+                            targets.append(bloc, player)
+
+                self.status = "going"
+                self.target = targets[0]
 
         elif self.status == 'fighting':
             target = self.target
@@ -109,7 +120,7 @@ class AI(object):
                     entity.entity_skin.change_animation(
                         'smash-straight',
                         game,
-                        params={'entity':entity}
+                        params={'entity': entity}
                     )
                 elif target.place[1] > entity.place[1] + 100:#FIXME ugly hardcoded value
                     entity.entity_skin.change_animation(
@@ -121,7 +132,4 @@ class AI(object):
                 if dist > 100:
                     self.status = 'searching'
                     print "now searching"
-        else:
-            print "WTF?"
-            self.status = 'searching'
 
