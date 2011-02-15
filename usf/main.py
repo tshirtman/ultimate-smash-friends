@@ -22,7 +22,6 @@
 import logging
 import os
 
-
 from pygame.locals import QUIT
 import pygame
 import sys
@@ -33,10 +32,6 @@ import traceback
 from exceptions import AttributeError
 # our modules
 from config import Config
-config = Config()
-SIZE = (config.general['WIDTH'], 
-        config.general['HEIGHT'])
-
 
 from game import Game, NetworkServerGame, NetworkClientGame
 from gui import Gui
@@ -45,6 +40,7 @@ import loaders, music
 from font import fonts
 
 try:
+    config = Config()
     logging.basicConfig(
         filename=config.debug['LOG_FILENAME'],
         level=eval('logging.'+config.debug['LOG_LEVEL'])
@@ -85,75 +81,86 @@ class Main(object):
         self.address = None
         self.text_thread = _("Loading...")
 
+        self.initate_options_parser()
         self.parse_options()
 
-        if self.game_type == "server":
-            self.game = NetworkServerGame()
+    def init(self):
+        if self.game_type == 'server':
+            self.init_server()
+        elif self.game_type == 'client':
+            self.init_client()
+        else:
+            self.init_standalone()
 
-        elif self.game_type == "client":
-            self.init_screen()
+    def init_server(self):
+        self.game = NetworkServerGame()
+
+    def init_client(self):
+        self.init_screen()
+        self.init_sound()
+
+        self.game = NetworkClientGame(level, players)
+        self.state = "game"
+        self.menu = Gui(self.screen)
+
+    def init_standalone(self):
+        self.init_screen()
+        try:
+            self.text_thread = "Loading sounds and musics..."
+            self.thread = threading.Thread(None, self.loading_screen)
+            self.thread.start()
+
             self.init_sound()
 
-            self.game = NetworkClientGame(level, players)
-            self.state = "game"
-            self.menu = Gui(self.screen)
+            # if a level was provided and at least two players in the option
+            # immediatly jump into game mode
+            if len(self.players) > 1 and self.level is not None:
+                self.game = Game(self.screen, self.level, self.players)
+                self.state = "game"
+                self.menu = Gui(self.screen)
+                self.menu.handle_reply('goto:resume')
 
-        else:
-            self.init_screen()
-            try:
-                self.thread = threading.Thread(None, self.loading)
-                self.thread.start()
+            else:
+                pygame.display.update()
 
                 self.lock.acquire()
-                self.text_thread = "Loading sounds and musics..."
+                self.text_thread = "Loading GUI..."
                 self.lock.release()
 
-                self.init_sound()
+                self.menu = Gui(self.screen)
 
-                if len(self.players) > 1 and self.level is not None:
-                    self.game = Game(self.screen, self.level, self.players)
-                    self.state = "game"
-                    self.menu = Gui(self.screen)
-                    self.menu.handle_reply('goto:resume')
+                self.state = "menu"
 
-                else:
-                    pygame.display.update()
+                self.game = None
+                self.level = None
 
+            self.lock.acquire()
+            self.stop_thread = True
+            self.lock.release()
+            # end of loading resources
+
+        except Exception as e:
+            try:
+                if not config.general["DEBUG"]:
                     self.lock.acquire()
-                    self.text_thread = "Loading GUI..."
+                    self.text_thread = "An error occured:\n" + str(traceback.format_exc())
                     self.lock.release()
-
-                    self.menu = Gui(self.screen)
-
-                    self.state = "menu"
-
-                    self.game = None
-                    self.level = None
-
+                    time.sleep(5)
                 self.lock.acquire()
                 self.stop_thread = True
                 self.lock.release()
-            except Exception as e:
-                try:
-                    if not config.general["DEBUG"]:
-                        self.lock.acquire()
-                        self.text_thread = "An error occured:\n" + str(traceback.format_exc())
-                        self.lock.release()
-                        time.sleep(5)
-                    self.lock.acquire()
-                    self.stop_thread = True
-                    self.lock.release()
-                    raise
-                except:
-                    self.lock.acquire()
-                    self.stop_thread = True
-                    self.lock.release()
-                    logging.debug(e)
-                    raise
-            self.go()
+                raise
+            except:
+                self.lock.acquire()
+                self.stop_thread = True
+                self.lock.release()
+                logging.debug(e)
+                raise
 
-    def parse_options(self):
-        # set up the comand line parser and its options
+    def initate_options_parser(self):
+        """
+        Set options and usage to parse users choices
+        """
         usage = ''.join((
                 'ultimate-smash-friends [-h] [-a][-l level-name] ',
                 '[-p player1,player2...] [-s num] [-C address] [-t',
@@ -164,26 +171,26 @@ class Main(object):
 
         version = '%prog 0.1.3'
 
-        parser = OptionParser(usage=usage, version=version)
-        parser.add_option('-a', '--authors', 
+        self.parser = OptionParser(usage=usage, version=version)
+        self.parser.add_option('-a', '--authors', 
                           action='store_true', dest='author',
                           help='See authors of this game.')
-        parser.add_option('-l', '--level',
+        self.parser.add_option('-l', '--level',
                           action='store', dest='level', metavar='levelname',
                           help='select level by name')
-        parser.add_option('-p', '--players',
+        self.parser.add_option('-p', '--players',
                           action='store', dest='players', nargs=1,
                           metavar='player1,player2..',
                           help='select up to 4 players by name')
-        parser.add_option('-s', '--server',
+        self.parser.add_option('-s', '--server',
                           action='store', dest='server', metavar='num',
                           help="will launch a game server accepting 'num' " \
                                "players before launching the bame.")
-        parser.add_option('-C', '--client',
+        self.parser.add_option('-C', '--client',
                           action='store', dest='client', metavar='address',
                           help="will attempt to connect to a game server at " \
                                "'address'")
-        parser.add_option('-t', '--train',
+        self.parser.add_option('-t', '--train',
                           action='store', dest='train',
                           metavar='character,level',
                           help=''.join(("will load 4 times the character in the level,",
@@ -191,7 +198,9 @@ class Main(object):
                                 "find path values and store them")
                                 ))
 
-        (options, args) = parser.parse_args()
+    def parse_options(self):
+        # set up the comand line parser and its options
+        (options, args) = self.parser.parse_args()
 
         # actually parse the command line options
         if options.author:
@@ -224,6 +233,7 @@ class Main(object):
         self.state = ""
 
     def init_screen(self):
+        SIZE = (config.general['WIDTH'], config.general['HEIGHT'])
         if (config.general['WIDTH'], config.general['HEIGHT']) == (0,0):
             if (800, 600) in pygame.display.list_modes():
                 (config.general['WIDTH'], config.general['HEIGHT']) = (800, 600)
@@ -247,6 +257,75 @@ class Main(object):
         if config.audio['MUSIC']:
             self.music = music.Music()
 
+    def manage_menu(self):
+        # return of the menu update function may contain a new game
+        # instance to switch to.
+        start_loop = pygame.time.get_ticks()
+        newgame, game_ = self.menu.update(self.clock)
+        if newgame:
+            self.state = 'game'
+            if game_ is not self.game:
+                del(self.game)
+                self.game = game_
+
+        max_fps = 1000/config.general["MAX_GUI_FPS"]
+
+        if self.menu.screen_current == 'about':
+            self.music_state = 'credits'
+        else:
+            self.music_state = self.state
+
+        if pygame.time.get_ticks() < max_fps + start_loop:
+            pygame.time.wait(max_fps + start_loop - pygame.time.get_ticks())
+
+    def manage_game(self):
+        self.state = self.game.update()
+        if self.state in ('game', 'victory'):
+            self.game.draw(
+                debug_params={
+                    'controls': config.debug['CONTROLS'] and self.controls,
+                    'action': config.debug['ACTIONS'],
+                    'hardshape': config.debug['HARDSHAPES'],
+                    'footrect': config.debug['FOOTRECT'],
+                    'current_animation':
+                    config.debug['CURRENT_ANIMATION'],
+                    'levelshape': config.debug['LEVELSHAPES'],
+                    'levelmap': config.debug['LEVELMAP'],
+                    }
+                )
+            self.menu.load = False
+        else:
+            self.menu.screen_current = "main_screen"
+        self.state = self.game.update()
+        if self.state in ('game', 'victory'):
+            self.game.draw(
+                debug_params={
+                    'controls': config.debug['CONTROLS'] and self.controls,
+                    'action': config.debug['ACTIONS'],
+                    'hardshape': config.debug['HARDSHAPES'],
+                    'footrect': config.debug['FOOTRECT'],
+                    'current_animation':
+                    config.debug['CURRENT_ANIMATION'],
+                    'levelshape': config.debug['LEVELSHAPES'],
+                    'levelmap': config.debug['LEVELMAP'],
+                    }
+                )
+            self.menu.load = False
+        else:
+            self.menu.screen_current = "main_screen"
+        self.music_state = self.state
+
+    def display_fps(self):
+            #FPS counter
+            if config.general["SHOW_FPS"]:
+                self.screen.blit(
+                        loaders.text(
+                            "FPS: " + str(self.clock.get_fps()),
+                            fonts["mono"]["38"]
+                            ),
+                        (10, 5)
+                        )
+
     def go(self):
         """
         The main game loop, take care of the state of the game/menu.
@@ -255,53 +334,21 @@ class Main(object):
         pygame.mouse.set_visible(False)
         while (True):
             # update the fps counter
-            start_loop = pygame.time.get_ticks()
             self.clock.tick()
 
             # poll controls and update informations on current state of the UI
             if self.state != "menu" :
                 self.state = self.controls.poll(self.game, self.menu, self.state)
             if self.state == "menu":
-                # return of the menu update function may contain a new game
-                # instance to switch to.
-                newgame, game_ = self.menu.update(self.clock)
-                if newgame:
-                    if game_ is not self.game:
-                        #logging.debug('new game')
-                        del(self.game)
-                        self.game = game_
-
-                    self.state = 'game'
+                self.manage_menu()
             else:
-                self.state = self.game.update()
-                if self.state in ['game', 'victory']:
-                    self.game.draw(
-                        debug_params={
-                            'controls': config.debug['CONTROLS'] and self.controls,
-                            'action': config.debug['ACTIONS'],
-                            'hardshape': config.debug['HARDSHAPES'],
-                            'footrect': config.debug['FOOTRECT'],
-                            'current_animation':
-                            config.debug['CURRENT_ANIMATION'],
-                            'levelshape': config.debug['LEVELSHAPES'],
-                            'levelmap': config.debug['LEVELMAP'],
-                            }
-                        )
-                    self.menu.load = False
-                else:
-                    self.menu.screen_current = "main_screen"
-            #FPS counter
-            if config.general["SHOW_FPS"]:
-                self.screen.blit(loaders.text("FPS: " + str(self.clock.get_fps()), fonts["mono"]["38"]), (10, 5))
+                self.manage_game()
+
+            self.display_fps()
             pygame.display.update()
 
-            if self.menu.screen_current == 'about':
-                music_state = 'credits'
-            else:
-                music_state = self.state
-
             if config.audio['MUSIC']:
-                self.music.update(music_state)
+                self.music.update(self.music_state)
             # verify there is not a QUIT event waiting for us, in case of we
             # have to quit.
             self.ended = pygame.event.get(QUIT)
@@ -309,39 +356,28 @@ class Main(object):
                 logging.debug('fps = '+str(self.clock.get_fps()))
                 pygame.quit()
                 break
-            if self.state == "menu":
-                #FIXME
-                max_fps = 1000/config.general["MAX_GUI_FPS"]
-                if pygame.time.get_ticks() < max_fps + start_loop:
-                    pygame.time.wait(max_fps + start_loop - pygame.time.get_ticks())
 
     def author(self):
         if 'CREDITS' not in os.listdir(os.path.join(config.sys_data_dir)):
             logging.info(config.sys_data_dir)
             logging.info('\n'.join(os.listdir(os.path.join(config.sys_data_dir))))
             logging.debug(config.sys_data_dir+'/CREDITS file not found')
-            #sys.exit(0)
         else:
             author_file = open(os.path.join(config.sys_data_dir,'CREDITS'))
             logging.info(author_file.read())
             author_file.close()
-            #sys.exit(2)
 
-    """ TODO: Rather than having a BIN_DIRECTORY variable, programmatically determine
-        binary location
-    def launch_character_creator(self):
-        os.popen(os.path.join(config['BIN_DIRECTORY'],'viewer'))
-        sys.exit(2)
-    """
-
-    def loading(self):
+    def loading_screen(self):
+        """
+        update the screen display during loading
+        """
         try:
             while(True):
                 start_loop = pygame.time.get_ticks()
 
-                self.lock.acquire()
 
                 self.screen.fill(pygame.color.Color("black"))
+                self.lock.acquire()
                 x = self.screen.get_width()/2 - loaders.paragraph(self.text_thread, fonts['mono']['normal']).get_width()/2
                 y = self.screen.get_height()/2 - loaders.paragraph(self.text_thread, fonts['mono']['normal']).get_height()/2
                 self.screen.blit(loaders.paragraph(self.text_thread, fonts['mono']['normal']), (x,y))
@@ -361,7 +397,8 @@ if __name__ == '__main__':
     """
     Entry point of the game, if not imported from another script, launch the
     main class with parameters (appart from program self name) if any.
-
     """
 
-    Main()
+    m = Main()
+    m.init()
+    m.go()
