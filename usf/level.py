@@ -260,8 +260,7 @@ class Level ( object ):
         else:
             self.foreground = False
 
-        tmp = pygame.image.load(self.level)
-        self.rect = pygame.Rect(0,0, *tmp.get_size())
+        self.rect = pygame.Rect(0,0, loaders.image(self.level)[1])
 
         if 'margins' in attribs:
             margins = [int(i) for i in attribs['margins'].split(',')]
