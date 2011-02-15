@@ -148,16 +148,22 @@ class Entity (object):
 
     def dist(self, entity):
         """
-        Return the distance to another entity. None if the entity is None.
+        Return the distance to a Rect or to another entity.
 
         """
-        if entity is not None:
+        if isinstance(entity, pygame.Rect):
+            return (
+                (self.place[0] - entity.centerx) ** 2 +
+                (self.place[1] - entity.centery) ** 2
+                ) ** .5
+
+        elif isinstance(entity, Entity):
             return (
                 (self.place[0] - entity.place[0]) ** 2 +
                 (self.place[1] - entity.place[1]) ** 2
                 ) ** .5
         else:
-            return None
+            raise ValueError("param 1 is neither a Rect or an Entity")
 
     def serialize(self):
         """
@@ -589,14 +595,10 @@ class Entity (object):
         self.worldCollide (game)
 
 
-    def update(self, dt, t, surface, game, coords=(0,0), zoom=1):
+    def update(self, dt, t, game, coords=(0,0), zoom=1):
         """
         Global function to update everything about entity, dt is the time
-        ellapsed since the precedent frame, t is the current time, surface is
-        the surface where the updated entity will be blitted, game is the
-        reference of the current game. If the surface is None (for example in
-        game server mode), then no drawing is performed.
-
+        ellapsed since the precedent frame, t is the current time.
         """
         self.update_floor_vector( game.level.moving_blocs)
         # all of this is nonsense if the entity is not present.

@@ -154,10 +154,13 @@ class Main(object):
 
     def parse_options(self):
         # set up the comand line parser and its options
-        usage = 'ultimate-smash-friends [-h] [-a][-l level-name] ' \
-                '[-p player1,player2...] [-s num] [-C address]\n' \
-                'If a level and at least two players are selected, a match is ' \
-                'launched immediately.'
+        usage = ''.join((
+                'ultimate-smash-friends [-h] [-a][-l level-name] ',
+                '[-p player1,player2...] [-s num] [-C address] [-t',
+                'character,level]\n',
+                'If a level and at least two players are selected, a match is',
+                ' launched immediately.'
+                ))
 
         version = '%prog 0.1.3'
 
@@ -180,6 +183,13 @@ class Main(object):
                           action='store', dest='client', metavar='address',
                           help="will attempt to connect to a game server at " \
                                "'address'")
+        parser.add_option('-t', '--train',
+                          action='store', dest='train',
+                          metavar='character,level',
+                          help=''.join(("will load 4 times the character in the level,",
+                                " and use random moves from every place to ",
+                                "find path values and store them")
+                                ))
 
         (options, args) = parser.parse_args()
 
@@ -200,6 +210,11 @@ class Main(object):
         if options.client:
             self.game_type = 'client'
             self.address = options.client
+
+        if options.train:
+            self.level = options.train.split(',')[1]
+            self.players = (options.train.split(',')[0],)*4
+            self.game_type = 'training'
 
         pygame.init()
 

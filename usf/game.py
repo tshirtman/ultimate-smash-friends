@@ -89,7 +89,6 @@ class Game (object):
             # loading level
             self.level_place = [0, 0]
             self.game_font = game_font
-            self.tmp_surface = self.screen.copy()
 
             # loading players
 
@@ -553,7 +552,6 @@ class Game (object):
             player.update(
                     deltatime,
                     self.gametime,
-                    self.tmp_surface,
                     self,
                     self.level_place,
                     self.zoom
@@ -616,7 +614,6 @@ class Game (object):
             item.update(
                          deltatime,
                          self.gametime,
-                         self.tmp_surface,
                          self,
                          self.level_place,
                          self.zoom
