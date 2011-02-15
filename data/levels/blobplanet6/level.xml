@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map
+    name="blobplanet"
+    background="blobplanet-background.png"
+    foreground="blobplanet-foreground.png"
+    middle="blobplanet-middle.png"
+    margins="250,250,250,250"
+    >
+    <block coords="225 190 120 75" ></block>
+    <block coords="685 190 115 45" ></block>
+    <block coords="1060 265 185 60" ></block>
+    <block coords="60 435 135 80" ></block>
+    <block coords="185 675 185 60" ></block>
+    <block coords="895 405 100 45" ></block>
+    <block coords="765 580 90 45" ></block>
+    <block coords="1015 600 145 50" ></block>
+
+    <block coords="350 425 95 65" ></block>
+    <block coords="445 355 75 245" ></block>
+    <block coords="520 375 125 60" ></block>
+    
+    <!-- entry-point coords="50 100"></entry-point>
+    <entry-point coords="410 100"></entry-point>
+    <entry-point coords="710 100"></entry-point>
+    <entry-point coords="900 100"></entry-point>
+    <entry-point coords="230 0"></entry-point>
+    <entry-point coords="580 0"></entry-point -->
+</map>
