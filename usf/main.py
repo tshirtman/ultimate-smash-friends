@@ -121,8 +121,6 @@ class Main(object):
                 self.menu.handle_reply('goto:resume')
 
             else:
-                pygame.display.update()
-
                 self.lock.acquire()
                 self.text_thread = "Loading GUI..."
                 self.lock.release()

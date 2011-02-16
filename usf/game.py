@@ -80,6 +80,9 @@ class Game (object):
         self.events = []
         self.gametime = 0
 
+        #we load the bool for smooth scrolling here, for a better performance
+        self.smooth_scrolling = loaders.get_gconfig().get("game", "smooth_scrolling") == "y"
+
         self.level = Level(level)
         if screen is not None:
             self.font = game_font
@@ -87,23 +90,33 @@ class Game (object):
             # loading level
             self.level_place = [0, 0]
             self.game_font = game_font
+            self.icon_space = self.SIZE[0]/len(players_)
 
             # loading players
 
         self.load_players(players_)
-        if screen is not None:
-            self.icon_space = self.SIZE[0]/len(players_)
 
         #the optional progress bar for the players lives
         self.progress_bar_size = (82.5*config.general["WIDTH"]/800, 12.5*config.general["WIDTH"]/800)
         self.progress_bar_x = config.general["HEIGHT"]-25*config.general["WIDTH"]/800
 
-        #we load the bool for smooth scrolling here, for a better performance
-        self.smooth_scrolling = loaders.get_gconfig().get("game", "smooth_scrolling") == "y"
         # various other initialisations
         self.last_clock = time.time()
 
         ## adding test events.
+        self.add_world_event()
+
+        # a countdown to the game end
+        self.ending = 5.0
+
+    def __del__(self):
+        """
+        destructor method of game, just useful for loging.
+
+        """
+        logging.debug('game deleted')
+
+    def add_world_event(self):
         self.events.append(
             timed_event.ItemShower(
                 (None, None),
@@ -113,17 +126,6 @@ class Game (object):
                 }
                 )
             )
-
-        # a countdown to the game end
-        self.ending = 5.0
-        #logging.debug('DONE')
-
-    def __del__(self):
-        """
-        destructor method of game, just useful for loging.
-
-        """
-        logging.debug('game deleted')
 
     def load_players(self, players_):
         """
@@ -225,38 +227,7 @@ class Game (object):
             if not event.update( dt, self.gametime ):
                 self.events.remove(event)
 
-    def draw(self, debug_params={}):
-        """
-        Draw every parts of the game on the screen.
-
-        """
-        self.center_zoom_camera()
-        self.level.draw_before_players(
-            self.screen, self.level_place, self.zoom,
-            'levelshape' in debug_params and debug_params['levelshape'],
-        )
-        for entity in self.players+self.items:
-            entity.present and entity.draw(
-                self.level_place, self.zoom, self.screen, debug_params=debug_params
-                )
-
-        self.level.draw_after_players(
-            self.screen, self.level_place, self.zoom,
-            'levelmap' in debug_params and debug_params['levelmap'],
-        )
-
-        #draw the background of the block where the lives are displayed
-        hud_height = 75*config.general["WIDTH"]/800
-        self.screen.blit(loaders.image(os.path.join(
-            config.sys_data_dir,
-            "misc",
-            "hud.png"
-            ), scale=(config.general["WIDTH"], hud_height))[0],
-          (0,config.general["HEIGHT"]-hud_height)
-        )
-
-        # draw players portraits at bottom of screen
-        for num, player in enumerate(self.players):
+    def draw_player_portrait(self, num, player):
             self.screen.blit(
                      player.entity_skin.image,
                         (
@@ -321,6 +292,8 @@ class Game (object):
                         )
                         )
 
+    def draw_debug(self, debug_params):
+        for num, player in enumerate(self.players):
             # displays coords of player, usefull for debuging
             if 'coords' in debug_params:
                 self.screen.blit(
@@ -364,15 +337,67 @@ class Game (object):
                         )
                         )
 
+    def draw_portraits(self):
+        """
+        Draw player's portraits at bottom of the screen
+        """
+        #draw the background of the block where the lives are displayed
+        hud_height = 75*config.general["WIDTH"]/800
+        self.screen.blit(loaders.image(os.path.join(
+            config.sys_data_dir,
+            "misc",
+            "hud.png"
+            ), scale=(config.general["WIDTH"], hud_height))[0],
+          (0,config.general["HEIGHT"]-hud_height)
+        )
+
+        for num, player in enumerate(self.players):
+            self.draw_player_portrait(num, player)
+
+    def draw(self, debug_params={}):
+        """
+        Draw every parts of the game on the screen.
+
+        """
+        self.center_zoom_camera()
+        self.level.draw_before_players(
+            self.screen, self.level_place, self.zoom,
+            'levelshape' in debug_params and debug_params['levelshape'],
+        )
+        for entity in self.players+self.items:
+            entity.present and entity.draw(
+                self.level_place, self.zoom, self.screen, debug_params=debug_params
+                )
+
+        self.level.draw_after_players(
+            self.screen, self.level_place, self.zoom,
+            'levelmap' in debug_params and debug_params['levelmap'],
+        )
+
+        self.draw_portraits()
+        self.draw_debug(debug_params)
+
+        self.display_game_state()
+        self.update_notif()
+
+    def display_game_state(self):
+        """
+        Display if the game is ended by a won, or a draw, does nothing if the
+        game is still running
+        """
+
         if len([player for player in self.players if player.lives > 0]) == 1:
-            self.screen.blit(loaders.text(
-                                        [
-                                         player for player in self.players if
-                                         player.lives > 0
-                                        ][0].name.capitalize()+_(" WON!"), fonts["bold"][15], 0, 0, 0), (
-                                              self.SIZE[0]/2,
-                                              self.SIZE[1]/2)
-                                            )
+            self.screen.blit(
+                    loaders.text(
+                        [ player for player in self.players if player.lives > 0 ]
+                            [0].name.capitalize()+_(" WON!"),
+                        fonts["bold"][15],
+                        0,
+                        0,
+                        0
+                        )
+                    ,(self.SIZE[0]/2, self.SIZE[1]/2)
+                )
 
         if len([player for player in self.players if player.lives > 0]) == 0:
             # there is no more player in games, the game is tailed.
@@ -390,7 +415,6 @@ class Game (object):
                                               self.SIZE[1]/2
                                             )
                                         )
-        self.update_notif()
 
     def update_notif(self):
         for notif in self.notif:
