@@ -127,6 +127,30 @@ class Game (object):
                 )
             )
 
+    def load_player(self, i, player):
+        logging.debug('player '+str(i)+' loaded')
+            #logging.debug(player)
+        if player and "AI" in player.split(os.sep)[1][:2]:
+            self.players.append(
+                    entity.Entity(
+                        i+1,
+                        self,
+                        player.replace("AI", ""),
+                        ((i+1)*self.SIZE[0]/5,100)
+                        )
+                    )
+            self.players[len(self.players)-1].ai = True
+
+        else:
+            self.players.append(
+                    entity.Entity(
+                        i+1,
+                        self,
+                        player,
+                        ((i+1)*self.SIZE[0]/5,100)
+                        )
+                    )
+
     def load_players(self, players_):
         """
         this function is responsible of adding the requested players to the
@@ -136,28 +160,7 @@ class Game (object):
         logging.debug('loading players')
         self.players = []
         for i,player in enumerate(players_):
-            logging.debug('player '+str(i)+' loaded')
-                #logging.debug(player)
-            if player and "AI" in player.split(os.sep)[1][:2]:
-                self.players.append(
-                        entity.Entity(
-                            i+1,
-                            self,
-                            player.replace("AI", ""),
-                            ((i+1)*self.SIZE[0]/5,100)
-                            )
-                        )
-                self.players[len(self.players)-1].ai = True
-
-            else:
-                self.players.append(
-                        entity.Entity(
-                            i+1,
-                            self,
-                            player,
-                            ((i+1)*self.SIZE[0]/5,100)
-                            )
-                        )
+            self.load_player(i, player)
 
         # events to make players appear into game
         # logging.debug('players insertion in game')
@@ -185,10 +188,8 @@ class Game (object):
         Insert an item into game.
 
         """
-        if bullet:
-            physic=False
-        else:
-            physic=True
+        physic = not bullet
+
         try:
             os.listdir(os.path.join( config.sys_data_dir, 'items', item))
             self.items.append(
@@ -227,115 +228,139 @@ class Game (object):
             if not event.update( dt, self.gametime ):
                 self.events.remove(event)
 
-    def draw_player_portrait(self, num, player):
+    def draw_progress_bar_for_lives(self):
+        self.screen.blit(
+                image(
+                    os.path.join(
+                        config.sys_data_dir,
+                        'misc',
+                        'progress_bar_bg.png'
+                        ),
+                    scale=self.progress_bar_size
+                    )[0],
+                (
+                -0.5*self.icon_space+player.num*self.icon_space,
+                self.progress_bar_x
+                )
+            )
+        if self.progress_bar_size[0] - self.progress_bar_size[0]*(player.percents*0.1+0.01) > 0:
             self.screen.blit(
-                     player.entity_skin.image,
+                    image(
+                        os.path.join(
+                            config.sys_data_dir,
+                            'misc',
+                            'progress_bar.png'
+                            ),
+                        scale=(self.progress_bar_size[0] - self.progress_bar_size[0]*(player.percents*0.1+0.01), self.progress_bar_size[1])
+                        )[0],
+                    (
+                    -0.5*self.icon_space+player.num*self.icon_space,
+                self.progress_bar_x
+                    )
+                )
+
+    def draw_player_portrait(self, num, player):
+        self.screen.blit(
+                 player.entity_skin.image,
+                    (
+                    -0.5*self.icon_space+player.num*self.icon_space,
+                    self.SIZE[1]*.9
+                    )
+                )
+
+        if loaders.get_gconfig().get("game", "displaylives") == "y" :
+            self.screen.blit(
+                     self.font.render(str(player.percents*10)[:3]+"%",
+                     True,
+                     pygame.color.Color("red")),
                         (
                         -0.5*self.icon_space+player.num*self.icon_space,
                         self.SIZE[1]*.9
                         )
                     )
+        elif loaders.get_gconfig().get("game", "display_progress_bar_for_lives") == "y":
+            draw_progress_bar_for_lives()
 
-            if loaders.get_gconfig().get("game", "displaylives") == "y" :
-                self.screen.blit(
-                         self.font.render(str(player.percents*10)[:3]+"%",
-                         True,
-                         pygame.color.Color("red")),
-                            (
-                            -0.5*self.icon_space+player.num*self.icon_space,
-                            self.SIZE[1]*.9
+        self.draw_player_lives(player)
+
+    def draw_player_lives(self, player):
+        """ draw as much hearth as the player has lives on it's portrait
+        """
+        for i in range(player.lives):
+            self.screen.blit(
+                    image(
+                        os.path.join(
+                            config.sys_data_dir,
+                            'misc',
+                            'heart.png'
                             )
-                        )
-            elif loaders.get_gconfig().get("game", "display_progress_bar_for_lives") == "y":
-                self.screen.blit(
-                        image(
-                            os.path.join(
-                                config.sys_data_dir,
-                                'misc',
-                                'progress_bar_bg.png'
-                                ),
-                            scale=self.progress_bar_size
-                            )[0],
-                        (
-                        -0.5*self.icon_space+player.num*self.icon_space,
-                        self.progress_bar_x
-                        )
-                    )
-                if self.progress_bar_size[0] - self.progress_bar_size[0]*(player.percents*0.1+0.01) > 0:
-                    self.screen.blit(
-                            image(
-                                os.path.join(
-                                    config.sys_data_dir,
-                                    'misc',
-                                    'progress_bar.png'
-                                    ),
-                                scale=(self.progress_bar_size[0] - self.progress_bar_size[0]*(player.percents*0.1+0.01), self.progress_bar_size[1])
-                                )[0],
-                            (
-                            -0.5*self.icon_space+player.num*self.icon_space,
-                        self.progress_bar_x
-                            )
-                        )
-            # draw player's lives.
-            for i in range(player.lives):
-                self.screen.blit(
-                        image(
-                            os.path.join(
-                                config.sys_data_dir,
-                                'misc',
-                                'heart.png'
-                                )
-                            )[0],
-                        (
-                        -0.5*self.icon_space+player.num*self.icon_space+32+i*self.icon_space/40,
+                        )[0],
+                    (
+                        -0.5 * self.icon_space +
+                            player.num * self.icon_space +
+                            32 +
+                            i * self.icon_space / 40,
                         self.SIZE[1]*.9+10
                         )
-                        )
+                    )
+
+    def draw_debug_player_coords(self, num, player):
+        """ draw player coords, useful for debugging.
+        """
+        self.screen.blit(
+                self.font.render(
+                    str(player.place[0])+
+                    ':'+
+                    str(player.place[1]),
+                    True,
+                    pygame.color.Color('red')
+                    ),
+                (
+                 self.SIZE[0] * 3 / 4,
+                 num*self.SIZE[1] / 4
+                )
+                )
+
+    def draw_debug_player_movement(self, num, player):
+        """displays current key movement of player, useful for debuging
+        """
+        self.screen.blit(
+                self.font.render(
+                    player.entity_skin.current_animation,
+                    True,
+                    pygame.color.Color('red')
+                    ),
+                (
+                 0,
+                 num*self.SIZE[1] / 4
+                )
+                )
+
+    def draw_debug_player_controls(self, num, player):
+        """ displays current key sequence of player, useful for debuging
+        """
+        self.screen.blit(
+                self.font.render(
+                    str(debug_params['controls'].player_sequences[num+1]),
+                    True,
+                    pygame.color.Color('red')
+                    ),
+                (
+                 0,
+                 num*self.SIZE[1] / 4
+                )
+                )
 
     def draw_debug(self, debug_params):
         for num, player in enumerate(self.players):
-            # displays coords of player, usefull for debuging
             if 'coords' in debug_params:
-                self.screen.blit(
-                        self.font.render(
-                            str(player.place[0])+
-                            ':'+
-                            str(player.place[1]),
-                            True,
-                            pygame.color.Color('red')
-                            ),
-                        (
-                         self.SIZE[0] * 3 / 4,
-                         num*self.SIZE[1] / 4
-                        )
-                        )
+                self.draw_debug_player_coords(num, player)
 
             if debug_params.get('actions', False):
-                # displays current key movement of player, usefull for debuging
-                self.screen.blit(
-                        self.font.render(
-                            player.entity_skin.current_animation,
-                            True,
-                            pygame.color.Color('red')
-                            ),
-                        (
-                         0,
-                         num*self.SIZE[1] / 4
-                        )
-                        )
+                self.draw_debug_player_movement(num, player)
+
             if debug_params.get('controls', False):
-                # displays current key sequence of player, usefull for debuging
-                self.screen.blit(
-                        self.font.render(
-                            str(debug_params['controls'].player_sequences[num+1]),
-                            True,
-                            pygame.color.Color('red')
-                            ),
-                        (
-                         0,
-                         num*self.SIZE[1] / 4
-                        )
-                        )
+                self.draw_debug_player_controls(num, player)
 
     def draw_portraits(self):
         """
@@ -390,31 +415,37 @@ class Game (object):
             self.screen.blit(
                     loaders.text(
                         [ player for player in self.players if player.lives > 0 ]
-                            [0].name.capitalize()+_(" WON!"),
-                        fonts["bold"][15],
-                        0,
-                        0,
-                        0
-                        )
-                    ,(self.SIZE[0]/2, self.SIZE[1]/2)
-                )
+                        [0].name.capitalize()+_(" WON!"),
+                        fonts["bold"][15], 0, 0, 0),
+                    (self.SIZE[0]/2, self.SIZE[1]/2)
+                    )
 
         if len([player for player in self.players if player.lives > 0]) == 0:
             # there is no more player in games, the game is tailed.
             self.screen.blit(game_font.render(
-                                        _("OOPS... DRAW!!!"),
-                                        True,
-                                        pygame.color.Color("#"+
-                                            str(math.sin(self.ending/10)) [3:5]+
-                                            "50"+
-                                            str(math.sin(self.ending/10)) [3:5]+
-                                            "30"
-                                        )),
-                                            (
-                                              self.SIZE[0]/2,
-                                              self.SIZE[1]/2
-                                            )
-                                        )
+                _("OOPS... DRAW!!!"),
+                True,
+                pygame.color.Color("#"+
+                    str(math.sin(self.ending/10)) [3:5]+
+                    "50"+
+                    str(math.sin(self.ending/10)) [3:5]+
+                    "30"
+                    )),
+                (self.SIZE[0]/2, self.SIZE[1]/2)
+                )
+
+    def draw_notif(self, notif):
+        self.screen.blit(
+                game_font.render(
+                    str(notif[1]),
+                    True,
+                    pygame.color.Color("black")
+                    ),
+                (
+                 self.SIZE[0]/4,
+                 self.notif.index(notif)*self.SIZE[1]/20
+                )
+                )
 
     def update_notif(self):
         for notif in self.notif:
@@ -423,87 +454,72 @@ class Game (object):
                     notif.append(notif[1][0])
                 elif len(notif[2]) is not len(notif[1]):
                     notif[2] = notif[2] + notif[1][len(notif[2])]
-                if(notif[0] +4 > time.time()):
-                    self.screen.blit(
-                            game_font.render(
-                                str(notif[2]),
-                                True,
-                                pygame.color.Color("black")
-                                ),
-                            (
-                             self.SIZE[0]/4,
-                             self.notif.index(notif)*self.SIZE[1]/20
-                            )
-                            )
-                else:
-                    self.notif.remove(notif)
+            if(notif[0] +4 > time.time()):
+                self.draw_notif(notif)
             else:
-                if(notif[0] +4 > time.time()):
-                    self.screen.blit(
-                            game_font.render(
-                                str(notif[1]),
-                                True,
-                                pygame.color.Color("black")
-                                ),
-                            (
-                             self.SIZE[0]/4,
-                             self.notif.index(notif)*self.SIZE[1]/20
-                            )
-                            )
-                else:
-                    self.notif.remove(notif)
+                self.notif.remove(notif)
 
-    def center_zoom_camera(self):
-        present_players = [ i for i in self.players if i.present ]
-        if len(present_players) is not 0:
-            if len(present_players) == 1:
-                players_barycenter = present_players[0].rect[0:2]
-                precise_zoom = 1
-                self.zoom = int(precise_zoom *
-                            config.general['ZOOM_SHARPNESS'])/(config.general['ZOOM_SHARPNESS']*
-                            1.0 )
-            # center the level around the barycenter of present players.
-            else:
-                ordered = sorted([ i.place[0] for i in present_players ])
-                L = max(
-                    self.SIZE[0],
-                    max(1, ordered[-1] + 100)- max(1, ordered[0] - 100) * 1.25
-                    )
+    @property
+    def precise_zoom(self):
+        """
+        Return the minimum scale of the level to use so every player is
+        visible on screen, provided there is more than one player 
+        """
+        if len(self.present_players) == 1:
+            return 1
 
-                ordered = sorted([ i.place[1] for i in present_players ])
-
-                H = max( self.SIZE[1], ordered[-1] - ordered[0] * 1.25)
-
-                precise_zoom = min (
-                        1.0*self.SIZE[0] / L,
-                        1.0*self.SIZE[1] / H
-                        )
-
-                # there is a trade between zoom sharpness and speed so we force
-                # the zoom level to be a limited precision value here, so the
-                # image cache is more useful.
-
-                self.zoom = (
-                    int( precise_zoom * config.general['ZOOM_SHARPNESS'] )/
-                    (config.general['ZOOM_SHARPNESS'] * 1.0)
+        else:
+            ordered = sorted([ i.place[0] for i in self.present_players ])
+            L = max(
+                self.SIZE[0],
+                max(1, ordered[-1] + 100)- max(1, ordered[0] - 100) * 1.25
                 )
 
-                players_barycenter = (
-                    sum( i.place[0] for i in present_players ) / len(present_players),
-                    sum( i.place[1] for i in present_players ) / len(present_players)
+            ordered = sorted([ i.place[1] for i in self.present_players ])
+
+            H = max( self.SIZE[1], ordered[-1] - ordered[0] * 1.25)
+
+            return min (
+                    1.0*self.SIZE[0] / L,
+                    1.0*self.SIZE[1] / H
                     )
 
-            #logging.debug(( self.zoom, lower - upper, rightwing - leftist))
+    @property
+    def players_barycenter(self):
+        if len(self.present_players) == 1:
+            return self.present_players[0].rect[0:2]
+        else:
+            return (
+                sum(i.place[0] for i in self.present_players) / len(self.present_players),
+                sum(i.place[1] for i in self.present_players) / len(self.present_players)
+                )
+
+    def center_zoom_camera(self):
+        self.present_players = [ i for i in self.players if i.present ]
+        if len(self.present_players) is not 0:
+            # there is a trade between zoom sharpness and speed so we force
+            # the zoom level to be a limited precision value here, so the
+            # image cache is more useful.
+            self.zoom = (
+                int(self.precise_zoom * config.general['ZOOM_SHARPNESS'])/
+                (config.general['ZOOM_SHARPNESS']* 1.0)
+            )
+
+            players_barycenter = self.players_barycenter
             # calculate coordinates of top left corner of level
             # rect the barycenter of players at the center of the screen
             level_place = [
                  -(players_barycenter[0])*self.zoom+self.SIZE[0]/2 ,
                  -(players_barycenter[1])*self.zoom+self.SIZE[1]/2 
                  ]
+
             if self.smooth_scrolling:
+                # tends to the ideal position (nicer!)
                 self.level_place[0] += (level_place[0] - self.level_place[0])/4
                 self.level_place[1] += (level_place[1] - self.level_place[1])/4
+
             else:
+                # move immediatly to the ideal position
                 self.level_place = level_place
 
     def update_physics(self):
@@ -523,36 +539,7 @@ class Game (object):
                                 and i.invincible is False ]:
                     if pl.collide_point([point[0][0]+entity.rect[0],
                                          point[0][1]+entity.rect[1]] )is not -1:
-                        if pl.shield['on'] :
-                            pl.shield['power'] -= math.sqrt(
-                                                point[1][0]**2 + point[1][1]**2
-                                                )/config.general['SHIELD_SOLIDITY']
-                            pl.shield['power'] = max(0, pl.shield['power'])
-                            if (
-                            pl.shield['date'] < time.time() - config.general['POWER_SHIELD_TIME']
-                            ):
-                                pl.percents += math.sqrt( point[1][0]**2\
-                                                     +point[1][1]**2)/(30 * (100 -
-                                                     pl.armor )) / 2
-
-                        else:
-                            if entity.reversed != pl.reversed:
-                                pl.vector = [-point[1][0]*(1+pl.percents),
-                                              point[1][1]*(1+pl.percents)]
-                            else:
-                                pl.vector = [ point[1][0]*(1+pl.percents),
-                                              point[1][1]*(1+pl.percents) ]
-                            pl.percents += math.sqrt( point[1][0]**2\
-                                                     +point[1][1]**2)/(30 * (100 -
-                                                     pl.armor ))*10
-
-                            pl.entity_skin.change_animation(
-                                    "take",
-                                    self,
-                                    params={
-                                    'entity': pl
-                                    }
-                                    )
+                        pl.hit(point, entity.reversed)
 
         # collision between players and items -- tests and
         # consequences

@@ -145,6 +145,41 @@ class Entity (object):
                     self.entity_skin.animation.image
                     ))
 
+    def hit(self, point, reverse):
+        """ enforce the effect of a collision with an aggressive point, the
+        point is a list of x,y,dx,dy coords, and reverse is a flag indicating
+        if the attacking entity is reversed (to apply projection vectors)
+        """
+        if self.shield['on'] :
+            self.shield['power'] -= math.sqrt(
+                                point[1][0]**2 + point[1][1]**2
+                                )/config.general['SHIELD_SOLIDITY']
+            self.shield['power'] = max(0, self.shield['power'])
+            if (
+            self.shield['date'] < time.time() - config.general['POWER_SHIELD_TIME']
+            ):
+                self.percents += math.sqrt( point[1][0]**2\
+                                     +point[1][1]**2)/(30 * (100 -
+                                     self.armor )) / 2
+
+        else:
+            if reverse != self.reversed:
+                self.vector = [-point[1][0]*(1+self.percents),
+                              point[1][1]*(1+self.percents)]
+            else:
+                self.vector = [ point[1][0]*(1+self.percents),
+                              point[1][1]*(1+self.percents) ]
+            self.percents += math.sqrt( point[1][0]**2\
+                                     +point[1][1]**2)/(30 * (100 -
+                                     self.armor ))*10
+
+            self.entity_skin.change_animation(
+                    "take",
+                    self,
+                    params={
+                    'entity': self
+                    }
+                    )
 
     def dist(self, entity):
         """
