@@ -76,9 +76,13 @@ class Layer(object):
                                         scale=(int(node.attrib["sizex"])*config.general['WIDTH']/800,
                                                int(node.attrib["sizey"])*config.general['HEIGHT']/480))[0]
         self.frame = []
-        for frame in node.findall("frame"):
-            self.frame.append([float(frame.attrib["time"]),
-                          (int(frame.attrib["x"]), int(frame.attrib["y"]))])
+        if node.attrib.has_key("type"):
+            if node.attrib["type"] == "framebyframe":
+                pass
+        else:
+            for frame in node.findall("frame"):
+                self.frame.append([float(frame.attrib["time"]),
+                              (int(frame.attrib["x"]), int(frame.attrib["y"]))])
 
     def get_image(self):
         if self.last_update + self.frame[self.current][0] < time.time():
