@@ -24,7 +24,7 @@ import logging
 import loaders
 import time
 from config import Config
-
+from usf import skin
 config = Config()
 
 from debug_utils import draw_rect
@@ -283,16 +283,7 @@ class Level ( object ):
 
         self.layers = []
         for layer in xml.findall('layer'):
-            self.layers.append(
-                (
-                    os.path.join(
-                        config.sys_data_dir,
-                        'levels',
-                        layer.attrib['image']
-                        ),
-                    layer.attrib['depth']
-                    )
-                )
+            self.layers.append(skin.Layer(layer))
 
         for block in xml.findall('block'):
             nums = block.attrib['coords'].split(' ')
@@ -429,6 +420,8 @@ class Level ( object ):
     def draw_background(self, surface, coords=(0,0)):
         surface.blit( loaders.image(self.background,
             scale=self.SIZE)[0], coords )
+        for layer in self.layers:
+            pygame.display.get_surface().blit(layer.get_image(), layer.get_pos())
 
     def draw_level(self, surface, coords, zoom, shapes=False):
         surface.blit( loaders.image(self.level, zoom=zoom)[0], coords)

@@ -72,8 +72,6 @@ class Layer(object):
         self.last_update = 0
         self.current = 0
         self.background = loaders.image(join(config.sys_data_dir,
-                                             "gui",
-                                             config.general['THEME'],
                                              node.attrib["src"]),
                                         scale=(int(node.attrib["sizex"])*config.general['WIDTH']/800,
                                                int(node.attrib["sizey"])*config.general['HEIGHT']/480))[0]
@@ -92,4 +90,19 @@ class Layer(object):
         return self.background
 
     def get_pos(self):
-        return self.frame[self.current][1]
+        interval = time.time() - self.last_update
+        period   = self.frame[self.current][0]
+        position_first   = self.frame[self.current][1]
+        position_next = (0,0)
+        if self.current + 1 < len(self.frame):
+            position_next = self.frame[self.current + 1][1]
+        else:
+            period = 0
+
+        if period == 0:
+            return self.frame[self.current][1]
+
+        x = ( (period - interval) * position_first[0] + interval * position_next[0] )/period
+        y = ( (period - interval) * position_first[1] + interval * position_next[1] )/period
+        position = (x, y)
+        return position

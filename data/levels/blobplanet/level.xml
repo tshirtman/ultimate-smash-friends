@@ -18,11 +18,54 @@
     <block coords="350 425 95 65" ></block>
     <block coords="445 355 75 245" ></block>
     <block coords="520 375 125 60" ></block>
-    
-    <!-- entry-point coords="50 100"></entry-point>
-    <entry-point coords="410 100"></entry-point>
-    <entry-point coords="710 100"></entry-point>
-    <entry-point coords="900 100"></entry-point>
-    <entry-point coords="230 0"></entry-point>
-    <entry-point coords="580 0"></entry-point -->
+
+    <layer sizex="35" sizey="46" src="levels/blobplanet/leaf.png">
+        <frame time="2" x="0" y="-70" />
+        <frame time="0" x="30" y="600" />
+    </layer>
+    <layer sizex="40" sizey="52" src="levels/blobplanet/leaf2.png">
+        <frame time="3" x="100" y="-70" />
+        <frame time="0" x="175" y="600" />
+    </layer>
+    <layer sizex="25" sizey="35" src="levels/blobplanet/leaf.png">
+        <frame time="4" x="300" y="-70" />
+        <frame time="0" x="250" y="600" />
+    </layer>
+    <layer sizex="35" sizey="46" src="levels/blobplanet/leaf3.png">
+        <frame time="3" x="400" y="-70" />
+        <frame time="0" x="450" y="600" />
+    </layer>
+    <layer sizex="40" sizey="52" src="levels/blobplanet/leaf3.png">
+        <frame time="4" x="600" y="-70" />
+        <frame time="0" x="550" y="600" />
+    </layer>
+    <layer sizex="40" sizey="52" src="levels/blobplanet/leaf.png">
+        <frame time="2" x="750" y="-70" />
+        <frame time="0" x="800" y="600" />
+    </layer>
+
+    <layer sizex="35" sizey="46" src="levels/blobplanet/leaf.png">
+        <frame time="2" x="100" y="-70" />
+        <frame time="0" x="175" y="600" />
+    </layer>
+    <layer sizex="40" sizey="52" src="levels/blobplanet/leaf2.png">
+        <frame time="3" x="200" y="-70" />
+        <frame time="0" x="150" y="600" />
+    </layer>
+    <layer sizex="25" sizey="35" src="levels/blobplanet/leaf.png">
+        <frame time="4" x="420" y="-70" />
+        <frame time="0" x="358" y="600" />
+    </layer>
+    <layer sizex="35" sizey="46" src="levels/blobplanet/leaf.png">
+        <frame time="1" x="400" y="-70" />
+        <frame time="0" x="450" y="600" />
+    </layer>
+    <layer sizex="40" sizey="52" src="levels/blobplanet/leaf2.png">
+        <frame time="5" x="570" y="-70" />
+        <frame time="0" x="536" y="600" />
+    </layer>
+    <layer sizex="40" sizey="52" src="levels/blobplanet/leaf3.png">
+        <frame time="3" x="80" y="-70" />
+        <frame time="0" x="10" y="600" />
+    </layer>
 </map>
