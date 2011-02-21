@@ -387,22 +387,21 @@ class Level ( object ):
 
     def draw_after_players(self, surface, level_place, zoom, levelmap=False):
         self.draw_foreground(surface, level_place, zoom)
-        if levelmap:
+        if levelmap or loaders.get_gconfig().get("game", "minimap") == "y":
             self.draw_minimap(surface)
 
     def draw_minimap(self, surface):
         for rect in self.map:
-            if loaders.get_gconfig().get("game", "minimap") == "y":
-                draw_rect(
-                        surface,
-                        pygame.Rect(
-                            (rect[0])/8,
-                            (rect[1])/8,
-                            rect[2]/8,
-                            rect[3]/8
-                            ),
-                        pygame.Color('grey')
-                        )
+            draw_rect(
+                    surface,
+                    pygame.Rect(
+                        (rect[0])/8,
+                        (rect[1])/8,
+                        rect[2]/8,
+                        rect[3]/8
+                        ),
+                    pygame.Color('grey')
+                    )
 
     def draw_debug_map(self, surface, level_place, zoom):
         for rect in self.map:

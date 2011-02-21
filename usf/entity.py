@@ -460,17 +460,17 @@ class Entity (object):
         # Draw a point on the map at the entity position.
         if not self.present:
             return
-
-        draw_rect(
-                surface,
-                pygame.Rect(
-                    self.place[0]/8,
-                    self.place[1]/8,
-                    2,
-                    2
-                    ),
-                pygame.Color('red')
-                )
+        if debug_params["levelmap"] or loaders.get_gconfig().get("game", "minimap") == "y":
+            draw_rect(
+                    surface,
+                    pygame.Rect(
+                        self.place[0]/8,
+                        self.place[1]/8,
+                        2,
+                        2
+                        ),
+                    pygame.Color('red')
+                    )
 
         if self.visible == True:
             if not self.reversed:
