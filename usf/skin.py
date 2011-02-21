@@ -36,15 +36,11 @@ config = Config()
 import translation
 
 class Skin (object):
+
     def __init__(self):
-        self.last_update = 0
         self.dialog = {}
         self.color = pygame.color.Color("white")
-        self.background = []
         self.layer = []
-        self.background_duration = []
-        self.current = 0
-        self.surface = 0
         xml_file = ElementTree().parse(os.path.join(sys_data_dir, 
                                                     "gui", general["THEME"],
                                                     "theme.xml"))

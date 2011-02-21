@@ -53,6 +53,12 @@ class TestLayer(unittest.TestCase):
         self.assertEqual(layer.get_pos(0)[0], 0)
         # At 0.0, our layer should be at -70 on the y axis
         self.assertEqual(layer.get_pos(0)[1], -70)
+
+        # At 1.0, our layer should be at 15 on the x axis
+        self.assertEqual(layer.get_pos(1)[0], 15)
+        # At 1.0, our layer should be at 265 on the x axis
+        self.assertEqual(layer.get_pos(1)[1], 265)
+
         # At 2.0, our layer should be at 30 on the x axis
         self.assertEqual(layer.get_pos(2)[0], 30)
         # At 2.0, our layer should be at 600 on the x axis
