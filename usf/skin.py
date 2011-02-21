@@ -88,15 +88,25 @@ class Layer(object):
         self.current = 0
         sizex = int(node.attrib["sizex"])*config.general['WIDTH']/800
         sizey = int(node.attrib["sizey"])*config.general['HEIGHT']/600
-        self.background = loaders.image(join(config.sys_data_dir,
-                                             node.attrib["src"]),
-                                        scale=(sizex, sizey)
-                                       )[0]
         self.frame = []
         if node.attrib.has_key("type"):
+            self.x = int(node.attrib["x"])*config.general['WIDTH']/800
+            self.y = int(node.attrib["y"])*config.general['HEIGHT']/600
             if node.attrib["type"] == "framebyframe":
-                pass
+                self.type = 1
+                for frame in node.findall("frame"):
+                    src = loaders.image(join(config.sys_data_dir,
+                                                 frame.attrib["src"]),
+                                            scale=(sizex, sizey)
+                                           )[0]
+                    time = float(frame.attrib["time"])
+                    self.frame.append( (time, src) )
         else:
+            self.type = 0
+            self.background = loaders.image(join(config.sys_data_dir,
+                                                 node.attrib["src"]),
+                                            scale=(sizex, sizey)
+                                           )[0]
             for frame in node.findall("frame"):
                 x = int(frame.attrib["x"])*config.general['WIDTH']/800
                 y = int(frame.attrib["y"])*config.general['HEIGHT']/600
@@ -121,7 +131,10 @@ class Layer(object):
                 self.current += 1
             else:
                 self.current = 0
-        return self.background
+        if self.type == 0:
+            return self.background
+        else:
+            return self.frame[self.current][1]
 
     def get_pos(self, dt = -1):
         """
@@ -133,25 +146,28 @@ class Layer(object):
 
         :rtype: tuple which contains the coordinates of the layer (x,y)
         """
-        if dt == -1:
-            dt = time.time()
+        if self.type == 0:
+            if dt == -1:
+                dt = time.time()
 
-        interval        = dt - self.last_update
-        period          = self.frame[self.current][0]
-        position_first  = self.frame[self.current][1]
-        position_next   = (0,0)
+            interval        = dt - self.last_update
+            period          = self.frame[self.current][0]
+            position_first  = self.frame[self.current][1]
+            position_next   = (0,0)
 
-        # if we are on the last frame, just return the value of this frame
-        if self.current + 1 < len(self.frame):
-            position_next = self.frame[self.current + 1][1]
+            # if we are on the last frame, just return the value of this frame
+            if self.current + 1 < len(self.frame):
+                position_next = self.frame[self.current + 1][1]
+            else:
+                period = 0
+
+            # if we are on the first frame, just return it coordinates
+            if period == 0:
+                return self.frame[self.current][1]
+
+            x = ( (period - interval) * position_first[0] + interval * position_next[0] )/period
+            y = ( (period - interval) * position_first[1] + interval * position_next[1] )/period
+            position = (x, y)
+            return position
         else:
-            period = 0
-
-        # if we are on the first frame, just return it coordinates
-        if period == 0:
-            return self.frame[self.current][1]
-
-        x = ( (period - interval) * position_first[0] + interval * position_next[0] )/period
-        y = ( (period - interval) * position_first[1] + interval * position_next[1] )/period
-        position = (x, y)
-        return position
+            return(self.x, self.y)

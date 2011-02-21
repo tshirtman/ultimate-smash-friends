@@ -23,10 +23,6 @@
         <frame time="2" x="0" y="-70" />
         <frame time="0" x="30" y="600" />
     </layer>
-    <layer sizex="40" sizey="52" src="levels/blobplanet/leaf2.png">
-        <frame time="3" x="100" y="-70" />
-        <frame time="0" x="175" y="600" />
-    </layer>
     <layer sizex="25" sizey="35" src="levels/blobplanet/leaf.png">
         <frame time="4" x="300" y="-70" />
         <frame time="0" x="250" y="600" />
