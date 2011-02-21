@@ -67,24 +67,56 @@ class Skin (object):
             pygame.display.get_surface().blit(layer.get_image(), layer.get_pos())
 
 class Layer(object):
+    """
+    A layer class.
+    It is mainly used to have animated background in both the gui and the game.
+    
+    It is created from an ElementTree xml node.
+    
+    Here is the syntax::
+
+        <layer sizex="35" sizey="46" src="path.png">
+            <frame time="2" x="0" y="-70" />
+            <frame time="0" x="30" y="600" />
+        </layer>
+    
+    The path (path.png) of the image must be an absolute path from the data
+    directory of USF, e.g. levels/blobplanet/leaf.png.
+    
+    Time is the duration of the frame (seconds), here, the image will go to the second
+    frame in 2 seconds (and then, it will go to the first in 0).
+    """
 
     def __init__(self, node):
         self.last_update = 0
         self.current = 0
+        sizex = int(node.attrib["sizex"])*config.general['WIDTH']/800
+        sizey = int(node.attrib["sizey"])*config.general['HEIGHT']/600
         self.background = loaders.image(join(config.sys_data_dir,
                                              node.attrib["src"]),
-                                        scale=(int(node.attrib["sizex"])*config.general['WIDTH']/800,
-                                               int(node.attrib["sizey"])*config.general['HEIGHT']/480))[0]
+                                        scale=(sizex, sizey)
+                                       )[0]
         self.frame = []
         if node.attrib.has_key("type"):
             if node.attrib["type"] == "framebyframe":
                 pass
         else:
             for frame in node.findall("frame"):
-                self.frame.append([float(frame.attrib["time"]),
-                              (int(frame.attrib["x"]), int(frame.attrib["y"]))])
+                x = int(frame.attrib["x"])*config.general['WIDTH']/800
+                y = int(frame.attrib["y"])*config.general['HEIGHT']/600
+                time = float(frame.attrib["time"])
+                self.frame.append( (time, (x, y)) )
 
     def get_image(self, dt = -1):
+        """
+        Get the image surface.
+        
+        :param dt: The current time. Usually, it is -1, and it is set to
+            time.time() when it is -1. It can be useful to specify the time for
+            unit testing.
+            
+        :rtype: pygame surface
+        """
         if dt == -1:
             dt = time.time()
         if self.last_update + self.frame[self.current][0] < dt:
@@ -96,17 +128,30 @@ class Layer(object):
         return self.background
 
     def get_pos(self, dt = -1):
+        """
+        Get the position of the layer.
+        
+        :param dt: The current time. Usually, it is -1, and it is set to
+            time.time() when it is -1. It can be useful to specify the time for
+            unit testing.
+
+        :rtype: tuple which contains the coordinates of the layer (x,y)
+        """
         if dt == -1:
             dt = time.time()
-        interval = dt - self.last_update
-        period   = self.frame[self.current][0]
-        position_first   = self.frame[self.current][1]
-        position_next = (0,0)
+
+        interval        = dt - self.last_update
+        period          = self.frame[self.current][0]
+        position_first  = self.frame[self.current][1]
+        position_next   = (0,0)
+
+        # if we are on the last frame, just return the value of this frame
         if self.current + 1 < len(self.frame):
             position_next = self.frame[self.current + 1][1]
         else:
             period = 0
 
+        # if we are on the first frame, just return it coordinates
         if period == 0:
             return self.frame[self.current][1]
 
