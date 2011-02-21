@@ -228,7 +228,7 @@ class Game (object):
             if not event.update( dt, self.gametime ):
                 self.events.remove(event)
 
-    def draw_progress_bar_for_lives(self):
+    def draw_progress_bar_for_lives(self, player):
         self.screen.blit(
                 image(
                     os.path.join(
@@ -279,7 +279,7 @@ class Game (object):
                         )
                     )
         elif loaders.get_gconfig().get("game", "display_progress_bar_for_lives") == "y":
-            draw_progress_bar_for_lives()
+            self.draw_progress_bar_for_lives(player)
 
         self.draw_player_lives(player)
 

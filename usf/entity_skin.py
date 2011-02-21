@@ -241,7 +241,7 @@ class Entity_skin (object):
 
             self.animation_change = 1
             params['world'] = game
-            params['gametime'] = game is not None and game.gametime or 0
+            params['gametime'] = game is not None or 0
             for event in self.action_events[anim_name]:
                 if event[1][0] is 0:
                     p1 = None
