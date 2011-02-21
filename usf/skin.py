@@ -84,17 +84,21 @@ class Layer(object):
                 self.frame.append([float(frame.attrib["time"]),
                               (int(frame.attrib["x"]), int(frame.attrib["y"]))])
 
-    def get_image(self):
-        if self.last_update + self.frame[self.current][0] < time.time():
-            self.last_update = time.time()
+    def get_image(self, dt = -1):
+        if dt == -1:
+            dt = time.time()
+        if self.last_update + self.frame[self.current][0] < dt:
+            self.last_update = dt
             if self.current + 1 < len(self.frame):
                 self.current += 1
             else:
                 self.current = 0
         return self.background
 
-    def get_pos(self):
-        interval = time.time() - self.last_update
+    def get_pos(self, dt = -1):
+        if dt == -1:
+            dt = time.time()
+        interval = dt - self.last_update
         period   = self.frame[self.current][0]
         position_first   = self.frame[self.current][1]
         position_next = (0,0)
