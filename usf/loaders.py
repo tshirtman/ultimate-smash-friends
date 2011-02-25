@@ -28,6 +28,7 @@ import math
 
 from config import Config
 config = Config()
+from ConfigParser import SafeConfigParser
 
 try:
     from pygame.locals import BLEND_RGBA_MAX
