@@ -347,36 +347,25 @@ class Entity (object):
         if one of the two lowers points collide, the entity bounce up and it's
         horizontal speed is lowered
         """
-        points = self.points
-        if (game.level.collide_point(points[self.TOP_LEFT])
+        points = self.update_points()
+        return (game.level.collide_point(points[self.TOP_LEFT])
         or game.level.collide_point(points[self.TOP_RIGHT])):
             self.vector[1] = -math.fabs(
                 self.vector[1] * config.general['BOUNCE']
                 )
-            self.onGround = True
-            self.vector[0] /= 2
-            while (game.level.collide_point(points[self.TOP_LEFT])
-            or game.level.collide_point(points[self.TOP_RIGHT])):
-                self.move(( 0, -1))
-                points = self.update_points()
 
     def collide_bottom(self, game):
         """
         test of points and consequences on vectors if one of the two uppers
         points collide, the entity bounce down.
         """
-        points = self.points
-        if (game.level.collide_point(points[self.BOTTOM_RIGHT])
+        points = self.update_points()
+        return (game.level.collide_point(points[self.BOTTOM_RIGHT])
         or game.level.collide_point(points[self.BOTTOM_LEFT])):
             if self.vector[1] < 0:
                 self.vector[1] = int(
                     -self.vector[1] * config.general['BOUNCE']
                     )
-            self.vector[0] /= 2
-            while (game.level.collide_point(points[self.BOTTOM_RIGHT])
-            or game.level.collide_point(points[self.BOTTOM_LEFT])):
-                self.move(( 0, 1))
-                points = self.update_points()
 
     def collide_front(self, game):
         """
@@ -385,22 +374,13 @@ class Entity (object):
         reversed and the player is pushed forward.
         """
 
-        points = self.points
-        if ( game.level.collide_point(points[self.UPPER_RIGHT])
+        points = self.update_points()
+        return ( game.level.collide_point(points[self.UPPER_RIGHT])
             or game.level.collide_point(points[self.LOWER_RIGHT]) )\
             and self.reversed\
         or ( game.level.collide_point(points[self.LOWER_LEFT])\
             or game.level.collide_point(points[self.UPPER_LEFT]) )\
-            and not self.reversed:
-            self.vector[0] = math.fabs(self.vector[0])/2
-            while ( game.level.collide_point(points[self.UPPER_RIGHT])\
-                or game.level.collide_point(points[self.LOWER_RIGHT]) )\
-                and self.reversed\
-            or ( game.level.collide_point(points[self.LOWER_LEFT])\
-                or game.level.collide_point(points[self.UPPER_RIGHT]) )\
-                and not self.reversed:
-                self.move(( 1, 0))
-                points = self.update_points()
+            and not self.reversed
 
     def collide_back(self, game):
         """
@@ -409,22 +389,13 @@ class Entity (object):
         player bounce back.
         """
 
-        points = self.points
-        if ((( game.level.collide_point(points[self.UPPER_RIGHT])
+        points = self.update_points()
+        return ((( game.level.collide_point(points[self.UPPER_RIGHT])
             or game.level.collide_point(points[self.LOWER_RIGHT]) )
             and not self.reversed)
         or (( game.level.collide_point(points[self.UPPER_LEFT])
             or game.level.collide_point(points[self.LOWER_LEFT]) )
-            and self.reversed)):
-            self.vector[0] = -math.fabs(self.vector[0])/2
-            while ((( game.level.collide_point(points[self.UPPER_RIGHT])
-                or game.level.collide_point(points[self.LOWER_RIGHT]) )
-                and not self.reversed)
-            or ( game.level.collide_point(points[self.UPPER_LEFT])
-                or game.level.collide_point(points[self.LOWER_LEFT]) )
-                and self.reversed):
-                self.move(( -1, 0), "wall, pushed back")
-                points = self.update_points()
+            and self.reversed))
 
     def worldCollide(self, game):
         """
@@ -449,10 +420,26 @@ class Entity (object):
             self.physic):
             self.onGround = False
 
-            self.collide_top(game)
-            self.collide_bottom(game)
-            self.collide_front(game)
-            self.collide_back(game)
+            if self.collide_top(game):
+                self.onGround = True
+                self.vector[0] /= 2
+                while self.collide_top(game):
+                    self.move(( 0, -1))
+
+            if self.collide_bottom(game):
+                self.vector[0] /= 2
+                while self.collide_bottom(game):
+                    self.move(( 0, 1))
+
+            if self.collide_front(game):
+                self.vector[0] = math.fabs(self.vector[0])/2
+                while self.collide_front(game):
+                    self.move(( 1, 0))
+
+            if self.collide_back(game):
+                self.vector[0] = -math.fabs(self.vector[0])/2
+                while self.collide_back(game):
+                    self.move(( -1, 0), "wall, pushed back")
 
         self.place = [
                 int(self.place[0]),
