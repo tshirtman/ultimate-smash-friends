@@ -349,10 +349,7 @@ class Entity (object):
         """
         points = self.update_points()
         return (game.level.collide_point(points[self.TOP_LEFT])
-        or game.level.collide_point(points[self.TOP_RIGHT])):
-            self.vector[1] = -math.fabs(
-                self.vector[1] * config.general['BOUNCE']
-                )
+        or game.level.collide_point(points[self.TOP_RIGHT]))
 
     def collide_bottom(self, game):
         """
@@ -361,11 +358,7 @@ class Entity (object):
         """
         points = self.update_points()
         return (game.level.collide_point(points[self.BOTTOM_RIGHT])
-        or game.level.collide_point(points[self.BOTTOM_LEFT])):
-            if self.vector[1] < 0:
-                self.vector[1] = int(
-                    -self.vector[1] * config.general['BOUNCE']
-                    )
+        or game.level.collide_point(points[self.BOTTOM_LEFT]))
 
     def collide_front(self, game):
         """
@@ -421,12 +414,19 @@ class Entity (object):
             self.onGround = False
 
             if self.collide_top(game):
+                self.vector[1] = -math.fabs(
+                    self.vector[1] * config.general['BOUNCE']
+                )
                 self.onGround = True
                 self.vector[0] /= 2
                 while self.collide_top(game):
                     self.move(( 0, -1))
 
             if self.collide_bottom(game):
+                if self.vector[1] < 0:
+                    self.vector[1] = int(
+                        -self.vector[1] * config.general['BOUNCE']
+                    )
                 self.vector[0] /= 2
                 while self.collide_bottom(game):
                     self.move(( 0, 1))
