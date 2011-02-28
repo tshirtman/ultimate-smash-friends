@@ -42,7 +42,7 @@ class TestLayer(unittest.TestCase):
         # Read the xml file of blobplanet level
         attrib = ElementTree()
         attrib.parse(loaders.get_config().sys_data_dir + "levels/blobplanet/level.xml")
-        
+
         # Let's use the first layer node, we know it values
         layer = skin.Layer(attrib.findall("layer")[0])
 

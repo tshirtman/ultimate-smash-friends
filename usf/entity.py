@@ -425,8 +425,8 @@ class Entity (object):
             if self.collide_bottom(game):
                 if self.vector[1] < 0:
                     self.vector[1] = int(
-                        -self.vector[1] * config.general['BOUNCE']
-                    )
+                            -self.vector[1] * config.general['BOUNCE']
+                            )
                 self.vector[0] /= 2
                 while self.collide_bottom(game):
                     self.move(( 0, 1))
@@ -446,6 +446,80 @@ class Entity (object):
                 int(self.place[1])
                 ]
 
+    def draw_debug(self, coords, zoom, surface, debug_params):
+        self.draw_debug_levelmap(coords, zoom, surface, debug_params)
+        self.draw_debug_hardshape(coords, zoom, surface, debug_params)
+        self.draw_debug_footrect(coords, zoom, surface, debug_params)
+        self.draw_debug_current_animation(coords, zoom, surface, debug_params)
+
+    def draw_debug_levelmap(self, coords, zoom, surface, debug_params):
+        if debug_params["levelmap"] or loaders.get_gconfig().get("game", "minimap") == "y":
+            draw_rect(
+                    surface,
+                    pygame.Rect(
+                        self.place[0]/8,
+                        self.place[1]/8,
+                        2,
+                        2
+                        ),
+                    pygame.Color('red')
+                    )
+
+    def draw_debug_hardshape(self, coords, zoom, surface, debug_params):
+        if self.visible:
+            if debug_params.get('hardshape', False):
+                draw_rect(
+                    surface,
+                    pygame.Rect(
+                    real_coords[0]+self.entity_skin.hardshape[0]*zoom,
+                    real_coords[1]+self.entity_skin.hardshape[1]*zoom,
+                    self.entity_skin.hardshape[2]*zoom,
+                    self.entity_skin.hardshape[3]*zoom
+                    )
+                    ,
+                pygame.Color(255, 0, 0, 127)
+                )
+
+                for i in self.update_points():
+                    draw_rect(
+                        surface,
+                        pygame.Rect((
+                            int(i[0])+coords[0]*zoom,
+                            int(i[1])+coords[1]*zoom,
+                            2,
+                            2
+                            )),
+                        pygame.Color('blue')
+                        )
+
+    def draw_debug_footrect(self, coords, zoom, surface, debug_params):
+        if self.visible:
+            if debug_params.get('footrect', False):
+                r = self.foot_collision_rect()
+                draw_rect(
+                    surface,
+                    pygame.Rect(
+                    coords[0]+r[0]*zoom,
+                    coords[1]+r[1]*zoom,
+                    r[2]*zoom,
+                    r[3]*zoom
+                    )
+                    ,
+                pygame.Color(255, 255, 0, 127)
+                )
+
+    def draw_debug_current_animation(self, coords, zoom, surface, debug_params):
+        if self.visible:
+            if debug_params.get('current_animation', False):
+                surface.blit(
+                    loaders.text(self.entity_skin.current_animation,
+                    fonts['mono']['25']),
+                    (
+                     real_coords[0],
+                     real_coords[1]+self.entity_skin.animation.rect[3]/2
+                    ),
+                    )
+
     def draw(self, coords, zoom, surface, debug_params=dict()):
         """
         Draw the entity on the surface(i.e: the screen), applying coordinates
@@ -460,19 +534,10 @@ class Entity (object):
         # Draw a point on the map at the entity position.
         if not self.present:
             return
-        if debug_params["levelmap"] or loaders.get_gconfig().get("game", "minimap") == "y":
-            draw_rect(
-                    surface,
-                    pygame.Rect(
-                        self.place[0]/8,
-                        self.place[1]/8,
-                        2,
-                        2
-                        ),
-                    pygame.Color('red')
-                    )
 
-        if self.visible == True:
+        self.draw_debug(coords, zoom, surface, debug_params)
+
+        if self.visible:
             if not self.reversed:
                 place = (
                     self.rect[0] - self.entity_skin.hardshape[0],
@@ -487,43 +552,6 @@ class Entity (object):
                     int(place[0]*zoom)+coords[0] ,
                     int(place[1]*zoom)+coords[1]
                     )
-            if debug_params.get('hardshape', False):
-                draw_rect(
-                    surface,
-                    pygame.Rect(
-                    real_coords[0]+self.entity_skin.hardshape[0]*zoom,
-                    real_coords[1]+self.entity_skin.hardshape[1]*zoom,
-                    self.entity_skin.hardshape[2]*zoom,
-                    self.entity_skin.hardshape[3]*zoom
-                    )
-                    ,
-                pygame.Color(255, 0, 0, 127)
-                )
-                for i in self.update_points():
-                    draw_rect(
-                        surface,
-                        pygame.Rect((
-                            int(i[0])+coords[0]*zoom,
-                            int(i[1])+coords[1]*zoom,
-                            2,
-                            2
-                            )),
-                        pygame.Color('blue')
-                        )
-
-            if debug_params.get('footrect', False):
-                r = self.foot_collision_rect()
-                draw_rect(
-                    surface,
-                    pygame.Rect(
-                    coords[0]+r[0]*zoom,
-                    coords[1]+r[1]*zoom,
-                    r[2]*zoom,
-                    r[3]*zoom
-                    )
-                    ,
-                pygame.Color(255, 255, 0, 127)
-                )
 
 
             skin_image = loaders.image(
@@ -559,15 +587,6 @@ class Entity (object):
                     )
                 surface.blit(image[0], shield_coords)
 
-            if debug_params.get('current_animation', False):
-                surface.blit(
-                    loaders.text(self.entity_skin.current_animation,
-                    fonts['mono']['25']),
-                    (
-                     real_coords[0],
-                     real_coords[1]+self.entity_skin.animation.rect[3]/2
-                    ),
-                    )
 
 
     def update_physics(self, dt, game):
@@ -626,7 +645,6 @@ class Entity (object):
 
         # Avoid collisions with the map
         self.worldCollide (game)
-
 
     def update(self, dt, t, game, coords=(0,0), zoom=1):
         """
