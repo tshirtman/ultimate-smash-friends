@@ -134,6 +134,7 @@ class MovingPart (Block):
                         "common",
                         texture
                         )
+
             except pygame.error:
                 logging.error("Can't load the texture: " + str(file))
         self.patterns = patterns
@@ -216,13 +217,24 @@ class Level ( object ):
         based on a map file, and the new based on an xml file.
 
         """
-        #test if there is an xml file for this level (new format)
-        self.moving_blocs = []
-        self.vector_blocs = []
-        self.map = []
-        self.SIZE = (config.general['WIDTH'], 
+        self.SIZE = (config.general['WIDTH'],
             config.general['HEIGHT'])
-        xml = ElementTree.ElementTree(
+
+        xml = self.getXML(levelname)
+        attribs = xml.getroot().attrib
+        self.name = attribs['name']
+
+        self.load_images(attribs, levelname)
+        self.load_borders(attribs)
+        self.load_entrypoints(xml)
+        self.load_layers(xml)
+        self.load_blocs(xml)
+        self.load_moving_blocs(xml)
+        self.load_water_blocs(xml)
+        self.load_vector_blocs(xml)
+
+    def getXML(self, levelname):
+        return ElementTree.ElementTree(
                 None,
                 os.path.join(
                     config.sys_data_dir,
@@ -232,10 +244,10 @@ class Level ( object ):
                     )
                 )
 
-        attribs = xml.getroot().attrib
+    def __del__(self):
+        logging.debug('deleting level')
 
-        self.name = attribs['name']
-
+    def load_images(self, attribs, levelname):
         self.background = os.path.join(
                     config.sys_data_dir,
                     'levels',
@@ -260,6 +272,8 @@ class Level ( object ):
         else:
             self.foreground = False
 
+    def load_borders(self, attribs):
+        #FIXME: should not depend on the initialisation of pygame
         self.rect = loaders.image(self.level)[1]
 
         if 'margins' in attribs:
@@ -273,23 +287,26 @@ class Level ( object ):
         else:
             self.border = self.rect.inflate(self.rect[2]/2, self.rect[3]/2)
 
-
+    def load_entrypoints(self, xml):
         self.entrypoints = []
         for point in xml.findall('entry-point'):
             x,y = point.attrib['coords'].split(' ')
             self.entrypoints.append([ int(x), int(y) ])
 
-        #logging.debug(self.entrypoints)
-
+    def load_layers(self, xml):
         self.layers = []
         for layer in xml.findall('layer'):
             self.layers.append(skin.Layer(layer))
 
+    def load_blocs(self, xml):
+        self.map = []
         for block in xml.findall('block'):
             nums = block.attrib['coords'].split(' ')
             nums = [ int(i) for i in nums ]
             self.map.append(pygame.Rect(nums))
 
+    def load_moving_blocs(self, xml):
+        self.moving_blocs = []
         for block in xml.findall('moving-block'):
             texture = block.attrib['texture']
 
@@ -323,12 +340,16 @@ class Level ( object ):
                         levelname
                         )
                     )
+
+    def load_water_blocs(self, xml):
         self.water_blocs = []
         for block in xml.findall('water'):
             nums = block.attrib['coords'].split(' ')
             nums = [ int(i) for i in nums ]
             self.water_blocs.append(pygame.Rect(nums))
 
+    def load_vector_blocs(self, xml):
+        self.vector_blocs = []
         for block in xml.findall('vector-block'):
             texture = block.attrib['texture']
             position = [int(i) for i in block.attrib['position'].split(' ')]
@@ -358,9 +379,6 @@ class Level ( object ):
                             server
                             )
                         )
-
-    def __del__(self):
-        logging.debug('deleting level')
 
     def serialize(self):
         return (

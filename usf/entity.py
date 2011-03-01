@@ -641,7 +641,7 @@ class Entity (object):
             self.vector[1] -= (F * self.vector[1] * dt)
 
         # apply the vector to entity.
-        self.move ((self.vector[0] * dt, self.vector[1] * dt), 'vector')
+        self.move((self.vector[0] * dt, self.vector[1] * dt), 'vector')
 
         # Avoid collisions with the map
         self.worldCollide (game)
