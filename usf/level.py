@@ -30,7 +30,7 @@ config = Config()
 from debug_utils import draw_rect
 
 # different in python 2.4 and 2.5
-if sys.version_info[0] == 2 and sys.version_info[1] >= 5:
+if sys.version_info >= (2, 5)
     from xml.etree import ElementTree
 else:
     from elementtree import ElementTree
@@ -229,7 +229,7 @@ class Level ( object ):
         self.load_entrypoints(xml)
         self.load_layers(xml)
         self.load_blocs(xml)
-        self.load_moving_blocs(xml)
+        self.load_moving_blocs(xml, server, levelname)
         self.load_water_blocs(xml)
         self.load_vector_blocs(xml)
 
@@ -305,31 +305,26 @@ class Level ( object ):
             nums = [ int(i) for i in nums ]
             self.map.append(pygame.Rect(nums))
 
-    def load_moving_blocs(self, xml):
+    def load_moving_blocs(self, xml, server, levelname):
         self.moving_blocs = []
         for block in xml.findall('moving-block'):
             texture = block.attrib['texture']
-
             rects = []
 
             for rect in block.findall('rect'):
                 rects.append(
-                        pygame.Rect(
-                            [
-                            int(i) for i in rect.attrib['coords'].split(' ')
-                            ]
+                        pygame.Rect([
+                            int(i) for i in rect.attrib['coords'].split(' ')]
                             )
                         )
 
             patterns = []
             for pattern in block.findall('pattern'):
-                patterns.append(
-                        {
-                        'time': int(pattern.attrib['time']),
-                        'position': [ int(i) for i in
+                patterns.append({
+                    'time': int(pattern.attrib['time']),
+                    'position': [int(i) for i in
                         pattern.attrib['position'].split(' ')]
-                        }
-                        )
+                    })
 
             self.moving_blocs.append(
                     MovingPart(
@@ -361,11 +356,7 @@ class Level ( object ):
             for rect in block.findall('rect'):
                 rects.append(
                         pygame.Rect(
-                            [
-                            int(i)
-                            for i in
-                            rect.attrib['coords'].split(' ')
-                            ]
+                            [int(i) for i in rect.attrib['coords'].split(' ')]
                             )
                         )
 
@@ -396,7 +387,6 @@ class Level ( object ):
     def draw_before_players(self, surface, level_place, zoom, shapes=False):
         self.draw_background(surface)
         self.draw_level( surface , level_place, zoom, shapes)
-        #logging.debug(self.level.moving_blocs)
         for block in self.moving_blocs:
             block.draw( surface, level_place, zoom)
 
@@ -465,6 +455,4 @@ class Level ( object ):
                 or self.moving_blocs+self.vector_blocs != []
                     and True in map(lambda(a): a.collide_rect((x,y), (h,w)), list)
                )
-
-    collide_point = collide_rect # alias from the deprecated name to the new one.
 
