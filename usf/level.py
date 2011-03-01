@@ -30,9 +30,13 @@ config = Config()
 from debug_utils import draw_rect
 
 # different in python 2.4 and 2.5
-if sys.version_info >= (2, 5)
+try:
     from xml.etree import ElementTree
-else:
+except:
+    logging.warning(
+            "your python version seems quite old, you should consider"
+            " upgrading"
+    )
     from elementtree import ElementTree
 
 class Block (object):
@@ -102,9 +106,9 @@ class VectorBloc (Block):
 
         """
         entity.vector = [
-        entity.vector[0] + self.vector[0],
-        entity.vector[1] + self.vector[1]
-        ]
+                entity.vector[0] + self.vector[0],
+                entity.vector[1] + self.vector[1]
+                ]
 
 class MovingPart (Block):
     """
@@ -172,12 +176,13 @@ class MovingPart (Block):
                )[-1]
 
         # get the next position of pattern we will get by.
+        # FIXME: maybe avoid filtering all, maybe using an itertool?
         next = filter(
                 lambda(x): x['time'] >= level_time * 10000 %
                 self.patterns[-1]['time'],
                 self.patterns
                 )[0]
-        #logging.debug((level_time, last,next))
+
         # get the proportion of travel between last and next we should have
         # done.
         percent_bettween = (
@@ -188,6 +193,7 @@ class MovingPart (Block):
             int(last['position'][0] * (1 - percent_bettween) +
             next['position'][0] * (percent_bettween))
             )
+
         self.position[1] = (
             int(last['position'][1] * (1 - percent_bettween)
             +next['position'][1] * (percent_bettween))
