@@ -348,8 +348,8 @@ class Entity (object):
         horizontal speed is lowered
         """
         points = self.update_points()
-        return (game.level.collide_point(points[self.TOP_LEFT])
-        or game.level.collide_point(points[self.TOP_RIGHT]))
+        return (game.level.collide_rect(points[self.TOP_LEFT])
+        or game.level.collide_rect(points[self.TOP_RIGHT]))
 
     def collide_bottom(self, game):
         """
@@ -357,8 +357,8 @@ class Entity (object):
         points collide, the entity bounce down.
         """
         points = self.update_points()
-        return (game.level.collide_point(points[self.BOTTOM_RIGHT])
-        or game.level.collide_point(points[self.BOTTOM_LEFT]))
+        return (game.level.collide_rect(points[self.BOTTOM_RIGHT])
+        or game.level.collide_rect(points[self.BOTTOM_LEFT]))
 
     def collide_front(self, game):
         """
@@ -368,11 +368,11 @@ class Entity (object):
         """
 
         points = self.update_points()
-        return ( game.level.collide_point(points[self.UPPER_RIGHT])
-            or game.level.collide_point(points[self.LOWER_RIGHT]) )\
+        return ( game.level.collide_rect(points[self.UPPER_RIGHT])
+            or game.level.collide_rect(points[self.LOWER_RIGHT]) )\
             and self.reversed\
-        or ( game.level.collide_point(points[self.LOWER_LEFT])\
-            or game.level.collide_point(points[self.UPPER_LEFT]) )\
+        or ( game.level.collide_rect(points[self.LOWER_LEFT])\
+            or game.level.collide_rect(points[self.UPPER_LEFT]) )\
             and not self.reversed
 
     def collide_back(self, game):
@@ -383,11 +383,11 @@ class Entity (object):
         """
 
         points = self.update_points()
-        return ((( game.level.collide_point(points[self.UPPER_RIGHT])
-            or game.level.collide_point(points[self.LOWER_RIGHT]) )
+        return ((( game.level.collide_rect(points[self.UPPER_RIGHT])
+            or game.level.collide_rect(points[self.LOWER_RIGHT]) )
             and not self.reversed)
-        or (( game.level.collide_point(points[self.UPPER_LEFT])
-            or game.level.collide_point(points[self.LOWER_LEFT]) )
+        or (( game.level.collide_rect(points[self.UPPER_LEFT])
+            or game.level.collide_rect(points[self.LOWER_LEFT]) )
             and self.reversed))
 
     def worldCollide(self, game):
@@ -405,7 +405,7 @@ class Entity (object):
         self.points = self.update_points()
         points = self.points
         if not self.physic:
-            if game.level.collide_point(points[self.TOP_LEFT]):
+            if game.level.collide_rect(points[self.TOP_LEFT]):
                 self.place = [-10, -10]
 
         # this test should optimise most of situations.
