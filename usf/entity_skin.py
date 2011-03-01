@@ -48,15 +48,13 @@ class Entity_skin (object):
     importants information as the character/item name and such details.
 
     """
-    def __init__( self, dir_name="characters"+os.sep+"stick",
-    server=False, xml_from_str=None, keep_xml=False):
+    def __init__(self, dir_name, server=False, xml_from_str=None, keep_xml=False):
         """
         The dir_name is the relative path of the directory where the item/player
         is defined, the class search for an xml file of the same name as the
         directory there.
 
         """
-        #logging.debug(dir_name)
         self.animations = {}
         if xml_from_str is not None:
             a = ElementTree.ElementTree()
@@ -96,38 +94,42 @@ class Entity_skin (object):
                         ), scale=(30, 30)
                     )[0]
 
-        self.weigh = attribs['weight']
+        self.weight = attribs['weight']
         if 'armor' in attribs:
             self.armor = int(attribs['armor'])
         else:
             self.armor = 0
+
         self.action_events = {}
         self.sounds = {}
         self.vectors = {}
 
-        self.hardshape = pygame.Rect(
-                [
-                int(i) for i
-                in attribs['hardshape'].split(' ')
-                ]
-                )
+        self.hardshape = self.load_hardshape(attribs)
+        self.shield_center = self.load_shield_center(attribs)
+        self.load_movements(a, dir_name, server)
 
+        self.current_animation = "static"
+        self.animation = self.animations[self.current_animation]
+        self.animation_change = 1
+
+    def load_hardshape(self, attribs):
+        return pygame.Rect([int(i) for i in attribs['hardshape'].split(' ')])
+
+    def load_shield_center(self, attribs):
         if 'shield_center' in attribs:
-            self.shield_center = [
-            int(i) for i in
-            attribs['shield_center'].split(' ')
-            ]
+            return [int(i) for i in attribs['shield_center'].split(' ')]
         else:
             logging.warning(
                 'warning, entity '+self.name+' has no attribute shield_center'+
                 ', guessing from hardshape'
                 )
 
-            self.shield_center = (
+            return (
                 self.hardshape[0] + .5 * self.hardshape[2],
                 self.hardshape[1] + .5 * self.hardshape[3]
             )
 
+    def load_movements(self, a, dir_name, server):
         for movement in a.findall('movement'):
             frames = []
             events = []
@@ -206,14 +208,6 @@ class Entity_skin (object):
                     movement.attrib,
                     server
                     )
-
-        self.current_animation = "static"
-        self.animation = self.animations[self.current_animation]
-        self.animation_change = 1
-
-    def __del__(self):
-        del(self.__dict__)
-        del(self)
 
     def change_animation( self, anim_name, game, params={}):
         """
