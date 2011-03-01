@@ -247,7 +247,7 @@ class Entity (object):
         Test the collision of the entity with the 1 pixel wide point at (x,y).
 
         """
-        return self.rect.collidelist( [pygame.Rect(x,y,1,1), ] )
+        return self.rect.collidelist([pygame.Rect(x,y,1,1), ])
 
     def foot_collision_rect(self):
         return pygame.Rect(
@@ -280,7 +280,6 @@ class Entity (object):
                     vector[0]-part.vector[0],
                     vector[1]+part.vector[1]
                     ]
-            pass
         return vector
 
     def get_env_collision(self, blocks):
