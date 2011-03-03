@@ -66,7 +66,7 @@ class Option(dict):
                     # try to convert the item into a float
                     object[object.index(item)] = float(item)
                 except ValueError:
-                    # try to convert it into a boolean other wise it's a string
+                    # try to convert it into a boolean otherwise it's a string
                     if item.lower() in ['true', 't', 'yes', 'y']:
                         object[object.index(item)] = True
                     elif item.lower() in ['false', 'f', 'no', 'n']:
@@ -131,7 +131,6 @@ class Config(object):
 
                 # see if files are installed on the system
                 stat(sys_data_dir)
-
 
             except OSError:
                 # files aren't installed on the system so set user_config_dir
@@ -225,3 +224,4 @@ class Config(object):
 
         if keycode is not None:
             return keymap[keycode]
+

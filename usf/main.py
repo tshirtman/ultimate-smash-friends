@@ -368,24 +368,24 @@ class Main(object):
             logging.info(author_file.read())
             author_file.close()
 
+    def get_loading_text():
+       return loaders.paragraph(self.text_thread, fonts['mono']['normal'])
+
     def loading_screen(self):
         """
         update the screen display during loading
         """
         try:
-            while(True):
+            while(self.stop_thread):
                 start_loop = pygame.time.get_ticks()
-
-
-                self.screen.fill(pygame.color.Color("black"))
                 self.lock.acquire()
-                x = self.screen.get_width()/2 - loaders.paragraph(self.text_thread, fonts['mono']['normal']).get_width()/2
-                y = self.screen.get_height()/2 - loaders.paragraph(self.text_thread, fonts['mono']['normal']).get_height()/2
-                self.screen.blit(loaders.paragraph(self.text_thread, fonts['mono']['normal']), (x,y))
-                if self.stop_thread:
-                    break
-                pygame.display.update()
+                text = get_loading_text()
                 self.lock.release()
+                self.screen.fill(pygame.color.Color("black"))
+                x = self.screen.get_width()/2 - text.get_width()/2
+                y = self.screen.get_height()/2 - text.get_height()/2
+                self.screen.blit(text, (x,y))
+                pygame.display.update()
 
                 max_fps = 1000/config.general["MAX_GUI_FPS"]
                 if pygame.time.get_ticks() < max_fps + start_loop:

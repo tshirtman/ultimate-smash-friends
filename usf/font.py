@@ -82,7 +82,7 @@ class Font(object):
             return self.italic
         if item == "bolditalic" and self.bolditalic:
             return self.bolditalic
-        if item not self.size:
+        if item not in self.size:
             self.size[item] = pygame.font.Font(self.font_file, 480/int(item))
         #logging.info("No font named : " + str(item))
 
