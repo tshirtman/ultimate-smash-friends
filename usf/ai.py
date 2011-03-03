@@ -126,8 +126,6 @@ class AI(object):
                                 entity.entity_skin.change_animation('walking')
                                 entity.reversed = True
 
-
-
         elif self.status == 'fighting':
             target = self.target
             if entity.entity_skin.current_animation == 'static':

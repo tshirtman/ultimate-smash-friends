@@ -34,7 +34,7 @@ from game import Game
 
 from skin import Skin
 
-from widgets import optimize_size 
+from widgets import optimize_size
 from font import fonts
 import screen
 
@@ -86,9 +86,9 @@ class Gui(object):
 
         #draw the background
         self.skin.get_background()
-            
+
         self.screens[self.screen_current].update()
-        
+
         while(True):
             event = pygame.event.poll()
             if event.type == pygame.QUIT:
@@ -111,14 +111,14 @@ class Gui(object):
         #x += self.cursor.get_height()
         #y += self.cursor.get_width()
         self.screen.blit(self.cursor, (x, y))
-        
+
         #if we have a game instance and the state is menu...
-        if self.game != None and self.state != "ingame":
+        if self.game and self.state != "ingame":
             self.state = "ingame"
             return True, self.game
-            
+
         return False, None
-        
+
     def handle_mouse(self,event):
         """
         This function handles mouse event which are send from the update function.
@@ -139,7 +139,7 @@ class Gui(object):
             self.handle_reply(reply)
         #remove the event for performance, maybe it is useless
         del(event)
-        
+
     def handle_keys(self,event):
         """
         This function handles keyboard event which are send from the update function.
@@ -170,7 +170,7 @@ class Gui(object):
 
         #remove the event for performance, maybe it is useless
         del(event)
-                
+
     def handle_reply(self,reply):
         """
         This function handles the callback return by thz screens
@@ -272,7 +272,7 @@ class Gui(object):
             self.skin.get_background()
             text.set_alpha(i*250/10)
             self.screen.blit(text, (self.screens[self.screen_current].indent_title,10))
-            self.screen.blit(new_surface, 
+            self.screen.blit(new_surface,
                 (optimize_size((i*8*10-800, 0))[0],
                 self.screens[self.screen_current].widget.y))
 
@@ -288,7 +288,7 @@ class Gui(object):
             self.screen.blit(self.skin.get_background(), (0,0))
             text.set_alpha( (i*(- 1) + 5) *250/5)
             self.screen.blit(text, (old_screen.indent_title,10))
-            
+
             #back.set_alpha( (i*(- 1) + 5) *250/5)
             back.set_alpha(i *250/5)
             self.screen.blit(old_surface, (old_screen.widget.x,old_screen.widget.y))
@@ -304,7 +304,7 @@ class Gui(object):
             self.screen.blit(self.skin.get_background(), (0,0))
             text.set_alpha(i*250/5)
             self.screen.blit(text, (self.screens[self.screen_current].indent_title,10))
-            
+
             #new_surface.set_alpha(i *250/5)
             back.set_alpha( (i*(- 1) + 5) *250/5)
             self.screen.blit(new_surface, (new_screen.widget.x,new_screen.widget.y))

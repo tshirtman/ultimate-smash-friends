@@ -100,7 +100,7 @@ class Entity (object):
             self.name = entity_skinname.split(os.sep)[-1]
             self.entity_skin = entity_skin.Entity_skin(
                     entity_skinname,
-                    game == None or game.screen == None
+                    not game or not game.screen
                     )
             self.armor = self.entity_skin.armor
             self.rect = pygame.Rect(0,0,0,0)
@@ -237,7 +237,8 @@ class Entity (object):
         positively on x mean going left).
 
         """
-        if self.reversed: x = -x
+        if self.reversed:
+            x = -x
         self.place = self.place[0] + x, int (self.place[1] + y)
 
         self.update_rect()

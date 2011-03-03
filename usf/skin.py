@@ -41,7 +41,7 @@ class Skin (object):
         self.dialog = {}
         self.color = pygame.color.Color("white")
         self.layer = []
-        xml_file = ElementTree().parse(os.path.join(sys_data_dir, 
+        xml_file = ElementTree().parse(os.path.join(sys_data_dir,
                                                     "gui", general["THEME"],
                                                     "theme.xml"))
 
@@ -66,19 +66,19 @@ class Layer(object):
     """
     A layer class.
     It is mainly used to have animated background in both the gui and the game.
-    
+
     It is created from an ElementTree xml node.
-    
+
     Here is the syntax::
 
         <layer sizex="35" sizey="46" src="path.png">
             <frame time="2" x="0" y="-70" />
             <frame time="0" x="30" y="600" />
         </layer>
-    
+
     The path (path.png) of the image must be an absolute path from the data
     directory of USF, e.g. levels/blobplanet/leaf.png.
-    
+
     Time is the duration of the frame (seconds), here, the image will go to the second
     frame in 2 seconds (and then, it will go to the first in 0).
     """
@@ -89,7 +89,7 @@ class Layer(object):
         sizex = int(node.attrib["sizex"])*config.general['WIDTH']/800
         sizey = int(node.attrib["sizey"])*config.general['HEIGHT']/600
         self.frame = []
-        if node.attrib.has_key("type"):
+        if "type" in node.attrib:
             self.x = int(node.attrib["x"])*config.general['WIDTH']/800
             self.y = int(node.attrib["y"])*config.general['HEIGHT']/600
             if node.attrib["type"] == "framebyframe":
@@ -116,11 +116,11 @@ class Layer(object):
     def get_image(self, dt = -1):
         """
         Get the image surface.
-        
+
         :param dt: The current time. Usually, it is -1, and it is set to
             time.time() when it is -1. It can be useful to specify the time for
             unit testing.
-            
+
         :rtype: pygame surface
         """
         if dt == -1:
@@ -139,7 +139,7 @@ class Layer(object):
     def get_pos(self, dt = -1):
         """
         Get the position of the layer.
-        
+
         :param dt: The current time. Usually, it is -1, and it is set to
             time.time() when it is -1. It can be useful to specify the time for
             unit testing.
@@ -150,10 +150,10 @@ class Layer(object):
             if dt == -1:
                 dt = time.time()
 
-            interval        = dt - self.last_update
-            period          = self.frame[self.current][0]
-            position_first  = self.frame[self.current][1]
-            position_next   = (0,0)
+            interval = dt - self.last_update
+            period = self.frame[self.current][0]
+            position_first = self.frame[self.current][1]
+            position_next = (0,0)
 
             # if we are on the last frame, just return the value of this frame
             if self.current + 1 < len(self.frame):

@@ -25,7 +25,7 @@ import logging
 from config import Config
 
 config = Config()
-SIZE = (config.general['WIDTH'], 
+SIZE = (config.general['WIDTH'],
         config.general['HEIGHT'])
 
 class TimedEvent (object):

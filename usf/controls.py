@@ -92,7 +92,7 @@ class Controls (object):
 
     def __init__(self):
         #loaders.load_keys()
-        self.keys = dict([[locals.__dict__[config.keyboard[key]], key] 
+        self.keys = dict([[locals.__dict__[config.keyboard[key]], key]
                          for key in config.keyboard])
         self.sequences = []
         self.player_sequences = [[], [], [], []]
@@ -117,7 +117,8 @@ class Controls (object):
                 tab=["PL"+str(player)+'_'+btn for btn in seq]
                 self.sequences.append(Sequence(player-1, tab, act, condition))
 
-            for i in range(4): self.player_sequences.append([])
+            for i in range(4):
+                self.player_sequences.append([])
         self.ai = AI()
 
     def save(self):
@@ -152,7 +153,8 @@ class Controls (object):
                                 key=self.keys[key]
                                 )
                             )
-                else: pygame.event.post(
+                else:
+                    pygame.event.post(
                         pygame.event.Event(
                             USEREVENT,
                             player = int(self.keys[key].split('_')[0][-1]),
@@ -160,6 +162,7 @@ class Controls (object):
                             )
                         )
         return ret
+
 
     def handle_game_key( self, state, key, game_instance ):
         ret = "game"
@@ -192,9 +195,11 @@ class Controls (object):
                         for player in game_instance.players:
                             pl = "PL"+str(player.num)
                             the_key = self.keys[key]
-                            if pl not in the_key: continue
+                            if pl not in the_key:
+                                continue
                             # the player can't do anything if the shield is on
-                            if player.shield['on']: break
+                            if player.shield['on']:
+                                break
                             if ("_SHIELD" in the_key and
                                 player.entity_skin.current_animation in (
                                 'static', 'static_upgraded',
@@ -255,9 +260,11 @@ class Controls (object):
                     numplayer = int(self.keys[key].split('_')[0][-1])-1
                     if(not game_instance.players[numplayer].ai):
                         for player in game_instance.players:
-                            if key not in self.keys : break
+                            if key not in self.keys :
+                                break
                             pl = "PL"+str(player.num)
-                            if pl not in self.keys[key]: continue
+                            if pl not in self.keys[key]:
+                                continue
                             if key in self.keys :
                                 if "_SHIELD" in self.keys[key]:
                                     player.shield['on'] = False
@@ -297,10 +304,10 @@ class Controls (object):
         by clients in the case of a networkk game.
 
         """
-        if game_instance != None :
+        if game_instance:
             for i, player in enumerate(game_instance.players):
                 if(player.ai):
-                    if player.ai_ != None:
+                    if player.ai_:
                         player.ai_.update(game_instance, i)
                         for sequence_ai in player.ai_.sequences_ai:
                             self.player_sequences[i].append(sequence_ai)
@@ -322,9 +329,9 @@ class Controls (object):
         if isinstance(game_instance, game.NetworkServerGame):
             while True:
                 k = game_instance.server.fetch()
-                if k == None: 
+                if not k:
                     break
-                else: 
+                else:
                     self.handle_game_key( "game", k, game_instance )
 
         else:

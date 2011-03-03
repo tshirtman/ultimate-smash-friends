@@ -21,13 +21,21 @@
 
 # standards import
 import pygame
-import time, math, os, logging, sys
+import time
+import math
+import os
+import logging
+import sys
 
-import socket, threading, SocketServer
+import socket
+import threading
+import SocketServer
 
 # my modules import
 from loaders import image
-import animations, entity, timed_event
+import animations
+import entity
+import timed_event
 import loaders
 
 from level import Level
@@ -43,8 +51,10 @@ from debug_utils import draw_rect
 config = Config()
 
 
-if not pygame.font: logging.debug('Warning, fonts disabled')
-if not pygame.mixer: logging.debug('Warning, sound disabled')
+if not pygame.font:
+    logging.debug('Warning, fonts disabled')
+if not pygame.mixer:
+    logging.debug('Warning, sound disabled')
 
 class BadPlayersNetworkParamError(Exception):
     """
@@ -463,7 +473,7 @@ class Game (object):
     def precise_zoom(self):
         """
         Return the minimum scale of the level to use so every player is
-        visible on screen, provided there is more than one player 
+        visible on screen, provided there is more than one player
         """
         if len(self.present_players) == 1:
             return 1
@@ -510,7 +520,7 @@ class Game (object):
             # rect the barycenter of players at the center of the screen
             level_place = [
                  -(players_barycenter[0])*self.zoom+self.SIZE[0]/2 ,
-                 -(players_barycenter[1])*self.zoom+self.SIZE[1]/2 
+                 -(players_barycenter[1])*self.zoom+self.SIZE[1]/2
                  ]
 
             if self.smooth_scrolling:

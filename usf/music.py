@@ -97,7 +97,7 @@ class Music (object):
         #logging.debug('launching music: '+str(music.get_length()))
         self.time_begin = time.time()
         if fading == True:
-            if self.current_track != None:
+            if self.current_track:
                 self.current_track.fadeout(3000)
             self.current_track = loaders.track(random.choice(music))
             if self.current_track:

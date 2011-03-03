@@ -33,10 +33,13 @@ from exceptions import AttributeError
 # our modules
 from config import Config
 
-from game import Game, NetworkServerGame, NetworkClientGame
+from game import Game
+from game import NetworkServerGame
+from game import NetworkClientGame
 from gui import Gui
 from controls import Controls
-import loaders, music
+import loaders
+import music
 from font import fonts
 
 try:
@@ -170,7 +173,7 @@ class Main(object):
         version = '%prog 0.1.3'
 
         self.parser = OptionParser(usage=usage, version=version)
-        self.parser.add_option('-a', '--authors', 
+        self.parser.add_option('-a', '--authors',
                           action='store_true', dest='author',
                           help='See authors of this game.')
         self.parser.add_option('-l', '--level',

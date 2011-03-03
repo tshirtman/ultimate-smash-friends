@@ -55,7 +55,7 @@ class Option(dict):
 
     def __getitem__(self, key):
         # create a list of strings for the stored value
-        object = [value.strip().strip('\'\"') 
+        object = [value.strip().strip('\'\"')
                   for value in dict.__getitem__(self, key).split(',')]
         for item in object:
             try:
@@ -82,10 +82,10 @@ class Config(object):
     """ Object that implements automatic saving.
 
         Config first loads default settings from the system config file, then
-        overwrites those with the ones found in the user config file. 
+        overwrites those with the ones found in the user config file.
 
         Different config sections can be accessed as
-        attributes (eg. Config().section), which would then return an Option 
+        attributes (eg. Config().section), which would then return an Option
         object, which acts virtually identical to the builtin dict type. As
         such, specific options can be accesed as keys
         (Config().section[option]).
@@ -99,7 +99,7 @@ class Config(object):
         self.__parser = SafeConfigParser()
         self.__parser.optionxform=str
 
-        (self.user_config_dir, self.sys_config_file, self.user_config_file, 
+        (self.user_config_dir, self.sys_config_file, self.user_config_file,
          self.sys_data_dir, self.user_data_dir) = self.__get_locations()
 
         if config_files is None:
@@ -124,7 +124,7 @@ class Config(object):
             """
 
             try:
-                sys_data_dir = join(environ['PROGRAMFILES'], 
+                sys_data_dir = join(environ['PROGRAMFILES'],
                                     'Ultimate Smash Friends', 'data')
                 sys_config_file = join(environ['PROGRAMFILES'],
                                        'Ultimate Smash Friends', 'system.cfg')
@@ -140,7 +140,7 @@ class Config(object):
                 sys_data_dir = join(user_config_dir, 'data')
                 sys_config_file = join(user_config_dir, 'system.cfg')
 
-            user_config_dir = join(environ['APPDATA'], 
+            user_config_dir = join(environ['APPDATA'],
                                 'Ultimate Smash Friends')
             user_config_file = join(user_config_dir, 'user.cfg')
             user_data_dir = join(user_config_dir, 'user_data')
@@ -149,13 +149,13 @@ class Config(object):
             sys_data_dir = ""
             #for the devlopment version
             #"./data/", "./system.cfg"
-            
+
             #if someone launch launch main.py directly
             #"../data/", "../system.cfg"
-            
+
             #an easier way to create a mod
             #"../usf-data/", "./system.cfg"
-            
+
             #standard use
             #"/usr/share/ultimate-smash-friends/data/", "/etc/ultimate-smash-friends/system.cfg"
 
@@ -169,7 +169,7 @@ class Config(object):
                 try:
                     stat(datadir[0])
                     sys_data_dir = datadir[0]
-                    
+
                     if 'XDG_CONFIG_HOME' in environ.keys():
                         user_config_dir = join(environ['XDG_CONFIG_HOME'],
                                           'ultimate-smash-friends')
@@ -197,7 +197,7 @@ class Config(object):
             # paths already exist or user doesn't have permission to create them
             pass
 
-        return (user_config_dir, sys_config_file, user_config_file, 
+        return (user_config_dir, sys_config_file, user_config_file,
                 sys_data_dir, user_data_dir)
 
     def save(self):
@@ -219,7 +219,7 @@ class Config(object):
                     name=section))
 
     def reverse_keymap(self, keycode=None):
-        keymap = dict((value, key) 
+        keymap = dict((value, key)
                       for key, value in pygame.__dict__.iteritems()
                       if key[:2] in ('K_', 'KM'))
 

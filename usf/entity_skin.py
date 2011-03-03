@@ -20,7 +20,8 @@
 import pygame
 import logging
 
-from animations import Frame, PreciseTimedAnimation
+from animations import Frame
+from animations import PreciseTimedAnimation
 import loaders
 import game
 import timed_event
@@ -38,13 +39,14 @@ try:
 except ImportError:
     from elementtree import ElementTree
 
-import os, sys
+import os
+import sys
 import random
 
 class Entity_skin (object):
     """
     An Entity_skin contains all information about a player or an item, which is
-    mainly animations frames, with their timings and vectors, and less 
+    mainly animations frames, with their timings and vectors, and less
     importants information as the character/item name and such details.
 
     """
@@ -110,7 +112,7 @@ class Entity_skin (object):
 
         self.current_animation = "static"
         self.animation = self.animations[self.current_animation]
-        self.animation_change = 1
+        self.animation_change = True
 
     def load_hardshape(self, attribs):
         return pygame.Rect([int(i) for i in attribs['hardshape'].split(' ')])
@@ -151,12 +153,9 @@ class Entity_skin (object):
             for event in movement.findall('event'):
                 events.append(
                         (
-                         event.attrib['action'],
-                         [
-                         int(i)\
-                         for i in event.attrib['period'].split(',')
-                         ]
-                        )
+                            event.attrib['action'],
+                            [int(i) for i in event.attrib['period'].split(',')]
+                            )
                         )
 
             self.action_events[movement.attrib['name']] = events
@@ -209,70 +208,44 @@ class Entity_skin (object):
                     server
                     )
 
-    def change_animation( self, anim_name, game, params={}):
+    def valid_animation(self, anim_name):
+        return (
+                anim_name in self.animations
+                and (
+                    anim_name == 'static' or
+                    anim_name != self.current_animation
+                    )
+                )
+
+    def change_animation( self, anim_name, game=None, params={}):
         """
         Change animation of the entity skin, updating hardshape and agressiv
         points. Add associated events to game.
 
         """
         #logging.debug(params,1)
-        if (anim_name in self.animations
-                and ( anim_name == "static"
-                    or anim_name != self.current_animation )):
+        if self.valid_animation(anim_name):
             if 'entity' in params and params['entity'].upgraded:
                 if anim_name+'_upgraded' in self.animations:
                     self.current_animation = anim_name+'_upgraded'
                 else:
-                    logging.debug(self.name+
-                        ' character has no upgraded '
-                        'version of '
-                        + anim_name
-                        +' falling back to normal version'
-                        )
+                    logging.debug(
+                            ' '.join((self.name,
+                                'character has no upgraded version of ',
+                                anim_name, 'falling back to normal version'
+                                ))
+                            )
                     self.current_animation = anim_name
             else:
                 self.current_animation = anim_name
 
-            self.animation_change = 1
+            self.animation_change = True
             params['world'] = game
             params['gametime'] = game is not None or 0
-            for event in self.action_events[anim_name]:
-                if event[1][0] is 0:
-                    p1 = None
-                else:
-                    p1 = game.gametime+(event[1][0]/1000.0)
-
-                if event[1][1] is 0:
-                    p2 = None
-                else:
-                    p2 = game.gametime+(event[1][1]/1000.0)
-
-                try:
-                    game.events.append(
-                            timed_event.event_names[event[0]]
-                            (
-                             period=(p1, p2),
-                             params=params
-                            )
-                            )
-
-                except AttributeError:
-                    logging.debug((self.name, game), 3)
-                    raise
+            self.add_events(anim_name, game, params)
 
             #logging.debug(self.vectors[anim_name])
-            for vector in self.vectors[anim_name]:
-                #logging.debug('vector added')
-                params2 = params.copy() # because we want to change some of
-                                        # them for this time.
-                params2['vector'] = vector[0]
-                params2['anim_name'] = anim_name
-                game.events.append(
-                        timed_event.VectorEvent(
-                             period=(None, game.gametime+vector[1]/1000.0),
-                             params=params2
-                            )
-                        )
+            self.add_vectors(anim_name, game, params)
 
             if self.sounds[anim_name] != []:
                 random.choice(self.sounds[anim_name]).play()
@@ -280,6 +253,45 @@ class Entity_skin (object):
             #logging.debug( "entity_skin "+self.name+" has no "+anim_name+"\
 #animation.")
             pass
+
+    def add_vectors(self, anim_name, game, params):
+        for vector in self.vectors[anim_name]:
+            #logging.debug('vector added')
+            params2 = params.copy() # because we want to change some of
+                                    # them for this time.
+            params2['vector'] = vector[0]
+            params2['anim_name'] = anim_name
+            game.events.append(
+                    timed_event.VectorEvent(
+                         period=(None, game.gametime+vector[1]/1000.0),
+                         params=params2
+                        )
+                    )
+
+    def add_events(self, anim_name, game, params):
+        for event in self.action_events[anim_name]:
+            if event[1][0] is 0:
+                p1 = None
+            else:
+                p1 = game.gametime+(event[1][0]/1000.0)
+
+            if event[1][1] is 0:
+                p2 = None
+            else:
+                p2 = game.gametime+(event[1][1]/1000.0)
+
+            try:
+                game.events.append(
+                        timed_event.event_names[event[0]]
+                        (
+                         period=(p1, p2),
+                         params=params
+                        )
+                        )
+
+            except AttributeError:
+                logging.debug((self.name, game), 3)
+                raise
 
     def update(self, t, reversed=False, upgraded=False, server=False):
         """

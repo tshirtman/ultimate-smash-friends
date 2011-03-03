@@ -17,7 +17,8 @@
 # along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.
 ##################################################################################
 
-import os, sys
+import os
+import sys
 import pygame
 import logging
 
