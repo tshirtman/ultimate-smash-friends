@@ -382,9 +382,10 @@ class Main(object):
             text = self.get_loading_text()
             self.lock.release()
 
-            self.screen.fill(pygame.color.Color("black"))
             x = self.screen.get_width()/2 - text.get_width()/2
             y = self.screen.get_height()/2 - text.get_height()/2
+
+            self.screen.fill(pygame.color.Color("black"))
             self.screen.blit(text, (x,y))
             pygame.display.update()
 
