@@ -102,6 +102,12 @@ class PreciseTimedAnimation(Sprite):
         self._start_time = gametime
         self.playing = 1
 
+    def frame(self, t):
+        try:
+           return filter(lambda x: x.time/1000 < t, self.frames)[-1]
+        except IndexError:
+            return self.frames[0]
+
     def update(self, gametime, reversed=False, server=False):
        if self.playing:
            if self.duration != 0 and gametime - self._start_time > self.duration/1000.0:
@@ -109,15 +115,9 @@ class PreciseTimedAnimation(Sprite):
                if self.repeat is not 0:
                    #FIXME: repeat will not reset properly
                    self.repeat = max( -1, self.repeat - 1 )
-                   self.start( gametime )
+                   self.start(gametime - self._start_time)
            else:
-               try:
-                   frame = [
-                   i for i in self.frames
-                   if i.time/1000.0 < gametime - self._start_time
-                   ][-1]
-               except:
-                   frame = self.frames[0]
+               frame = self.frame(gametime)
                self.image = frame.image
                if reversed:
                    self.agressivpoints = frame.agressivpoints_reverse
