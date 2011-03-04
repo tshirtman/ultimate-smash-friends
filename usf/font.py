@@ -34,6 +34,8 @@ pygame.font.init()
 class FontList(object):
 
     def __init__(self):
+        '''#TODO: documentation
+        '''
         self.list = {}
         font_xml = xml.parse(join(config.sys_data_dir, "fonts", "fonts.xml"))
         for font in font_xml.findall("font"):
@@ -58,7 +60,8 @@ class FontList(object):
 
 
 class Font(object):
-
+    ''' #TODO documentation
+    '''
     def __init__(self, name, size, font_file, bold="", italic="", bolditalic=""):
         self.size = {}
         self.font_file = font_file
