@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: Ultimate-Smash-Friends\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-07-29 17:26+0200\n"
-"PO-Revision-Date: 2010-09-18 20:50+0000\n"
-"Last-Translator: Lagierl <Unknown>\n"
+"PO-Revision-Date: 2011-03-03 17:45+0000\n"
+"Last-Translator: Zarmakuizz <Unknown>\n"
 "Language-Team: English\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-19 05:38+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-03-04 05:06+0000\n"
+"X-Generator: Launchpad (build 12351)\n"
 
 #: game.py:308
 msgid " WON!"
@@ -23,7 +23,7 @@ msgstr " A GAGNÉ !"
 
 #: game.py:323
 msgid "OOPS... DRAW!!!"
-msgstr "OUPS, ERREUR..."
+msgstr "DOMMAGE... ÉGALITÉ !!!"
 
 #: gui.py:234
 msgid "you are here:"
@@ -47,7 +47,7 @@ msgstr "Retour"
 
 #: screen/main_screen.py:29 screen/main_screen.py:35
 msgid "Local game"
-msgstr "Jeu local"
+msgstr "Jouer en local"
 
 #: screen/main_screen.py:30 screen/main_screen.py:37 screen/resume.py:28
 #: screen/resume.py:36
@@ -85,7 +85,7 @@ msgstr "Voir les FPS"
 #. I18N: The title of the screen where players can choose their character.
 #: screen/characters.py:42
 msgid "characters"
-msgstr "joueurs"
+msgstr "Choix des personnages"
 
 #. I18N: in the character screen, to select no character for this player
 #. I18N: (with the [?] icon)
@@ -101,7 +101,7 @@ msgstr "Joueur %s"
 #. I18N: Artificial Intelligence
 #: screen/characters.py:105
 msgid "AI :"
-msgstr "IA :"
+msgstr "Ordinateur"
 
 #: screen/characters.py:117 screen/characters.py:140
 msgid "Next"
@@ -149,6 +149,7 @@ msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
 "  Lagierl https://launchpad.net/~lagierl\n"
+"  Zarmakuizz https://launchpad.net/~generalzarmakuizz\n"
 "  loquehumaine https://launchpad.net/~loquehumaine\n"
 "  viviun https://launchpad.net/~viviun\n"
 "  xapantu https://launchpad.net/~xapantu\n"
