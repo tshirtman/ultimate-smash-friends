@@ -72,59 +72,69 @@ class Frame (object):
     def addBullet(self, image):
         self.bullet = image
 
-class EmptyAnimationException(Exception):
-    pass
 
 class PreciseTimedAnimation(Sprite):
+    """
+    This object store the frames of an animation and update the image of the
+    entity skin.
+    """
     def __init__( self, timedFrames, attribs, server=False ):
         Sprite.__init__(self)
         self.frames = timedFrames
         self.server_mode = server
-        try:
-            self.image = timedFrames[0].image
-        except IndexError:
-            raise EmptyAnimationException
+        self.image = timedFrames[0].image
         self.rect = loaders.image(self.image, nodisplay=server)[1]
         self._start_time = 0
         self.playing = 0
 
         self.repeat = int ('repeat' in attribs and attribs ['repeat'])
         self.duration = int ('duration' in attribs and attribs ['duration'])
-        self.hardshape = ('hardshape' in attribs) and\
-                        pygame.Rect([int(i) for i in attribs['hardshape'].split(' ')])\
-                        or 0
+        self.hardshape = (
+                ('hardshape' in attribs) and
+                    pygame.Rect(
+                        [int(i) for i in attribs['hardshape'].split(' ')]
+                        )
+                    or 0
+                    )
+
         self.update(0, server=server)
 
-    def __del__(self):
-        del(self)
-
     def start(self, gametime):
+        """
+        set the animation start as now, and the animation as started.
+        """
         self._start_time = gametime
         self.playing = 1
 
     def frame(self, t):
-        try:
-           return filter(lambda x: x.time/1000 < t, self.frames)[-1]
-        except IndexError:
-            return self.frames[0]
+        """
+        return the current frame depending on the time since the beggining of
+        the animation.
+        """
+        return filter(lambda x: x.time/1000.0 <= t, self.frames)[-1]
 
     def update(self, gametime, reversed=False, server=False):
-       if self.playing:
-           if self.duration != 0 and gametime - self._start_time > self.duration/1000.0:
-               self.playing = 0
-               if self.repeat is not 0:
-                   #FIXME: repeat will not reset properly
-                   self.repeat = max( -1, self.repeat - 1 )
-                   self.start(gametime - self._start_time)
-           else:
-               frame = self.frame(gametime)
-               self.image = frame.image
-               if reversed:
-                   self.agressivpoints = frame.agressivpoints_reverse
-                   self.hardshape = frame.hardshape_reverse
-               else:
-                   self.agressivpoints = frame.agressivpoints
-                   self.hardshape = frame.hardshape
+        """
+        update the state of the animation.
+        """
+        if self.playing:
+            if self.duration != 0 and gametime - self._start_time > self.duration/1000.0:
+                self.playing = 0
+                if self.repeat is not 0:
+                    #FIXME: repeat will not reset properly
+                    self.repeat = max( -1, self.repeat - 1 )
+                    self.start(gametime)
+            else:
+                frame = self.frame(gametime - self._start_time)
+                self.image = frame.image
 
-       self.rect = loaders.image(self.image, nodisplay=server)[1]
+                if reversed:
+                    self.agressivpoints = frame.agressivpoints_reverse
+                    self.hardshape = frame.hardshape_reverse
+
+                else:
+                    self.agressivpoints = frame.agressivpoints
+                    self.hardshape = frame.hardshape
+
+            self.rect = loaders.image(self.image, nodisplay=server)[1]
 
