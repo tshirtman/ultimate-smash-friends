@@ -24,7 +24,8 @@ from pygame.locals import (
     USEREVENT,
     )
 
-import sys, os
+import sys
+import os
 import time
 import logging
 import re

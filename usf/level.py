@@ -456,7 +456,7 @@ class Level ( object ):
         the rects of the level, including the moving blocks and vector blocks.
 
         """
-        list = self.moving_blocs+self.vector_blocs
+        list = self.moving_blocs + self.vector_blocs
         return (
                 pygame.Rect(x,y,h,w).collidelist(self.map) != -1
                 or self.moving_blocs+self.vector_blocs != []

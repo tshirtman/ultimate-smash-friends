@@ -6,7 +6,10 @@
 
 """
 
-import sys, os, platform, imp
+import sys
+import os
+import platform
+import imp
 from os import environ, sep
 from os.path import abspath, join, splitext, isdir, isfile
 from sys import exit

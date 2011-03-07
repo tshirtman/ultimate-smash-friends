@@ -211,7 +211,9 @@ class Main(object):
             self.level = options.level
 
         if options.players:
-            self.players = ['characters'+os.sep+np for np in options.players.split(',')]
+            self.players = map(
+                    lambda p: 'characters'+os.sep+p,
+                    options.players.split(','))
 
         if options.server:
             self.game_type = 'server'
@@ -338,7 +340,7 @@ class Main(object):
             self.clock.tick()
 
             # poll controls and update informations on current state of the UI
-            if self.state != "menu" :
+            if self.state != "menu":
                 self.state = self.controls.poll(self.game, self.menu, self.state)
             if self.state == "menu":
                 self.manage_menu()
@@ -368,9 +370,6 @@ class Main(object):
             logging.info(author_file.read())
             author_file.close()
 
-    def get_loading_text(self):
-       return loaders.paragraph(self.text_thread, fonts['mono']['normal'])
-
     def loading_screen(self):
         """
         update the screen display during loading
@@ -379,7 +378,7 @@ class Main(object):
             start_loop = pygame.time.get_ticks()
 
             self.lock.acquire()
-            text = self.get_loading_text()
+            text = loaders.paragraph(self.text_thread, fonts['mono']['normal'])
             self.lock.release()
 
             x = self.screen.get_width()/2 - text.get_width()/2
