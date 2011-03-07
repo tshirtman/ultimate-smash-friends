@@ -96,6 +96,7 @@ class Entity (object):
         self.present = present
         self.visible = visible
         self.onGround = False
+
         if entity_skinname is not None:
             self.name = entity_skinname.split(os.sep)[-1]
             self.entity_skin = entity_skin.Entity_skin(
@@ -155,9 +156,10 @@ class Entity (object):
             else:
                 self.vector = [ point[1][0]*(1+self.percents),
                               point[1][1]*(1+self.percents) ]
-            self.percents += math.sqrt( point[1][0]**2\
-                                     +point[1][1]**2)/(30 * (100 -
-                                     self.armor ))*10
+
+            self.percents += math.sqrt((
+                point[1][0] ** 2 +point[1][1] ** 2) / (30 * (100 - self.armor))
+                ) * 10
 
             self.entity_skin.change_animation(
                     "take",
@@ -239,7 +241,7 @@ class Entity (object):
         """
         if self.reversed:
             x = -x
-        self.place = self.place[0] + x, int (self.place[1] + y)
+        self.place = self.place[0] + x, int(self.place[1] + y)
 
         self.update_rect()
 
@@ -273,13 +275,13 @@ class Entity (object):
             if entity_rect.collidelist(part.collide_rects) != -1:
                 if part.relative and not self.reversed:
                     vector = [
-                    vector[0]+part.vector[0],
-                    vector[1]+part.vector[1]
+                    vector[0] + part.vector[0],
+                    vector[1] + part.vector[1]
                     ]
                 else:
                     vector = [
-                    vector[0]-part.vector[0],
-                    vector[1]+part.vector[1]
+                    vector[0] - part.vector[0],
+                    vector[1] + part.vector[1]
                     ]
         return vector
 
@@ -574,12 +576,12 @@ class Entity (object):
                             )
 
                 shield_coords = (
-                     coords[0] + int (
+                     coords[0] + int(
                      self.rect[0]
                      + self.entity_skin.shield_center[0]
                      - .5 * image[1][2]
                     ) * zoom
-                    , coords[1] + int (
+                    , coords[1] + int(
                      self.rect[1]
                      + self.entity_skin.shield_center[1]
                      - .5 * image[1][3]
@@ -644,7 +646,7 @@ class Entity (object):
         self.move((self.vector[0] * dt, self.vector[1] * dt), 'vector')
 
         # Avoid collisions with the map
-        self.worldCollide (game)
+        self.worldCollide(game)
 
     def update(self, dt, t, game, coords=(0,0), zoom=1):
         """
