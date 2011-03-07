@@ -96,10 +96,10 @@ def image(name, *args, **kwargs):
                     BLEND_RGBA_MAX
                     )
         else:
-           # this mean this version of pygame is to old to use the effect
-           # above, an equivalent method would be a good thing
-           logging.warning('pygame version < 1.9 no alpha blend.')
-           pass #nothing for the moment
+            # this mean this version of pygame is to old to use the effect
+            # above, an equivalent method would be a good thing
+            logging.warning('pygame version < 1.9 no alpha blend.')
+            pass #nothing for the moment
 
     elif 'alpha' in kwargs and kwargs['alpha'] is not None:
         alpha = kwargs['alpha']
@@ -215,7 +215,7 @@ def get_config():
 @memoize
 def get_gconfig():
     parser = SafeConfigParser()
-    parser.optionxform=str
+    parser.optionxform = str
     parser.read(get_config().sys_data_dir + "game.cfg")
     return parser
 
