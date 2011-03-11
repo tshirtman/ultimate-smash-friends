@@ -33,6 +33,11 @@ config = Config()
 from ConfigParser import SafeConfigParser
 
 try:
+    from pygame.locals import BLEND_RGB_MAX
+    from pygame.locals import BLEND_RGB_ADD
+    from pygame.locals import BLEND_RGB_SUB
+    from pygame.locals import BLEND_RGB_MULT
+    from pygame.locals import BLEND_RGB_MIN
     from pygame.locals import BLEND_RGBA_MAX
     from pygame.locals import BLEND_RGBA_ADD
     from pygame.locals import BLEND_RGBA_SUB
@@ -93,7 +98,7 @@ def image(name, *args, **kwargs):
             img.fill(
                     pygame.Color('lightgrey'),
                     None,
-                    BLEND_RGBA_MAX
+                    BLEND_RGB_MAX
                     )
         else:
             # this mean this version of pygame is to old to use the effect

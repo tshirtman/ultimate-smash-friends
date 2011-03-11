@@ -10,6 +10,7 @@ class EventManager(object):
     def __init__(self):
         self.events = set()
         self.to_add = set()
+        self.to_remove = set()
 
     def update(self, deltatime, gametime):
         """
@@ -18,24 +19,25 @@ class EventManager(object):
         """
         self.events.update(self.to_add)
         self.to_add.clear()
-        to_remove = set()
+
         for e in self.events:
             if not e.update(deltatime, gametime):
-                to_remove.add(e)
+                self.to_remove.add(e)
 
-        self.events.difference_update(to_remove)
+        self.events.difference_update(self.to_remove)
+        self.to_remove.clear()
 
     def add_event(self, name, *args, **kwargs):
         self.to_add.add(event_names[name](self, *args, **kwargs))
 
-    def get_events(self, name=None, params=dict()):
+    def get_events(self, cls=None, params=dict()):
         ''' return events filtered by name and target parameters, None mean no
         filter on this parameter
         '''
 
         return itertools.ifilter(
                 lambda event:
-                (name==None or event.name==name) and
+                (cls is None or event.__class__==cls) and
                 (reduce(
                     lambda x,y: x and y,
                     [event.params[i] == params[i] for i in event.params])

@@ -17,7 +17,6 @@
 # ultimate-smash-friends.  If not, see <http://www.gnu.org/licenses/>.
 ###############################################################################
 
-import exceptions
 import logging
 import os
 import random
@@ -84,7 +83,7 @@ class TimedEvent (object):
         event.
 
         """
-        raise exceptions.NotImplementedError
+        raise NotImplementedError
 
     def condition(self):
         """
@@ -92,7 +91,7 @@ class TimedEvent (object):
         event, to verify if the event must continue.
 
         """
-        raise exceptions.NotImplementedError
+        raise NotImplementedError
 
     def delete(self):
         """
@@ -109,10 +108,6 @@ class TimedEvent (object):
         """
         logging.info(str(self.__class__) + ' event deleted')
         self.delete()
-
-    @property
-    def name(self):
-        return str(self.__class__).split('.')[1].split("'")[0]
 
 
 class HealEvent(TimedEvent):
@@ -342,18 +337,11 @@ class InvinciblePlayer(TimedEvent):
     The target player is invincible and half invisible during this event.
 
     """
-    def myfilter(self, element):
-        return element.__class__ is InvinciblePlayer and\
-           element.params['player'] is self.params['player']
-
-
     def initiate(self):
         # if we find another invincibility event on the same player we
         # just extend it's time to our limit and we are done.
-        #invisibilities = filter(self.myfilter, self.params['world'].events)
-        invicibilities = self.em.get_events(name='InvinciblePlayer',
+        invicibilities = self.em.get_events(cls=InvinciblePlayer,
                 params={'player': self.params['player']})
-        print invicibilities
         if len(list(invicibilities)) is not 0:
             invicibilities[0].period = self.period
             self.done = True
@@ -361,6 +349,7 @@ class InvinciblePlayer(TimedEvent):
             self.params['player'].invincible = True
 
     def execute(self, deltatime):
+        print deltatime, self.params['player'].lighten
         self.params['player'].invincible = True
         self.params['player'].lighten = not self.params['player'].lighten
 
@@ -454,17 +443,15 @@ class DropPlayer(TimedEvent):
             self.params['world']
             )
         self.em.add_event(
-                InvinciblePlayer(
-                    (None,
-                     self.params['gametime'] + 3),
-                    params = {
+                'InvinciblePlayer',
+                (None, self.params['gametime'] + 3),
+                params = {
                     'player':
                     self.params['entity'],
                     'world':
                     self.params['world']
                     }
                 )
-        )
 
 class PlayerOut(TimedEvent):
     """

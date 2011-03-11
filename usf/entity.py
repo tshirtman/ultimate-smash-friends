@@ -168,6 +168,9 @@ class Entity (object):
                     }
                     )
 
+    def alive(self):
+        return self.lives > 0
+
     def dist(self, entity):
         """
         Return the distance to a Rect or to another entity.

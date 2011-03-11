@@ -168,14 +168,14 @@ class Game (object):
         # events to make players appear into game
         # logging.debug('players insertion in game')
         for pl in self.players:
-            self.events.add_event('DropPlayer',
+            self.events.add_event(
+                    'DropPlayer',
                     (None, self.gametime),
                     params={
-                    'world':self,
-                    'entity':pl,
-                    'gametime' : self.gametime
-                    }
-                    )
+                        'world': self,
+                        'entity': pl,
+                        'gametime': self.gametime
+                        })
 
     def addItem(
         self,
@@ -217,13 +217,6 @@ class Game (object):
             if e.errno is 2:
                 logging.debug(item+' is not a valid item directory.')
                 raise
-
-    def update_events(self, dt):
-        # FIXME: the index is not updated when we remove and element, so we may
-        # skip outdated events until next frame. (it's a dit dirty).
-        for event in self.events:
-            if not event.update( dt, self.gametime ):
-                self.events.remove(event)
 
     def draw_progress_bar_for_lives(self, player):
         self.screen.blit(
@@ -428,8 +421,7 @@ class Game (object):
                     str(math.sin(self.ending/10)) [3:5]+
                     "30"
                     )),
-                (self.SIZE[0]/2, self.SIZE[1]/2)
-                )
+                (self.SIZE[0]/2, self.SIZE[1]/2))
 
     def draw_notif(self, notif):
         self.screen.blit(
@@ -553,6 +545,20 @@ class Game (object):
                                 }
                                 )
 
+    def update_items(self, deltatime):
+        for item in self.items:
+            item.update(
+                         deltatime,
+                         self.gametime,
+                         self,
+                         self.level_place,
+                         self.zoom
+                        )
+            if item.rect.collidelist([self.level.border,]) == -1:
+                item.lives = 0
+            if item.lives <= 0:
+                del(self.items[self.items.index(item)])
+
     def update_players(self, deltatime):
         for player in (p for p in self.players if p.present ):
             player.update(
@@ -587,6 +593,7 @@ class Game (object):
         """
         # calculate elapsed time
         deltatime = 0
+        print "update"
 
         # frame limiter
         while deltatime < 1.0/config.general['MAX_FPS']:
@@ -596,37 +603,16 @@ class Game (object):
             # #FIXME this is a workaround the bug allowing game to evolve
             # while being "paused" but only works for pause > 1 second
             self.gametime += deltatime
-        #sys.stdout.write("\r"+str(self.gametime))
-        #sys.stdout.flush()
 
         self.last_clock = time.time()
-
-        if deltatime > .25:
-            # if true we are lagging, prevent anything from happening until next
-            # frame (and forget about passed time).
-            logging.debug("too slow, forget this frame!")
-            return "game"
 
         self.events.update(deltatime, self.gametime)
         self.level.update(self.gametime)
         self.update_players(deltatime)
         self.update_physics()
+        self.update_items(deltatime)
 
-        #update items
-        for item in self.items:
-            item.update(
-                         deltatime,
-                         self.gametime,
-                         self,
-                         self.level_place,
-                         self.zoom
-                        )
-            if item.rect.collidelist([self.level.border,]) == -1:
-                item.lives = 0
-            if item.lives <= 0:
-                del(self.items[self.items.index(item)])
-
-        players_left = len([player for player in self.players if player.lives > 0])
+        players_left = len(filter(entity.Entity.alive, self.players))
         if players_left <= 1:
             # there is only one player left then the game need to end after a
             # short animation
