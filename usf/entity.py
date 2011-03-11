@@ -111,12 +111,11 @@ class Entity (object):
                     )
             self.rect[2:] = self.entity_skin.animation.rect[2:]
             self.entity_skin.update(0, server=(game is None or game.screen is None))
-            game.events.append(
-                timed_event.ShieldUpdateEvent(
+            game.events.add_event(
+                    'ShieldUpdateEvent',
                     (None, None),
                     {'world': game, 'player': self}
-                )
-            )
+                    )
 
     def __str__(self):
         return ','.join((
@@ -664,4 +663,4 @@ class Entity (object):
 
         self.update_rect()
         self.update_physics(dt, game)
-
+    # the number of the beast!

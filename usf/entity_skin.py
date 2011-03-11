@@ -242,6 +242,7 @@ class Entity_skin (object):
             self.animation_change = True
             params['world'] = game
             params['gametime'] = game is not None or 0
+            #game.events.add_event(anim_name, game, params)
             self.add_events(anim_name, game, params)
 
             #logging.debug(self.vectors[anim_name])
@@ -261,11 +262,10 @@ class Entity_skin (object):
                                     # them for this time.
             params2['vector'] = vector[0]
             params2['anim_name'] = anim_name
-            game.events.append(
-                    timed_event.VectorEvent(
-                         period=(None, game.gametime+vector[1]/1000.0),
-                         params=params2
-                        )
+            game.events.add_event(
+                    'VectorEvent',
+                    period=(None, game.gametime+vector[1]/1000.0),
+                    params=params2
                     )
 
     def add_events(self, anim_name, game, params):
@@ -281,12 +281,10 @@ class Entity_skin (object):
                 p2 = game.gametime+(event[1][1]/1000.0)
 
             try:
-                game.events.append(
-                        timed_event.event_names[event[0]]
-                        (
+                game.events.add_event(
+                        event[0],
                          period=(p1, p2),
                          params=params
-                        )
                         )
 
             except AttributeError:

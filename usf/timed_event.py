@@ -1,26 +1,26 @@
-####################################################################################
+###############################################################################
 # copyright 2008 Gabriel Pettier <gabriel.pettier@gmail.com>
 #
 # This file is part of ultimate-smash-friends
 #
-# ultimate-smash-friends is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# ultimate-smash-friends is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or (at your
+# option) any later version.
 #
-# ultimate-smash-friends is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# ultimate-smash-friends is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+# more details.
 #
-# You should have received a copy of the GNU General Public License
-# along with ultimate-smash-friends.  If not, see <http://www.gnu.org/licenses/>.
-##################################################################################
+# You should have received a copy of the GNU General Public License along with
+# ultimate-smash-friends.  If not, see <http://www.gnu.org/licenses/>.
+###############################################################################
 
 import exceptions
+import logging
 import os
 import random
-import logging
 
 from config import Config
 
@@ -41,7 +41,7 @@ class TimedEvent (object):
         """
         pass
 
-    def __init__( self, period, params={} ):
+    def __init__(self, manager, period, params={} ):
         """
         Action must be a callable, it will be called every frames in the
         period.
@@ -51,11 +51,13 @@ class TimedEvent (object):
         second is None, the event will happen until dying.
 
         """
-        #logging.debug(str(self)+str(params))
         self.params = params
         self.period = period
         self.done = False
+        self.em = manager
         self.initiate()
+        logging.info(str(self.__class__) + ' event created, params:' +
+                str(params))
 
     def update(self, deltatime, gametime):
         """
@@ -91,6 +93,27 @@ class TimedEvent (object):
 
         """
         raise exceptions.NotImplementedError
+
+    def delete(self):
+        """
+        you can override this one if you want special behaviour
+
+        """
+        pass
+
+    def __del__(self):
+        """
+        please don't override this method if you want a special behaviour,
+        override "delete" method instead.
+
+        """
+        logging.info(str(self.__class__) + ' event deleted')
+        self.delete()
+
+    @property
+    def name(self):
+        return str(self.__class__).split('.')[1].split("'")[0]
+
 
 class HealEvent(TimedEvent):
     """
@@ -134,7 +157,7 @@ class DelItemEvent(TimedEvent):
     def condition(self):
         return True
 
-    def __del__(self):
+    def delete(self):
         if self.params is not None and 'entity' in self.params :
             target = self.params['entity']
         else:
@@ -327,9 +350,12 @@ class InvinciblePlayer(TimedEvent):
     def initiate(self):
         # if we find another invincibility event on the same player we
         # just extend it's time to our limit and we are done.
-        invisibilities = filter(self.myfilter, self.params['world'].events)
-        if len(invisibilities) is not 0:
-            invisibilities[0].period = self.period
+        #invisibilities = filter(self.myfilter, self.params['world'].events)
+        invicibilities = self.em.get_events(name='InvinciblePlayer',
+                params={'player': self.params['player']})
+        print invicibilities
+        if len(list(invicibilities)) is not 0:
+            invicibilities[0].period = self.period
             self.done = True
         else:
             self.params['player'].invincible = True
@@ -341,7 +367,7 @@ class InvinciblePlayer(TimedEvent):
     def condition(self):
         return True
 
-    def __del__(self):
+    def delete(self):
         self.params['player'].lighten = False
         self.params['player'].invincible = False
 
@@ -366,7 +392,7 @@ class VectorEvent(TimedEvent):
         return self.params['anim_name'] ==\
             self.params['entity'].entity_skin.current_animation
 
-    def __del__(self):
+    def delete(self):
         """
         Add the vector to the player vector.
 
@@ -420,14 +446,14 @@ class DropPlayer(TimedEvent):
     def condition(self):
         return True
 
-    def __del__(self):
+    def delete(self):
         self.params['entity'].visible = True
         self.params['entity'].present = True
         self.params['entity'].entity_skin.change_animation(
             'static',
             self.params['world']
             )
-        self.params['world'].events.append(
+        self.em.add_event(
                 InvinciblePlayer(
                     (None,
                      self.params['gametime'] + 3),
@@ -459,14 +485,10 @@ class PlayerOut(TimedEvent):
         self.params['entity'].lives -= 1
         self.params['entity'].present = False
         if self.params['entity'].lives > 0:
-            self.params['world'].events.append(
-                    DropPlayer(
-                        (
-                         None,
-                         self.params['gametime'] + 1
-                        ),
-                        params = self.params
-                        )
+            self.em.add_event(
+                    'DropPlayer',
+                    (None, self.params['gametime'] + 1),
+                    params = self.params
                     )
         self.xy = self.params['entity'].place
 
@@ -488,7 +510,7 @@ class PlayerStaticOnGround(TimedEvent):
         """
         return not self.params['entity'].onGround
 
-    def __del__(self):
+    def delete(self):
         if tuple(self.params['entity'].walking_vector) != (0, 0):
             anim = 'walk'
         else:
@@ -511,25 +533,29 @@ class Bounce(TimedEvent):
     def condition(self):
         return True
 
-    def __del__(self):
+    def delete(self):
         pass
 
 # This list is used to cast an event by name. This is usefull since events are
 # configured in players/items xml files.
 
 event_names = {
-    'HealEvent' : HealEvent,
     'BombExplode' : BombExplode,
-    'DelItemEvent' : DelItemEvent,
-    'DropRandomItem' : DropRandomItem,
-    'ItemShower': ItemShower,
-    'InvinciblePlayer' : InvinciblePlayer,
-    'ThrowBomb' : ThrowBomb,
-    'ThrowMiniGost' : ThrowMiniGost,
-    'Gost' : Gost,
-    'PlayerStaticOnGround' : PlayerStaticOnGround,
-    'UpgradePlayer' : UpgradePlayer,
-    'ThrowFireBall' : ThrowFireBall,
     'Bounce' : Bounce,
+    'DelItemEvent' : DelItemEvent,
+    'DropPlayer' : DropPlayer,
+    'DropRandomItem' : DropRandomItem,
+    'Gost' : Gost,
+    'HealEvent' : HealEvent,
+    'InvinciblePlayer' : InvinciblePlayer,
+    'ItemShower': ItemShower,
     'LaunchBullet' : LaunchBullet,
+    'PlayerOut' : PlayerOut,
+    'PlayerStaticOnGround' : PlayerStaticOnGround,
+    'ShieldUpdateEvent' : ShieldUpdateEvent,
+    'ThrowBomb' : ThrowBomb,
+    'ThrowFireBall' : ThrowFireBall,
+    'ThrowMiniGost' : ThrowMiniGost,
+    'UpgradePlayer' : UpgradePlayer,
+    'VectorEvent' : VectorEvent,
 }

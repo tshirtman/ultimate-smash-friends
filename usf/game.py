@@ -39,6 +39,7 @@ import timed_event
 import loaders
 
 from level import Level
+from event_manager import EventManager
 from controls import Controls
 from config import Config
 #module to load fonts
@@ -87,7 +88,7 @@ class Game (object):
         self.screen = screen
 
         self.items = []
-        self.events = []
+        self.events = EventManager()
         self.gametime = 0
 
         #we load the bool for smooth scrolling here, for a better performance
@@ -119,23 +120,15 @@ class Game (object):
         # a countdown to the game end
         self.ending = 5.0
 
-    def __del__(self):
-        """
-        destructor method of game, just useful for loging.
-
-        """
-        logging.debug('game deleted')
-
     def add_world_event(self):
-        self.events.append(
-            timed_event.ItemShower(
+        self.events.add_event(
+                'ItemShower',
                 (None, None),
                 {
-                'freq': 15,
-                'world': self
-                }
+                    'freq': 15,
+                    'world': self
+                    }
                 )
-            )
 
     def load_player(self, i, player):
         logging.debug('player '+str(i)+' loaded')
@@ -175,8 +168,7 @@ class Game (object):
         # events to make players appear into game
         # logging.debug('players insertion in game')
         for pl in self.players:
-            self.events.append(
-                timed_event.DropPlayer(
+            self.events.add_event('DropPlayer',
                     (None, self.gametime),
                     params={
                     'world':self,
@@ -184,7 +176,6 @@ class Game (object):
                     'gametime' : self.gametime
                     }
                     )
-                )
 
     def addItem(
         self,
@@ -228,10 +219,6 @@ class Game (object):
                 raise
 
     def update_events(self, dt):
-        """
-        Called every frame, update every instancied event.
-
-        """
         # FIXME: the index is not updated when we remove and element, so we may
         # skip outdated events until next frame. (it's a dit dirty).
         for event in self.events:
@@ -578,16 +565,16 @@ class Game (object):
 
             # if the player is out of the level zone
             if player.rect.collidelist([self.level.border,]) == -1:
-                self.events.append(
-                        timed_event.PlayerOut(
-                            (self.gametime, 0),
-                            params={
+                self.events.add_event(
+                        'PlayerOut',
+                        (self.gametime, 0),
+                        params={
                             'entity': player,
                             'world': self,
                             'gametime' : self.gametime
                             }
-                            )
                         )
+
             if player.lives <= 0:
                 logging.debug("player's DEAD")
                 player.present = False
@@ -620,12 +607,9 @@ class Game (object):
             logging.debug("too slow, forget this frame!")
             return "game"
 
-        self.update_events( deltatime )
-
+        self.events.update(deltatime, self.gametime)
         self.level.update(self.gametime)
-
         self.update_players(deltatime)
-
         self.update_physics()
 
         #update items
