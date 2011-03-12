@@ -57,12 +57,14 @@ if not pygame.font:
 if not pygame.mixer:
     logging.debug('Warning, sound disabled')
 
+
 class BadPlayersNetworkParamError(Exception):
     """
     Raised when the player params of a network server game is not correct.
 
     """
     pass
+
 
 class Game (object):
     """
@@ -391,17 +393,17 @@ class Game (object):
         game is still running
         """
 
-        if len([player for player in self.players if player.lives > 0]) == 1:
+        alive_players = filter(entity.Entity.alive, self.players)
+
+        if len(alive_players) == 1:
             self.screen.blit(
                     loaders.text(
-                        [ player for player in self.players if player.lives > 0 ]
-                        [0].name.capitalize()+_(" WON!"),
+                        alive_players[0].name.capitalize()+_(" WON!"),
                         fonts["bold"][15], 0, 0, 0),
                     (self.SIZE[0]/2, self.SIZE[1]/2)
                     )
 
-        if len([player for player in self.players if player.lives > 0]) == 0:
-            # there is no more player in games, the game is tailed.
+        elif len(num_alive_players) == 0:
             self.screen.blit(game_font.render(
                 _("OOPS... DRAW!!!"),
                 True,
