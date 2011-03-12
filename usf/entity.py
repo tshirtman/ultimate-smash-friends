@@ -76,6 +76,7 @@ class Entity (object):
         else:
             self.number = number
 
+        self.game = game
         self.physic = physic
         self.num = num
         self.upgraded = upgraded
@@ -170,7 +171,7 @@ class Entity (object):
 
             self.entity_skin.change_animation(
                     'take',
-                    self,
+                    self.game,
                     params={'entity': self}
                     )
 
