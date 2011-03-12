@@ -27,6 +27,7 @@ config = Config()
 SIZE = (config.general['WIDTH'],
         config.general['HEIGHT'])
 
+
 class TimedEvent (object):
     """
     An event allow to define a function to be executed later and/or during a
@@ -123,6 +124,7 @@ class HealEvent(TimedEvent):
     def condition(self):
         return self.params['player'].percents > 0
 
+
 class ShieldUpdateEvent(TimedEvent):
     """
     This event, launched for one character, update the energy of it's shield at
@@ -139,6 +141,7 @@ class ShieldUpdateEvent(TimedEvent):
 
     def condition(self):
         return True
+
 
 class DelItemEvent(TimedEvent):
     """
@@ -159,6 +162,7 @@ class DelItemEvent(TimedEvent):
             target = self.target
         target.lives = 0
 
+
 class BombExplode(TimedEvent):
     """
     This Event timely trigger the bomb explostion.
@@ -174,6 +178,7 @@ class BombExplode(TimedEvent):
 
     def condition(self):
         return True
+
 
 class DropRandomItem(TimedEvent):
     """
@@ -193,6 +198,7 @@ class DropRandomItem(TimedEvent):
 
     def condition(self):
         return True
+
 
 class ItemShower(TimedEvent):
     """
@@ -231,6 +237,7 @@ class ItemShower(TimedEvent):
     def condition(self):
         return True
 
+
 class ThrowBomb(TimedEvent):
     """
     Launch a bomb in front of the player.
@@ -247,6 +254,7 @@ class ThrowBomb(TimedEvent):
 
     def condition(self):
         return True
+
 
 class ThrowFireBall(TimedEvent):
     """
@@ -268,6 +276,7 @@ class ThrowFireBall(TimedEvent):
 
     def condition(self):
         return True
+
 
 class Gost(TimedEvent):
     """
@@ -294,6 +303,7 @@ class Gost(TimedEvent):
     def condition(self):
         return True
 
+
 class ThrowMiniGost(TimedEvent):
     """
     Insert a little chasing gost in game.
@@ -309,6 +319,7 @@ class ThrowMiniGost(TimedEvent):
 
     def condition(self):
         return True
+
 
 class LaunchBullet(TimedEvent):
     """
@@ -331,6 +342,7 @@ class LaunchBullet(TimedEvent):
 
     def condition(self):
         return True
+
 
 class InvinciblePlayer(TimedEvent):
     """
@@ -358,6 +370,7 @@ class InvinciblePlayer(TimedEvent):
     def delete(self):
         self.params['player'].lighten = False
         self.params['player'].invincible = False
+
 
 class VectorEvent(TimedEvent):
     """
@@ -390,6 +403,7 @@ class VectorEvent(TimedEvent):
             self.params['entity'].vector[1] = -self.params['vector'][1]
         #logging.debug("vector Event applied")
 
+
 class UpgradePlayer(TimedEvent):
     """
     This event will upgrade the player to his upper state, that state ends when
@@ -404,6 +418,7 @@ class UpgradePlayer(TimedEvent):
 
     def condition(self):
         return False
+
 
 class DropPlayer(TimedEvent):
     """
@@ -445,6 +460,7 @@ class DropPlayer(TimedEvent):
                     }
                 )
 
+
 class PlayerOut(TimedEvent):
     """
     This event is called when a player is hitting the level border
@@ -476,6 +492,7 @@ class PlayerOut(TimedEvent):
     def condition(self):
         return True
 
+
 class PlayerStaticOnGround(TimedEvent):
     """
     This event will set the player on static animation when he tuch the ground
@@ -501,6 +518,7 @@ class PlayerStaticOnGround(TimedEvent):
                 anim+self.params['entity'].upgraded*'_upgraded',
                 self.params['world']
                 )
+
 
 class Bounce(TimedEvent):
     """
