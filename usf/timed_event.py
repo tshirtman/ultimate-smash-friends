@@ -349,7 +349,6 @@ class InvinciblePlayer(TimedEvent):
             self.params['player'].invincible = True
 
     def execute(self, deltatime):
-        print deltatime, self.params['player'].lighten
         self.params['player'].invincible = True
         self.params['player'].lighten = not self.params['player'].lighten
 
@@ -418,16 +417,9 @@ class DropPlayer(TimedEvent):
         self.params['entity'].percents = 0
         self.params['entity'].upgraded = False
 
-        if len(self.params['world'].level.entrypoints) != 0:
-            self.params['entity'].place = random.sample(
-                self.params['world'].level.entrypoints, 1
-            )[0]
-
-        else:
-            #logging.debug('no entry point defined for this level')
-            self.params['entity'].place = (
-                self.params['world'].level.rect[2]/2, 50
-            )
+        self.params['entity'].place = random.sample(
+            self.params['world'].level.entrypoints, 1
+        )[0]
 
     def execute(self, deltatime):
         pass
@@ -459,17 +451,19 @@ class PlayerOut(TimedEvent):
 
     """
     def execute(self, deltatime):
-        self.params['world'].addItem(
-                'star',
-                place=(self.xy),
-                vector=(
-                    self.target.level.rect[0]/2-self.xy[0],
-                    self.target.level.rect[1]/2-self.xy[1]
-                    )
-                )
+        pass
+        #self.params['world'].addItem(
+                #'star',
+                #place=(self.xy),
+                #vector=(
+                    #self.target.level.rect[0]/2-self.xy[0],
+                    #self.target.level.rect[1]/2-self.xy[1]
+                    #)
+                #)
 
     def initiate(self):
         self.params['entity'].lives -= 1
+        print self.params['entity'].lives
         self.params['entity'].present = False
         if self.params['entity'].lives > 0:
             self.em.add_event(
