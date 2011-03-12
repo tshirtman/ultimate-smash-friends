@@ -133,26 +133,16 @@ class Game (object):
     def load_player(self, i, player):
         logging.debug('player '+str(i)+' loaded')
             #logging.debug(player)
+        self.players.append(
+                entity.Entity(
+                    i+1,
+                    self,
+                    player.replace("AI", ""),
+                    ((i+1)*self.SIZE[0]/5,100)
+                    )
+                )
         if player and "AI" in player.split(os.sep)[1][:2]:
-            self.players.append(
-                    entity.Entity(
-                        i+1,
-                        self,
-                        player.replace("AI", ""),
-                        ((i+1)*self.SIZE[0]/5,100)
-                        )
-                    )
             self.players[len(self.players)-1].ai = True
-
-        else:
-            self.players.append(
-                    entity.Entity(
-                        i+1,
-                        self,
-                        player,
-                        ((i+1)*self.SIZE[0]/5,100)
-                        )
-                    )
 
     def load_players(self, players_):
         """
@@ -571,6 +561,7 @@ class Game (object):
 
             # if the player is out of the level zone
             if player.rect.collidelist([self.level.border,]) == -1:
+                print "player out!"
                 self.events.add_event(
                         'PlayerOut',
                         (self.gametime, 0),
@@ -593,7 +584,6 @@ class Game (object):
         """
         # calculate elapsed time
         deltatime = 0
-        print "update"
 
         # frame limiter
         while deltatime < 1.0/config.general['MAX_FPS']:
@@ -622,17 +612,13 @@ class Game (object):
         # if animation time elapsed, return to menu
         if self.ending <= 0:
             self.ended = True
-            del(self.game_font)
-            del(self.level)
-            del(self.players)
-            del(self.events)
             self.ingame=False
             return 'menu'
 
         if players_left == 1:
             return 'victory'
 
-        return "game"
+        return 'game'
 
 class ThreadedTCPRequestHandler(SocketServer.BaseRequestHandler):
     def __init__(self):

@@ -342,7 +342,7 @@ class Main(object):
             # poll controls and update informations on current state of the UI
             if self.state != "menu":
                 self.state = self.controls.poll(self.game, self.menu, self.state)
-            if self.state in ("menu", "victory"):
+            if self.state == "menu":
                 self.manage_menu()
             else:
                 self.manage_game()
