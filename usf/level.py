@@ -212,7 +212,7 @@ class MovingPart (Block):
              self.rects
          )
 
-class Level ( object ):
+class Level(object):
     """
     This object contain information about the world within the characters move,
     it contains the textures of background, stage and foreground, the coords of
@@ -299,6 +299,11 @@ class Level ( object ):
         for point in xml.findall('entry-point'):
             x,y = point.attrib['coords'].split(' ')
             self.entrypoints.append([ int(x), int(y) ])
+
+        if not self.entrypoints:
+            logging.info('no entry point defined for this level')
+            for x in xrange(4):
+                self.entrypoints.append([ int(x*self.rect[2]/5), self.rect[3]/5])
 
     def load_layers(self, xml):
         self.layers = []
