@@ -144,28 +144,24 @@ class Entity (object):
             if (
             self.shield['date'] < time.time() - config.general['POWER_SHIELD_TIME']
             ):
-                self.percents += math.sqrt( point[1][0]**2\
-                                     +point[1][1]**2)/(30 * (100 -
-                                     self.armor )) / 2
+                self.percents += math.sqrt(point[1][0] ** 2 + point[1][1]**2)\
+                        / (30 * (100 - self.armor)) / 2
 
         else:
             if reverse != self.reversed:
                 self.vector = [-point[1][0]*(1+self.percents),
                               point[1][1]*(1+self.percents)]
             else:
-                self.vector = [ point[1][0]*(1+self.percents),
-                              point[1][1]*(1+self.percents) ]
+                self.vector = [point[1][0]*(1+self.percents),
+                              point[1][1]*(1+self.percents)]
 
             self.percents += math.sqrt((
-                point[1][0] ** 2 +point[1][1] ** 2) / (30 * (100 - self.armor))
-                ) * 10
+                point[1][0] ** 2 +point[1][1] ** 2) / (30 * (100 - self.armor)))
 
             self.entity_skin.change_animation(
-                    "take",
+                    'take',
                     self,
-                    params={
-                    'entity': self
-                    }
+                    params={'entity': self}
                     )
 
     def alive(self):
