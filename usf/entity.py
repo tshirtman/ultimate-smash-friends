@@ -131,6 +131,16 @@ class Entity (object):
                     self.entity_skin.animation.image
                     ))
 
+
+    def test_hit(self, entity):
+        if entity is not self and not entity.invincible:
+            for point in self.entity_skin.animation.agressivpoints:
+                if entity.collide_point(
+                        [
+                            point[0][0]+self.rect[0],
+                            point[0][1]+self.rect[1]]) is not -1:
+                            entity.hit(point, self.reversed)
+
     def hit(self, point, reverse):
         """ enforce the effect of a collision with an aggressive point, the
         point is a list of x,y,dx,dy coords, and reverse is a flag indicating
