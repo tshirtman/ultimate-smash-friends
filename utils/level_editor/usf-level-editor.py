@@ -29,11 +29,8 @@ except:
 sys.path.append(os.path.join('..'))
 
 from usf.config import Config
-print "hell"
 from usf import level
-print "hell"
 from usf import loaders
-print "hell"
 
 config = Config()
 
@@ -301,6 +298,7 @@ class PygameHandler(object):
         self.xml_file = os.path.join(
             '..', '..', 'utils', 'level_editor', 'emptyLevel'
             )
+        pygame.display.set_mode((1,1))
         self.level = level.Level(self.xml_file)
 
         self.parts = {
