@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<character
+    name="pixie"
+    image="portrait.png"
+    hardshape="1 2 16 57"
+    creator="Doudoulolita"
+    weight="1"
+    auto-reverse="True"
+    age="18"
+    Description="A girl in pixel art">
+
+    <movement name="static"
+    duration="1"
+    repeat="-1"
+    >
+        <frame
+        time="0"
+        image="static1.png"
+        hardshape="5 0 30 63"
+        > </frame>
+    </movement>
+    <movement name="walk"
+    duration="800"
+    repeat="-1"
+    >
+        <frame
+        time="0"
+        image="walk1.png"
+        hardshape="5 0 30 63"
+        > </frame>
+        <frame
+        time="200"
+        image="walk2.png"
+        hardshape="5 0 30 62"
+        > </frame>
+        <frame
+        time="400"
+        image="walk3.png"
+        hardshape="5 0 30 63"
+        > </frame>
+        <frame
+        time="600"
+        image="walk4.png"
+        hardshape="5 0 30 62"
+        > </frame>
+    </movement>
+    <movement name="jump"
+    duration="540"
+    repeat="0"
+    >
+        <event
+        period="150,0"
+        action="PlayerStaticOnGround"
+        ></event>
+        <vector
+        time="0"
+        vector="0,1500"
+        ></vector>
+        <sound
+        filename="jump.wav"
+        ></sound>
+        <frame
+        time="0"
+        image="jump1.png"
+        hardshape="5 10 30 63"
+        > </frame>
+        <frame
+        time="180"
+        image="jump2.png"
+        hardshape="5 7 30 58"
+        vector="0,110"
+        > </frame>
+        <frame
+        time="360"
+        image="jump3.png"
+        hardshape="5 10 30 63"
+        > </frame>
+    </movement>
+    <movement name="hit"
+    duration="360"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="hit1.png"
+        hardshape="5 0 30 63"
+        >
+            <agressiv-point
+            coords="37,22"
+            vector="200,-100"
+            ></agressiv-point>
+	</frame>
+        <frame
+        time="180"
+        image="hit2.png"
+        hardshape="8 0 30 63"
+        >
+            <agressiv-point
+            coords="40,20"
+            vector="200,-60"
+            ></agressiv-point>
+        </frame>
+    </movement>
+    <movement name="kick"
+    duration="360"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="hit1.png"
+        hardshape="5 0 30 63"
+        > </frame>
+        <frame
+        time="180"
+        image="kick1.png"
+        hardshape="5 0 30 63"
+        >
+            <agressiv-point
+            coords="24,31"
+            vector="200,-20"
+            ></agressiv-point>
+            <agressiv-point
+            coords="43,45"
+            vector="200,-10"
+            ></agressiv-point>
+        </frame>
+    </movement>
+    <movement name="pick"
+    duration="400"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="pick1.png"
+        hardshape="4 0 30 63"
+        > </frame>
+        <frame
+        time="200"
+        image="pick2.png"
+        hardshape="10 0 25 56"
+        > </frame>
+    </movement>
+    <movement name="smash-straight"
+    duration="400"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="hit2.png"
+        hardshape="5 0 30 63"
+        > </frame>
+        <frame
+        time="0"
+        image="hit2.png"
+        hardshape="5 0 30 63"
+        > </frame>
+        <frame
+        time="200"
+        image="smash-straight1.png"
+        hardshape="5 0 30 63"
+        >
+            <agressiv-point
+            coords="32,16"
+            vector="200,-50"
+            ></agressiv-point>
+            <agressiv-point
+            coords="30,30"
+            vector="400,-50"
+            ></agressiv-point>
+        </frame>
+    </movement>
+    <movement name="smash-up"
+    duration="600"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="hit2.png"
+        hardshape="5 0 30 63"
+        > <agressiv-point
+            coords="38,17"
+            vector="300,-150"
+            ></agressiv-point>
+            <agressiv-point
+            coords="20,40"
+            vector="300,-150"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="300"
+        image="smash-up1.png"
+        hardshape="5 0 30 63"
+        > <agressiv-point
+            coords="38,17"
+            vector="500,-200"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,17"
+            vector="500,-200"
+            ></agressiv-point>
+        </frame>
+    </movement>
+    <movement name="smash-up-jumping"
+    duration="600"
+    repeat="0"
+    >
+        <event
+        period="150,0"
+        action="PlayerStaticOnGround"
+        ></event>
+        <frame
+        time="0"
+        image="hit2.png"
+        hardshape="5 0 30 63"
+        > <agressiv-point
+            coords="38,17"
+            vector="300,-150"
+            ></agressiv-point>
+            <agressiv-point
+            coords="20,40"
+            vector="300,-150"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="300"
+        image="smash-up2.png"
+        hardshape="5 0 30 63"
+        > <agressiv-point
+            coords="38,17"
+            vector="500,-200"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,17"
+            vector="500,-200"
+            ></agressiv-point>
+        </frame>
+    </movement>
+    <movement name="roll"
+    duration="1000"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="roll1.png"
+        hardshape="5 0 30 62"
+        > </frame>
+        <frame
+        time="200"
+        image="roll2.png"
+        hardshape="5 0 60 33"
+        > </frame>
+        <frame
+        time="400"
+        image="roll3.png"
+        hardshape="5 0 30 58"
+        > </frame>
+        <frame
+        time="600"
+        image="roll4.png"
+        hardshape="5 0 60 33"
+        > </frame>
+        <frame
+        time="800"
+        image="pick2.png"
+        hardshape="10 0 25 56"
+        > </frame>
+    </movement>
+    <!-- movement name="take"
+    duration="100"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="take1.png"
+        > </frame>
+        <frame
+        time="30"
+        image="take2.png"
+        > </frame>
+        <frame
+        time="80"
+        image="take3.png"
+        > </frame>
+    </movement>
+    <movement name="scnd-jump"
+    duration="0"
+    repeat="0"
+    >
+        <event
+        period="150,0"
+        action="PlayerStaticOnGround"
+        ></event>
+        <vector
+        time="0"
+        vector="0,1200"
+        ></vector>
+        <frame
+        time="0"
+        image="roll1.png"
+        > </frame>
+        <frame
+        time="100"
+        image="roll2.png"
+        vector="0,110"
+        > </frame>
+        <frame
+        time="500"
+        image="roll2.png"
+        vector="40,0"
+        > </frame>
+        <frame
+        time="700"
+        image="jump2.png"
+        > </frame>
+        <frame
+        time="1000"
+        image="jump2.png"
+        vector="-20,0"
+        > </frame>
+        <frame
+        time="1500"
+        image="jump5.png"
+        > </frame>
+    </movement>
+    <movement name="smash-down"
+    duration="1000"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="smash-down1.png"
+        > </frame>
+        <frame
+        time="100"
+        image="smash-down2.png"
+        > </frame>
+        <frame
+        time="200"
+        image="smash-down3.png"
+        > </frame>
+        <frame
+        time="300"
+        image="smash-down4.png"
+        > </frame>
+        <frame
+        time="400"
+        image="smash-down5.png"
+        vector="0,-50"
+        hardshape= "8 0 22 48"
+        > <agressiv-point
+            coords="28,41"
+            vector="300,-10"
+            ></agressiv-point>
+        </frame>
+    </movement>
+    <movement name="specialhit"
+    duration="1000"
+    repeat="0"
+    hardshape="0 0 157 40"
+    >
+        <frame
+        time="0"
+        image="specialhit1.png"
+        vector="10,0"
+        > </frame>
+        <frame
+        time="200"
+        image="specialhit2.png"
+        vector="50,0"
+        hardshape="0 0 157 40"
+        >
+            <agressiv-point
+            coords="86,9"
+            vector="150,-30"
+            ></agressiv-point>
+            <agressiv-point
+            coords="51,9"
+            vector="150,-30"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="300"
+        image="specialhit3.png"
+        vector="10,0"
+        hardshape="0 0 157 40"
+        >
+            <agressiv-point
+            coords="131,6"
+            vector="150,-30"
+            ></agressiv-point>
+            <agressiv-point
+            coords="84,9"
+            vector="150,-60"
+            ></agressiv-point>
+            <agressiv-point
+            coords="44,18"
+            vector="250,-30"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="400"
+        image="specialhit4.png"
+        vector="50,0"
+        hardshape="0 0 157 40"
+        >
+            <agressiv-point
+            coords="144,4"
+            vector="250,-30"
+            ></agressiv-point>
+            <agressiv-point
+            coords="116,4"
+            vector="150,-30"
+            ></agressiv-point>
+            <agressiv-point
+            coords="87,4"
+            vector="150,-30"
+            ></agressiv-point>
+            <agressiv-point
+            coords="51,4"
+            vector="150,-30"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="500"
+        image="specialhit5.png"
+        vector="50,0"
+        hardshape="0 0 157 40"
+        > </frame>
+        <frame
+        time="700"
+        image="specialhit6.png"
+        vector="50,0"
+        hardshape="0 0 157 40"
+        > </frame>
+        <frame
+        time="800"
+        image="specialhit7.png"
+        vector="50,0"
+        hardshape="0 0 157 40"
+        > </frame>
+        <frame
+        time="900"
+        image="specialhit8.png"
+        vector="50,0"
+        > </frame>
+    </movement>
+    <movement name="special2"
+    duration="500"
+    repeat="0"
+    >
+        <event
+        period = "500,0"
+        action = "ThrowBomb"
+        > </event>
+        <frame
+        time="0"
+        image="take1.png"
+        > </frame>
+        <frame
+        time="200"
+        image="roll1.png"
+        > </frame>
+        <frame
+        time="300"
+        image="sintel-static1.png"
+        > </frame>
+    </movement -->
+
+    <!-- movement name="kick-jumping"
+    duration="500"
+    repeat="0"
+    >
+        <event
+        period="150,0"
+        action="PlayerStaticOnGround"
+        ></event>
+        <frame
+        time="0"
+        image="kick1.png"
+        hardshape="5 0 30 63"
+        > </frame>
+        <frame
+        time="200"
+        image="kick2.png"
+        vector="50,60"
+        > </frame>
+        <frame
+        time="300"
+        image="kick3.png"
+        vector="100,60"
+        >
+            <agressiv-point
+            coords="24,31"
+            vector="30,-20"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,42"
+            vector="30,-10"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="400"
+        image="kick4.png"
+        vector="50,60"
+        >
+            <agressiv-point
+            coords="27,30"
+            vector="30,-30"
+            ></agressiv-point>
+            <agressiv-point
+            coords="40,33"
+            vector="30,-20"
+            ></agressiv-point>
+        </frame>
+    </movement -->
+</character>

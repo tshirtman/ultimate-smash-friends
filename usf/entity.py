@@ -81,7 +81,7 @@ class Entity (object):
         self.num = num
         self.upgraded = upgraded
         self.lighten = False
-        self.shield = { 'on': False, 'power': 1.0, 'date': 0 }
+        self.shield = {'on': False, 'power': 1.0, 'date': 0}
         self.place = place
         self.carried_by = carried_by
         # the 'center' of the entity is at the bottom middle.

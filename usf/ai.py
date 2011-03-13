@@ -32,25 +32,6 @@ class AI(object):
 
     def update(self, game, iam):
         entity = game.players[iam]
-        #print "name: ", entity.name
-        #print "animation: ", entity.entity_skin.current_animation
-        #print "bloc_vector: ", entity.get_block_vector
-        #print "invincible: ", entity.invincible
-        #print "lives: ", entity.lives
-        #print "onGround: ", entity.onGround
-        #print "present: ", entity.present
-        #print "rect: ", entity.rect
-        #print "foot rect: ", entity.foot_collision_rect()
-        #print "reversed: ", entity.reversed
-        #print "shield power: ", entity.shield['power']
-        #print "upgraded: ", entity.upgraded
-        #print "vector: ", entity.vector
-        #print "walking: ", entity.walking_vector
-        #print "map: ",game.level.map
-        #print "players: ", game.players
-        #print "items: ", game.items
-        #print "----------------------"
-
         if self.status == 'searching':
             targets = []
             bloc = entity.foot_collision_rect().collidelist(game.level.map)
@@ -104,27 +85,27 @@ class AI(object):
                     print "on a bloc, and with a target"
                     if (target[0][1] <= entity.place[1]):
                         print "target on a higher plateform"
-                        if entity.entity_skin.animation in('static', 'walking'):
-                            entity.entity_skin.change_animation('jumping')
-                            entity.walking_vector[0] = conf.general['WALKSPEED']
-                            if target[0][0] > entity.place[0]:
-                                entity.reversed = False
-                            if target[0][0] + target[0][2] < entity.place[0]:
-                                entity.reversed = True
+                        #if entity.entity_skin.animation in('static', 'walking'):
+                            #entity.entity_skin.change_animation('jumping')
+                            #entity.walking_vector[0] = conf.general['WALKSPEED']
+                            #if target[0][0] > entity.place[0]:
+                                #entity.reversed = False
+                            #if target[0][0] + target[0][2] < entity.place[0]:
+                                #entity.reversed = True
 
                     elif (target[0][1] > bloc[1]):
                         print "target on a lower plateform"
-                        if (bloc[0] < target[0][0] + target[0][2]):
-                                entity.walking_vector[0] = conf.general['WALKSPEED']
-                                entity.entity_skin.change_animation('walking')
-                                entity.reversed = True
-                        elif (
-                            bloc[0][0] + bloc[0][2]
-                            < target[0][0] + target[0][2]
-                            ):
-                                entity.walking_vector[0] = conf.general['WALKSPEED']
-                                entity.entity_skin.change_animation('walking')
-                                entity.reversed = True
+                        #if (bloc[0] < target[0][0] + target[0][2]):
+                                #entity.walking_vector[0] = conf.general['WALKSPEED']
+                                #entity.entity_skin.change_animation('walking')
+                                #entity.reversed = True
+                        #elif (
+                            #bloc[0][0] + bloc[0][2]
+                            #< target[0][0] + target[0][2]
+                            #):
+                                #entity.walking_vector[0] = conf.general['WALKSPEED']
+                                #entity.entity_skin.change_animation('walking')
+                                #entity.reversed = True
 
         elif self.status == 'fighting':
             target = self.target
