@@ -218,11 +218,10 @@ class Level(object):
     it contains the textures of background, stage and foreground, the coords of
     collision rects, the size of the leve;t.
     """
-    def __init__(self, levelname='baselevel', server=False):
+    def __init__(self, levelname='baselevel', server=False, clone=None):
         """
         This constructor is currently using two initialisation method, the old,
         based on a map file, and the new based on an xml file.
-
         """
         self.SIZE = (config.general['WIDTH'],
             config.general['HEIGHT'])

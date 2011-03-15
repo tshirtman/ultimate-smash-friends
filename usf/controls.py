@@ -236,7 +236,7 @@ class Controls (object):
                         #test sequences
                         for sequence in self.player_sequences:
                             for i in self.sequences:
-                                if i.compare( sequence, game_instance ):
+                                if i.compare(sequence, game_instance):
                                     game_instance.players[
                                         i.player
                                         ].entity_skin.change_animation(

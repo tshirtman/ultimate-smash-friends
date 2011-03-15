@@ -569,14 +569,13 @@ class Game (object):
                 logging.debug("player's DEAD")
                 player.present = False
 
-    def update(self, debug_params={}):
+    def update(self, debug_params={}, deltatime=0):
         """
         sync everything to current time. Return "game" if we are still in game
         mode, return "menu" otherwise.
 
         """
         # calculate elapsed time
-        deltatime = 0
 
         # frame limiter
         while deltatime < 1.0/config.general['MAX_FPS']:
