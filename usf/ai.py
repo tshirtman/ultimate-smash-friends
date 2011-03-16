@@ -67,20 +67,23 @@ def heuristic(game, iam):
     return (
             game.players[iam].lives * 100 -
             game.players[iam].percents -
-            reduce(lambda x, y: x + y.lives, game.players) * 100 +
-            reduce(lambda x, y: x + y.percents, game.players) +
-            game.players[iam].y / 4
+            reduce(lambda x, y: x + y.lives, [0,] + game.players) * 100 +
+            reduce(lambda x, y: x + y.percents, [0,] + game.players) +
+            game.players[iam].place[1] / 4
             )
 
 def search_path(game, iam, max_depth):
     if max_depth == 0:
         return heuristic(game, iam), [Movement(game.gametime,None), ]
 
-    best_score = 0
+    result = (0, ())
     for movement in [None, ] + possible_movements(game.players[iam].entity_skin.current_animation):
         work_game = deepcopy(game)
-        score, motements = search_path(simulate(work_game, iam, movement), iam, max_depth-1)
-        if score > best_score:
+        print "work_game: ", work_game
+        simulate(work_game, iam, movement)
+        score, movements = search_path(work_game, iam, max_depth-1)
+        print "done"
+        if score > result[0]:
             result = score, movements.append(Movement(game.gametime, movement))
 
     return result
@@ -98,6 +101,7 @@ class AI(object):
         self.sequences_ai = list()
 
     def update(self, game, iam):
+        print "game: ",game
         entity = game.players[iam]
         open_positions = set()
         closed_positios = set()
@@ -107,4 +111,6 @@ class AI(object):
             self.sequences_ai = search_path(game, iam, max_depth)
         else:
             if game.gametime > self.sequence_ai[0].time:
-                game.players[iam].entity_skin.change_animation(self.sequence_ai.pop(0).movement)
+                game.players[iam].entity_skin.change_animation(
+                        self.sequence_ai.pop(0).movement)
+

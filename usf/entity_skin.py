@@ -160,20 +160,14 @@ class Entity_skin (object):
 
             self.action_events[movement.attrib['name']] = events
 
-            try:
-                for sound in movement.findall('sound'):
-                    sounds.append(
-                            pygame.mixer.Sound(
-                                os.path.join(
-                                    config.sys_data_dir,
-                                    dir_name,
-                                    sound.attrib['filename']
-                                    )
-                                )
+            for sound in movement.findall('sound'):
+                sounds.append(
+                        os.path.join(
+                            config.sys_data_dir,
+                            dir_name,
+                            sound.attrib['filename']
                             )
-            except (pygame.error), e:
-                # bad but simple, no sound loaded if mixer not initialised
-                pass
+                        )
             self.sounds[movement.attrib['name']] = sounds
 
             for frame in movement.findall('frame'):
@@ -249,7 +243,10 @@ class Entity_skin (object):
             self.add_vectors(anim_name, game, params)
 
             if self.sounds[anim_name] != []:
-                random.choice(self.sounds[anim_name]).play()
+                try:
+                    loaders.track(random.choice(self.sounds[anim_name])).play()
+                except e:
+                    logging.warning(e)
         else:
             #logging.debug( "entity_skin "+self.name+" has no "+anim_name+"\
 #animation.")

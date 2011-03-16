@@ -237,10 +237,11 @@ class Entity (object):
         """
         hardshape = self.entity_skin.hardshape
         self.rect[2:] = hardshape[2:]
+        print self.place[1], hardshape[1]
         self.rect[:2] = [
-            self.place[0] - hardshape[2]/2 - hardshape[0],
-            self.place[1] - hardshape[1]
-            ]
+                self.place[0] - hardshape[2]/2 - hardshape[0],
+                self.place[1] - hardshape[1]
+                ]
 
     def move(self,(x,y), _from=''):
         """
@@ -607,39 +608,33 @@ class Entity (object):
 
         """
         # Move in walking direction.
-        self.move(
-                (
-                 self.walking_vector[0] * dt,
-                 self.walking_vector[1] * dt
-                ),
-                'walk'
-                )
+        self.move((
+                    self.walking_vector[0] * dt,
+                    self.walking_vector[1] * dt),
+                    'walk')
 
         # follow the floor if it's moving
         floor_vector = self.update_floor_vector(game.level.moving_blocs)
 
         # get environemental vector if we collide some vector-block
         environnement_vector = self.get_block_vector(
-                game.level.vector_blocs
-                )
+                game.level.vector_blocs)
 
         environnement_friction = self.get_env_collision(
-                game.level.water_blocs
-                )
+                game.level.water_blocs)
 
         self.vector = [
         self.vector[0] + environnement_vector[0],
-        self.vector[1] + environnement_vector[1]
-        ]
+        self.vector[1] + environnement_vector[1]]
 
         self.place = [
         self.place[0] + floor_vector[0],
-        self.place[1] + floor_vector[1]
-        ]
+        self.place[1] + floor_vector[1]]
 
         # Gravity
         if self.gravity and self.physic and not self.onGround:
             self.vector[1] += float(config.general['GRAVITY']) * dt
+
         elif not self.physic:
             #FIXME : it is a bit hackish
             self.vector[1] += -0.00001
@@ -662,15 +657,13 @@ class Entity (object):
         Global function to update everything about entity, dt is the time
         ellapsed since the precedent frame, t is the current time.
         """
-        self.update_floor_vector( game.level.moving_blocs)
-        # all of this is nonsense if the entity is not present.
-        if not self.present:
-            return
 
         # Update animation of entity
-        if self.entity_skin.update( t, self.reversed, self.upgraded ) == 0:
-            del(self)
+        self.entity_skin.update(t, self.reversed, self.upgraded)
 
-        self.update_rect()
-        self.update_physics(dt, game)
-    # the number of the beast!
+        if self.present:
+            self.update_floor_vector( game.level.moving_blocs)
+
+            self.update_rect()
+            self.update_physics(dt, game)
+

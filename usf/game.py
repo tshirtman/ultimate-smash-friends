@@ -32,7 +32,7 @@ import threading
 import SocketServer
 
 # my modules import
-from loaders import image
+from loaders import image, text
 import animations
 import entity
 import timed_event
@@ -98,11 +98,9 @@ class Game (object):
 
         self.level = Level(level)
         if screen is not None:
-            self.font = game_font
             self.zoom = 1
             # loading level
             self.level_place = [0, 0]
-            self.game_font = game_font
             self.icon_space = self.SIZE[0]/len(players_)
 
             # loading players
@@ -252,7 +250,7 @@ class Game (object):
 
         if loaders.get_gconfig().get("game", "displaylives") == "y" :
             self.screen.blit(
-                     self.font.render(str(player.percents*10)[:3]+"%",
+                     game_font.render(str(player.percents*10)[:3]+"%",
                      True,
                      pygame.color.Color("red")),
                         (
@@ -290,7 +288,7 @@ class Game (object):
         """ draw player coords, useful for debugging.
         """
         self.screen.blit(
-                self.font.render(
+                game_font.render(
                     str(player.place[0])+
                     ':'+
                     str(player.place[1]),
@@ -307,7 +305,7 @@ class Game (object):
         """displays current key movement of player, useful for debuging
         """
         self.screen.blit(
-                self.font.render(
+                game_font.render(
                     player.entity_skin.current_animation,
                     True,
                     pygame.color.Color('red')
@@ -322,7 +320,7 @@ class Game (object):
         """ displays current key sequence of player, useful for debuging
         """
         self.screen.blit(
-                self.font.render(
+                game_font.render(
                     str(debug_params['controls'].player_sequences[num+1]),
                     True,
                     pygame.color.Color('red')
@@ -575,9 +573,9 @@ class Game (object):
         mode, return "menu" otherwise.
 
         """
-        # calculate elapsed time
-
+        # calculate elapsed time if we are not in simulation
         # frame limiter
+
         while deltatime < 1.0/config.general['MAX_FPS']:
             deltatime = time.time() - self.last_clock
 
@@ -585,6 +583,9 @@ class Game (object):
             # #FIXME this is a workaround the bug allowing game to evolve
             # while being "paused" but only works for pause > 1 second
             self.gametime += deltatime
+
+        else:
+            deltatime = 0
 
         self.last_clock = time.time()
 

@@ -59,6 +59,7 @@ class FontList(object):
             return self.list['sans']
 
 
+@memoize
 class Font(object):
     ''' #TODO documentation
     '''
