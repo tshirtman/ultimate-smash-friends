@@ -307,13 +307,13 @@ class Controls (object):
         if game_instance:
             for i, player in enumerate(game_instance.players):
                 if(player.ai):
+                    print player.name
                     if player.ai_:
                         player.ai_.update(game_instance, i)
-                        for sequence_ai in player.ai_.sequences_ai:
-                            self.player_sequences[i].append(sequence_ai)
+                        #for sequence_ai in player.ai_.sequences_ai:
+                            #self.player_sequences[i].append(sequence_ai)
                     else:
                         player.ai_ = AI()
-                    i+=1
         #update sequence after AI
         for sequence in self.player_sequences:
             for i in self.sequences:

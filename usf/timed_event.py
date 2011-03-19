@@ -78,6 +78,12 @@ class TimedEvent (object):
         else:
             return True
 
+    def backup(self):
+        return self.done
+
+    def restore(self, backup):
+        self.done = backup
+
     def execute(self, dt):
         """
         This method must be overriden, it will be called every frame by the
@@ -108,7 +114,6 @@ class TimedEvent (object):
 
         """
         logging.info(str(self.__class__) + ' event deleted')
-        self.delete()
 
 
 class HealEvent(TimedEvent):
@@ -355,7 +360,7 @@ class InvinciblePlayer(TimedEvent):
         invicibilities = self.em.get_events(cls=InvinciblePlayer,
                 params={'player': self.params['player']})
         if len(list(invicibilities)) is not 0:
-            invicibilities[0].period = self.period
+            list(invicibilities)[0].period = self.period
             self.done = True
         else:
             self.params['player'].invincible = True

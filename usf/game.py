@@ -26,6 +26,7 @@ import math
 import os
 import logging
 import sys
+from copy import deepcopy
 
 import socket
 import threading
@@ -241,7 +242,7 @@ class Game (object):
 
     def draw_player_portrait(self, num, player):
         self.screen.blit(
-                 player.entity_skin.image,
+                 image(player.entity_skin.image, scale=(30,30))[0],
                     (
                     -0.5*self.icon_space+player.num*self.icon_space,
                     self.SIZE[1]*.9
@@ -567,6 +568,53 @@ class Game (object):
                 logging.debug("player's DEAD")
                 player.present = False
 
+    def backup_items(self):
+        return (i.backup() for i in self.items)
+
+    def restore_items(self, backup):
+        for i, b in zip(self.items, backup):
+            i.restore(b)
+
+    def backup_players(self):
+        return (p.backup() for p in self.players)
+
+    def restore_players(self, backup):
+        for p, b in zip(self.players, backup):
+            p.restore(b)
+
+    def backup_skins(self):
+        return (e.entity_skin.backup() for e in self.players+self.items)
+
+    def restore_skins(self, backup):
+        (e.entity_skin.restore(b) for e,b in zip(self.players+self.items, b))
+
+    def backup(self):
+        """
+        save last_clock, events, items, levels, players of the game in their
+        current state
+        """
+        return {
+                'last_clock': self.last_clock,
+                'events': self.events.backup(),
+                'items': self.backup_items(),
+                'level': self.level.backup(),
+                'ending': self.ending,
+                'ended': self.ended,
+                'players': self.backup_players(),
+                'skins': self.backup_skins()}
+
+    def restore(self, backup):
+        """
+        restore the game state from _backup
+        """
+        self.ended = backup['ended']
+        self.ending = backup['ending']
+        self.events.restore(backup['events'])
+        self.last_clock = backup['last_clock']
+        self.level.restore(backup['level'])
+        self.restore_items(backup['items'])
+        self.restore_players(backup['players'])
+
     def update(self, debug_params={}, deltatime=0):
         """
         sync everything to current time. Return "game" if we are still in game
@@ -613,189 +661,10 @@ class Game (object):
 
         return 'game'
 
-class ThreadedTCPRequestHandler(SocketServer.BaseRequestHandler):
-    def __init__(self):
-        super()
-        self.sharedMemory = sharedMemory()
-
-    def handle(self):
-        try:
-            self.sharedMemory.lock.acquire()
-            self.id = self.sharedMemory.get('current_client_id')
-            clients = self.sharedMemory.get('clients')
-            clients.append({})
-            self.sharedMemory.release()
-            while True:
-                data = self.request.recv(1024)
-                if NetworkServerGame().started:
-                    pass
-                else:
-                    if data[:len("<character>")] == "<character>":
-                        clients = self.sharedMemory.get('clients')
-                        clients[self.id].name = data[len('<character>'):]
-                        self.sharedMemory.set('clients', clients)
-
-                    if data[:len("<name>")] == "<name>":
-                        clients = self.sharedMemory.get('clients')
-                        clients[self.id].name = data[len('<name>'):]
-                        self.sharedMemory.set('clients', clients)
-
-                    if data[:len("<level>")] == "<level>":
-                        clients = self.sharedMemory.get('level')
-                        clients[self.id].name = data[len('<name>'):]
-                        self.sharedMemory.set('clients', clients)
-
-                    if data[:len("<message>")] == "<message>":
-                        self.sharedMemory.append(
-                            'messages',
-                            self.sharedMemory.get('clients')[self.id]+
-                                ': '+data[len("<message>"):]
-                            )
-                self.request.send(response)
-        except:
-            raise
-            logging.info("client quit")
-
-class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
+class NetworkServerGame(Game):
     pass
 
-class sharedMemory(object):
-    """
-    Useful to share information between threads, this is a singleton with thread safe access
-
-    """
-    __shared_state = {}
-    lock = threading.RLock()
-    def __init__(self):
-        self.__dict__ = self.__shared_state
-        self.dict = {}
-
-    def set(self, key, value):
-        if key in self.dict:
-            self.dict[key]['lock'].acquire()
-            self.dict[key]['value'] = value
-            self.dict[key]['lock'].release()
-        else:
-            self.lock.acquire()
-            self.dict[key] = {'lock': threading.RLock(), 'value': value}
-            self.lock.release()
-
-    def append(self, key, value):
-        """
-        append the value to the dict referenced by the key.
-        """
-        if key in self.dict:
-            self.dict[key]['lock'].acquire()
-            self.dict[key]['value'].append(value)
-            self.dict[key]['lock'].release()
-        else:
-            self.lock.acquire()
-            self.dict[key] = {'lock': threading.RLock(), 'value': [value,]}
-            self.lock.release()
-
-    def get(self, key):
-        return self.dict[key]['value']
-
-class NetworkServerGame(Game):
-    """
-    This particular version of the game class will accept connection of client,
-    listen their information about keys hit by the players, update physics and
-    send new postions of every entities, to every network players.
-
-    """
-    def __init__(self):
-        """
-        Initialize a game with a list of player and a level,
-        level is the basename of the level in media/levels/
-
-        """
-        self.sharedMemory = sharedMemory()
-        self.sharedMemory.set('clients', [])
-
-        players = []
-        level = ""
-
-        self.current_client_id = 0
-        self.server = ThreadedTCPServer(
-            ('0.0.0.0', config.general['NETWORK_PORT']),
-            ThreadedTCPRequestHandler
-            )
-        ip, port = self.server.server_address
-
-        # Start a thread with the server -- that thread will then start one
-        # more thread for each request
-        server_thread = threading.Thread(target=self.server.serve_forever)
-        # Exit the server thread when the main thread terminates
-        server_thread.setDaemon(True)
-        server_thread.start()
-        logging.info("Server loop running in thread:", server_thread.getName())
-
-        # choose level
-
-        while len(self.sharedMemory.get('clients')) < 4:
-            time.sleep(1)
-
-        Game.__init__(self, None, level, players)
-        self.begin(caracters, level)
-
-    def begin(self, level, players_):
-        """
-        Stop waiting for players, and start the real game.
-
-        """
-        pass
-
-    def draw(self):
-        """
-        As we are in server mode, there will be no drawing.
-
-        """
-        logging.info(self.gamestring)
-        pass
-
-    def update(self, debug_params={}):
-        super(debug_params)
-        self.gamestring = ";".join(
-            [ x.serialize() for x in self.players+self.items]
-        )+'|'+self.level.serialize()
-
-    def __del__(self):
-        self.server.shutdown()
-
 class NetworkClientGame(Game):
-    """
-    This particular version of the game class will try to connect to a server
-    game, will send information about the player, his skin and the updates
-    about the local player(s)'s movements. And draw the game based on
-    informations sent by the server.
+    pass
 
-    """
-    def __init__(self, screen, serverAddress, serverPort,
-                 players_=(None, None, None, None), votemap='maryoland'):
-        """
-        We connect to the server and send information about our players.
-
-        """
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.connect((ip, port))
-
-        for i in range(10):
-            sock.send(message+" "+str(i))
-            response = sock.recv(1024)
-            logging.info("Received: %s" % response)
-            time.sleep(1)
-
-        sock.close()
-
-
-    def begin( self, players=[], level='' ):
-        """
-        Initiation of the game itself, we load the level, and the skins of the
-        player we know of
-
-        """
-        pass
-
-    def update(self, time):
-        pass
 

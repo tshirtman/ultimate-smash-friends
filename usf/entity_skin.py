@@ -87,14 +87,11 @@ class Entity_skin (object):
         self.filename = dir_name
         self.name = attribs['name']
 
-        if not server:
-            self.image = loaders.image(
-                    os.path.join(
-                        config.sys_data_dir,
-                        dir_name,
-                        attribs['image']
-                        ), scale=(30, 30)
-                    )[0]
+        self.image = os.path.join(
+                    config.sys_data_dir,
+                    dir_name,
+                    attribs['image']
+                    )
 
         self.weight = attribs['weight']
         if 'armor' in attribs:
@@ -110,6 +107,8 @@ class Entity_skin (object):
         self.shield_center = self.load_shield_center(attribs)
         self.load_movements(a, dir_name, server)
 
+        # FIXME: this is about the state of the player, should be in the entity
+        # class
         self.current_animation = "static"
         self.animation = self.animations[self.current_animation]
         self.animation_change = True
@@ -183,7 +182,6 @@ class Entity_skin (object):
                             frame.attrib['time'],
                             ('hardshape' in frame.attrib
                              and frame.attrib ['hardshape']
-                             #or loaders.image(image, nodisplay=server)[1]
                              or self.hardshape
                              ),
                             name=frame.attrib['image']
@@ -211,13 +209,13 @@ class Entity_skin (object):
                     )
                 )
 
+    #FIXME: this should be in the entity class
     def change_animation( self, anim_name, game=None, params={}):
         """
         Change animation of the entity skin, updating hardshape and agressiv
         points. Add associated events to game.
 
         """
-        #logging.debug(params,1)
         if self.valid_animation(anim_name):
             if 'entity' in params and params['entity'].upgraded:
                 if anim_name+'_upgraded' in self.animations:
@@ -236,7 +234,6 @@ class Entity_skin (object):
             self.animation_change = True
             params['world'] = game
             params['gametime'] = game is not None or 0
-            #game.events.add_event(anim_name, game, params)
             self.add_events(anim_name, game, params)
 
             #logging.debug(self.vectors[anim_name])
@@ -251,6 +248,14 @@ class Entity_skin (object):
             #logging.debug( "entity_skin "+self.name+" has no "+anim_name+"\
 #animation.")
             pass
+
+    def backup(self):
+        return (self.current_animation, self.animation,
+                self.animation.playing, self.animation._start_time)
+
+    def restore(self, backup):
+        (self.current_animation, self.animation, self.animation.playing,
+                self.animation._start_time) = backup
 
     def add_vectors(self, anim_name, game, params):
         for vector in self.vectors[anim_name]:

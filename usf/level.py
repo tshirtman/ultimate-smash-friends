@@ -212,6 +212,13 @@ class MovingPart (Block):
              self.rects
          )
 
+        def backup(self):
+            return (self.old_position, self.position)
+
+        def restore(self, backup):
+            self.old_position, self.position = backup
+
+
 class Level(object):
     """
     This object contain information about the world within the characters move,
@@ -449,6 +456,12 @@ class Level(object):
     def draw_foreground(self, surface, coords, zoom):
         if self.foreground:
             surface.blit( loaders.image(self.foreground, zoom=zoom)[0], coords)
+
+    def backup(self):
+        return (b.backup() for b in self.moving_blocs)
+
+    def restore(self, backup):
+        (bloc.restore(back) for bloc,back in zip(self.moving_blocs, backup))
 
     def update(self, time):
         for block in self.moving_blocs:

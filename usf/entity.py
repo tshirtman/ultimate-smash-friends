@@ -118,6 +118,20 @@ class Entity (object):
                     {'world': game, 'player': self}
                     )
 
+    def backup(self):
+        """
+        save important attributes of the state of the player, to a dict
+        """
+        # would be easier with a dict comprehension, but not yet in 2.6
+        d = {}
+        for k in ('lives', 'place', 'reversed', 'percents', 'upgraded',
+                'shield', 'vector', 'walking_vector', 'present', 'visible'):
+            d[k] = self.__dict__[k]
+        return d
+
+    def restore(self, backup):
+        self.__dict__.update(backup)
+
     def __str__(self):
         return ','.join((
                     str(self.num),
@@ -237,7 +251,6 @@ class Entity (object):
         """
         hardshape = self.entity_skin.hardshape
         self.rect[2:] = hardshape[2:]
-        print self.place[1], hardshape[1]
         self.rect[:2] = [
                 self.place[0] - hardshape[2]/2 - hardshape[0],
                 self.place[1] - hardshape[1]
@@ -567,36 +580,36 @@ class Entity (object):
 
 
             skin_image = loaders.image(
-                          self.entity_skin.animation.image,
-                          reversed=self.reversed,
-                          lighten=self.lighten,
-                          zoom=zoom
-                          )
+                    self.entity_skin.animation.image,
+                    reversed=self.reversed,
+                    lighten=self.lighten,
+                    zoom=zoom
+                    )
             surface.blit(
-                  skin_image[0],
-                  real_coords
-                  )
+                    skin_image[0],
+                    real_coords
+                    )
 
             if self.shield['on']:
                 image = loaders.image(
-                            os.path.sep.join(
-                                (config.sys_data_dir,'misc','shield.png')
-                                ),
-                                zoom=zoom*self.shield['power']*3
-                            )
+                        os.path.sep.join(
+                            (config.sys_data_dir,'misc','shield.png')
+                            ),
+                        zoom=zoom*self.shield['power']*3
+                        )
 
                 shield_coords = (
-                     coords[0] + int(
-                     self.rect[0]
-                     + self.entity_skin.shield_center[0]
-                     - .5 * image[1][2]
-                    ) * zoom
-                    , coords[1] + int(
-                     self.rect[1]
-                     + self.entity_skin.shield_center[1]
-                     - .5 * image[1][3]
-                    ) * zoom
-                    )
+                        coords[0] + int(
+                            self.rect[0]
+                            + self.entity_skin.shield_center[0]
+                            - .5 * image[1][2]
+                            ) * zoom
+                        , coords[1] + int(
+                            self.rect[1]
+                            + self.entity_skin.shield_center[1]
+                            - .5 * image[1][3]
+                            ) * zoom
+                        )
                 surface.blit(image[0], shield_coords)
 
 
