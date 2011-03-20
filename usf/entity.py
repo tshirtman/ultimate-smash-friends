@@ -352,20 +352,15 @@ class Entity (object):
 
          """
 
-        points = []
-        for i in range(Entity.nb_points):
-            points.append((
-                Entity.list_sin_cos[i][0] * self.entity_skin.hardshape[2] / 2 +
-                self.entity_skin.hardshape[2]/2 +
-                self.entity_skin.hardshape[0] +
-                self.rect[0] + x,
+        h = self.entity_skin.hardshape
+        l = Entity.list_sin_cos
+        r = self.rect
 
-                Entity.list_sin_cos[i][1] * self.rect[3] / 2 +
-                self.rect[3]/2 +
-                self.rect[1] + y
-                ))
-
-        return points
+        return [
+                (
+                    l[i][0] * h[2] / 2 + h[2] / 2 + h[0] + r[0] + x,
+                    l[i][1] * r[3] / 2 + r[3] / 2 + r[1] + y)
+                for i in xrange(Entity.nb_points)]
 
     def collide_top(self, game):
         """
