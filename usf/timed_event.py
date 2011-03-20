@@ -56,8 +56,8 @@ class TimedEvent (object):
         self.done = False
         self.em = manager
         self.initiate()
-        logging.info(str(self.__class__) + ' event created, params:' +
-                str(params))
+        #logging.info(str(self.__class__) + ' event created, params:' +
+                #str(params))
 
     def update(self, deltatime, gametime):
         """
@@ -65,18 +65,10 @@ class TimedEvent (object):
         functions of the event.
 
         """
-        # FIXME: events don't care for the game being paused!!!
-
-        if self.period[0] is None or gametime > self.period[0]:
-            if not self.condition() or self.done:
-                return False
-            if self.period[1] is None or gametime < self.period[1]:
-                self.execute(deltatime)
-                return True
-            else:
-                return False
-        else:
-            return True
+        if gametime > self.period[1] or not self.condition():
+            self.done = True
+        elif gametime < self.period[0]:
+            self.execute(deltatime)
 
     def backup(self):
         return self.done
@@ -107,13 +99,14 @@ class TimedEvent (object):
         """
         pass
 
-    def __del__(self):
+    def del_(self):
         """
         please don't override this method if you want a special behaviour,
         override "delete" method instead.
 
         """
-        logging.info(str(self.__class__) + ' event deleted')
+        #logging.info(str(self.__class__) + ' event deleted')
+        self.delete()
 
 
 class HealEvent(TimedEvent):
@@ -359,7 +352,7 @@ class InvinciblePlayer(TimedEvent):
         # just extend it's time to our limit and we are done.
         invicibilities = self.em.get_events(cls=InvinciblePlayer,
                 params={'player': self.params['player']})
-        if len(list(invicibilities)) is not 0:
+        if len(list(invicibilities)) != 0:
             list(invicibilities)[0].period = self.period
             self.done = True
         else:
@@ -484,7 +477,6 @@ class PlayerOut(TimedEvent):
 
     def initiate(self):
         self.params['entity'].lives -= 1
-        print self.params['entity'].lives
         self.params['entity'].present = False
         if self.params['entity'].lives > 0:
             self.em.add_event(

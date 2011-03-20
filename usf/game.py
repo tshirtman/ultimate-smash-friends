@@ -553,7 +553,6 @@ class Game (object):
 
             # if the player is out of the level zone
             if player.rect.collidelist([self.level.border,]) == -1:
-                print "player out!"
                 self.events.add_event(
                         'PlayerOut',
                         (self.gametime, 0),
@@ -576,17 +575,18 @@ class Game (object):
             i.restore(b)
 
     def backup_players(self):
-        return (p.backup() for p in self.players)
+        return tuple((p.backup() for p in self.players))
 
     def restore_players(self, backup):
         for p, b in zip(self.players, backup):
             p.restore(b)
 
     def backup_skins(self):
-        return (e.entity_skin.backup() for e in self.players+self.items)
+        return tuple((e.entity_skin.backup() for e in self.players+self.items))
 
     def restore_skins(self, backup):
-        (e.entity_skin.restore(b) for e,b in zip(self.players+self.items, b))
+        (e.entity_skin.restore(b) for e,b in zip(self.players+self.items,
+            backup))
 
     def backup(self):
         """
@@ -594,14 +594,15 @@ class Game (object):
         current state
         """
         return {
-                'last_clock': self.last_clock,
+                'ended': self.ended,
+                'ending': self.ending,
                 'events': self.events.backup(),
+                'gametime': self.gametime,
                 'items': self.backup_items(),
                 'level': self.level.backup(),
-                'ending': self.ending,
-                'ended': self.ended,
                 'players': self.backup_players(),
-                'skins': self.backup_skins()}
+                'skins': self.backup_skins(),
+                }
 
     def restore(self, backup):
         """
@@ -610,10 +611,11 @@ class Game (object):
         self.ended = backup['ended']
         self.ending = backup['ending']
         self.events.restore(backup['events'])
-        self.last_clock = backup['last_clock']
+        self.gametime = backup['gametime']
         self.level.restore(backup['level'])
         self.restore_items(backup['items'])
         self.restore_players(backup['players'])
+        self.restore_skins(backup['skins'])
 
     def update(self, debug_params={}, deltatime=0):
         """
@@ -627,7 +629,7 @@ class Game (object):
         while deltatime < 1.0/config.general['MAX_FPS']:
             deltatime = time.time() - self.last_clock
 
-        if deltatime < 1.0:
+        if deltatime < 0.5:
             # #FIXME this is a workaround the bug allowing game to evolve
             # while being "paused" but only works for pause > 1 second
             self.gametime += deltatime

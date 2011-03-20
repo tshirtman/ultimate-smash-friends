@@ -123,9 +123,15 @@ class Entity (object):
         save important attributes of the state of the player, to a dict
         """
         # would be easier with a dict comprehension, but not yet in 2.6
-        d = {}
-        for k in ('lives', 'place', 'reversed', 'percents', 'upgraded',
-                'shield', 'vector', 'walking_vector', 'present', 'visible'):
+        d = {
+            'lives' : self.lives,
+            'place' : self.place[:],
+            'rect' : pygame.Rect(self.rect[:]),
+            'vector' : self.vector[:],
+            'walking_vector' : self.walking_vector[:],
+            }
+
+        for k in ('lives', 'reversed', 'percents', 'upgraded', 'present', 'visible'):
             d[k] = self.__dict__[k]
         return d
 
@@ -292,7 +298,7 @@ class Entity (object):
 
         """
         entity_rect = self.foot_collision_rect()
-        vector = [0,0]
+        vector = [0, 0]
 
         for part in level_vector_blocs:
             if entity_rect.collidelist(part.collide_rects) != -1:
@@ -491,8 +497,8 @@ class Entity (object):
                 draw_rect(
                     surface,
                     pygame.Rect(
-                    real_coords[0]+self.entity_skin.hardshape[0]*zoom,
-                    real_coords[1]+self.entity_skin.hardshape[1]*zoom,
+                    coords[0]+self.entity_skin.hardshape[0]*zoom,
+                    coords[1]+self.entity_skin.hardshape[1]*zoom,
                     self.entity_skin.hardshape[2]*zoom,
                     self.entity_skin.hardshape[3]*zoom
                     )
@@ -535,8 +541,8 @@ class Entity (object):
                     loaders.text(self.entity_skin.current_animation,
                     fonts['mono']['25']),
                     (
-                     real_coords[0],
-                     real_coords[1]+self.entity_skin.animation.rect[3]/2
+                     coords[0],
+                     coords[1]+self.entity_skin.animation.rect[3]/2
                     ),
                     )
 
@@ -555,8 +561,6 @@ class Entity (object):
         if not self.present:
             return
 
-        self.draw_debug(coords, zoom, surface, debug_params)
-
         if self.visible:
             if not self.reversed:
                 place = (
@@ -573,6 +577,7 @@ class Entity (object):
                     int(place[1]*zoom)+coords[1]
                     )
 
+            self.draw_debug(real_coords, zoom, surface, debug_params)
 
             skin_image = loaders.image(
                     self.entity_skin.animation.image,
@@ -580,6 +585,7 @@ class Entity (object):
                     lighten=self.lighten,
                     zoom=zoom
                     )
+
             surface.blit(
                     skin_image[0],
                     real_coords
@@ -632,12 +638,12 @@ class Entity (object):
                 game.level.water_blocs)
 
         self.vector = [
-        self.vector[0] + environnement_vector[0],
-        self.vector[1] + environnement_vector[1]]
+                self.vector[0] + environnement_vector[0],
+                self.vector[1] + environnement_vector[1]]
 
         self.place = [
-        self.place[0] + floor_vector[0],
-        self.place[1] + floor_vector[1]]
+                self.place[0] + floor_vector[0],
+                self.place[1] + floor_vector[1]]
 
         # Gravity
         if self.gravity and self.physic and not self.onGround:

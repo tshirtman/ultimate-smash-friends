@@ -47,20 +47,22 @@ def possible_movements(movement):
                 result.append(line.split(':')[1])
             line = f.readline().split('#')[0].split('\n')[0]
 
-    return result
+    return tuple(result)
 
-def simulate(game, iam, movement=None):
+def simulate(game, entity, movement=None, reverse=False, walk=False):
     """ change the player movement to movement, and jump 100ms in the future.
     if movement is none, just jump 100ms in the future.
     """
-    game.players[iam].entity_skin.change_animation(
+    entity.reversed = reverse
+    entity.walking_vector[0] = walk and conf.general['WALKSPEED'] or 0
+    entity.entity_skin.change_animation(
             movement,
             game,
-            {'entity': game.players[iam]})
+            {'entity': entity})
     game.update(deltatime=TIMESTEP)
 
 #@log_result
-def heuristic(game, iam):
+def heuristic(game, entity):
     """ return a score for the current state of the game, allow to chose a set
     of movement to do.
 
@@ -71,37 +73,42 @@ def heuristic(game, iam):
         % of damages to others
     """
     return (
-            game.players[iam].lives * 100
-            - game.players[iam].percents
-            - sum((x.lives for x in game.players)) * 100
-            + sum((x.percents for x in game.players))
+            min((entity.dist(e) for e in game.players if e is not entity))
+            #- entity.lives * 100
+            #+ entity.percents
+            #+ sum((x.lives for x in game.players)) * 100
+            #- sum((x.percents for x in game.players))
             )
 
 #@log_result
-def search_path(game, iam, max_depth):
-    assert game is not None
+def search_path(game, entity, max_depth):
     if max_depth == 0:
-        return heuristic(game, iam), [Movement(game.gametime,None), ]
+        return heuristic(game, entity), [Movement(game.gametime,None, False,
+            False), ]
 
-    result = (-1000, ())
+    result = (1000, ())
     backup = game.backup()
-    for movement in [None, ] + possible_movements(game.players[iam].entity_skin.current_animation):
-        simulate(game, iam, movement)
-        score, movements = search_path(game, iam, max_depth-1)
-        if score > result[0]:
-            result = score, movements + [Movement(game.gametime, movement),]
-        game.restore(backup)
+    for movement in possible_movements(entity.entity_skin.current_animation):
+        for walk, reverse in ((True, True), (True, False), (False, True), (False, False)):
+            simulate(game, entity, movement, reverse, walk)
+            score, movements = search_path(game, entity, max_depth-1)
+            if score < result[0]:
+                result = score, movements + [Movement(backup['gametime'],
+                    movement, reverse, walk),]
+            game.restore(backup)
 
-    print "max_depth", max_depth, "best result", result
+    #print "max_depth", max_depth, "best result", result
     return result
 
 
 class Movement(object):
-    def __init__(self,time, movement):
+    def __init__(self, time, movement, reverse, walk):
         self.time = time
+        self.reverse = reverse
+        self.walk = walk
         self.movement = movement
 
-    def str(self):
+    def __str__(self):
         return ' '.join((str(self.time), str(self.movement)))
 
 
@@ -111,7 +118,7 @@ class AI(object):
         self.sequences_ai = dict()
 
     def update(self, game, iam):
-        print "game: ",game
+        #print "game: ",game
         if iam not in self.sequences_ai:
             self.sequences_ai[iam] = list()
         entity = game.players[iam]
@@ -119,14 +126,29 @@ class AI(object):
         closed_positions = set()
         max_depth = MAXDEPTH # plan depth
 
-        print self.sequences_ai[iam]
+        #print self.sequences_ai[iam]
         if not self.sequences_ai[iam]:
-            self.sequences_ai[iam] = search_path(game, iam, max_depth)[1]
-            print "sequences updated", self.sequences_ai[iam]
+            print "before", entity.backup()
+            g = game.backup()
+            print g['players'][iam]
+            s = search_path(game, entity, max_depth)
+            game.restore(g)
+            print g['players'][iam]
+            print "after", entity.backup()
+            #self.sequences_ai[iam] = s[1]
+            #print "sequences updated", s[0], ' '.join(map(str, s[1]))
         else:
-            if game.gametime >= self.sequences_ai[iam][0].time:
-                game.players[iam].entity_skin.change_animation(
-                        self.sequences_ai[iam].pop(0).movement,
-                        game,
-                        {'entity': game.players[iam]})
+            pass
+            #if game.gametime >= self.sequences_ai[iam][0].time:
+                #movement = self.sequences_ai[iam].pop(0)
+                #print (
+                        #"I", movement.movement, movement.reverse and "reversed"
+                        #or "straight", movement.walk and "walking" or
+                        #"not walking")
+                #entity.entity_skin.change_animation(
+                        #movement.movement,
+                        #game,
+                        #{'entity': entity})
+                #entity.reverse = movement.reverse
+                #entity.walking_vector[0] = movement.walk and conf.general['WALKSPEED'] or 0
 

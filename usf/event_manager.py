@@ -10,8 +10,6 @@ class EventManager(object):
     """
     def __init__(self):
         self.events = list()
-        #self.to_add list()
-        #self.to_remove = list()
 
     def backup(self):
         return (self.events, (e.backup() for e in self.events))
@@ -25,20 +23,12 @@ class EventManager(object):
         Called every frame, update every instancied event.
 
         """
-        #self.events.update(self.to_add)
-        #self.to_add.clear()
-
         for e in self.events:
-            if not e.update(deltatime, gametime):
-                e.delete()
-                self.events.remove(e)
-                #self.to_remove.add(e)
-
-        #self.events.difference_update(self.to_remove)
-        #self.to_remove.clear()
+            e.update(deltatime, gametime)
+        [e.del_() for e in self.events if e.done]
+        self.events = filter(lambda x: not x.done, self.events)
 
     def add_event(self, name, *args, **kwargs):
-        #self.to_add.add(event_names[name](self, *args, **kwargs))
         self.events.append(event_names[name](self, *args, **kwargs))
 
     def get_events(self, cls=None, params=dict()):
