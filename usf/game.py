@@ -565,10 +565,10 @@ class Game (object):
 
             if player.lives <= 0:
                 logging.debug("player's DEAD")
-                player.present = False
+                player.set_present(False)
 
     def backup_items(self):
-        return (i.backup() for i in self.items)
+        return tuple((i.backup() for i in self.items))
 
     def restore_items(self, backup):
         for i, b in zip(self.items, backup):
@@ -585,8 +585,10 @@ class Game (object):
         return tuple((e.entity_skin.backup() for e in self.players+self.items))
 
     def restore_skins(self, backup):
-        (e.entity_skin.restore(b) for e,b in zip(self.players+self.items,
-            backup))
+        for e,b in zip(self.players + self.items, backup):
+            e.entity_skin.restore(b)
+        #(e.entity_skin.restore(b) for e,b in
+                #zip(self.players + self.items, backup))
 
     def backup(self):
         """

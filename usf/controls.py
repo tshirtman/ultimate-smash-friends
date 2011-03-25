@@ -222,7 +222,7 @@ class Controls (object):
                                         params={'entity': player}
                                         )
                                 player.walking_vector[0] = config.general['WALKSPEED']
-                                player.reversed = True
+                                player.set_reversed(True)
 
                             elif "_RIGHT" in the_key:
                                 if player.onGround:
@@ -232,7 +232,7 @@ class Controls (object):
                                         params={'entity': player}
                                         )
                                 player.walking_vector[0] = config.general['WALKSPEED']
-                                player.reversed = False
+                                player.set_reversed(False)
                         #test sequences
                         for sequence in self.player_sequences:
                             for i in self.sequences:

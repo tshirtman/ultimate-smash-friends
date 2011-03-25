@@ -12,11 +12,12 @@ class EventManager(object):
         self.events = list()
 
     def backup(self):
-        return (self.events, (e.backup() for e in self.events))
+        return tuple((self.events, (e.backup() for e in self.events)))
 
     def restore(self, backup):
         self.events = backup[0]
-        (e.restore(b) for e,b in zip(self.events, backup[1]))
+        for e,b in zip(self.events, backup[1]):
+            e.restore(b)
 
     def update(self, deltatime, gametime):
         """

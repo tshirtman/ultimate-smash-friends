@@ -71,46 +71,46 @@ class Entity (object):
             upgraded=False, physic=True
             ):
         if number is None:
-            self.number = Entity.counter
+            self._number = Entity.counter
             Entity.counter += 1
         else:
-            self.number = number
+            self._number = number
 
-        self.game = game
-        self.physic = physic
-        self.num = num
-        self.upgraded = upgraded
-        self.lighten = False
-        self.shield = {'on': False, 'power': 1.0, 'date': 0}
-        self.place = place
-        self.carried_by = carried_by
+        self._game = game
+        self._physic = physic
+        self._num = num
+        self._upgraded = upgraded
+        self._lighten = False
+        self._shield = {'on': False, 'power': 1.0, 'date': 0}
+        self._place = place
+        self._carried_by = carried_by
         # the 'center' of the entity is at the bottom middle.
         # so this is the point that move the least beetwen two frames.
-        self.vector = [vector[0], vector[1]]
-        self.walking_vector = [0.0, 0.0]
+        self._vector = [vector[0], vector[1]]
+        self._walking_vector = [0.0, 0.0]
         # the entity is reversed when looking at left.
-        self.reversed = reversed
-        self.percents = 0
-        self.lives = lives
-        self.gravity = True
-        self.invincible = False
-        self.present = present
-        self.visible = visible
-        self.onGround = False
+        self._reversed = reversed
+        self._percents = 0
+        self._lives = lives
+        self._gravity = True
+        self._invincible = False
+        self._present = present
+        self._visible = visible
+        self._onGround = False
 
         if entity_skinname is not None:
-            self.name = entity_skinname.split(os.sep)[-1]
+            self._name = entity_skinname.split(os.sep)[-1]
             self.entity_skin = entity_skin.Entity_skin(
                     entity_skinname,
                     not game or not game.screen
                     )
-            self.armor = self.entity_skin.armor
-            self.rect = pygame.Rect(0,0,0,0)
-            self.rect[:2] = (
-                    self.place[0] - self.rect[2]/2,
-                    self.place[1] - self.rect[3]
+            self._armor = self.entity_skin.armor
+            self._rect = pygame.Rect(0,0,0,0)
+            self._rect[:2] = (
+                    self._place[0] - self._rect[2]/2,
+                    self._place[1] - self._rect[3]
                     )
-            self.rect[2:] = self.entity_skin.animation.rect[2:]
+            self._rect[2:] = self.entity_skin.animation.rect[2:]
             self.entity_skin.update(0, server=(game is None or game.screen is None))
             game.events.add_event(
                     'ShieldUpdateEvent',
@@ -118,20 +118,109 @@ class Entity (object):
                     {'world': game, 'player': self}
                     )
 
+    @property
+    def num(self):
+        return self._num
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def lives(self):
+        return self._lives
+
+    def set_lives(self, value):
+        assert isinstance(value, int)
+        self._lives = value
+
+    @property
+    def place(self):
+        return self._place
+
+    def set_place(self, value):
+        self._place = value
+
+    @property
+    def rect(self):
+        return pygame.Rect(self._rect)
+
+    @property
+    def shield(self):
+        return self._shield
+    @property
+    def present(self):
+        return self._present
+
+    def set_present(self, value):
+        assert value in (True, False)
+        self._present = value
+
+    @property
+    def visible(self):
+        return self._visible
+
+    def set_visible(self, value):
+        self._visible = value
+
+    @property
+    def invincible(self):
+        return self._invincible
+
+    def set_invincible(self, value):
+        assert value in (True, False)
+        self._invincible = value
+
+    @property
+    def vector(self):
+        return tuple(self._vector)
+
+    def set_vector(self, value):
+        self._vector = value
+
+    @property
+    def gravity(self):
+        return self._gravity
+
+    @property
+    def onGround(self):
+        return self._onGround
+
+    @property
+    def physic(self):
+        return self._physic
+
+    @property
+    def lighten(self):
+        return self._lighten
+
+    def set_lighten(self, value):
+        assert value in (True, False)
+        self._lighten = value
+
+    @property
+    def reversed(self):
+        return self._reversed
+
+    def set_reversed(self, value):
+        assert value in (True, False)
+        self._reversed = value
+
     def backup(self):
         """
         save important attributes of the state of the player, to a dict
         """
         # would be easier with a dict comprehension, but not yet in 2.6
         d = {
-            'lives' : self.lives,
-            'place' : self.place[:],
-            'rect' : pygame.Rect(self.rect[:]),
-            'vector' : self.vector[:],
-            'walking_vector' : self.walking_vector[:],
+            '_lives' : self.lives,
+            '_place' : self.place[:],
+            '_rect' : pygame.Rect(self.rect[:]),
+            '_vector' : self.vector[:],
+            '_walking_vector' : self.walking_vector[:],
             }
 
-        for k in ('lives', 'reversed', 'percents', 'upgraded', 'present', 'visible'):
+        for k in ('_reversed', '_percents', '_upgraded', '_present',
+                '_visible'):
             d[k] = self.__dict__[k]
         return d
 
@@ -141,14 +230,14 @@ class Entity (object):
     def __str__(self):
         return ','.join((
                     str(self.num),
-                    self.upgraded and '1' or '0',
-                    self.lighten and '1' or '0',
-                    str(self.place),
-                    str(self.vector),
-                    str(self.walking_vector),
+                    self._upgraded and '1' or '0',
+                    self._lighten and '1' or '0',
+                    str(self._place),
+                    str(self._vector),
+                    str(self._walking_vector),
                     self.reversed and '1' or '0',
-                    str(self.lives),
-                    self.invincible and '1' or '0',
+                    str(self._lives),
+                    self._invincible and '1' or '0',
                     self.entity_skin.animation.image
                     ))
 
@@ -256,11 +345,11 @@ class Entity (object):
 
         """
         hardshape = self.entity_skin.hardshape
-        self.rect[2:] = hardshape[2:]
-        self.rect[:2] = [
+        self._rect = [
                 self.place[0] - hardshape[2]/2 - hardshape[0],
-                self.place[1] - hardshape[1]
-                ]
+                self.place[1] - hardshape[1],
+                hardshape[0],
+                hardshape[1]]
 
     def move(self,(x,y), _from=''):
         """
@@ -270,7 +359,7 @@ class Entity (object):
         """
         if self.reversed:
             x = -x
-        self.place = self.place[0] + x, int(self.place[1] + y)
+        self.set_place([self.place[0] + x, int(self.place[1] + y)])
 
         self.update_rect()
 
@@ -437,40 +526,40 @@ class Entity (object):
         # this test should optimise most of situations.
         elif (game.level.collide_rect(self.rect[:2], self.rect[2:]) != -1 and
             self.physic):
-            self.onGround = False
+            self._onGround = False
 
             if self.collide_top(game):
-                self.vector[1] = -math.fabs(
+                self._vector[1] = -math.fabs(
                     self.vector[1] * config.general['BOUNCE']
                 )
-                self.onGround = True
-                self.vector[0] /= 2
+                self._onGround = True
+                self._vector[0] /= 2
                 while self.collide_top(game):
-                    self.move(( 0, -1))
+                    self.move((0, -1))
 
             if self.collide_bottom(game):
                 if self.vector[1] < 0:
-                    self.vector[1] = int(
+                    self._vector[1] = int(
                             -self.vector[1] * config.general['BOUNCE']
                             )
-                self.vector[0] /= 2
+                self._vector[0] /= 2
                 while self.collide_bottom(game):
                     self.move(( 0, 1))
 
             if self.collide_front(game):
-                self.vector[0] = math.fabs(self.vector[0])/2
+                self._vector[0] = math.fabs(self.vector[0])/2
                 while self.collide_front(game):
                     self.move(( 1, 0))
 
             if self.collide_back(game):
-                self.vector[0] = -math.fabs(self.vector[0])/2
+                self._vector[0] = -math.fabs(self.vector[0])/2
                 while self.collide_back(game):
                     self.move(( -1, 0), "wall, pushed back")
 
-        self.place = [
+        self.set_place([
                 int(self.place[0]),
                 int(self.place[1])
-                ]
+                ])
 
     def draw_debug(self, coords, zoom, surface, debug_params):
         self.draw_debug_levelmap(coords, zoom, surface, debug_params)
@@ -637,28 +726,28 @@ class Entity (object):
         environnement_friction = self.get_env_collision(
                 game.level.water_blocs)
 
-        self.vector = [
+        self.set_vector([
                 self.vector[0] + environnement_vector[0],
-                self.vector[1] + environnement_vector[1]]
+                self.vector[1] + environnement_vector[1]])
 
-        self.place = [
+        self.set_place([
                 self.place[0] + floor_vector[0],
-                self.place[1] + floor_vector[1]]
+                self.place[1] + floor_vector[1]])
 
         # Gravity
         if self.gravity and self.physic and not self.onGround:
-            self.vector[1] += float(config.general['GRAVITY']) * dt
+            self._vector[1] += float(config.general['GRAVITY']) * dt
 
         elif not self.physic:
             #FIXME : it is a bit hackish
-            self.vector[1] += -0.00001
+            self._vector[1] += -0.00001
 
         # Application of air friction.
         F = config.general['AIR_FRICTION'] * environnement_friction
 
         if self.physic: #FIXME: and not a bullet
-            self.vector[0] -= (F * self.vector[0] * dt)
-            self.vector[1] -= (F * self.vector[1] * dt)
+            self._vector[0] -= (F * self.vector[0] * dt)
+            self._vector[1] -= (F * self.vector[1] * dt)
 
         # apply the vector to entity.
         self.move((self.vector[0] * dt, self.vector[1] * dt), 'vector')

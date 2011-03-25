@@ -27,7 +27,7 @@ conf = config.Config()
 #controls = controls.Controls()
 
 TIMESTEP = 250
-MAXDEPTH = 2
+MAXDEPTH = 1
 
 #@log_result
 @memoize
@@ -53,12 +53,13 @@ def simulate(game, entity, movement=None, reverse=False, walk=False):
     """ change the player movement to movement, and jump 100ms in the future.
     if movement is none, just jump 100ms in the future.
     """
-    entity.reversed = reverse
+    entity.set_reversed(reverse)
     entity.walking_vector[0] = walk and conf.general['WALKSPEED'] or 0
     entity.entity_skin.change_animation(
             movement,
             game,
             {'entity': entity})
+    assert entity in game.players
     game.update(deltatime=TIMESTEP)
 
 #@log_result
@@ -89,7 +90,8 @@ def search_path(game, entity, max_depth):
     result = (1000, ())
     backup = game.backup()
     for movement in possible_movements(entity.entity_skin.current_animation):
-        for walk, reverse in ((True, True), (True, False), (False, True), (False, False)):
+        #for walk, reverse in ((True, True), (True, False), (False, True), (False, False)):
+        for walk, reverse in ((True, True), ):
             simulate(game, entity, movement, reverse, walk)
             score, movements = search_path(game, entity, max_depth-1)
             if score < result[0]:
@@ -128,14 +130,11 @@ class AI(object):
 
         #print self.sequences_ai[iam]
         if not self.sequences_ai[iam]:
-            print "before", entity.backup()
+            #print "before", entity.entity_skin.backup()
             g = game.backup()
-            print g['players'][iam]
             s = search_path(game, entity, max_depth)
             game.restore(g)
-            print g['players'][iam]
-            print "after", entity.backup()
-            #self.sequences_ai[iam] = s[1]
+            #print "after ", entity.entity_skin.backup()
             #print "sequences updated", s[0], ' '.join(map(str, s[1]))
         else:
             pass

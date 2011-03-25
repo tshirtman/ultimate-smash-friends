@@ -71,10 +71,13 @@ class TimedEvent (object):
             self.execute(deltatime)
 
     def backup(self):
-        return self.done
+        backup = {}
+        for k in self.__dict__:
+            backup[k] = self.__dict__[k]
+        return backup
 
     def restore(self, backup):
-        self.done = backup
+        self.__dict__.update(backup)
 
     def execute(self, dt):
         """
@@ -158,7 +161,7 @@ class DelItemEvent(TimedEvent):
             target = self.params['entity']
         else:
             target = self.target
-        target.lives = 0
+        target.set_lives(0)
 
 
 class BombExplode(TimedEvent):
@@ -294,10 +297,10 @@ class Gost(TimedEvent):
             self.target_player.dist( self.params['entity']):
                 self.target_player = p
 
-        self.params['entity'].vector = [
+        self.params['entity'].set_vector ([
         ( self.target_player.place[0] - self.params['entity'].place[0]) * 3,
         ( self.target_player.place[1] - self.params['entity'].place[1]) * 3
-        ]
+        ])
     def condition(self):
         return True
 
@@ -350,24 +353,24 @@ class InvinciblePlayer(TimedEvent):
     def initiate(self):
         # if we find another invincibility event on the same player we
         # just extend it's time to our limit and we are done.
-        invicibilities = self.em.get_events(cls=InvinciblePlayer,
-                params={'player': self.params['player']})
-        if len(list(invicibilities)) != 0:
-            list(invicibilities)[0].period = self.period
+        invincibilities = list(self.em.get_events(cls=InvinciblePlayer,
+                params={'player': self.params['player']}))
+        if len(invincibilities) != 0:
+            invincibilities[0].period = self.period
             self.done = True
         else:
-            self.params['player'].invincible = True
+            self.params['player'].set_invincible(True)
 
     def execute(self, deltatime):
-        self.params['player'].invincible = True
+        self.params['player'].set_invincible(True)
         self.params['player'].lighten = not self.params['player'].lighten
 
     def condition(self):
         return True
 
     def delete(self):
-        self.params['player'].lighten = False
-        self.params['player'].invincible = False
+        self.params['player'].set_lighten(False)
+        self.params['player'].set_invincible(False)
 
 
 class VectorEvent(TimedEvent):
@@ -397,8 +400,9 @@ class VectorEvent(TimedEvent):
 
         """
         if self.params['entity'].entity_skin.current_animation:
-            self.params['entity'].vector[0] = self.params['vector'][0]
-            self.params['entity'].vector[1] = -self.params['vector'][1]
+            self.params['entity'].set_vector([
+                self.params['vector'][0],
+                -self.params['vector'][1]])
         #logging.debug("vector Event applied")
 
 
@@ -425,14 +429,14 @@ class DropPlayer(TimedEvent):
     """
     def initiate(self):
         #logging.debug("inserting player in game")
-        self.params['entity'].vector = [0, 0]
+        self.params['entity'].set_vector([0, 0])
         self.params['entity'].walking_vector = [0, 0]
         self.params['entity'].percents = 0
         self.params['entity'].upgraded = False
 
-        self.params['entity'].place = random.sample(
-            self.params['world'].level.entrypoints, 1
-        )[0]
+        self.params['entity'].set_place(random.choice(
+            self.params['world'].level.entrypoints
+        ))
 
     def execute(self, deltatime):
         pass
@@ -441,8 +445,8 @@ class DropPlayer(TimedEvent):
         return True
 
     def delete(self):
-        self.params['entity'].visible = True
-        self.params['entity'].present = True
+        self.params['entity'].set_visible(True)
+        self.params['entity'].set_present(True)
         self.params['entity'].entity_skin.change_animation(
             'static',
             self.params['world']
@@ -476,8 +480,8 @@ class PlayerOut(TimedEvent):
                 #)
 
     def initiate(self):
-        self.params['entity'].lives -= 1
-        self.params['entity'].present = False
+        self.params['entity'].set_lives(self.params['entity'].lives - 1)
+        self.params['entity'].set_present(False)
         if self.params['entity'].lives > 0:
             self.em.add_event(
                     'DropPlayer',
