@@ -74,6 +74,8 @@ class TimedEvent (object):
         backup = {}
         for k in self.__dict__:
             backup[k] = self.__dict__[k]
+        if isinstance(self, VectorEvent):
+            print backup
         return backup
 
     def restore(self, backup):

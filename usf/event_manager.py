@@ -12,9 +12,11 @@ class EventManager(object):
         self.events = list()
 
     def backup(self):
-        return tuple((self.events, (e.backup() for e in self.events)))
+        #return deepcopy(self.events)
+        return tuple((self.events[:], (e.backup() for e in self.events)))
 
     def restore(self, backup):
+        #self.events = backup
         self.events = backup[0]
         for e,b in zip(self.events, backup[1]):
             e.restore(b)
