@@ -568,10 +568,11 @@ class Game (object):
                 player.set_present(False)
 
     def backup_items(self):
-        return tuple((i.backup() for i in self.items))
+        return (self.items[:], tuple((i.backup() for i in self.items)))
 
     def restore_items(self, backup):
-        for i, b in zip(self.items, backup):
+        self.items = backup[0]
+        for i, b in zip(self.items, backup[1]):
             i.restore(b)
 
     def backup_players(self):

@@ -74,8 +74,6 @@ class TimedEvent (object):
         backup = {}
         for k in self.__dict__:
             backup[k] = self.__dict__[k]
-        if isinstance(self, VectorEvent):
-            print backup
         return backup
 
     def restore(self, backup):
@@ -432,7 +430,7 @@ class DropPlayer(TimedEvent):
     def initiate(self):
         #logging.debug("inserting player in game")
         self.params['entity'].set_vector([0, 0])
-        self.params['entity'].walking_vector = [0, 0]
+        self.params['entity'].set_walking_vector([0, 0])
         self.params['entity'].percents = 0
         self.params['entity'].upgraded = False
 

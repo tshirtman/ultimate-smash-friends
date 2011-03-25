@@ -179,6 +179,13 @@ class Entity (object):
         self._vector = value
 
     @property
+    def walking_vector(self):
+        return tuple(self._walking_vector)
+
+    def set_walking_vector(self, value):
+        self._walking_vector = value
+
+    @property
     def gravity(self):
         return self._gravity
 
@@ -210,7 +217,6 @@ class Entity (object):
         """
         save important attributes of the state of the player, to a dict
         """
-        # would be easier with a dict comprehension, but not yet in 2.6
         d = {
             '_lives' : self.lives,
             '_place' : self.place[:],
@@ -219,6 +225,7 @@ class Entity (object):
             '_walking_vector' : self.walking_vector[:],
             }
 
+        # would be easier with a dict comprehension, but not yet in 2.6
         for k in ('_reversed', '_percents', '_upgraded', '_present',
                 '_visible'):
             d[k] = self.__dict__[k]

@@ -27,7 +27,7 @@ conf = config.Config()
 #controls = controls.Controls()
 
 TIMESTEP = 250
-MAXDEPTH = 1
+MAXDEPTH = 2
 
 #@log_result
 @memoize
@@ -54,7 +54,8 @@ def simulate(game, entity, movement=None, reverse=False, walk=False):
     if movement is none, just jump 100ms in the future.
     """
     entity.set_reversed(reverse)
-    entity.walking_vector[0] = walk and conf.general['WALKSPEED'] or 0
+    entity.set_walking_vector([walk and conf.general['WALKSPEED'] or 0,
+        entity.walking_vector[1]])
     entity.entity_skin.change_animation(
             movement,
             game,
@@ -88,20 +89,20 @@ def search_path(game, entity, max_depth):
             False), ]
 
     result = (1000, ())
-    backup = game.backup()
+    gametime = game.gametime
     for movement in possible_movements(entity.entity_skin.current_animation):
         #for walk, reverse in ((True, True), (True, False), (False, True), (False, False)):
         for walk, reverse in ((True, True), ):
+            b = game.backup() #no, this can't be factorized by moving it 3 line^
             simulate(game, entity, movement, reverse, walk)
             score, movements = search_path(game, entity, max_depth-1)
+            game.restore(b)
             if score < result[0]:
-                result = score, movements + [Movement(backup['gametime'],
+                result = score, movements + [Movement(gametime,
                     movement, reverse, walk),]
-            game.restore(backup)
 
     #print "max_depth", max_depth, "best result", result
     return result
-
 
 class Movement(object):
     def __init__(self, time, movement, reverse, walk):
@@ -130,24 +131,21 @@ class AI(object):
 
         #print self.sequences_ai[iam]
         if not self.sequences_ai[iam]:
-            #print "before", entity.entity_skin.backup()
-            g = game.backup()
             s = search_path(game, entity, max_depth)
-            game.restore(g)
-            #print "after ", entity.entity_skin.backup()
-            #print "sequences updated", s[0], ' '.join(map(str, s[1]))
+            print "sequences updated", s[0], ' '.join(map(str, s[1]))
+            self.sequences_ai[iam] = s[1]
         else:
-            pass
-            #if game.gametime >= self.sequences_ai[iam][0].time:
-                #movement = self.sequences_ai[iam].pop(0)
-                #print (
-                        #"I", movement.movement, movement.reverse and "reversed"
-                        #or "straight", movement.walk and "walking" or
-                        #"not walking")
-                #entity.entity_skin.change_animation(
-                        #movement.movement,
-                        #game,
-                        #{'entity': entity})
-                #entity.reverse = movement.reverse
-                #entity.walking_vector[0] = movement.walk and conf.general['WALKSPEED'] or 0
+            if game.gametime >= self.sequences_ai[iam][-1].time:
+                movement = self.sequences_ai[iam].pop()
+                print (
+                        "I", movement.movement, movement.reverse and "reversed"
+                        or "straight", movement.walk and "walking" or
+                        "not walking")
+                entity.entity_skin.change_animation(
+                        movement.movement,
+                        game,
+                        {'entity': entity})
+                entity.reverse = movement.reverse
+                entity.set_walking_vector([movement.walk and
+                    conf.general['WALKSPEED'] or 0, entity.walking_vector[1]])
 
