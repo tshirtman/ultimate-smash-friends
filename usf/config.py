@@ -24,6 +24,7 @@ from os import environ, makedirs, stat, sep
 import os
 from os.path import join, dirname, abspath
 from sys import prefix
+from memoize import memoize
 
 from ConfigParser import SafeConfigParser
 import platform
@@ -32,6 +33,30 @@ import logging
 import pygame
 
 OS = platform.system().lower()
+
+@memoize
+def _get_value_from_config(c):
+    values = [value.strip().strip('\'\"') for value in c.split(',')]
+    for item in values:
+        try:
+            # try to convert it into an integer instead
+            values[values.index(item)] = int(item)
+        except ValueError:
+            try:
+                # try to convert the item into a float
+                values[values.index(item)] = float(item)
+            except ValueError:
+                # try to convert it into a boolean otherwise it's a string
+                if item.lower() in ['true', 't', 'yes', 'y']:
+                    values[values.index(item)] = True
+                elif item.lower() in ['false', 'f', 'no', 'n']:
+                    values[values.index(item)] = False
+
+    if len(values) == 1:
+        return values[0]
+    else:
+        return values
+
 
 class Option(dict):
     def __init__(self, args, **kwargs):
@@ -47,36 +72,22 @@ class Option(dict):
         dict.__init__(self, args, **kwargs)
 
     def __setitem__(self, option, value):
+        try:
+            #invalidate cache of __getitem__
+            self.__getitem__.cache = {}
+        except attributeError:
+            logging.warning("__getitem__ not memoized? oO")
+
         self.__parser.set(self.name, option, str(value))
         dict.__setitem__(self, option, str(value))
         # automatically save recently changed value to file
         with open(self.__config, 'wb') as config_file:
             self.__parser.write(config_file)
 
+
     def __getitem__(self, key):
         # create a list of strings for the stored value
-        object = [value.strip().strip('\'\"')
-                  for value in dict.__getitem__(self, key).split(',')]
-        for item in object:
-            try:
-                # try to convert it into an integer instead
-                object[object.index(item)] = int(item)
-            except ValueError:
-                try:
-                    # try to convert the item into a float
-                    object[object.index(item)] = float(item)
-                except ValueError:
-                    # try to convert it into a boolean otherwise it's a string
-                    if item.lower() in ['true', 't', 'yes', 'y']:
-                        object[object.index(item)] = True
-                    elif item.lower() in ['false', 'f', 'no', 'n']:
-                        object[object.index(item)] = False
-
-        if len(object) == 1:
-            return object[0]
-        else:
-            return object
-
+        return _get_value_from_config(dict.__getitem__(self, key))
 
 class Config(object):
     """ Object that implements automatic saving.

@@ -25,7 +25,7 @@ config = Config()
 import xml.etree.ElementTree as xml
 from os.path import join
 from os import stat
-from loaders import memoize
+from memoize import memoize
 #library import
 import pygame
 

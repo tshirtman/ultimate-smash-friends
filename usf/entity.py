@@ -269,7 +269,7 @@ class Entity (object):
                                 )/config.general['SHIELD_SOLIDITY']
             self.shield['power'] = max(0, self.shield['power'])
             if (
-            self.shield['date'] < time.time() - config.general['POWER_SHIELD_TIME']
+            self.shield['date'] < self.game.gametime() - config.general['POWER_SHIELD_TIME']
             ):
                 self.percents += math.sqrt(point[1][0] ** 2 + point[1][1]**2)\
                         / (30 * (100 - self.armor)) / 2
@@ -458,11 +458,22 @@ class Entity (object):
         l = Entity.list_sin_cos
         r = self.rect
 
-        return [
-                (
-                    l[i][0] * h[2] / 2 + h[2] / 2 + h[0] + r[0] + x,
-                    l[i][1] * r[3] / 2 + r[3] / 2 + r[1] + y)
+        H2_2 = h[2] / 2
+        HRX = h[0] + r[0] + x
+        RY = r[1] + y
+        R3_2 = r[3] / 2
+
+        return [ ( (l[i][0] + 1) * H2_2 + HRX,
+                    (l[i][1] + 1) * R3_2 + RY)
                 for i in xrange(Entity.nb_points)]
+
+        # before simplification making it uncomprehensible but hopefully, more
+        # efficient
+        #return [
+                #(
+                    #l[i][0] * h[2] / 2 + h[2] / 2 + h[0] + r[0] + x,
+                    #l[i][1] * r[3] / 2 + r[3] / 2 + r[1] + y)
+                #for i in xrange(Entity.nb_points)]
 
     def collide_top(self, game):
         """
@@ -505,11 +516,11 @@ class Entity (object):
         """
 
         points = self.update_points()
-        return ((( game.level.collide_rect(points[self.UPPER_RIGHT])
-            or game.level.collide_rect(points[self.LOWER_RIGHT]) )
+        return (((game.level.collide_rect(points[self.UPPER_RIGHT])
+            or game.level.collide_rect(points[self.LOWER_RIGHT]))
             and not self.reversed)
-        or (( game.level.collide_rect(points[self.UPPER_LEFT])
-            or game.level.collide_rect(points[self.LOWER_LEFT]) )
+        or ((game.level.collide_rect(points[self.UPPER_LEFT])
+            or game.level.collide_rect(points[self.LOWER_LEFT]))
             and self.reversed))
 
     def worldCollide(self, game):
@@ -544,7 +555,7 @@ class Entity (object):
                 while self.collide_top(game):
                     self.move((0, -1))
 
-            if self.collide_bottom(game):
+            elif self.collide_bottom(game):
                 if self.vector[1] < 0:
                     self._vector[1] = int(
                             -self.vector[1] * config.general['BOUNCE']
@@ -558,7 +569,7 @@ class Entity (object):
                 while self.collide_front(game):
                     self.move(( 1, 0))
 
-            if self.collide_back(game):
+            elif self.collide_back(game):
                 self._vector[0] = -math.fabs(self.vector[0])/2
                 while self.collide_back(game):
                     self.move(( -1, 0), "wall, pushed back")
@@ -767,11 +778,9 @@ class Entity (object):
         Global function to update everything about entity, dt is the time
         ellapsed since the precedent frame, t is the current time.
         """
-
-        # Update animation of entity
-        self.entity_skin.update(t, self.reversed, self.upgraded)
-
         if self.present:
+            self.entity_skin.update(t, self.reversed, self.upgraded)
+
             self.update_floor_vector( game.level.moving_blocs)
 
             self.update_rect()

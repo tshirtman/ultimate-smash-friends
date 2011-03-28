@@ -28,6 +28,7 @@ from config import Config
 from usf import skin
 config = Config()
 
+from memoize import memoize
 from debug_utils import draw_rect
 
 # different in python 2.4 and 2.5
@@ -67,12 +68,12 @@ class Block (object):
 
         surface.blit(loaders.image(self.texture, zoom=zoom)[0], real_coords)
 
-    def collide_rect(self, (x,y), (h,w)=(1,1)):
+    def collide_rect(self, rect):
         """
         Return True if the point at (x,y) collide this bloc's rects.
 
         """
-        return pygame.Rect(x,y,h,w).collidelist(self.collide_rects) != -1
+        return rect.collidelist(self.collide_rects) != -1
 
 class VectorBloc (Block):
     """
@@ -110,6 +111,10 @@ class VectorBloc (Block):
                 entity.vector[0] + self.vector[0],
                 entity.vector[1] + self.vector[1]
                 ]
+
+    @memoize
+    def collide_rect(self, rect):
+        return Block.collide_rect(self, rect)
 
 class MovingPart (Block):
     """
@@ -212,11 +217,11 @@ class MovingPart (Block):
              self.rects
          )
 
-        def backup(self):
-            return (self.old_position, self.position)
+    def backup(self):
+        return (self.old_position, self.position)
 
-        def restore(self, backup):
-            self.old_position, self.position = backup
+    def restore(self, backup):
+        self.old_position, self.position = backup
 
 
 class Level(object):
@@ -467,6 +472,12 @@ class Level(object):
         for block in self.moving_blocs:
             block.update(time)
 
+    def _helper_collide(self, l, rect):
+        for i in l:
+            if i.collide_rect(rect):
+                return True
+        return False
+
     def collide_rect(self, (x,y), (h,w)=(1,1)):
         """
         This fonction return True if the rect at coords (x,y) collide one of
@@ -474,8 +485,9 @@ class Level(object):
 
         """
         l = self.moving_blocs + self.vector_blocs
+        rect = pygame.Rect((x,y),(h,w))
         return (
-                pygame.Rect(x,y,h,w).collidelist(self.map) != -1
-                or l and True in map(lambda(a): a.collide_rect((x,y), (h,w)), l)
+                pygame.Rect(x,y,h,w).collidelist(self.map) != -1 or
+                l and self._helper_collide(l, rect)
                )
 

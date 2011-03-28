@@ -28,6 +28,7 @@ import pygame
 import logging
 import math
 
+from memoize import memoize
 from config import Config
 config = Config()
 from ConfigParser import SafeConfigParser
@@ -46,24 +47,6 @@ try:
 except:
     Log().log("old version of pygame no BLEND_RGBA_MAX")
     BLEND_RGBA_MAX = None
-
-def memoize(function):
-    """
-    Any function decorated with memoize will cache it's results and send them
-    directly when called with same parameters as before, without calling the
-    actual code, please only use with functions which result depend only of
-    parameters (not time, state of the game or such).
-    """
-    cache = {}
-    def decorated_function(*args, **kwargs):
-        params = (args)+tuple(zip(kwargs.keys(),kwargs.values()))
-        try:
-            return cache[params]
-        except:
-            val = function(*args, **kwargs)
-            cache[params] = val
-            return val
-    return decorated_function
 
 @memoize #the memoize is critical for performances!
 def image(name, *args, **kwargs):

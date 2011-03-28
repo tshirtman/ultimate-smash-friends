@@ -20,8 +20,7 @@ from os import path
 
 import game
 import config
-from debug_utils import log_result
-from loaders import memoize
+from memoize import memoize
 conf = config.Config()
 
 #controls = controls.Controls()
@@ -29,7 +28,6 @@ conf = config.Config()
 TIMESTEP = 250
 MAXDEPTH = 2
 
-#@log_result
 @memoize
 def possible_movements(movement):
     """ return the list of current legal movements for the player
@@ -63,7 +61,6 @@ def simulate(game, entity, movement=None, reverse=False, walk=False):
     assert entity in game.players
     game.update(deltatime=TIMESTEP)
 
-#@log_result
 def heuristic(game, entity):
     """ return a score for the current state of the game, allow to chose a set
     of movement to do.
@@ -82,7 +79,6 @@ def heuristic(game, entity):
             #- sum((x.percents for x in game.players))
             )
 
-#@log_result
 def search_path(game, entity, max_depth):
     if max_depth == 0:
         return heuristic(game, entity), [Movement(game.gametime,None, False,
@@ -92,7 +88,7 @@ def search_path(game, entity, max_depth):
     gametime = game.gametime
     for movement in possible_movements(entity.entity_skin.current_animation):
         #for walk, reverse in ((True, True), (True, False), (False, True), (False, False)):
-        for walk, reverse in ((True, True), ):
+        for walk, reverse in ((True, True), (True, False), (False, True)):
             b = game.backup() #no, this can't be factorized by moving it 3 line^
             simulate(game, entity, movement, reverse, walk)
             score, movements = search_path(game, entity, max_depth-1)
@@ -132,15 +128,15 @@ class AI(object):
         #print self.sequences_ai[iam]
         if not self.sequences_ai[iam]:
             s = search_path(game, entity, max_depth)
-            print "sequences updated", s[0], ' '.join(map(str, s[1]))
+            #print "sequences updated", s[0], ' '.join(map(str, s[1]))
             self.sequences_ai[iam] = s[1]
         else:
             if game.gametime >= self.sequences_ai[iam][-1].time:
                 movement = self.sequences_ai[iam].pop()
-                print (
-                        "I", movement.movement, movement.reverse and "reversed"
-                        or "straight", movement.walk and "walking" or
-                        "not walking")
+                #print (
+                        #"I", movement.movement, movement.reverse and "reversed"
+                        #or "straight", movement.walk and "walking" or
+                        #"not walking")
                 entity.entity_skin.change_animation(
                         movement.movement,
                         game,

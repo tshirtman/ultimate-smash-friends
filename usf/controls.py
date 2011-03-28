@@ -48,20 +48,27 @@ class Sequence (object):
     """
     def __init__(self, player, keys, action, condition=None):
         self.player = player
+        self._skin = None
         self.keys = keys
         self.action = action
         self.condition = condition
 
     def compare(self, seq, game_instance):
+        if not len(game_instance.players) > self.player:
+            return False
+
+        if not self._skin:
+            self._skin = game_instance.players[self.player].entity_skin
         if(
-            not self.condition
-            or len(game_instance.players) > self.player
-            and
-            game_instance.players[self.player].entity_skin.current_animation.replace('_upgraded','')
-                in self.condition
+            not self.condition or
+            self._skin.current_animation.replace('_upgraded','') in self.condition
           ):
-            keyseq = [i[0] for i in seq]
-            return self.keys == keyseq[-len(self.keys):]
+            for a,b in zip(self.keys, seq):
+                if a != b[0]:
+                    return False
+            return True
+            #keyseq = [i[0] for i in seq]
+            #return self.keys == keyseq[-len(self.keys):]
         else:
             return False
 
@@ -173,7 +180,7 @@ class Controls (object):
                 try:
                     numplayer = int(self.keys[key].split('_')[0][-1])-1
                     if(not game_instance.players[numplayer].ai):
-                        self.player_sequences[numplayer].append((self.keys[key],time.time()))
+                        self.player_sequences[numplayer].append((self.keys[key],game_instance.gametime))
                 except:
                     pass # fail when the key not associated to a player eg:
                          # toggle_menu
@@ -273,7 +280,8 @@ class Controls (object):
 
                                 elif "_LEFT" in self.keys[key]:
                                     if player.reversed:
-                                        player.walking_vector[0] = 0
+                                        player.set_walking_vector(
+                                                [0, player.walking_vector[1]])
                                     if (
                                         player.entity_skin.current_animation in
                                         ('walk', 'walk_upgraded')
@@ -285,7 +293,8 @@ class Controls (object):
                                                 )
                                 elif "_RIGHT" in self.keys[key]:
                                     if not player.reversed:
-                                        player.walking_vector[0] = 0
+                                        player.set_walking_vector(
+                                                [0, self.walking_vector[1]])
                                     if (
                                         player.entity_skin.current_animation in
                                         ('walk', 'walk_upgraded')
@@ -350,7 +359,7 @@ class Controls (object):
 
             # clean sequences from outdated keys
             for index, sequence in enumerate(self.player_sequences):
-                limit_time = time.time()-.5
+                limit_time = game_instance.gametime - .5
                 # clean the entire sequence if the last key is outdated.
                 if sequence != [] and sequence[-1][1] < limit_time:
                     self.player_sequences[index] = []
