@@ -39,6 +39,7 @@ import entity
 import timed_event
 import loaders
 
+from ai import AiThreadRunner
 from level import Level
 from event_manager import EventManager
 from controls import Controls
@@ -120,6 +121,10 @@ class Game (object):
 
         # a countdown to the game end
         self.ending = 5.0
+
+        # initiate AI
+        self.AI = AiThreadRunner()
+        self.AI.start_AI(self)
 
     def add_world_event(self):
         self.events.add_event(
@@ -665,6 +670,9 @@ class Game (object):
             return 'victory'
 
         return 'game'
+
+    def __del__(self):
+        self.AI.stop_AI()
 
 class NetworkServerGame(Game):
     pass

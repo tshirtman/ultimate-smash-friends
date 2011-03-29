@@ -315,13 +315,13 @@ class Controls (object):
         by clients in the case of a networkk game.
 
         """
-        if game_instance:
-            for i, player in enumerate(game_instance.players):
-                if(player.ai and player.present):
-                    if player.ai_:
-                        player.ai_.update(game_instance, i)
-                    else:
-                        player.ai_ = AI()
+        #if game_instance:
+            #for i, player in enumerate(game_instance.players):
+                #if(player.ai and player.present):
+                    #if player.ai_:
+                        #player.ai_.update(game_instance, i)
+                    #else:
+                        #player.ai_ = AI()
 
         for sequence in self.player_sequences:
             for i in self.sequences:

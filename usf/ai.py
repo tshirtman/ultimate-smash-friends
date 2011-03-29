@@ -17,11 +17,13 @@
 # UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.           #
 ################################################################################
 from os import path
+import pygame
 
 import game
 import config
 from memoize import memoize
 conf = config.Config()
+from threading import Thread
 
 #controls = controls.Controls()
 
@@ -144,4 +146,38 @@ class AI(object):
                 entity.reverse = movement.reverse
                 entity.set_walking_vector([movement.walk and
                     conf.general['WALKSPEED'] or 0, entity.walking_vector[1]])
+
+
+class AiThreadRunner(object):
+    """
+    This class will update the players AI when possible, in a thread-safe way
+    """
+    def __init__(self):
+        """
+        AI object must be given as a parameter
+        """
+        self.AI = AI()
+        self.ended = True
+
+    def update(self, game):
+        while not self.ended:
+            pygame.time.wait(50)
+            for i,j in enumerate(game.players):
+                if j.ai and j.present:
+                    self.AI.update(game, i)
+
+    def start_AI(self, game):
+        """
+        """
+        if self.ended:
+            self.ended = False
+            t = Thread(target = self.update, args=(game,))
+            t.start()
+        else:
+            logging.warning('AI aleady already running!')
+
+    def stop_AI(self):
+        """
+        """
+        self.ended = True
 
