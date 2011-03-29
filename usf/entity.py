@@ -456,15 +456,14 @@ class Entity (object):
 
         h = self.entity_skin.hardshape
         l = Entity.list_sin_cos
-        r = self.rect
+        r = self._rect
 
         H2_2 = h[2] / 2
         HRX = h[0] + r[0] + x
         RY = r[1] + y
         R3_2 = r[3] / 2
 
-        return [ ( (l[i][0] + 1) * H2_2 + HRX,
-                    (l[i][1] + 1) * R3_2 + RY)
+        return [((l[i][0] + 1) * H2_2 + HRX, (l[i][1] + 1) * R3_2 + RY)
                 for i in xrange(Entity.nb_points)]
 
         # before simplification making it uncomprehensible but hopefully, more
@@ -501,12 +500,12 @@ class Entity (object):
         """
 
         points = self.update_points()
-        return ( game.level.collide_rect(points[self.UPPER_RIGHT])
-            or game.level.collide_rect(points[self.LOWER_RIGHT]) )\
-            and self.reversed\
-        or ( game.level.collide_rect(points[self.LOWER_LEFT])\
-            or game.level.collide_rect(points[self.UPPER_LEFT]) )\
-            and not self.reversed
+        return (self.reversed and (
+            game.level.collide_rect(points[self.UPPER_RIGHT]) or
+            game.level.collide_rect(points[self.LOWER_RIGHT])) or
+            not self.reversed and (
+                game.level.collide_rect(points[self.LOWER_LEFT])
+                or game.level.collide_rect(points[self.UPPER_LEFT])))
 
     def collide_back(self, game):
         """
@@ -516,12 +515,12 @@ class Entity (object):
         """
 
         points = self.update_points()
-        return (((game.level.collide_rect(points[self.UPPER_RIGHT])
-            or game.level.collide_rect(points[self.LOWER_RIGHT]))
-            and not self.reversed)
-        or ((game.level.collide_rect(points[self.UPPER_LEFT])
-            or game.level.collide_rect(points[self.LOWER_LEFT]))
-            and self.reversed))
+        return (not self.reversed and (
+            game.level.collide_rect(points[self.UPPER_RIGHT]) or
+            game.level.collide_rect(points[self.LOWER_RIGHT])) or
+            self.reversed and (
+                game.level.collide_rect(points[self.UPPER_LEFT]) or
+                game.level.collide_rect(points[self.LOWER_LEFT])))
 
     def worldCollide(self, game):
         """
@@ -542,8 +541,7 @@ class Entity (object):
                 self.place = [-10, -10]
 
         # this test should optimise most of situations.
-        elif (game.level.collide_rect(self.rect[:2], self.rect[2:]) != -1 and
-            self.physic):
+        elif game.level.collide_rect(self.rect[:2], self.rect[2:]) != -1:
             self._onGround = False
 
             if self.collide_top(game):

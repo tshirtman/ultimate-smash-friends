@@ -474,7 +474,7 @@ class Level(object):
 
     def _helper_collide(self, l, rect):
         for i in l:
-            if i.collide_rect(rect):
+            if rect.collidelist(i.collide_rects) != -1:
                 return True
         return False
 
@@ -485,9 +485,6 @@ class Level(object):
 
         """
         l = self.moving_blocs + self.vector_blocs
-        rect = pygame.Rect((x,y),(h,w))
-        return (
-                pygame.Rect(x,y,h,w).collidelist(self.map) != -1 or
-                l and self._helper_collide(l, rect)
-               )
+        r = pygame.Rect((x,y),(h,w))
+        return r.collidelist(self.map) != -1 or self._helper_collide(l, r)
 
