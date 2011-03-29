@@ -671,9 +671,6 @@ class Game (object):
 
         return 'game'
 
-    def __del__(self):
-        self.AI.stop_AI()
-
 class NetworkServerGame(Game):
     pass
 

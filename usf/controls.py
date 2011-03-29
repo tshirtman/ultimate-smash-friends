@@ -170,144 +170,142 @@ class Controls (object):
                         )
         return ret
 
+    def test_sequences(self, game_instance):
+        for sequence in self.player_sequences:
+            for i in self.sequences:
+                if i.compare(sequence, game_instance):
+                    game_instance.players[
+                        i.player
+                        ].entity_skin.change_animation(
+                         i.action,
+                         game_instance,
+                         params={
+                         'entity':
+                         game_instance.players[i.player]
+                         }
+                        )
+                    i.remove(sequence)
 
-    def handle_game_key( self, state, key, game_instance ):
-        ret = "game"
+    def key_shield(self, the_key, player):
+        if ("_SHIELD" in the_key and
+            player.entity_skin.current_animation in (
+            'static', 'static_upgraded',
+            'walk', 'walk_upgraded'
+            )
+        ):
+            player.shield['on'] = True
+            player.entity_skin.change_animation(
+                'static',
+                game_instance,
+                params={ 'entity': player }
+                )
+            player.set_walking_vector(0, player.walking_vector[1])
+            return True
+        return False
+
+    def key_down_left(self, the_key, player):
+        if "_LEFT" in the_key:
+            if player.onGround:
+                player.entity_skin.change_animation(
+                    'walk',
+                    game_instance,
+                    params={'entity': player}
+                    )
+            player.set_walking_vector([config.general['WALKSPEED'],
+                    player.walking_vector[1]])
+            player.set_reversed(True)
+            return True
+        return False
+
+    def key_down_right(self, the_key, player, game_instance):
+        if "_RIGHT" in the_key:
+            if player.onGround:
+                player.entity_skin.change_animation(
+                        'walk',
+                        game_instance,
+                        params={'entity': player})
+
+            player.set_walking_vector([config.general['WALKSPEED'],
+                player.walking_vector[1]])
+            player.set_reversed(False)
+            return True
+        return False
+
+    def key_up_left(self, game_instance, player):
+        if player.reversed:
+            player.set_walking_vector([0, player.walking_vector[1]])
+
+        if (player.entity_skin.current_animation in ('walk', 'walk_upgraded')):
+            player.entity_skin.change_animation("static", game_instance,
+                    params={'entity': player})
+            return
+        return
+
+    def key_up_right(self, game_instance, player):
+        if not player.reversed:
+            player.set_walking_vector([0, self.walking_vector[1]])
+
+        if (player.entity_skin.current_animation in ('walk', 'walk_upgraded')):
+            player.entity_skin.change_animation( "static", game_instance,
+                    params={'entity': player})
+            return
+        return
+
+    def handle_game_key_down(self, key, game_instance):
+        ret = 'game'
+        if key in self.keys:
+            #FIXME: test if the player is not an AI.
+            the_key = self.keys[key]
+            if the_key == "QUIT":
+                ret = "menu"
+            elif the_key == "TOGGLE_FULLSCREEN":
+                pygame.display.toggle_fullscreen()
+
+            else:
+                numplayer = int(the_key.split('_')[0][-1])-1
+                if (not game_instance.players[numplayer].ai):
+                    self.player_sequences[numplayer].append((the_key, game_instance.gametime))
+
+                    player = game_instance.players[numplayer]
+                    # the player can't do anything if the shield is on
+
+                    if (player.shield['on'] or
+                        self.key_shield(the_key, player) or
+                        self.key_down_left(the_key, player) or
+                        self.key_down_right(the_key, player, game_instance)):
+                        pass
+                #test sequences
+                self.test_sequences(game_instance)
+        return ret
+
+    def handle_game_key_up(self, key, game_instance):
+        numplayer = int(self.keys[key].split('_')[0][-1])-1
+        player = game_instance.players[numplayer]
+
+        if (not player.ai):
+            if key in self.keys :
+                the_key = self.keys[key]
+                if "_SHIELD" in the_key:
+                    player.shield['on'] = False
+
+                elif "_LEFT" in the_key:
+                    self.key_up_left(game_instance, player)
+                elif "_RIGHT" in the_key:
+                    self.key_up_right(game_instance, player)
+
+    def handle_game_key(self, state, key, game_instance):
         numplayer = 0
         if state is KEYDOWN:
-            if key in self.keys:
-                #FIXME: test if the player is not an AI.
-                try:
-                    numplayer = int(self.keys[key].split('_')[0][-1])-1
-                    if(not game_instance.players[numplayer].ai):
-                        self.player_sequences[numplayer].append((self.keys[key],game_instance.gametime))
-                except:
-                    pass # fail when the key not associated to a player eg:
-                         # toggle_menu
-                if isinstance(game_instance, game.NetworkClientGame):
-                    game_instance.client.send(key,'down')
-
-                elif isinstance(game_instance, game.NetworkServerGame):
-                    pass
-                else:
-                    if self.keys[key] == "QUIT":
-                        ret = "menu"
-                        #pygame.event.set_grab(False)
-                    elif self.keys[key] == "TOGGLE_FULLSCREEN":
-                        pygame.display.toggle_fullscreen()
-
-                    if (len(game_instance.players) > numplayer
-                        and not game_instance.players[numplayer].ai):
-
-                        for player in game_instance.players:
-                            pl = "PL"+str(player.num)
-                            the_key = self.keys[key]
-                            if pl not in the_key:
-                                continue
-                            # the player can't do anything if the shield is on
-                            if player.shield['on']:
-                                break
-                            if ("_SHIELD" in the_key and
-                                player.entity_skin.current_animation in (
-                                'static', 'static_upgraded',
-                                'walk', 'walk_upgraded'
-                                )
-                            ):
-                                player.shield['on'] = True
-                                player.entity_skin.change_animation(
-                                    'static',
-                                    game_instance,
-                                    params={ 'entity': player }
-                                    )
-                                player.walking_vector[0] = 0
-
-                            elif "_LEFT" in the_key:
-                                if player.onGround:
-                                    player.entity_skin.change_animation(
-                                        'walk',
-                                        game_instance,
-                                        params={'entity': player}
-                                        )
-                                player.set_walking_vector([config.general['WALKSPEED'],
-                                        player.walking_vector[1]])
-                                player.set_reversed(True)
-
-                            elif "_RIGHT" in the_key:
-                                if player.onGround:
-                                    player.entity_skin.change_animation(
-                                        'walk',
-                                        game_instance,
-                                        params={'entity': player}
-                                        )
-                                player.set_walking_vector([config.general['WALKSPEED'],
-                                    player.walking_vector[1]])
-                                player.set_reversed(False)
-                        #test sequences
-                        for sequence in self.player_sequences:
-                            for i in self.sequences:
-                                if i.compare(sequence, game_instance):
-                                    game_instance.players[
-                                        i.player
-                                        ].entity_skin.change_animation(
-                                         i.action,
-                                         game_instance,
-                                         params={
-                                         'entity':
-                                         game_instance.players[i.player]
-                                         }
-                                        )
-                                    i.remove(sequence)
+            return self.handle_game_key_down(key, game_instance)
 
         elif state is KEYUP:
-            if isinstance(game_instance, game.NetworkClientGame):
-                game_instance.client.send(key, 'up')
-
-            elif isinstance(game_instance, game.NetworkServerGame):
-                pass
-            else:
-                try:
-                    numplayer = int(self.keys[key].split('_')[0][-1])-1
-                    if(not game_instance.players[numplayer].ai):
-                        for player in game_instance.players:
-                            if key not in self.keys :
-                                break
-                            pl = "PL"+str(player.num)
-                            if pl not in self.keys[key]:
-                                continue
-                            if key in self.keys :
-                                if "_SHIELD" in self.keys[key]:
-                                    player.shield['on'] = False
-
-                                elif "_LEFT" in self.keys[key]:
-                                    if player.reversed:
-                                        player.set_walking_vector(
-                                                [0, player.walking_vector[1]])
-                                    if (
-                                        player.entity_skin.current_animation in
-                                        ('walk', 'walk_upgraded')
-                                    ):
-                                        player.entity_skin.change_animation(
-                                                "static",
-                                                game_instance,
-                                                params={'entity': player}
-                                                )
-                                elif "_RIGHT" in self.keys[key]:
-                                    if not player.reversed:
-                                        player.set_walking_vector(
-                                                [0, self.walking_vector[1]])
-                                    if (
-                                        player.entity_skin.current_animation in
-                                        ('walk', 'walk_upgraded')
-                                    ):
-                                        player.entity_skin.change_animation(
-                                                "static",
-                                                game_instance,
-                                                params={'entity': player}
-                                                )
-                except:
-                    # FIXME: OMGthisisSOwrong...
-                    pass
-        return ret
+            #try:
+            self.handle_game_key_up(key, game_instance)
+            #except Exception, e:
+                #print e
+                ## FIXME: OMGthisisSOwrong...
+                #raise e
+            return "game"
 
     def poll(self, game_instance, menu, state):
         """

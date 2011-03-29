@@ -335,6 +335,7 @@ class Main(object):
 
         """
         pygame.mouse.set_visible(False)
+        #try:
         while (True):
             # update the fps counter
             self.clock.tick()
@@ -357,8 +358,15 @@ class Main(object):
             self.ended = pygame.event.get(QUIT)
             if self.ended :
                 logging.debug('fps = '+str(self.clock.get_fps()))
+                if self.game:
+                    self.game.AI.stop_AI()
                 pygame.quit()
                 break
+
+        #except Exception, e:
+            #if self.game:
+                #self.game.AI.stop_AI()
+            #raise e
 
     def author(self):
         if 'CREDITS' not in os.listdir(os.path.join(config.sys_data_dir)):
@@ -374,7 +382,7 @@ class Main(object):
         """
         update the screen display during loading
         """
-        while(not self.stop_thread):
+        while not self.stop_thread:
             start_loop = pygame.time.get_ticks()
 
             self.lock.acquire()

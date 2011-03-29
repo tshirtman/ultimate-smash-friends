@@ -18,6 +18,7 @@
 ################################################################################
 from os import path
 import pygame
+import copy
 
 import game
 import config
@@ -28,7 +29,7 @@ from threading import Thread
 #controls = controls.Controls()
 
 TIMESTEP = 250
-MAXDEPTH = 2
+MAXDEPTH = 5
 
 @memoize
 def possible_movements(movement):
@@ -49,10 +50,11 @@ def possible_movements(movement):
 
     return tuple(result)
 
-def simulate(game, entity, movement=None, reverse=False, walk=False):
+def simulate(game, iam, movement=None, reverse=False, walk=False):
     """ change the player movement to movement, and jump 100ms in the future.
     if movement is none, just jump 100ms in the future.
     """
+    entity = game.players[iam]
     entity.set_reversed(reverse)
     entity.set_walking_vector([walk and conf.general['WALKSPEED'] or 0,
         entity.walking_vector[1]])
@@ -60,10 +62,9 @@ def simulate(game, entity, movement=None, reverse=False, walk=False):
             movement,
             game,
             {'entity': entity})
-    assert entity in game.players
     game.update(deltatime=TIMESTEP)
 
-def heuristic(game, entity):
+def heuristic(game, iam):
     """ return a score for the current state of the game, allow to chose a set
     of movement to do.
 
@@ -74,28 +75,28 @@ def heuristic(game, entity):
         % of damages to others
     """
     return (
-            min((entity.dist(e) for e in game.players if e is not entity))
+            min((game.players[iam].dist(e) for i,e in enumerate(game.players) if
+                i is not iam))
             #- entity.lives * 100
             #+ entity.percents
             #+ sum((x.lives for x in game.players)) * 100
             #- sum((x.percents for x in game.players))
             )
 
-def search_path(game, entity, max_depth):
+def search_path(game, iam, max_depth):
     if max_depth == 0:
-        return heuristic(game, entity), [Movement(game.gametime,None, False,
+        return heuristic(game, iam), [Movement(game.gametime,None, False,
             False), ]
 
-    result = (1000, ())
+    result = (None, ())
     gametime = game.gametime
-    for movement in possible_movements(entity.entity_skin.current_animation):
-        #for walk, reverse in ((True, True), (True, False), (False, True), (False, False)):
-        for walk, reverse in ((True, True), (True, False), (False, True)):
+    for movement in possible_movements(game.players[iam].entity_skin.current_animation):
+        for walk, reverse in ((True, True), (True, False), (False, True), (False, False)):
             b = game.backup() #no, this can't be factorized by moving it 3 line^
-            simulate(game, entity, movement, reverse, walk)
-            score, movements = search_path(game, entity, max_depth-1)
+            simulate(game, iam, movement, reverse, walk)
+            score, movements = search_path(game, iam, max_depth-1)
             game.restore(b)
-            if score < result[0]:
+            if not result[0] or score < result[0]:
                 result = score, movements + [Movement(gametime,
                     movement, reverse, walk),]
 
@@ -129,7 +130,8 @@ class AI(object):
 
         #print self.sequences_ai[iam]
         if not self.sequences_ai[iam]:
-            s = search_path(game, entity, max_depth)
+            g = copy.deepcopy(game)
+            s = search_path(g, iam, max_depth)
             #print "sequences updated", s[0], ' '.join(map(str, s[1]))
             self.sequences_ai[iam] = s[1]
         else:
