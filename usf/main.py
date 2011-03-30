@@ -110,8 +110,8 @@ class Main(object):
         self.init_screen()
         try:
             self.text_thread = "Loading sounds and musics..."
-            self.thread = threading.Thread(None, self.loading_screen)
-            self.thread.start()
+            thread = threading.Thread(None, self.loading_screen)
+            thread.start()
 
             self.init_sound()
 
@@ -138,6 +138,7 @@ class Main(object):
             self.lock.acquire()
             self.stop_thread = True
             self.lock.release()
+            thread.join()
             # end of loading resources
 
         except Exception as e:
