@@ -203,7 +203,7 @@ class Controls (object):
             return True
         return False
 
-    def key_down_left(self, the_key, player):
+    def key_down_left(self, the_key, player, game_instance):
         if "_LEFT" in the_key:
             if player.onGround:
                 player.entity_skin.change_animation(
@@ -231,7 +231,7 @@ class Controls (object):
             return True
         return False
 
-    def key_up_left(self, game_instance, player):
+    def key_up_left(self, player, game_instance):
         if player.reversed:
             player.set_walking_vector([0, player.walking_vector[1]])
 
@@ -241,9 +241,9 @@ class Controls (object):
             return
         return
 
-    def key_up_right(self, game_instance, player):
+    def key_up_right(self, player, game_instance):
         if not player.reversed:
-            player.set_walking_vector([0, self.walking_vector[1]])
+            player.set_walking_vector([0, player.walking_vector[1]])
 
         if (player.entity_skin.current_animation in ('walk', 'walk_upgraded')):
             player.entity_skin.change_animation( "static", game_instance,
@@ -263,16 +263,17 @@ class Controls (object):
 
             else:
                 numplayer = int(the_key.split('_')[0][-1])-1
-                if (not game_instance.players[numplayer].ai):
+                player = game_instance.players[numplayer]
+                if (not player.ai):
                     self.player_sequences[numplayer].append((the_key, game_instance.gametime))
 
-                    player = game_instance.players[numplayer]
                     # the player can't do anything if the shield is on
 
-                    if (player.shield['on'] or
-                        self.key_shield(the_key, player) or
-                        self.key_down_left(the_key, player) or
-                        self.key_down_right(the_key, player, game_instance)):
+                    if (
+                            player.shield['on'] or
+                            self.key_shield(the_key, player) or
+                            self.key_down_left(the_key, player, game_instance) or
+                            self.key_down_right(the_key, player, game_instance)):
                         pass
                 #test sequences
                 self.test_sequences(game_instance)
@@ -281,6 +282,7 @@ class Controls (object):
     def handle_game_key_up(self, key, game_instance):
         numplayer = int(self.keys[key].split('_')[0][-1])-1
         player = game_instance.players[numplayer]
+        from entity import Entity
 
         if (not player.ai):
             if key in self.keys :
@@ -289,9 +291,11 @@ class Controls (object):
                     player.shield['on'] = False
 
                 elif "_LEFT" in the_key:
-                    self.key_up_left(game_instance, player)
+                    assert isinstance(player, Entity)
+                    self.key_up_left(player, game_instance)
                 elif "_RIGHT" in the_key:
-                    self.key_up_right(game_instance, player)
+                    assert isinstance(player, Entity)
+                    self.key_up_right(player, game_instance)
 
     def handle_game_key(self, state, key, game_instance):
         numplayer = 0
@@ -323,14 +327,14 @@ class Controls (object):
 
         for sequence in self.player_sequences:
             for i in self.sequences:
-                if i.compare( sequence, game_instance ):
+                if i.compare(sequence, game_instance):
                     game_instance.players[i.player].entity_skin.change_animation(
-                         i.action,
-                         game_instance,
-                         params={
-                         'entity':game_instance.players[i.player]
-                         }
-                        )
+                            i.action,
+                            game_instance,
+                            params={
+                                'entity':game_instance.players[i.player]
+                                }
+                            )
         # if this is a network server game
         if isinstance(game_instance, game.NetworkServerGame):
             while True:
@@ -347,6 +351,7 @@ class Controls (object):
                     if game is not None:
                         state = self.handle_game_key( event.type, event.key, game_instance)
                     # forget other events
+                    #FIXME: remove?
                     pygame.event.clear()
 
                 elif state is "menu":
@@ -361,5 +366,6 @@ class Controls (object):
                 # clean the entire sequence if the last key is outdated.
                 if sequence != [] and sequence[-1][1] < limit_time:
                     self.player_sequences[index] = []
+
         return state
 
