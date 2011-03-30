@@ -38,7 +38,7 @@ config = Config()
 import game
 from ai import AI
 
-class Sequence (object):
+class Sequence(object):
     """
     Used to bind a character animation to a sequence of key of a player.
     condition allow to restrict the avaiability of the animation to certain
@@ -46,29 +46,22 @@ class Sequence (object):
     for example)
 
     """
-    def __init__(self, player, keys, action, condition=None):
-        self.player = player
-        self._skin = None
+    def __init__(self, keys, action, condition=None):
         self.keys = keys
         self.action = action
         self.condition = condition
 
-    def compare(self, seq, game_instance):
-        if not len(game_instance.players) > self.player:
-            return False
+    def compare(self, seq, player):
 
-        if not self._skin:
-            self._skin = game_instance.players[self.player].entity_skin
         if(
             not self.condition or
-            self._skin.current_animation.replace('_upgraded','') in self.condition
+            player.entity_skin.current_animation.replace('_upgraded','') in self.condition
           ):
             for a,b in zip(self.keys, seq):
                 if a != b[0]:
                     return False
             return True
-            #keyseq = [i[0] for i in seq]
-            #return self.keys == keyseq[-len(self.keys):]
+
         else:
             return False
 
@@ -101,35 +94,33 @@ class Controls (object):
         #loaders.load_keys()
         self.keys = dict([[locals.__dict__[config.keyboard[key]], key]
                          for key in config.keyboard])
+
         self.sequences = []
         self.player_sequences = [[], [], [], []]
+
         sequences_file = open(os.path.join(
                     config.sys_data_dir,
                     'sequences'+os.extsep+'cfg')
                 , 'r')
+
         sequence_tmpl = []
-        condition = ""
+
         for i in sequences_file.readlines():
             if i == '\n' or i[0] == '#':
                 continue
+
             if i[0] == '=':
-                condition=i.split('=')[1].split('\n')[0].split(',')
+                condition = i.split('=')[1].split('\n')[0].split(',')
                 continue
+
             tmp = i.replace(' ','').split('\n')[0].split(':')
-            sequence_tmpl.append([condition[:], tmp[0].split('+'), tmp[1]])
+
+            seq = tmp[0].split('+')
+            act = tmp[1]
+            self.sequences.append(Sequence(seq, act, condition))
+
         sequences_file.close()
 
-        for player in range(4):
-            for condition,seq,act in sequence_tmpl:
-                tab=["PL"+str(player)+'_'+btn for btn in seq]
-                self.sequences.append(Sequence(player-1, tab, act, condition))
-
-            for i in range(4):
-                self.player_sequences.append([])
-        self.ai = AI()
-
-    def save(self):
-        config.save
 
     def handle_menu_key( self, state, key, game):
         ret = "menu"
@@ -171,22 +162,18 @@ class Controls (object):
         return ret
 
     def test_sequences(self, game_instance):
-        for sequence in self.player_sequences:
+        for player, sequence in zip(game_instance.players,
+                self.player_sequences):
             for i in self.sequences:
-                if i.compare(sequence, game_instance):
-                    game_instance.players[
-                        i.player
-                        ].entity_skin.change_animation(
-                         i.action,
-                         game_instance,
-                         params={
-                         'entity':
-                         game_instance.players[i.player]
-                         }
-                        )
+                if i.compare(sequence, player):
+                    player.entity_skin.change_animation(
+                            i.action,
+                            game_instance,
+                            params={'entity': player}
+                            )
                     i.remove(sequence)
 
-    def key_shield(self, the_key, player):
+    def key_shield(self, the_key, player, game_instance):
         if ("_SHIELD" in the_key and
             player.entity_skin.current_animation in (
             'static', 'static_upgraded',
@@ -199,7 +186,7 @@ class Controls (object):
                 game_instance,
                 params={ 'entity': player }
                 )
-            player.set_walking_vector(0, player.walking_vector[1])
+            player.set_walking_vector((0, player.walking_vector[1]))
             return True
         return False
 
@@ -263,52 +250,56 @@ class Controls (object):
 
             else:
                 numplayer = int(the_key.split('_')[0][-1])-1
+
+                if numplayer >= len(game_instance.players):
+                    return
+
                 player = game_instance.players[numplayer]
-                if (not player.ai):
-                    self.player_sequences[numplayer].append((the_key, game_instance.gametime))
+
+                if not player.ai:
+                    self.player_sequences[numplayer].append(
+                            (the_key, game_instance.gametime))
 
                     # the player can't do anything if the shield is on
 
                     if (
                             player.shield['on'] or
-                            self.key_shield(the_key, player) or
+                            self.key_shield(the_key, player, game_instance) or
                             self.key_down_left(the_key, player, game_instance) or
                             self.key_down_right(the_key, player, game_instance)):
                         pass
-                #test sequences
-                self.test_sequences(game_instance)
+
+                    #test sequences
+                    self.test_sequences(game_instance)
         return ret
 
     def handle_game_key_up(self, key, game_instance):
-        numplayer = int(self.keys[key].split('_')[0][-1])-1
-        player = game_instance.players[numplayer]
-        from entity import Entity
+        if key in self.keys :
+            the_key = self.keys[key]
 
-        if (not player.ai):
-            if key in self.keys :
-                the_key = self.keys[key]
+            numplayer = int(self.keys[key].split('_')[0][-1]) - 1
+
+            if numplayer >= len(game_instance.players):
+                return
+
+            player = game_instance.players[numplayer]
+
+            if not player.ai:
                 if "_SHIELD" in the_key:
                     player.shield['on'] = False
 
                 elif "_LEFT" in the_key:
-                    assert isinstance(player, Entity)
                     self.key_up_left(player, game_instance)
+
                 elif "_RIGHT" in the_key:
-                    assert isinstance(player, Entity)
                     self.key_up_right(player, game_instance)
 
     def handle_game_key(self, state, key, game_instance):
-        numplayer = 0
         if state is KEYDOWN:
             return self.handle_game_key_down(key, game_instance)
 
         elif state is KEYUP:
-            #try:
             self.handle_game_key_up(key, game_instance)
-            #except Exception, e:
-                #print e
-                ## FIXME: OMGthisisSOwrong...
-                #raise e
             return "game"
 
     def poll(self, game_instance, menu, state):
@@ -317,24 +308,16 @@ class Controls (object):
         by clients in the case of a networkk game.
 
         """
-        #if game_instance:
-            #for i, player in enumerate(game_instance.players):
-                #if(player.ai and player.present):
-                    #if player.ai_:
-                        #player.ai_.update(game_instance, i)
-                    #else:
-                        #player.ai_ = AI()
-
-        for sequence in self.player_sequences:
-            for i in self.sequences:
-                if i.compare(sequence, game_instance):
-                    game_instance.players[i.player].entity_skin.change_animation(
-                            i.action,
-                            game_instance,
-                            params={
-                                'entity':game_instance.players[i.player]
-                                }
-                            )
+        #for sequence in self.player_sequences:
+            #for i in self.sequences:
+                #if i.compare(sequence, player):
+                    #game_instance.players[i.player].entity_skin.change_animation(
+                            #i.action,
+                            #game_instance,
+                            #params={
+                                #'entity':game_instance.players[i.player]
+                                #}
+                            #)
         # if this is a network server game
         if isinstance(game_instance, game.NetworkServerGame):
             while True:

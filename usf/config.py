@@ -75,7 +75,7 @@ class Option(dict):
         try:
             #invalidate cache of __getitem__
             self.__getitem__.cache = {}
-        except attributeError:
+        except AttributeError:
             logging.warning("__getitem__ not memoized? oO")
 
         self.__parser.set(self.name, option, str(value))

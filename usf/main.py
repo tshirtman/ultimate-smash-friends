@@ -360,7 +360,10 @@ class Main(object):
             if self.ended :
                 logging.debug('fps = '+str(self.clock.get_fps()))
                 if self.game:
-                    self.game.AI.stop_AI()
+                    try:
+                        self.game.AI.stop_AI()
+                    except AttributeError, e:
+                        pass
                 pygame.quit()
                 break
 
