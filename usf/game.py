@@ -29,7 +29,6 @@ import sys
 from copy import deepcopy
 
 import socket
-import threading
 import SocketServer
 
 # my modules import
@@ -323,12 +322,12 @@ class Game (object):
                 )
                 )
 
-    def draw_debug_player_controls(self, num, player):
+    def draw_debug_player_controls(self, num, player, controls):
         """ displays current key sequence of player, useful for debuging
         """
         self.screen.blit(
                 game_font.render(
-                    str(debug_params['controls'].player_sequences[num+1]),
+                    str(controls.player_sequences[num+1]),
                     True,
                     pygame.color.Color('red')
                     ),
@@ -347,7 +346,8 @@ class Game (object):
                 self.draw_debug_player_movement(num, player)
 
             if debug_params.get('controls', False):
-                self.draw_debug_player_controls(num, player)
+                self.draw_debug_player_controls(num, player,
+                        debug_params['controls'])
 
     def draw_portraits(self):
         """

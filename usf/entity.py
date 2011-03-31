@@ -463,9 +463,12 @@ class Entity (object):
         RY = r[1] + y
         R3_2 = r[3] / 2
 
-        return [((l[i][0] + 1) * H2_2 + HRX, (l[i][1] + 1) * R3_2 + RY)
-                for i in xrange(Entity.nb_points)]
-
+        #return [((l[i][0]) * H2_2 + HRX, (l[i][1]) * R3_2 + RY)
+                #for i in xrange(Entity.nb_points)]
+#
+        #return [((l[i][0] + 1) * H2_2 + HRX, (l[i][1] + 1) * R3_2 + RY)
+                #for i in xrange(Entity.nb_points)]
+#
         # before simplification making it uncomprehensible but hopefully, more
         # efficient
         #return [
@@ -473,6 +476,11 @@ class Entity (object):
                     #l[i][0] * h[2] / 2 + h[2] / 2 + h[0] + r[0] + x,
                     #l[i][1] * r[3] / 2 + r[3] / 2 + r[1] + y)
                 #for i in xrange(Entity.nb_points)]
+        return [
+                (
+                    l[i][0] * h[2] / 2 +  i h[2] / 2 + h[0] + r[0] + x,
+                    l[i][1] * r[3] * 4 + r[3] / 2 + r[1] + y)
+                for i in xrange(Entity.nb_points)]
 
     def collide_top(self, game):
         """
@@ -540,7 +548,7 @@ class Entity (object):
             if game.level.collide_rect(points[self.TOP_LEFT]):
                 self.place = [-10, -10]
 
-        # this test should optimise most of situations.
+        # this test should optimise most situations.
         elif game.level.collide_rect(self.rect[:2], self.rect[2:]) != -1:
             self._onGround = False
 
@@ -602,10 +610,10 @@ class Entity (object):
                 draw_rect(
                     surface,
                     pygame.Rect(
-                    coords[0]+self.entity_skin.hardshape[0]*zoom,
-                    coords[1]+self.entity_skin.hardshape[1]*zoom,
-                    self.entity_skin.hardshape[2]*zoom,
-                    self.entity_skin.hardshape[3]*zoom
+                    coords[0] + self.entity_skin.hardshape[0] * zoom,
+                    coords[1] + self.entity_skin.hardshape[1] * zoom,
+                    self.entity_skin.hardshape[2] * zoom,
+                    self.entity_skin.hardshape[3] * zoom
                     )
                     ,
                 pygame.Color(255, 0, 0, 127)
@@ -615,8 +623,8 @@ class Entity (object):
                     draw_rect(
                         surface,
                         pygame.Rect((
-                            int(i[0])+coords[0]*zoom,
-                            int(i[1])+coords[1]*zoom,
+                            int(i[0] + coords[0] * zoom),
+                            int(i[1] + coords[1] * zoom),
                             2,
                             2
                             )),

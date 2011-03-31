@@ -181,5 +181,6 @@ class AiThreadRunner(object):
     def stop_AI(self):
         """
         """
-        self.ended = True
+        if self.ended == False:
+            self.ended = True
 
