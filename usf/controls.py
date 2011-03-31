@@ -57,6 +57,7 @@ class Sequence(object):
             player.entity_skin.current_animation.replace('_upgraded','') in self.condition
           ):
             for a, b in zip(self.keys, seq):
+                print a, b
                 if a != b[0]:
                     return False
             return True
@@ -101,8 +102,6 @@ class Controls (object):
                     config.sys_data_dir,
                     'sequences'+os.extsep+'cfg')
                 , 'r')
-
-        sequence_tmpl = []
 
         for i in sequences_file.readlines():
             if i == '\n' or i[0] == '#':
@@ -160,18 +159,18 @@ class Controls (object):
                         )
         return ret
 
-    def test_sequences(self, game_instance):
-        for player, sequence in zip(game_instance.players,
-                self.player_sequences):
-            for i in self.sequences:
-                if i.compare(sequence, player):
-                    print player.num, player.name
-                    player.entity_skin.change_animation(
-                            i.action,
-                            game_instance,
-                            params={'entity': player}
-                            )
-                    i.remove_from(sequence)
+    def test_sequences(self, game_instance, numplayer):
+        player = game_instance.players[numplayer]
+        sequence = self.player_sequences[numplayer]
+        for i in self.sequences:
+            if i.compare(sequence, player):
+                print player.num, player.name
+                player.entity_skin.change_animation(
+                        i.action,
+                        game_instance,
+                        params={'entity': player}
+                        )
+                i.remove_from(sequence)
 
     def key_shield(self, the_key, player, game_instance):
         if ("_SHIELD" in the_key and
@@ -250,6 +249,7 @@ class Controls (object):
 
             else:
                 numplayer = int(the_key.split('_')[0][-1]) - 1
+                keyname = the_key.split('_')[1]
 
                 if numplayer >= len(game_instance.players):
                     return
@@ -258,7 +258,8 @@ class Controls (object):
 
                 if not player.ai:
                     self.player_sequences[numplayer].append(
-                            (the_key, game_instance.gametime))
+                            (keyname, game_instance.gametime))
+                    print "key %s added to %s" %(key, player.name)
 
                     # the player can't do anything if the shield is on
 
@@ -270,7 +271,7 @@ class Controls (object):
                         pass
 
                     #test sequences
-                    self.test_sequences(game_instance)
+                    self.test_sequences(game_instance, numplayer)
         return ret
 
     def handle_game_key_up(self, key, game_instance):
