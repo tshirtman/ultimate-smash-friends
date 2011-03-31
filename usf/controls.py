@@ -52,12 +52,11 @@ class Sequence(object):
         self.condition = condition
 
     def compare(self, seq, player):
-
         if(
             not self.condition or
             player.entity_skin.current_animation.replace('_upgraded','') in self.condition
           ):
-            for a,b in zip(self.keys, seq):
+            for a, b in zip(self.keys, seq):
                 if a != b[0]:
                     return False
             return True
@@ -65,7 +64,7 @@ class Sequence(object):
         else:
             return False
 
-    def remove(self, seq):
+    def remove_from(self, seq):
         """
         remove self.keys keys from sequence, so each sequence is only activated
         one time.
@@ -166,12 +165,13 @@ class Controls (object):
                 self.player_sequences):
             for i in self.sequences:
                 if i.compare(sequence, player):
+                    print player.num, player.name
                     player.entity_skin.change_animation(
                             i.action,
                             game_instance,
                             params={'entity': player}
                             )
-                    i.remove(sequence)
+                    i.remove_from(sequence)
 
     def key_shield(self, the_key, player, game_instance):
         if ("_SHIELD" in the_key and
@@ -249,7 +249,7 @@ class Controls (object):
                 pygame.display.toggle_fullscreen()
 
             else:
-                numplayer = int(the_key.split('_')[0][-1])-1
+                numplayer = int(the_key.split('_')[0][-1]) - 1
 
                 if numplayer >= len(game_instance.players):
                     return
