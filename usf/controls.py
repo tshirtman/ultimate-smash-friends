@@ -53,11 +53,12 @@ class Sequence(object):
 
     def compare(self, seq, player):
         if(
-            not self.condition or
-            player.entity_skin.current_animation.replace('_upgraded','') in self.condition
+                len(seq) >= len(self.keys) and (
+                    not self.condition or
+                    player.entity_skin.current_animation.replace('_upgraded','')
+                    in self.condition)
           ):
             for a, b in zip(self.keys, seq):
-                print a, b
                 if a != b[0]:
                     return False
             return True
@@ -164,7 +165,6 @@ class Controls (object):
         sequence = self.player_sequences[numplayer]
         for i in self.sequences:
             if i.compare(sequence, player):
-                print player.num, player.name
                 player.entity_skin.change_animation(
                         i.action,
                         game_instance,
@@ -259,7 +259,6 @@ class Controls (object):
                 if not player.ai:
                     self.player_sequences[numplayer].append(
                             (keyname, game_instance.gametime))
-                    print "key %s added to %s" %(key, player.name)
 
                     # the player can't do anything if the shield is on
 
