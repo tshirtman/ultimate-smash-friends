@@ -123,6 +123,10 @@ class Entity (object):
         return self._num
 
     @property
+    def hardshape(self):
+        return self.entity_skin.hardshape
+
+    @property
     def name(self):
         return self._name
 
@@ -351,7 +355,7 @@ class Entity (object):
         when entity moved or animation frame changed.
 
         """
-        hardshape = self.entity_skin.hardshape
+        hardshape = self.hardshape
         self._rect = [
                 self.place[0] - hardshape[2]/2 - hardshape[0],
                 self.place[1] - hardshape[1],
@@ -379,11 +383,9 @@ class Entity (object):
 
     def foot_collision_rect(self):
         return pygame.Rect(
-                self.rect[0]+self.entity_skin.animation.hardshape[0],
-                self.rect[1]+
-                    #self.entity_skin.animation.hardshape[1]+
-                    self.entity_skin.animation.hardshape[3],
-                self.entity_skin.animation.hardshape[2],
+                self.rect[0] + self.hardshape[0],
+                self.rect[1] + self.hardshape[3],
+                self.hardshape[2],
                 15
                 )
 
@@ -454,9 +456,9 @@ class Entity (object):
 
          """
 
-        h = self.entity_skin.hardshape
+        h = self.hardshape
         l = Entity.list_sin_cos
-        r = self._rect
+        r = self.rect
 
         H2_2 = h[2] / 2
         HRX = h[0] + r[0] + x
@@ -478,8 +480,8 @@ class Entity (object):
                 #for i in xrange(Entity.nb_points)]
         return [
                 (
-                    l[i][0] * h[2] / 2 + h[2] / 2 + h[0] + r[0] + x,
-                    l[i][1] * r[3] * 4 + r[3] / 2 + r[1] + y)
+                    int(l[i][0] * h[2] / 2 + h[2] / 2 + h[0] + r[0] + x),
+                    int(l[i][1] * r[3] + r[3] / 2 + r[1] + y))
                 for i in xrange(Entity.nb_points)]
 
     def collide_top(self, game):
@@ -489,7 +491,7 @@ class Entity (object):
         """
         points = self.update_points()
         return (game.level.collide_rect(points[self.TOP_LEFT])
-        or game.level.collide_rect(points[self.TOP_RIGHT]))
+                or game.level.collide_rect(points[self.TOP_RIGHT]))
 
     def collide_bottom(self, game):
         """
@@ -608,44 +610,44 @@ class Entity (object):
         if self.visible:
             if debug_params.get('hardshape', False):
                 draw_rect(
-                    surface,
-                    pygame.Rect(
-                    coords[0] + self.entity_skin.hardshape[0] * zoom,
-                    coords[1] + self.entity_skin.hardshape[1] * zoom,
-                    self.entity_skin.hardshape[2] * zoom,
-                    self.entity_skin.hardshape[3] * zoom
-                    )
-                    ,
-                pygame.Color(255, 0, 0, 127)
-                )
+                        surface,
+                        pygame.Rect(
+                            coords[0] + self.hardshape[0] * zoom,
+                            coords[1] + self.hardshape[1] * zoom,
+                            self.hardshape[2] * zoom,
+                            self.hardshape[3] * zoom
+                            )
+                        ,
+                        pygame.Color(255, 0, 0, 127)
+                        )
 
                 for i in self.update_points():
                     draw_rect(
-                        surface,
-                        pygame.Rect((
-                            int(i[0] + coords[0] * zoom),
-                            int(i[1] + coords[1] * zoom),
-                            2,
-                            2
-                            )),
-                        pygame.Color('blue')
-                        )
+                            surface,
+                            pygame.Rect((
+                                coords[0] + (i[0] - self.rect[0])* zoom,
+                                coords[1] + (i[1] - self.rect[1])* zoom,
+                                2,
+                                2
+                                )),
+                            pygame.Color('blue')
+                            )
 
     def draw_debug_footrect(self, coords, zoom, surface, debug_params):
         if self.visible:
             if debug_params.get('footrect', False):
                 r = self.foot_collision_rect()
                 draw_rect(
-                    surface,
-                    pygame.Rect(
-                    coords[0]+r[0]*zoom,
-                    coords[1]+r[1]*zoom,
-                    r[2]*zoom,
-                    r[3]*zoom
-                    )
-                    ,
-                pygame.Color(255, 255, 0, 127)
-                )
+                        surface,
+                        pygame.Rect(
+                            coords[0] + (r[0] - self.rect[0]) * zoom,
+                            coords[1] + (r[1] - self.rect[1]) * zoom,
+                            r[2] * zoom,
+                            r[3] * zoom
+                            )
+                        ,
+                        pygame.Color(255, 255, 0, 127)
+                        )
 
     def draw_debug_current_animation(self, coords, zoom, surface, debug_params):
         if self.visible:
@@ -677,13 +679,13 @@ class Entity (object):
         if self.visible:
             if not self.reversed:
                 place = (
-                    self.rect[0] - self.entity_skin.hardshape[0],
-                    self.rect[1] - self.entity_skin.hardshape[1]
+                    self.rect[0] - self.hardshape[0],
+                    self.rect[1] - self.hardshape[1]
                     )
             else:
                 place = (
                     self.rect[0],
-                    self.rect[1] - self.entity_skin.hardshape[1]
+                    self.rect[1] - self.hardshape[1]
                     )
             real_coords = (
                     int(place[0]*zoom)+coords[0] ,
