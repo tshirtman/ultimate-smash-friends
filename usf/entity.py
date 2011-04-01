@@ -120,29 +120,50 @@ class Entity (object):
 
     @property
     def num(self):
+        """
+        return entity number
+        """
         return self._num
 
     @property
     def hardshape(self):
+        """
+        return current hardshape from entity_skin
+        """
         return self.entity_skin.hardshape
 
     @property
     def name(self):
+        """
+        name of the entity
+        """
         return self._name
 
     @property
     def lives(self):
+        """
+        return current number of lives of the entity
+        """
         return self._lives
 
     def set_lives(self, value):
+        """
+        change current number of lives of the entity
+        """
         assert isinstance(value, int)
         self._lives = value
 
     @property
     def place(self):
+        """
+        current position in level of the entity
+        """
         return self._place
 
     def set_place(self, value):
+        """
+        move the entity to an arbitrary position
+        """
         self._place = value
 
     @property
@@ -151,69 +172,127 @@ class Entity (object):
 
     @property
     def shield(self):
+        """
+        return current state of the shield
+        """
         return self._shield
     @property
     def present(self):
+        """
+        return True if the entity is currently in game
+        """
         return self._present
 
     def set_present(self, value):
+        """
+        set the entity presence in game
+        """
         assert value in (True, False)
         self._present = value
 
     @property
     def visible(self):
+        """
+        set if the entity is currently visible on screen
+        """
         return self._visible
 
     def set_visible(self, value):
+        """
+        Set the visibility statue of the entity
+        """
         self._visible = value
 
     @property
     def invincible(self):
+        """
+        status of the entity vulnerability to hits
+        """
         return self._invincible
 
     def set_invincible(self, value):
+        """
+        set the entity invulnerability status
+        """
         assert value in (True, False)
         self._invincible = value
 
     @property
     def vector(self):
+        """
+        current dx/dt and dy/dt of the entity
+        """
         return tuple(self._vector)
 
     def set_vector(self, value):
+        """
+        set the (dx/dt, dy/dt) of the entity
+        """
         self._vector = value
 
     @property
     def walking_vector(self):
+        """
+        current walking vector of the entity (this is different of the vector,
+        as it's defined only by the fact the player uses direction keys)
+        """
         return tuple(self._walking_vector)
 
     def set_walking_vector(self, value):
-        self._walking_vector = value
+        """"
+        set entity walking vector
+        """
+        if value[1] is None:
+            self._walking_vector[0] = value[0]
+        else:
+            self._walking_vector = value
 
     @property
     def gravity(self):
+        """
+        True if the entity should react to gravity
+        """
         return self._gravity
 
     @property
     def onGround(self):
+        """
+        True if the entity is currently in collision with the ground
+        """
         return self._onGround
 
     @property
     def physic(self):
+        """
+        True if the entity should have any physical reaction
+        """
         return self._physic
 
     @property
     def lighten(self):
+        """
+        True if the entity should be currently displayed lightened
+        """
         return self._lighten
 
     def set_lighten(self, value):
+        """
+        Set lighten attribute of entity to value
+        """
         assert value in (True, False)
         self._lighten = value
 
     @property
     def reversed(self):
+        """
+        is the entity looking left
+        """
         return self._reversed
 
     def set_reversed(self, value):
+        """
+        set the direction of the entity
+        """
         assert value in (True, False)
         self._reversed = value
 
@@ -236,6 +315,9 @@ class Entity (object):
         return d
 
     def restore(self, backup):
+        """
+        restore the game to the state described in backup
+        """
         self.__dict__.update(backup)
 
     def __str__(self):
@@ -254,6 +336,9 @@ class Entity (object):
 
 
     def test_hit(self, entity):
+        """
+        test entity aggressive points collisions with other entity
+        """
         if entity is not self and not entity.invincible:
             for point in self.entity_skin.animation.agressivpoints:
                 if entity.collide_point(
@@ -263,7 +348,8 @@ class Entity (object):
                             entity.hit(point, self.reversed)
 
     def hit(self, point, reverse):
-        """ enforce the effect of a collision with an aggressive point, the
+        """
+        enforce the effect of a collision with an aggressive point, the
         point is a list of x,y,dx,dy coords, and reverse is a flag indicating
         if the attacking entity is reversed (to apply projection vectors)
         """
@@ -296,6 +382,9 @@ class Entity (object):
                     )
 
     def alive(self):
+        """
+        True if the player still have lives left
+        """
         return self.lives > 0
 
     def dist(self, entity):
