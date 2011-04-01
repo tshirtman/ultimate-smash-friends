@@ -478,7 +478,7 @@ class Entity (object):
                 #for i in xrange(Entity.nb_points)]
         return [
                 (
-                    l[i][0] * h[2] / 2 +  i h[2] / 2 + h[0] + r[0] + x,
+                    l[i][0] * h[2] / 2 + h[2] / 2 + h[0] + r[0] + x,
                     l[i][1] * r[3] * 4 + r[3] / 2 + r[1] + y)
                 for i in xrange(Entity.nb_points)]
 
