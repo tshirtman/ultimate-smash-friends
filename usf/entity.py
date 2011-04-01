@@ -176,6 +176,7 @@ class Entity (object):
         return current state of the shield
         """
         return self._shield
+
     @property
     def present(self):
         """
@@ -320,21 +321,6 @@ class Entity (object):
         """
         self.__dict__.update(backup)
 
-    def __str__(self):
-        return ','.join((
-                    str(self.num),
-                    self._upgraded and '1' or '0',
-                    self._lighten and '1' or '0',
-                    str(self._place),
-                    str(self._vector),
-                    str(self._walking_vector),
-                    self.reversed and '1' or '0',
-                    str(self._lives),
-                    self._invincible and '1' or '0',
-                    self.entity_skin.animation.image
-                    ))
-
-
     def test_hit(self, entity):
         """
         test entity aggressive points collisions with other entity
@@ -368,6 +354,7 @@ class Entity (object):
             if reverse != self.reversed:
                 self.vector = [-point[1][0]*(1+self.percents),
                               point[1][1]*(1+self.percents)]
+
             else:
                 self.vector = [point[1][0]*(1+self.percents),
                               point[1][1]*(1+self.percents)]
@@ -418,25 +405,6 @@ class Entity (object):
                 str(self.place),
                 self.entity_skin.animation.image.split(os.sep)[1:]
                )
-
-
-# should Not be useful
-#    def unserialize(self, string):
-#        """
-#        Set the entity to the state described by the string.
-#
-#        """
-#        number, entity_type, name, place, animation, starttime = string.split(',')
-#
-#        if self.number != int(number):
-#            raise WrongEntityException
-#
-#        self.entity_skinname = name
-#        self.entity_type = entity_type
-#        self.place = place[1:-1].split('*')
-#        self.place = [int(self.place[0]), self.place[1]]
-#        self.entity_skin.current_animation = animation
-#        self.entity_skin.animation.__start__time = starttime
 
     def update_rect(self):
         """
@@ -550,28 +518,22 @@ class Entity (object):
         r = self.rect
 
         H2_2 = h[2] / 2
-        HRX = h[0] + r[0] + x
-        RY = r[1] + y
-        R3_2 = r[3] / 2
+        H3_2 = h[3] / 2
+        HRXY = (h[0] + r[0] + x, h[1] + r[1] + y)
 
-        #return [((l[i][0]) * H2_2 + HRX, (l[i][1]) * R3_2 + RY)
-                #for i in xrange(Entity.nb_points)]
-#
-        #return [((l[i][0] + 1) * H2_2 + HRX, (l[i][1] + 1) * R3_2 + RY)
-                #for i in xrange(Entity.nb_points)]
-#
-        # before simplification making it uncomprehensible but hopefully, more
-        # efficient
-        #return [
-                #(
-                    #l[i][0] * h[2] / 2 + h[2] / 2 + h[0] + r[0] + x,
-                    #l[i][1] * r[3] / 2 + r[3] / 2 + r[1] + y)
-                #for i in xrange(Entity.nb_points)]
         return [
                 (
-                    int(l[i][0] * h[2] / 2 + h[2] / 2 + h[0] + r[0] + x),
-                    int(l[i][1] * r[3] + r[3] / 2 + r[1] + y))
+                    int((l[i][0] + 1) * H2_2 + HRXY[0]),
+                    int((l[i][1] + 1) * H3_2 + HRXY[1]))
                 for i in xrange(Entity.nb_points)]
+
+        # reference version, non optimized and then should be easier to
+        # understand
+        #return [
+        #        (
+        #            int(l[i][0] * h[2] / 2 + h[2] / 2 + h[0] + r[0] + x),
+        #            int(l[i][1] * h[3] / 2 + h[3] / 2 + h[1] + r[1] + y))
+        #        for i in xrange(Entity.nb_points)]
 
     def collide_top(self, game):
         """
@@ -710,7 +672,7 @@ class Entity (object):
                         pygame.Color(255, 0, 0, 127)
                         )
 
-                for i in self.update_points():
+                for n,i in enumerate(self.update_points()):
                     draw_rect(
                             surface,
                             pygame.Rect((
@@ -719,6 +681,7 @@ class Entity (object):
                                 2,
                                 2
                                 )),
+                            n > 3 and pygame.Color('green') or
                             pygame.Color('blue')
                             )
 
