@@ -34,13 +34,12 @@ from exceptions import AttributeError
 from config import Config
 
 from game import Game
-from game import NetworkServerGame
-from game import NetworkClientGame
 from gui import Gui
 from controls import Controls
 import loaders
 import music
 from font import fonts
+from ai import AiThreadRunner
 
 try:
     config = Config()
@@ -119,6 +118,8 @@ class Main(object):
             # immediatly jump into game mode
             if len(self.players) > 1 and self.level is not None:
                 self.game = Game(self.screen, self.level, self.players)
+                self.ai_thread = AiThreadRunner()
+                self.ai_thread.start_AI(self.game)
                 self.state = "game"
                 self.menu = Gui(self.screen)
                 self.menu.handle_reply('goto:resume')
@@ -134,6 +135,7 @@ class Main(object):
 
                 self.game = None
                 self.level = None
+                self.ai_thread = None
 
             self.lock.acquire()
             self.stop_thread = True
@@ -269,8 +271,14 @@ class Main(object):
         if newgame:
             self.state = 'game'
             if game_ is not self.game:
+                print "starting game"
+                if self.ai_thread:
+                    self.ai_thread.stop_AI()
+
                 del(self.game)
                 self.game = game_
+                self.ai_thread = AiThreadRunner()
+                self.ai_thread.start_AI(game_)
 
         max_fps = 1000/config.general["MAX_GUI_FPS"]
 
@@ -308,8 +316,7 @@ class Main(object):
                     'action': config.debug['ACTIONS'],
                     'hardshape': config.debug['HARDSHAPES'],
                     'footrect': config.debug['FOOTRECT'],
-                    'current_animation':
-                    config.debug['CURRENT_ANIMATION'],
+                    'current_animation': config.debug['CURRENT_ANIMATION'],
                     'levelshape': config.debug['LEVELSHAPES'],
                     'levelmap': config.debug['LEVELMAP'],
                     }
@@ -359,11 +366,8 @@ class Main(object):
             self.ended = pygame.event.get(QUIT)
             if self.ended :
                 logging.debug('fps = '+str(self.clock.get_fps()))
-                if self.game:
-                    try:
-                        self.game.AI.stop_AI()
-                    except AttributeError, e:
-                        pass
+                if self.ai_thread:
+                    self.ai_thread.stop_AI()
                 pygame.quit()
                 break
 

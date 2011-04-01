@@ -29,7 +29,7 @@ from threading import Thread
 #controls = controls.Controls()
 
 TIMESTEP = 250
-MAXDEPTH = 5
+MAXDEPTH = 2
 
 @memoize
 def possible_movements(movement):
@@ -160,6 +160,7 @@ class AiThreadRunner(object):
         """
         self.AI = AI()
         self.ended = True
+        self.thread = None
 
     def update(self, game):
         while not self.ended:
@@ -173,8 +174,9 @@ class AiThreadRunner(object):
         """
         if self.ended:
             self.ended = False
-            t = Thread(target = self.update, args=(game,))
-            t.start()
+            self.thread = Thread(target = self.update, args=(game,))
+            self.thread.start()
+            print "AI started"
         else:
             logging.warning('AI aleady already running!')
 
@@ -183,4 +185,7 @@ class AiThreadRunner(object):
         """
         if self.ended == False:
             self.ended = True
+            print "waiting for thread to stop"
+            self.thread.join()
+            print "ai stopped"
 

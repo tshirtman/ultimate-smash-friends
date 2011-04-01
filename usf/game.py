@@ -121,11 +121,6 @@ class Game (object):
         # a countdown to the game end
         self.ending = 5.0
 
-        # initiate AI
-        if [x for x in self.players if x.ai]:
-            self.AI = AiThreadRunner()
-            self.AI.start_AI(self)
-
     def add_world_event(self):
         self.events.add_event(
                 'ItemShower',

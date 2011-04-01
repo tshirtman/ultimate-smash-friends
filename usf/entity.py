@@ -780,8 +780,6 @@ class Entity (object):
                         )
                 surface.blit(image[0], shield_coords)
 
-
-
     def update_physics(self, dt, game):
         """
         This function apply current movemements and various environemental
