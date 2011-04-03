@@ -28,14 +28,14 @@ from threading import Thread
 
 #controls = controls.Controls()
 
-TIMESTEP = 250
-MAXDEPTH = 1
+TIMESTEP = 0.25
+MAXDEPTH = 2
 
 @memoize
 def possible_movements(movement):
     """ return the list of current legal movements for the player
     """
-    result = list()
+    result = ['static', 'walk']
     with open(path.join(conf.sys_data_dir, 'sequences.cfg')) as f:
         line = f.readline().split('#')[0].split('\n')[0]
 
@@ -49,6 +49,7 @@ def possible_movements(movement):
             line = f.readline().split('#')[0].split('\n')[0]
 
     return tuple(result)
+    return filter(lambda x: x in ('walk', 'jump', 'scnd-jump'), tuple(result))
 
 def simulate(game, iam, movement=None, reverse=False, walk=False):
     """ change the player movement to movement, and jump 100ms in the future.
@@ -56,8 +57,7 @@ def simulate(game, iam, movement=None, reverse=False, walk=False):
     """
     entity = game.players[iam]
     entity.set_reversed(reverse)
-    entity.set_walking_vector([walk and conf.general['WALKSPEED'] or 0,
-        entity.walking_vector[1]])
+    entity.set_walking_vector([walk and conf.general['WALKSPEED'] or 0, None])
     entity.entity_skin.change_animation(
             movement,
             game,
@@ -86,15 +86,21 @@ def heuristic(game, iam):
 def search_path(game, iam, max_depth):
     if max_depth == 0:
         return heuristic(game, iam), [Movement(game.gametime,None, False,
-            False), ]
+            False),]
 
     result = (None, ())
     gametime = game.gametime
     for movement in possible_movements(game.players[iam].entity_skin.current_animation):
-        for walk, reverse in ((True, True), (True, False), (False, True), (False, False)):
+        for walk, reverse in (
+                (True, True), (True, False), (False, True), (False, False)):
             b = game.backup() #no, this can't be factorized by moving it 3 line^
             simulate(game, iam, movement, reverse, walk)
             score, movements = search_path(game, iam, max_depth-1)
+            print '    ' * (MAXDEPTH - max_depth) + '\t'.join((
+                    movement,
+                    walk and 'walking' or 'static',
+                    reverse and 'reversed' or 'straight',
+                    str(score)))
             game.restore(b)
             if not result[0] or score < result[0]:
                 result = score, movements + [Movement(gametime,

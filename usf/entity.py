@@ -252,7 +252,7 @@ class Entity (object):
         set entity walking vector
         """
         if value[1] is None:
-            self._walking_vector[0] = value[0]
+            self._walking_vector = (value[0], self._walking_vector[1])
         else:
             self._walking_vector = value
 

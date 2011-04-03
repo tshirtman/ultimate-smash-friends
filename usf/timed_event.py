@@ -56,7 +56,7 @@ class TimedEvent (object):
         self.done = False
         self.em = manager
         self.initiate()
-        logging.info(str(self.__class__) + ' event created, params:' + str(params))
+        #logging.info(str(self.__class__) + ' event created, params:' + str(params))
 
     def update(self, deltatime, gametime):
         """
