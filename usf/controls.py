@@ -51,18 +51,22 @@ class Sequence(object):
         self.action = action
         self.condition = condition
 
-    def compare(self, seq, player):
-        if(
-                len(seq) >= len(self.keys) and (
-                    not self.condition or
-                    player.entity_skin.current_animation.replace('_upgraded','')
-                    in self.condition)
-          ):
-            for a, b in zip(self.keys, seq):
+    def local_compare(self, index, sequence):
+        """ compare our sequence with the provided sequence, starting from
+        index in the provided sequence
+        """
+        if len(sequence[index:]) >= len(self.keys):
+            for a, b in zip(self.keys, sequence[index:]):
                 if a != b[0]:
                     return False
             return True
 
+    def compare(self, seq, player):
+        current = player.entity_skin.current_animation.replace('_upgraded','')
+        if (not self.condition or current in self.condition):
+            for x in range(len(seq)):
+                if self.local_compare(x, seq):
+                    return True
         else:
             return False
 
@@ -308,16 +312,6 @@ class Controls (object):
         by clients in the case of a networkk game.
 
         """
-        #for sequence in self.player_sequences:
-            #for i in self.sequences:
-                #if i.compare(sequence, player):
-                    #game_instance.players[i.player].entity_skin.change_animation(
-                            #i.action,
-                            #game_instance,
-                            #params={
-                                #'entity':game_instance.players[i.player]
-                                #}
-                            #)
         # if this is a network server game
         if isinstance(game_instance, game.NetworkServerGame):
             while True:
@@ -330,12 +324,8 @@ class Controls (object):
         else:
             pygame.event.pump()
             for event in pygame.event.get( [ KEYDOWN, KEYUP ] ):
-                if state is "game":
-                    if game is not None:
-                        state = self.handle_game_key( event.type, event.key, game_instance)
-                    # forget other events
-                    #FIXME: remove?
-                    pygame.event.clear()
+                if state is "game" and game:
+                    state = self.handle_game_key( event.type, event.key, game_instance)
 
                 elif state is "menu":
                     state = self.handle_menu_key( event.type, event.key, menu )
