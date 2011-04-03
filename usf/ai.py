@@ -18,7 +18,7 @@
 ################################################################################
 from os import path
 import pygame
-import copy
+from copy import deepcopy
 
 import game
 import config
@@ -29,7 +29,7 @@ from threading import Thread
 #controls = controls.Controls()
 
 TIMESTEP = 250
-MAXDEPTH = 2
+MAXDEPTH = 1
 
 @memoize
 def possible_movements(movement):
@@ -75,7 +75,7 @@ def heuristic(game, iam):
         % of damages to others
     """
     return (
-            min((game.players[iam].dist(e) for i,e in enumerate(game.players) if
+            min((game.players[iam].dist(e) for i, e in enumerate(game.players) if
                 i is not iam))
             #- entity.lives * 100
             #+ entity.percents
@@ -130,17 +130,12 @@ class AI(object):
 
         #print self.sequences_ai[iam]
         if not self.sequences_ai[iam]:
-            g = copy.deepcopy(game)
-            s = search_path(g, iam, max_depth)
+            s = search_path(game, iam, max_depth)
             #print "sequences updated", s[0], ' '.join(map(str, s[1]))
             self.sequences_ai[iam] = s[1]
         else:
             if game.gametime >= self.sequences_ai[iam][-1].time:
                 movement = self.sequences_ai[iam].pop()
-                #print (
-                        #"I", movement.movement, movement.reverse and "reversed"
-                        #or "straight", movement.walk and "walking" or
-                        #"not walking")
                 entity.entity_skin.change_animation(
                         movement.movement,
                         game,
@@ -154,11 +149,11 @@ class AiThreadRunner(object):
     """
     This class will update the players AI when possible, in a thread-safe way
     """
-    def __init__(self):
+    def __init__(self, game):
         """
         AI object must be given as a parameter
         """
-        self.AI = AI()
+        self.AI = AI(game)
         self.ended = True
         self.thread = None
 
