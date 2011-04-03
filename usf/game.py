@@ -538,7 +538,7 @@ class Game (object):
                          self.zoom
                         )
             if item.rect.collidelist([self.level.border,]) == -1:
-                item.lives = 0
+                item.set_lives(0)
             if item.lives <= 0:
                 del(self.items[self.items.index(item)])
 

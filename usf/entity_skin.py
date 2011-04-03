@@ -248,6 +248,7 @@ class Entity_skin (object):
             #logging.debug( "entity_skin "+self.name+" has no "+anim_name+"\
 #animation.")
             pass
+        print "current animation changed:", self.current_animation
 
     def backup(self):
         return (self.current_animation, self.animation,
@@ -283,6 +284,7 @@ class Entity_skin (object):
                 p2 = game.gametime+(event[1][1]/1000.0)
 
             try:
+                print "adding", event[0], p1,p2
                 game.events.add_event(
                         event[0],
                          period=(p1, p2),

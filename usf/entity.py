@@ -192,6 +192,14 @@ class Entity (object):
         self._present = value
 
     @property
+    def upgraded(self):
+        return self._upgraded
+
+    def set_upgraded(self, value):
+        assert value in (True, False)
+        self._upgraded = value
+
+    @property
     def visible(self):
         """
         set if the entity is currently visible on screen

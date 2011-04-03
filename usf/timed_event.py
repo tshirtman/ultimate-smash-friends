@@ -56,8 +56,7 @@ class TimedEvent (object):
         self.done = False
         self.em = manager
         self.initiate()
-        #logging.info(str(self.__class__) + ' event created, params:' +
-                #str(params))
+        logging.info(str(self.__class__) + ' event created, params:' + str(params))
 
     def update(self, deltatime, gametime):
         """
@@ -65,9 +64,9 @@ class TimedEvent (object):
         functions of the event.
 
         """
-        if gametime > self.period[1] or not self.condition():
+        if self.period[1] is not None and gametime > self.period[1] or not self.condition():
             self.done = True
-        elif gametime < self.period[0]:
+        elif gametime > self.period[0]:
             self.execute(deltatime)
 
     def backup(self):
@@ -363,7 +362,7 @@ class InvinciblePlayer(TimedEvent):
 
     def execute(self, deltatime):
         self.params['player'].set_invincible(True)
-        self.params['player'].lighten = not self.params['player'].lighten
+        self.params['player'].set_lighten(not self.params['player'].lighten)
 
     def condition(self):
         return True
@@ -413,7 +412,7 @@ class UpgradePlayer(TimedEvent):
 
     """
     def initiate(self):
-        self.params['player'].upgraded = True
+        self.params['player'].set_upgraded(True)
 
     def execute(self, deltatime):
         pass
@@ -432,7 +431,7 @@ class DropPlayer(TimedEvent):
         self.params['entity'].set_vector([0, 0])
         self.params['entity'].set_walking_vector([0, 0])
         self.params['entity'].percents = 0
-        self.params['entity'].upgraded = False
+        self.params['entity'].set_upgraded(False)
 
         self.params['entity'].set_place(random.choice(
             self.params['world'].level.entrypoints
