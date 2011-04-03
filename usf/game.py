@@ -512,7 +512,8 @@ class Game (object):
         # agressive point collision between entities players.
         for entity in self.players + self.items:
             for target in self.players + self.items:
-                entity.test_hit(target)
+                if target is not entity and not target.invincible:
+                    entity.test_hit(target)
 
         # collision between players and items -- tests and consequences
         for player in filter(lambda x: "pick" in

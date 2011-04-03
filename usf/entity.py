@@ -154,6 +154,10 @@ class Entity (object):
         self._lives = value
 
     @property
+    def armor(self):
+        return self._armor
+
+    @property
     def place(self):
         """
         current position in level of the entity
@@ -329,17 +333,19 @@ class Entity (object):
         """
         self.__dict__.update(backup)
 
+    @property
+    def agressiv_points(self):
+        return self.entity_skin.animation.agressivpoints
+
     def test_hit(self, entity):
         """
         test entity aggressive points collisions with other entity
         """
-        if entity is not self and not entity.invincible:
-            for point in self.entity_skin.animation.agressivpoints:
-                if entity.collide_point(
-                        [
-                            point[0][0]+self.rect[0],
-                            point[0][1]+self.rect[1]]) is not -1:
-                            entity.hit(point, self.reversed)
+        for point in self.agressiv_points:
+            if entity.rect.collidepoint(
+                    self.rect[0] + point[0][0],
+                    self.rect[1] + point[0][1]):
+                entity.hit(point, self.reversed)
 
     def hit(self, point, reverse):
         """
@@ -352,27 +358,22 @@ class Entity (object):
                                 point[1][0]**2 + point[1][1]**2
                                 )/config.general['SHIELD_SOLIDITY']
             self.shield['power'] = max(0, self.shield['power'])
-            if (
-            self.shield['date'] < self.game.gametime() - config.general['POWER_SHIELD_TIME']
-            ):
+            if (self.shield['date'] < self.game.gametime() - config.general['POWER_SHIELD_TIME']):
                 self.percents += math.sqrt(point[1][0] ** 2 + point[1][1]**2)\
                         / (30 * (100 - self.armor)) / 2
 
         else:
-            if reverse != self.reversed:
-                self.vector = [-point[1][0]*(1+self.percents),
-                              point[1][1]*(1+self.percents)]
+            direction = reverse != self.reversed and -1 or 1
 
-            else:
-                self.vector = [point[1][0]*(1+self.percents),
-                              point[1][1]*(1+self.percents)]
+            self.set_vector([direction * point[1][0] * (1 + self._percents),
+                          point[1][1] * (1 + self._percents)])
 
-            self.percents += math.sqrt((
+            self._percents += math.sqrt((
                 point[1][0] ** 2 +point[1][1] ** 2) / (30 * (100 - self.armor)))
 
             self.entity_skin.change_animation(
                     'take',
-                    self.game,
+                    self._game,
                     params={'entity': self}
                     )
 
@@ -424,8 +425,8 @@ class Entity (object):
         self._rect = [
                 self.place[0] - hardshape[2]/2 - hardshape[0],
                 self.place[1] - hardshape[1],
-                hardshape[0],
-                hardshape[1]]
+                hardshape[2],
+                hardshape[3]]
 
     def move(self,(x,y), _from=''):
         """
@@ -438,13 +439,6 @@ class Entity (object):
         self.set_place([self.place[0] + x, int(self.place[1] + y)])
 
         self.update_rect()
-
-    def collide_point(self, (x,y)):
-        """
-        Test the collision of the entity with the 1 pixel wide point at (x,y).
-
-        """
-        return self.rect.collidelist([pygame.Rect(x,y,1,1), ])
 
     def foot_collision_rect(self):
         return pygame.Rect(
@@ -525,6 +519,14 @@ class Entity (object):
         l = Entity.list_sin_cos
         r = self.rect
 
+        # reference version, non optimized and then should be easier to
+        # understand
+        #return [
+        #        (
+        #            int(l[i][0] * h[2] / 2 + h[2] / 2 + h[0] + r[0] + x),
+        #            int(l[i][1] * h[3] / 2 + h[3] / 2 + h[1] + r[1] + y))
+        #        for i in xrange(Entity.nb_points)]
+
         H2_2 = h[2] / 2
         H3_2 = h[3] / 2
         HRXY = (h[0] + r[0] + x, h[1] + r[1] + y)
@@ -534,14 +536,6 @@ class Entity (object):
                     int((l[i][0] + 1) * H2_2 + HRXY[0]),
                     int((l[i][1] + 1) * H3_2 + HRXY[1]))
                 for i in xrange(Entity.nb_points)]
-
-        # reference version, non optimized and then should be easier to
-        # understand
-        #return [
-        #        (
-        #            int(l[i][0] * h[2] / 2 + h[2] / 2 + h[0] + r[0] + x),
-        #            int(l[i][1] * h[3] / 2 + h[3] / 2 + h[1] + r[1] + y))
-        #        for i in xrange(Entity.nb_points)]
 
     def collide_top(self, game):
         """
