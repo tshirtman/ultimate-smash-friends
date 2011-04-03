@@ -29,7 +29,7 @@ from threading import Thread
 #controls = controls.Controls()
 
 TIMESTEP = 0.25
-MAXDEPTH = 2
+MAXDEPTH = 1
 
 @memoize
 def possible_movements(movement):
@@ -49,7 +49,6 @@ def possible_movements(movement):
             line = f.readline().split('#')[0].split('\n')[0]
 
     return tuple(result)
-    return filter(lambda x: x in ('walk', 'jump', 'scnd-jump'), tuple(result))
 
 def simulate(game, iam, movement=None, reverse=False, walk=False):
     """ change the player movement to movement, and jump 100ms in the future.
@@ -74,13 +73,15 @@ def heuristic(game, iam):
         number of lives of others
         % of damages to others
     """
+    player = game.players[iam]
+    others = (p for p in game.players if p is not player)
+
     return (
-            min((game.players[iam].dist(e) for i, e in enumerate(game.players) if
-                i is not iam))
-            #- entity.lives * 100
-            #+ entity.percents
-            #+ sum((x.lives for x in game.players)) * 100
-            #- sum((x.percents for x in game.players))
+            min((player.dist(p) for p in others))
+            - player.lives * 100
+            + player.percents
+            + sum((p.lives for p in others)) * 100
+            - sum((p.percents for p in others))
             )
 
 def search_path(game, iam, max_depth):
@@ -96,11 +97,11 @@ def search_path(game, iam, max_depth):
             b = game.backup() #no, this can't be factorized by moving it 3 line^
             simulate(game, iam, movement, reverse, walk)
             score, movements = search_path(game, iam, max_depth-1)
-            print '    ' * (MAXDEPTH - max_depth) + '\t'.join((
-                    movement,
-                    walk and 'walking' or 'static',
-                    reverse and 'reversed' or 'straight',
-                    str(score)))
+            #print '    ' * (MAXDEPTH - max_depth) + '\t'.join((
+            #        movement,
+            #        walk and 'walking' or 'static',
+            #        reverse and 'reversed' or 'straight',
+            #        str(score)))
             game.restore(b)
             if not result[0] or score < result[0]:
                 result = score, movements + [Movement(gametime,
@@ -146,7 +147,7 @@ class AI(object):
                         movement.movement,
                         game,
                         {'entity': entity})
-                entity.reverse = movement.reverse
+                entity.set_reversed(movement.reverse)
                 entity.set_walking_vector([movement.walk and
                     conf.general['WALKSPEED'] or 0, entity.walking_vector[1]])
 

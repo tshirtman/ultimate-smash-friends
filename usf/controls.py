@@ -64,7 +64,6 @@ class Sequence(object):
     def compare(self, seq, player):
         current = player.entity_skin.current_animation.replace('_upgraded','')
         if (not self.condition or current in self.condition):
-            print self.condition, current, self.action
             for x in range(len(seq)):
                 if self.local_compare(x, seq):
                     return True
