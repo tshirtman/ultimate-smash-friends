@@ -169,7 +169,7 @@ class BombExplode(TimedEvent):
 
     """
     def execute(self, dt):
-        self.params['entity'].gravity = False
+        self.params['entity'].set_gravity(False)
         self.params['entity'].entity_skin.change_animation(
                 'explode',
                 self.params['world']

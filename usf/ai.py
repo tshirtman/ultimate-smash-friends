@@ -20,7 +20,6 @@ from os import path
 import pygame
 from copy import deepcopy
 
-import game
 import config
 from memoize import memoize
 conf = config.Config()
@@ -32,27 +31,30 @@ TIMESTEP = 0.25
 MAXDEPTH = 1
 
 @memoize
-def possible_movements(movement):
+def possible_movements(movement='static'):
     """ return the list of current legal movements for the player
     """
-    result = ['static', 'walk']
     with open(path.join(conf.sys_data_dir, 'sequences.cfg')) as f:
-        line = f.readline().split('#')[0].split('\n')[0]
+        lines = f.readlines()
 
-        while not line or "=" not in line and movement not in line:
-            line = f.readline().split('#')[0].split('\n')[0]
+    result = set()
+    possible = False
+    for l in lines:
+        line = l.split('#')[0].split('\n')[0]
 
-        line = f.readline().split('#')[0].split('\n')[0]
-        while "=" not in line:
-            if line != '':
-                result.append(line.split(':')[1])
-            line = f.readline().split('#')[0].split('\n')[0]
+        if "=" in line:
+            possible = movement in line
+            continue
+
+        elif possible:
+            if ":" in line:
+                result.add(line.split(':')[1])
 
     return tuple(result)
 
 def simulate(game, iam, movement=None, reverse=False, walk=False):
-    """ change the player movement to movement, and jump 100ms in the future.
-    if movement is none, just jump 100ms in the future.
+    """ change the player movement to movement, and jump TIMESTEP in the future.
+    if movement is none, just jump TIMESTEP in the future.
     """
     entity = game.players[iam]
     entity.set_reversed(reverse)
@@ -77,7 +79,7 @@ def heuristic(game, iam):
     others = (p for p in game.players if p is not player)
 
     return (
-            min((player.dist(p) for p in others))
+            max(200, min((player.dist(p) for p in others)))
             - player.lives * 100
             + player.percents
             + sum((p.lives for p in others)) * 100
@@ -91,7 +93,7 @@ def search_path(game, iam, max_depth):
 
     result = (None, ())
     gametime = game.gametime
-    for movement in possible_movements(game.players[iam].entity_skin.current_animation):
+    for movement in possible_movements(movement=game.players[iam].entity_skin.current_animation):
         for walk, reverse in (
                 (True, True), (True, False), (False, True), (False, False)):
             b = game.backup() #no, this can't be factorized by moving it 3 line^
@@ -190,4 +192,5 @@ class AiThreadRunner(object):
             print "waiting for thread to stop"
             self.thread.join()
             print "ai stopped"
+
 

@@ -267,6 +267,10 @@ class Entity (object):
         """
         return self._gravity
 
+    def set_gravity(self, value):
+        assert value in (True, False)
+        self._gravity = value
+
     @property
     def onGround(self):
         """
