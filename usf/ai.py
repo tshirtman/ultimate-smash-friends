@@ -28,7 +28,7 @@ from threading import Thread
 #controls = controls.Controls()
 
 TIMESTEP = 0.25
-MAXDEPTH = 2
+MAXDEPTH = 1
 
 @memoize
 def possible_movements(movement='static'):
