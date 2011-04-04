@@ -544,7 +544,7 @@ class Game (object):
                 del(self.items[self.items.index(item)])
 
     def update_players(self, deltatime):
-        for player in (p for p in self.players if p.present ):
+        for player in filter(entity.Entity.is_present, self.players):
             player.update(
                     deltatime,
                     self.gametime,
@@ -554,7 +554,7 @@ class Game (object):
                     )
 
             # if the player is out of the level zone
-            if player.rect.collidelist([self.level.border,]) == -1:
+            if not player.rect.colliderect(self.level.border):
                 self.events.add_event(
                         'PlayerOut',
                         (self.gametime, 0),
@@ -566,7 +566,6 @@ class Game (object):
                         )
 
             if player.lives <= 0:
-                logging.debug("player's DEAD")
                 player.set_present(False)
 
     def backup_items(self):

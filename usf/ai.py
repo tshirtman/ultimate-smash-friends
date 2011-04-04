@@ -28,7 +28,7 @@ from threading import Thread
 #controls = controls.Controls()
 
 TIMESTEP = 0.25
-MAXDEPTH = 1
+MAXDEPTH = 2
 
 @memoize
 def possible_movements(movement='static'):
@@ -91,7 +91,7 @@ def search_path(game, iam, max_depth):
         return heuristic(game, iam), [Movement(game.gametime,None, False,
             False),]
 
-    result = (None, ())
+    result = (None, [])
     gametime = game.gametime
     for movement in possible_movements(movement=game.players[iam].entity_skin.current_animation):
         for walk, reverse in (
@@ -106,8 +106,8 @@ def search_path(game, iam, max_depth):
             #        str(score)))
             game.restore(b)
             if not result[0] or score < result[0]:
-                result = score, movements + [Movement(gametime,
-                    movement, reverse, walk),]
+                result = score, (movements + [Movement(gametime,
+                    movement, reverse, walk),])
 
     #print "max_depth", max_depth, "best result", result
     return result
