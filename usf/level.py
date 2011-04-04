@@ -1,4 +1,4 @@
-####################################################################################
+###############################################################################
 # copyright 2008 Gabriel Pettier <gabriel.pettier@gmail.com>
 #
 # This file is part of UltimateSmashFriends
@@ -15,7 +15,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.
-##################################################################################
+###############################################################################
 
 import os
 import sys
@@ -61,10 +61,8 @@ class Block (object):
         placement of camera.
 
         """
-        real_coords = (
-                int(self.position[0]*zoom)+coords[0],
-                int(self.position[1]*zoom)+coords[1]
-                )
+        real_coords = (int(self.position[0] * zoom) + coords[0],
+                int(self.position[1] * zoom) + coords[1])
 
         surface.blit(loaders.image(self.texture, zoom=zoom)[0], real_coords)
 
@@ -107,10 +105,8 @@ class VectorBloc (Block):
         This method simply add the bloc's vector to the passed player.
 
         """
-        entity.vector = [
-                entity.vector[0] + self.vector[0],
-                entity.vector[1] + self.vector[1]
-                ]
+        entity.vector = [entity.vector[0] + self.vector[0],
+                entity.vector[1] + self.vector[1]]
 
     @memoize
     def collide_rect(self, rect):
@@ -156,10 +152,8 @@ class MovingPart (Block):
         now, usefull to communicate this movement to another entity.
 
         """
-        return (
-                self.position[0] - self.old_position[0],
-                self.position[1] - self.old_position[1]
-               )
+        return (self.position[0] - self.old_position[0],
+                self.position[1] - self.old_position[1])
 
     def update(self, level_time):
         """
@@ -309,7 +303,7 @@ class Level(object):
         self.entrypoints = []
         for point in xml.findall('entry-point'):
             x,y = point.attrib['coords'].split(' ')
-            self.entrypoints.append([ int(x), int(y) ])
+            self.entrypoints.append([int(x), int(y)])
 
         if not self.entrypoints:
             logging.info('no entry point defined for this level')
@@ -325,7 +319,7 @@ class Level(object):
         self.map = []
         for block in xml.findall('block'):
             nums = block.attrib['coords'].split(' ')
-            nums = [ int(i) for i in nums ]
+            nums = [int(i) for i in nums]
             self.map.append(pygame.Rect(nums))
 
     def load_moving_blocs(self, xml, server, levelname):
@@ -363,7 +357,7 @@ class Level(object):
         self.water_blocs = []
         for block in xml.findall('water'):
             nums = block.attrib['coords'].split(' ')
-            nums = [ int(i) for i in nums ]
+            nums = [int(i) for i in nums]
             self.water_blocs.append(pygame.Rect(nums))
 
     def load_vector_blocs(self, xml):
@@ -394,22 +388,10 @@ class Level(object):
                             )
                         )
 
-    def serialize(self):
-        return (
-                (
-                    self.background,
-                    self.foreground,
-                    self.middle
-                ),
-                [
-                    serialize(block) for block in
-                        self.moving_blocs+self.vector_blocs
-                ]
-            )
-
     def draw_before_players(self, surface, level_place, zoom, shapes=False):
         self.draw_background(surface)
         self.draw_level( surface , level_place, zoom, shapes)
+
         for block in self.moving_blocs:
             block.draw( surface, level_place, zoom)
 
@@ -472,19 +454,20 @@ class Level(object):
         for block in self.moving_blocs:
             block.update(time)
 
-    def _helper_collide(self, l, rect):
-        for i in l:
-            if rect.collidelist(i.collide_rects) != -1:
-                return True
-        return False
-
     def collide_rect(self, (x,y), (h,w)=(1,1)):
         """
-        This fonction return True if the rect at coords (x,y) collide one of
+        This fonction returns True if the rect at coords (x,y) collides one of
         the rects of the level, including the moving blocks and vector blocks.
 
         """
-        l = self.moving_blocs + self.vector_blocs
-        r = pygame.Rect((x,y),(h,w))
-        return r.collidelist(self.map) != -1 or self._helper_collide(l, r)
+        r = pygame.Rect((x, y), (h, w))
+
+        if r.collidelist(self.map) != -1:
+            return True
+
+        else:
+            for i in self.vector_blocs + self.moving_blocs:
+                if r.collidelist(i.collide_rects) != -1:
+                    return True
+            return False
 

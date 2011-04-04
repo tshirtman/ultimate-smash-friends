@@ -323,15 +323,15 @@ class Controls (object):
 
         else:
             pygame.event.pump()
-            for event in pygame.event.get( [ KEYDOWN, KEYUP ] ):
+            for event in pygame.event.get([KEYDOWN, KEYUP]):
                 if state is "game" and game:
-                    state = self.handle_game_key( event.type, event.key, game_instance)
+                    state = self.handle_game_key(event.type, event.key, game_instance)
 
                 elif state is "menu":
-                    state = self.handle_menu_key( event.type, event.key, menu )
+                    state = self.handle_menu_key(event.type, event.key, menu)
 
             # eliminate unwanted events that fill the pool and break the controls.
-            pygame.event.clear( [MOUSEMOTION, MOUSEBUTTONUP, MOUSEBUTTONDOWN] )
+            pygame.event.clear([MOUSEMOTION, MOUSEBUTTONUP, MOUSEBUTTONDOWN])
 
             # clean sequences from outdated keys
             for index, sequence in enumerate(self.player_sequences):

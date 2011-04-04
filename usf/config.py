@@ -32,6 +32,7 @@ import logging
 
 import pygame
 
+
 OS = platform.system().lower()
 
 @memoize
@@ -74,7 +75,7 @@ class Option(dict):
     def __setitem__(self, option, value):
         try:
             #invalidate cache of __getitem__
-            self.__getitem__.cache = {}
+            _get_value_from_config.cache = {}
         except AttributeError:
             logging.warning("__getitem__ not memoized? oO")
 

@@ -57,6 +57,7 @@ class Entity (object):
                 math.sin(i * math.pi / (nb_points/2) + math.pi / nb_points),
                 math.cos(i * math.pi / (nb_points/2) + math.pi / nb_points)]
             for i in range(nb_points)]
+    list_sin_cos_1 = map(lambda (x,y): (x+1,y+1), list_sin_cos)
 
     # this counter will allow us to correctly update entities.
     counter = 0
@@ -432,7 +433,7 @@ class Entity (object):
                 hardshape[2],
                 hardshape[3]]
 
-    def move(self,(x,y), _from=''):
+    def move(self,(x,y)):
         """
         move the entity relatively to his referencial (if he look left, moving
         positively on x mean going left).
@@ -520,26 +521,29 @@ class Entity (object):
          """
 
         h = self.hardshape
-        l = Entity.list_sin_cos
-        r = self.rect
+        r = self._rect
+        n = Entity.nb_points
 
         # reference version, non optimized and then should be easier to
         # understand
+        #l = Entity.list_sin_cos
         #return [
         #        (
         #            int(l[i][0] * h[2] / 2 + h[2] / 2 + h[0] + r[0] + x),
         #            int(l[i][1] * h[3] / 2 + h[3] / 2 + h[1] + r[1] + y))
         #        for i in xrange(Entity.nb_points)]
 
+        # optimised version
         H2_2 = h[2] / 2
         H3_2 = h[3] / 2
-        HRXY = (h[0] + r[0] + x, h[1] + r[1] + y)
+        HRX, HRY = h[0] + r[0] + x, h[1] + r[1] + y
+        l2 = Entity.list_sin_cos_1
 
         return [
                 (
-                    int((l[i][0] + 1) * H2_2 + HRXY[0]),
-                    int((l[i][1] + 1) * H3_2 + HRXY[1]))
-                for i in xrange(Entity.nb_points)]
+                    int(l2[i][0] * H2_2 + HRX),
+                    int(l2[i][1] * H3_2 + HRY))
+                for i in xrange(n)]
 
     def collide_top(self, game):
         """
