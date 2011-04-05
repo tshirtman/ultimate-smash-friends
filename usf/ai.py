@@ -28,7 +28,7 @@ from threading import Thread
 #controls = controls.Controls()
 
 TIMESTEP = 0.25
-MAXDEPTH = 1
+MAXDEPTH = 2
 
 @memoize
 def possible_movements(movement='static'):
@@ -99,11 +99,6 @@ def search_path(game, iam, max_depth):
             b = game.backup() #no, this can't be factorized by moving it 3 line^
             simulate(game, iam, movement, reverse, walk)
             score, movements = search_path(game, iam, max_depth-1)
-            #print '    ' * (MAXDEPTH - max_depth) + '\t'.join((
-            #        movement,
-            #        walk and 'walking' or 'static',
-            #        reverse and 'reversed' or 'straight',
-            #        str(score)))
             game.restore(b)
             if not result[0] or score < result[0]:
                 result = score, (movements + [Movement(gametime,

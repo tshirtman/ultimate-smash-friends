@@ -454,6 +454,16 @@ class Level(object):
         for block in self.moving_blocs:
             block.update(time)
 
+    def collide_r(self, r):
+        if r.collidelist(self.map) != -1:
+            return True
+
+        else:
+            for i in self.vector_blocs + self.moving_blocs:
+                if r.collidelist(i.collide_rects) != -1:
+                    return True
+            return False
+
     def collide_rect(self, (x,y), (h,w)=(1,1)):
         """
         This fonction returns True if the rect at coords (x,y) collides one of

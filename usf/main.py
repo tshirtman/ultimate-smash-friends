@@ -294,8 +294,9 @@ class Main(object):
     def manage_game(self):
         self.state = self.game.update()
         for i, p in enumerate(self.game.players):
-            if p.ai:
+            if p.ai and p.present:
                 self.ai.update(self.game, i)
+
         if self.state in ('game', 'victory'):
             self.game.draw(
                 debug_params={

@@ -32,12 +32,15 @@ import logging
 
 import pygame
 
-
 OS = platform.system().lower()
 
 @memoize
+def _splitconf(c):
+    return [value.strip().strip('\'\"') for value in c.split(',')]
+
+@memoize
 def _get_value_from_config(c):
-    values = [value.strip().strip('\'\"') for value in c.split(',')]
+    values = _splitconf(c)
     for item in values:
         try:
             # try to convert it into an integer instead
