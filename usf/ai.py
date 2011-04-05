@@ -28,7 +28,7 @@ from threading import Thread
 #controls = controls.Controls()
 
 TIMESTEP = 0.25
-MAXDEPTH = 2
+MAXDEPTH = 3
 
 @memoize
 def possible_movements(movement='static'):
@@ -52,15 +52,15 @@ def possible_movements(movement='static'):
 
     return tuple(result)
 
-def simulate(game, iam, movement=None, reverse=False, walk=False):
+def simulate(game, iam, m):
     """ change the player movement to movement, and jump TIMESTEP in the future.
     if movement is none, just jump TIMESTEP in the future.
     """
     entity = game.players[iam]
-    entity.set_reversed(reverse)
-    entity.set_walking_vector([walk and conf.general['WALKSPEED'] or 0, None])
+    entity.set_reversed(m.reverse)
+    entity.set_walking_vector([m.walk and conf.general['WALKSPEED'] or 0, None])
     entity.entity_skin.change_animation(
-            movement,
+            m.movement,
             game,
             {'entity': entity})
     game.update(deltatime=TIMESTEP)
@@ -91,21 +91,29 @@ def search_path(game, iam, max_depth):
         return heuristic(game, iam), [Movement(game.gametime,None, False,
             False),]
 
-    result = (None, [])
     gametime = game.gametime
+    scores = []
     for movement in possible_movements(movement=game.players[iam].entity_skin.current_animation):
         for walk, reverse in (
                 (True, True), (True, False), (False, True), (False, False)):
+            M = Movement(movement, gametime, reverse, walk)
             b = game.backup() #no, this can't be factorized by moving it 3 line^
-            simulate(game, iam, movement, reverse, walk)
-            score, movements = search_path(game, iam, max_depth-1)
+            simulate(game, iam, M)
+            scores.append((heuristic(game, iam), M, game.backup()))
             game.restore(b)
-            if not result[0] or score < result[0]:
-                result = score, (movements + [Movement(gametime,
-                    movement, reverse, walk),])
+
+    scores.sort()
+
+    b = game.backup()
+    result = []
+    for p in scores[:2]:
+        game.restore(p[2])
+        result.append((p[1],) + search_path(game,iam, max_depth - 1))
 
     #print "max_depth", max_depth, "best result", result
-    return result
+    game.restore(b)
+    print min(result)
+    return min(result)
 
 class Movement(object):
     def __init__(self, time, movement, reverse, walk):
@@ -139,13 +147,13 @@ class AI(object):
             self.sequences_ai[iam] = s[1]
         else:
             if game.gametime >= self.sequences_ai[iam][-1].time:
-                movement = self.sequences_ai[iam].pop()
+                m= self.sequences_ai[iam].pop()
                 entity.entity_skin.change_animation(
-                        movement.movement,
+                        m.movement,
                         game,
                         {'entity': entity})
-                entity.set_reversed(movement.reverse)
-                entity.set_walking_vector([movement.walk and
+                entity.set_reversed(m.reverse)
+                entity.set_walking_vector([m.walk and
                     conf.general['WALKSPEED'] or 0, entity.walking_vector[1]])
 
 
