@@ -95,9 +95,12 @@ def search_path(game, iam, max_depth):
     scores = []
     for movement in possible_movements(movement=game.players[iam].entity_skin.current_animation):
         for walk, reverse in (
-                (True, True), (True, False), (False, True), (False, False)):
-            M = Movement(movement, gametime, reverse, walk)
-            b = game.backup() #no, this can't be factorized by moving it 3 line^
+                (True, True),
+                (True, False),
+                (False, True),
+                (False, False)):
+            M = Movement(gametime, movement, reverse, walk)
+            b = game.backup() #no, this can't be factorized by moving it upper
             simulate(game, iam, M)
             scores.append((heuristic(game, iam), M, game.backup()))
             game.restore(b)
@@ -108,12 +111,14 @@ def search_path(game, iam, max_depth):
     result = []
     for p in scores[:2]:
         game.restore(p[2])
-        result.append((p[1],) + search_path(game,iam, max_depth - 1))
+        score, movements = search_path(game, iam, max_depth - 1)
+        print score, movements
+        result.append((p[0] + score, [p[1],] + movements))
 
     #print "max_depth", max_depth, "best result", result
     game.restore(b)
     print min(result)
-    return min(result)
+    return min((0, []), result)
 
 class Movement(object):
     def __init__(self, time, movement, reverse, walk):
@@ -140,14 +145,18 @@ class AI(object):
         closed_positions = set()
         max_depth = MAXDEPTH # plan depth
 
-        #print self.sequences_ai[iam]
+        print game.gametime
+        print 'before', '; '.join(map(str, self.sequences_ai[iam]))
         if not self.sequences_ai[iam]:
             s = search_path(game, iam, max_depth)
-            #print "sequences updated", s[0], ' '.join(map(str, s[1]))
+            print s
+            print "sequences updated", s[0], ' '.join(map(str, s[1]))
             self.sequences_ai[iam] = s[1]
         else:
-            if game.gametime >= self.sequences_ai[iam][-1].time:
-                m= self.sequences_ai[iam].pop()
+            print "ho", self.sequences_ai[iam][0].time
+            if game.gametime >= self.sequences_ai[iam][0].time:
+                print "hey!"
+                m = self.sequences_ai[iam].pop(0)
                 entity.entity_skin.change_animation(
                         m.movement,
                         game,
