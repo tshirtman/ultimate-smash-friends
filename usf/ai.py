@@ -84,16 +84,15 @@ def heuristic(game, iam):
             + player.percents
             + sum((p.lives for p in others)) * 100
             - sum((p.percents for p in others))
+            - player.upgraded * 100
+            - player.invincible * 100
             )
 
 def search_path(game, iam, max_depth):
-    if max_depth == 0:
-        return heuristic(game, iam), [Movement(game.gametime,None, False,
-            False),]
-
     gametime = game.gametime
     scores = []
-    for movement in possible_movements(movement=game.players[iam].entity_skin.current_animation):
+    for movement in possible_movements(
+            game.players[iam].entity_skin.current_animation):
         for walk, reverse in (
                 (True, True),
                 (True, False),
@@ -108,17 +107,21 @@ def search_path(game, iam, max_depth):
     scores.sort()
 
     b = game.backup()
-    result = []
-    for p in scores[:2]:
-        game.restore(p[2])
-        score, movements = search_path(game, iam, max_depth - 1)
-        print score, movements
-        result.append((p[0] + score, [p[1],] + movements))
+    if max_depth == 0:
+        result = [(x[0],[x[1],]) for x in scores[:2]]
+    else:
+        result = []
+        for p in scores[:2]:
+            game.restore(p[2])
+            score, movements = search_path(game, iam, max_depth - 1)
+            try:
+                result.append((p[0] + score, [p[1],] + movements))
+            except TypeError, e:
+                import pdb; pdb.set_trace()
 
     #print "max_depth", max_depth, "best result", result
     game.restore(b)
-    print min(result)
-    return min((0, []), result)
+    return min([(0, []),]+ result)
 
 class Movement(object):
     def __init__(self, time, movement, reverse, walk):
@@ -137,6 +140,12 @@ class AI(object):
         self.sequences_ai = dict()
 
     def update(self, game, iam):
+        """
+        iam represent the index of the player being controlled in the
+        game.players list, this method will either create a list of future
+        actions to do, or use actions that where planned before if there are
+        some left to do.
+        """
         #print "game: ",game
         if iam not in self.sequences_ai:
             self.sequences_ai[iam] = list()
@@ -145,17 +154,11 @@ class AI(object):
         closed_positions = set()
         max_depth = MAXDEPTH # plan depth
 
-        print game.gametime
-        print 'before', '; '.join(map(str, self.sequences_ai[iam]))
         if not self.sequences_ai[iam]:
             s = search_path(game, iam, max_depth)
-            print s
-            print "sequences updated", s[0], ' '.join(map(str, s[1]))
             self.sequences_ai[iam] = s[1]
         else:
-            print "ho", self.sequences_ai[iam][0].time
             if game.gametime >= self.sequences_ai[iam][0].time:
-                print "hey!"
                 m = self.sequences_ai[iam].pop(0)
                 entity.entity_skin.change_animation(
                         m.movement,
@@ -204,5 +207,4 @@ class AiThreadRunner(object):
             print "waiting for thread to stop"
             self.thread.join()
             print "ai stopped"
-
 
