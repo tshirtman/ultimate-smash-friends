@@ -146,10 +146,7 @@ class AI(object):
         actions to do, or use actions that where planned before if there are
         some left to do.
         """
-        if self.last_update < game.gametime - .20:
-            self.last_update = game.gametime
-        else:
-            return
+        self.last_update = game.gametime
         #print "game: ",game
         if iam not in self.sequences_ai:
             self.sequences_ai[iam] = list()
