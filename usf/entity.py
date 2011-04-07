@@ -432,12 +432,12 @@ class Entity (object):
         when entity moved or animation frame changed.
 
         """
-        hardshape = self.hardshape
+        h = self.hardshape
         self._rect = [
-                self.place[0] - hardshape[2]/2 - hardshape[0],
-                self.place[1] - hardshape[1],
-                hardshape[2],
-                hardshape[3]]
+                self._place[0] - h[2]/2 - h[0],
+                self._place[1] - h[1],
+                h[2],
+                h[3]]
 
     def move(self,(x,y)):
         """
@@ -445,9 +445,9 @@ class Entity (object):
         positively on x mean going left).
 
         """
-        if self.reversed:
+        if self._reversed:
             x = -x
-        self.set_place([self.place[0] + x, int(self.place[1] + y)])
+        self.set_place((self._place[0]+ x, self._place[1] + y))
 
         self.update_rect()
 

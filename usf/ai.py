@@ -28,7 +28,7 @@ from threading import Thread
 #controls = controls.Controls()
 
 TIMESTEP = 0.25
-MAXDEPTH = 3
+MAXDEPTH = 2
 
 @memoize
 def possible_movements(movement='static'):
@@ -79,13 +79,14 @@ def heuristic(game, iam):
     others = (p for p in game.players if p is not player)
 
     return (
-            max(200, min((player.dist(p) for p in others)))
-            - player.lives * 100
-            + player.percents
-            + sum((p.lives for p in others)) * 100
-            - sum((p.percents for p in others))
-            - player.upgraded * 100
-            - player.invincible * 100
+            max(200, min((player.dist(p) for p in others))) # search company
+            - player.lives * 100 # avoid dying, ain't no fun kid.
+            + player.percents # avoid being hurt
+            + sum((p.lives for p in others)) * 100 # kill people!
+            - sum((p.percents for p in others)) # hurt people, it's good
+            - player.upgraded * 100 # being upgraded is cool
+            - player.invincible * 100 # being invincible is good
+            - player.onGround * 50 # more conservative about jumping
             )
 
 def search_path(game, iam, max_depth):
@@ -105,6 +106,7 @@ def search_path(game, iam, max_depth):
             game.restore(b)
 
     scores.sort()
+    #print len(scores), [x[0] for x in scores]
 
     b = game.backup()
     if max_depth == 0:
@@ -114,10 +116,7 @@ def search_path(game, iam, max_depth):
         for p in scores[:2]:
             game.restore(p[2])
             score, movements = search_path(game, iam, max_depth - 1)
-            try:
-                result.append((p[0] + score, [p[1],] + movements))
-            except TypeError, e:
-                import pdb; pdb.set_trace()
+            result.append((p[0] + score, [p[1],] + movements))
 
     #print "max_depth", max_depth, "best result", result
     game.restore(b)
@@ -138,6 +137,7 @@ class AI(object):
     def __init__(self):
         self.status = 'searching'
         self.sequences_ai = dict()
+        self.last_update = None
 
     def update(self, game, iam):
         """
@@ -146,6 +146,10 @@ class AI(object):
         actions to do, or use actions that where planned before if there are
         some left to do.
         """
+        if self.last_update < game.gametime - .20:
+            self.last_update = game.gametime
+        else:
+            return
         #print "game: ",game
         if iam not in self.sequences_ai:
             self.sequences_ai[iam] = list()
@@ -154,57 +158,18 @@ class AI(object):
         closed_positions = set()
         max_depth = MAXDEPTH # plan depth
 
-        if not self.sequences_ai[iam]:
-            s = search_path(game, iam, max_depth)
-            self.sequences_ai[iam] = s[1]
-        else:
-            if game.gametime >= self.sequences_ai[iam][0].time:
-                m = self.sequences_ai[iam].pop(0)
-                entity.entity_skin.change_animation(
-                        m.movement,
-                        game,
-                        {'entity': entity})
-                entity.set_reversed(m.reverse)
-                entity.set_walking_vector([m.walk and
-                    conf.general['WALKSPEED'] or 0, entity.walking_vector[1]])
+        s = search_path(game, iam, max_depth)
+        if not s[1]:
+            return
 
-
-class AiThreadRunner(object):
-    """
-    This class will update the players AI when possible, in a thread-safe way
-    """
-    def __init__(self, game):
-        """
-        AI object must be given as a parameter
-        """
-        self.AI = AI(game)
-        self.ended = True
-        self.thread = None
-
-    def update(self, game):
-        while not self.ended:
-            pygame.time.wait(50)
-            for i,j in enumerate(game.players):
-                if j.ai and j.present:
-                    self.AI.update(game, i)
-
-    def start_AI(self, game):
-        """
-        """
-        if self.ended:
-            self.ended = False
-            self.thread = Thread(target = self.update, args=(game,))
-            self.thread.start()
-            print "AI started"
-        else:
-            logging.warning('AI aleady already running!')
-
-    def stop_AI(self):
-        """
-        """
-        if self.ended == False:
-            self.ended = True
-            print "waiting for thread to stop"
-            self.thread.join()
-            print "ai stopped"
+        self.sequences_ai[iam] = s[1]
+        if game.gametime >= self.sequences_ai[iam][0].time:
+            m = self.sequences_ai[iam].pop(0)
+            entity.entity_skin.change_animation(
+                    m.movement,
+                    game,
+                    {'entity': entity})
+            entity.set_reversed(m.reverse)
+            entity.set_walking_vector([m.walk and
+                conf.general['WALKSPEED'] or 0, entity.walking_vector[1]])
 

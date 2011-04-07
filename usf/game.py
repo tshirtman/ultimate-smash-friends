@@ -38,7 +38,6 @@ import entity
 import timed_event
 import loaders
 
-from ai import AiThreadRunner
 from level import Level
 from event_manager import EventManager
 from controls import Controls

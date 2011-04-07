@@ -39,7 +39,7 @@ from controls import Controls
 import loaders
 import music
 from font import fonts
-from ai import AiThreadRunner, AI
+from ai import AI
 
 try:
     config = Config()
