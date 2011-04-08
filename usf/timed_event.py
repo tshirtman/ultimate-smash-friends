@@ -117,9 +117,8 @@ class HealEvent(TimedEvent):
 
     """
     def execute(self, dt):
-        self.params['player'].percents -= dt*2 # at this rate it should take 5
-                                               # seconds to go from 100% to 0%
-        self.params['player'].percents = max(self.params['player'].percents, 0)
+        self.params['player'].add_percents(-dt*2)
+        # at this rate it should take 5 seconds to go from 100% to 0%
 
     def condition(self):
         return self.params['player'].percents > 0
@@ -430,7 +429,7 @@ class DropPlayer(TimedEvent):
         #logging.debug("inserting player in game")
         self.params['entity'].set_vector([0, 0])
         self.params['entity'].set_walking_vector([0, 0])
-        self.params['entity'].percents = 0
+        self.params['entity'].set_percents(0)
         self.params['entity'].set_upgraded(False)
 
         self.params['entity'].set_place(random.choice(

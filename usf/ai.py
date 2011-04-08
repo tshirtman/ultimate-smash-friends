@@ -29,12 +29,14 @@ from threading import Thread
 
 TIMESTEP = 0.25
 MAXDEPTH = 2
+walkspeed = conf.general['WALKSPEED']
+sequences_file = path.join(conf.sys_data_dir, 'sequences.cfg')
 
 @memoize
 def possible_movements(movement='static'):
     """ return the list of current legal movements for the player
     """
-    with open(path.join(conf.sys_data_dir, 'sequences.cfg')) as f:
+    with open(sequences_file) as f:
         lines = f.readlines()
 
     result = set()
@@ -58,7 +60,7 @@ def simulate(game, iam, m):
     """
     entity = game.players[iam]
     entity.set_reversed(m.reverse)
-    entity.set_walking_vector([m.walk and conf.general['WALKSPEED'] or 0, None])
+    entity.set_walking_vector([m.walk and walkspeed or 0, None])
     entity.entity_skin.change_animation(
             m.movement,
             game,
@@ -168,5 +170,5 @@ class AI(object):
                     {'entity': entity})
             entity.set_reversed(m.reverse)
             entity.set_walking_vector([m.walk and
-                conf.general['WALKSPEED'] or 0, entity.walking_vector[1]])
+                walkspeed or 0, entity.walking_vector[1]])
 

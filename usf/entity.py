@@ -172,6 +172,17 @@ class Entity (object):
         self._place = value
 
     @property
+    def percents(self):
+        return self._percents
+
+    def set_percents(self, value):
+        self._percents = value
+
+    def add_percents(self, value):
+        self._percents += value
+        self._percents = max(self.percents, 0)
+
+    @property
     def rect(self):
         return pygame.Rect(self._rect)
 
@@ -370,7 +381,7 @@ class Entity (object):
                                 )/config.general['SHIELD_SOLIDITY']
             self.shield['power'] = max(0, self.shield['power'])
             if (self.shield['date'] < self.game.gametime() - config.general['POWER_SHIELD_TIME']):
-                self.percents += math.sqrt(point[1][0] ** 2 + point[1][1]**2)\
+                self._percents += math.sqrt(point[1][0] ** 2 + point[1][1]**2)\
                         / (30 * (100 - self.armor)) / 2
 
         else:
