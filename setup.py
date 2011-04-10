@@ -46,7 +46,7 @@ def isSystemDLL(pathname):
 
 
 NAME = 'ultimate-smash-friends'
-VERSION = '0.1.3'
+VERSION = '0.1.4'
 DESCRIPTION = ('A 2d arcade fight game, based on the gameplay of super '
                 'smash bros, from nintendo.')
 AUTHOR = 'Gabriel Pettier'
