@@ -110,4 +110,4 @@ setup(name=NAME, version=VERSION, description=DESCRIPTION,
       author=AUTHOR, author_email=AUTHOR_EMAIL, 
       maintainer=MAINTAINER, maintainer_email=MAINTAINER_EMAIL, url=URL,
       classsifiers=CLASSIFIERS, packages=PACKAGES, scripts=SCRIPTS, 
-      requires=REQUIRES, data_files=DATA, windows=WINDOWS, app=APP)
+      requires=REQUIRES, data_files=DATA+CONFIG, windows=WINDOWS, app=APP)
