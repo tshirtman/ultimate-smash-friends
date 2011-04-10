@@ -239,8 +239,8 @@ class Level(object):
         self.load_layers(xml)
         self.load_blocs(xml)
         self.load_moving_blocs(xml, server, levelname)
-        self.load_water_blocs(xml)
-        self.load_vector_blocs(xml)
+        self.load_water_blocs(xml, server)
+        self.load_vector_blocs(xml, server)
 
     def getXML(self, levelname):
         return ElementTree.ElementTree(
@@ -350,14 +350,14 @@ class Level(object):
                         )
                     )
 
-    def load_water_blocs(self, xml):
+    def load_water_blocs(self, xml, server=False):
         self.water_blocs = []
         for block in xml.findall('water'):
             nums = block.attrib['coords'].split(' ')
             nums = [int(i) for i in nums]
             self.water_blocs.append(pygame.Rect(nums))
 
-    def load_vector_blocs(self, xml):
+    def load_vector_blocs(self, xml, server=False):
         self.vector_blocs = []
         for block in xml.findall('vector-block'):
             texture = block.attrib['texture']

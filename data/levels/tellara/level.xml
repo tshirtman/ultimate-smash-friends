@@ -3,7 +3,7 @@
     name="tellara"
     background="tellara-background.png"
     foreground=""
-    middle="tellara-foreground.png"
+    middle="tellara-front.png"
     margins="750,750,750,750"
     >
     <entry-point
