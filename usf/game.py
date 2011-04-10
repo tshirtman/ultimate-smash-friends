@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # set encoding: utf-8
 ################################################################################
 # copyright 2008 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
@@ -119,6 +118,8 @@ class Game (object):
 
         # a countdown to the game end
         self.ending = 5.0
+
+        self.max_fps = config.general['MAX_FPS']
 
     def add_world_event(self):
         self.events.add_event(
@@ -620,7 +621,19 @@ class Game (object):
         self.restore_players(backup['players'])
         self.restore_skins(backup['skins'])
 
-    def update(self, debug_params={}, deltatime=0):
+    def update_clock(self, was_paused):
+        if was_paused:
+            deltatime = 0
+        else:
+            deltatime = time.time() - self.last_clock
+            while deltatime < 1.0/self.max_fps:
+                deltatime = time.time() - self.last_clock
+            self.gametime += deltatime
+
+        self.last_clock = time.time()
+        return deltatime
+
+    def update(self, deltatime):
         """
         sync everything to current time. Return "game" if we are still in game
         mode, return "menu" otherwise.
@@ -628,19 +641,6 @@ class Game (object):
         """
         # calculate elapsed time if we are not in simulation
         # frame limiter
-
-        while deltatime < 1.0/config.general['MAX_FPS']:
-            deltatime = time.time() - self.last_clock
-
-        if deltatime < 0.5:
-            # #FIXME this is a workaround the bug allowing game to evolve
-            # while being "paused" but only works for pause > 1 second
-            self.gametime += deltatime
-
-        else:
-            deltatime = 0
-
-        self.last_clock = time.time()
 
         self.events.update(deltatime, self.gametime)
         self.level.update(self.gametime)

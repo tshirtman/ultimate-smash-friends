@@ -28,7 +28,8 @@ from threading import Thread
 #controls = controls.Controls()
 
 TIMESTEP = 0.25
-MAXDEPTH = 2
+MAXDEPTH = 1
+
 walkspeed = conf.general['WALKSPEED']
 sequences_file = path.join(conf.sys_data_dir, 'sequences.cfg')
 
@@ -54,6 +55,14 @@ def possible_movements(movement='static'):
 
     return tuple(result)
 
+@memoize
+def displacement_movement(s):
+    return s in ('walk','jump','scnd-jump','smash-up-jumping','roll')
+
+@memoize
+def fight_movement(s):
+    return not displacement_movement(s)
+
 def simulate(game, iam, m):
     """ change the player movement to movement, and jump TIMESTEP in the future.
     if movement is none, just jump TIMESTEP in the future.
@@ -67,7 +76,7 @@ def simulate(game, iam, m):
             {'entity': entity})
     game.update(deltatime=TIMESTEP)
 
-def heuristic(game, iam):
+def heuristic_distance(game, iam):
     """ return a score for the current state of the game, allow to chose a set
     of movement to do.
 
@@ -80,22 +89,45 @@ def heuristic(game, iam):
     player = game.players[iam]
     others = (p for p in game.players if p is not player)
 
-    return (
-            max(200, min((player.dist(p) for p in others))) # search company
-            - player.lives * 100 # avoid dying, ain't no fun kid.
-            + player.percents # avoid being hurt
-            + sum((p.lives for p in others)) * 100 # kill people!
-            - sum((p.percents for p in others)) # hurt people, it's good
-            - player.upgraded * 100 # being upgraded is cool
-            - player.invincible * 100 # being invincible is good
-            - player.onGround * 50 # more conservative about jumping
-            )
+    return (0
+        + (1500 if not player.rect.colliderect(game.level.rect) else 0)
+        - player.invincible * 100               # being invincible is good
+        - player.lives * 100                    # avoid dying, ain't no fun kid
+        - player.onGround * 50                  # more conservative about jumps
+        - player.upgraded * 100                 # being upgraded is cool
+        + min((player.dist(p) for p in others))
+        )
+
+def heuristic_fight(game, iam):
+    player = game.players[iam]
+    others = (p for p in game.players if p is not player)
+
+    return (0
+        + (500 if not player.rect.colliderect(game.level.rect) else 0)
+        + player.percents                       # avoid being hurt
+        + sum((p.lives for p in others)) * 100  # kill people!
+        - player.invincible * 100               # being invincible is good
+        - player.onGround * 50                  # more conservative about jumps
+        - player.upgraded * 100                 # being upgraded is cool
+        - sum((p.percents for p in others))     # hurt people, it's good
+        )
 
 def search_path(game, iam, max_depth):
     gametime = game.gametime
     scores = []
-    for movement in possible_movements(
-            game.players[iam].entity_skin.current_animation):
+    if heuristic_distance(game, iam) > 100:
+        f = displacement_movement
+        h = heuristic_distance
+    else:
+        f = fight_movement
+        h = heuristic_fight
+
+    movements = filter(f, possible_movements(
+        game.players[iam].entity_skin.current_animation))
+    if not movements:
+        return (0, [])
+
+    for movement in movements:
         for walk, reverse in (
                 (True, True),
                 (True, False),
@@ -104,7 +136,7 @@ def search_path(game, iam, max_depth):
             M = Movement(gametime, movement, reverse, walk)
             b = game.backup() #no, this can't be factorized by moving it upper
             simulate(game, iam, M)
-            scores.append((heuristic(game, iam), M, game.backup()))
+            scores.append((h(game, iam), M, game.backup()))
             game.restore(b)
 
     scores.sort()
@@ -122,7 +154,7 @@ def search_path(game, iam, max_depth):
 
     #print "max_depth", max_depth, "best result", result
     game.restore(b)
-    return min([(0, []),]+ result)
+    return min(result)
 
 class Movement(object):
     def __init__(self, time, movement, reverse, walk):

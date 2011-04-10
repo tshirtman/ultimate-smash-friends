@@ -52,9 +52,6 @@ class Block (object):
         """
         pass
 
-    def __str__(self):
-        return ' '.join(str(self.rects),)
-
     def draw(self, surface, coords=(0,0), zoom=1):
         """
         Draw this moving bloc on the passed surface, taking account of zoom and
@@ -417,6 +414,16 @@ class Level(object):
                     )
 
     def draw_debug_map(self, surface, level_place, zoom):
+        draw_rect(
+                surface,
+                pygame.Rect(
+                level_place[0],
+                level_place[1],
+                self.rect[2]*zoom,
+                self.rect[3]*zoom
+                ),
+                pygame.Color('lightblue')
+                )
         for rect in self.map:
             draw_rect(
                     surface,

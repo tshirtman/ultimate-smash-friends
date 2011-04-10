@@ -637,7 +637,7 @@ class Entity (object):
                 self._onGround = True
                 self._vector[0] /= 2
                 while self.collide_top(game):
-                    self.move((0, -2))
+                    self.move((0, -4))
 
             elif self.collide_bottom(game):
                 if self.vector[1] < 0:

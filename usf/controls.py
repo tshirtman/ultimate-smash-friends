@@ -281,6 +281,8 @@ class Controls (object):
         if key in self.keys :
             the_key = self.keys[key]
 
+            if the_key == "VALIDATE":
+                return
             numplayer = int(self.keys[key].split('_')[0][-1]) - 1
 
             if numplayer >= len(game_instance.players):

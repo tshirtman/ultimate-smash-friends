@@ -291,30 +291,18 @@ class Main(object):
         if pygame.time.get_ticks() < max_fps + start_loop:
             pygame.time.wait(max_fps + start_loop - pygame.time.get_ticks())
 
-    def manage_game(self):
-        self.state = self.game.update()
+    def manage_ai(self):
         if self.ai and self.ai.last_update < self.game.gametime - .20:
             for i, p in enumerate(self.game.players):
                 if p.ai and p.present:
                     self.ai.update(self.game, i)
 
-        if self.state in ('game', 'victory'):
-            self.game.draw(
-                debug_params={
-                    'controls': config.debug['CONTROLS'] and self.controls,
-                    'action': config.debug['ACTIONS'],
-                    'hardshape': config.debug['HARDSHAPES'],
-                    'footrect': config.debug['FOOTRECT'],
-                    'current_animation':
-                    config.debug['CURRENT_ANIMATION'],
-                    'levelshape': config.debug['LEVELSHAPES'],
-                    'levelmap': config.debug['LEVELMAP'],
-                    }
-                )
-            self.menu.load = False
-        else:
-            self.menu.screen_current = "main_screen"
-        self.state = self.game.update()
+
+    def manage_game(self, was_paused):
+        d = self.game.update_clock(was_paused)
+        self.state = self.game.update(d)
+        self.manage_ai()
+
         if self.state in ('game', 'victory'):
             self.game.draw(
                 debug_params={
@@ -330,6 +318,7 @@ class Main(object):
             self.menu.load = False
         else:
             self.menu.screen_current = "main_screen"
+
         self.music_state = self.state
 
     def display_fps(self):
@@ -355,12 +344,13 @@ class Main(object):
             self.clock.tick()
 
             # poll controls and update informations on current state of the UI
+            state_was = self.state
             if self.state != "menu":
                 self.state = self.controls.poll(self.game, self.menu, self.state)
             if self.state == "menu":
                 self.manage_menu()
             else:
-                self.manage_game()
+                self.manage_game(state_was == "menu")
 
             self.display_fps()
             pygame.display.update()
