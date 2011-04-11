@@ -42,11 +42,11 @@ except:
         )
     inotifyx = False
 
-sys.path.append(os.path.join(usf_root,'usf'))
+sys.path.append(usf_root)
 
-from entity_skin import Entity_skin
-from loaders import image
-from config import Config
+from usf.entity_skin import Entity_skin
+from usf.loaders import image
+from usf.config import Config
 config = Config()
 
 def create_character_xml(path):
