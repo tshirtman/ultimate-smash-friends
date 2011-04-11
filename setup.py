@@ -72,12 +72,12 @@ DOC[-1][-1].append('CREDITS.txt')
 DOC[-1][-1].append('README.txt')
 DOC[-1][-1].append('README.fr.txt')
 CONFIG = [(sep + join('etc', 'ultimate-smash-friends'), ['system.cfg'])]
-ICON = [(join('share', 'applications'), 
+ICON = [(join('share', 'applications'),
               ['ultimate-smash-friends.desktop'])]
 ICON_FILE = 'data/icon/icon.ico'
 SCRIPTS = ['ultimate-smash-friends',
-           'viewer.pyw', 'utils/togimpmap.py', 
-           'utils/tolevel.py', 
+           'viewer.pyw', 'utils/togimpmap.py',
+           'utils/tolevel.py',
            'utils/xml_text_extractor.py'
           ]
 PACKAGES = ['usf', 'usf.widgets', 'usf.screen', 'usf.subpixel']
