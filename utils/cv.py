@@ -203,7 +203,7 @@ def main(charnames):
             vector="%s,%s"
             ></agressiv-point>
             """ % (
-                mouse_xy[0] - image_position[0],
+                (mouse_xy[0] - image_position[0]) % 200,
                 mouse_xy[1] - image_position[1],
                 2 * (pygame.mouse.get_pos()[0] - mouse_xy[0]),
                 2 * (pygame.mouse.get_pos()[1] - mouse_xy[1])
@@ -265,19 +265,28 @@ def main(charnames):
             # update screen
             if animation in skin.animations:
                 if not pause:
-                    img = filter(
-                                lambda f : f.time <= (
-                                    (time.time()*1000.0*speed) %
-                                    skin.animations[animation].duration
-                                    ),
-                                skin.animations[animation].frames
-                                )[-1]
-                    if "walk" in animation:
-                        bottom_center_hardshape[0] = int(
-                            time.time() * config.general['WALKSPEED']
-                            ) % window_size[0]
-                    else:
-                        bottom_center_hardshape[0] = window_size[0]/(len(charnames) * 2)
+                    try:
+                        img = filter(
+                                    lambda f : f.time <= (
+                                        (time.time()*1000.0*speed) %
+                                        skin.animations[animation].duration
+                                        ),
+                                    skin.animations[animation].frames
+                                    )[-1]
+                    except ZeroDivisionError:
+                        print "error: duration of 0 in", charnames[i], "in animation", animation
+                        continue
+
+                    bottom_center_hardshape[0] = (window_size[0]/(len(charnames)
+                            * 2)) + (int(time.time() * config.general['WALKSPEED']) % 200 if
+                                    "walk" in animation else 0)
+
+                    #if "walk" in animation:
+                        #bottom_center_hardshape[0] = int(
+                            #time.time() * config.general['WALKSPEED']
+                            #) % window_size[0]
+                    #else:
+                        #bottom_center_hardshape[0] = window_size[0]/(len(charnames) * 2)
                 else:
                     frame %= len(skin.animations[animation].frames)
                     img = skin.animations[animation].frames[frame]
