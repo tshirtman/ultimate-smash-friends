@@ -30,7 +30,27 @@ import time
 import logging
 import re
 
-usf_root='../'
+usf_root = '../'
+
+animations = (
+'static',          'static_upgraded',
+'walk',            'walk_upgraded',
+'jump',            'jump_upgraded',
+'scnd-jump',       'scnd-jump_upgraded',
+'pick',            'pick_upgraded',
+'roll',            'roll_upgraded',
+'take',            'take_upgraded',
+'hit',             'hit_upgraded',
+'kick',            'kick-jumping_upgraded',
+'kick-jumping',    'kick_upgraded',
+'smash-straight',  'smash-straight_upgraded',
+'smash-up',        'smash-up-jumping_upgraded',
+'smash-up-jumping','smash-up_upgraded',
+'smash-down',      'smash-down_upgraded',
+'special',         'special_upgraded',
+'special2',        'special2_upgraded',
+'specialhit',      'specialhit_upgraded',
+)
 
 try:
     import inotifyx
@@ -48,6 +68,14 @@ from usf.entity_skin import Entity_skin
 from usf.loaders import image
 from usf.config import Config
 config = Config()
+
+class Placeholder(object):
+    def __init__(self):
+        self.hardshape=(0,0,40,60)
+        self.image = 'no_animation.png'
+        self.time = 0
+        self.agressivpoints = []
+        self.vectors = []
 
 def create_character_xml(path):
     """ create a stub xml character """
@@ -115,25 +143,32 @@ shield_center="20 40"
 </character>
 ''')
     f.close()
+def load_entities(charnames):
+    wds = list()
+    skins = list()
 
-def main(charname):
+    for charname in charnames:
+        path = os.path.join(usf_root, 'data', 'characters', charname)
+        if os.path.exists(path):
+            if not os.path.exists(
+                os.path.join(path,path.split(os.path.sep)[-1])+".xml"
+                ):
+                create_character_xml(path)
+        else:
+            logging.error("no directory of this name in characters.")
+
+        skins.append(Entity_skin(path))
+        if inotifyx:
+            wds.append(inotifyx.add_watch(fd, path, inotifyx.IN_MODIFY))
+    return skins, wds
+
+
+def main(charnames):
     pygame.init()
-    window_size = (400, 400)
+    window_size = (200*len(charnames), 400)
     screen = pygame.display.set_mode(window_size)
-    path = os.path.join(
-        usf_root, 'data', 'characters', charname
-        )
-    if os.path.exists(path):
-        if not os.path.exists(
-            os.path.join(path,path.split(os.path.sep)[-1])+".xml"
-            ):
-            create_character_xml(path)
-    else:
-        logging.error("no directory of this name in characters.")
+    skins, wds = load_entities(charnames)
 
-    entity_skin = Entity_skin(path)
-    if inotifyx:
-        wd = inotifyx.add_watch(fd, path, inotifyx.IN_MODIFY)
     anim = 0
     display_hardshape = True
     speed = 1.0
@@ -148,16 +183,17 @@ def main(charname):
     while True:
         # get key events
         pygame.event.pump()
-        if inotifyx and inotifyx.get_events(fd, 0):
-            time.sleep(0.5)
-            for i in range(3):
-                try:
-                    entity_skin = Entity_skin(path)
-                    break
-                except:
-                    pass
-            else:
-                print "doh!"
+        if inotifyx:
+            for i, w in enumerate(wds):
+                if inotifyx.get_events(fd, 0):
+                    for i in range(3):
+                        try:
+                            skins = load_entities(charnames)[0]
+                            break
+                        except:
+                            time.sleep(0.5)
+                    else:
+                        print "doh!"
 
         if mouse_click and not pygame.mouse.get_pressed()[0]:
             print "click released"
@@ -191,13 +227,13 @@ def main(charname):
             mouse_click = True
 
         for event in pygame.event.get(
-            [ KEYDOWN, KEYUP ]
+            [KEYDOWN, KEYUP]
             ):
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     return
                 elif event.key == K_F5:
-                    entity_skin = Entity_skin(path)
+                    entity_skins = load_entities(charnames)[0]
                     print "reloaded"
                 elif event.key == K_s:
                     shield = not shield
@@ -222,127 +258,137 @@ def main(charname):
                 elif event.key == K_MINUS or event.key == K_KP_MINUS:
                     speed /= 2
 
-        animation = (
-            sorted(
-                filter(
-                    lambda x: 'upgraded' not in x,
-                    entity_skin.animations.keys()
-                    )
-                )+sorted(
-                filter(
-                    lambda x: 'upgraded' in x,
-                    entity_skin.animations.keys()
-                    )
-                )
-            )[anim % len(entity_skin.animations.keys())]
         pygame.event.clear( [MOUSEMOTION, MOUSEBUTTONUP, MOUSEBUTTONDOWN] )
-        # update screen
         screen.fill(pygame.Color('green'))
-        try:
-            if not pause:
-                img = filter(
-                            lambda f : f.time <= (
-                                (time.time()*1000.0*speed) %
-                                entity_skin.animations[animation].duration
-                                ),
-                            entity_skin.animations[animation].frames
-                            )[-1]
-                if "walk" in animation:
-                    bottom_center_hardshape[0] = int(
-                        time.time() * config.general['WALKSPEED']
-                        ) % window_size[0]
+        for i, skin in enumerate(skins):
+            animation = animations[anim % len(animations)]
+            # update screen
+            if animation in skin.animations:
+                if not pause:
+                    img = filter(
+                                lambda f : f.time <= (
+                                    (time.time()*1000.0*speed) %
+                                    skin.animations[animation].duration
+                                    ),
+                                skin.animations[animation].frames
+                                )[-1]
+                    if "walk" in animation:
+                        bottom_center_hardshape[0] = int(
+                            time.time() * config.general['WALKSPEED']
+                            ) % window_size[0]
+                    else:
+                        bottom_center_hardshape[0] = window_size[0]/(len(charnames) * 2)
                 else:
-                    bottom_center_hardshape[0] = window_size[0]/2
+                    frame %= len(skin.animations[animation].frames)
+                    img = skin.animations[animation].frames[frame]
             else:
-                frame %= len(entity_skin.animations[animation].frames)
-                img = entity_skin.animations[animation].frames[frame]
-        except Exception, e:
-            print e
-        # update the image_position of the up-left corner of image, so that the
-        # bottom-middle of the hardhape never moves (as in the game)
-        image_position = (
-            bottom_center_hardshape[0] - img.hardshape[0] - img.hardshape[2]/2,
-            bottom_center_hardshape[1] - img.hardshape[1] - img.hardshape[3]
-        )
-        if display_hardshape:
-            screen.fill(
-                pygame.Color('grey'),
-                pygame.Rect((
-                    image_position[0],
-                    image_position[1],
-                    image(img.image)[1][2],
-                    image(img.image)[1][3]
-                ))
-                )
-            screen.fill(
-                pygame.Color('blue'),
-                pygame.Rect((
-                    image_position[0]+img.hardshape[0],
-                    image_position[1]+img.hardshape[1],
-                    img.hardshape[2],
-                    img.hardshape[3]
-                ))
-                )
-        screen.blit(image(img.image)[0], image_position)
-        screen.blit(
-            font.render(
-                str(anim)+': '+animation +'   '+ str(img.time),
-                True,
-                pygame.Color('red'),
-                ),
-            (10,10)
-            )
+                img = Placeholder()
 
-        if shield:
-            pygame.draw.circle(
-                screen,
-                pygame.Color('red'),
-                (
-                    image_position[0] + img.hardshape[0] + entity_skin.shield_center[0],
-                    image_position[1] + img.hardshape[1] + entity_skin.shield_center[1]
-                ),
-                10
+            # update the image_position of the up-left corner of image, so that the
+            # bottom-middle of the hardhape never moves (as in the game)
+            image_position = (
+                (bottom_center_hardshape[0] - img.hardshape[0] -
+                img.hardshape[2]/2 + 200 * i) % window_size[0],
+                bottom_center_hardshape[1] - img.hardshape[1] - img.hardshape[3]
             )
-
-            image_shield = image(
-                    os.path.sep.join(('..','data','misc','shield.png')),
-                    zoom=3
+            if display_hardshape:
+                screen.fill(
+                    pygame.Color('grey'),
+                    pygame.Rect((
+                        image_position[0],
+                        image_position[1],
+                        image(img.image)[1][2],
+                        image(img.image)[1][3]
+                    ))
+                    )
+                screen.fill(
+                    pygame.Color('blue'),
+                    pygame.Rect((
+                        image_position[0]+img.hardshape[0],
+                        image_position[1]+img.hardshape[1],
+                        img.hardshape[2],
+                        img.hardshape[3]
+                    ))
                     )
 
+            screen.blit(image(img.image)[0], image_position)
             screen.blit(
-                image_shield[0],
-                (
+                font.render(
+                    charnames[i],
+                    True,
+                    pygame.Color('red'),
+                    ),
+                (10 + 200 * i,10)
+                )
+            screen.blit(
+                font.render(
+                    str(anim)+': '+animation,
+                    True,
+                    pygame.Color('red'),
+                    ),
+                (10 + 200 * i,20)
+                )
+            screen.blit(
+                font.render(
+                    str(img.time),
+                    True,
+                    pygame.Color('red'),
+                    ),
+                (10 + 200 * i,30)
+                )
+
+            if shield:
+                pygame.draw.circle(
+                    screen,
+                    pygame.Color('red'),
+                    (
+                        image_position[0] + img.hardshape[0] +
+                        skin.shield_center[0] - 100 + 200 * i,
+                        image_position[1] + img.hardshape[1] + skin.shield_center[1]
+                    ),
+                    10
+                )
+
+                image_shield = image(
+                        os.path.sep.join(('..','data','misc','shield.png')),
+                        zoom=3
+                        )
+
+                screen.blit(
+                    image_shield[0],
+                    (
                         image_position[0]
-                        + entity_skin.shield_center[0]
+                        + skin.shield_center[0]
                         - .5 * image_shield[1][2]
                         ,
                         image_position[1]
-                        + entity_skin.shield_center[1]
+                        + skin.shield_center[1]
                         - .5 * image_shield[1][3]
-                )
+                        )
+                    )
+
+            for i in img.agressivpoints:
+                pygame.draw.ellipse(
+                    screen,
+                    pygame.Color('red'),
+                    pygame.Rect(
+                        image_position[0]+i[0][0]-1, image_position[1]+i[0][1]-1, 2, 2
+                        )
+                    )
+                pygame.draw.line(
+                    screen,
+                    pygame.Color('red'),
+                        (
+                        image_position[0]+i[0][0],
+                        image_position[1]+i[0][1],
+                        ),
+                        (
+                        image_position[0]+i[0][0]+i[1][0]/2,
+                        image_position[1]+i[0][1]+i[1][1]/2,
+                        ),
+                    1
                 )
 
-        for i in img.agressivpoints:
-            pygame.draw.ellipse(
-                screen,
-                pygame.Color('red'),
-                pygame.Rect(
-                    image_position[0]+i[0][0]-1, image_position[1]+i[0][1]-1, 2, 2
-                    )
-                )
-            pygame.draw.line(
-                screen,
-                pygame.Color('red'),
-                    (
-                    image_position[0]+i[0][0],
-                    image_position[1]+i[0][1],
-                    ),
-                    (
-                    image_position[0]+i[0][0]+i[1][0]/2,
-                    image_position[1]+i[0][1]+i[1][1]/2,
-                    ),
-                1
-            )
         if mouse_click:
             pygame.draw.line(
                 screen,
@@ -353,7 +399,8 @@ def main(charname):
                 )
 
         pygame.display.flip()
-    inotifyx.rm_watch(wd)
+    for wd in wds:
+        inotifyx.rm_watch(wd)
 
 def usage():
     print "usage: cv.py character_name"
@@ -379,7 +426,7 @@ def usage():
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 2 or sys.argv[1] == "help":
+    if len(sys.argv) < 2 or sys.argv[1] == "help":
         usage()
     else:
-        main(sys.argv[1])
+        main(sys.argv[1:])

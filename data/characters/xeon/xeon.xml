@@ -61,7 +61,7 @@
         > </frame>
     </movement>
     <movement name="jump"
-    duration="0"
+    duration="10000"
     repeat="0"
     >
         <event
@@ -100,7 +100,7 @@
         > </frame>
     </movement>
     <movement name="scnd-jump"
-    duration="0"
+    duration="10000"
     repeat="0"
     >
         <event
@@ -446,7 +446,7 @@
         > </frame>
     </movement>
     <movement name="jump_upgraded"
-    duration="0"
+    duration="1000"
     repeat="0"
     >
         <event
@@ -485,7 +485,7 @@
         > </frame>
     </movement>
     <movement name="scnd-jump_upgraded"
-    duration="0"
+    duration="100000"
     repeat="0"
     >
         <event
