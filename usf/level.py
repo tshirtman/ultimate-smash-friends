@@ -440,7 +440,7 @@ class Level(object):
         surface.blit( loaders.image(self.background,
             scale=self.SIZE)[0], coords )
         for layer in self.layers:
-            pygame.display.get_surface().blit(layer.get_image(), layer.get_pos())
+            surface.blit(layer.get_image(), layer.get_pos())
 
     def draw_level(self, surface, coords, zoom, shapes=False):
         surface.blit( loaders.image(self.level, zoom=zoom)[0], coords)
