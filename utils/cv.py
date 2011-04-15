@@ -322,29 +322,16 @@ def main(charnames):
 
             screen.blit(image(img.image)[0], image_position)
             screen.blit(
-                font.render(
-                    charnames[i],
-                    True,
-                    pygame.Color('red'),
-                    ),
-                (10 + 200 * i,10)
-                )
+                font.render( charnames[i], True, pygame.Color('red')),
+                (10 + 200 * i,10))
+
             screen.blit(
-                font.render(
-                    str(anim)+': '+animation,
-                    True,
-                    pygame.Color('red'),
-                    ),
-                (10 + 200 * i,20)
-                )
+                font.render(str(anim)+': '+animation, True, pygame.Color('red')),
+                (10 + 200 * i,20))
+
             screen.blit(
-                font.render(
-                    str(img.time),
-                    True,
-                    pygame.Color('red'),
-                    ),
-                (10 + 200 * i,30)
-                )
+                font.render(str(img.time), True, pygame.Color('red')),
+                (10 + 200 * i,30))
 
             if shield:
                 pygame.draw.circle(
