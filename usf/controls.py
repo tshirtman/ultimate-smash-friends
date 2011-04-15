@@ -38,14 +38,15 @@ config = Config()
 import game
 from ai import AI
 
+
 class Sequence(object):
     """
     Used to bind a character animation to a sequence of key of a player.
     condition allow to restrict the avaiability of the animation to certain
     current animation (the player can only double jump if he is already jumping
     for example)
-
     """
+
     def __init__(self, keys, action, condition=None):
         self.keys = keys
         self.action = action
@@ -62,7 +63,7 @@ class Sequence(object):
             return True
 
     def compare(self, seq, player):
-        current = player.entity_skin.current_animation.replace('_upgraded','')
+        current = player.entity_skin.current_animation.replace('_upgraded', '')
         if (not self.condition or current in self.condition):
             for x in range(len(seq)):
                 if self.local_compare(x, seq):
@@ -74,8 +75,8 @@ class Sequence(object):
         """
         remove self.keys keys from sequence, so each sequence is only activated
         one time.
-
         """
+
         i = 0
         while seq and i < len(self.keys):
             if seq.pop(0) != self.keys[i]:
@@ -84,15 +85,16 @@ class Sequence(object):
                 i += 1
 
     def __str__():
-        return [ str(i) for i in self.keys ]
+        return [str(i) for i in self.keys]
+
 
 class Controls (object):
     """
     Catch pygame keyboard events and decides of the interaction with the game,
     game menu and entity instances. Key configuration are taken from
     sequences.cfg. This class can update and save configuration.
-
     """
+
     ai_true = False
 
     def __init__(self):
@@ -105,8 +107,7 @@ class Controls (object):
 
         sequences_file = open(os.path.join(
                     config.sys_data_dir,
-                    'sequences'+os.extsep+'cfg')
-                , 'r')
+                    'sequences'+os.extsep+'cfg'), 'r')
 
         for i in sequences_file.readlines():
             if i == '\n' or i[0] == '#':
@@ -116,7 +117,7 @@ class Controls (object):
                 condition = i.split('=')[1].split('\n')[0].split(',')
                 continue
 
-            tmp = i.replace(' ','').split('\n')[0].split(':')
+            tmp = i.replace(' ', '').split('\n')[0].split(':')
 
             seq = tmp[0].split('+')
             act = tmp[1]
@@ -124,11 +125,10 @@ class Controls (object):
 
         sequences_file.close()
 
-
-    def handle_menu_key( self, state, key, game):
+    def handle_menu_key(self, state, key, game):
         ret = "menu"
         if state is KEYDOWN:
-            if key in self.keys :
+            if key in self.keys:
                 #logging.debug(self.keys[key])
                 if self.keys[key] == "MENU_TOGGLE":
                     ret = "game"
@@ -136,32 +136,22 @@ class Controls (object):
                     if config.general['CONFIRM_EXIT']:
                         pygame.event.post(
                                 pygame.event.Event(
-                                    USEREVENT,
-                                    key=self.keys[key]
-                                    )
-                                )
+                                    USEREVENT, key=self.keys[key]))
                     else:
-                        pygame.event.post(
-                                pygame.event.Event(QUIT)
-                        )
+                        pygame.event.post(pygame.event.Event(QUIT))
+
                 elif self.keys[key] == "TOGGLE_FULLSCREEN":
                     pygame.display.toggle_fullscreen()
 
                 elif self.keys[key] == "VALIDATE":
                     pygame.event.post(
-                            pygame.event.Event(
-                                USEREVENT,
-                                key=self.keys[key]
-                                )
-                            )
+                            pygame.event.Event(USEREVENT, key=self.keys[key]))
                 else:
                     pygame.event.post(
                         pygame.event.Event(
                             USEREVENT,
                             player = int(self.keys[key].split('_')[0][-1]),
-                            key = self.keys[key].split('_')[1]
-                            )
-                        )
+                            key = self.keys[key].split('_')[1]))
         return ret
 
     def test_sequences(self, game_instance, numplayer):
@@ -172,23 +162,21 @@ class Controls (object):
                 player.entity_skin.change_animation(
                         i.action,
                         game_instance,
-                        params={'entity': player}
-                        )
+                        params={'entity': player})
+
                 i.remove_from(sequence)
 
     def key_shield(self, the_key, player, game_instance):
         if ("_SHIELD" in the_key and
             player.entity_skin.current_animation in (
             'static', 'static_upgraded',
-            'walk', 'walk_upgraded'
-            )
-        ):
+            'walk', 'walk_upgraded')):
             player.shield['on'] = True
             player.entity_skin.change_animation(
                 'static',
                 game_instance,
-                params={ 'entity': player }
-                )
+                params={'entity': player})
+
             player.set_walking_vector((0, player.walking_vector[1]))
             return True
         return False
@@ -199,8 +187,8 @@ class Controls (object):
                 player.entity_skin.change_animation(
                     'walk',
                     game_instance,
-                    params={'entity': player}
-                    )
+                    params={'entity': player})
+
             player.set_walking_vector([config.general['WALKSPEED'],
                     player.walking_vector[1]])
             player.set_reversed(True)
@@ -236,7 +224,7 @@ class Controls (object):
             player.set_walking_vector([0, player.walking_vector[1]])
 
         if (player.entity_skin.current_animation in ('walk', 'walk_upgraded')):
-            player.entity_skin.change_animation( "static", game_instance,
+            player.entity_skin.change_animation("static", game_instance,
                     params={'entity': player})
             return
         return
@@ -266,19 +254,19 @@ class Controls (object):
 
                     # the player can't do anything if the shield is on
 
-                    if (
-                            player.shield['on'] or
-                            self.key_shield(the_key, player, game_instance) or
-                            self.key_down_left(the_key, player, game_instance) or
-                            self.key_down_right(the_key, player, game_instance)):
-                        pass
+                    (player.shield['on']
+                            or self.key_shield(the_key, player, game_instance)
+                            or self.key_down_left(
+                                the_key, player, game_instance)
+                            or self.key_down_right(
+                                the_key, player, game_instance))
 
                     #test sequences
                     self.test_sequences(game_instance, numplayer)
         return ret
 
     def handle_game_key_up(self, key, game_instance):
-        if key in self.keys :
+        if key in self.keys:
             the_key = self.keys[key]
 
             if the_key == "VALIDATE":
@@ -312,8 +300,8 @@ class Controls (object):
         """
         This function manages key events aquiered from local keyboard or sent
         by clients in the case of a networkk game.
-
         """
+
         # if this is a network server game
         if isinstance(game_instance, game.NetworkServerGame):
             while True:
@@ -321,18 +309,20 @@ class Controls (object):
                 if not k:
                     break
                 else:
-                    self.handle_game_key( "game", k, game_instance )
+                    self.handle_game_key("game", k, game_instance)
 
         else:
             pygame.event.pump()
             for event in pygame.event.get([KEYDOWN, KEYUP]):
                 if state is "game" and game:
-                    state = self.handle_game_key(event.type, event.key, game_instance)
+                    state = self.handle_game_key(
+                            event.type, event.key, game_instance)
 
                 elif state is "menu":
                     state = self.handle_menu_key(event.type, event.key, menu)
 
-            # eliminate unwanted events that fill the pool and break the controls.
+            # eliminate unwanted events that fill the pool and break the
+            # controls.
             pygame.event.clear([MOUSEMOTION, MOUSEBUTTONUP, MOUSEBUTTONDOWN])
 
             # clean sequences from outdated keys
