@@ -23,6 +23,7 @@ from pygame.sprite import Sprite
 import loaders
 import logging
 
+
 class Frame (object):
     """
     A Frame is an image of n animation, plus some information on the player
@@ -36,8 +37,8 @@ class Frame (object):
 
     * The Vector indicate the speed and direction taken by the entity when in
       this state, this combine with the current direction/speed of the entity.
-
     """
+
     def __init__(self, image, gametime, hardshape, name):
         """
         Load a frame from an image, the current gametime, the deplacement/s of
@@ -59,15 +60,14 @@ class Frame (object):
                 - self.hardshape[0] - self.hardshape[2],
             self.hardshape[1],
             self.hardshape[2],
-            self.hardshape[3]
-            )
+            self.hardshape[3])
 
         self.agressivpoints = []
         self.agressivpoints_reverse = []
 
-    def addAgressivPoint(self, (x,y),(v,j)):
-        self.agressivpoints.append(((x,y),(v,j)))
-        self.agressivpoints_reverse.append(((self.hardshape[2] - x,y),(v,j)))
+    def addAgressivPoint(self, (x, y), (v, j)):
+        self.agressivpoints.append(((x, y), (v, j)))
+        self.agressivpoints_reverse.append(((self.hardshape[2] - x, y), (v, j)))
 
     def addBullet(self, image):
         self.bullet = image
@@ -78,7 +78,8 @@ class PreciseTimedAnimation(Sprite):
     This object store the frames of an animation and update the image of the
     entity skin.
     """
-    def __init__( self, timedFrames, attribs, server=False ):
+
+    def __init__(self, timedFrames, attribs, server=False):
         Sprite.__init__(self)
         self.frames = timedFrames
         self.server_mode = server
@@ -87,15 +88,12 @@ class PreciseTimedAnimation(Sprite):
         self._start_time = 0
         self.playing = 0
 
-        self.repeat = int ('repeat' in attribs and attribs ['repeat'])
-        self.duration = int ('duration' in attribs and attribs ['duration'])
+        self.repeat = int('repeat' in attribs and attribs['repeat'])
+        self.duration = int('duration' in attribs and attribs['duration'])
         self.hardshape = (
                 ('hardshape' in attribs) and
                     pygame.Rect(
-                        [int(i) for i in attribs['hardshape'].split(' ')]
-                        )
-                    or 0
-                    )
+                        [int(i) for i in attribs['hardshape'].split(' ')]) or 0)
 
         self.update(0, server=server)
 
@@ -118,11 +116,12 @@ class PreciseTimedAnimation(Sprite):
         update the state of the animation.
         """
         if self.playing:
-            if self.duration != 0 and gametime - self._start_time > self.duration/1000.0:
+            if (self.duration != 0
+                    and gametime - self._start_time > self.duration/1000.0):
                 self.playing = 0
                 if self.repeat is not 0:
                     #FIXME: repeat will not reset properly
-                    self.repeat = max( -1, self.repeat - 1 )
+                    self.repeat = max(-1, self.repeat - 1)
                     self.start(gametime)
             else:
                 frame = self.frame(gametime - self._start_time)
