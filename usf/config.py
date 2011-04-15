@@ -34,9 +34,11 @@ import pygame
 
 OS = platform.system().lower()
 
+
 @memoize
 def _splitconf(c):
     return [value.strip().strip('\'\"') for value in c.split(',')]
+
 
 @memoize
 def _get_value_from_config(c):
@@ -63,6 +65,9 @@ def _get_value_from_config(c):
 
 
 class Option(dict):
+    """#FIXME: doc!
+    """
+
     def __init__(self, args, **kwargs):
         self.name = kwargs['name']
         del kwargs['name']
@@ -88,10 +93,10 @@ class Option(dict):
         with open(self.__config, 'wb') as config_file:
             self.__parser.write(config_file)
 
-
     def __getitem__(self, key):
         # create a list of strings for the stored value
         return _get_value_from_config(dict.__getitem__(self, key))
+
 
 class Config(object):
     """ Object that implements automatic saving.
@@ -112,7 +117,7 @@ class Config(object):
     def __init__(self, config_files=None):
         self.__dict__ = self.__shared_state
         self.__parser = SafeConfigParser()
-        self.__parser.optionxform=str
+        self.__parser.optionxform = str
 
         (self.user_config_dir, self.sys_config_file, self.user_config_file,
          self.sys_data_dir, self.user_data_dir) = self.__get_locations()
@@ -171,15 +176,15 @@ class Config(object):
             #"../usf-data/", "./system.cfg"
 
             #standard use
-            #"/usr/share/ultimate-smash-friends/data/", "/etc/ultimate-smash-friends/system.cfg"
+            #"/usr/share/ultimate-smash-friends/data/",
+            #"/etc/ultimate-smash-friends/system.cfg"
 
             for datadir in [
                 ("../usf-data/", "./system.cfg"),
                 ("./data/", "./system.cfg"),
                 ("../data/", "../system.cfg"),
                 ("/usr/share/ultimate-smash-friends/data/",
-                    "/etc/ultimate-smash-friends/system.cfg")
-                ]:
+                    "/etc/ultimate-smash-friends/system.cfg")]:
                 try:
                     stat(datadir[0])
                     sys_data_dir = datadir[0]
@@ -194,7 +199,6 @@ class Config(object):
                     break
                 except OSError:
                     pass
-                    #logging.debug("Can't use " + datadir[0] + " as data folder.")
             if sys_data_dir == "":
                 logging.error("Error: no valid data directory - aborting")
                 logging.error("Current dir: " + os.getcwd())
