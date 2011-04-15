@@ -33,6 +33,7 @@ MAXDEPTH = 1
 walkspeed = conf.general['WALKSPEED']
 sequences_file = path.join(conf.sys_data_dir, 'sequences.cfg')
 
+
 @memoize
 def possible_movements(movement='static'):
     """ return the list of current legal movements for the player
@@ -55,13 +56,16 @@ def possible_movements(movement='static'):
 
     return tuple(result)
 
+
 @memoize
 def displacement_movement(s):
-    return s in ('walk','jump','scnd-jump','smash-up-jumping','roll')
+    return s in ('walk', 'jump', 'scnd-jump', 'smash-up-jumping', 'roll')
+
 
 @memoize
 def fight_movement(s):
     return not displacement_movement(s)
+
 
 def simulate(game, iam, m):
     """ change the player movement to movement, and jump TIMESTEP in the future.
@@ -75,6 +79,7 @@ def simulate(game, iam, m):
             game,
             {'entity': entity})
     game.update(deltatime=TIMESTEP)
+
 
 def heuristic_distance(game, iam):
     """ return a score for the current state of the game, allow to chose a set
@@ -95,8 +100,8 @@ def heuristic_distance(game, iam):
         - player.lives * 100                    # avoid dying, ain't no fun kid
         - player.onGround * 50                  # more conservative about jumps
         - player.upgraded * 100                 # being upgraded is cool
-        + min((player.dist(p) for p in others))
-        )
+        + min((player.dist(p) for p in others)))
+
 
 def heuristic_fight(game, iam):
     player = game.players[iam]
@@ -109,8 +114,8 @@ def heuristic_fight(game, iam):
         - player.invincible * 100               # being invincible is good
         - player.onGround * 50                  # more conservative about jumps
         - player.upgraded * 100                 # being upgraded is cool
-        - sum((p.percents for p in others))     # hurt people, it's good
-        )
+        - sum((p.percents for p in others)))    # hurt people, it's good
+
 
 def search_path(game, iam, max_depth):
     gametime = game.gametime
@@ -144,19 +149,23 @@ def search_path(game, iam, max_depth):
 
     b = game.backup()
     if max_depth == 0:
-        result = [(x[0],[x[1],]) for x in scores[:2]]
+        result = [(x[0], [x[1], ]) for x in scores[:2]]
     else:
         result = []
         for p in scores[:2]:
             game.restore(p[2])
             score, movements = search_path(game, iam, max_depth - 1)
-            result.append((p[0] + score, [p[1],] + movements))
+            result.append((p[0] + score, [p[1], ] + movements))
 
     #print "max_depth", max_depth, "best result", result
     game.restore(b)
     return min(result)
 
+
 class Movement(object):
+    """ #FIXME: doc!
+    """
+
     def __init__(self, time, movement, reverse, walk):
         self.time = time
         self.reverse = reverse
@@ -168,6 +177,9 @@ class Movement(object):
 
 
 class AI(object):
+    """ #FIXME: doc!
+    """
+
     def __init__(self):
         self.status = 'searching'
         self.sequences_ai = dict()
