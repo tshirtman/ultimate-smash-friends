@@ -69,7 +69,7 @@ class Entity (object):
             entity_skinname='characters'+os.sep+'stick-tiny', place=(550,1),
             lives=3, carried_by=None, vector=[0,0], reversed=False,
             server=False, number=None, visible=False, present=False,
-            upgraded=False, physic=True
+            upgraded=False, physic=True, gravity=True,
             ):
         if number is None:
             self._number = Entity.counter
@@ -93,7 +93,7 @@ class Entity (object):
         self._reversed = reversed
         self._percents = 0
         self._lives = lives
-        self._gravity = True
+        self._gravity = gravity
         self._invincible = False
         self._present = present
         self._visible = visible
@@ -624,7 +624,7 @@ class Entity (object):
 
         if not self.physic:
             if game.level.collide_rect(self.point(self.TOP_LEFT)):
-                self.place = [-10, -10]
+                self.set_place((-10, -10))
 
         # this test should optimise most situations.
         elif game.level.collide_rect(self.rect[:2], self.rect[2:]) != -1:

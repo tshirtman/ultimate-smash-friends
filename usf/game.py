@@ -180,12 +180,9 @@ class Game (object):
         Insert an item into game.
 
         """
-        physic = not bullet
-
         try:
-            os.listdir(os.path.join( config.sys_data_dir, 'items', item))
-            self.items.append(
-                    entity.Entity(
+            os.listdir(os.path.join(config.sys_data_dir, 'items', item))
+            e = entity.Entity(
                         None,
                         self,
                         os.path.join( 'items', item,),
@@ -195,9 +192,13 @@ class Game (object):
                         visible=True,
                         present=True,
                         upgraded=upgraded,
-                        physic=physic
+                        gravity=not bullet,
+                        physic=not bullet
                         )
-                    )
+
+            e.entity_skin.change_animation('static', self, {'entity': e})
+
+            self.items.append(e)
 
         except OSError, e:
             if e.errno is 22:

@@ -264,13 +264,14 @@ class ThrowFireBall(TimedEvent):
         self.done = True
         entity = self.params['entity']
         place = list(entity.place[0:2])
-        place[0] += entity.reversed and -entity.rect[2] or entity.rect[2]
-        place[1] += entity.rect[3]/2
+        place[0] += -100 if entity.reversed else entity.rect[2]
+        #place[1] -= entity.rect[3]/3
         self.params['world'].addItem(
                 'fireball',
                 place=place,
                 reversed=entity.reversed,
                 upgraded=entity.upgraded,
+                bullet=True,
                 )
 
     def condition(self):
