@@ -161,7 +161,7 @@ class Game (object):
         for pl in self.players:
             self.events.add_event(
                     'DropPlayer',
-                    (None, self.gametime),
+                    (None, self.gametime + 2),
                     params={
                         'world': self,
                         'entity': pl,
