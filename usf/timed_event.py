@@ -263,7 +263,7 @@ class ThrowFireBall(TimedEvent):
     def execute(self, deltatime):
         self.done = True
         entity = self.params['entity']
-        place = entity.place[0:2]
+        place = list(entity.place[0:2])
         place[0] += entity.reversed and -entity.rect[2] or entity.rect[2]
         place[1] += entity.rect[3]/2
         self.params['world'].addItem(
