@@ -4,24 +4,25 @@
     background="blobplanet-background.png"
     foreground="blobplanet-foreground.png"
     middle="blobplanet-middle.png"
-    margins="-250,0,0,0">
+    margins="-250,250,3310,550">
 
-    <entry-point coords="0 160"></entry-point>
-    <entry-point coords="256 160"></entry-point>
+    <entry-point coords="127 160"></entry-point>
+    <entry-point coords="270 504"></entry-point>
     <entry-point coords="512 160"></entry-point>
-    <entry-point coords="768 160"></entry-point>
+    <entry-point coords="939 327"></entry-point>
+    <entry-point coords="1120 100"></entry-point>
 
-    <block coords="225 190 120 75"></block>
-    <block coords="685 190 115 45"></block>
-    <block coords="1060 265 185 60"></block>
-    <block coords="60 435 135 80"></block>
-    <block coords="895 405 100 45"></block>
-    <block coords="765 580 90 45"></block>
-    <block coords="1015 600 145 50"></block>
+    <block coords="200 190 120 75"></block>
+    <block coords="1040 200 185 60"></block>
+    <block coords="55 435 137 80"></block>
+    <block coords="880 405 115 45"></block>
     <block coords="350 425 95 65"></block>
     <block coords="445 355 75 245"></block>
     <block coords="520 375 125 60"></block>
-    <block coords="185 675 185 60"></block>
+    <block coords="179 650 185 60"></block>
+    <block coords="755 525 98 45"></block>
+    <block coords="1014 633 146 44"></block>
+    <block coords="691 174 121 44"></block>
 
 
 </map>

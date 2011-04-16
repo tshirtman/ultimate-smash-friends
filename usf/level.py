@@ -436,6 +436,18 @@ class Level(object):
                     pygame.Color('green')
                     )
 
+        for rect in self.entrypoints:
+            draw_rect(
+                    surface,
+                    pygame.Rect(
+                        int(level_place[0]+(rect[0])*zoom),
+                        int(level_place[1]+(rect[1])*zoom),
+                        20,
+                        20
+                        ),
+                    pygame.Color('blue')
+                    )
+
     def draw_background(self, surface, coords=(0,0)):
         surface.blit( loaders.image(self.background,
             scale=self.SIZE)[0], coords )
