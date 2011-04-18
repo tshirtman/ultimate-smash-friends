@@ -93,7 +93,7 @@ class Game (object):
         self.gametime = 0
 
         #we load the bool for smooth scrolling here, for a better performance
-        self.smooth_scrolling = loaders.get_gconfig().get("game", "smooth_scrolling") == "y"
+        self.smooth_scrolling = config.general["SMOOTH_SCROLLING"]
 
         self.level = Level(level)
         if screen is not None:
@@ -454,16 +454,16 @@ class Game (object):
             ordered = sorted([ i.place[0] for i in self.present_players ])
             L = max(
                 self.SIZE[0],
-                max(1, ordered[-1] + 100)- max(1, ordered[0] - 100) * 1.25
+                max(1, ordered[-1] + 100)- max(1, ordered[0] - 100) * 1.0
                 )
 
             ordered = sorted([ i.place[1] for i in self.present_players ])
 
-            H = max( self.SIZE[1], ordered[-1] - ordered[0] * 1.25)
+            H = max( self.SIZE[1], ordered[-1] - ordered[0] * 1.0)
 
             return min (
-                    1.0*self.SIZE[0] / L,
-                    1.0*self.SIZE[1] / H
+                    1.0 * self.SIZE[0] / L,
+                    1.0 * self.SIZE[1] / H
                     )
 
     @property
@@ -477,22 +477,22 @@ class Game (object):
                 )
 
     def center_zoom_camera(self):
-        self.present_players = [ i for i in self.players if i.present ]
-        if len(self.present_players) is not 0:
+        self.present_players = [i for i in self.players if i.present]
+        if self.present_players:
             # there is a trade between zoom sharpness and speed so we force
             # the zoom level to be a limited precision value here, so the
             # image cache is more useful.
             self.zoom = (
                 int(self.precise_zoom * config.general['ZOOM_SHARPNESS'])/
-                (config.general['ZOOM_SHARPNESS']* 1.0)
+                (config.general['ZOOM_SHARPNESS'] * 1.0)
             )
 
             players_barycenter = self.players_barycenter
             # calculate coordinates of top left corner of level
             # rect the barycenter of players at the center of the screen
             level_place = [
-                 -(players_barycenter[0])*self.zoom+self.SIZE[0]/2 ,
-                 -(players_barycenter[1])*self.zoom+self.SIZE[1]/2
+                 -(players_barycenter[0]) * self.zoom + self.SIZE[0] / 2 ,
+                 -(players_barycenter[1]) * self.zoom + self.SIZE[1] / 2
                  ]
 
             if self.smooth_scrolling:
