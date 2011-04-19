@@ -619,23 +619,29 @@ class Game(object):
         sync everything to current time. Return "game" if we are still in game
         mode, return "menu" otherwise.
 
+        At the beggining of the game, we add world events, and then wait for
+        the next frame before adding players, resolve bug 76585 on slower
+        machines.
         """
         if self.first_frame:
             self.first_frame = False
+            self.second_frame = True
+            ## adding test events.
+            self.add_world_event()
+
+        elif self.second_frame:
+            self.second_frame = False
             # events to make players appear into game
             # logging.debug('players insertion in game')
             for pl in self.players:
                 self.events.add_event(
                         'DropPlayer',
-                        (None, self.gametime + 3),
+                        (None, self.gametime + 1),
                         params={
                             'world': self,
                             'entity': pl,
                             'gametime': self.gametime
                             })
-
-            ## adding test events.
-            self.add_world_event()
 
         # calculate elapsed time if we are not in simulation
         # frame limiter
