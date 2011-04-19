@@ -65,7 +65,7 @@ class BadPlayersNetworkParamError(Exception):
     pass
 
 
-class Game (object):
+class Game(object):
     """
     The game base object, initiate and update everything when in game (not in
     menu).
@@ -83,8 +83,6 @@ class Game (object):
             )
 
         self.notif = []
-        self.ingame = True
-        self.ended = False
         self.type = 'local'
         self.screen = screen
 
@@ -109,12 +107,6 @@ class Game (object):
         #the optional progress bar for the players lives
         self.progress_bar_size = (82.5*config.general["WIDTH"]/800, 12.5*config.general["WIDTH"]/800)
         self.progress_bar_x = config.general["HEIGHT"]-25*config.general["WIDTH"]/800
-
-        # various other initialisations
-        self.last_clock = time.time()
-
-        ## adding test events.
-        self.add_world_event()
 
         # a countdown to the game end
         self.ending = 5.0
@@ -156,17 +148,23 @@ class Game (object):
         for i,player in enumerate(players_):
             self.load_player(i, player)
 
+    def start(self):
         # events to make players appear into game
         # logging.debug('players insertion in game')
         for pl in self.players:
             self.events.add_event(
                     'DropPlayer',
-                    (None, self.gametime + 2),
+                    (None, self.gametime + 3),
                     params={
                         'world': self,
                         'entity': pl,
                         'gametime': self.gametime
                         })
+        # various other initialisations
+        self.last_clock = time.time()
+
+        ## adding test events.
+        self.add_world_event()
 
     def addItem(
         self,
@@ -539,9 +537,10 @@ class Game (object):
                          self.level_place,
                          self.zoom
                         )
-            if item.rect.collidelist([self.level.border,]) == -1:
+            if not item.rect.colliderect(self.level.border):
                 item.set_lives(0)
-            if item.lives <= 0:
+
+            if not item.lives:
                 del(self.items[self.items.index(item)])
 
     def update_players(self, deltatime):
@@ -599,7 +598,6 @@ class Game (object):
         current state
         """
         return {
-                'ended': self.ended,
                 'ending': self.ending,
                 'events': self.events.backup(),
                 'gametime': self.gametime,
@@ -613,7 +611,6 @@ class Game (object):
         """
         restore the game state from _backup
         """
-        self.ended = backup['ended']
         self.ending = backup['ending']
         self.events.restore(backup['events'])
         self.gametime = backup['gametime']
@@ -650,6 +647,7 @@ class Game (object):
         self.update_items(deltatime)
 
         players_left = len(filter(entity.Entity.alive, self.players))
+
         if players_left <= 1:
             # there is only one player left then the game need to end after a
             # short animation
@@ -658,8 +656,6 @@ class Game (object):
 
         # if animation time elapsed, return to menu
         if self.ending <= 0:
-            self.ended = True
-            self.ingame=False
             return 'menu'
 
         if players_left == 1:

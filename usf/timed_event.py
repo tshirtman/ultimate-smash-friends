@@ -432,10 +432,9 @@ class DropPlayer(TimedEvent):
         self.params['entity'].set_walking_vector([0, 0])
         self.params['entity'].set_percents(0)
         self.params['entity'].set_upgraded(False)
-
-        self.params['entity'].set_place(random.choice(
-            self.params['world'].level.entrypoints
-        ))
+        entry = random.choice(self.params['world'].level.entrypoints)
+        print 'entering', entry
+        self.params['entity'].set_place(entry)
 
     def execute(self, deltatime):
         pass

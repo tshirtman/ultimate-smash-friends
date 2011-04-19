@@ -114,6 +114,8 @@ class Main(object):
 
             self.init_sound()
 
+            self.ai = AI()
+
             # if a level was provided and at least two players in the option
             # immediatly jump into game mode
             if len(self.players) > 1 and self.level is not None:
@@ -123,6 +125,7 @@ class Main(object):
                 self.state = "game"
                 self.menu = Gui(self.screen)
                 self.menu.handle_reply('goto:resume')
+                self.game.start()
 
             else:
                 self.lock.acquire()
@@ -137,7 +140,6 @@ class Main(object):
                 self.level = None
                 #self.ai_thread = None
 
-            self.ai = AI()
             self.lock.acquire()
             self.stop_thread = True
             self.lock.release()
