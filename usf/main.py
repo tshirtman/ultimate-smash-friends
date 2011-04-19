@@ -125,7 +125,6 @@ class Main(object):
                 self.state = "game"
                 self.menu = Gui(self.screen)
                 self.menu.handle_reply('goto:resume')
-                self.game.start()
 
             else:
                 self.lock.acquire()
@@ -301,7 +300,7 @@ class Main(object):
 
 
     def manage_game(self, was_paused):
-        d = self.game.update_clock(was_paused)
+        d = self.game.update_clock(was_paused or self.game.first_frame)
         self.state = self.game.update(d)
         self.manage_ai()
 

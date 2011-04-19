@@ -82,6 +82,7 @@ class Game(object):
             config.general['HEIGHT']
             )
 
+        self.first_frame = True
         self.notif = []
         self.type = 'local'
         self.screen = screen
@@ -147,24 +148,6 @@ class Game(object):
         self.players = []
         for i,player in enumerate(players_):
             self.load_player(i, player)
-
-    def start(self):
-        # events to make players appear into game
-        # logging.debug('players insertion in game')
-        for pl in self.players:
-            self.events.add_event(
-                    'DropPlayer',
-                    (None, self.gametime + 3),
-                    params={
-                        'world': self,
-                        'entity': pl,
-                        'gametime': self.gametime
-                        })
-        # various other initialisations
-        self.last_clock = time.time()
-
-        ## adding test events.
-        self.add_world_event()
 
     def addItem(
         self,
@@ -637,6 +620,23 @@ class Game(object):
         mode, return "menu" otherwise.
 
         """
+        if self.first_frame:
+            self.first_frame = False
+            # events to make players appear into game
+            # logging.debug('players insertion in game')
+            for pl in self.players:
+                self.events.add_event(
+                        'DropPlayer',
+                        (None, self.gametime + 3),
+                        params={
+                            'world': self,
+                            'entity': pl,
+                            'gametime': self.gametime
+                            })
+
+            ## adding test events.
+            self.add_world_event()
+
         # calculate elapsed time if we are not in simulation
         # frame limiter
 
