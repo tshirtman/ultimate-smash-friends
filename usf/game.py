@@ -432,15 +432,12 @@ class Game(object):
             return 1
 
         else:
-            ordered = sorted([ i.place[0] for i in self.present_players ])
-            L = max(
-                self.SIZE[0],
-                max(1, ordered[-1] + 100)- max(1, ordered[0] - 100) * 1.0
-                )
+            ordered = sorted([i.place[0] for i in self.present_players])
+            L = max(self.SIZE[0], (ordered[-1] - ordered[0]) * 1.5)
 
-            ordered = sorted([ i.place[1] for i in self.present_players ])
+            ordered = sorted([i.place[1] for i in self.present_players])
 
-            H = max( self.SIZE[1], ordered[-1] - ordered[0] * 1.0)
+            H = max( self.SIZE[1], (ordered[-1] - ordered[0]) * 1.5)
 
             return min (
                     1.0 * self.SIZE[0] / L,
@@ -606,8 +603,10 @@ class Game(object):
         if was_paused:
             deltatime = 0
         else:
+            # calculate elapsed time if we are not in simulation
+            # frame limiter
             deltatime = time.time() - self.last_clock
-            while deltatime < 1.0/self.max_fps:
+            while deltatime < 1.0 / self.max_fps:
                 deltatime = time.time() - self.last_clock
             self.gametime += deltatime
 
@@ -642,9 +641,6 @@ class Game(object):
                             'entity': pl,
                             'gametime': self.gametime
                             })
-
-        # calculate elapsed time if we are not in simulation
-        # frame limiter
 
         self.events.update(deltatime, self.gametime)
         self.level.update(self.gametime)
