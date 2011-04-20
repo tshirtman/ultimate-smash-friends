@@ -528,10 +528,8 @@ class Entity (object):
         r = self._rect
         # i think r[0] and r[1] should be used in this formules, but they break it, so
         # maybe i'm wrong
-        return (
-                int(Entity.list_sin_cos_1[n][0] * h[2] / 2 + r[0]),
-                int(Entity.list_sin_cos_1[n][1] * h[3] / 2 + r[1])
-                )
+        return (int(Entity.list_sin_cos_1[n][0] * h[2] / 2 + r[0]),
+                int(Entity.list_sin_cos_1[n][1] * h[3] / 2 + r[1]))
 
     def update_points(self, x = 0, y = 0):
         """
