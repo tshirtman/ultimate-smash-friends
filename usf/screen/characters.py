@@ -84,27 +84,21 @@ class characters(Screen):
         self.player_vbox = [widgets.VBox(), widgets.VBox(), widgets.VBox(), widgets.VBox()]
 
         for i in range(0,4):
-            self.checkboxes_ai.append(widgets.TextCheckBox(_("AI :")))
-            #self.checkboxes_ai.append(widgets.CheckBox())
+            #I18N: Artificial Intelligence
+            self.checkboxes_ai.append(widgets.TextCheckBox(_("AI:")))
             self.portraits.append(widgets.Image(
                     join(
                         self.game_data['character_file'][0],
                         "portrait.png")
                 ))
             self.player_spinner.append(widgets.Spinner(self.character))
+            #I18N: %s is the player number, it can be Player 1, Player2...
             self.player_vbox[i].add(widgets.Label(_("Player %s").replace("%s", str(i+1))))
             self.player_vbox[i].add(self.player_spinner[-1])
             self.player_vbox[i].add(self.portraits[-1],
                 margin_left=65,
                 margin=5,
                 size=(50,50))
-
-            #create a hbox to display "AI:" + the checkbox 
-            #hbox = widgets.HBox()
-
-            #I18N: Artificial Intelligence
-            #hbox.add(self.checkboxes_ai[-1], margin=10, size=(150, 40))
-            #hbox.add(self.checkboxes_ai[-1], margin=10)
             self.player_vbox[i].add(self.checkboxes_ai[-1], margin_left=(180-self.checkboxes_ai[-1].width)/2)
 
         

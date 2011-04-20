@@ -8,27 +8,32 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-29 17:26+0200\n"
+"POT-Creation-Date: 2011-04-20 13:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: game.py:308
+#: game.py:383
 msgid " WON!"
 msgstr ""
 
-#: game.py:323
+#: game.py:390
 msgid "OOPS... DRAW!!!"
 msgstr ""
 
-#: gui.py:234
+#: gui.py:250
 msgid "you are here:"
 msgstr ""
 
-#: main.py:68
+#: main.py:55
+msgid "Bad logging level in user.cfg!"
+msgstr ""
+
+#: main.py:84
 msgid "Loading..."
 msgstr ""
 
@@ -36,11 +41,11 @@ msgstr ""
 msgid "about"
 msgstr ""
 
-#: screen/about.py:35 screen/about.py:41 screen/screen_screen.py:66
-#: screen/screen_screen.py:86 screen/characters.py:122
-#: screen/characters.py:143 screen/keyboard.py:61 screen/keyboard.py:66
-#: screen/sound.py:38 screen/sound.py:45 screen/configure.py:41
-#: screen/configure.py:52 screen/level.py:64 screen/level.py:73
+#: screen/about.py:33 screen/about.py:37 screen/screen_screen.py:60
+#: screen/screen_screen.py:80 screen/characters.py:117
+#: screen/characters.py:142 screen/keyboard.py:61 screen/keyboard.py:68
+#: screen/sound.py:38 screen/sound.py:45 screen/configure.py:37
+#: screen/configure.py:46 screen/level.py:70 screen/level.py:79
 msgid "Back"
 msgstr ""
 
@@ -69,15 +74,15 @@ msgstr ""
 msgid "Screen resolution (requires a restart):"
 msgstr ""
 
-#: screen/screen_screen.py:47
+#: screen/screen_screen.py:44
 msgid "Fullscreen:"
 msgstr ""
 
-#: screen/screen_screen.py:51
+#: screen/screen_screen.py:49
 msgid "Zoom sharpness:"
 msgstr ""
 
-#: screen/screen_screen.py:62
+#: screen/screen_screen.py:54
 msgid "Show FPS:"
 msgstr ""
 
@@ -92,17 +97,18 @@ msgstr ""
 msgid "None"
 msgstr ""
 
-#: screen/characters.py:94
+#. I18N: Artificial Intelligence
+#: screen/characters.py:88
+msgid "AI:"
+msgstr ""
+
+#. I18N: %s is the player number, it can be Player 1, Player2...
+#: screen/characters.py:96
 #, python-format
 msgid "Player %s"
 msgstr ""
 
-#. I18N: Artificial Intelligence
-#: screen/characters.py:105
-msgid "AI :"
-msgstr ""
-
-#: screen/characters.py:117 screen/characters.py:140
+#: screen/characters.py:112 screen/characters.py:134
 msgid "Next"
 msgstr ""
 
@@ -127,19 +133,19 @@ msgid "configure"
 msgstr ""
 
 #. I18N:option screen
-#: screen/configure.py:31 screen/configure.py:46
+#: screen/configure.py:31 screen/configure.py:40
 msgid "Audio"
 msgstr ""
 
-#: screen/configure.py:35 screen/configure.py:48
+#: screen/configure.py:33 screen/configure.py:42
 msgid "Screen"
 msgstr ""
 
-#: screen/configure.py:38 screen/configure.py:50
+#: screen/configure.py:35 screen/configure.py:44
 msgid "Keyboard"
 msgstr ""
 
-#: screen/level.py:63 screen/level.py:70
+#: screen/level.py:69 screen/level.py:76
 msgid "Go !"
 msgstr ""
 
