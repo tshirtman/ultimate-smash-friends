@@ -181,8 +181,8 @@
             ></agressiv-point>
         </frame>
     </movement>
-    <!--movement name="smash-up-jumping"
-    duration="0"
+    <movement name="smash-up-jumping"
+    duration="10000"
     repeat="0"
     >
         <event
@@ -195,12 +195,12 @@
         ></vector>
         <frame
         time="0"
-        image="smash-up1.png"
+        image="jump1.png"
         vector="0,70"
         > </frame>
         <frame
         time="300"
-        image="smash-up2.png"
+        image="kick2.png"
         vector="0,70"
         > <agressiv-point
             coords="48,20"
@@ -209,7 +209,7 @@
         </frame>
         <frame
         time="700"
-        image="smash-up1.png"
+        image="jump5.png"
         > </frame>
     </movement>
     <movement name="smash-up"
@@ -248,22 +248,12 @@
         <frame
         time="200"
         image="smash-down3.png"
-        > </frame>
-        <frame
-        time="300"
-        image="smash-down4.png"
-        > </frame>
-        <frame
-        time="400"
-        image="smash-down5.png"
-        vector="0,-50"
-        hardshape= "8 0 22 48"
         > <agressiv-point
             coords="28,41"
             vector="300,-10"
             ></agressiv-point>
         </frame>
-    </movement-->
+    </movement>
     <movement name="specialhit"
     duration="1500"
     repeat="0"
@@ -566,8 +556,8 @@
             ></agressiv-point>
         </frame>
     </movement>
-    <!--movement name="smash-up-jumping"
-    duration="0"
+    <movement name="smash-up-jumping-upgaded"
+    duration="10000"
     repeat="0"
     >
         <event
@@ -580,12 +570,12 @@
         ></vector>
         <frame
         time="0"
-        image="smash-up1-upgraded.png"
+        image="jump1-upgraded.png"
         vector="0,70"
         > </frame>
         <frame
         time="300"
-        image="smash-up2-upgraded.png"
+        image="kick2-upgraded.png"
         vector="0,70"
         > <agressiv-point
             coords="48,20"
@@ -594,7 +584,7 @@
         </frame>
         <frame
         time="700"
-        image="smash-up1-upgraded.png"
+        image="jump5-upgraded.png"
         > </frame>
     </movement>
     <movement name="smash-up"
@@ -633,22 +623,12 @@
         <frame
         time="200"
         image="smash-down3-upgraded.png"
-        > </frame>
-        <frame
-        time="300"
-        image="smash-down4-upgraded.png"
-        > </frame>
-        <frame
-        time="400"
-        image="smash-down5-upgraded.png"
-        vector="0,-50"
-        hardshape= "8 0 22 48"
         > <agressiv-point
             coords="28,41"
             vector="300,-10"
             ></agressiv-point>
         </frame>
-    </movement-->
+    </movement>
     <movement name="specialhit_upgraded"
     duration="1500"
     repeat="0"
@@ -778,5 +758,33 @@
             vector="30,-10"
             ></agressiv-point>
         </frame>
+    </movement>
+    <movement name="roll-upgraded"
+    duration="500"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="roll1-upgraded.png"
+        > </frame>
+        <frame
+        time="100"
+        image="roll2-upgraded.png"
+        > </frame>
+        <frame
+        time="200"
+        image="roll3-upgraded.png"
+        vector="50,0"
+        > </frame>
+        <frame
+        time="300"
+        image="roll4-upgraded.png"
+        vector="70,0"
+        > </frame>
+        <frame
+        time="400"
+        image="roll5-upgraded.png"
+        vector="70,0"
+        > </frame>
     </movement>
 </character>
