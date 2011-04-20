@@ -41,8 +41,8 @@ animations = (
 'roll',            'roll_upgraded',
 'take',            'take_upgraded',
 'hit',             'hit_upgraded',
-'kick',            'kick-jumping_upgraded',
-'kick-jumping',    'kick_upgraded',
+'kick',            'kick_upgraded',
+'kick-jumping',    'kick-jumping_upgraded',
 'smash-straight',  'smash-straight_upgraded',
 'smash-up',        'smash-up-jumping_upgraded',
 'smash-up-jumping','smash-up_upgraded',
@@ -186,6 +186,7 @@ def main(charnames):
         if inotifyx:
             for i, w in enumerate(wds):
                 if inotifyx.get_events(fd, 0):
+                    print "events"
                     for i in range(3):
                         try:
                             skins = load_entities(charnames)[0]
@@ -288,8 +289,7 @@ def main(charnames):
                     #else:
                         #bottom_center_hardshape[0] = window_size[0]/(len(charnames) * 2)
                 else:
-                    frame %= len(skin.animations[animation].frames)
-                    img = skin.animations[animation].frames[frame]
+                    img = skin.animations[animation].frames[frame % len(skin.animations[animation].frames)]
             else:
                 img = Placeholder()
 
