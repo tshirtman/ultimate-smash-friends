@@ -526,9 +526,11 @@ class Entity (object):
     def point(self, n):
         h = self.hardshape
         r = self._rect
+        # i think r[0] and r[1] should be used in this formules, but they break it, so
+        # maybe i'm wrong
         return (
-                int(Entity.list_sin_cos_1[n][0] * h[2] / 2 + h[0] + r[0]),
-                int(Entity.list_sin_cos_1[n][1] * h[3] / 2 + h[1] + r[1])
+                int(Entity.list_sin_cos_1[n][0] * h[2] / 2 + r[0]),
+                int(Entity.list_sin_cos_1[n][1] * h[3] / 2 + r[1])
                 )
 
     def update_points(self, x = 0, y = 0):
@@ -637,7 +639,7 @@ class Entity (object):
                 self._onGround = True
                 self._vector[0] /= 2
                 while self.collide_top(game):
-                    self.move((0, -4))
+                    self.move((0, -1))
 
             elif self.collide_bottom(game):
                 if self.vector[1] < 0:
@@ -646,7 +648,7 @@ class Entity (object):
                             )
                 self._vector[0] /= 2
                 while self.collide_bottom(game):
-                    self.move(( 0, 2))
+                    self.move(( 0, 1))
 
             if self.collide_front(game):
                 self._vector[0] = math.fabs(self.vector[0])/2
