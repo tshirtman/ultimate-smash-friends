@@ -306,13 +306,8 @@ class Game(object):
                 game_font.render(
                     str(controls.player_sequences[num+1]),
                     True,
-                    pygame.color.Color('red')
-                    ),
-                (
-                 0,
-                 num*self.SIZE[1] / 4
-                )
-                )
+                    pygame.color.Color('red')),
+                (0, num * self.SIZE[1] / 4))
 
     def draw_debug(self, debug_params):
         for num, player in enumerate(self.players):
@@ -438,10 +433,7 @@ class Game(object):
             L = max(self.SIZE[0], (max(x) - min(x)) * 1.25)
             H = max(self.SIZE[1], (max(y) - min(y)) * 1.5)
 
-            return min (
-                    1.0 * self.SIZE[0] / L,
-                    1.0 * self.SIZE[1] / H
-                    )
+            return min(self.SIZE[0] / L, self.SIZE[1] / H)
 
     @property
     def players_barycenter(self):
@@ -449,9 +441,11 @@ class Game(object):
             return self.present_players[0].rect[0:2]
         else:
             return (
-                sum(i.place[0] for i in self.present_players) / len(self.present_players),
-                sum(i.place[1] for i in self.present_players) / len(self.present_players)
-                )
+                    sum(i.place[0] for i in self.present_players) /
+                    len(self.present_players),
+                    sum(i.place[1] for i in self.present_players) /
+                    len(self.present_players)
+                    )
 
     def center_zoom_camera(self):
         self.present_players = [i for i in self.players if i.present]
