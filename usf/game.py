@@ -432,12 +432,11 @@ class Game(object):
             return 1
 
         else:
-            ordered = sorted([i.place[0] for i in self.present_players])
-            L = max(self.SIZE[0], (ordered[-1] - ordered[0]) * 1.25)
+            x = [i.place[0] for i in self.present_players]
+            y = [i.place[1] for i in self.present_players]
 
-            ordered = sorted([i.place[1] for i in self.present_players])
-
-            H = max( self.SIZE[1], (ordered[-1] - ordered[0]) * 1.5)
+            L = max(self.SIZE[0], (max(x) - min(x)) * 1.25)
+            H = max(self.SIZE[1], (max(y) - min(y)) * 1.5)
 
             return min (
                     1.0 * self.SIZE[0] / L,
