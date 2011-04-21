@@ -1,16 +1,16 @@
-# Polish translation for ultimate-smash-friends
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Russian translation for ultimate-smash-friends
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
 # This file is distributed under the same license as the ultimate-smash-friends package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: ultimate-smash-friends\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-04-20 13:02+0200\n"
-"PO-Revision-Date: 2010-12-28 02:01+0000\n"
-"Last-Translator: pp/bs <Unknown>\n"
-"Language-Team: Polish <pl@li.org>\n"
+"PO-Revision-Date: 2011-04-20 15:30+0000\n"
+"Last-Translator: Eugene Marshal <Unknown>\n"
+"Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,27 +19,27 @@ msgstr ""
 
 #: game.py:383
 msgid " WON!"
-msgstr " WYGRYWA!"
+msgstr " ВЫИГРЫШЬ!"
 
 #: game.py:390
 msgid "OOPS... DRAW!!!"
-msgstr "OJEJ... REMIS!!!"
+msgstr "СОЖАЛЕНИЕ!!!"
 
 #: gui.py:250
 msgid "you are here:"
-msgstr "jesteś tutaj:"
+msgstr "вы здесь:"
 
 #: main.py:55
 msgid "Bad logging level in user.cfg!"
-msgstr ""
+msgstr "Неправильный уровень ведения журнала в user.cfg!"
 
 #: main.py:84
 msgid "Loading..."
-msgstr "Ładowanie..."
+msgstr "Загрузка…"
 
 #: screen/about.py:27
 msgid "about"
-msgstr "informacje"
+msgstr "сведения о программе"
 
 #: screen/about.py:33 screen/about.py:37 screen/screen_screen.py:60
 #: screen/screen_screen.py:80 screen/characters.py:117
@@ -47,55 +47,55 @@ msgstr "informacje"
 #: screen/sound.py:38 screen/sound.py:45 screen/configure.py:37
 #: screen/configure.py:46 screen/level.py:70 screen/level.py:79
 msgid "Back"
-msgstr "Wstecz"
+msgstr "Назад"
 
 #: screen/main_screen.py:29 screen/main_screen.py:35
 msgid "Local game"
-msgstr "Gra lokalna"
+msgstr "Локальная игра"
 
 #: screen/main_screen.py:30 screen/main_screen.py:37 screen/resume.py:28
 #: screen/resume.py:36
 msgid "Configure"
-msgstr "Konfiguracja"
+msgstr "Настройки"
 
 #: screen/main_screen.py:31 screen/main_screen.py:39
 msgid "Credits"
-msgstr "Autorzy"
+msgstr "Список разработчиков"
 
 #: screen/main_screen.py:32 screen/main_screen.py:41
 msgid "Quit"
-msgstr "Zakończ"
+msgstr "Выйти"
 
 #: screen/screen_screen.py:31
 msgid "screen configuration"
-msgstr "konfiguracja ekranu"
+msgstr "настройка экрана"
 
 #: screen/screen_screen.py:41
 msgid "Screen resolution (requires a restart):"
-msgstr "Rozdzielczość ekranu (wymaga restartu)"
+msgstr "Разрешение экрана (необходим перезапуск):"
 
 #: screen/screen_screen.py:44
 msgid "Fullscreen:"
-msgstr "Pełny ekran:"
+msgstr "Полноэкранный режим:"
 
 #: screen/screen_screen.py:49
 msgid "Zoom sharpness:"
-msgstr "Ostrość przybliżania:"
+msgstr "Масштабировать резкость:"
 
 #: screen/screen_screen.py:54
 msgid "Show FPS:"
-msgstr "Pokaż liczbę klatek/s:"
+msgstr "Показывать Кадры в с.:"
 
 #. I18N: The title of the screen where players can choose their character.
 #: screen/characters.py:42
 msgid "characters"
-msgstr "postacie"
+msgstr "символов"
 
 #. I18N: in the character screen, to select no character for this player
 #. I18N: (with the [?] icon)
 #: screen/characters.py:49
 msgid "None"
-msgstr "Brak"
+msgstr "Нет"
 
 #. I18N: Artificial Intelligence
 #: screen/characters.py:88
@@ -106,54 +106,51 @@ msgstr ""
 #: screen/characters.py:96
 #, python-format
 msgid "Player %s"
-msgstr "Gracz %s"
+msgstr "Проигрыватель %s"
 
 #: screen/characters.py:112 screen/characters.py:134
 msgid "Next"
-msgstr "Dalej"
+msgstr "Далее"
 
 #: screen/keyboard.py:33
 msgid "keyboard"
-msgstr "klawiatura"
+msgstr "клавиатура"
 
 #: screen/keyboard.py:48
 msgid "Shield"
-msgstr "Osłona"
+msgstr "Защитный экран"
 
 #: screen/sound.py:29
 msgid "Sound and effects"
-msgstr "Dźwięk / efekty"
+msgstr "Звук и эффекты"
 
 #: screen/sound.py:32
 msgid "Music"
-msgstr "Muzyka"
+msgstr "Музыка"
 
 #: screen/configure.py:28
 msgid "configure"
-msgstr "konfiguracja"
+msgstr "настроить"
 
 #. I18N:option screen
 #: screen/configure.py:31 screen/configure.py:40
 msgid "Audio"
-msgstr "Dźwięk"
+msgstr "Звук"
 
 #: screen/configure.py:33 screen/configure.py:42
 msgid "Screen"
-msgstr "Ekran"
+msgstr "Экран"
 
 #: screen/configure.py:35 screen/configure.py:44
 msgid "Keyboard"
-msgstr "Klawiatura"
+msgstr "Клавиатура"
 
 #: screen/level.py:69 screen/level.py:76
 msgid "Go !"
-msgstr "Start !"
+msgstr "Вперёд !"
 
 #: translation.py:12
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  pp/bs https://launchpad.net/~pawprok"
-
-#~ msgid "AI :"
-#~ msgstr "AI :"
+"  Eugene Marshal https://launchpad.net/~lowrider"

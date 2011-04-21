@@ -7,29 +7,33 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ultimate-smash-friends\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-07-29 17:26+0200\n"
+"POT-Creation-Date: 2011-04-20 13:02+0200\n"
 "PO-Revision-Date: 2010-11-22 13:12+0000\n"
 "Last-Translator: cmdrhenner <cmdrhenner@gmail.com>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-23 05:12+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-04-21 04:51+0000\n"
+"X-Generator: Launchpad (build 12758)\n"
 
-#: game.py:308
+#: game.py:383
 msgid " WON!"
 msgstr " GEWONNEN!"
 
-#: game.py:323
+#: game.py:390
 msgid "OOPS... DRAW!!!"
 msgstr "UNENTSCHIEDEN!!!"
 
-#: gui.py:234
+#: gui.py:250
 msgid "you are here:"
 msgstr "Sie sind hier:"
 
-#: main.py:68
+#: main.py:55
+msgid "Bad logging level in user.cfg!"
+msgstr ""
+
+#: main.py:84
 msgid "Loading..."
 msgstr "Lade …"
 
@@ -37,11 +41,11 @@ msgstr "Lade …"
 msgid "about"
 msgstr "über"
 
-#: screen/about.py:35 screen/about.py:41 screen/screen_screen.py:66
-#: screen/screen_screen.py:86 screen/characters.py:122
-#: screen/characters.py:143 screen/keyboard.py:61 screen/keyboard.py:66
-#: screen/sound.py:38 screen/sound.py:45 screen/configure.py:41
-#: screen/configure.py:52 screen/level.py:64 screen/level.py:73
+#: screen/about.py:33 screen/about.py:37 screen/screen_screen.py:60
+#: screen/screen_screen.py:80 screen/characters.py:117
+#: screen/characters.py:142 screen/keyboard.py:61 screen/keyboard.py:68
+#: screen/sound.py:38 screen/sound.py:45 screen/configure.py:37
+#: screen/configure.py:46 screen/level.py:70 screen/level.py:79
 msgid "Back"
 msgstr "Zurück"
 
@@ -70,15 +74,15 @@ msgstr "Bildschirmeinstellungen"
 msgid "Screen resolution (requires a restart):"
 msgstr "Bildschirmauflösung (Neustart notwendig)"
 
-#: screen/screen_screen.py:47
+#: screen/screen_screen.py:44
 msgid "Fullscreen:"
 msgstr "Vollbildmodus"
 
-#: screen/screen_screen.py:51
+#: screen/screen_screen.py:49
 msgid "Zoom sharpness:"
 msgstr "Zoomschärfe"
 
-#: screen/screen_screen.py:62
+#: screen/screen_screen.py:54
 msgid "Show FPS:"
 msgstr "FPS anzeigen"
 
@@ -93,17 +97,18 @@ msgstr "Wähle deinen Charakter!"
 msgid "None"
 msgstr "Keiner"
 
-#: screen/characters.py:94
+#. I18N: Artificial Intelligence
+#: screen/characters.py:88
+msgid "AI:"
+msgstr ""
+
+#. I18N: %s is the player number, it can be Player 1, Player2...
+#: screen/characters.py:96
 #, python-format
 msgid "Player %s"
 msgstr "Spieler %s"
 
-#. I18N: Artificial Intelligence
-#: screen/characters.py:105
-msgid "AI :"
-msgstr "KI:"
-
-#: screen/characters.py:117 screen/characters.py:140
+#: screen/characters.py:112 screen/characters.py:134
 msgid "Next"
 msgstr "Weiter"
 
@@ -128,19 +133,19 @@ msgid "configure"
 msgstr "konfigurieren"
 
 #. I18N:option screen
-#: screen/configure.py:31 screen/configure.py:46
+#: screen/configure.py:31 screen/configure.py:40
 msgid "Audio"
 msgstr "Audio"
 
-#: screen/configure.py:35 screen/configure.py:48
+#: screen/configure.py:33 screen/configure.py:42
 msgid "Screen"
 msgstr "Bildschirm"
 
-#: screen/configure.py:38 screen/configure.py:50
+#: screen/configure.py:35 screen/configure.py:44
 msgid "Keyboard"
 msgstr "Tastatur"
 
-#: screen/level.py:63 screen/level.py:70
+#: screen/level.py:69 screen/level.py:76
 msgid "Go !"
 msgstr "Los!"
 
@@ -149,6 +154,9 @@ msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
 "  Konstantin Renner https://launchpad.net/~konsti\n"
-"  Max Strube https://launchpad.net/~maxstr\n"
+"  Max https://launchpad.net/~maxlp-deactivatedaccount\n"
 "  cmdrhenner https://launchpad.net/~cmdrhenner\n"
 "  xapantu https://launchpad.net/~xapantu"
+
+#~ msgid "AI :"
+#~ msgstr "KI:"
