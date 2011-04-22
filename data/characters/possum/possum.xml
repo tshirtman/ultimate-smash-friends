@@ -84,24 +84,22 @@
         <frame
         time="0"
         image="jump1.png"
+	hardshape="8 14 33 50"
         > </frame>
         <frame
         time="100"
         image="jump2.png"
-        vector="0,110"
-        > </frame>
-        <frame
-        time="400"
-        image="jump2.png"
-        vector="0,50"
+	hardshape="8 10 33 50"
         > </frame>
         <frame
         time="900"
         image="jump3.png"
+	hardshape="8 10 33 61"
         > </frame>
         <frame
         time="1200"
         image="jump4.png"
+	hardshape="8 10 33 61"
         > </frame>
         <frame
         time="1400"
@@ -206,12 +204,10 @@
         <frame
         time="0"
         image="smash-up1.png"
-        vector="0,70"
         > </frame>
         <frame
         time="300"
         image="smash-up2.png"
-        vector="0,70"
         > <agressiv-point
             coords="48,20"
             vector="100,-800"
@@ -266,7 +262,6 @@
         <frame
         time="400"
         image="smash-down5.png"
-        vector="0,-50"
         hardshape= "8 0 22 48"
         > <agressiv-point
             coords="28,41"
@@ -322,6 +317,14 @@
     duration="500"
     repeat="0"
     >
+    	<vector
+	time="200"
+	vector="50,0"
+	/>
+    	<vector
+	time="300"
+	vector="70,0"
+	/>
         <frame
         time="0"
         image="roll1.png"
@@ -335,19 +338,16 @@
         <frame
         time="200"
         image="roll3.png"
-        vector="50,0"
         hardshape="2 2 35 43"
         > </frame>
         <frame
         time="300"
         image="roll4.png"
-        vector="70,0"
         hardshape="4 2 42 35"
         > </frame>
         <frame
         time="400"
         image="roll5.png"
-        vector="70,0"
         hardshape="6 3 36 46"
         > </frame>
     </movement>
@@ -424,6 +424,10 @@
         time="100"
         vector="0,1000"
         ></vector>
+	<vector
+	time="200"
+	vector="100,200"
+	></vector>
         <frame
         time="0"
         image="jump1.png"
@@ -431,7 +435,6 @@
         <frame
         time="200"
         image="jump-kick.png"
-        vector="100,60"
         >
             <agressiv-point
             coords="51,35"
@@ -513,24 +516,22 @@
         <frame
         time="0"
         image="jump1-upgraded.png"
+	hardshape="8 12 33 56"
         > </frame>
         <frame
         time="100"
         image="jump2-upgraded.png"
-        vector="0,110"
-        > </frame>
-        <frame
-        time="400"
-        image="jump2-upgraded.png"
-        vector="0,50"
+	hardshape="8 10 33 56"
         > </frame>
         <frame
         time="900"
         image="jump3-upgraded.png"
+	hardshape="8 10 33 64"
         > </frame>
         <frame
         time="1200"
         image="jump4-upgraded.png"
+	hardshape="8 10 33 64"
         > </frame>
         <frame
         time="1400"
@@ -746,6 +747,14 @@
     duration="500"
     repeat="0"
     >
+    	<vector
+	time="200"
+	vector="50,0"
+	> </vector>
+	<vector
+	time="300"
+	vector="70,0"
+	> </vector>
         <frame
         time="0"
         image="roll1-upgraded.png"
@@ -759,19 +768,16 @@
         <frame
         time="200"
         image="roll3-upgraded.png"
-        vector="50,0"
         hardshape="2 2 35 43"
         > </frame>
         <frame
         time="300"
         image="roll4-upgraded.png"
-        vector="70,0"
         hardshape="4 2 42 35"
         > </frame>
         <frame
         time="400"
         image="roll5-upgraded.png"
-        vector="70,0"
         hardshape="6 3 36 46"
         > </frame>
     </movement>
@@ -843,6 +849,10 @@
         time="100"
         vector="0,1000"
         ></vector>
+	<vector
+	time="200"
+	vector="100,60"
+	></vector>
         <frame
         time="0"
         image="jump1-upgraded.png"
@@ -850,7 +860,6 @@
         <frame
         time="200"
         image="jump-kick-upgraded.png"
-        vector="100,60"
         >
             <agressiv-point
             coords="51,35"
