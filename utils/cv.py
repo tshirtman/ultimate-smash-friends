@@ -180,7 +180,14 @@ def main(charnames):
     mouse_xy = [0, 0]
 
     bottom_center_hardshape = [window_size[0]/2, window_size[1]*2/3]
+    last_time = time.time()
     while True:
+        # frame limiter
+        while time.time() < last_time + 0.05:
+            time.sleep(0.05)
+
+        last_time = time.time()
+
         # get key events
         pygame.event.pump()
         if inotifyx:
