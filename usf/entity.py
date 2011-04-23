@@ -69,7 +69,8 @@ class Entity (object):
             entity_skinname='characters'+os.sep+'stick-tiny', place=(550,1),
             lives=3, carried_by=None, vector=[0,0], reversed=False,
             server=False, number=None, visible=False, present=False,
-            upgraded=False, physic=True, gravity=True,
+            upgraded=False, physic=True, gravity=True, animation='static'
+
             ):
         if number is None:
             self._number = Entity.counter
@@ -103,7 +104,8 @@ class Entity (object):
             self._name = entity_skinname.split(os.sep)[-1]
             self.entity_skin = entity_skin.Entity_skin(
                     entity_skinname,
-                    not game or not game.screen
+                    not game or not game.screen,
+                    animation=animation
                     )
             self._armor = self.entity_skin.armor
             self._rect = pygame.Rect(0,0,0,0)

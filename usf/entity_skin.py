@@ -20,8 +20,7 @@
 import pygame
 import logging
 
-from animations import Frame
-from animations import PreciseTimedAnimation
+from animations import Frame, PreciseTimedAnimation
 import loaders
 import game
 import timed_event
@@ -50,7 +49,8 @@ class Entity_skin (object):
     importants information as the character/item name and such details.
 
     """
-    def __init__(self, dir_name, server=False, xml_from_str=None, keep_xml=False):
+    def __init__(self, dir_name, server=False, xml_from_str=None,
+            keep_xml=False, animation='static'):
         """
         The dir_name is the relative path of the directory where the item/player
         is defined, the class search for an xml file of the same name as the
@@ -109,7 +109,7 @@ class Entity_skin (object):
 
         # FIXME: this is about the state of the player, should be in the entity
         # class
-        self.current_animation = "static"
+        self.current_animation = animation
         self.animation = self.animations[self.current_animation]
         self.animation_change = True
 
@@ -298,13 +298,16 @@ class Entity_skin (object):
         Update the skin's animation if necessary.
 
         """
-        if self.animation.playing == 0:
-            self.current_animation = "static"+upgraded*'_upgraded'
-            self.animation_change = True
         if self.animation_change:
             self.animation = self.animations[self.current_animation]
             self.animation_change = False
             self.animation.start(t)
+
+        if self.animation.playing == 0:
+            self.current_animation = "static"+upgraded*'_upgraded'
+            self.animation = self.animations[self.current_animation]
+            self.animation.start(t)
+
         self.animation.update(t, reversed, server)
         self.hardshape = self.animation.hardshape
 

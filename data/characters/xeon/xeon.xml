@@ -149,14 +149,27 @@
         image="smash-straight2.png"
         >
             <agressiv-point
-            coords="59,33"
+            coords="48,38"
+            vector="500,-300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="24,38"
             vector="500,-300"
             ></agressiv-point>
         </frame>
         <frame
         time="500"
         image="smash-straight3.png"
-        > </frame>
+        >
+            <agressiv-point
+            coords="59,31"
+            vector="500,-300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="34,30"
+            vector="500,-300"
+            ></agressiv-point>
+	</frame>
     </movement>
     <movement name="hit"
     duration="500"
@@ -209,22 +222,34 @@
         ></vector>
         <frame
         time="0"
-        image="jump1.png"
-        vector="0,70"
+        image="smash-up1.png"
         > </frame>
         <frame
         time="300"
-        image="kick2.png"
-        vector="0,70"
+        image="smash-up2.png"
         > <agressiv-point
-            coords="48,20"
+            coords="38,20"
             vector="100,-800"
             ></agressiv-point>
         </frame>
         <frame
         time="700"
-        image="jump5.png"
-        > </frame>
+        image="smash-up3.png"
+	hardshape="4 42 33 55"
+	>
+	    <agressiv-point
+            coords="36,27"
+            vector="0,-500"
+            ></agressiv-point>
+	    <agressiv-point
+            coords="30,20"
+            vector="-70,-200"
+            ></agressiv-point>
+	    <agressiv-point
+            coords="40,20"
+            vector="70,-200"
+            ></agressiv-point>
+        </frame>
     </movement>
     <movement name="smash-up"
     duration="1000"
@@ -238,14 +263,28 @@
         time="300"
         image="smash-up2.png"
         > <agressiv-point
-            coords="48,20"
+            coords="38,20"
             vector="100,-800"
             ></agressiv-point>
         </frame>
         <frame
         time="700"
-        image="smash-up1.png"
-        > </frame>
+        image="smash-up3.png"
+	hardshape="4 42 33 55"
+	>
+	    <agressiv-point
+            coords="36,27"
+            vector="0,-500"
+            ></agressiv-point>
+	    <agressiv-point
+            coords="30,20"
+            vector="-70,-200"
+            ></agressiv-point>
+	    <agressiv-point
+            coords="40,20"
+            vector="70,-200"
+            ></agressiv-point>
+        </frame>
     </movement>
     <movement name="smash-down"
     duration="1000"
@@ -263,8 +302,12 @@
         time="200"
         image="smash-down3.png"
         > <agressiv-point
-            coords="28,41"
-            vector="300,-10"
+            coords="27,69"
+            vector="0,300"
+            ></agressiv-point>
+	    <agressiv-point
+            coords="32,53"
+            vector="100,100"
             ></agressiv-point>
         </frame>
     </movement>
@@ -334,27 +377,55 @@
 	hardshape="3 0 32 42"
         > </frame>
     </movement>
-    <!--movement name="special2"
-    duration="500"
+    <movement name="special2"
+    duration="1700"
     repeat="0"
     >
         <event
         period = "500,0"
-        action = "ThrowBomb"
+        action = "XeonCharge"
         > </event>
         <frame
         time="0"
-        image="take1.png"
+        image="charging1.png"
         > </frame>
         <frame
-        time="200"
-        image="roll1.png"
+        time="150"
+        image="charging2.png"
         > </frame>
         <frame
         time="300"
-        image="static1.png"
+        image="charging3.png"
         > </frame>
-    </movement-->
+        <frame
+        time="600"
+        image="charging4.png"
+        > </frame>
+        <frame
+        time="750"
+        image="charging3.png"
+        > </frame>
+        <frame
+        time="900"
+        image="charging4.png"
+        > </frame>
+        <frame
+        time="1050"
+        image="charging3.png"
+        > </frame>
+        <frame
+        time="1200"
+        image="charging4.png"
+        > </frame>
+        <frame
+        time="1350"
+        image="charging3.png"
+        > </frame>
+        <frame
+        time="1500"
+        image="charging4.png"
+        > </frame>
+    </movement>
     <movement name="kick"
     duration="500"
     repeat="0"
@@ -543,14 +614,27 @@
         image="smash-straight2-upgraded.png"
         >
             <agressiv-point
-            coords="59,33"
+            coords="52,40"
+            vector="500,-300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="29,39"
             vector="500,-300"
             ></agressiv-point>
         </frame>
         <frame
         time="500"
         image="smash-straight3-upgraded.png"
-        > </frame>
+        >
+            <agressiv-point
+            coords="62,31"
+            vector="500,-300"
+            ></agressiv-point>
+            <agressiv-point
+            coords="37,30"
+            vector="500,-300"
+	    ></agressiv-point>
+    	</frame>
     </movement>
     <movement name="hit_upgraded"
     duration="500"
@@ -589,7 +673,7 @@
             ></agressiv-point>
         </frame>
     </movement>
-    <movement name="smash-up-jumping-upgaded"
+    <movement name="smash-up-jumping_upgraded"
     duration="10000"
     repeat="0"
     >
@@ -603,24 +687,36 @@
         ></vector>
         <frame
         time="0"
-        image="jump1-upgraded.png"
-        vector="0,70"
+        image="smash-up1-upgraded.png"
         > </frame>
         <frame
         time="300"
-        image="kick2-upgraded.png"
-        vector="0,70"
+        image="smash-up2-upgraded.png"
         > <agressiv-point
-            coords="48,20"
+            coords="38,20"
             vector="100,-800"
             ></agressiv-point>
         </frame>
         <frame
         time="700"
-        image="jump5-upgraded.png"
-        > </frame>
+        image="smash-up3-upgraded.png"
+	hardshape="4 42 33 55"
+	>
+	    <agressiv-point
+            coords="36,27"
+            vector="0,-500"
+            ></agressiv-point>
+	    <agressiv-point
+            coords="30,20"
+            vector="-70,-200"
+            ></agressiv-point>
+	    <agressiv-point
+            coords="40,20"
+            vector="70,-200"
+            ></agressiv-point>
+    	</frame>
     </movement>
-    <movement name="smash-up"
+    <movement name="smash-up_upgraded"
     duration="1000"
     repeat="0"
     >
@@ -632,16 +728,30 @@
         time="300"
         image="smash-up2-upgraded.png"
         > <agressiv-point
-            coords="48,20"
+            coords="38,20"
             vector="100,-800"
             ></agressiv-point>
         </frame>
         <frame
         time="700"
-        image="smash-up1-upgraded.png"
-        > </frame>
+        image="smash-up3-upgraded.png"
+	hardshape="4 42 33 55"
+	>
+	    <agressiv-point
+            coords="36,27"
+            vector="0,-500"
+            ></agressiv-point>
+	    <agressiv-point
+            coords="30,20"
+            vector="-70,-200"
+            ></agressiv-point>
+	    <agressiv-point
+            coords="40,20"
+            vector="70,-200"
+            ></agressiv-point>
+        </frame>
     </movement>
-    <movement name="smash-down"
+    <movement name="smash-down_upgraded"
     duration="1000"
     repeat="0"
     >
@@ -657,10 +767,14 @@
         time="200"
         image="smash-down3-upgraded.png"
         > <agressiv-point
-            coords="28,41"
-            vector="300,-10"
+            coords="27,69"
+            vector="0,300"
             ></agressiv-point>
-        </frame>
+	    <agressiv-point
+            coords="32,53"
+            vector="100,100"
+            ></agressiv-point>
+	</frame>
     </movement>
     <movement name="specialhit_upgraded"
     duration="1500"
@@ -728,27 +842,59 @@
 	hardshape="3 0 32 42"
         > </frame>
     </movement>
-    <!--movement name="special2"
-    duration="500"
+    <movement name="special2_upgraded"
+    duration="1700"
     repeat="0"
     >
         <event
         period = "500,0"
-        action = "ThrowBomb"
+        action = "XeonCharge"
         > </event>
         <frame
         time="0"
-        image="take1-upgraded.png"
+        image="charging1-upgraded.png"
         > </frame>
         <frame
-        time="200"
-        image="roll1-upgraded.png"
+        time="150"
+        image="charging2-upgraded.png"
         > </frame>
         <frame
         time="300"
-        image="static1-upgraded.png"
+        image="charging3-upgraded.png"
+	hardshape="8 10 31 54"
         > </frame>
-    </movement-->
+        <frame
+        time="600"
+        image="charging4-upgraded.png"
+        > </frame>
+        <frame
+        time="750"
+	hardshape="8 10 31 54"
+        image="charging3-upgraded.png"
+        > </frame>
+        <frame
+        time="900"
+        image="charging4-upgraded.png"
+        > </frame>
+        <frame
+        time="1050"
+        image="charging3-upgraded.png"
+	hardshape="8 10 31 54"
+        > </frame>
+        <frame
+        time="1200"
+        image="charging4-upgraded.png"
+        > </frame>
+        <frame
+        time="1350"
+        image="charging3-upgraded.png"
+	hardshape="8 10 31 54"
+        > </frame>
+        <frame
+        time="1500"
+        image="charging4-upgraded.png"
+        > </frame>
+    </movement>
     <movement name="kick_upgraded"
     duration="500"
     repeat="0"

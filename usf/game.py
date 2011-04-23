@@ -156,7 +156,8 @@ class Game(object):
         reversed=False,
         upgraded=False,
         vector=(0,0),
-        bullet=False):
+        bullet=False,
+        animation='static'):
         """
         Insert an item into game.
 
@@ -174,10 +175,11 @@ class Game(object):
                         present=True,
                         upgraded=upgraded,
                         gravity=not bullet,
-                        physic=not bullet
+                        physic=not bullet,
+                        animation=animation
                         )
 
-            e.entity_skin.change_animation('static', self, {'entity': e})
+            e.entity_skin.change_animation(animation, self, {'entity': e})
 
             self.items.append(e)
 

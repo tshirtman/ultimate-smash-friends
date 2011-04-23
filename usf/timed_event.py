@@ -533,6 +533,41 @@ class Bounce(TimedEvent):
     def delete(self):
         pass
 
+
+class XeonCharge(TimedEvent):
+    """
+    """
+    def initiate(self):
+        self.size = 0
+        self.entity = self.params['entity']
+        self.world = self.params['world']
+        self.entity_life = self.entity.percents
+
+    def execute(self, deltatime):
+        self.size += deltatime
+
+    def condition(self):
+        if (self.size <= 1700 and
+                self.entity_life == self.entity.percents and
+                "special2" in self.entity.entity_skin.current_animation):
+            return True
+
+        else:
+            return False
+
+    def delete(self):
+        if self.entity_life == self.entity.percents:
+            size = int(self.size / 0.243) # magick number, yes, it's round(1700 / 7)
+            self.world.addItem(
+                    "xeon-charge",
+                    upgraded=self.entity.upgraded,
+                    animation=str(size),
+                    reversed=self.entity.reversed,
+                    place=[self.entity.place[0] + (-100 if self.entity.reversed
+                        else 100), self.entity.place[1]],
+                    vector=(300,0),
+                    bullet=True)
+
 # This list is used to cast an event by name. This is usefull since events are
 # configured in players/items xml files.
 
@@ -555,4 +590,5 @@ event_names = {
     'ThrowMiniGost' : ThrowMiniGost,
     'UpgradePlayer' : UpgradePlayer,
     'VectorEvent' : VectorEvent,
+    'XeonCharge' : XeonCharge,
 }
