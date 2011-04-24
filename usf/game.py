@@ -157,6 +157,7 @@ class Game(object):
         upgraded=False,
         vector=(0,0),
         bullet=False,
+        physics=True,
         animation='static'):
         """
         Insert an item into game.
@@ -176,7 +177,8 @@ class Game(object):
                         upgraded=upgraded,
                         gravity=not bullet,
                         physic=not bullet,
-                        animation=animation
+                        animation=animation,
+                        physics=physics
                         )
 
             e.entity_skin.change_animation(animation, self, {'entity': e})
@@ -192,6 +194,8 @@ class Game(object):
             if e.errno is 2:
                 logging.debug(item+' is not a valid item directory.')
                 raise
+
+        return e
 
     def draw_progress_bar_for_lives(self, player):
         self.screen.blit(

@@ -20,6 +20,7 @@
 import logging
 import os
 import random
+import math
 
 from config import Config
 
@@ -534,6 +535,65 @@ class Bounce(TimedEvent):
         pass
 
 
+class BlobSpecial(TimedEvent):
+    """
+    """
+    def initiate(self):
+        self.entity = self.params['entity']
+
+        self.entity_life = self.entity.percents
+
+        try:
+            self.target = min([(self.entity.dist(e), e)
+                for e in self.params['world'].players
+                if e is not self.entity and ((
+                    e.place[0] < self.entity.place[0]) == self.entity.reversed
+                    )])[1]
+        except ValueError:
+            # no suitable target, abort
+            self.done = True
+
+        self.angle = 0
+
+    def execute(self, deltatime):
+        try:
+            self.eye
+        except:
+            self.eye = self.params['world'].addItem('blob-eye',
+                    upgraded=self.entity.upgraded, physics=False,
+                    reversed=self.entity.reversed)
+
+        self.angle += deltatime * 2 * 3.14159 # enought precision here
+        center = (
+                (self.entity.place[0] + self.target.place[0]) / 2,
+                (self.entity.place[1] + self.target.place[1]) / 2)
+
+        dx = self.target.place[0] - self.entity.place[0]
+        dy = self.target.place[1] - self.entity.place[1]
+
+        x = - math.cos(self.angle) * dx / 2 + center[0]
+        y =   math.sin(self.angle) * dy / 2 + center[1] + dy * (
+                self.angle / (2 * 3.14159) * (1 if self.angle < 3.14159 else
+                    -1))
+
+        self.eye.set_place((x,y))
+
+    def condition(self):
+        if (self.angle <= (2 * 3.14159) and self.entity_life == self.entity.percents):
+             #and
+             #   "special" in self.entity.entity_skin.current_animation
+             return True
+
+        else:
+            return False
+
+    def delete(self):
+        try:
+            self.eye.set_lives(0)
+        except:
+            # happens if there was no suitable target and event was aborted
+            pass
+
 class XeonCharge(TimedEvent):
     """
     """
@@ -572,6 +632,7 @@ class XeonCharge(TimedEvent):
 # configured in players/items xml files.
 
 event_names = {
+    'BlobSpecial' : BlobSpecial,
     'BombExplode' : BombExplode,
     'Bounce' : Bounce,
     'DelItemEvent' : DelItemEvent,

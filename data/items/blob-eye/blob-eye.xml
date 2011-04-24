@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<character
+    name="blob-eye"
+    image=""
+    hardshape="0 0 10 10"
+    creator="RedShrike"
+    weight="1"
+    auto-reverse="True"
+    age=""
+    Description=""
+    shield_center="20 40"
+    >
+    <movement name="static"
+        duration="3000"
+        repeat="0"
+        >
+        <frame
+        time="0"
+        image="eye.png"
+        hardshape="0 0 10 10"
+        >
+            <agressiv-point
+            coords="5,5"
+            vector="100,100"
+            />
+        </frame>
+    </movement>
+    <movement name="static_upgraded"
+        duration="3000"
+        repeat="0"
+        >
+        <frame
+        time="0"
+        image="eye-upgraded.png"
+        hardshape="0 0 10 10"
+        >
+            <agressiv-point
+            coords="5,5"
+            vector="100,100"
+            />
+        </frame>
+    </movement>
+</character>
+

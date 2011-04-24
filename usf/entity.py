@@ -69,7 +69,8 @@ class Entity (object):
             entity_skinname='characters'+os.sep+'stick-tiny', place=(550,1),
             lives=3, carried_by=None, vector=[0,0], reversed=False,
             server=False, number=None, visible=False, present=False,
-            upgraded=False, physic=True, gravity=True, animation='static'
+            upgraded=False, physic=True, gravity=True, animation='static',
+            physics=True
 
             ):
         if number is None:
@@ -99,6 +100,7 @@ class Entity (object):
         self._present = present
         self._visible = visible
         self._onGround = False
+        self._physics = physics
 
         if entity_skinname is not None:
             self._name = entity_skinname.split(os.sep)[-1]
@@ -332,6 +334,10 @@ class Entity (object):
         """
         assert value in (True, False)
         self._reversed = value
+
+    @property
+    def physics(self):
+        return self._physics
 
     def backup(self):
         """
@@ -850,6 +856,9 @@ class Entity (object):
 
         # apply the vector to entity.
         self.move((self.vector[0] * dt, self.vector[1] * dt))
+
+        if not self.physics:
+            return
 
         # Avoid collisions with the map
         self.worldCollide(game)
