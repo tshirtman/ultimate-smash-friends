@@ -1,3 +1,12 @@
+
+Dependencies
+
+To play you need python (>=2.5) ,pygame(>=1.7) (older version not tested) and
+numpy (>=1.5).
+
+If you use python 2.4 you must install python-elementtree.
+Python 3 is not currently supported.
+
 == Linux ==
 Note: All commands are terminal commands, as this is the one tool that is universal to all 
       distributions. If you would like to use a GUI, consult your Distributions documentation

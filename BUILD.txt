@@ -1,0 +1,23 @@
+windows
+=======
+
+Creating the installer require innosetup, the pythin2.6 msi install file, the
+pygame.1.9 install file for python 2.6, and the numpy 1.5 installation file for
+python 2.6
+
+Install innosetup and create a "deps" folder in ultimate-smash-friends root
+folder, put the python, pygame, and numpy installers in this folder.
+
+Open the setup.iss file with innosetup
+
+Edit the versions numbers in the script, then build the installer, and test it.
+
+
+Linux
+=====
+
+  Ubuntu:
+    you need python (>= 2.6, <3.0), python-pygame (>=1.9), python-numpy (>= 1.5), python-stdeb (>= 0.6)
+    rm -r build deb_dist dist
+
+
