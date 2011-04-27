@@ -19,6 +19,29 @@ friends.
 Contrôles
 =========
 
+Chaque joueur dispose de 4 touches de directions, de deux touches d'actions nommées ici A et B, et d'une touche BOUCLIER.
+
+Actions basique:
+
+  * Les touches DROITES et GAUCHE permettent de marcher
+  * La touche HAUT permet de sauter
+  * La touche BAS permet de ramasser un objet
+  * La touche A déclenche un coup de pied
+  * La touche B déclenche un coup simple
+  * La touche BOUCLIER permet d'activer le bouclier jusqu'à ce qu'ils soit
+  épuisé ou que la touche soit relâchée
+
+Actions combinées:
+  * Pendant un saut, la touche HAUT, déclenchera un double saut
+  * Si la touche BAS vient d'être poussée, un appuis sur GAUCHE ou DROITE,
+  déclenchera une roulade
+  * Si la touche B est appuyé après un déplacement dans une direction, un smash
+  sera déclenché dans cette direction
+  * Si A est appuyé suivit de BAS une attaque spécial est déclenchée, si
+  disponible
+  * Si BAS est appuyé deux fois, suivit de A, une autre attaque spéciale est
+  déclenchée, si disponible
+
 
 Comment gagner
 ==============
@@ -47,3 +70,4 @@ Cette version est une Beta: Si vous relevez quelques bugs et/ou des manques de
 fonctionnalités, je vous prie d'envoyer vos rapports, suggestions ou patchs à :
 https://bugs.launchpad.net/ultimate-smash-friends
 
+Dernière mise à jour: mercredi 27 avril 2011, 18:46:08 (UTC+0200)

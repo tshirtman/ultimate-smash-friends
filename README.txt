@@ -35,26 +35,30 @@ like this the second player will be an AI player.
 Controls
 ========
 
-Keys configuration are stored in the user.cfg file.
+Keys configuration are stored in the user.cfg file and can be changed from the
+options menu of the game
 
-Each player has 4 direction keys and two action keys refered here as A and B
+Each player has 4 direction keys and two action keys referred here as A and B
 plus a SHIELD key.
 
-basic actions:
+Basic actions:
 
-the LEFT and RIGHT keys allow to walk
-the UP key allow to jump
-the DOwn key allow to pick an item
-the A key trigger a kick
-the B key trigger a simple hit
-the SHIELD key set the shield on until the key is released of the shield is exausted
+  * The LEFT and RIGHT keys allow to walk
+  * The UP key allow to jump
+  * The DOWN key allow to pick an item
+  * The A key trigger a kick
+  * The B key trigger a simple hit
+  * The SHIELD key set the shield on until the key is released of the shield is
+  exhausted
 
-combined actions:
-during a jump, the UP key will trigger a second jump
-when DOWN has been pushed, a LEFT or RIGHT push will trigger a roll
-when B is pushed just after a move in any direction, that will trigger a smash in that direction
-when A is pushed after DOWN, a special attack is triggered, if avahiable
-when DOWN is pushed two times, and then A is pushed, another special attack is triggered, if avahiable
+Combined actions:
+  * During a jump, the UP key will trigger a second jump
+  * When DOWN has been pushed, a LEFT or RIGHT push will trigger a roll
+  * When B is pushed just after a move in any direction, that will trigger a
+  smash in that direction
+  * When A is pushed after DOWN, a special attack is triggered, if available
+  * When DOWN is pushed two times, and then A is pushed, another special attack
+  is triggered, if available
 
 
 Menu
@@ -106,4 +110,4 @@ Bugs
 Please send reports, suggests or patchs to:
 https://bugs.launchpad.net/ultimate-smash-friends
 
-last update: Sun, 10 Apr 2011 10:53:29 +0200
+last update: Wed, 27 Apr 2011 18:45:51 +0200
