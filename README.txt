@@ -52,6 +52,9 @@ the SHIELD key set the shield on until the key is released of the shield is exau
 combined actions:
 during a jump, the UP key will trigger a second jump
 when DOWN has been pushed, a LEFT or RIGHT push will trigger a roll
+when B is pushed just after a move in any direction, that will trigger a smash in that direction
+when A is pushed after DOWN, a special attack is triggered, if avahiable
+when DOWN is pushed two times, and then A is pushed, another special attack is triggered, if avahiable
 
 
 Menu
