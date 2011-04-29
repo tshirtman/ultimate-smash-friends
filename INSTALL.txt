@@ -48,19 +48,19 @@ A. Source Archive
 
 B. Debian File
    1. Install Dependencies
-      # apt-get update && apt-get install python-pygame
+      # apt-get update && apt-get install python-pygame python-numpy
 
    2. Download Package
-      $ wget -c http://download.tuxfamily.org/usf/release/pre-alpha/ultimate-smash-friends_0.0.8_all.deb
+      $ wget -c http://download.tuxfamily.org/usf/release/beta/ultimate-smash-friends_0.1.5-1_all.deb
 
    3. Install Ultimate Smash Friends
-      # dpkg -i ultimate-smash-friends_0.0.2_all.deb 
+      # dpkg -i ultimate-smash-friends_0.1.5-1_all.deb
 
    4. Run
-      $ ultimate-smash-friends.pyw
+      $ ultimate-smash-friends
 
    5. Uninstall
-      # apt-get remove ultimate-smash-friends.pyw
+      # apt-get remove ultimate-smash-friends
 
 C. Arch Linux PKGBUILD
    1. Download PKGBUILD
