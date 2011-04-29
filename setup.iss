@@ -7,7 +7,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{183C11E0-4777-440A-B63B-2341D77A8DC9}
 AppName=Ultimate Smash Friends
-AppVerName=Ultimate Smash Friends 0.1.1
+AppVerName=Ultimate Smash Friends 0.1.5
 AppPublisher=USF Team
 AppPublisherURL=http://usf.tuxfamily.org
 AppSupportURL=http://usf.tuxfamily.org
