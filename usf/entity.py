@@ -388,9 +388,8 @@ class Entity (object):
                                 point[1][0]**2 + point[1][1]**2
                                 )/config.general['SHIELD_SOLIDITY']
             self.shield['power'] = max(0, self.shield['power'])
-            if (self.shield['date'] < self.game.gametime() - config.general['POWER_SHIELD_TIME']):
-                self._percents += math.sqrt(point[1][0] ** 2 + point[1][1]**2)\
-                        / (30 * (100 - self.armor)) / 2
+            self._percents += math.sqrt(point[1][0] ** 2 + point[1][1]**2)\
+                    / (30 * (100 - self.armor)) / 2
 
         else:
             direction = reverse != self.reversed and -1 or 1
@@ -632,7 +631,7 @@ class Entity (object):
 
         if not self.physic:
             if game.level.collide_rect(self.point(self.TOP_LEFT)):
-                self.set_place((-10, -10))
+                self.set_lives(0)
 
         # this test should optimise most situations.
         elif game.level.collide_rect(self.rect[:2], self.rect[2:]) != -1:
@@ -673,7 +672,7 @@ class Entity (object):
         self.draw_debug_current_animation(coords, zoom, surface, debug_params)
 
     def draw_debug_levelmap(self, coords, zoom, surface, debug_params):
-        if debug_params["levelmap"] or loaders.get_gconfig().get("game", "minimap") == "y":
+        if debug_params["levelmap"]:
             draw_rect(
                     surface,
                     pygame.Rect(
