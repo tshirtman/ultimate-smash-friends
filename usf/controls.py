@@ -239,6 +239,9 @@ class Controls (object):
             elif the_key == "TOGGLE_FULLSCREEN":
                 pygame.display.toggle_fullscreen()
 
+            elif the_key == "VALIDATE":
+                pass
+
             else:
                 numplayer = int(the_key.split('_')[0][-1]) - 1
                 keyname = the_key.split('_')[1]

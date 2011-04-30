@@ -15,12 +15,12 @@
         <frame
         time="0"
         image="charge1.png"
-	>
-	<agressiv-point
-	coords="29,6"
-	vector="10,0"
-	></agressiv-point>
-	</frame>
+        >
+        <agressiv-point
+        coords="29,6"
+        vector="10,0"
+        ></agressiv-point>
+        </frame>
    </movement>
     <movement name="0_upgraded"
     duration="10000"
@@ -30,11 +30,11 @@
         time="0"
         image="charge1-upgraded.png"
         >
-	<agressiv-point
-	coords="29,6"
-	vector="15,0"
-	></agressiv-point>
-	</frame>
+        <agressiv-point
+        coords="29,6"
+        vector="15,0"
+        ></agressiv-point>
+        </frame>
    </movement>
     <movement name="1"
     duration="10000"
@@ -43,11 +43,11 @@
         <frame
         time="0"
         image="charge2.png"
-	>
-	<agressiv-point
-	coords="29,5"
-	vector="20,0"
-	></agressiv-point>
+        >
+        <agressiv-point
+        coords="29,5"
+        vector="20,0"
+        ></agressiv-point>
  </frame>
    </movement>
     <movement name="1_upgraded"
@@ -58,10 +58,10 @@
         time="0"
         image="charge2-upgraded.png"
         >
-	<agressiv-point
-	coords="29,6"
-	vector="25,0"
-	></agressiv-point>
+        <agressiv-point
+        coords="29,6"
+        vector="25,0"
+        ></agressiv-point>
  </frame>
    </movement>
     <movement name="2"
@@ -72,10 +72,10 @@
         time="0"
         image="charge3.png"
         >
-	<agressiv-point
-	coords="29,6"
-	vector="30,0"
-	></agressiv-point>
+        <agressiv-point
+        coords="29,6"
+        vector="30,0"
+        ></agressiv-point>
  </frame>
    </movement>
     <movement name="2_upgraded"
@@ -86,10 +86,10 @@
         time="0"
         image="charge3-upgraded.png"
         >
-	<agressiv-point
-	coords="29,6"
-	vector="35,0"
-	></agressiv-point>
+        <agressiv-point
+        coords="29,6"
+        vector="35,0"
+        ></agressiv-point>
  </frame>
    </movement>
     <movement name="3"
@@ -100,10 +100,10 @@
         time="0"
         image="charge4.png"
         >
-	<agressiv-point
-	coords="27,9"
-	vector="40,0"
-	></agressiv-point>
+        <agressiv-point
+        coords="27,9"
+        vector="40,0"
+        ></agressiv-point>
  </frame>
    </movement>
     <movement name="3_upgraded"
@@ -114,10 +114,10 @@
         time="0"
         image="charge4-upgraded.png"
         >
-	<agressiv-point
-	coords="29,6"
-	vector="45,0"
-	></agressiv-point>
+        <agressiv-point
+        coords="29,6"
+        vector="45,0"
+        ></agressiv-point>
  </frame>
    </movement>
     <movement name="4"
@@ -128,10 +128,10 @@
         time="0"
         image="charge5.png"
         >
-	<agressiv-point
-	coords="27,9"
-	vector="50,0"
-	></agressiv-point>
+        <agressiv-point
+        coords="27,9"
+        vector="50,0"
+        ></agressiv-point>
  </frame>
    </movement>
     <movement name="4_upgraded"
@@ -142,10 +142,10 @@
         time="0"
         image="charge5-upgraded.png"
         >
-	<agressiv-point
-	coords="29,6"
-	vector="55,0"
-	></agressiv-point>
+        <agressiv-point
+        coords="29,6"
+        vector="55,0"
+        ></agressiv-point>
  </frame>
     </movement>
     <movement name="5"
@@ -156,10 +156,10 @@
         time="0"
         image="charge6.png"
         >
-	<agressiv-point
-	coords="29,6"
-	vector="60,0"
-	></agressiv-point>
+        <agressiv-point
+        coords="29,6"
+        vector="60,0"
+        ></agressiv-point>
  </frame>
    </movement>
     <movement name="5_upgraded"
@@ -170,10 +170,10 @@
         time="0"
         image="charge6-upgraded.png"
         >
-	<agressiv-point
-	coords="29,6"
-	vector="65,0"
-	></agressiv-point>
+        <agressiv-point
+        coords="29,6"
+        vector="65,0"
+        ></agressiv-point>
  </frame>
     </movement>
     <movement name="6"
@@ -184,10 +184,10 @@
         time="0"
         image="charge7.png"
         >
-	<agressiv-point
-	coords="29,6"
-	vector="70,0"
-	></agressiv-point>
+        <agressiv-point
+        coords="29,6"
+        vector="70,0"
+        ></agressiv-point>
  </frame>
    </movement>
     <movement name="6_upgraded"
@@ -198,10 +198,10 @@
         time="0"
         image="charge7-upgraded.png"
         >
-	<agressiv-point
-	coords="29,6"
-	vector="75,0"
-	></agressiv-point>
+        <agressiv-point
+        coords="29,6"
+        vector="75,0"
+        ></agressiv-point>
  </frame>
    </movement>
 </character>
