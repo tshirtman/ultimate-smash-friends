@@ -338,8 +338,7 @@ class Game(object):
             "misc",
             "hud.png"
             ), scale=(config.general["WIDTH"], hud_height))[0],
-          (0,config.general["HEIGHT"]-hud_height)
-        )
+          (0,config.general["HEIGHT"]-hud_height))
 
         for num, player in enumerate(self.players):
             self.draw_player_portrait(num, player)

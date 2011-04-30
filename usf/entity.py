@@ -431,19 +431,6 @@ class Entity (object):
         else:
             raise ValueError("param 1 is neither a Rect or an Entity")
 
-    def serialize(self):
-        """
-        Return an ascii representation of the object current state.
-
-        """
-        return (
-                str(self.number),
-                self.name,
-                self in game.players and 'C' or 'I',
-                str(self.place),
-                self.entity_skin.animation.image.split(os.sep)[1:]
-               )
-
     def update_rect(self):
         """
         update entity rect using position and harshape place/size, necessary
@@ -452,7 +439,7 @@ class Entity (object):
         """
         h = self.hardshape
         self._rect = [
-                self._place[0] - h[2]/2 - h[0],
+                self._place[0] - h[2] / 2 - h[0],
                 self._place[1] - h[1],
                 h[2],
                 h[3]]
@@ -465,6 +452,7 @@ class Entity (object):
         """
         if self._reversed:
             x = -x
+
         self.set_place((self._place[0]+ x, self._place[1] + y))
 
         self.update_rect()
