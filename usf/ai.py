@@ -97,8 +97,8 @@ def heuristic_distance(game, iam):
     return (0
         + (1500 if not player.rect.colliderect(game.level.rect) else 0)
         - player.invincible * 100               # being invincible is good
-        - player.lives * 100                    # avoid dying, ain't no fun kid
-        - player.onGround * 50                  # more conservative about jumps
+        - player.lives * 1000                   # avoid dying, ain't no fun kid
+        - player.onGround * 450                 # more conservative about jumps
         - player.upgraded * 100                 # being upgraded is cool
         + min((player.dist(p) for p in others)))
 
@@ -108,11 +108,11 @@ def heuristic_fight(game, iam):
     others = (p for p in game.players if p is not player)
 
     return (0
-        + (500 if not player.rect.colliderect(game.level.rect) else 0)
+        + (1500 if not player.rect.colliderect(game.level.rect) else 0)
         + player.percents                       # avoid being hurt
         + sum((p.lives for p in others)) * 100  # kill people!
         - player.invincible * 100               # being invincible is good
-        - player.onGround * 50                  # more conservative about jumps
+        - player.onGround * 150                 # more conservative about jumps
         - player.upgraded * 100                 # being upgraded is cool
         - sum((p.percents for p in others)))    # hurt people, it's good
 
