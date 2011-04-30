@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<character
+name="pixie"
+image="portrait.png"
+hardshape="10 10 10 10"
+creator=""
+weight="1"
+auto-reverse="True"
+age=""
+Description=""
+shield_center="20 40"
+>
+    <movement name="hit"
+    duration="300"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="hit1.png"
+        hardshape="0 0 45 63"
+        />
+        <frame
+        time="150"
+        image="hit2.png"
+        hardshape="0 0 41 63"
+        />
+    </movement>
+    <movement name="walk"
+    duration="600"
+    repeat="-1"
+    >
+        <frame
+        time="0"
+        image="walk1.png"
+        hardshape="7 0 19 62"
+        />
+        <frame
+        time="150"
+        image="walk2.png"
+        hardshape="10 2 19 62"
+        />
+        <frame
+        time="300"
+        image="walk3.png"
+        hardshape="7 0 19 62"
+        />
+        <frame
+        time="450"
+        image="walk4.png"
+        hardshape="10 2 19 62"
+        />
+    </movement>
+    <movement name="scnd-jump"
+    duration="30450"
+    repeat="0"
+    >
+        <event
+        period="350,0"
+        action="PlayerStaticOnGround"
+        ></event>
+        <vector
+        time="200"
+        vector="0,1200"
+        ></vector>
+        <frame
+        time="0"
+        image="jump1.png"
+        hardshape="5 12 23 59"
+        />
+        <frame
+        time="150"
+        image="jump2.png"
+        hardshape="10 5 23 54"
+        />
+        <frame
+        time="300"
+        image="jump3.png"
+        hardshape="10 10 23 58"
+        />
+    </movement>
+    <movement name="jump"
+    duration="30450"
+    repeat="0"
+    >
+        <event
+        period="350,0"
+        action="PlayerStaticOnGround"
+        ></event>
+        <vector
+        time="200"
+        vector="0,1500"
+        ></vector>
+        <frame
+        time="0"
+        image="jump1.png"
+        hardshape="5 12 23 59"
+        />
+        <frame
+        time="150"
+        image="jump2.png"
+        hardshape="10 5 23 54"
+        />
+        <frame
+        time="300"
+        image="jump3.png"
+        hardshape="10 10 23 58"
+        />
+    </movement>
+    <movement name="static"
+    duration="150"
+    repeat="-1"
+    >
+        <frame
+        time="0"
+        image="static1.png"
+        hardshape="10 2 18 60"
+        />
+    </movement>
+    <movement name="take"
+    duration="150"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="take1.png"
+        hardshape="0 0 30 59"
+        />
+    </movement>
+    <movement name="pick"
+    duration="300"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="pick1.png"
+        hardshape="0 0 37 62"
+        />
+        <frame
+        time="150"
+        image="pick2.png"
+        hardshape="0 0 45 56"
+        />
+    </movement>
+    <movement name="smash-up"
+    duration="300"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="smash-up1.png"
+        hardshape="0 0 40 62"
+        />
+        <frame
+        time="150"
+        image="smash-up2.png"
+        hardshape="0 0 38 62"
+        />
+    </movement>
+    <movement name="kick"
+    duration="150"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="kick1.png"
+        hardshape="0 0 45 63"
+        />
+    </movement>
+    <movement name="roll"
+    duration="600"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="roll1.png"
+        hardshape="0 0 43 62"
+        />
+        <frame
+        time="150"
+        image="roll2.png"
+        hardshape="0 0 64 33"
+        />
+        <frame
+        time="300"
+        image="roll3.png"
+        hardshape="0 0 35 58"
+        />
+        <frame
+        time="450"
+        image="roll4.png"
+        hardshape="0 0 60 33"
+        />
+    </movement>
+    <movement name="special"
+    duration="750"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="special1.png"
+        hardshape="0 0 30 59"
+        />
+        <frame
+        time="150"
+        image="special2.png"
+        hardshape="0 0 68 41"
+        />
+        <frame
+        time="300"
+        image="special3.png"
+        hardshape="0 0 50 71"
+        />
+        <frame
+        time="450"
+        image="special4.png"
+        hardshape="0 0 60 57"
+        />
+        <frame
+        time="600"
+        image="special5.png"
+        hardshape="0 0 35 61"
+        />
+    </movement>
+    <movement name="smash-straight"
+    duration="150"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="smash-straight1.png"
+        hardshape="0 0 34 62"
+        />
+    </movement>
+</character>
