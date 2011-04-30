@@ -279,11 +279,11 @@ shield_center="20 40"
     >
 	<vector
         time="50"
-        vector="150,0"
+        vector="350,0"
         ></vector>
 	<vector
         time="350"
-        vector="150,0"
+        vector="350,0"
         ></vector>
         <frame
         time="0"
@@ -644,11 +644,11 @@ shield_center="20 40"
     >
 	<vector
         time="50"
-        vector="150,0"
+        vector="350,0"
         ></vector>
 	<vector
         time="350"
-        vector="150,0"
+        vector="350,0"
         ></vector>
         <frame
         time="0"
