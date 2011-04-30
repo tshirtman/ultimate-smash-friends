@@ -6,6 +6,11 @@
     middle="rizland-middle.png"
     margins="500,500,500,500"
     >
+    <entry-point coords="260 160"></entry-point>
+    <entry-point coords="527 0"></entry-point>
+    <entry-point coords="727 360"></entry-point>
+    <entry-point coords="1037 160"></entry-point>
+
     <moving-block
     texture="rizland-pod.png"
     >
