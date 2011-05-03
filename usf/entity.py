@@ -270,6 +270,7 @@ class Entity (object):
         """
         set the (dx/dt, dy/dt) of the entity
         """
+        assert isinstance(value, list)
         self._vector = value
 
     @property
@@ -352,11 +353,12 @@ class Entity (object):
         """
         save important attributes of the state of the player, to a dict
         """
+        assert isinstance(self._vector, list)
         d = {
             '_lives' : self.lives,
             '_place' : self.place[:],
             '_rect' : pygame.Rect(self.rect[:]),
-            '_vector' : self.vector[:],
+            '_vector' : self._vector[:],
             '_walking_vector' : self.walking_vector[:],
             }
 
@@ -371,6 +373,7 @@ class Entity (object):
         restore the game to the state described in backup
         """
         self.__dict__.update(backup)
+        assert isinstance(self._vector, list)
 
     @property
     def agressiv_points(self):

@@ -249,7 +249,7 @@ class ThrowBomb(TimedEvent):
                 'bomb',
                 place=(self.params['entity'].rect[0:2]),
                 reversed=self.params['entity'].reversed,
-                vector=(1000, -1000)
+                vector=[1000, -1000]
                 )
 
     def condition(self):
@@ -315,7 +315,7 @@ class ThrowMiniGost(TimedEvent):
         self.params['world'].addItem(
                 'mini_gost',
                 place=(self.params['entity'].rect[0:2]),
-                vector=(1000, 50)
+                vector=[1000, 50]
                 )
 
     def condition(self):
@@ -466,17 +466,6 @@ class PlayerOut(TimedEvent):
     This event is called when a player is hitting the level border
 
     """
-    def execute(self, deltatime):
-        pass
-        #self.params['world'].addItem(
-                #'star',
-                #place=(self.xy),
-                #vector=(
-                    #self.target.level.rect[0]/2-self.xy[0],
-                    #self.target.level.rect[1]/2-self.xy[1]
-                    #)
-                #)
-
     def initiate(self):
         self.params['entity'].set_lives(self.params['entity'].lives - 1)
         self.params['entity'].set_present(False)
@@ -625,7 +614,7 @@ class XeonCharge(TimedEvent):
                     reversed=self.entity.reversed,
                     place=[self.entity.place[0] + (-100 if self.entity.reversed
                         else 100), self.entity.place[1]],
-                    vector=(300,0),
+                    vector=[300, 0],
                     bullet=True)
 
 # This list is used to cast an event by name. This is usefull since events are
