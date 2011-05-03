@@ -332,13 +332,13 @@ class Game(object):
         Draw player's portraits at bottom of the screen
         """
         #draw the background of the block where the lives are displayed
-        hud_height = 75*config.general["WIDTH"]/800
+        hud_height = 75 * config.general["WIDTH"] / 800
         self.screen.blit(loaders.image(os.path.join(
             config.sys_data_dir,
             "misc",
             "hud.png"
             ), scale=(config.general["WIDTH"], hud_height))[0],
-          (0,config.general["HEIGHT"]-hud_height))
+            (0,config.general["HEIGHT"]-hud_height))
 
         for num, player in enumerate(self.players):
             self.draw_player_portrait(num, player)

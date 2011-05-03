@@ -307,6 +307,7 @@ def main(charnames):
                 img.hardshape[2]/2 + 200 * i) % window_size[0],
                 bottom_center_hardshape[1] - img.hardshape[1] - img.hardshape[3]
             )
+
             if display_hardshape:
                 screen.fill(
                     pygame.Color('grey'),
@@ -317,11 +318,12 @@ def main(charnames):
                         image(img.image)[1][3]
                     ))
                     )
+
                 screen.fill(
                     pygame.Color('blue'),
                     pygame.Rect((
-                        image_position[0]+img.hardshape[0],
-                        image_position[1]+img.hardshape[1],
+                        image_position[0] + img.hardshape[0],
+                        image_position[1] + img.hardshape[1],
                         img.hardshape[2],
                         img.hardshape[3]
                     ))

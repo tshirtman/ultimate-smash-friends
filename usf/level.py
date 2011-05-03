@@ -405,10 +405,10 @@ class Level(object):
             draw_rect(
                     surface,
                     pygame.Rect(
-                        (rect[0])/8,
-                        (rect[1])/8,
-                        rect[2]/8,
-                        rect[3]/8
+                        (rect[0]) / 8,
+                        (rect[1]) / 8,
+                        rect[2] / 8,
+                        rect[3] / 8
                         ),
                     pygame.Color('grey')
                     )
@@ -417,10 +417,10 @@ class Level(object):
         draw_rect(
                 surface,
                 pygame.Rect(
-                level_place[0]+self.border[0]*zoom,
-                level_place[1]+self.border[1]*zoom,
-                self.border[2]*zoom,
-                self.border[3]*zoom
+                level_place[0] + self.border[0] * zoom,
+                level_place[1] + self.border[1] * zoom,
+                self.border[2] * zoom,
+                self.border[3] * zoom
                 ),
                 pygame.Color('white')
                 )
@@ -429,8 +429,8 @@ class Level(object):
                 pygame.Rect(
                 level_place[0],
                 level_place[1],
-                self.rect[2]*zoom,
-                self.rect[3]*zoom
+                self.rect[2] * zoom,
+                self.rect[3] * zoom
                 ),
                 pygame.Color('lightblue')
                 )
@@ -438,10 +438,10 @@ class Level(object):
             draw_rect(
                     surface,
                     pygame.Rect(
-                        int(level_place[0]+(rect[0])*zoom),
-                        int(level_place[1]+(rect[1])*zoom),
-                        int(rect[2]*zoom),
-                        int(rect[3]*zoom)
+                        int(level_place[0] + (rect[0]) * zoom),
+                        int(level_place[1] + (rect[1]) * zoom),
+                        int(rect[2] * zoom),
+                        int(rect[3] * zoom)
                         ),
                     pygame.Color('green')
                     )
@@ -450,8 +450,8 @@ class Level(object):
             draw_rect(
                     surface,
                     pygame.Rect(
-                        int(level_place[0]+(rect[0])*zoom),
-                        int(level_place[1]+(rect[1])*zoom),
+                        int(level_place[0] + (rect[0]) * zoom),
+                        int(level_place[1] + (rect[1]) * zoom),
                         20,
                         20
                         ),
