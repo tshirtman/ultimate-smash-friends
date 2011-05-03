@@ -45,6 +45,11 @@ class Entity (object):
     Provide an entity object, which will take care of lifes, movements,
     collisions of an Entity. Players and Items are Entities.
 
+    This is a big class, and it uses a few counter intuitive concepts, first,
+    its vectors are defined relatively, that mean moving "forward/backward"
+    instead of moving "left/right", also the vector representing the walking
+    movement of the entity is seperated from the main vector.
+
     """
 
     # Precalculation of some sin-cos list to speed up collision detection.
@@ -71,8 +76,8 @@ class Entity (object):
             server=False, number=None, visible=False, present=False,
             upgraded=False, physic=True, gravity=True, animation='static',
             physics=True
-
             ):
+
         if number is None:
             self._number = Entity.counter
             Entity.counter += 1
@@ -166,12 +171,14 @@ class Entity (object):
     def place(self):
         """
         current position in level of the entity
+
         """
         return self._place
 
     def set_place(self, value):
         """
         move the entity to an arbitrary position
+
         """
         self._place = value
 
@@ -333,7 +340,9 @@ class Entity (object):
         set the direction of the entity
         """
         assert value in (True, False)
-        self._reversed = value
+        if value != self._reversed:
+            self._vector[0] *= -1
+            self._reversed = value
 
     @property
     def physics(self):
@@ -508,12 +517,12 @@ class Entity (object):
         ones that collides, their horizontal movement.
 
         """
-        vector = [0,0]
+        vector = [0, 0]
         for part in level_moving_parts:
             if self.foot_rect.collidelist(part.collide_rects)!= -1:
                 vector = [
-                vector[0]+part.get_movement()[0],
-                vector[1]+part.get_movement()[1]
+                vector[0] + part.get_movement()[0],
+                vector[1] + part.get_movement()[1]
                 ]
 
         return vector
