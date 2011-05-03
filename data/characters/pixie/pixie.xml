@@ -72,21 +72,36 @@ shield_center="20 40"
         time="200"
         vector="0,1200"
         ></vector>
-        <frame
-        time="0"
-        image="jump1.png"
-        hardshape="5 12 23 59"
-        />
-        <frame
-        time="150"
-        image="jump2.png"
+	<frame
+	time="0"
+	image="second-jump1.png"
+        hardshape="10 8 23 54"
+	/>
+	<frame
+	time="150"
+	image="second-jump2.png"
+        hardshape="15 8 23 54"
+	/>
+	<frame
+	time="300"
+	image="jump2.png"
         hardshape="10 5 23 54"
-        />
-        <frame
-        time="300"
-        image="jump3.png"
+	/>
+	<frame
+	time="450"
+	image="second-jump3.png"
+        hardshape="3 5 23 54"
+	/>
+	<frame
+	time="600"
+	image="jump3.png"
         hardshape="10 10 23 58"
-        />
+	/>
+	<frame
+	time="750"
+	image="second-jump1.png"
+        hardshape="10 8 23 54"
+	/>
     </movement>
     <movement name="jump"
     duration="10000"
@@ -437,21 +452,36 @@ shield_center="20 40"
         time="200"
         vector="0,1200"
         ></vector>
-        <frame
-        time="0"
-        image="jump1-upgraded.png"
-        hardshape="5 12 23 59"
-        />
-        <frame
-        time="150"
-        image="jump2-upgraded.png"
+	<frame
+	time="0"
+	image="second-jump1-upgraded.png"
+        hardshape="10 8 23 54"
+	/>
+	<frame
+	time="150"
+	image="second-jump2-upgraded.png"
+        hardshape="15 8 23 54"
+	/>
+	<frame
+	time="300"
+	image="jump2-upgraded.png"
         hardshape="10 5 23 54"
-        />
-        <frame
-        time="300"
-        image="jump3-upgraded.png"
+	/>
+	<frame
+	time="450"
+	image="second-jump3-upgraded.png"
+        hardshape="3 5 23 54"
+	/>
+	<frame
+	time="600"
+	image="jump3-upgraded.png"
         hardshape="10 10 23 58"
-        />
+	/>
+	<frame
+	time="750"
+	image="second-jump1-upgraded.png"
+        hardshape="10 8 23 54"
+	/>
     </movement>
     <movement name="jump_upgraded"
     duration="10000"
