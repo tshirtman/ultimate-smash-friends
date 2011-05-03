@@ -606,7 +606,7 @@ class XeonCharge(TimedEvent):
 
     def delete(self):
         if self.entity_life == self.entity.percents:
-            size = int(self.size / 0.243) # magick number, yes, it's round(1700 / 7)
+            size = min(int(self.size / 0.243), 6) # magick number, yes, it's round(1700 / 7)
             self.world.addItem(
                     "xeon-charge",
                     upgraded=self.entity.upgraded,
