@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-####################################################################################
+################################################################################
 # copyright 2008 Gabriel Pettier <gabriel.pettier@gmail.com>
 #
 # This file is part of UltimateSmashFriends
@@ -18,7 +18,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.
-##################################################################################
+################################################################################
 
 # standards imports
 import os
@@ -48,7 +48,8 @@ except:
     Log().log("old version of pygame no BLEND_RGBA_MAX")
     BLEND_RGBA_MAX = None
 
-@memoize #the memoize is critical for performances!
+
+@memoize
 def image(name, *args, **kwargs):
     """
     A function to load an image, shamelessly picked from pygame
@@ -59,6 +60,7 @@ def image(name, *args, **kwargs):
     keywords arguments accepted are the followings:
         zoom=None, colorkey=None, server=False, lighten=False, reversed=False,
     """
+
     # FIXME: should not have to load the image in server mode, we just want
     # it's size!
     if 'nodisplay' in kwargs and kwargs['nodisplay']:
@@ -68,10 +70,9 @@ def image(name, *args, **kwargs):
         kwargs['reversed'] = False
         #logging.debug("reverse "+name)
         img = pygame.transform.flip(
-            image(name,*args, **kwargs)[0],
+            image(name, *args, **kwargs)[0],
             True, #flip horizontaly
-            False #not verticaly
-            )
+            False) #not verticaly
 
     elif 'lighten' in kwargs and kwargs['lighten']:
         #logging.debug('lightened: '+name)
@@ -81,8 +82,7 @@ def image(name, *args, **kwargs):
             img.fill(
                     pygame.Color('lightgrey'),
                     None,
-                    BLEND_RGB_MAX
-                    )
+                    BLEND_RGB_MAX)
         else:
             # this mean this version of pygame is to old to use the effect
             # above, an equivalent method would be a good thing
@@ -100,26 +100,23 @@ def image(name, *args, **kwargs):
         img.fill(
                 pygame.Color(255, 255, 255, int(alpha*255)),
                 image(name, *args, **kwargs)[1],
-                BLEND_RGBA_MULT
-                )
+                BLEND_RGBA_MULT)
 
     elif 'scale' in kwargs and kwargs['scale'] is not None:
         if len(kwargs['scale']) is not 2:
             raise Exception.ValueError(
-                "scale parameter should be a tuple of two integers"
-                )
+                "scale parameter should be a tuple of two integers")
+
         scale = kwargs['scale']
         kwargs['scale'] = None
         if config.general['SMOOTHSCALE']:
             img = pygame.transform.smoothscale(
                 image(name, *args, **kwargs)[0],
-                scale
-                )
+                scale)
         else:
             img = pygame.transform.scale(
                 image(name, *args, **kwargs)[0],
-                scale
-                )
+                scale)
 
 
     elif 'zoom' in kwargs and kwargs['zoom'] not in (None, 1):
@@ -131,22 +128,19 @@ def image(name, *args, **kwargs):
                     image(name, **kwargs)[0],
                     (
                      int(image(name, *args, **kwargs)[1][2]*zoom),
-                     int(image(name, *args, **kwargs)[1][3]*zoom)
-                    )
-                    )
+                     int(image(name, *args, **kwargs)[1][3]*zoom)))
         else:
             img = pygame.transform.scale(
                     image(name, **kwargs)[0],
                     (
                      int(image(name, *args, **kwargs)[1][2]*zoom),
-                     int(image(name, *args, **kwargs)[1][3]*zoom)
-                    )
-                    )
+                     int(image(name, *args, **kwargs)[1][3]*zoom)))
 
     elif 'rotate' in kwargs and kwargs['rotate'] not in (None, 0):
         angle = kwargs['rotate']
         kwargs['rotate'] = None
-        img = pygame.transform.rotate(image(name, **kwargs)[0], angle *180/math.pi)
+        img = pygame.transform.rotate(
+                image(name, **kwargs)[0], angle * 180/math.pi)
 
     else:
         try:
@@ -157,17 +151,20 @@ def image(name, *args, **kwargs):
         img = img.convert_alpha()
     return img, img.get_rect()
 
+
 @memoize
-def image_layer(first, second, pos=(0,0)):
+def image_layer(first, second, pos=(0, 0)):
     surface = copy.copy(first)
     surface.blit(second, pos)
     return surface
+
 
 @memoize
 def text(text_send, font, r=240, g=240, b=240, a=250):
     return font.render(text_send.decode('utf-8'),
             True,
             pygame.color.Color(r, g, b, a))
+
 
 @memoize
 def paragraph(text_send, font):
@@ -176,14 +173,18 @@ def paragraph(text_send, font):
         if text(texte, font).get_width() > max_len.get_width():
             max_len = text(texte, font)
 
-    text_re = pygame.surface.Surface((max_len.get_width(), len(text_send.split('\n'))*text("", font).get_height()))
+    text_re = pygame.surface.Surface(
+            (max_len.get_width(),
+                len(text_send.split('\n'))*text("", font).get_height()))
 
     i = -1
     for texte in text_send.split('\n'):
         i += 1
         surf = text(texte, font)
-        text_re.blit(surf, (text_re.get_width()/2 - surf.get_width()/2, i*surf.get_height()))
+        text_re.blit(surf, (text_re.get_width()/2 - surf.get_width()/2,
+            i*surf.get_height()))
     return text_re
+
 
 @memoize
 def track(name):
@@ -196,9 +197,11 @@ def track(name):
         logging.info("Unable to initialize audio.")
         return None
 
+
 @memoize
 def get_config():
     return Config()
+
 
 @memoize
 def get_gconfig():

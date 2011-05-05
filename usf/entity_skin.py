@@ -42,13 +42,14 @@ import os
 import sys
 import random
 
+
 class Entity_skin (object):
     """
     An Entity_skin contains all information about a player or an item, which is
     mainly animations frames, with their timings and vectors, and less
     importants information as the character/item name and such details.
-
     """
+
     def __init__(self, dir_name, server=False, xml_from_str=None,
             keep_xml=False, animation='static'):
         """
@@ -61,7 +62,7 @@ class Entity_skin (object):
         if xml_from_str is not None:
             a = ElementTree.ElementTree()
             # FIXME this is DIRTY
-            f = open('/tmp/erf','w')
+            f = open('/tmp/erf', 'w')
             f.write(xml_from_str)
             f.close()
             a.parse('/tmp/erf')
@@ -71,13 +72,11 @@ class Entity_skin (object):
                         config.sys_data_dir,
                         dir_name,
                         dir_name.split(os.sep)[-1]
-                        +os.extsep+'xml'
-                        )
+                        +os.extsep+'xml')
             #logging.debug(file)
             a = ElementTree.ElementTree(
                     None,
-                    file
-                    )
+                    file)
         if keep_xml:
             # keep this to use it for editors
             self.xml = a
@@ -90,8 +89,7 @@ class Entity_skin (object):
         self.image = os.path.join(
                     config.sys_data_dir,
                     dir_name,
-                    attribs['image']
-                    )
+                    attribs['image'])
 
         self.weight = attribs['weight']
         if 'armor' in attribs:
@@ -122,13 +120,11 @@ class Entity_skin (object):
         else:
             logging.warning(
                 'warning, entity '+self.name+' has no attribute shield_center'+
-                ', guessing from hardshape'
-                )
+                ', guessing from hardshape')
 
             return (
                 self.hardshape[0] + .5 * self.hardshape[2],
-                self.hardshape[1] + .5 * self.hardshape[3]
-            )
+                self.hardshape[1] + .5 * self.hardshape[3])
 
     def load_movements(self, a, dir_name, server):
         for movement in a.findall('movement'):
@@ -139,13 +135,11 @@ class Entity_skin (object):
 
             for event in movement.findall('vector'):
                 #logging.debug('vector found')
-                x,y = [int(n) for n in event.attrib['vector'].split(',')]
+                x, y = [int(n) for n in event.attrib['vector'].split(',')]
                 vectors.append(
                         (
-                        (x,y),
-                         int(event.attrib['time'])
-                        )
-                        )
+                        (x, y),
+                         int(event.attrib['time'])))
 
             self.vectors[movement.attrib['name']] = vectors
 
@@ -153,9 +147,8 @@ class Entity_skin (object):
                 events.append(
                         (
                             event.attrib['action'],
-                            [int(i) for i in event.attrib['period'].split(',')]
-                            )
-                        )
+                            [int(i) for i in
+                                event.attrib['period'].split(',')]))
 
             self.action_events[movement.attrib['name']] = events
 
@@ -164,53 +157,45 @@ class Entity_skin (object):
                         os.path.join(
                             config.sys_data_dir,
                             dir_name,
-                            sound.attrib['filename']
-                            )
-                        )
+                            sound.attrib['filename']))
+
             self.sounds[movement.attrib['name']] = sounds
 
             for frame in movement.findall('frame'):
                 image = os.path.join(
                             config.sys_data_dir,
                             dir_name,
-                            frame.attrib['image']
-                            )
+                            frame.attrib['image'])
 
                 frames.append(
                         Frame(
                             image,
                             frame.attrib['time'],
                             ('hardshape' in frame.attrib
-                             and frame.attrib ['hardshape']
-                             or self.hardshape
-                             ),
-                            name=frame.attrib['image']
-                            )
-                        )
+                             and frame.attrib['hardshape']
+                             or self.hardshape),
+                            name=frame.attrib['image']))
 
-                for agressiv in frame.findall( 'agressiv-point' ):
-                    coords = agressiv.attrib[ 'coords' ].split( ',' )
-                    vector = agressiv.attrib[ 'vector' ].split( ',' )
+                for agressiv in frame.findall('agressiv-point'):
+                    coords = agressiv.attrib['coords'].split(',')
+                    vector = agressiv.attrib['vector'].split(',')
                     frames[-1].addAgressivPoint([int(i) for i in coords],
                                                 [int(i) for i in vector])
 
             self.animations[movement.attrib['name']] = PreciseTimedAnimation(
                     frames,
                     movement.attrib,
-                    server
-                    )
+                    server)
 
     def valid_animation(self, anim_name):
         return (
                 anim_name in self.animations
                 and (
                     anim_name == 'static' or
-                    anim_name != self.current_animation
-                    )
-                )
+                    anim_name != self.current_animation))
 
     #FIXME: this should be in the entity class
-    def change_animation( self, anim_name, game=None, params={}):
+    def change_animation(self, anim_name, game=None, params={}):
         """
         Change animation of the entity skin, updating hardshape and agressiv
         points. Add associated events to game.
@@ -218,15 +203,14 @@ class Entity_skin (object):
         """
         if self.valid_animation(anim_name):
             if 'entity' in params and params['entity'].upgraded:
-                if anim_name+'_upgraded' in self.animations:
-                    self.current_animation = anim_name+'_upgraded'
+                if anim_name + '_upgraded' in self.animations:
+                    self.current_animation = anim_name + '_upgraded'
                 else:
                     logging.debug(
                             ' '.join((self.name,
                                 'character has no upgraded version of ',
-                                anim_name, 'falling back to normal version'
-                                ))
-                            )
+                                anim_name, 'falling back to normal version')))
+
                     self.current_animation = anim_name
             else:
                 self.current_animation = anim_name
@@ -267,8 +251,7 @@ class Entity_skin (object):
             game.events.add_event(
                     'VectorEvent',
                     period=(None, game.gametime+vector[1]/1000.0),
-                    params=params2
-                    )
+                    params=params2)
 
     def add_events(self, anim_name, game, params):
         for event in self.action_events[anim_name]:
@@ -286,8 +269,7 @@ class Entity_skin (object):
                 game.events.add_event(
                         event[0],
                          period=(p1, p2),
-                         params=params
-                        )
+                         params=params)
 
             except AttributeError:
                 logging.debug((self.name, game), 3)
@@ -304,7 +286,7 @@ class Entity_skin (object):
             self.animation.start(t)
 
         if self.animation.playing == 0:
-            self.current_animation = "static"+upgraded*'_upgraded'
+            self.current_animation = "static" + upgraded * '_upgraded'
             self.animation = self.animations[self.current_animation]
             self.animation.start(t)
 

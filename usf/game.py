@@ -69,18 +69,18 @@ class Game(object):
     """
     The game base object, initiate and update everything when in game (not in
     menu).
-
     """
-    def __init__(self, screen, level="biglevel", players_=(None, None, None, None)):
+
+    def __init__(self, screen, level="biglevel", players_=(None, None, None,
+        None)):
         """
         Initialize a game with a list of player and a level,
         level is the basename of the level in levels/
-
         """
+
         self.SIZE = (
             config.general['WIDTH'],
-            config.general['HEIGHT']
-            )
+            config.general['HEIGHT'])
 
         self.first_frame = True
         self.notif = []
@@ -106,8 +106,12 @@ class Game(object):
         self.load_players(players_)
 
         #the optional progress bar for the players lives
-        self.progress_bar_size = (82.5*config.general["WIDTH"]/800, 12.5*config.general["WIDTH"]/800)
-        self.progress_bar_x = config.general["HEIGHT"]-25*config.general["WIDTH"]/800
+        self.progress_bar_size = (
+                82.5*config.general["WIDTH"]/800,
+                12.5*config.general["WIDTH"]/800)
+
+        self.progress_bar_x = (
+                config.general["HEIGHT"] - 25 * config.general["WIDTH"] / 800)
 
         # a countdown to the game end
         self.ending = 5.0
@@ -118,11 +122,7 @@ class Game(object):
         self.events.add_event(
                 'ItemShower',
                 (None, None),
-                {
-                    'freq': 15,
-                    'world': self
-                    }
-                )
+                {'freq': 15, 'world': self})
 
     def load_player(self, i, player):
         logging.debug('player '+str(i)+' loaded')
@@ -132,9 +132,8 @@ class Game(object):
                     i+1,
                     self,
                     player.replace("AI", ""),
-                    ((i+1)*self.SIZE[0]/5,100)
-                    )
-                )
+                    ((i + 1) * self.SIZE[0] / 5, 100)))
+
         if player and "AI" in player.split(os.sep)[1][:2]:
             self.players[len(self.players)-1].ai = True
 
@@ -142,20 +141,20 @@ class Game(object):
         """
         this function is responsible of adding the requested players to the
         game.
-
         """
+
         logging.debug('loading players')
         self.players = []
-        for i,player in enumerate(players_):
+        for i, player in enumerate(players_):
             self.load_player(i, player)
 
     def addItem(
         self,
         item='heal',
-        place=(550,50),
+        place=(550, 50),
         reversed=False,
         upgraded=False,
-        vector=(0,0),
+        vector=(0, 0),
         bullet=False,
         physics=True,
         animation='static'):
@@ -168,7 +167,7 @@ class Game(object):
             e = entity.Entity(
                         None,
                         self,
-                        os.path.join( 'items', item,),
+                        os.path.join('items', item),
                         place=place,
                         vector=vector,
                         reversed=reversed,
@@ -178,8 +177,7 @@ class Game(object):
                         gravity=not bullet,
                         physic=not bullet,
                         animation=animation,
-                        physics=physics
-                        )
+                        physics=physics)
 
             e.entity_skin.change_animation(animation, self, {'entity': e})
 
@@ -203,51 +201,46 @@ class Game(object):
                     os.path.join(
                         config.sys_data_dir,
                         'misc',
-                        'progress_bar_bg.png'
-                        ),
-                    scale=self.progress_bar_size
-                    )[0],
+                        'progress_bar_bg.png'),
+                    scale=self.progress_bar_size)[0],
                 (
                 -0.5*self.icon_space+player.num*self.icon_space,
-                self.progress_bar_x
-                )
-            )
-        if self.progress_bar_size[0] - self.progress_bar_size[0]*(player.percents*0.1+0.01) > 0:
+                self.progress_bar_x))
+
+        if (self.progress_bar_size[0] -
+                self.progress_bar_size[0] * (player.percents * 0.1 + 0.01) > 0):
             self.screen.blit(
                     image(
                         os.path.join(
                             config.sys_data_dir,
                             'misc',
-                            'progress_bar.png'
-                            ),
-                        scale=(self.progress_bar_size[0] - self.progress_bar_size[0]*(player.percents*0.1+0.01), self.progress_bar_size[1])
-                        )[0],
+                            'progress_bar.png'),
+                        scale=(self.progress_bar_size[0] -
+                            self.progress_bar_size[0] * (
+                                player.percents * 0.1 + 0.01),
+                            self.progress_bar_size[1]))[0],
                     (
                     -0.5*self.icon_space+player.num*self.icon_space,
-                self.progress_bar_x
-                    )
-                )
+                self.progress_bar_x))
 
     def draw_player_portrait(self, num, player):
         self.screen.blit(
-                 image(player.entity_skin.image, scale=(30,30))[0],
+                 image(player.entity_skin.image, scale=(30, 30))[0],
                     (
                     -0.5*self.icon_space+player.num*self.icon_space,
-                    self.SIZE[1]*.9
-                    )
-                )
+                    self.SIZE[1]*.9))
 
-        if loaders.get_gconfig().get("game", "displaylives") == "y" :
+        if loaders.get_gconfig().get("game", "displaylives") == "y":
             self.screen.blit(
                      game_font.render(str(player.percents*10)[:3]+"%",
                      True,
                      pygame.color.Color("red")),
                         (
                         -0.5*self.icon_space+player.num*self.icon_space,
-                        self.SIZE[1]*.9
-                        )
-                    )
-        elif loaders.get_gconfig().get("game", "display_progress_bar_for_lives") == "y":
+                        self.SIZE[1]*.9))
+
+        elif loaders.get_gconfig().get("game",
+                "display_progress_bar_for_lives") == "y":
             self.draw_progress_bar_for_lives(player)
 
         self.draw_player_lives(player)
@@ -261,17 +254,13 @@ class Game(object):
                         os.path.join(
                             config.sys_data_dir,
                             'misc',
-                            'heart.png'
-                            )
-                        )[0],
+                            'heart.png'))[0],
                     (
                         -0.5 * self.icon_space +
                             player.num * self.icon_space +
                             32 +
                             i * self.icon_space / 40,
-                        self.SIZE[1]*.9+10
-                        )
-                    )
+                        self.SIZE[1]*.9+10))
 
     def draw_debug_player_coords(self, num, player):
         """ draw player coords, useful for debugging.
@@ -282,13 +271,10 @@ class Game(object):
                     ':'+
                     str(player.place[1]),
                     True,
-                    pygame.color.Color('red')
-                    ),
+                    pygame.color.Color('red')),
                 (
                  self.SIZE[0] * 3 / 4,
-                 num*self.SIZE[1] / 4
-                )
-                )
+                 num*self.SIZE[1] / 4))
 
     def draw_debug_player_movement(self, num, player):
         """displays current key movement of player, useful for debuging
@@ -297,13 +283,10 @@ class Game(object):
                 game_font.render(
                     player.entity_skin.current_animation,
                     True,
-                    pygame.color.Color('red')
-                    ),
+                    pygame.color.Color('red')),
                 (
                  0,
-                 num*self.SIZE[1] / 4
-                )
-                )
+                 num*self.SIZE[1] / 4))
 
     def draw_debug_player_controls(self, num, player, controls):
         """ displays current key sequence of player, useful for debuging
@@ -336,9 +319,9 @@ class Game(object):
         self.screen.blit(loaders.image(os.path.join(
             config.sys_data_dir,
             "misc",
-            "hud.png"
-            ), scale=(config.general["WIDTH"], hud_height))[0],
-            (0,config.general["HEIGHT"]-hud_height))
+            "hud.png"),
+            scale=(config.general["WIDTH"], hud_height))[0],
+            (0, config.general["HEIGHT"]-hud_height))
 
         for num, player in enumerate(self.players):
             self.draw_player_portrait(num, player)
@@ -351,17 +334,16 @@ class Game(object):
         self.center_zoom_camera()
         self.level.draw_before_players(
             self.screen, self.level_place, self.zoom,
-            'levelshape' in debug_params and debug_params['levelshape'],
-        )
-        for entity in self.players+self.items:
+            'levelshape' in debug_params and debug_params['levelshape'])
+
+        for entity in self.players + self.items:
             entity.present and entity.draw(
-                self.level_place, self.zoom, self.screen, debug_params=debug_params
-                )
+                self.level_place, self.zoom, self.screen,
+                debug_params=debug_params)
 
         self.level.draw_after_players(
             self.screen, self.level_place, self.zoom,
-            'levelmap' in debug_params and debug_params['levelmap'],
-        )
+            'levelmap' in debug_params and debug_params['levelmap'])
 
         self.draw_portraits()
         self.draw_debug(debug_params)
@@ -382,8 +364,7 @@ class Game(object):
                     loaders.text(
                         alive_players[0].name.capitalize()+_(" WON!"),
                         fonts["bold"][15], 0, 0, 0),
-                    (self.SIZE[0]/2, self.SIZE[1]/2)
-                    )
+                    (self.SIZE[0]/2, self.SIZE[1]/2))
 
         elif len(alive_players) == 0:
             self.screen.blit(game_font.render(
@@ -393,8 +374,7 @@ class Game(object):
                     str(math.sin(self.ending/10)) [3:5]+
                     "50"+
                     str(math.sin(self.ending/10)) [3:5]+
-                    "30"
-                    )),
+                    "30")),
                 (self.SIZE[0]/2, self.SIZE[1]/2))
 
     def draw_notif(self, notif):
@@ -402,13 +382,10 @@ class Game(object):
                 game_font.render(
                     str(notif[1]),
                     True,
-                    pygame.color.Color("black")
-                    ),
+                    pygame.color.Color("black")),
                 (
                  self.SIZE[0]/4,
-                 self.notif.index(notif)*self.SIZE[1]/20
-                )
-                )
+                 self.notif.index(notif)*self.SIZE[1]/20))
 
     def update_notif(self):
         for notif in self.notif:
@@ -449,8 +426,7 @@ class Game(object):
                     sum(i.place[0] for i in self.present_players) /
                     len(self.present_players),
                     sum(i.place[1] for i in self.present_players) /
-                    len(self.present_players)
-                    )
+                    len(self.present_players))
 
     def center_zoom_camera(self):
         self.present_players = [i for i in self.players if i.present]
@@ -460,16 +436,14 @@ class Game(object):
             # image cache is more useful.
             self.zoom = (
                 int(self.precise_zoom * config.general['ZOOM_SHARPNESS'])/
-                (config.general['ZOOM_SHARPNESS'] * 1.0)
-            )
+                (config.general['ZOOM_SHARPNESS'] * 1.0))
 
             players_barycenter = self.players_barycenter
             # calculate coordinates of top left corner of level
             # rect the barycenter of players at the center of the screen
             level_place = [
-                 -(players_barycenter[0]) * self.zoom + self.SIZE[0] / 2 ,
-                 -(players_barycenter[1]) * self.zoom + self.SIZE[1] / 2
-                 ]
+                 -(players_barycenter[0]) * self.zoom + self.SIZE[0] / 2,
+                 -(players_barycenter[1]) * self.zoom + self.SIZE[1] / 2]
 
             if self.smooth_scrolling:
                 # tends to the ideal position (nicer!)
@@ -496,15 +470,11 @@ class Game(object):
         for player in filter(lambda x: "pick" in
                 x.entity_skin.current_animation, self.players):
             for item in self.items:
-                if player.rect.collidelist([item.rect,]) != -1:
+                if player.rect.collidelist([item.rect, ]) != -1:
                         item.entity_skin.change_animation(
                                 'triger',
                                 self,
-                                params={
-                                    'player': player,
-                                    'entity': item
-                                    }
-                                )
+                                params={'player': player, 'entity': item})
 
     def update_items(self, deltatime):
         for item in self.items:
@@ -513,8 +483,8 @@ class Game(object):
                          self.gametime,
                          self,
                          self.level_place,
-                         self.zoom
-                        )
+                         self.zoom)
+
             if not item.rect.colliderect(self.level.border):
                 item.set_lives(0)
 
@@ -528,8 +498,7 @@ class Game(object):
                     self.gametime,
                     self,
                     self.level_place,
-                    self.zoom
-                    )
+                    self.zoom)
 
             # if the player is out of the level zone
             if not player.rect.colliderect(self.level.border):
@@ -539,9 +508,7 @@ class Game(object):
                         params={
                             'entity': player,
                             'world': self,
-                            'gametime' : self.gametime
-                            }
-                        )
+                            'gametime': self.gametime})
 
             if player.lives <= 0:
                 player.set_present(False)
@@ -565,10 +532,8 @@ class Game(object):
         return tuple((e.entity_skin.backup() for e in self.players+self.items))
 
     def restore_skins(self, backup):
-        for e,b in zip(self.players + self.items, backup):
+        for e, b in zip(self.players + self.items, backup):
             e.entity_skin.restore(b)
-        #(e.entity_skin.restore(b) for e,b in
-                #zip(self.players + self.items, backup))
 
     def backup(self):
         """
@@ -640,8 +605,7 @@ class Game(object):
                         params={
                             'world': self,
                             'entity': pl,
-                            'gametime': self.gametime
-                            })
+                            'gametime': self.gametime})
 
         self.events.update(deltatime, self.gametime)
         self.level.update(self.gametime)
@@ -666,8 +630,10 @@ class Game(object):
 
         return 'game'
 
+
 class NetworkServerGame(Game):
     pass
+
 
 class NetworkClientGame(Game):
     pass

@@ -172,8 +172,8 @@ class BombExplode(TimedEvent):
         self.params['entity'].set_gravity(False)
         self.params['entity'].entity_skin.change_animation(
                 'explode',
-                self.params['world']
-        )
+                self.params['world'])
+
         self.done = True
 
     def condition(self):
@@ -189,8 +189,8 @@ class DropRandomItem(TimedEvent):
         try:
             self.params['world'].addItem(
                     random.sample(['heal','bomb'],1)[0],
-                    place=(random.random()*SIZE[0],50)
-            )
+                    place=(random.random()*SIZE[0],50))
+
             self.done = True
         except:
             raise
@@ -225,10 +225,9 @@ class ItemShower(TimedEvent):
                             'trunk',
                             'bomb',
                             ],
-                            1
-                            )[0],
-                        place=(random.random()*SIZE[0],50)
-                        )
+                            1)[0],
+                        place=(random.random()*SIZE[0],50))
+
                 self.elapsed -= freq
             except:
                 raise
@@ -249,8 +248,7 @@ class ThrowBomb(TimedEvent):
                 'bomb',
                 place=(self.params['entity'].rect[0:2]),
                 reversed=self.params['entity'].reversed,
-                vector=[1000, -1000]
-                )
+                vector=[1000, -1000])
 
     def condition(self):
         return True
@@ -272,8 +270,7 @@ class ThrowFireBall(TimedEvent):
                 place=place,
                 reversed=entity.reversed,
                 upgraded=entity.upgraded,
-                bullet=True,
-                )
+                bullet=True)
 
     def condition(self):
         return True
@@ -290,8 +287,8 @@ class Gost(TimedEvent):
         for p in (
                 player
                 for player in self.params['world'].players
-                if player is not self.params['entity']
-                ):
+                if player is not self.params['entity']):
+
             if self.target_player is None or None <\
             self.params['entity'].dist(p) <\
             self.target_player.dist( self.params['entity']):
@@ -315,8 +312,7 @@ class ThrowMiniGost(TimedEvent):
         self.params['world'].addItem(
                 'mini_gost',
                 place=(self.params['entity'].rect[0:2]),
-                vector=[1000, 50]
-                )
+                vector=[1000, 50])
 
     def condition(self):
         return True
@@ -338,8 +334,7 @@ class LaunchBullet(TimedEvent):
                 place=place,
                 reversed=entity.reversed,
                 upgraded=entity.upgraded,
-                bullet=True
-                )
+                bullet=True)
 
     def condition(self):
         return True
@@ -447,8 +442,8 @@ class DropPlayer(TimedEvent):
         self.params['entity'].set_present(True)
         self.params['entity'].entity_skin.change_animation(
             'static',
-            self.params['world']
-            )
+            self.params['world'])
+
         self.em.add_event(
                 'InvinciblePlayer',
                 (None, self.params['gametime'] + 3),
@@ -457,8 +452,7 @@ class DropPlayer(TimedEvent):
                     self.params['entity'],
                     'world':
                     self.params['world']
-                    }
-                )
+                    })
 
 
 class PlayerOut(TimedEvent):
@@ -473,8 +467,8 @@ class PlayerOut(TimedEvent):
             self.em.add_event(
                     'DropPlayer',
                     (None, self.params['gametime'] + 1),
-                    params = self.params
-                    )
+                    params = self.params)
+
         self.xy = self.params['entity'].place
 
     def condition(self):
@@ -504,8 +498,7 @@ class PlayerStaticOnGround(TimedEvent):
 
         self.params['entity'].entity_skin.change_animation(
                 anim+self.params['entity'].upgraded*'_upgraded',
-                self.params['world']
-                )
+                self.params['world'])
 
 
 class Bounce(TimedEvent):
@@ -533,11 +526,12 @@ class BlobSpecial(TimedEvent):
         self.entity_life = self.entity.percents
 
         try:
-            self.target = min([(self.entity.dist(e), e)
-                for e in self.params['world'].players
-                if e is not self.entity and ((
-                    e.place[0] < self.entity.place[0]) == self.entity.reversed
-                    )])[1]
+            self.target = min([
+                (self.entity.dist(e), e) for e in self.params['world'].players
+                if e is not self.entity and
+                ((e.place[0] < self.entity.place[0]) ==\
+                        self.entity.reversed)])[1]
+
         except ValueError:
             # no suitable target, abort
             self.done = True

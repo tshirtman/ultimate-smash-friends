@@ -1,12 +1,32 @@
 #!/usr/bin/env python
+################################################################################
+# copyright 2008 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
+#                                                                              #
+# This file is part of UltimateSmashFriends                                    #
+#                                                                              #
+# UltimateSmashFriends is free software: you can redistribute it and/or modify #
+# it under the terms of the GNU General Public License as published by         #
+# the Free Software Foundation, either version 3 of the License, or            #
+# (at your option) any later version.                                          #
+#                                                                              #
+# UltimateSmashFriends is distributed in the hope that it will be useful,      #
+# but WITHOUT ANY WARRANTY; without even the implied warranty of               #
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                #
+# GNU General Public License for more details.                                 #
+#                                                                              #
+# You should have received a copy of the GNU General Public License            #
+# along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.#
+################################################################################
+
 from timed_event import event_names
 import itertools
+
 
 class EventManager(object):
     """
     This simple module takes care of the state of events in the game
-
     """
+
     def __init__(self):
         self.events = list()
 
@@ -15,7 +35,7 @@ class EventManager(object):
 
     def restore(self, backup):
         self.events = backup[0]
-        for e,b in zip(self.events, backup[1]):
+        for e, b in zip(self.events, backup[1]):
             e.restore(b)
 
     def update(self, deltatime, gametime):
@@ -40,8 +60,8 @@ class EventManager(object):
                 lambda event:
                 (cls is None or event.__class__==cls) and
                 (reduce(
-                    lambda x,y: x and y,
-                    [(i in event.params and event.params[i] == params[i]) for i in params])
-                    ),
+                    lambda x, y: x and y,
+                    [(i in event.params and event.params[i] == params[i])
+                        for i in params])),
                 self.events)
 

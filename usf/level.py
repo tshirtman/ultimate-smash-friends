@@ -37,22 +37,23 @@ try:
 except:
     logging.warning(
             "your python version seems quite old, you should consider"
-            " upgrading"
-    )
+            " upgrading")
+
     from elementtree import ElementTree
+
 
 class Block (object):
     """
     An abstraction class to define methods shared by some level objects.
-
     """
+
     def __init__(self):
         """
         Not much to do here.
         """
         pass
 
-    def draw(self, surface, coords=(0,0), zoom=1):
+    def draw(self, surface, coords=(0, 0), zoom=1):
         """
         Draw this moving bloc on the passed surface, taking account of zoom and
         placement of camera.
@@ -65,25 +66,27 @@ class Block (object):
 
     def collide_rect(self, rect):
         """
-        Return True if the point at (x,y) collide this bloc's rects.
+        Return True if the point at (x, y) collide this bloc's rects.
 
         """
         return rect.collidelist(self.collide_rects) != -1
 
+
 class VectorBloc (Block):
     """
     This define a bloc that apply a vector to any entity falling/walking on it.
-
     """
-    def __init__(self, rects, position, vector, relative, texture, server=False):
+
+    def __init__(self, rects, position, vector, relative, texture,
+            server=False):
         Block.__init__(self)
         self.rects = rects
         self.relative = relative
         self.texture = os.path.join(
                 config.sys_data_dir,
                 "levels",
-                texture
-                )
+                texture)
+
         self.vector = vector
         self.position = position
         self.collide_rects = []
@@ -92,16 +95,13 @@ class VectorBloc (Block):
                     pygame.Rect(
                         i[0]+position[0],
                         i[1]+position[1],
-                        i[2],
-                        i[3]
-                        )
-                    )
+                        i[2], i[3]))
 
     def apply_vector(self, entity):
         """
         This method simply add the bloc's vector to the passed player.
-
         """
+
         entity.vector = [entity.vector[0] + self.vector[0],
                 entity.vector[1] + self.vector[1]]
 
@@ -109,14 +109,16 @@ class VectorBloc (Block):
     def collide_rect(self, rect):
         return Block.collide_rect(self, rect)
 
+
 class MovingPart (Block):
     """
     This define a level bloc that move, with a defined texture, and a defined
-    set of collision rects. It moves following a pattern of (position(x,y):
+    set of collision rects. It moves following a pattern of (position(x, y):
     time( % maxtime)).
-
     """
-    def __init__(self, rects, texture, patterns, server=False, levelname="biglevel"):
+
+    def __init__(self, rects, texture, patterns, server=False,
+            levelname="biglevel"):
         Block.__init__(self)
         #logging.debug('moving block created')
         self.rects = rects
@@ -125,8 +127,7 @@ class MovingPart (Block):
                     config.sys_data_dir,
                     "levels",
                     levelname,
-                    texture
-                    )
+                    texture)
             loaders.image(self.texture)
         except pygame.error:
             logging.debug("No texture found here: " + str(file))
@@ -135,8 +136,7 @@ class MovingPart (Block):
                         config.sys_data_dir,
                         "levels",
                         "common",
-                        texture
-                        )
+                        texture)
 
             except pygame.error:
                 logging.error("Can't load the texture: " + str(file))
@@ -168,33 +168,28 @@ class MovingPart (Block):
                 filter(
                     lambda(x):
                     x['time'] <= level_time * 10000 % self.patterns[-1]['time'],
-                    self.patterns
-                    )
-               )[-1]
+                    self.patterns))[-1]
 
         # get the next position of pattern we will get by.
         # FIXME: maybe avoid filtering all, maybe using an itertool?
         next = filter(
                 lambda(x): x['time'] >= level_time * 10000 %
                 self.patterns[-1]['time'],
-                self.patterns
-                )[0]
+                self.patterns)[0]
 
         # get the proportion of travel between last and next we should have
         # done.
         percent_bettween = (
-                level_time*10000 % self.patterns[-1]['time'] - last['time']
-                ) / (next['time'] - last['time'])
+                level_time*10000 % self.patterns[-1]['time'] - last['time']) /(
+                        next['time'] - last['time'])
 
         self.position[0] = (
             int(last['position'][0] * (1 - percent_bettween) +
-            next['position'][0] * (percent_bettween))
-            )
+            next['position'][0] * (percent_bettween)))
 
         self.position[1] = (
             int(last['position'][1] * (1 - percent_bettween)
-            +next['position'][1] * (percent_bettween))
-            )
+            +next['position'][1] * (percent_bettween)))
 
         # maybe usefull to cache thoose result too.
         self.collide_rects = map(
@@ -202,11 +197,8 @@ class MovingPart (Block):
                 pygame.Rect(
                     rect[0]+self.position[0],
                     rect[1]+self.position[1],
-                    rect[2],
-                    rect[3]
-                    ),
-             self.rects
-         )
+                    rect[2], rect[3]),
+             self.rects)
 
     def backup(self):
         return (self.old_position, self.position)
@@ -221,6 +213,7 @@ class Level(object):
     it contains the textures of background, stage and foreground, the coords of
     collision rects, the size of the leve;t.
     """
+
     def __init__(self, levelname='baselevel', server=False, clone=None):
         """
         This constructor is currently using two initialisation method, the old,
@@ -249,9 +242,7 @@ class Level(object):
                     config.sys_data_dir,
                     'levels',
                     levelname,
-                    'level.xml'
-                    )
-                )
+                    'level.xml'))
 
     def __del__(self):
         logging.debug('deleting level')
@@ -261,23 +252,20 @@ class Level(object):
                     config.sys_data_dir,
                     'levels',
                     levelname,
-                    attribs['background']
-                    )
+                    attribs['background'])
 
         self.level = os.path.join(
                     config.sys_data_dir,
                     'levels',
                     levelname,
-                    attribs['middle']
-                    )
+                    attribs['middle'])
 
         if 'foreground' in attribs:
             self.foreground = os.path.join(
                         config.sys_data_dir,
                         'levels',
                         levelname,
-                        attribs['foreground']
-                        )
+                        attribs['foreground'])
         else:
             self.foreground = False
 
@@ -291,21 +279,21 @@ class Level(object):
                 self.rect[0] - margins[0],
                 self.rect[1] - margins[1],
                 self.rect[2] + margins[0] + margins[2],
-                self.rect[3] + margins[1] + margins[3]
-                )
+                self.rect[3] + margins[1] + margins[3])
         else:
             self.border = self.rect.inflate(self.rect[2]/2, self.rect[3]/2)
 
     def load_entrypoints(self, xml):
         self.entrypoints = []
         for point in xml.findall('entry-point'):
-            x,y = point.attrib['coords'].split(' ')
+            x, y = point.attrib['coords'].split(' ')
             self.entrypoints.append([int(x), int(y)])
 
         if not self.entrypoints:
             logging.info('no entry point defined for this level')
             for x in xrange(4):
-                self.entrypoints.append([ int(x*self.rect[2]/5), self.rect[3]/5])
+                self.entrypoints.append(
+                        [int(x*self.rect[2]/5), self.rect[3]/5])
 
     def load_layers(self, xml):
         self.layers = []
@@ -328,17 +316,14 @@ class Level(object):
             for rect in block.findall('rect'):
                 rects.append(
                         pygame.Rect([
-                            int(i) for i in rect.attrib['coords'].split(' ')]
-                            )
-                        )
+                            int(i) for i in rect.attrib['coords'].split(' ')]))
 
             patterns = []
             for pattern in block.findall('pattern'):
                 patterns.append({
                     'time': int(pattern.attrib['time']),
                     'position': [int(i) for i in
-                        pattern.attrib['position'].split(' ')]
-                    })
+                        pattern.attrib['position'].split(' ')]})
 
             self.moving_blocs.append(
                     MovingPart(
@@ -346,9 +331,7 @@ class Level(object):
                         texture,
                         patterns,
                         server,
-                        levelname
-                        )
-                    )
+                        levelname))
 
     def load_water_blocs(self, xml, server=False):
         self.water_blocs = []
@@ -370,9 +353,7 @@ class Level(object):
             for rect in block.findall('rect'):
                 rects.append(
                         pygame.Rect(
-                            [int(i) for i in rect.attrib['coords'].split(' ')]
-                            )
-                        )
+                            [int(i) for i in rect.attrib['coords'].split(' ')]))
 
                 self.vector_blocs.append(
                         VectorBloc(
@@ -381,19 +362,17 @@ class Level(object):
                             vector,
                             relative,
                             texture,
-                            server
-                            )
-                        )
+                            server))
 
     def draw_before_players(self, surface, level_place, zoom, shapes=False):
         self.draw_background(surface)
-        self.draw_level( surface , level_place, zoom, shapes)
+        self.draw_level(surface, level_place, zoom, shapes)
 
         for block in self.moving_blocs:
-            block.draw( surface, level_place, zoom)
+            block.draw(surface, level_place, zoom)
 
         for block in self.vector_blocs:
-            block.draw( surface, level_place, zoom)
+            block.draw(surface, level_place, zoom)
 
     def draw_after_players(self, surface, level_place, zoom, levelmap=False):
         self.draw_foreground(surface, level_place, zoom)
@@ -408,10 +387,8 @@ class Level(object):
                         (rect[0]) / 8,
                         (rect[1]) / 8,
                         rect[2] / 8,
-                        rect[3] / 8
-                        ),
-                    pygame.Color('grey')
-                    )
+                        rect[3] / 8),
+                    pygame.Color('grey'))
 
     def draw_debug_map(self, surface, level_place, zoom):
         draw_rect(
@@ -420,20 +397,18 @@ class Level(object):
                 level_place[0] + self.border[0] * zoom,
                 level_place[1] + self.border[1] * zoom,
                 self.border[2] * zoom,
-                self.border[3] * zoom
-                ),
-                pygame.Color('white')
-                )
+                self.border[3] * zoom),
+                pygame.Color('white'))
+
         draw_rect(
                 surface,
                 pygame.Rect(
                 level_place[0],
                 level_place[1],
                 self.rect[2] * zoom,
-                self.rect[3] * zoom
-                ),
-                pygame.Color('lightblue')
-                )
+                self.rect[3] * zoom),
+                pygame.Color('lightblue'))
+
         for rect in self.map:
             draw_rect(
                     surface,
@@ -441,10 +416,8 @@ class Level(object):
                         int(level_place[0] + (rect[0]) * zoom),
                         int(level_place[1] + (rect[1]) * zoom),
                         int(rect[2] * zoom),
-                        int(rect[3] * zoom)
-                        ),
-                    pygame.Color('green')
-                    )
+                        int(rect[3] * zoom)),
+                    pygame.Color('green'))
 
         for rect in self.entrypoints:
             draw_rect(
@@ -452,32 +425,29 @@ class Level(object):
                     pygame.Rect(
                         int(level_place[0] + (rect[0]) * zoom),
                         int(level_place[1] + (rect[1]) * zoom),
-                        20,
-                        20
-                        ),
-                    pygame.Color('blue')
-                    )
+                        20, 20),
+                    pygame.Color('blue'))
 
-    def draw_background(self, surface, coords=(0,0)):
-        surface.blit( loaders.image(self.background,
-            scale=self.SIZE)[0], coords )
+    def draw_background(self, surface, coords=(0, 0)):
+        surface.blit(loaders.image(self.background,
+            scale=self.SIZE)[0], coords)
         for layer in self.layers:
             surface.blit(layer.get_image(), layer.get_pos())
 
     def draw_level(self, surface, coords, zoom, shapes=False):
-        surface.blit( loaders.image(self.level, zoom=zoom)[0], coords)
+        surface.blit(loaders.image(self.level, zoom=zoom)[0], coords)
         if shapes:
             self.draw_debug_map(surface, coords, zoom)
 
     def draw_foreground(self, surface, coords, zoom):
         if self.foreground:
-            surface.blit( loaders.image(self.foreground, zoom=zoom)[0], coords)
+            surface.blit(loaders.image(self.foreground, zoom=zoom)[0], coords)
 
     def backup(self):
         return (b.backup() for b in self.moving_blocs)
 
     def restore(self, backup):
-        (bloc.restore(back) for bloc,back in zip(self.moving_blocs, backup))
+        (bloc.restore(back) for bloc, back in zip(self.moving_blocs, backup))
 
     def update(self, time):
         for block in self.moving_blocs:
@@ -493,9 +463,9 @@ class Level(object):
                     return True
             return False
 
-    def collide_rect(self, (x,y), (h,w)=(1,1)):
+    def collide_rect(self, (x, y), (h, w)=(1, 1)):
         """
-        This fonction returns True if the rect at coords (x,y) collides one of
+        This fonction returns True if the rect at coords (x, y) collides one of
         the rects of the level, including the moving blocks and vector blocks.
 
         """

@@ -633,8 +633,8 @@ class Entity (object):
 
             if self.collide_top(game):
                 self._vector[1] = -math.fabs(
-                    self.vector[1] * config.general['BOUNCE']
-                )
+                    self.vector[1] * config.general['BOUNCE'])
+
                 self._onGround = True
                 self._vector[0] /= 2
                 while self.collide_top(game):
@@ -643,21 +643,21 @@ class Entity (object):
             elif self.collide_bottom(game):
                 if self.vector[1] < 0:
                     self._vector[1] = int(
-                            -self.vector[1] * config.general['BOUNCE']
-                            )
+                            -self.vector[1] * config.general['BOUNCE'])
+
                 self._vector[0] /= 2
                 while self.collide_bottom(game):
-                    self.move(( 0, 1))
+                    self.move((0, 1))
 
             if self.collide_front(game):
                 self._vector[0] = math.fabs(self.vector[0])/2
                 while self.collide_front(game):
-                    self.move(( 2, 0))
+                    self.move((2, 0))
 
             elif self.collide_back(game):
                 self._vector[0] = -math.fabs(self.vector[0])/2
                 while self.collide_back(game):
-                    self.move(( -2, 0))
+                    self.move((-2, 0))
 
     def draw_debug(self, coords, zoom, surface, debug_params):
         self.draw_debug_levelmap(coords, zoom, surface, debug_params)
@@ -669,14 +669,8 @@ class Entity (object):
         if debug_params["levelmap"]:
             draw_rect(
                     surface,
-                    pygame.Rect(
-                        self.place[0]/8,
-                        self.place[1]/8,
-                        2,
-                        2
-                        ),
-                    pygame.Color('red')
-                    )
+                    pygame.Rect(self.place[0]/8, self.place[1]/8, 2, 2),
+                    pygame.Color('red'))
 
     def draw_debug_hardshape(self, coords, zoom, surface, debug_params):
         if self.visible:
@@ -687,24 +681,18 @@ class Entity (object):
                             coords[0] + self.hardshape[0] * zoom,
                             coords[1] + self.hardshape[1] * zoom,
                             self.hardshape[2] * zoom,
-                            self.hardshape[3] * zoom
-                            )
-                        ,
-                        pygame.Color(255, 0, 0, 127)
-                        )
+                            self.hardshape[3] * zoom),
+                        pygame.Color(255, 0, 0, 127))
 
-                for n,i in enumerate(self.update_points()):
+                for n, i in enumerate(self.update_points()):
                     draw_rect(
                             surface,
                             pygame.Rect((
                                 coords[0] + (i[0] - self.rect[0])* zoom,
                                 coords[1] + (i[1] - self.rect[1])* zoom,
-                                2,
-                                2
-                                )),
+                                2, 2)),
                             n > 3 and pygame.Color('green') or
-                            pygame.Color('blue')
-                            )
+                            pygame.Color('blue'))
 
     def draw_debug_footrect(self, coords, zoom, surface, debug_params):
         if self.visible:
@@ -716,11 +704,8 @@ class Entity (object):
                             coords[0] + (r[0] - self.rect[0]) * zoom,
                             coords[1] + (r[1] - self.rect[1]) * zoom,
                             r[2] * zoom,
-                            r[3] * zoom
-                            )
-                        ,
-                        pygame.Color(255, 255, 0, 127)
-                        )
+                            r[3] * zoom),
+                        pygame.Color(255, 255, 0, 127))
 
     def draw_debug_current_animation(self, coords, zoom, surface, debug_params):
         if self.visible:
@@ -728,11 +713,7 @@ class Entity (object):
                 surface.blit(
                     loaders.text(self.entity_skin.current_animation,
                     fonts['mono']['25']),
-                    (
-                     coords[0],
-                     coords[1]+self.entity_skin.animation.rect[3]/2
-                    ),
-                    )
+                    (coords[0], coords[1]+self.entity_skin.animation.rect[3]/2))
 
     def draw(self, coords, zoom, surface, debug_params=dict()):
         """
@@ -753,17 +734,15 @@ class Entity (object):
             if not self.reversed:
                 place = (
                     self.rect[0] - self.hardshape[0],
-                    self.rect[1] - self.hardshape[1]
-                    )
+                    self.rect[1] - self.hardshape[1])
             else:
                 place = (
                     self.rect[0],
-                    self.rect[1] - self.hardshape[1]
-                    )
+                    self.rect[1] - self.hardshape[1])
+
             real_coords = (
-                    int(place[0]*zoom)+coords[0] ,
-                    int(place[1]*zoom)+coords[1]
-                    )
+                    int(place[0]*zoom)+coords[0],
+                    int(place[1]*zoom)+coords[1])
 
             self.draw_debug(real_coords, zoom, surface, debug_params)
 
@@ -771,34 +750,27 @@ class Entity (object):
                     self.entity_skin.animation.image,
                     reversed=self.reversed,
                     lighten=self.lighten,
-                    zoom=zoom
-                    )
+                    zoom=zoom)
 
             surface.blit(
                     skin_image[0],
-                    real_coords
-                    )
+                    real_coords)
 
             if self.shield['on']:
                 image = loaders.image(
                         os.path.sep.join(
-                            (config.sys_data_dir,'misc','shield.png')
-                            ),
-                        zoom=zoom*self.shield['power']*3
-                        )
+                            (config.sys_data_dir, 'misc', 'shield.png')),
+                        zoom=zoom*self.shield['power']*3)
 
                 shield_coords = (
                         coords[0] + int(
                             self.rect[0]
                             + self.entity_skin.shield_center[0]
-                            - .5 * image[1][2]
-                            ) * zoom
-                        , coords[1] + int(
+                            - .5 * image[1][2]) * zoom,
+                        coords[1] + int(
                             self.rect[1]
                             + self.entity_skin.shield_center[1]
-                            - .5 * image[1][3]
-                            ) * zoom
-                        )
+                            - .5 * image[1][3]) * zoom)
                 surface.blit(image[0], shield_coords)
 
     def update_physics(self, dt, game):
@@ -856,7 +828,7 @@ class Entity (object):
         # Avoid collisions with the map
         self.worldCollide(game)
 
-    def update(self, dt, t, game, coords=(0,0), zoom=1):
+    def update(self, dt, t, game, coords=(0, 0), zoom=1):
         """
         Global function to update everything about entity, dt is the time
         ellapsed since the precedent frame, t is the current time.

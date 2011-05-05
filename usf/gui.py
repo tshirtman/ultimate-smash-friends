@@ -38,6 +38,7 @@ from widgets import optimize_size
 from font import fonts
 import screen
 
+
 class Gui(object):
     """
     Main class of the GUI. Init and maintain all menus and widgets.
@@ -61,7 +62,8 @@ class Gui(object):
                    'characters']
         for name in screens:
             exec("import screen." + name)
-            exec('scr = screen.' + name + '.' + name + "('"+ name +"',self.screen)")
+            exec('scr = screen.' + name + '.' + name + "('" + name
+                    + "',self.screen)")
 
             #load all image
             #I don't know why but if we update only one time the scree, the
@@ -76,7 +78,8 @@ class Gui(object):
         self.image = 0
         self.focus = False
         self.state = "menu"
-        self.cursor = loaders.image(config.sys_data_dir + os.sep + 'cursor.png')[0]
+        self.cursor = loaders.image(
+                config.sys_data_dir + os.sep + 'cursor.png')[0]
         self.update_youhere()
 
     def update(self, clock):
@@ -92,15 +95,15 @@ class Gui(object):
         while(True):
             event = pygame.event.poll()
             if event.type == pygame.QUIT:
-                pygame.event.post( pygame.event.Event(QUIT) )
+                pygame.event.post(pygame.event.Event(QUIT))
                 break
 
             elif event.type != pygame.NOEVENT:
                 if event.type == pygame.KEYDOWN:
                     self.handle_keys(event)
-                elif ( event.type == pygame.MOUSEBUTTONUP or
+                elif (event.type == pygame.MOUSEBUTTONUP or
                     event.type == pygame.MOUSEBUTTONDOWN or
-                    event.type == pygame.MOUSEMOTION) :
+                    event.type == pygame.MOUSEMOTION):
                     self.handle_mouse(event)
 
             else:
@@ -119,30 +122,34 @@ class Gui(object):
 
         return False, None
 
-    def handle_mouse(self,event):
+    def handle_mouse(self, event):
         """
-        This function handles mouse event which are send from the update function.
+        This function handles mouse event which are send from the update
+        function.
         """
-        if self.focus == False:
-            event.dict['pos'] = (event.dict['pos'][0] - self.screens[self.screen_current].widget.x,
-                event.dict['pos'][1] - self.screens[self.screen_current].widget.y)
+        if not self.focus:
+            event.dict['pos'] = (
+              event.dict['pos'][0] - self.screens[self.screen_current].widget.x,
+              event.dict['pos'][1] - self.screens[self.screen_current].widget.y)
 
-            (query, self.focus) = self.screens[self.screen_current].widget.handle_mouse(event)
+            (query, self.focus) = (
+                self.screens[self.screen_current].widget.handle_mouse(event))
 
         else:
             (query, focus) = self.focus.handle_mouse(event)
-            if focus == False:
+            if not focus:
                 self.focus = False
 
-        if  query != False:
+        if  query:
             reply = self.screens[self.screen_current].callback(query)
             self.handle_reply(reply)
         #remove the event for performance, maybe it is useless
         del(event)
 
-    def handle_keys(self,event):
+    def handle_keys(self, event):
         """
-        This function handles keyboard event which are send from the update function.
+        This function handles keyboard event which are send from the update
+        function.
         """
         #TODO : a complete navigation system with the keyboard.
         reply = False
@@ -150,28 +157,29 @@ class Gui(object):
 
         if self.focus:
             (query, focus) = self.focus.handle_keys(event)
-            if focus == False:
+            if not focus:
                 self.focus = False
-            if  query != False:
+            if  query:
                 reply = self.screens[self.screen_current].callback(query)
                 self.handle_reply(reply)
-        if self.focus == False and (not reply and not query):
+        if not self.focus and (not reply and not query):
             if event.dict['key'] == pygame.K_ESCAPE:
                 self.handle_reply("goto:back")
             else:
-                (query, focus) = self.screens[self.screen_current].handle_keys(event)
-                if focus == False:
+                (query, focus) = (
+                        self.screens[self.screen_current].handle_keys(event))
+                if not focus:
                     self.focus = False
                 else:
                     self.focus = focus
-                if  query != False:
+                if  query:
                     reply = self.screens[self.screen_current].callback(query)
                     self.handle_reply(reply)
 
         #remove the event for performance, maybe it is useless
         del(event)
 
-    def handle_reply(self,reply):
+    def handle_reply(self, reply):
         """
         This function handles the callback return by thz screens
         with the function event_callback().
@@ -194,7 +202,10 @@ class Gui(object):
         if type(reply) == str:
             if reply.split(':')[0] == 'goto':
                 animation = True
-                sound = loaders.track(os.path.join(config.sys_data_dir, "sounds", "mouseClick2.wav"))
+                sound = loaders.track(
+                        os.path.join(config.sys_data_dir, "sounds",
+                            "mouseClick2.wav"))
+
                 sound.set_volume(config.audio['SOUND_VOLUME']/100.0)
                 sound.play()
                 old_screen = self.screens[self.screen_current]
@@ -231,7 +242,6 @@ class Gui(object):
                     self.screen_current = 'main_screen'
                     self.screen_history = []
 
-
     def screen_back(self):
         """
         Go to the last screen.
@@ -244,24 +254,25 @@ class Gui(object):
 
     def update_youhere(self):
         screen_list = ""
-        for screen in self.screen_history :
+        for screen in self.screen_history:
             screen_list += screen + "/"
+
         screen_list += self.screen_current + "/"
         self.here = loaders.text("> " + _("you are here:") + screen_list,
             fonts['mono']['30'])
 
-    def transition_slide(self, old_screen, old_surface, new_screen, new_surface):
-
+    def transition_slide(self, old_screen, old_surface, new_screen,
+            new_surface):
         text = get_text_transparent(old_screen.name)
 
         for i in range(0, 10):
             time.sleep(1.00/float(config.general['MAX_FPS']))
             self.skin.get_background()
-            text.set_alpha( (i*(- 1) + 10) *250/10)
+            text.set_alpha((i * -1 + 10) * 250 / 10)
             self.screen.blit(text,
-                (old_screen.indent_title,10))
+                (old_screen.indent_title, 10))
             self.screen.blit(old_surface,
-                (optimize_size((i*8*10, 0))[0], old_screen.widget.y))
+                (optimize_size((i * 8 * 10, 0))[0], old_screen.widget.y))
 
             pygame.display.update()
 
@@ -271,27 +282,29 @@ class Gui(object):
             time.sleep(1.00/float(config.general['MAX_FPS']))
             self.skin.get_background()
             text.set_alpha(i*250/10)
-            self.screen.blit(text, (self.screens[self.screen_current].indent_title,10))
+            self.screen.blit(text,
+                    (self.screens[self.screen_current].indent_title, 10))
             self.screen.blit(new_surface,
                 (optimize_size((i*8*10-800, 0))[0],
                 self.screens[self.screen_current].widget.y))
 
             pygame.display.update()
 
-    def transition_fading(self, old_screen, old_surface, new_screen, new_surface):
-
+    def transition_fading(self, old_screen, old_surface, new_screen,
+            new_surface):
         text = get_text_transparent(old_screen.name)
 
         for i in range(0, 5):
             back = self.skin.get_background().convert()
             time.sleep(1.00/float(config.general['MAX_FPS']))
-            self.screen.blit(self.skin.get_background(), (0,0))
-            text.set_alpha( (i*(- 1) + 5) *250/5)
-            self.screen.blit(text, (old_screen.indent_title,10))
+            self.screen.blit(self.skin.get_background(), (0, 0))
+            text.set_alpha((i* -1 + 5) * 250 / 5)
+            self.screen.blit(text, (old_screen.indent_title, 10))
 
             #back.set_alpha( (i*(- 1) + 5) *250/5)
             back.set_alpha(i *250/5)
-            self.screen.blit(old_surface, (old_screen.widget.x,old_screen.widget.y))
+            self.screen.blit(old_surface,
+                    (old_screen.widget.x, old_screen.widget.y))
             self.screen.blit(back, (0, 0))
 
             pygame.display.update()
@@ -301,13 +314,15 @@ class Gui(object):
         for i in range(0, 5):
             back = self.skin.get_background().convert()
             time.sleep(1.00/float(config.general['MAX_FPS']))
-            self.screen.blit(self.skin.get_background(), (0,0))
+            self.screen.blit(self.skin.get_background(), (0, 0))
             text.set_alpha(i*250/5)
-            self.screen.blit(text, (self.screens[self.screen_current].indent_title,10))
+            self.screen.blit(text,
+                    (self.screens[self.screen_current].indent_title, 10))
 
             #new_surface.set_alpha(i *250/5)
-            back.set_alpha( (i*(- 1) + 5) *250/5)
-            self.screen.blit(new_surface, (new_screen.widget.x,new_screen.widget.y))
+            back.set_alpha((i * -1 + 5) * 250 / 5)
+            self.screen.blit(new_surface,
+                    (new_screen.widget.x, new_screen.widget.y))
             self.screen.blit(back, (0, 0))
 
             pygame.display.update()
@@ -321,17 +336,19 @@ class Gui(object):
         players = []
         for i in range(0, len(self.screens["characters"].players)):
             if self.screens["characters"].players[i] != 0:
-                file_name = self.screens["characters"].game_data['character_file'][self.screens["characters"].players[i]]
+                file_name = (
+                        self.screens["characters"].game_data['character_file']\
+                                [self.screens["characters"].players[i]])
                 if self.screens["characters"].checkboxes_ai[i].get_value():
-                    file_name = file_name.replace("characters/", "characters/AI")
+                    file_name = file_name.replace(
+                            "characters/", "characters/AI")
                 players.append(file_name)
 
         if len(players) > 1:
             game = Game(
                 self.screen,
                 self.screens["level"].get_level(),
-                players
-            )
+                players)
 
             #thread.start_new_thread(self.loading, ())
             #self.goto_screen("ingame.usfgui", False)
@@ -344,6 +361,6 @@ def get_text_transparent(name):
     text.fill(pygame.color.Color("black"))
     #TODO: the colorkey should be a property of the skin
     text.set_colorkey(pygame.color.Color("black"))
-    text.blit(loaders.text(name, fonts['mono']['15']), (0,0))
+    text.blit(loaders.text(name, fonts['mono']['15']), (0, 0))
     return text
 

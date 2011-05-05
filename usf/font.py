@@ -30,6 +30,8 @@ from memoize import memoize
 import pygame
 
 pygame.font.init()
+
+
 @memoize
 class FontList(object):
 
@@ -49,7 +51,8 @@ class FontList(object):
             except:
                 font_file = join(config.sys_data_dir, "fonts", font.get('file'))
 
-            self.list[font.get('name')] = Font(font.get('name'), int(font.get('size')), font_file)
+            self.list[font.get('name')] = (Font(font.get('name'),
+                int(font.get('size')), font_file))
 
     def __getitem__(self, item):
         if item in self.list:
@@ -63,7 +66,9 @@ class FontList(object):
 class Font(object):
     ''' #TODO documentation
     '''
-    def __init__(self, name, size, font_file, bold="", italic="", bolditalic=""):
+
+    def __init__(self, name, size, font_file, bold="", italic="",
+            bolditalic=""):
         self.size = {}
         self.font_file = font_file
         self.font = pygame.font.Font(font_file, 480/size)
