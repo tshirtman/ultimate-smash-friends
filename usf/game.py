@@ -606,6 +606,9 @@ class Game(object):
             deltatime = time.time() - self.last_clock
             while deltatime < 1.0 / self.max_fps:
                 deltatime = time.time() - self.last_clock
+
+            if deltatime >= 0.3:
+                deltatime = 0
             self.gametime += deltatime
 
         self.last_clock = time.time()
