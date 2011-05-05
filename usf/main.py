@@ -313,9 +313,8 @@ class Main(object):
                     'footrect': config.debug['FOOTRECT'],
                     'current_animation': config.debug['CURRENT_ANIMATION'],
                     'levelshape': config.debug['LEVELSHAPES'],
-                    'levelmap': config.debug['LEVELMAP'],
-                    }
-                )
+                    'levelmap': config.debug['LEVELMAP']})
+
             self.menu.load = False
         else:
             self.menu.screen_current = "main_screen"
@@ -328,10 +327,8 @@ class Main(object):
                 self.screen.blit(
                         loaders.text(
                             "FPS: " + str(self.clock.get_fps()),
-                            fonts["mono"]["38"]
-                            ),
-                        (10, 5)
-                        )
+                            fonts["mono"]["38"]),
+                        (10, 5))
 
     def go(self):
         """

@@ -35,10 +35,6 @@ config = Config()
 
 from debug_utils import draw_rect
 
-class WrongEntityException(Exception):
-    def __init__(self):
-        logging.debug("The entity you wanted to unserialize is not this entity:"
-                      "Check number.")
 
 class Entity (object):
     """
@@ -62,7 +58,7 @@ class Entity (object):
                 math.sin(i * math.pi / (nb_points/2) + math.pi / nb_points),
                 math.cos(i * math.pi / (nb_points/2) + math.pi / nb_points)]
             for i in range(nb_points)]
-    list_sin_cos_1 = map(lambda (x,y): (x+1,y+1), list_sin_cos)
+    list_sin_cos_1 = map(lambda (x, y): (x+1, y+1), list_sin_cos)
 
     # this counter will allow us to correctly update entities.
     counter = 0
@@ -71,12 +67,11 @@ class Entity (object):
      UPPER_LEFT, TOP_LEFT) = range(8)
 
     def __init__(self, num, game,
-            entity_skinname='characters'+os.sep+'stick-tiny', place=(550,1),
-            lives=3, carried_by=None, vector=[0,0], reversed=False,
+            entity_skinname='characters'+os.sep+'stick-tiny', place=(550, 1),
+            lives=3, carried_by=None, vector=[0, 0], reversed=False,
             server=False, number=None, visible=False, present=False,
             upgraded=False, physic=True, gravity=True, animation='static',
-            physics=True
-            ):
+            physics=True):
 
         if number is None:
             self._number = Entity.counter
@@ -112,21 +107,22 @@ class Entity (object):
             self.entity_skin = entity_skin.Entity_skin(
                     entity_skinname,
                     not game or not game.screen,
-                    animation=animation
-                    )
+                    animation=animation)
+
             self._armor = self.entity_skin.armor
-            self._rect = pygame.Rect(0,0,0,0)
+            self._rect = pygame.Rect(0, 0, 0, 0)
             self._rect[:2] = (
                     self._place[0] - self._rect[2]/2,
-                    self._place[1] - self._rect[3]
-                    )
+                    self._place[1] - self._rect[3])
+
             self._rect[2:] = self.entity_skin.animation.rect[2:]
-            self.entity_skin.update(0, server=(game is None or game.screen is None))
+            self.entity_skin.update(0,
+                    server=(game is None or game.screen is None))
+
             game.events.add_event(
                     'ShieldUpdateEvent',
                     (None, None),
-                    {'world': game, 'player': self}
-                    )
+                    {'world': game, 'player': self})
 
     @property
     def num(self):
@@ -355,12 +351,11 @@ class Entity (object):
         """
         assert isinstance(self._vector, list)
         d = {
-            '_lives' : self.lives,
-            '_place' : self.place[:],
-            '_rect' : pygame.Rect(self.rect[:]),
-            '_vector' : self._vector[:],
-            '_walking_vector' : self.walking_vector[:],
-            }
+            '_lives': self.lives,
+            '_place': self.place[:],
+            '_rect': pygame.Rect(self.rect[:]),
+            '_vector': self._vector[:],
+            '_walking_vector': self.walking_vector[:]}
 
         # would be easier with a dict comprehension, but not yet in 2.6
         for k in ('_reversed', '_percents', '_upgraded', '_present',
@@ -395,10 +390,12 @@ class Entity (object):
         point is a list of x,y,dx,dy coords, and reverse is a flag indicating
         if the attacking entity is reversed (to apply projection vectors)
         """
-        if self.shield['on'] :
-            self.shield['power'] -= math.sqrt(
-                                point[1][0]**2 + point[1][1]**2
-                                )/config.general['SHIELD_SOLIDITY']
+
+        if self.shield['on']:
+            self.shield['power'] -= (math.sqrt(
+                                point[1][0]**2 + point[1][1]**2)
+                                / config.general['SHIELD_SOLIDITY'])
+
             self.shield['power'] = max(0, self.shield['power'])
             self._percents += math.sqrt(point[1][0] ** 2 + point[1][1]**2)\
                     / (30 * (100 - self.armor)) / 2
@@ -415,8 +412,7 @@ class Entity (object):
             self.entity_skin.change_animation(
                     'take',
                     self._game,
-                    params={'entity': self}
-                    )
+                    params={'entity': self})
 
     def alive(self):
         """
@@ -432,14 +428,12 @@ class Entity (object):
         if isinstance(entity, pygame.Rect):
             return (
                 (self.place[0] - entity.centerx) ** 2 +
-                (self.place[1] - entity.centery) ** 2
-                ) ** .5
+                (self.place[1] - entity.centery) ** 2) ** .5
 
         elif isinstance(entity, Entity):
             return (
                 (self.place[0] - entity.place[0]) ** 2 +
-                (self.place[1] - entity.place[1]) ** 2
-                ) ** .5
+                (self.place[1] - entity.place[1]) ** 2) ** .5
         else:
             raise ValueError("param 1 is neither a Rect or an Entity")
 
@@ -456,7 +450,7 @@ class Entity (object):
                 h[2],
                 h[3]]
 
-    def move(self,(x,y)):
+    def move(self, (x, y)):
         """
         move the entity relatively to his referencial (if he look left, moving
         positively on x mean going left).
@@ -474,8 +468,7 @@ class Entity (object):
                 self.rect[0] + self.hardshape[0],
                 self.rect[1] + self.hardshape[3],
                 self.hardshape[2],
-                15
-                )
+                15)
 
     def get_block_vector(self, level_vector_blocs):
         """
@@ -490,20 +483,22 @@ class Entity (object):
                 if part.relative and not self.reversed:
                     vector = [
                     vector[0] + part.vector[0],
-                    vector[1] + part.vector[1]
-                    ]
+                    vector[1] + part.vector[1]]
+
                 else:
                     vector = [
                     vector[0] - part.vector[0],
-                    vector[1] + part.vector[1]
-                    ]
+                    vector[1] + part.vector[1]]
         return vector
 
     def get_env_collision(self, blocks):
         for block in blocks:
             if self.foot_rect.colliderect(block) == 1:
                 if not self.in_water:
-                    loaders.track(os.path.join(config.sys_data_dir, "sounds", "splash1.wav")).play()
+                    loaders.track(os.path.join(config.sys_data_dir,
+                        "sounds",
+                        "splash1.wav")).play()
+
                 self.in_water = True
                 return 5
         self.in_water = False
@@ -524,17 +519,16 @@ class Entity (object):
         for part in level_moving_parts:
             if self.foot_rect.collidelist(part.collide_rects)!= -1:
                 vector = [
-                vector[0] + part.get_movement()[0],
-                vector[1] + part.get_movement()[1]
-                ]
+                        vector[0] + part.get_movement()[0],
+                        vector[1] + part.get_movement()[1]]
 
         return vector
 
     def point(self, n):
         h = self.hardshape
         r = self._rect
-        # i think r[0] and r[1] should be used in this formules, but they break it, so
-        # maybe i'm wrong
+        # i think r[0] and r[1] should be used in this formules, but they break
+        # it, so maybe i'm wrong
         return (int(Entity.list_sin_cos_1[n][0] * h[2] / 2 + r[0]),
                 int(Entity.list_sin_cos_1[n][1] * h[3] / 2 + r[1]))
 
