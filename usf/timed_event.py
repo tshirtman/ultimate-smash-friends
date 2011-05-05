@@ -34,15 +34,16 @@ class TimedEvent (object):
     An event allow to define a function to be executed later and/or during a
     certain period of time.
     """
+
     def initiate(self):
         """
         Overriding this fonction allow a better control on initialisation of
         the event
-
         """
+
         pass
 
-    def __init__(self, manager, period, params={} ):
+    def __init__(self, manager, period, params={}):
         """
         Action must be a callable, it will be called every frames in the
         period.
@@ -50,22 +51,22 @@ class TimedEvent (object):
         Period must be a period of time defined as a tupple of value, if the
         first value is None, then it will replaced by current time and if the
         second is None, the event will happen until dying.
-
         """
+
         self.params = params
         self.period = period
         self.done = False
         self.em = manager
         self.initiate()
-        #logging.info(str(self.__class__) + ' event created, params:' + str(params))
 
     def update(self, deltatime, gametime):
         """
         This method make the event up to date, by executing the various
         functions of the event.
-
         """
-        if self.period[1] is not None and gametime > self.period[1] or not self.condition():
+
+        if (self.period[1] is not None and gametime > self.period[1] or not
+                self.condition()):
             self.done = True
         elif gametime > self.period[0]:
             self.execute(deltatime)
@@ -83,31 +84,31 @@ class TimedEvent (object):
         """
         This method must be overriden, it will be called every frame by the
         event.
-
         """
+
         raise NotImplementedError
 
     def condition(self):
         """
         This method must be overriden, it will be called every frame by the
         event, to verify if the event must continue.
-
         """
+
         raise NotImplementedError
 
     def delete(self):
         """
         you can override this one if you want special behaviour
-
         """
+
         pass
 
     def del_(self):
         """
         please don't override this method if you want a special behaviour,
         override "delete" method instead.
-
         """
+
         #logging.info(str(self.__class__) + ' event deleted')
         self.delete()
 
@@ -115,11 +116,11 @@ class TimedEvent (object):
 class HealEvent(TimedEvent):
     """
     Event used to timely drop a player's percentage to zero.
-
     """
+
     def execute(self, dt):
-        self.params['player'].add_percents(-dt*2)
         # at this rate it should take 5 seconds to go from 100% to 0%
+        self.params['player'].add_percents(-dt*2)
 
     def condition(self):
         return self.params['player'].percents > 0
@@ -129,8 +130,8 @@ class ShieldUpdateEvent(TimedEvent):
     """
     This event, launched for one character, update the energy of it's shield at
     every loop, depending on if it's on or off.
-
     """
+
     def execute(self, dt):
         if self.params['player'].shield['on']:
             self.params['player'].shield['power'] -= dt/10
@@ -147,8 +148,8 @@ class DelItemEvent(TimedEvent):
     """
     Event used to timely delete an item, because it was used, or because it got
     a timeout.
-
     """
+
     def execute(self, dt):
         pass
 
@@ -156,7 +157,7 @@ class DelItemEvent(TimedEvent):
         return True
 
     def delete(self):
-        if self.params is not None and 'entity' in self.params :
+        if self.params is not None and 'entity' in self.params:
             target = self.params['entity']
         else:
             target = self.target
@@ -166,8 +167,8 @@ class DelItemEvent(TimedEvent):
 class BombExplode(TimedEvent):
     """
     This Event timely trigger the bomb explostion.
-
     """
+
     def execute(self, dt):
         self.params['entity'].set_gravity(False)
         self.params['entity'].entity_skin.change_animation(
@@ -183,13 +184,13 @@ class BombExplode(TimedEvent):
 class DropRandomItem(TimedEvent):
     """
     Add a random item in game.
-
     """
+
     def execute(self, dt):
         try:
             self.params['world'].addItem(
-                    random.sample(['heal','bomb'],1)[0],
-                    place=(random.random()*SIZE[0],50))
+                    random.sample(['heal', 'bomb'], 1)[0],
+                    place=(random.random()*SIZE[0], 50))
 
             self.done = True
         except:
@@ -203,10 +204,10 @@ class DropRandomItem(TimedEvent):
 class ItemShower(TimedEvent):
     """
     Add periodicaly an item into game.
-
     """
-    def execute(self,dt):
-        if 'freq' in self.params :
+
+    def execute(self, dt):
+        if 'freq' in self.params:
             freq=self.params['freq']
         else:
             freq=2
@@ -226,7 +227,7 @@ class ItemShower(TimedEvent):
                             'bomb',
                             ],
                             1)[0],
-                        place=(random.random()*SIZE[0],50))
+                        place=(random.random()*SIZE[0], 50))
 
                 self.elapsed -= freq
             except:
@@ -240,8 +241,8 @@ class ItemShower(TimedEvent):
 class ThrowBomb(TimedEvent):
     """
     Launch a bomb in front of the player.
-
     """
+
     def execute(self, deltatime):
         self.done = True
         self.params['world'].addItem(
@@ -257,8 +258,8 @@ class ThrowBomb(TimedEvent):
 class ThrowFireBall(TimedEvent):
     """
     Launch a fireball in front of the player.
-
     """
+
     def execute(self, deltatime):
         self.done = True
         entity = self.params['entity']
@@ -279,8 +280,8 @@ class ThrowFireBall(TimedEvent):
 class Gost(TimedEvent):
     """
     Chasing 'AI' for a little chasing gost.
-
     """
+
     def execute(self, deltatime):
         self.target_player = None
 
@@ -291,13 +292,13 @@ class Gost(TimedEvent):
 
             if self.target_player is None or None <\
             self.params['entity'].dist(p) <\
-            self.target_player.dist( self.params['entity']):
+            self.target_player.dist(self.params['entity']):
                 self.target_player = p
 
-        self.params['entity'].set_vector ([
-        ( self.target_player.place[0] - self.params['entity'].place[0]) * 3,
-        ( self.target_player.place[1] - self.params['entity'].place[1]) * 3
-        ])
+        self.params['entity'].set_vector([
+        (self.target_player.place[0] - self.params['entity'].place[0]) * 3,
+        (self.target_player.place[1] - self.params['entity'].place[1]) * 3])
+
     def condition(self):
         return True
 
@@ -305,8 +306,8 @@ class Gost(TimedEvent):
 class ThrowMiniGost(TimedEvent):
     """
     Insert a little chasing gost in game.
-
     """
+
     def execute(self, deltatime):
         self.done = True
         self.params['world'].addItem(
@@ -321,8 +322,8 @@ class ThrowMiniGost(TimedEvent):
 class LaunchBullet(TimedEvent):
     """
     Launch a fireball in front of the player.
-
     """
+
     def execute(self, deltatime):
         self.done = True
         entity = self.params['entity']
@@ -343,8 +344,8 @@ class LaunchBullet(TimedEvent):
 class InvinciblePlayer(TimedEvent):
     """
     The target player is invincible and half invisible during this event.
-
     """
+
     def initiate(self):
         # if we find another invincibility event on the same player we
         # just extend it's time to our limit and we are done.
@@ -372,8 +373,8 @@ class VectorEvent(TimedEvent):
     """
     This event is used to assign time-based vector (accelerations) to a player.
     Used by animations.
-
     """
+
     def initiate(self):
         #logging.debug("vector Event created "+ str(self.period))
         pass
@@ -384,29 +385,29 @@ class VectorEvent(TimedEvent):
     def condition(self):
         """
         Return false so the addition is only performed once.
-
         """
+
         return self.params['anim_name'] ==\
             self.params['entity'].entity_skin.current_animation
 
     def delete(self):
         """
         Add the vector to the player vector.
-
         """
+
+        #logging.debug("vector Event applied")
         if self.params['entity'].entity_skin.current_animation:
             self.params['entity'].set_vector([
                 self.params['vector'][0],
                 -self.params['vector'][1]])
-        #logging.debug("vector Event applied")
 
 
 class UpgradePlayer(TimedEvent):
     """
     This event will upgrade the player to his upper state, that state ends when
     the player dies.
-
     """
+
     def initiate(self):
         self.params['player'].set_upgraded(True)
 
@@ -420,8 +421,8 @@ class UpgradePlayer(TimedEvent):
 class DropPlayer(TimedEvent):
     """
     This event is called to drop a player in game.
-
     """
+
     def initiate(self):
         #logging.debug("inserting player in game")
         self.params['entity'].set_vector([0, 0])
@@ -451,15 +452,14 @@ class DropPlayer(TimedEvent):
                     'player':
                     self.params['entity'],
                     'world':
-                    self.params['world']
-                    })
+                    self.params['world']})
 
 
 class PlayerOut(TimedEvent):
     """
     This event is called when a player is hitting the level border
-
     """
+
     def initiate(self):
         self.params['entity'].set_lives(self.params['entity'].lives - 1)
         self.params['entity'].set_present(False)
@@ -478,16 +478,16 @@ class PlayerOut(TimedEvent):
 class PlayerStaticOnGround(TimedEvent):
     """
     This event will set the player on static animation when he tuch the ground
-
     """
+
     def execute(self, deltatime):
         pass
 
     def condition(self):
         """
         Return false if the player is on ground so the event effect occure.
-
         """
+
         return not self.params['entity'].onGround
 
     def delete(self):
@@ -504,8 +504,8 @@ class PlayerStaticOnGround(TimedEvent):
 class Bounce(TimedEvent):
     """
     This event will make the entity bounce when touching the ground
-
     """
+
     def execute(self, deltatime):
         if self.params['entity'].onGround:
             self.params['entity'].vector[1] *= -1
@@ -518,8 +518,9 @@ class Bounce(TimedEvent):
 
 
 class BlobSpecial(TimedEvent):
+    """ A boomerang like attack with the eye of blob
     """
-    """
+
     def initiate(self):
         self.entity = self.params['entity']
 
@@ -555,17 +556,18 @@ class BlobSpecial(TimedEvent):
         dy = self.target.place[1] - self.entity.place[1]
 
         x = - math.cos(self.angle) * dx / 2 + center[0]
-        y =   math.sin(self.angle) * dy / 2 + center[1] + dy * (
+        y = math.sin(self.angle) * dy / 2 + center[1] + dy * (
                 self.angle / (2 * 3.14159) * (1 if self.angle < 3.14159 else
                     -1))
 
-        self.eye.set_place((x,y))
+        self.eye.set_place((x, y))
 
     def condition(self):
-        if (self.angle <= (2 * 3.14159) and self.entity_life == self.entity.percents):
-             #and
-             #   "special" in self.entity.entity_skin.current_animation
-             return True
+        if (self.angle <= (2 * 3.14159)
+                and self.entity_life == self.entity.percents):
+            #and
+            #   "special" in self.entity.entity_skin.current_animation
+            return True
 
         else:
             return False
@@ -577,9 +579,11 @@ class BlobSpecial(TimedEvent):
             # happens if there was no suitable target and event was aborted
             pass
 
+
 class XeonCharge(TimedEvent):
+    """ a charge attack for Xeon
     """
-    """
+
     def initiate(self):
         self.size = 0
         self.entity = self.params['entity']
@@ -600,7 +604,7 @@ class XeonCharge(TimedEvent):
 
     def delete(self):
         if self.entity_life == self.entity.percents:
-            size = min(int(self.size / 0.243), 6) # magick number, yes, it's round(1700 / 7)
+            size = min(int(self.size / (1.7 / 7)), 6)
             self.world.addItem(
                     "xeon-charge",
                     upgraded=self.entity.upgraded,
@@ -615,24 +619,24 @@ class XeonCharge(TimedEvent):
 # configured in players/items xml files.
 
 event_names = {
-    'BlobSpecial' : BlobSpecial,
-    'BombExplode' : BombExplode,
-    'Bounce' : Bounce,
-    'DelItemEvent' : DelItemEvent,
-    'DropPlayer' : DropPlayer,
-    'DropRandomItem' : DropRandomItem,
-    'Gost' : Gost,
-    'HealEvent' : HealEvent,
-    'InvinciblePlayer' : InvinciblePlayer,
+    'BlobSpecial': BlobSpecial,
+    'BombExplode': BombExplode,
+    'Bounce': Bounce,
+    'DelItemEvent': DelItemEvent,
+    'DropPlayer': DropPlayer,
+    'DropRandomItem': DropRandomItem,
+    'Gost': Gost,
+    'HealEvent': HealEvent,
+    'InvinciblePlayer': InvinciblePlayer,
     'ItemShower': ItemShower,
-    'LaunchBullet' : LaunchBullet,
-    'PlayerOut' : PlayerOut,
-    'PlayerStaticOnGround' : PlayerStaticOnGround,
-    'ShieldUpdateEvent' : ShieldUpdateEvent,
-    'ThrowBomb' : ThrowBomb,
-    'ThrowFireBall' : ThrowFireBall,
-    'ThrowMiniGost' : ThrowMiniGost,
-    'UpgradePlayer' : UpgradePlayer,
-    'VectorEvent' : VectorEvent,
-    'XeonCharge' : XeonCharge,
+    'LaunchBullet': LaunchBullet,
+    'PlayerOut': PlayerOut,
+    'PlayerStaticOnGround': PlayerStaticOnGround,
+    'ShieldUpdateEvent': ShieldUpdateEvent,
+    'ThrowBomb': ThrowBomb,
+    'ThrowFireBall': ThrowFireBall,
+    'ThrowMiniGost': ThrowMiniGost,
+    'UpgradePlayer': UpgradePlayer,
+    'VectorEvent': VectorEvent,
+    'XeonCharge': XeonCharge,
 }

@@ -8,6 +8,7 @@ def memoize(function):
     parameters (not time, state of the game or such).
     """
     cache = {}
+
     def decorated_function(*args, **kwargs):
         params = (args)+tuple(zip(kwargs.keys(),kwargs.values()))
         try:

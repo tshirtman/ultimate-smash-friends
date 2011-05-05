@@ -3,11 +3,14 @@ import cProfile
 from usf import main
 import sys
 
+
 def main_():
-    sys.argv = ['./ultimate-smash-friends', '-p', 'AIblob,AIxeon', '-l', 'rizland']
+    sys.argv = ['./ultimate-smash-friends', '-p', 'AIblob,AIxeon', '-l',
+            'rizland']
     m = main.Main()
     m.init()
-    cProfile.runctx("m.go()", globals(), locals(), filename="usf.profile" )
+    cProfile.runctx("m.go()", globals(), locals(), filename="usf.profile")
+
 
 if __name__ == '__main__':
     main_()
