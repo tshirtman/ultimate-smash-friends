@@ -28,12 +28,13 @@ import loaders
 mixer.init()
 config = Config()
 
+
 class Music (object):
     """
     This class take care of the background music in menus and games, it load the
     "playlist" and change the music in random order.
-
     """
+
     def __init__(self):
         """
         We load the playlist.
@@ -44,19 +45,19 @@ class Music (object):
         self.music_volume = config.audio['MUSIC_VOLUME']
 
         preload = ['credits.ogg']
-        for plist in ['menu','game','credits','victory']:
+        for plist in ['menu', 'game', 'credits', 'victory']:
             self.playlists[plist] = [
                                     os.path.join(
                                     config.sys_data_dir,
                                     'music',
-                                    'ogg',file)
+                                    'ogg', file)
                                 for file
                                 in os.listdir(os.path.join(
                                     config.sys_data_dir,
                                     'music',
-                                    'ogg'))\
-                                if plist in file
-                            ]
+                                    'ogg'))
+                                if plist in file]
+
             for file in os.listdir(os.path.join(
                             config.sys_data_dir,
                             'music',
@@ -75,15 +76,17 @@ class Music (object):
         This check various parameters (state of game, time since last music
         change), and may choose to change music (with a fading) if it seems
         necessary.
-
         """
+
         if self.current_track is not None:
             if config.audio['MUSIC_VOLUME'] != self.music_volume:
-                self.current_track.set_volume(config.audio['MUSIC_VOLUME']/100.0)
+                self.current_track.set_volume(
+                        config.audio['MUSIC_VOLUME'] / 100.0)
 
         if (state != self.previous_state or
            (self.current_track and time.time() - self.time_begin
-            + 4 > self.current_track.get_length()) or self.current_track is None):
+               + 4 > self.current_track.get_length())
+           or self.current_track is None):
             self.change_music(self.playlists[state])
 
         self.music_volume = config.audio['MUSIC_VOLUME']
@@ -96,12 +99,13 @@ class Music (object):
         """
         #logging.debug('launching music: '+str(music.get_length()))
         self.time_begin = time.time()
-        if fading == True:
+        if fading:
             if self.current_track:
                 self.current_track.fadeout(3000)
             self.current_track = loaders.track(random.choice(music))
             if self.current_track:
-                self.current_track.set_volume(config.audio['MUSIC_VOLUME']/100.0)
+                self.current_track.set_volume(
+                        config.audio['MUSIC_VOLUME'] / 100.0)
                 self.current_track.play(fade_ms=3000)
         else:
             self.current_track = music

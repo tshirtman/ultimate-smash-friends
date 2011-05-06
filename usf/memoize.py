@@ -10,7 +10,7 @@ def memoize(function):
     cache = {}
 
     def decorated_function(*args, **kwargs):
-        params = (args)+tuple(zip(kwargs.keys(),kwargs.values()))
+        params = (args)+tuple(zip(kwargs.keys(), kwargs.values()))
         try:
             return cache[params]
         except:

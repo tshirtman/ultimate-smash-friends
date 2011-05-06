@@ -45,13 +45,13 @@ try:
     config = Config()
     logging.basicConfig(
         filename=config.debug['LOG_FILENAME'],
-        level=eval('logging.'+config.debug['LOG_LEVEL'])
-        )
+        level=eval('logging.'+config.debug['LOG_LEVEL']))
+
 except AttributeError:
     logging.basicConfig(
         filename=config.debug['LOG_FILENAME'],
-        level = logging.WARNING
-        )
+        level = logging.WARNING)
+
     logging.error(_('Bad logging level in user.cfg!'))
 
 logging.debug("User config file: " + config.user_config_file)
@@ -60,18 +60,18 @@ logging.debug("User data dir: " + config.user_data_dir)
 logging.debug("System config file: " + config.sys_config_file)
 logging.debug("System data dir: " + config.sys_data_dir)
 
+
 class Main(object):
     """
     The main class, load some parameters, sets initial states and takes care of
     the game main loop.
-
     """
+
     def __init__(self):
         """
         The constructor, create the render surface, set the menu initial state,
         parse command line params if any, launch the menu or the game depending
         on parameters.
-
         """
 
         self.lock = threading.Lock()
@@ -149,7 +149,9 @@ class Main(object):
             try:
                 if not config.general["DEBUG"]:
                     self.lock.acquire()
-                    self.text_thread = "An error occured:\n" + str(traceback.format_exc())
+                    self.text_thread = (
+                            "An error occured:\n" + str(traceback.format_exc()))
+
                     self.lock.release()
                     time.sleep(5)
                 self.lock.acquire()
@@ -172,8 +174,7 @@ class Main(object):
                 '[-p player1,player2...] [-s num] [-C address] [-t',
                 'character,level]\n',
                 'If a level and at least two players are selected, a match is',
-                ' launched immediately.'
-                ))
+                ' launched immediately.'))
 
         version = '%prog 0.1.3'
 
@@ -199,10 +200,10 @@ class Main(object):
         self.parser.add_option('-t', '--train',
                           action='store', dest='train',
                           metavar='character,level',
-                          help=''.join(("will load 4 times the character in the level,",
-                                " and use random moves from every place to ",
-                                "find path values and store them")
-                                ))
+                          help=''.join((
+                              "will load 4 times the character in the level,",
+                              " and use random moves from every place to ",
+                              "find path values and store them")))
 
     def parse_options(self):
         # set up the comand line parser and its options
@@ -230,7 +231,7 @@ class Main(object):
 
         if options.train:
             self.level = options.train.split(',')[1]
-            self.players = (options.train.split(',')[0],)*4
+            self.players = (options.train.split(',')[0], )*4
             self.game_type = 'training'
 
         pygame.init()
@@ -242,7 +243,7 @@ class Main(object):
 
     def init_screen(self):
         SIZE = (config.general['WIDTH'], config.general['HEIGHT'])
-        if (config.general['WIDTH'], config.general['HEIGHT']) == (0,0):
+        if (config.general['WIDTH'], config.general['HEIGHT']) == (0, 0):
             if (800, 600) in pygame.display.list_modes():
                 (config.general['WIDTH'], config.general['HEIGHT']) = (800, 600)
 
@@ -258,7 +259,7 @@ class Main(object):
         icon = loaders.image(os.path.join(config.sys_data_dir, 'icon',
                                           'icon_50.png'))[0]
         pygame.display.set_icon(icon)
-        if config.general['FULLSCREEN'] == True:
+        if config.general['FULLSCREEN']:
             pygame.display.toggle_fullscreen()
 
     def init_sound(self):
@@ -297,7 +298,6 @@ class Main(object):
             for i, p in enumerate(self.game.players):
                 if p.ai and p.present:
                     self.ai.update(self.game, i)
-
 
     def manage_game(self, was_paused):
         d = self.game.update_clock(was_paused or self.game.first_frame)
@@ -344,7 +344,8 @@ class Main(object):
             # poll controls and update informations on current state of the UI
             state_was = self.state
             if self.state != "menu":
-                self.state = self.controls.poll(self.game, self.menu, self.state)
+                self.state = self.controls.poll(
+                        self.game, self.menu, self.state)
             if self.state == "menu":
                 self.manage_menu()
             else:
@@ -358,25 +359,21 @@ class Main(object):
             # verify there is not a QUIT event waiting for us, in case of we
             # have to quit.
             self.ended = pygame.event.get(QUIT)
-            if self.ended :
+            if self.ended:
                 logging.debug('fps = '+str(self.clock.get_fps()))
                 #if self.ai_thread:
                     #self.ai_thread.stop_AI()
                 pygame.quit()
                 break
 
-        #except Exception, e:
-            #if self.game:
-                #self.game.AI.stop_AI()
-            #raise e
-
     def author(self):
         if 'CREDITS' not in os.listdir(os.path.join(config.sys_data_dir)):
             logging.info(config.sys_data_dir)
-            logging.info('\n'.join(os.listdir(os.path.join(config.sys_data_dir))))
+            logging.info(
+                    '\n'.join(os.listdir(os.path.join(config.sys_data_dir))))
             logging.debug(config.sys_data_dir+'/CREDITS file not found')
         else:
-            author_file = open(os.path.join(config.sys_data_dir,'CREDITS'))
+            author_file = open(os.path.join(config.sys_data_dir, 'CREDITS'))
             logging.info(author_file.read())
             author_file.close()
 
@@ -395,7 +392,7 @@ class Main(object):
             y = self.screen.get_height()/2 - text.get_height()/2
 
             self.screen.fill(pygame.color.Color("black"))
-            self.screen.blit(text, (x,y))
+            self.screen.blit(text, (x, y))
             pygame.display.update()
 
             max_fps = 1000/config.general["MAX_GUI_FPS"]
