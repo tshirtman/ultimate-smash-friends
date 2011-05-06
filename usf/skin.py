@@ -1,4 +1,4 @@
-#i###############################################################################
+################################################################################
 # copyright 2009 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
 #                                                                              #
 # This file is part of Ultimate Smash Friends                                  #
@@ -35,6 +35,7 @@ config = Config()
 #translation
 import translation
 
+
 class Skin (object):
 
     def __init__(self):
@@ -46,13 +47,17 @@ class Skin (object):
                                                     "theme.xml"))
 
         if xml_file.find("color") is not None:
-            self.color = pygame.color.Color(xml_file.find("color").attrib["value"])
+            self.color = pygame.color.Color(
+                    xml_file.find("color").attrib["value"])
 
         if xml_file.find("dialog") is not None:
-            self.dialog["sizex"] = int(xml_file.find("dialog").attrib["sizex"])*general["WIDTH"]/100
-            self.dialog["sizey"] = int(xml_file.find("dialog").attrib["sizey"])*general["HEIGHT"]/100
-            self.dialog["posx"] = int(xml_file.find("dialog").attrib["posx"])*general["WIDTH"]/100
-            self.dialog["posy"] = int(xml_file.find("dialog").attrib["posy"])*general["HEIGHT"]/100
+            conf_d = xml_file.find("dialog")
+            W, H = general["WIDTH"], general["HEIGHT"]
+
+            self.dialog["sizex"] = int(conf_d.attrib["sizex"]) * W / 100
+            self.dialog["sizey"] = int(conf_d.attrib["sizey"]) * H / 100
+            self.dialog["posx"] = int(conf_d.attrib["posx"]) * W / 100
+            self.dialog["posy"] = int(conf_d.attrib["posy"]) * H / 100
 
         for node in xml_file.findall("layer"):
             self.layer.append(Layer(node))
@@ -60,7 +65,9 @@ class Skin (object):
     def get_background(self):
         pygame.display.get_surface().fill(pygame.color.Color("black"))
         for layer in self.layer:
-            pygame.display.get_surface().blit(layer.get_image(), layer.get_pos())
+            pygame.display.get_surface().blit(
+                    layer.get_image(), layer.get_pos())
+
 
 class Layer(object):
     """
@@ -79,8 +86,8 @@ class Layer(object):
     The path (path.png) of the image must be an absolute path from the data
     directory of USF, e.g. levels/blobplanet/leaf.png.
 
-    Time is the duration of the frame (seconds), here, the image will go to the second
-    frame in 2 seconds (and then, it will go to the first in 0).
+    Time is the duration of the frame (seconds), here, the image will go to the
+    second frame in 2 seconds (and then, it will go to the first in 0).
     """
 
     def __init__(self, node):
@@ -97,23 +104,23 @@ class Layer(object):
                 for frame in node.findall("frame"):
                     src = loaders.image(join(config.sys_data_dir,
                                                  frame.attrib["src"]),
-                                            scale=(sizex, sizey)
-                                           )[0]
+                                            scale=(sizex, sizey))[0]
+
                     time = float(frame.attrib["time"])
-                    self.frame.append( (time, src) )
+                    self.frame.append((time, src))
         else:
             self.type = 0
             self.background = loaders.image(join(config.sys_data_dir,
                                                  node.attrib["src"]),
-                                            scale=(sizex, sizey)
-                                           )[0]
+                                            scale=(sizex, sizey))[0]
+
             for frame in node.findall("frame"):
                 x = int(frame.attrib["x"])*config.general['WIDTH']/800
                 y = int(frame.attrib["y"])*config.general['HEIGHT']/600
                 time = float(frame.attrib["time"])
-                self.frame.append( (time, (x, y)) )
+                self.frame.append((time, (x, y)))
 
-    def get_image(self, dt = -1):
+    def get_image(self, dt=-1):
         """
         Get the image surface.
 
@@ -123,6 +130,7 @@ class Layer(object):
 
         :rtype: pygame surface
         """
+
         if dt == -1:
             dt = time.time()
         if self.last_update + self.frame[self.current][0] < dt:
@@ -153,7 +161,7 @@ class Layer(object):
             interval = dt - self.last_update
             period = self.frame[self.current][0]
             position_first = self.frame[self.current][1]
-            position_next = (0,0)
+            position_next = (0, 0)
 
             # if we are on the last frame, just return the value of this frame
             if self.current + 1 < len(self.frame):
@@ -165,9 +173,14 @@ class Layer(object):
             if period == 0:
                 return self.frame[self.current][1]
 
-            x = ( (period - interval) * position_first[0] + interval * position_next[0] )/period
-            y = ( (period - interval) * position_first[1] + interval * position_next[1] )/period
+            p = period
+            i = interval
+
+            x = ((p - i) * position_first[0] + i * position_next[0]) / p
+            y = ((p - i) * position_first[1] + i * position_next[1]) / p
+
             position = (x, y)
             return position
         else:
             return(self.x, self.y)
+

@@ -81,6 +81,22 @@ def simulate(game, iam, m):
     game.update(deltatime=TIMESTEP)
 
 
+def under_lowest_plateform(game, player):
+    for p in game.level.map:
+        if p[1] > player.place[1]:
+            return False
+
+    return True
+
+
+def over_some_plateform(game, player):
+    for p in game.level.map:
+        if p[1] > player.place[1] and p[0] < player.place[0] < p[0]+p[2]:
+            return True
+
+    return False
+
+
 def heuristic_distance(game, iam):
     """ return a score for the current state of the game, allow to chose a set
     of movement to do.
@@ -96,10 +112,11 @@ def heuristic_distance(game, iam):
 
     return (0
         + (1500 if not player.rect.colliderect(game.level.rect) else 0)
-        - player.invincible * 100               # being invincible is good
-        - player.lives * 1000                   # avoid dying, ain't no fun kid
-        - player.onGround * 450                 # more conservative about jumps
-        - player.upgraded * 100                 # being upgraded is cool
+        + (0 if player.invincible else 10)       # being invincible is good
+        + (0 if player.onGround else 450)        # more conservative about jumps
+        + (0 if player.upgraded else 100)        # being upgraded is cool
+        + (1000 if under_lowest_plateform(game, player) else 0)
+        + (0 if over_some_plateform(game, player) else 500)
         + min((player.dist(p) for p in others)))
 
 
@@ -114,6 +131,8 @@ def heuristic_fight(game, iam):
         - player.invincible * 100               # being invincible is good
         - player.onGround * 150                 # more conservative about jumps
         - player.upgraded * 100                 # being upgraded is cool
+        + under_lowest_plateform(game, player) * 100000
+        - over_some_plateform(game, player) * 500
         - sum((p.percents for p in others)))    # hurt people, it's good
 
 
@@ -123,15 +142,18 @@ def search_path(game, iam, max_depth):
     if heuristic_distance(game, iam) > 100:
         f = displacement_movement
         h = heuristic_distance
+        print "displacement"
     else:
         f = fight_movement
         h = heuristic_fight
+        print "fight"
 
     movements = filter(f, possible_movements(
         game.players[iam].entity_skin.current_animation))
     if not movements:
         return (0, [])
 
+    print "comparing heuristics"
     for movement in movements:
         for walk, reverse in (
                 (True, True),
@@ -141,6 +163,7 @@ def search_path(game, iam, max_depth):
             M = Movement(gametime, movement, reverse, walk)
             b = game.backup() #no, this can't be factorized by moving it upper
             simulate(game, iam, M)
+            print M, '\t', h(game, iam)
             scores.append((h(game, iam), M, game.backup()))
             game.restore(b)
 
