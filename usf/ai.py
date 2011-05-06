@@ -111,11 +111,11 @@ def heuristic_distance(game, iam):
     others = (p for p in game.players if p is not player)
 
     return (0
-        + (1500 if not player.rect.colliderect(game.level.rect) else 0)
+        + (0 if player.rect.colliderect(game.level.rect) else 1000)
         + (0 if player.invincible else 10)       # being invincible is good
         + (0 if player.onGround else 450)        # more conservative about jumps
         + (0 if player.upgraded else 100)        # being upgraded is cool
-        + (1000 if under_lowest_plateform(game, player) else 0)
+        + (0 if not under_lowest_plateform(game, player) else 1000)
         + (0 if over_some_plateform(game, player) else 500)
         + min((player.dist(p) for p in others)))
 
