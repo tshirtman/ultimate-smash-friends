@@ -32,12 +32,12 @@ class characters(Screen):
     name_pl2 = 0
     name_pl3 = 0
     name_pl4 = 0
-    players = [0,0,0,0]
+    players = [0, 0, 0, 0]
 
     def init(self):
         self.game_data = {}
         self.game_data['character_file'] = []
-        
+
         #I18N: The title of the screen where players can choose their character.
         self.set_name(_("characters"))
 
@@ -48,26 +48,18 @@ class characters(Screen):
         #I18N: (with the [?] icon)
         self.character.append(_("None"))
         #create a character for every directory in the characters directory.
-        files = os.listdir(
-                join(
-                    config.sys_data_dir,
-                    'characters'
-                    )
-                )
+        files = os.listdir(join(config.sys_data_dir, 'characters'))
         files.sort()
+
         for file in files:
             try:
                 if file != "none":
-                    self.game_data['character_file'].append(join("characters",
-                                                                 file
-                                                                 )
-                                                            )
+                    self.game_data['character_file'].append(join(
+                        "characters",
+                        file))
+
                     self.character.append(entity_skin.Entity_skin(
-                                    join(
-                                    'characters',
-                                    file
-                                    )
-                                ).name)
+                                    join('characters', file)).name)
             except OSError, e:
                 if e.errno is 20:
                     pass
@@ -77,7 +69,7 @@ class characters(Screen):
                 pass
 
         self.add(widgets.VBox())
-        
+
         self.checkboxes_ai = []
         self.portraits = []
         self.player_spinner = []
@@ -87,10 +79,8 @@ class characters(Screen):
             #I18N: Artificial Intelligence
             self.checkboxes_ai.append(widgets.TextCheckBox(_("AI:")))
             self.portraits.append(widgets.Image(
-                    join(
-                        self.game_data['character_file'][0],
-                        "portrait.png")
-                ))
+                    join(self.game_data['character_file'][0], "portrait.png")))
+
             self.player_spinner.append(widgets.Spinner(self.character))
             #I18N: %s is the player number, it can be Player 1, Player2...
             self.player_vbox[i].add(widgets.Label(_("Player %s").replace("%s", str(i+1))))
@@ -101,18 +91,18 @@ class characters(Screen):
                 size=(50,50))
             self.player_vbox[i].add(self.checkboxes_ai[-1], margin_left=(180-self.checkboxes_ai[-1].width)/2)
 
-        
+
         hbox = widgets.HBox()
         #adding the two box which contains the spinner and the name of the characters
         for vbox in self.player_vbox:
             hbox.add(vbox, margin=20)
         self.widget.add(hbox, margin=50)
-        
+
         #next button to go to the level screen
         self.widget.add(widgets.Button(_("Next")),
             margin=83,
             align="center")
-        
+
         #back button to come back to main screen
         self.widget.add(widgets.Button(_('Back')),
             margin=20,
@@ -122,14 +112,13 @@ class characters(Screen):
         if action in self.player_spinner :
             #get the index of the player
             player_number = self.player_spinner.index(action)
-    
+
             self.players[player_number] = action.get_index()
             #change the portrait
             self.portraits[player_number].setImage(
                         join(
                         self.game_data['character_file'][action.get_index()],
-                        "portrait.png"
-                        ))
+                        "portrait.png"))
 
         if action.text == _("Next"):
             i  = 0

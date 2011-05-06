@@ -29,6 +29,7 @@ import unittest
 from xml.etree.ElementTree import ElementTree
 import pygame
 
+
 class TestLayer(unittest.TestCase):
 
     def setUp(self):
@@ -37,11 +38,12 @@ class TestLayer(unittest.TestCase):
     def test(self):
         # We need to init pygame and to create a display to load the images
         pygame.init()
-        self.screen = pygame.display.set_mode((100,100))
+        self.screen = pygame.display.set_mode((100, 100))
 
         # Read the xml file of blobplanet level
         attrib = ElementTree()
-        attrib.parse(loaders.get_config().sys_data_dir + "levels/blobplanet/level.xml")
+        attrib.parse(loaders.get_config().sys_data_dir +
+                "levels/blobplanet/level.xml")
 
         # Let's use the first layer node, we know it values
         layer = skin.Layer(attrib.findall("layer")[0])

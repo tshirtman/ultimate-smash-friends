@@ -36,8 +36,8 @@ class Image(Widget):
         self.surface = loaders.image(
                     config.sys_data_dir+
                     os.sep+
-                    self.path, scale=(self.width,self.height)
-                    )[0]
+                    self.path, scale=(self.width,self.height))[0]
+
         self.screen = pygame.display.get_surface()
 
     def __init__(self, image):
@@ -66,4 +66,4 @@ class Image(Widget):
         self.path = path
         #reload the image
         self.init()
-        
+

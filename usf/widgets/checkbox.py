@@ -39,7 +39,7 @@ class CheckBox(Widget):
         self.set_size(optimize_size((25,25)))
         self.state = False
         self.checked = False
-        
+
     def init(self):
         """
         This function can be rewritten in the others widget if the surface
@@ -51,6 +51,7 @@ class CheckBox(Widget):
         """
         Set the size of the widget.
         """
+
         self.height = h
         self.width = w
         self.surface_static = loaders.image(join(config.sys_data_dir,
@@ -67,9 +68,11 @@ class CheckBox(Widget):
         self.surface = self.surface_static
 
     def handle_mouse(self,event):
-        if self.state == True:
-            event.dict['pos'] = (event.dict['pos'][0] - self.parentpos[0] - self.x,
-                                 event.dict['pos'][1] - self.parentpos[1] - self.y)
+        if self.state:
+            event.dict['pos'] = (
+                    event.dict['pos'][0] - self.parentpos[0] - self.x,
+                    event.dict['pos'][1] - self.parentpos[1] - self.y)
+
         if (0 < event.dict['pos'][0] < self.width and
             0 < event.dict['pos'][1] < self.height and
             event.type == pygame.MOUSEBUTTONUP):
@@ -96,3 +99,4 @@ class CheckBox(Widget):
         Set the value of the checkbox, it must be a boolean.
         """
         self.checked = value
+

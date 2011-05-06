@@ -25,6 +25,7 @@ from usf import loaders
 from usf.font import fonts
 config = loaders.get_config()
 
+
 class Container(Widget):
     """
     This widget is never used directly, it is used to be a base for the HBox and VBox widget.
@@ -124,7 +125,7 @@ class Container(Widget):
             if widget.x < x < widget.x+widget.width and widget.y < y < widget.y+widget.height:
                 event.dict['pos'] = (x-widget.x, y-widget.y)
                 return widget.handle_mouse(event)
-        
+
         return (False,False)
 
     def handle_keys(self,event):
@@ -132,8 +133,6 @@ class Container(Widget):
         This function is used for keyboard events.
         """
 
-
-    
 
 class HBox(Container):
     """

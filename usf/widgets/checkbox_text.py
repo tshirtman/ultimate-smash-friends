@@ -49,7 +49,7 @@ class TextCheckBox(HBox):
         self.state = False
         self.checked = False
         self.focusable = False
-        
+
     def init(self):
         """
         This function can be rewritten in the others widget if the surface
@@ -60,27 +60,31 @@ class TextCheckBox(HBox):
         self.widgets = []
 
         #left radius
-        self.left_border = Image(join("gui",
-                                      config.general['THEME'],
-                                      "checkbox_left.png"))
+        self.left_border = Image(join(
+            "gui",
+            config.general['THEME'],
+            "checkbox_left.png"))
+
         self.left_border.set_size((12, self.height))
         self.add(self.left_border, margin=0)
 
-        
-        self.center = Label(self.text + " ",
-                            background=join("gui",
-                                            config.general['THEME'],
-                                            "checkbox_center.png"),
-                            align="center")
-            
+
+        self.center = Label(
+                self.text + " ",
+                background=join("gui",
+                    config.general['THEME'],
+                    "checkbox_center.png"),
+                align="center")
+
         if(w < 12+37):
             w = 12+37 + self.center.width
         self.add(self.center, margin = 0, size=(w-12-37, self.height))
         #print self.center.get_text()
 
-        self.check = Image(join("gui",
-                                config.general['THEME'],
-                                "checkbox_empty_right.png"))
+        self.check = Image(join(
+            "gui",
+            config.general['THEME'],
+            "checkbox_empty_right.png"))
 
         self.add(self.check, margin = 0, size=(37, self.height))
         self.update_pos()
@@ -108,7 +112,7 @@ class TextCheckBox(HBox):
             x = event.dict['pos'][0]
             y = event.dict['pos'][1]
 
-            if self.state == True:
+            if self.state:
                 x -= self.parentpos[0] + self.x
                 y -= self.parentpos[1] + self.y
 
@@ -138,50 +142,62 @@ class TextCheckBox(HBox):
 
     def update_image(self):
         if self.state:
-            self.left_border.setImage(join("gui",
-                                           config.general['THEME'],
-                                           "checkbox_left_hover.png"
-                                           )
-                                     )
-            self.center.background_path = join("gui",
-                                               config.general['THEME'],
-                                               "checkbox_center_hover.png"
-                                              )
+            self.left_border.setImage(join(
+                "gui",
+                config.general['THEME'],
+                "checkbox_left_hover.png"))
+
+            self.center.background_path = join(
+                    "gui",
+                    config.general['THEME'],
+                    "checkbox_center_hover.png")
+
             if self.checked:
-                self.check.setImage(join("gui",
-                                         config.general['THEME'],
-                                         "checkbox_full_right_hover.png"
-                                        )
-                                   )
+                self.check.setImage(join(
+                    "gui",
+                    config.general['THEME'],
+                    "checkbox_full_right_hover.png"))
+
             else:
-                self.check.setImage(join("gui",
-                                         config.general['THEME'],
-                                         "checkbox_empty_right_hover.png"))
+                self.check.setImage(join(
+                    "gui",
+                    config.general['THEME'],
+                    "checkbox_empty_right_hover.png"))
+
             self.center.init()
-        
+
         else:
-            self.left_border.setImage(join("gui",
-                                           config.general['THEME'],
-                                           "checkbox_left.png"))
-            self.center.background_path = join("gui",
-                                               config.general['THEME'],
-                                               "checkbox_center.png")
+            self.left_border.setImage(join(
+                "gui",
+                config.general['THEME'],
+                "checkbox_left.png"))
+
+            self.center.background_path = join(
+                    "gui",
+                    config.general['THEME'],
+                    "checkbox_center.png")
+
             if self.checked:
-                self.check.setImage(join("gui",
-                                         config.general['THEME'],
-                                         "checkbox_full_right.png"))
+                self.check.setImage(join(
+                    "gui",
+                    config.general['THEME'],
+                    "checkbox_full_right.png"))
+
             else:
-                self.check.setImage(join("gui",
-                                         config.general['THEME'],
-                                         "checkbox_empty_right.png"))
+                self.check.setImage(join(
+                    "gui",
+                    config.general['THEME'],
+                    "checkbox_empty_right.png"))
+
             self.center.init()
 
     def handle_keys(self,event):
-        if (event.dict["key"] == pygame.K_DOWN or event.dict["key"] == pygame.K_UP) and not self.state:
+        if (event.dict["key"] == pygame.K_DOWN
+                or event.dict["key"] == pygame.K_UP) and not self.state:
             self.state = True
             self.update_image()
             return False,self
-        
+
         if event.dict["key"] == pygame.K_RETURN:
             if self.checked:
                 self.checked = False
@@ -189,7 +205,7 @@ class TextCheckBox(HBox):
                 self.checked = True
             self.update_image()
             return self, self
-        
+
         self.state = False
         self.update_image()
         return False, False

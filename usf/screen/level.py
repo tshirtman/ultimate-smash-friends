@@ -34,16 +34,12 @@ class level(Screen):
     def init(self):
         self.add(widgets.VBox())
         basename = join(config.sys_data_dir, "test", "")
-        
+
         coverflow_data = []
         #create a level image for every directory in the level directory.
-        files = os.listdir(
-                os.path.join(
-                    config.sys_data_dir,
-                    'levels'
-                    )
-                )
+        files = os.listdir(os.path.join( config.sys_data_dir, 'levels'))
         files.sort()
+
         for file in files:
             try:
                 if 'level.xml' in os.listdir(os.path.join(
@@ -57,10 +53,8 @@ class level(Screen):
                             config.sys_data_dir,
                             "levels",
                             file,
-                            "screenshot.png"
-                            )
-                        )
-            except :
+                            "screenshot.png"))
+            except:
                 logging.debug(str(file) +" is not a valid level.")
                 pass
 
@@ -68,10 +62,10 @@ class level(Screen):
         self.widget.add(self.coverflow, size=(800, 275))
         self.widget.add(widgets.Button(_('Go !')), margin_left=290)
         self.widget.add(widgets.Button(_('Back')), size=(150, 40), margin_left=20, margin=20)
-    
+
     def get_level(self):
         return self.coverflow.get_value()
-    
+
     def callback(self, action):
         if action.text == _('Go !'):
             return "game:new"

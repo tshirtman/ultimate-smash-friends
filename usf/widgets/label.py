@@ -68,7 +68,7 @@ class Label(Widget):
             self.indent = self.width/2-self.surface_text.get_width()/2
         if "background" in kwargs:
             self.background_path = kwargs['background']
-            
+
         self.init()
 
     def set_text(self,text):

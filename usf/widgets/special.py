@@ -31,7 +31,7 @@ class KeyboardWidget(Widget):
     def __init__(self, value):
         self.value = value
         exec("self.letter = pygame.key.name(pygame." + self.value + ").upper()")
-        self.font =  fonts['mono']['25']
+        self.font = fonts['mono']['25']
         #self.set_size(optimize_size((35, 35)))
         self.state = False
         self.focus = False
@@ -72,8 +72,11 @@ class KeyboardWidget(Widget):
             self.state = False
             self.focus = True
             return False,self
-        if self.state == True:
-            event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0]-self.x, event.dict['pos'][1] - self.parentpos[1] - self.y)
+        if self.state:
+            event.dict['pos'] = (
+                    event.dict['pos'][0] - self.parentpos[0]-self.x,
+                    event.dict['pos'][1] - self.parentpos[1] - self.y)
+
         if 0 < event.dict['pos'][0] < self.width and 0 < event.dict['pos'][1] < self.height:
             self.state = True
             return False,self

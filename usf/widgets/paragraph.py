@@ -31,7 +31,6 @@ from usf.subpixel.subpixelsurface import *
 config = loaders.get_config()
 
 
-
 class Paragraph(Widget):
     """
     A simple paragraph widget. It reads a text which is in the
@@ -78,7 +77,7 @@ class Paragraph(Widget):
             self.text[i] = self.text[i].replace('\n', "")
             self.surface_text.blit(loaders.text(self.text[i],
                                                 fonts['mono']['normal']),
-                                   (10, self.text_height*i  ))
+                                   (10, self.text_height*i))
 
         self.screen = pygame.display.get_surface()
         self.slider = SubPixelSurface(loaders.image(join(config.sys_data_dir,
@@ -133,7 +132,7 @@ class Paragraph(Widget):
         if event.type != pygame.MOUSEMOTION:
             self.auto_scroll = False
 
-        if self.state == True:
+        if self.state:
             #relative position
             x -= self.parentpos[0] + self.x
             y -= self.parentpos[1] + self.y
@@ -184,7 +183,8 @@ class Paragraph(Widget):
                 self.defil = 0
             else:
                 self.defil = 100
-            self.update_defil();
+            self.update_defil()
+
             return False,self
 
         return False,False

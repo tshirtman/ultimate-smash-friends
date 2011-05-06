@@ -71,12 +71,12 @@ class Tab(VBox):
                         self.widgets[1] = self.tab_content[self.tab_list.index(widget_)]
                         self.update_pos()
                         self.update_size()
-                    elif widget_ != None:
+                    elif widget_:
                         widget_.state=True
                 else:
                     return widget.handle_mouse(event)
                 break
-        
+
         return (False,False)
 
 
@@ -97,3 +97,4 @@ class TabBar(HBox):
             if widget.x < x < widget.x+widget.width and widget.y < y < widget.y+widget.height:
                 return widget
                 break
+

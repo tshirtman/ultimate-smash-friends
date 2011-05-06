@@ -24,6 +24,7 @@ from usf.font import fonts
 from usf import loaders
 import pygame
 
+
 class Screen(object):
 
     def __init__(self, name, screen):
@@ -45,9 +46,8 @@ class Screen(object):
     def update(self):
         #draw the title of the screen
         self.screen.blit(loaders.text(self.name, fonts['mono']['15']),
-                         (self.indent_title,10)
-                        )
-        
+                (self.indent_title,10))
+
         #draw all the others widgets
         self.widget.draw()
 
@@ -60,14 +60,14 @@ class Screen(object):
 
     def callback(self, action):
         pass
-        
+
     def set_name(self, name):
-        self.name = name.replace('_', ' ')  
-        
+        self.name = name.replace('_', ' ')
+
         #center the title
         self.indent_title = (config.general['WIDTH']/2 -
                      loaders.text(self.name, fonts['mono']['15']).get_width()/2)
-    
+
     def update_pos(self):
         self.widget.update_size()
         #center the main container (and all the widgets which are in it)
@@ -78,7 +78,7 @@ class Screen(object):
         self.widget.x = config.general['WIDTH']/2 - self.widget.width/2
 
         self.widget.update_pos()
-        
+
     def check_widgets(self, widgets):
         for widget in widgets:
             if widget.focusable:
@@ -89,7 +89,7 @@ class Screen(object):
 
             else:
                 self.widgets_known.append(widget)
-                
+
 
     def handle_keys(self, event):
         #remumber all widgets that needs to be focusable (= all widgets - boxes)
@@ -98,7 +98,7 @@ class Screen(object):
         except:
             self.widgets_known = []
             self.check_widgets(self.widget.widgets)
-        
+
         #increase the index of the focused widget and define in wich sens we
         #have to find a focusable widget
         sens = True
@@ -117,30 +117,30 @@ class Screen(object):
         while(attempt < len(self.widgets_known)):
             #send the event to widget
             callback = self.widgets_known[self.current_focus].handle_keys(event)
-            
+
             #if he wants the event
-            if callback[1] != False:
+            if callback[1]:
                 return callback
-            
+
             #if it doesn't want it:
             attempt += 1
-            
+
             #trying another widget:
-            
+
             #if the users pressed UP
             if sens:
                 if self.current_focus + 1 < len(self.widgets_known):
                     self.current_focus += 1
                 else:
                     self.current_focus = 0
-            
+
             #if he pressed DOWN
             else:
                 if self.current_focus > 0:
                     self.current_focus -= 1
                 else:
                     self.current_focus += 1
-        
+
         #this shouldn't happen, excepted if there is no focusable widget
         #in the screen (and it shoudn't happen, since there is back, at least)
         return False,False

@@ -33,36 +33,36 @@ class Slider(Widget):
         self.text = text
         self.keyboard = False
         self.space = 0
-        self.parentpos = (0,0)
+        self.parentpos = (0, 0)
         self.extend = False
         self.value = 0
         self.orientation = False
         self.init()
         self.index = 0
         self.state = False
-        self.height = optimize_size((250,25))[1]
-        self.width = optimize_size((25,25))[0] + optimize_size((25,25))[0] + optimize_size((100,25))[0]
+        self.height = optimize_size((250, 25))[1]
+        self.width = optimize_size((25, 25))[0] + optimize_size((25, 25))[0] + optimize_size((100, 25))[0]
 
     def init(self):
         self.background= loaders.image(join(config.sys_data_dir, 'gui',
                 config.general['THEME'], 'slider_background.png'),
-            scale=(self.width,self.height))[0]
+            scale=(self.width, self.height))[0]
         self.center= loaders.image(join(config.sys_data_dir, 'gui',
                 config.general['THEME'], 'slider_center.png'),
-            scale=(self.height,self.height))[0]
+            scale=(self.height, self.height))[0]
         self.center_hover= loaders.image(join(config.sys_data_dir, 'gui',
                 config.general['THEME'], 'slider_center_hover.png'),
-            scale=(self.height,self.height))[0]
+            scale=(self.height, self.height))[0]
         self.screen = pygame.display.get_surface()
-            
-    def handle_mouse(self,event):
+
+    def handle_mouse(self, event):
         if not self.keyboard:
-            if self.state == True:
+            if self.state:
                 event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0] - self.x,
                                     event.dict['pos'][1] - self.parentpos[1] - self.y)
             x = event.dict['pos'][0]
             y = event.dict['pos'][1]
-            if self.state == True:
+            if self.state:
                 if event.type == pygame.MOUSEBUTTONUP:
                     self.state = False
                     return False, False
@@ -78,7 +78,7 @@ class Slider(Widget):
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         #to adjust the position of the slider
                         self.space = x - self.value
-                        
+
                         self.state = True
                         return self, self
                 return False, False
@@ -86,27 +86,27 @@ class Slider(Widget):
         else:
             self.state = False
             self.keyboard = False
-        return (False,False)
-        
+        return (False, False)
+
     def get_value(self):
         return self.value*100/(self.width - self.height)
-        
+
     def set_value(self, value):
         self.value = value*(self.width - self.height)/100
-        
+
     def draw(self):
         if self.state:
-            surf = loaders.image_layer(self.background, self.center_hover, (self.value,0))
+            surf = loaders.image_layer(self.background, self.center_hover, (self.value, 0))
         else:
-            surf = loaders.image_layer(self.background, self.center, (self.value,0))
+            surf = loaders.image_layer(self.background, self.center, (self.value, 0))
         self.screen.blit(surf, (self.parentpos[0] + self.x, self.parentpos[1] + self.y))
 
-    def handle_keys(self,event):
+    def handle_keys(self, event):
         self.keyboard = True
         if (event.dict["key"] == pygame.K_DOWN or event.dict["key"] == pygame.K_UP) and not self.state:
             self.state = True
-            return False,self
-        
+            return False, self
+
         if event.dict["key"] == pygame.K_LEFT:
             if self.get_value() > 10:
                 self.set_value(self.get_value() - 10)
@@ -120,8 +120,7 @@ class Slider(Widget):
             else:
                 self.set_value(100)
             return self, self
-        
+
         self.state = False
         return False, False
-
 

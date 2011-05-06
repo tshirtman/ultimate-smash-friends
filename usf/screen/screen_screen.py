@@ -37,12 +37,12 @@ class screen_screen(Screen):
         self.resolution = widgets.Spinner(modes, 170)
         self.resolution.set_value(str(config.general['WIDTH']) + 'x'
                                     + str(config.general['HEIGHT']))
-        
+
         self.widget.add(widgets.Label(_('Screen resolution (requires a restart):')))
         self.widget.add(self.resolution)
-        
+
         self.fullscreen = widgets.TextCheckBox(_('Fullscreen:'))
-        
+
         if config.general['FULLSCREEN']:
             self.fullscreen.set_value(True)
         self.widget.add(self.fullscreen)
@@ -52,13 +52,13 @@ class screen_screen(Screen):
         zoom.set_value(config.general['ZOOM_SHARPNESS']/5)
 
         self.fps = widgets.TextCheckBox(_('Show FPS:'))
-        
+
         if config.general['SHOW_FPS']:
             self.fps.set_value(True)
         self.widget.add(self.fps, margin=25)
 
         self.widget.add(widgets.Button(_('Back')), margin=30)
-        
+
     def callback(self,action):
         if action == self.resolution:
             value = action.get_value()

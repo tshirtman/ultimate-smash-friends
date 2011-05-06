@@ -39,10 +39,11 @@ class Spinner(HBox):
     A spinner widget. (which could be called "select" too)
     It looks like this:
     <- text ->
-    
+
     It can be used to select an option (like a character, a game
     mode, etc...).
     """
+
     def __init__(self, values, width=100):
         """
         values is an array of string. Each string is an option.
@@ -147,7 +148,7 @@ class Spinner(HBox):
             self.right_arrow.state = True
             self.left_arrow.state = True
             return False,self
-        
+
         if event.dict["key"] == pygame.K_RIGHT:
             if self.get_index() + 1 < len(self.values):
                 self.set_index(self.get_index() + 1)
@@ -157,7 +158,7 @@ class Spinner(HBox):
             if self.get_index() > 0:
                 self.set_index(self.get_index() - 1)
             return self, self
-        
+
         self.right_arrow.state = False
         self.left_arrow.state = False
         self.state = False

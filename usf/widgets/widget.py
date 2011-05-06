@@ -24,6 +24,7 @@ from usf import loaders
 
 config = loaders.get_config()
 
+
 class Widget (object):
     """
     This class is the base of all other widget.
@@ -42,7 +43,7 @@ class Widget (object):
     last_animation = 0.0
     properties = {"focusable": True}
     focusable = False
-    
+
     def __init__(self):
         """
         This function can be rewritten in the others widgets to
@@ -65,7 +66,7 @@ class Widget (object):
         self.screen.blit(self.surface, (self.parentpos[0] + self.x, self.parentpos[1] + self.y))
 
     def set_size(self, (w,h)):
-        """    
+        """
         This function is used to resize a widget.
         """
         self.height = h
@@ -95,15 +96,15 @@ class Widget (object):
 
     def get_id(self):
         return self.widget_id
-        
+
     def start_anim(self):
-        if self.animation_speed == True:
+        if self.animation_speed:
             self.animation()
 
         elif(self.last_animation + self.animation_speed <= time.time()):
             self.last_animation = time.time()
             self.animation()
-        
+
     def animation(self):
         pass
 
@@ -112,8 +113,13 @@ class Widget (object):
 #FIXME : maybe they could go to loaders ?
 width = config.general['WIDTH']
 height = config.general['HEIGHT']
+
+
 def optimize_size(size):
     return size
+
+
 def get_scale(surface):
     size = (surface.get_width()*800/config.general['WIDTH'], surface.get_height()*480/config.general['HEIGHT'])
     return size
+

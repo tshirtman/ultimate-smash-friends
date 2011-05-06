@@ -20,7 +20,6 @@ except ImportError:
 
 class SubPixelSurface(object):
 
-
     def __init__(self, surface, x_level=3, y_level=None):
 
         """Creates a sub pixel surface object.

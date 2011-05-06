@@ -45,7 +45,7 @@ class Button(Label):
         """
         self.height = h
         self.width = w
-        
+
         #center the text vertically
         self.posy = self.height/2-self.surface_text.get_height()/2
 
@@ -57,24 +57,27 @@ class Button(Label):
         Draw the widget.
         """
         #mouse over
-        if self.state == True:
-            surf = loaders.image_layer(loaders.image(join(config.sys_data_dir,
-                                                          'gui',
-                                                          config.general['THEME'],
-                                                          'back_button_hover.png'),
-                                                     scale=(self.width, self.height))[0],
-                                       self.surface_text,
-                                       (self.posx, self.posy))
+        if self.state:
+            surf = loaders.image_layer(loaders.image(join(
+                config.sys_data_dir,
+                'gui',
+                config.general['THEME'],
+                'back_button_hover.png'),
+                scale=(self.width, self.height))[0],
+                self.surface_text,
+                (self.posx, self.posy))
 
         #normal
         else:
-            surf = loaders.image_layer(loaders.image(join(config.sys_data_dir,
-                                                          'gui',
-                                                          config.general['THEME'],
-                                                          'back_button.png'),
-                                                     scale=(self.width, self.height))[0],
-                                       self.surface_text,
-                                       (self.posx, self.posy))
+            surf = loaders.image_layer(loaders.image(join(
+                config.sys_data_dir,
+                'gui',
+                config.general['THEME'],
+                'back_button.png'),
+                scale=(self.width, self.height))[0],
+                self.surface_text,
+                (self.posx, self.posy))
+
         self.screen.blit(surf, (self.parentpos[0] + self.x, self.parentpos[1] + self.y))
 
     def handle_mouse(self,event):
@@ -88,7 +91,7 @@ class Button(Label):
         else:
             x = event.dict['pos'][0]
             y = event.dict['pos'][1]
-            if self.state == True:
+            if self.state:
                 x -= self.parentpos[0] + self.x
                 y -= self.parentpos[1] + self.y
             if 0 < x < self.width and 0 < y < self.height:
@@ -96,16 +99,16 @@ class Button(Label):
                 return False,self
             self.state = False
             return False,False
-    
-    
+
+
     def handle_keys(self,event):
         if (event.dict["key"] == pygame.K_DOWN or event.dict["key"] == pygame.K_UP) and not self.state:
             self.state = True
             return False,self
-        
+
         if event.dict["key"] == pygame.K_RETURN:
             return self, self
-        
+
         self.state = False
         return False, False
 

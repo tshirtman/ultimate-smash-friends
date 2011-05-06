@@ -21,6 +21,8 @@ from screen import Screen
 from usf import widgets
 import copy
 import pygame
+
+
 class main_screen(Screen):
     def init(self):
         self.set_name("ultimate smash friends")
@@ -40,4 +42,4 @@ class main_screen(Screen):
             return 'goto:about'
         if action.text == _('Quit'):
             pygame.event.post( pygame.event.Event(pygame.QUIT) )
-            
+

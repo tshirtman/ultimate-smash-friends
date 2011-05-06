@@ -50,7 +50,7 @@ class Coverflow(Widget):
         self.anim_state = ""
         self.advance = 0
         self.init()
-        
+
         #compatibility with the others widget only
         self.state = False
 
@@ -65,7 +65,6 @@ class Coverflow(Widget):
                                                 config.general['THEME'],
                                                 "coverflow",
                                                 "foreground.png"), scale=(config.general["WIDTH"], config.general["HEIGHT"]))[0]
-        
 
         self.frame = loaders.image(os.path.join(config.sys_data_dir,
                                                 "gui",
@@ -127,8 +126,8 @@ class Coverflow(Widget):
         #main frame
         self.screen.blit(self.main_frame, (x + self.pos, y + self.posy_center))
         self.screen.blit(loaders.image(self.values[self.index][1],
-                                       scale=self.center_image
-                                       )[0],
+                                       scale=self.center_image)[0],
+
                          (x + self.pos + self.center_image_indent[0],
                           y + self.posy_center  + self.center_image_indent[1]))
         self.pos += self.main_frame.get_width()
@@ -191,14 +190,14 @@ class Coverflow(Widget):
                 elif x < self.width/2 - self.frame.get_width()/2:
                     self.launch_anim(True)
         return False, False
-        
+
     def launch_anim(self, sens):
         #self.last_c_update = time.time()
         self.anim_state = "start"
         self.last_index = self.index
         self.in_anim = True
         self.sens = sens
-        
+
     def animation(self):
         if self.in_anim:
             if self.anim_state == "start" or self.anim_state == "slide":
@@ -256,23 +255,23 @@ class Coverflow(Widget):
                 self.in_anim = False
                 #print time.time() - self.last_c_update
                 self.need_update = True
-                
-            
+
+
     def handle_keys(self,event):
         if (event.dict["key"] == pygame.K_DOWN or event.dict["key"] == pygame.K_UP) and not self.state:
             self.state = True
             return False,self
-        
+
         if event.dict["key"] == pygame.K_RETURN:
             return self, self
-        
+
         if not self.in_anim and (event.dict["key"] == pygame.K_LEFT or event.dict["key"] == pygame.K_RIGHT):
             if event.dict["key"] == pygame.K_LEFT:
                 self.launch_anim(True)
             if event.dict["key"] == pygame.K_RIGHT:
                 self.launch_anim(False)
             return self,self
-            
+
         self.state = False
         return False, False
 
@@ -283,7 +282,7 @@ class Coverflow(Widget):
                                                 "coverflow",
                                                 "frame.png"),
                                         scale=self.center_size)[0]
-        
+
         img = loaders.image(self.values[self.index][1])[0]
 
         #keep the image ratio
@@ -295,10 +294,10 @@ class Coverflow(Widget):
             self.center_image = (img.get_width() * (self.main_frame.get_height() -
                                     self.sizey(25)) / img.get_height(),
                                  self.main_frame.get_height()- self.sizey(25))
-        
+
         self.center_image_indent = (self.main_frame.get_width()/2 - self.center_image[0]/2,
                                     self.main_frame.get_height()/2 - self.center_image[1]/2)
-    
+
     def get_text_transparent(self, name):
         text = loaders.text(name, fonts['mono']['10']).convert()
         #FIXME: the colorkey should be in a skin configuration file
@@ -306,7 +305,7 @@ class Coverflow(Widget):
         text.set_colorkey(pygame.color.Color("black"))
         text.blit(loaders.text(name, fonts['mono']['22']), (0,0))
         return text
-    
+
     def get_value(self):
         return self.values[self.index][0]
 

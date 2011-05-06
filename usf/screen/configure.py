@@ -33,7 +33,7 @@ class configure(Screen):
         self.widget.add(widgets.Button(_('Screen')))
 
         self.widget.add(widgets.Button(_('Keyboard')))
-    
+
         self.widget.add(widgets.Button(_('Back')), margin=100)
 
     def callback(self,action):

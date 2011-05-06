@@ -23,6 +23,7 @@ from usf.config import Config
 
 config = Config()
 
+
 class sound(Screen):
     def init(self):
         self.add(widgets.VBox())
@@ -32,7 +33,7 @@ class sound(Screen):
         self.widget.add(widgets.Label(_('Music')))
         music = widgets.Slider('music_slider')
         self.widget.add(music, size=(220,30))
-        
+
         music.set_value(config.audio['MUSIC_VOLUME'])
         sound.set_value(config.audio['SOUND_VOLUME'])
         self.widget.add(widgets.Button(_('Back')), margin=30)

@@ -35,4 +35,4 @@ class resume(Screen):
             return 'game:stop'
         if action.text == _('Configure'):
             return 'goto:configure'
-            
+
