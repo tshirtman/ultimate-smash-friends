@@ -41,7 +41,7 @@ def possible_movements(movement='static'):
     with open(sequences_file) as f:
         lines = f.readlines()
 
-    result = set()
+    result = set(('walk', ))
     possible = False
     for l in lines:
         line = l.split('#')[0].split('\n')[0]
@@ -59,7 +59,8 @@ def possible_movements(movement='static'):
 
 @memoize
 def displacement_movement(s):
-    return s in ('walk', 'jump', 'scnd-jump', 'smash-up-jumping', 'roll')
+    return s in (
+            'walk', 'jump', 'scnd-jump', 'smash-up-jumping', 'roll', 'pick')
 
 
 @memoize
@@ -78,6 +79,7 @@ def simulate(game, iam, m):
             m.movement,
             game,
             {'entity': entity})
+
     game.update(deltatime=TIMESTEP)
 
 
@@ -91,13 +93,13 @@ def under_lowest_plateform(game, player):
 
 def over_some_plateform(game, player):
     for p in game.level.map:
-        if p[1] > player.place[1] and p[0] < player.place[0] < p[0]+p[2]:
+        if p[1] > player.place[1] and p[0] < player.place[0] < p[0] + p[2]:
             return True
 
     return False
 
 
-def heuristic_distance(game, iam):
+def heuristic_state(game, iam, player, others):
     """ return a score for the current state of the game, allow to chose a set
     of movement to do.
 
@@ -107,53 +109,43 @@ def heuristic_distance(game, iam):
         number of lives of others
         % of damages to others
     """
-    player = game.players[iam]
-    others = (p for p in game.players if p is not player)
-
     return (0
         + (0 if player.rect.colliderect(game.level.rect) else 1000)
         + (0 if player.invincible else 10)       # being invincible is good
         + (0 if player.onGround else 450)        # more conservative about jumps
         + (0 if player.upgraded else 100)        # being upgraded is cool
         + (0 if not under_lowest_plateform(game, player) else 1000)
-        + (0 if over_some_plateform(game, player) else 500)
-        + min((player.dist(p) for p in others)))
+        + (0 if over_some_plateform(game, player) else 500))
+
+def heuristic_distance(game, iam, player, others):
+    return min((player.dist(p) for p in others))
 
 
-def heuristic_fight(game, iam):
-    player = game.players[iam]
-    others = (p for p in game.players if p is not player)
-
+def heuristic_fight(game, iam, player, others):
     return (0
-        + (1500 if not player.rect.colliderect(game.level.rect) else 0)
         + player.percents                       # avoid being hurt
         + sum((p.lives for p in others)) * 100  # kill people!
-        - player.invincible * 100               # being invincible is good
-        - player.onGround * 150                 # more conservative about jumps
-        - player.upgraded * 100                 # being upgraded is cool
-        + under_lowest_plateform(game, player) * 100000
-        - over_some_plateform(game, player) * 500
         - sum((p.percents for p in others)))    # hurt people, it's good
 
 
 def search_path(game, iam, max_depth):
     gametime = game.gametime
     scores = []
-    if heuristic_distance(game, iam) > 100:
+    player = game.players[iam]
+    others = (p for p in game.players if p is not player)
+
+    if heuristic_distance(game, iam, player, others) > 100:
         f = displacement_movement
         h = heuristic_distance
-        print "displacement"
     else:
         f = fight_movement
         h = heuristic_fight
-        print "fight"
 
     movements = filter(f, possible_movements(
         game.players[iam].entity_skin.current_animation))
     if not movements:
         return (0, [])
 
-    print "comparing heuristics"
     for movement in movements:
         for walk, reverse in (
                 (True, True),
@@ -162,9 +154,17 @@ def search_path(game, iam, max_depth):
                 (False, False)):
             M = Movement(gametime, movement, reverse, walk)
             b = game.backup() #no, this can't be factorized by moving it upper
+
+            player = game.players[iam]
+            others = (p for p in game.players if p is not player)
+
             simulate(game, iam, M)
-            print M, '\t', h(game, iam)
-            scores.append((h(game, iam), M, game.backup()))
+            scores.append((
+                h(game, iam, player, others) +
+                heuristic_state(game, iam, player, others),
+                M,
+                game.backup()))
+
             game.restore(b)
 
     scores.sort()
