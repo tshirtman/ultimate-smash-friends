@@ -145,9 +145,10 @@ class Config(object):
 
             try:
                 sys_data_dir = join(environ['PROGRAMFILES'],
-                                    'Ultimate Smash Friends', 'data')
+                        'Ultimate Smash Friends', 'data')
+
                 sys_config_file = join(environ['PROGRAMFILES'],
-                                       'Ultimate Smash Friends', 'system.cfg')
+                        'Ultimate Smash Friends', 'system.cfg')
 
                 # see if files are installed on the system
                 stat(sys_data_dir)
@@ -160,7 +161,7 @@ class Config(object):
                 sys_config_file = join(user_config_dir, 'system.cfg')
 
             user_config_dir = join(environ['APPDATA'],
-                                'Ultimate Smash Friends')
+                    'Ultimate Smash Friends')
             user_config_file = join(user_config_dir, 'user.cfg')
             user_data_dir = join(user_config_dir, 'user_data')
 
@@ -191,17 +192,18 @@ class Config(object):
 
                     if 'XDG_CONFIG_HOME' in environ.keys():
                         user_config_dir = join(environ['XDG_CONFIG_HOME'],
-                                          'ultimate-smash-friends')
+                                'ultimate-smash-friends')
                     else:
                         user_config_dir = join(environ['HOME'], '.config',
-                                          'ultimate-smash-friends')
+                                'ultimate-smash-friends')
                     sys_config_file = datadir[1]
                     break
                 except OSError:
                     pass
+
             if sys_data_dir == "":
-                logging.error("Error: no valid data directory - aborting")
-                logging.error("Current dir: " + os.getcwd())
+                print "Error: no valid data directory - aborting"
+                print "Current dir: " + os.getcwd()
                 exit(-1)
 
             user_config_file = join(user_config_dir, 'user.cfg')
