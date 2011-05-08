@@ -44,12 +44,14 @@ from ai import AI
 try:
     config = Config()
     logging.basicConfig(
-        filename=config.debug['LOG_FILENAME'],
-        level=eval('logging.'+config.debug['LOG_LEVEL']))
+        filename=os.path.join(config.user_data_dir,
+            config.debug['LOG_FILENAME']),
+        level=eval('logging.' + config.debug['LOG_LEVEL']))
 
 except AttributeError:
     logging.basicConfig(
-        filename=config.debug['LOG_FILENAME'],
+        filename=os.path.join(config.user_data_dir,
+config.debug['LOG_FILENAME']),
         level = logging.WARNING)
 
     logging.error(_('Bad logging level in user.cfg!'))
