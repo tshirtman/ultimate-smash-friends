@@ -115,7 +115,6 @@ class Main(object):
             thread.start()
 
             self.init_sound()
-
             self.ai = AI()
 
             # if a level was provided and at least two players in the option
@@ -277,6 +276,8 @@ class Main(object):
             self.state = 'game'
             if game_ is not self.game:
                 print "starting game"
+                self.ai = AI()
+
                 #if self.ai_thread:
                     #self.ai_thread.stop_AI()
 
@@ -296,10 +297,9 @@ class Main(object):
             pygame.time.wait(max_fps + start_loop - pygame.time.get_ticks())
 
     def manage_ai(self):
-        if self.ai and self.ai.last_update < self.game.gametime - .20:
-            for i, p in enumerate(self.game.players):
-                if p.ai and p.present:
-                    self.ai.update(self.game, i)
+        for i, p in enumerate(self.game.players):
+            if p.ai and p.present:
+                self.ai.update(self.game, i)
 
     def manage_game(self, was_paused):
         d = self.game.update_clock(was_paused or self.game.first_frame)

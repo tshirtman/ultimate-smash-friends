@@ -24,6 +24,7 @@ import config
 from memoize import memoize
 conf = config.Config()
 from threading import Thread
+import random
 
 #controls = controls.Controls()
 
@@ -110,11 +111,11 @@ def heuristic_state(game, iam, player, others):
         % of damages to others
     """
     return (0
-        + (0 if player.rect.colliderect(game.level.rect) else 1000)
+        #+ (0 if player.rect.colliderect(game.level.rect) else 1000)
         + (0 if player.invincible else 10)       # being invincible is good
-        + (0 if player.onGround else 450)        # more conservative about jumps
+        #+ (0 if player.onGround else 450)        # more conservative about jumps
         + (0 if player.upgraded else 100)        # being upgraded is cool
-        + (0 if not under_lowest_plateform(game, player) else 1000)
+        #+ (0 if not under_lowest_plateform(game, player) else 1000)
         + (0 if over_some_plateform(game, player) else 500))
 
 def heuristic_distance(game, iam, player, others):
@@ -206,7 +207,7 @@ class AI(object):
     def __init__(self):
         self.status = 'searching'
         self.sequences_ai = dict()
-        self.last_update = None
+        self.next_update = dict()
 
     def update(self, game, iam):
         """
@@ -215,10 +216,17 @@ class AI(object):
         actions to do, or use actions that where planned before if there are
         some left to do.
         """
-        self.last_update = game.gametime
+
+        if (iam in self.next_update and self.next_update[iam] < game.gametime):
+            return
+
+        # random is there to avoid too much ai being updated in the same frame
+        self.next_update[iam] = game.gametime + (random.randint(20, 60)/100.0)
+
         #print "game: ",game
         if iam not in self.sequences_ai:
             self.sequences_ai[iam] = list()
+
         entity = game.players[iam]
         open_positions = set()
         closed_positions = set()
