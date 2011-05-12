@@ -217,7 +217,7 @@ class AI(object):
         some left to do.
         """
 
-        if (iam in self.next_update and self.next_update[iam] < game.gametime):
+        if (iam in self.next_update and self.next_update[iam] > game.gametime):
             return
 
         # random is there to avoid too much ai being updated in the same frame
