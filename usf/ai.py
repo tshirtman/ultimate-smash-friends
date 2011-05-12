@@ -111,12 +111,12 @@ def heuristic_state(game, iam, player, others):
         % of damages to others
     """
     return (0
-        #+ (0 if player.rect.colliderect(game.level.rect) else 1000)
-        + (0 if player.invincible else 10)       # being invincible is good
-        #+ (0 if player.onGround else 450)        # more conservative about jumps
+        + (0 if player.rect.colliderect(game.level.rect) else 1000)
+        + (0 if player.invincible else 200)      # being invincible is good
+        + (0 if player.onGround else 45)         # more conservative about jumps
         + (0 if player.upgraded else 100)        # being upgraded is cool
-        #+ (0 if not under_lowest_plateform(game, player) else 1000)
-        + (0 if over_some_plateform(game, player) else 500))
+        + (0 if not under_lowest_plateform(game, player) else 1000)
+        + (0 if over_some_plateform(game, player) else 30))
 
 def heuristic_distance(game, iam, player, others):
     return min((player.dist(p) for p in others))
@@ -144,6 +144,7 @@ def search_path(game, iam, max_depth):
 
     movements = filter(f, possible_movements(
         game.players[iam].entity_skin.current_animation))
+
     if not movements:
         return (0, [])
 
@@ -174,6 +175,7 @@ def search_path(game, iam, max_depth):
     b = game.backup()
     if max_depth == 0:
         result = [(x[0], [x[1], ]) for x in scores[:2]]
+
     else:
         result = []
         for p in scores[:2]:
