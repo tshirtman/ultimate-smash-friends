@@ -42,7 +42,7 @@ def possible_movements(movement='static'):
     with open(sequences_file) as f:
         lines = f.readlines()
 
-    result = set(('walk', ))
+    result = set(('walk', )) if 'jump' not in movement else set()
     possible = False
     for l in lines:
         line = l.split('#')[0].split('\n')[0]
