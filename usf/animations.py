@@ -18,7 +18,6 @@
 ###############################################################################
 
 import pygame
-from pygame.sprite import Sprite
 
 import loaders
 import logging
@@ -73,14 +72,13 @@ class Frame (object):
         self.bullet = image
 
 
-class PreciseTimedAnimation(Sprite):
+class PreciseTimedAnimation(object):
     """
     This object store the frames of an animation and update the image of the
     entity skin.
     """
 
     def __init__(self, timedFrames, attribs, server=False):
-        Sprite.__init__(self)
         self.frames = timedFrames
         self.server_mode = server
         self.image = timedFrames[0].image
