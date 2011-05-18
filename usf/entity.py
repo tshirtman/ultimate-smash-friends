@@ -379,9 +379,11 @@ class Entity (object):
         test entity aggressive points collisions with other entity
         """
         for point in self.agressiv_points:
-            if entity.rect.collidepoint(
-                    self.rect[0] + point[0][0],
-                    self.rect[1] + point[0][1]):
+            if entity.rect.colliderect(
+                    self.rect[0] + point[0][0] - 3,
+                    self.rect[1] + point[0][1] - 3,
+                    6,
+                    6):
                 entity.hit(point, self.reversed)
 
     def hit(self, point, reverse):
@@ -397,8 +399,8 @@ class Entity (object):
                                 / config.general['SHIELD_SOLIDITY'])
 
             self.shield['power'] = max(0, self.shield['power'])
-            self._percents += math.sqrt(point[1][0] ** 2 + point[1][1]**2)\
-                    / (30 * (100 - self.armor)) / 2
+            self._percents += (math.sqrt(point[1][0] ** 2 + point[1][1]**2)
+                    / (30 * (100 - self.armor)) / 2)
 
         else:
             direction = reverse != self.reversed and -1 or 1
