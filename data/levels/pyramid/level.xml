@@ -16,4 +16,60 @@
 	<entry-point coords="430 100"></entry-point>
 	<entry-point coords="600 100"></entry-point>
 	<entry-point coords="710 200"></entry-point>
+	<decorum
+		coords="100, 100"
+		depth="1"
+		update="lambda coords, t: coords"
+		>
+		<frame
+			image="misc/bonus_armor.png"
+			time="1000"
+			/>
+		<frame
+			image="misc/bonus_bomb.png"
+			time="2000"
+			/>
+	</decorum>
+	<decorum
+		coords="100, 100"
+		depth="2"
+		update="lambda coords, t: coords"
+		>
+		<frame
+			image="misc/bonus_armor.png"
+			time="1000"
+			/>
+		<frame
+			image="misc/bonus_bomb.png"
+			time="2000"
+			/>
+	</decorum>
+	<decorum
+		coords="100, 100"
+		depth="8"
+		update="lambda coords, t: coords"
+		>
+		<frame
+			image="misc/bonus_armor.png"
+			time="1000"
+			/>
+		<frame
+			image="misc/bonus_bomb.png"
+			time="2000"
+			/>
+	</decorum>
+	<decorum
+		coords="100, 100"
+		depth="9"
+		update="lambda coords, t: coords"
+		>
+		<frame
+			image="misc/bonus_armor.png"
+			time="1000"
+			/>
+		<frame
+			image="misc/bonus_bomb.png"
+			time="2000"
+			/>
+	</decorum>
 </map>

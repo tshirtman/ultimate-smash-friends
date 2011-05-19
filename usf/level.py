@@ -42,6 +42,45 @@ except:
     from elementtree import ElementTree
 
 
+class Decorum(object):
+    """
+    A simple class to represent decorum in levels.
+    A decorum is an element displayed, but non interractive, as opposed to a
+    block, it can be at any depth between background and camera, and will be
+    diplayed with the appropriate zoom at the appromirate moment. It can be
+    animated, by containing several frames, and move, by providing dx and dy
+    update functions. which can use time and random.
+
+    frames are (image, time) couples, time being the END of the display of the
+    corresponding image (and thus, begin display of the next), image is the
+    path to the image, relative to the data directory.
+
+    depth is [0, 1[, 0 meaning the place of the camera when zoom = 1, and 1 the
+    place of the background (infinite).
+    """
+
+    def __init__(self, frames, coords, depth, update_fctn):
+        self.frames = frames
+        self.coords = coords
+        self.depth = depth
+        self.update_fctn = update_fctn
+        self.duration = max(map(lambda x: x[1], frames))
+        self.update(1)
+
+    def update(self, time):
+        self.texture = filter(
+                lambda x: x[1] > time % self.duration, self.frames)[0][0]
+
+        self.coords = self.update_fctn(self.coords, time)
+
+    def draw(self, surface, coords, zoom):
+        my_zoom = self.depth * zoom
+        real_coords = (
+                int(self.coords[0] * my_zoom) + coords[0],
+                int(self.coords[1] * my_zoom) + coords[1])
+
+        surface.blit(loaders.image('data/'+self.texture, zoom=my_zoom)[0], real_coords)
+
 class Block (object):
     """
     An abstraction class to define methods shared by some level objects.
@@ -234,6 +273,7 @@ class Level(object):
         self.load_moving_blocs(xml, server, levelname)
         self.load_water_blocs(xml, server)
         self.load_vector_blocs(xml, server)
+        self.load_decorums(xml)
 
     def getXML(self, levelname):
         return ElementTree.ElementTree(
@@ -364,8 +404,22 @@ class Level(object):
                             texture,
                             server))
 
+    def load_decorums(self, xml):
+        self.decorums = set()
+        for d in xml.findall('decorum'):
+            frames = list()
+            for f in d.findall('frame'):
+                frames.append((f.attrib['image'], int(f.attrib['time'])))
+
+            coords = [int(x) for x in d.attrib['coords'].split(',')]
+            depth = float(d.attrib['depth'])
+            update_fctn = eval(d.attrib['update'])
+
+            self.decorums.add(Decorum(frames, coords, depth, update_fctn))
+
+
     def draw_before_players(self, surface, level_place, zoom, shapes=False):
-        self.draw_background(surface)
+        self.draw_background(surface, level_place, zoom)
         self.draw_level(surface, level_place, zoom, shapes)
 
         for block in self.moving_blocs:
@@ -428,11 +482,16 @@ class Level(object):
                         20, 20),
                     pygame.Color('blue'))
 
-    def draw_background(self, surface, coords=(0, 0)):
+    def draw_background(self, surface, coords=(0, 0), zoom=1):
         surface.blit(loaders.image(self.background,
-            scale=self.SIZE)[0], coords)
+            scale=self.SIZE)[0], (0,0))
+
         for layer in self.layers:
             surface.blit(layer.get_image(), layer.get_pos())
+
+        for d in self.decorums:
+            if d.depth >= 0.5:
+                d.draw(surface, coords, zoom)
 
     def draw_level(self, surface, coords, zoom, shapes=False):
         surface.blit(loaders.image(self.level, zoom=zoom)[0], coords)
@@ -443,6 +502,11 @@ class Level(object):
         if self.foreground:
             surface.blit(loaders.image(self.foreground, zoom=zoom)[0], coords)
 
+        for d in self.decorums:
+            if d.depth < 0.5:
+                d.draw(surface, coords, zoom)
+
+
     def backup(self):
         return (b.backup() for b in self.moving_blocs)
 
@@ -452,6 +516,9 @@ class Level(object):
     def update(self, time):
         for block in self.moving_blocs:
             block.update(time)
+
+        for d in self.decorums:
+            d.update(time)
 
     def collide_r(self, r):
         if r.collidelist(self.map) != -1:
