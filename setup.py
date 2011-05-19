@@ -51,8 +51,8 @@ DESCRIPTION = ('A 2d arcade fight game, based on the gameplay of super '
                 'smash bros, from nintendo.')
 AUTHOR = 'Gabriel Pettier'
 AUTHOR_EMAIL = 'gabriel.pettier@gmail.com'
-MAINTAINER = 'Lucas Baudin (xapantu)'
-MAINTAINER_EMAIL = 'xapantu@gmail.com'
+MAINTAINER = 'Gabriel Pettier'
+MAINTAINER_EMAIL = 'gabriel.pettier@gmail.com'
 URL = 'http://usf.tuxfamily.org/'
 CLASSIFIERS = ['Development Status :: 2 - Pre-Alpha',
                'Operating System :: OS Independent',
