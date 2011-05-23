@@ -203,6 +203,47 @@ shield_center="20 40"
             ></agressiv-point>
         </frame>
     </movement>
+    <movement name="smash-down"
+    duration="300"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="pick1.png"
+        hardshape="10 0 20 62"
+        >
+            <agressiv-point
+            coords="8,57"
+            vector="0,100"
+            ></agressiv-point>
+            <agressiv-point
+            coords="22,51"
+            vector="20,100"
+            ></agressiv-point>
+            <agressiv-point
+            coords="31,38"
+            vector="33,100"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="1050"
+        image="hit1.png"
+        hardshape="10 0 18 62"
+        >
+            <agressiv-point
+            coords="10,57"
+            vector="0,49"
+            ></agressiv-point>
+            <agressiv-point
+            coords="22,57"
+            vector="7,37"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,26"
+            vector="9,43"
+            ></agressiv-point>
+        </frame>
+    </movement>
     <movement name="smash-up-jumping"
     duration="10000"
     repeat="0"
@@ -580,6 +621,47 @@ shield_center="20 40"
             <agressiv-point
             coords="53,14"
             vector="54,-142"
+            ></agressiv-point>
+        </frame>
+    </movement>
+    <movement name="smash-down_upgraded"
+    duration="300"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="pick1-upgraded.png"
+        hardshape="13 0 20 62"
+        >
+            <agressiv-point
+            coords="14,57"
+            vector="0,100"
+            ></agressiv-point>
+            <agressiv-point
+            coords="33,51"
+            vector="20,100"
+            ></agressiv-point>
+            <agressiv-point
+            coords="40,38"
+            vector="33,100"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="1050"
+        image="hit1-upgraded.png"
+        hardshape="13 0 18 62"
+        >
+            <agressiv-point
+            coords="16,57"
+            vector="0,49"
+            ></agressiv-point>
+            <agressiv-point
+            coords="30,57"
+            vector="7,37"
+            ></agressiv-point>
+            <agressiv-point
+            coords="38,26"
+            vector="9,43"
             ></agressiv-point>
         </frame>
     </movement>
