@@ -136,6 +136,9 @@ def search_path(game, iam, max_depth):
     others = (p for p in game.players if p is not player)
 
     if heuristic_distance(game, iam, player, others) > 100:
+        if player.ai == 1:
+            return (0, [Movement(gametime, 'static', player.reversed, False),])
+
         f = displacement_movement
         h = heuristic_distance
     else:
@@ -178,7 +181,11 @@ def search_path(game, iam, max_depth):
 
     else:
         result = []
-        for p in scores[:2]:
+        r = (
+                scores[5 - player.ai:5] if len(scores) >= 5
+                else scores[max(0, len(scores) - player.ai):])
+
+        for p in r:
             game.restore(p[2])
             score, movements = search_path(game, iam, max_depth - 1)
             result.append((p[0] + score, [p[1], ] + movements))
