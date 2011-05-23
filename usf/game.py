@@ -127,15 +127,27 @@ class Game(object):
     def load_player(self, i, player):
         logging.debug('player '+str(i)+' loaded')
             #logging.debug(player)
+        if player.split(os.sep)[1][:2] == 'AI':
+            try:
+                ai = int (player[player.index('AI') + 2])
+                player = player.replace('AI'+str(ai), '')
+            except ValueError:
+                # support old syntax with no number
+                ai = 5
+                player = player.replace('AI', '')
+
+        else:
+            ai = False
+
         self.players.append(
                 entity.Entity(
                     i+1,
                     self,
-                    player.replace("AI", ""),
+                    player,
                     ((i + 1) * self.SIZE[0] / 5, 100)))
 
-        if player and "AI" in player.split(os.sep)[1][:2]:
-            self.players[len(self.players)-1].ai = True
+        if ai:
+            self.players[len(self.players)-1].ai = ai
 
     def load_players(self, players_):
         """
