@@ -121,8 +121,6 @@ class Main(object):
             # immediatly jump into game mode
             if len(self.players) > 1 and self.level is not None:
                 self.game = Game(self.screen, self.level, self.players)
-                #self.ai_thread = AiThreadRunner(self.game)
-                #self.ai_thread.start_AI(self.game)
                 self.state = "game"
                 self.menu = Gui(self.screen)
                 self.menu.handle_reply('goto:resume')
@@ -138,7 +136,6 @@ class Main(object):
 
                 self.game = None
                 self.level = None
-                #self.ai_thread = None
 
             self.lock.acquire()
             self.stop_thread = True
@@ -278,13 +275,8 @@ class Main(object):
                 print "starting game"
                 self.ai = AI()
 
-                #if self.ai_thread:
-                    #self.ai_thread.stop_AI()
-
                 del(self.game)
                 self.game = game_
-                #self.ai_thread = AiThreadRunner(game_)
-                #self.ai_thread.start_AI(game_)
 
         max_fps = 1000/config.general["MAX_GUI_FPS"]
 
@@ -363,8 +355,6 @@ class Main(object):
             self.ended = pygame.event.get(QUIT)
             if self.ended:
                 logging.debug('fps = '+str(self.clock.get_fps()))
-                #if self.ai_thread:
-                    #self.ai_thread.stop_AI()
                 pygame.quit()
                 break
 
