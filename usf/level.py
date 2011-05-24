@@ -74,10 +74,13 @@ class Decorum(object):
         self.coords = self.update_fctn(self.coords, time)
 
     def draw(self, surface, coords, zoom):
-        my_zoom = self.depth * zoom
+        my_zoom = zoom / self.depth
+        middle = surface.get_size()[0] / 2, surface.get_size()[1] / 2
         real_coords = (
-                int(self.coords[0] * my_zoom) + coords[0],
-                int(self.coords[1] * my_zoom) + coords[1])
+                middle[0] + int((self.coords[0]) * my_zoom) +
+                (coords[0] - middle[0]) * my_zoom,
+                middle[1] + int((self.coords[1]) * my_zoom) +
+                (coords[1] - middle[1]) * my_zoom)
 
         surface.blit(loaders.image('data/'+self.texture, zoom=my_zoom)[0], real_coords)
 
