@@ -16,48 +16,48 @@
     </entry-point>
     
     <block
-    coords="82 336 35 48"
+    coords="62 301 35 48"
     ></block>
     <block
-    coords="117 305 45 79"
+    coords="97 270 45 79"
     ></block>
     <block
-    coords="161 314 80 72"
+    coords="141 279 80 72"
     ></block>
     <block
-    coords="241 324 36 51"
+    coords="221 289 26 51"
     ></block>
     
     <block
-    coords="277 442 91 127"
+    coords="247 402 91 127"
     ></block>
     <block
-    coords="368 419 72 143"
+    coords="324 379 72 143"
     ></block>
     <block
-    coords="440 442 65 113"
+    coords="396 402 80 113"
     ></block>
     <block
-    coords="505 457 95 98"
+    coords="455 417 95 98"
     ></block>
     <block
-    coords="600 442 55 120"
+    coords="550 402 55 120"
     ></block>
     <block
-    coords="655 457 52 105"
+    coords="605 417 52 105"
     ></block>
     <block
-    coords="707 489 70 66"
+    coords="657 449 20 66"
     ></block>    
     
     <block
-    coords="661 247 46 77"
+    coords="581 217 46 77"
     ></block>
     <block
-    coords="707 232 56 1045"
+    coords="627 202 56 105"
     ></block>
     <block
-    coords="763 240 49 96"
+    coords="683 210 49 96"
     ></block>        
     
     <vector-block
