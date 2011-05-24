@@ -1,0 +1,92 @@
+<?xml version="2.0" encoding="UTF-8"?>
+<map
+    name="meteor"
+    background="meteor-background.png"
+    foreground="meteor-foreground.png"
+    middle="meteor-middle.png"
+    >
+    <entry-point
+        coords="750 50">
+    </entry-point>
+    <entry-point
+        coords="150 50">
+    </entry-point>
+    <entry-point
+        coords="1350 350">
+    </entry-point>
+    
+    <block
+    coords="82 336 35 48"
+    ></block>
+    <block
+    coords="117 305 45 79"
+    ></block>
+    <block
+    coords="161 314 80 72"
+    ></block>
+    <block
+    coords="241 324 36 51"
+    ></block>
+    
+    <block
+    coords="277 442 91 127"
+    ></block>
+    <block
+    coords="368 419 72 143"
+    ></block>
+    <block
+    coords="440 442 65 113"
+    ></block>
+    <block
+    coords="505 457 95 98"
+    ></block>
+    <block
+    coords="600 442 55 120"
+    ></block>
+    <block
+    coords="655 457 52 105"
+    ></block>
+    <block
+    coords="707 489 70 66"
+    ></block>    
+    
+    <block
+    coords="661 247 46 77"
+    ></block>
+    <block
+    coords="707 232 56 1045"
+    ></block>
+    <block
+    coords="763 240 49 96"
+    ></block>        
+    
+    <vector-block
+    texture="meteor-rock-left.png"
+    vector="0 -1000"
+    relative="0"
+    position="314 255"
+    >
+        <rect
+        coords="3 16 68 43"
+        ></rect>
+        <rect
+        coords="71 0 58 58"
+        ></rect> 
+    </vector-block>
+    <vector-block
+    texture="meteor-rock-center.png"
+    vector="50 0"
+    relative="1"
+    position="509 148"
+    >
+        <rect
+        coords="0 36 19 24"
+        ></rect>
+        <rect
+        coords="20 6 51 59"
+        ></rect>
+        <rect
+        coords="71 13 47 40"
+        ></rect>        
+    </vector-block>
+</map>

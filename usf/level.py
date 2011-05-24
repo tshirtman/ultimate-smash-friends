@@ -120,14 +120,28 @@ class VectorBloc (Block):
     """
 
     def __init__(self, rects, position, vector, relative, texture,
-            server=False):
+            server=False, levelname='biglevel'):
         Block.__init__(self)
         self.rects = rects
         self.relative = relative
-        self.texture = os.path.join(
-                config.sys_data_dir,
-                "levels",
-                texture)
+        try:
+            self.texture = os.path.join(
+                    config.sys_data_dir,
+                    "levels",
+                    levelname,
+                    texture)
+            loaders.image(self.texture)
+        except pygame.error:
+            logging.debug("No texture found here: " + str(file))
+            try:
+                self.texture = os.path.join(
+                        config.sys_data_dir,
+                        "levels",
+                        "common",
+                        texture)
+
+            except pygame.error:
+                logging.error("Can't load the texture: " + str(file))
 
         self.vector = vector
         self.position = position
@@ -275,7 +289,7 @@ class Level(object):
         self.load_blocs(xml)
         self.load_moving_blocs(xml, server, levelname)
         self.load_water_blocs(xml, server)
-        self.load_vector_blocs(xml, server)
+        self.load_vector_blocs(xml, server, levelname)
         self.load_decorums(xml)
 
     def getXML(self, levelname):
@@ -383,7 +397,7 @@ class Level(object):
             nums = [int(i) for i in nums]
             self.water_blocs.append(pygame.Rect(nums))
 
-    def load_vector_blocs(self, xml, server=False):
+    def load_vector_blocs(self, xml, server, levelname):
         self.vector_blocs = []
         for block in xml.findall('vector-block'):
             texture = block.attrib['texture']
@@ -405,7 +419,8 @@ class Level(object):
                             vector,
                             relative,
                             texture,
-                            server))
+                            server,
+                            levelname))
 
     def load_decorums(self, xml):
         self.decorums = set()

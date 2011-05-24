@@ -25,7 +25,6 @@ import math
 import os
 import logging
 import sys
-from copy import deepcopy
 
 import socket
 import SocketServer

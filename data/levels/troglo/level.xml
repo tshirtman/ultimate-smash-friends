@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map name="troglo2"
+    background="troglo2-background.png"
+    foreground="troglo2-foreground.png"
+    middle="troglo2-middle.png"
+    margins="100,100,100,100"
+    >
+    <moving-block
+    texture="pod-left.png"
+    >
+        <rect
+        coords="6 10 68 34"
+        ></rect>
+        <rect
+        coords="70 20 153 37"
+        ></rect>
+        <pattern
+        position="500 670"
+        time="1"
+        ></pattern>
+        <pattern
+        position="500 620"
+        time="6000"
+        ></pattern>
+        <pattern
+        position="500 448"
+        time="14000"
+        ></pattern>
+        <pattern
+        position="500 398"
+        time="20000"
+        ></pattern>
+        <pattern
+        position="500 448"
+        time="26000"
+        ></pattern>
+        <pattern
+        position="500 620"
+        time="34000"
+        ></pattern>        
+        <pattern
+	position="500 670"
+	time="40000"
+        ></pattern>
+    </moving-block>
+
+    <moving-block
+    texture="pod-right.png"
+    >
+        <rect
+        coords="3 16 152 38"
+        ></rect>
+        <rect
+        coords="154 8 55 38"
+        ></rect>
+        <pattern
+        position="820 277"
+        time="1"
+        ></pattern>
+        <pattern
+        position="820 367"
+        time="6000"
+        ></pattern>
+        <pattern
+        position="820 575"
+        time="14000"
+        ></pattern>
+        <pattern
+        position="820 675"
+        time="20000"
+        ></pattern>
+        <pattern
+        position="820 575"
+        time="26000"
+        ></pattern>
+        <pattern
+        position="820 367"
+        time="34000"
+        ></pattern>        
+        <pattern
+        position="820 267"
+        time="40000"
+        ></pattern>
+    </moving-block>
+    <block coords="656 328 172 22" ></block>
+    <block coords="288 580 202 32" ></block>
+    <block coords="1042 682 241 30" ></block>
+</map>
