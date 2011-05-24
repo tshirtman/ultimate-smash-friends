@@ -4,6 +4,7 @@
     background="meteor-background.png"
     foreground="meteor-foreground.png"
     middle="meteor-middle.png"
+    margins="500,500,500,500"
     >
     <entry-point
         coords="750 50">
