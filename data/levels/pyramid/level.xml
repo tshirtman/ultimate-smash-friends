@@ -17,8 +17,8 @@
 	<entry-point coords="600 100"></entry-point>
 	<entry-point coords="710 200"></entry-point>
 	<decorum
-		coords="100, 100"
-		depth="1"
+		coords="200, 100"
+		depth=".1"
 		update="lambda coords, t: coords"
 		>
 		<frame
@@ -31,8 +31,8 @@
 			/>
 	</decorum>
 	<decorum
-		coords="100, 100"
-		depth="2"
+		coords="200, 100"
+		depth=".2"
 		update="lambda coords, t: coords"
 		>
 		<frame
@@ -45,8 +45,8 @@
 			/>
 	</decorum>
 	<decorum
-		coords="100, 100"
-		depth="8"
+		coords="200, 100"
+		depth=".8"
 		update="lambda coords, t: coords"
 		>
 		<frame
@@ -59,8 +59,8 @@
 			/>
 	</decorum>
 	<decorum
-		coords="100, 100"
-		depth="9"
+		coords="200, 100"
+		depth=".9"
 		update="lambda coords, t: coords"
 		>
 		<frame
