@@ -5,17 +5,17 @@
 # This file is part of UltimateSmashFriends                                    #
 #                                                                              #
 # UltimateSmashFriends is free software: you can redistribute it and/or modify #
-# it under the terms of the GNU General Public License as published by the Free#
-# Software Foundation, either version 3 of the License, or (at your option) any#
-# later version.                                                               #
+# it under the terms of the GNU General Public License as published by         #
+# the Free Software Foundation, either version 3 of the License, or            #
+# (at your option) any later version.                                          #
 #                                                                              #
-# UltimateSmashFriends is distributed in the hope that it will be useful, but  #
-# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or#
-# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for    #
-# more details.                                                                #
+# UltimateSmashFriends is distributed in the hope that it will be useful,      #
+# but WITHOUT ANY WARRANTY; without even the implied warranty of               #
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                #
+# GNU General Public License for more details.                                 #
 #                                                                              #
-# You should have received a copy of the GNU General Public License along with #
-# UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.           #
+# You should have received a copy of the GNU General Public License            #
+# along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.#
 ################################################################################
 
 # standards import
@@ -302,12 +302,17 @@ class Game(object):
     def draw_debug_player_controls(self, num, player, controls):
         """ displays current key sequence of player, useful for debuging
         """
-        self.screen.blit(
-                game_font.render(
-                    str(controls.player_sequences[num+1]),
-                    True,
-                    pygame.color.Color('red')),
-                (0, num * self.SIZE[1] / 4))
+        #self.screen.blit(
+                #game_font.render(
+                    #str(controls.player_sequences[num]),
+                    #True,
+                    #pygame.color.Color('red')),
+                #(0, num * self.SIZE[1] / 4))
+        for i, k in enumerate(controls.player_sequences[num]):
+            self.screen.blit(
+                    loaders.image(os.path.join(config.sys_data_dir,'misc','key_'+k[0].lower()+'.png'))[0],
+                    (num * self.SIZE[0] / 4 + i * 50, 0 + 100 * (num % 2)))
+
 
     def draw_debug(self, debug_params):
         for num, player in enumerate(self.players):
