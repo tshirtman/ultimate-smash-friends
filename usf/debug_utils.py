@@ -16,3 +16,4 @@ def log_result(function):
         return result
     return decorated
 
+
