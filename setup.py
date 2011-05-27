@@ -17,14 +17,19 @@ OS = platform.system().lower()
 
 if OS == 'darwin':
     from setuptools import setup
+
 elif OS == 'windows':
     from distutils.core import setup
     import py2exe
+
 else:
     from distutils.core import setup
 
 def files(path):
-    """Return all non-python-file filenames in path"""
+    """
+    Return all non-python-file filenames in path
+    """
+
     result = []
     all_results = []
     module_suffixes = [info[0] for info in imp.get_suffixes()]
@@ -46,49 +51,73 @@ def isSystemDLL(pathname):
 
 
 NAME = 'ultimate-smash-friends'
+
 VERSION = '0.1.6'
+
 DESCRIPTION = ('A 2d arcade fight game, based on the gameplay of super '
                 'smash bros, from nintendo.')
 AUTHOR = 'Gabriel Pettier'
+
 AUTHOR_EMAIL = 'gabriel.pettier@gmail.com'
+
 MAINTAINER = 'Gabriel Pettier'
+
 MAINTAINER_EMAIL = 'gabriel.pettier@gmail.com'
+
 URL = 'http://usf.tuxfamily.org/'
+
 CLASSIFIERS = ['Development Status :: 2 - Pre-Alpha',
                'Operating System :: OS Independent',
                'Intended Audience :: End Users/Desktop',
                'License :: OSI Approved :: GNU General Public License (GPL)',
                'Natural Language :: English',
                'Programming Language :: Python',
-               'Topic :: Games/Entertainment :: Arcade'
-              ]
+               'Topic :: Games/Entertainment :: Arcade']
+
 DATA = [(item[0], item[1]) for item in files('data')]
+
 DATA.append('CREDITS.txt')
+
 DATA.append('system.cfg')
+
 DOC = [(join('share', 'doc', 'ultimate-smash-friends') +
        item[0].replace('doc', ''), item[1]) for item in files('doc')]
+
 DOC[-1][-1].append('COPYING.txt')
+
 DOC[-1][-1].append('CREDITS.txt')
+
 DOC[-1][-1].append('README.txt')
+
 DOC[-1][-1].append('README.fr.txt')
+
 CONFIG = [(sep + join('etc', 'ultimate-smash-friends'), ['system.cfg'])]
+
 ICON = [(join('share', 'applications'),
               ['ultimate-smash-friends.desktop'])]
+
 ICON_FILE = 'data/icon/icon.ico'
+
 SCRIPTS = ['ultimate-smash-friends',
            'viewer.pyw', 'utils/togimpmap.py',
            'utils/tolevel.py',
-           'utils/xml_text_extractor.py'
-          ]
+           'utils/xml_text_extractor.py']
+
 PACKAGES = ['usf', 'usf.widgets', 'usf.screen', 'usf.subpixel']
+
 REQUIRES = ['pygame (>=1.6)', 'python (>=2.5)', 'numpy']
+
 APP = None
+
 WINDOWS = None
 
 if OS == 'windows':
     origIsSystemDLL = py2exe.build_exe.isSystemDLL
     py2exe.build_exe.isSystemDLL = isSystemDLL
-    WINDOWS = [{"script" : "ultimate-smash-friends", "icon_resources" : [(1, ICON_FILE)]}]
+    WINDOWS = [{
+        "script" : "ultimate-smash-friends",
+        "icon_resources" : [(1, ICON_FILE)]}]
+
 elif OS == 'darwin':
     SCRIPTS[0] = 'ultimate-smash-friends.py'
     PLIST = dict(CFBundleGetInfoString=' '.join([NAME, VERSION]),
@@ -99,15 +128,30 @@ elif OS == 'darwin':
                  CFBundleShortVersionString=VERSION,
                  NSHumanReadableCopyright='(C) usf-team GPLv3'
                 )
+
     APP = [dict(script='ultimate-smash-friends.py', plist=PLIST)]
     OPTIONS = {'argv_emulation': True}
+
 else:
     DATA = [(join('share', 'ultimate-smash-friends') + sep + item[0], item[1])
             for item in files('data')]
+
     DATA.append((join('share', 'ultimate-smash-friends') + sep + 'data', ['CREDITS.txt']))
 
-setup(name=NAME, version=VERSION, description=DESCRIPTION, 
-      author=AUTHOR, author_email=AUTHOR_EMAIL, 
-      maintainer=MAINTAINER, maintainer_email=MAINTAINER_EMAIL, url=URL,
-      classsifiers=CLASSIFIERS, packages=PACKAGES, scripts=SCRIPTS, 
-      requires=REQUIRES, data_files=DATA+CONFIG, windows=WINDOWS, app=APP)
+setup(
+        name=NAME,
+        version=VERSION,
+        description=DESCRIPTION,
+        author=AUTHOR,
+        author_email=AUTHOR_EMAIL,
+        maintainer=MAINTAINER,
+        maintainer_email=MAINTAINER_EMAIL,
+        url=URL,
+        classsifiers=CLASSIFIERS,
+        packages=PACKAGES,
+        scripts=SCRIPTS,
+        requires=REQUIRES,
+        data_files=DATA+CONFIG,
+        windows=WINDOWS,
+        app=APP)
+
