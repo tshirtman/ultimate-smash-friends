@@ -143,23 +143,38 @@ shield_center="20 40"
 </character>
 ''')
     f.close()
+
 def load_entities(charnames):
     wds = list()
     skins = list()
 
     for charname in charnames:
         path = os.path.join(usf_root, 'data', 'characters', charname)
+        path2 = os.path.join(usf_root, 'data', 'characters_unfinished', charname)
+
         if os.path.exists(path):
             if not os.path.exists(
                 os.path.join(path,path.split(os.path.sep)[-1])+".xml"
                 ):
                 create_character_xml(path)
+            skins.append(Entity_skin(path))
+
+            if inotifyx:
+                wds.append(inotifyx.add_watch(fd, path, inotifyx.IN_MODIFY))
+
+        elif os.path.exists(path2):
+            if not os.path.exists(
+                os.path.join(path2,path2.split(os.path.sep)[-1])+".xml"
+                ):
+                create_character_xml(path2)
+            skins.append(Entity_skin(path2))
+
+            if inotifyx:
+                wds.append(inotifyx.add_watch(fd, path2, inotifyx.IN_MODIFY))
+
         else:
             logging.error("no directory of this name in characters.")
 
-        skins.append(Entity_skin(path))
-        if inotifyx:
-            wds.append(inotifyx.add_watch(fd, path, inotifyx.IN_MODIFY))
     return skins, wds
 
 
@@ -433,5 +448,11 @@ def usage():
 if __name__ == '__main__':
     if len(sys.argv) < 2 or sys.argv[1] == "help":
         usage()
+        l = (
+                os.listdir(os.path.join(usf_root, 'data', 'characters'))+
+                os.listdir(os.path.join(usf_root, 'data',
+                'characters_unfinished')))
+
+        main(filter(lambda x: x != 'none', l))
     else:
         main(sys.argv[1:])
