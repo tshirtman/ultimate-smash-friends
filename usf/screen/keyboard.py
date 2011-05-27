@@ -21,7 +21,6 @@ from os.path import join
 
 from screen import Screen
 from usf import widgets
-import copy
 from usf.config import Config
 config = Config()
 
