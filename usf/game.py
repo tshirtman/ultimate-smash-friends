@@ -38,7 +38,6 @@ import loaders
 
 from level import Level
 from event_manager import EventManager
-from controls import Controls
 from config import Config
 #module to load fonts
 from font import fonts
