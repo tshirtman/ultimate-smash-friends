@@ -268,7 +268,13 @@ class Main(object):
         # return of the menu update function may contain a new game
         # instance to switch to.
         start_loop = pygame.time.get_ticks()
+        menu_was = self.menu.screen_current
         newgame, game_ = self.menu.update(self.clock)
+        if menu_was == 'keyboard' and self.menu.screen_current != 'keyboard':
+                print True
+                self.controls.load_keys()
+                self.controls.load_sequences()
+
         if newgame:
             self.state = 'game'
             if game_ is not self.game:

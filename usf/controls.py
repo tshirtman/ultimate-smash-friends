@@ -99,10 +99,13 @@ class Controls (object):
 
     def __init__(self):
         #loaders.load_keys()
+        self.load_keys()
+        self.load_sequences()
+
+    def load_keys(self):
         self.keys = dict([[locals.__dict__[config.keyboard[key]], key]
                          for key in config.keyboard])
 
-        self.load_sequences()
 
     def load_sequences(self):
         self.sequences = []
