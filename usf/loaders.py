@@ -181,7 +181,7 @@ def paragraph(text_send, font):
         i += 1
         surf = text(texte, font)
         text_re.blit(surf, (text_re.get_width()/2 - surf.get_width()/2,
-            i*surf.get_height()))
+            i * surf.get_height()))
     return text_re
 
 
