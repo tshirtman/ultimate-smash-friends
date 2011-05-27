@@ -16,7 +16,7 @@
 	<entry-point coords="430 100"></entry-point>
 	<entry-point coords="600 100"></entry-point>
 	<entry-point coords="710 200"></entry-point>
-	<decorum
+	<!--decorum
 		coords="200, 100"
 		depth=".1"
 		update="lambda coords, t: coords"
@@ -71,5 +71,5 @@
 			image="misc/bonus_bomb.png"
 			time="2000"
 			/>
-	</decorum>
+	</decorum-->
 </map>
