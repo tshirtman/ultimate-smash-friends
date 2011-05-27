@@ -102,6 +102,9 @@ class Controls (object):
         self.keys = dict([[locals.__dict__[config.keyboard[key]], key]
                          for key in config.keyboard])
 
+        self.load_sequences()
+
+    def load_sequences(self):
         self.sequences = []
         self.player_sequences = [[], [], [], []]
 
@@ -109,7 +112,10 @@ class Controls (object):
                     config.sys_data_dir,
                     'sequences'+os.extsep+'cfg'), 'r')
 
-        for i in sequences_file.readlines():
+        lines = sequences_file.readlines()
+        sequences_file.close()
+
+        for i in lines:
             if i == '\n' or i[0] == '#':
                 continue
 
@@ -122,8 +128,6 @@ class Controls (object):
             seq = tmp[0].split('+')
             act = tmp[1]
             self.sequences.append(Sequence(seq, act, condition))
-
-        sequences_file.close()
 
     def handle_menu_key(self, state, key, game):
         ret = "menu"
