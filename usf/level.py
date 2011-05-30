@@ -55,8 +55,8 @@ class Decorum(object):
     corresponding image (and thus, begin display of the next), image is the
     path to the image, relative to the data directory.
 
-    depth is [0, 1[, 0 meaning the place of the camera when zoom = 1, and 1 the
-    place of the background (infinite).
+    depth is [-1, 1[, 0 meaning the place of the level, a negative value mean
+    behind the level and a positive, before.
     """
 
     def __init__(self, frames, coords, depth, update_fctn):
@@ -74,15 +74,15 @@ class Decorum(object):
         self.coords = self.update_fctn(self.coords, time)
 
     def draw(self, surface, coords, zoom):
-        my_zoom = zoom / self.depth
         middle = surface.get_size()[0] / 2, surface.get_size()[1] / 2
-        real_coords = (
-                middle[0] + int((self.coords[0]) * my_zoom) +
-                (coords[0] - middle[0]) * my_zoom,
-                middle[1] + int((self.coords[1]) * my_zoom) +
-                (coords[1] - middle[1]) * my_zoom)
+        real_coords = (int(self.coords[0] * zoom) + coords[0],
+                int(self.coords[1] * zoom) + coords[1])
 
-        surface.blit(loaders.image('data/'+self.texture, zoom=my_zoom)[0], real_coords)
+        surface.blit(loaders.image('data/'+self.texture, zoom=zoom)[0], real_coords)
+
+    def __cmp__(self, other):
+        return cmp(self.depth, other.depth)
+
 
 class Block (object):
     """
@@ -423,17 +423,18 @@ class Level(object):
                             levelname))
 
     def load_decorums(self, xml):
-        self.decorums = set()
+        self.decorums = list()
         for d in xml.findall('decorum'):
             frames = list()
             for f in d.findall('frame'):
-                frames.append((f.attrib['image'], int(f.attrib['time'])))
+                frames.append((f.attrib['image'], float(f.attrib['time'])))
 
             coords = [int(x) for x in d.attrib['coords'].split(',')]
             depth = float(d.attrib['depth'])
             update_fctn = eval(d.attrib['update'])
 
-            self.decorums.add(Decorum(frames, coords, depth, update_fctn))
+            self.decorums.append(Decorum(frames, coords, depth, update_fctn))
+        self.decorums.sort()
 
 
     def draw_before_players(self, surface, level_place, zoom, shapes=False):
@@ -508,7 +509,7 @@ class Level(object):
             surface.blit(layer.get_image(), layer.get_pos())
 
         for d in self.decorums:
-            if d.depth >= 0.5:
+            if d.depth < 0:
                 d.draw(surface, coords, zoom)
 
     def draw_level(self, surface, coords, zoom, shapes=False):
@@ -521,7 +522,7 @@ class Level(object):
             surface.blit(loaders.image(self.foreground, zoom=zoom)[0], coords)
 
         for d in self.decorums:
-            if d.depth < 0.5:
+            if d.depth >= 0:
                 d.draw(surface, coords, zoom)
 
 
