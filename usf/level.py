@@ -457,8 +457,8 @@ class Level(object):
             draw_rect(
                     surface,
                     pygame.Rect(
-                        (rect[0]) / 8,
-                        (rect[1]) / 8,
+                        rect[0] / 8,
+                        rect[1] / 8,
                         rect[2] / 8,
                         rect[3] / 8),
                     pygame.Color('grey'))

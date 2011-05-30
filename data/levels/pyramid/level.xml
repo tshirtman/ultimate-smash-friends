@@ -1,75 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map 
-	name="pyramid"
-	background="pyramid-background.png"
-	foreground="pyramid-foreground.png"
-	middle="pyramid-middle.png"
+        name="pyramid"
+        background="pyramid-background.png"
+        foreground="pyramid-foreground.png"
+        middle="pyramid-middle.png"
         margins="750,750,750,750"
-	>
-	<block coords="76 373 270 46" ></block>
-	<block coords="343 241 190 44" ></block>
-	<block coords="594 419 229 47" ></block>
-	<block coords="542 108 286 46" ></block>
+        >
+        <block coords="76 373 270 46" ></block>
+        <block coords="343 241 190 44" ></block>
+        <block coords="594 419 229 47" ></block>
+        <block coords="542 108 286 46" ></block>
 
-	<entry-point coords="120 100"></entry-point>
-	<entry-point coords="240 100"></entry-point>
-	<entry-point coords="430 100"></entry-point>
-	<entry-point coords="600 100"></entry-point>
-	<entry-point coords="710 200"></entry-point>
-	<!--decorum
-		coords="200, 100"
-		depth=".1"
-		update="lambda coords, t: coords"
-		>
-		<frame
-			image="misc/bonus_armor.png"
-			time="1000"
-			/>
-		<frame
-			image="misc/bonus_bomb.png"
-			time="2000"
-			/>
-	</decorum>
-	<decorum
-		coords="200, 100"
-		depth=".2"
-		update="lambda coords, t: coords"
-		>
-		<frame
-			image="misc/bonus_armor.png"
-			time="1000"
-			/>
-		<frame
-			image="misc/bonus_bomb.png"
-			time="2000"
-			/>
-	</decorum>
-	<decorum
-		coords="200, 100"
-		depth=".8"
-		update="lambda coords, t: coords"
-		>
-		<frame
-			image="misc/bonus_armor.png"
-			time="1000"
-			/>
-		<frame
-			image="misc/bonus_bomb.png"
-			time="2000"
-			/>
-	</decorum>
-	<decorum
-		coords="200, 100"
-		depth=".9"
-		update="lambda coords, t: coords"
-		>
-		<frame
-			image="misc/bonus_armor.png"
-			time="1000"
-			/>
-		<frame
-			image="misc/bonus_bomb.png"
-			time="2000"
-			/>
-	</decorum-->
+        <entry-point coords="120 100"></entry-point>
+        <entry-point coords="240 100"></entry-point>
+        <entry-point coords="430 100"></entry-point>
+        <entry-point coords="600 100"></entry-point>
+        <entry-point coords="710 200"></entry-point>
+        <decorum
+                coords="100, 100"
+                depth=".1"
+                update="lambda coords, t: coords"
+                >
+                <frame
+                        image="misc/bonus_armor.png"
+                        time="1000"
+                        />
+                <frame
+                        image="misc/bonus_bomb.png"
+                        time="2000"
+                        />
+        </decorum>
+        <decorum
+                coords="200, 100"
+                depth=".2"
+                update="lambda coords, t: coords"
+                >
+                <frame
+                        image="misc/bonus_armor.png"
+                        time="1000"
+                        />
+                <frame
+                        image="misc/bonus_bomb.png"
+                        time="2000"
+                        />
+        </decorum>
+        <decorum
+                coords="200, 200"
+                depth=".8"
+                update="lambda coords, t: coords"
+                >
+                <frame
+                        image="misc/bonus_armor.png"
+                        time="1"
+                        />
+                <frame
+                        image="misc/bonus_bomb.png"
+                        time="2"
+                        />
+        </decorum>
+        <decorum
+                coords="200, 300"
+                depth=".9"
+                update="lambda coords, t: coords"
+                >
+                <frame
+                        image="misc/bonus_armor.png"
+                        time="1.5"
+                        />
+                <frame
+                        image="misc/bonus_bomb.png"
+                        time="2"
+                        />
+        </decorum>
 </map>
