@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map
+    name="dunbar2"
+    background="background.png"
+    foreground="foreground.png"
+    middle="middle.png"
+    margins="500,500,500,500"
+    >
+
+    <block coords="48 81 510 21" ></block>
+    <block coords="721 81 525 21" ></block>
+    <block coords="48 268 192 20" ></block>
+    <block coords="1010 268 236 20" ></block>
+    <block coords="26 81 22 207" ></block>
+    <block coords="1245 81 22 207" ></block>
+    
+    <block coords="395 247 391 40" ></block>
+    <block coords="786 232 58 55" ></block>
+    <block coords="647 183 13 64" ></block>
+    
+    
+    <block coords="48 316 171 16" ></block>
+    <block coords="441 316 395 16" ></block>
+    <block coords="1000 316 245 16" ></block>
+    <block coords="48 470 345 20" ></block>
+    <block coords="549 470 103 20" ></block>
+    <block coords="812 470 433 20" ></block>
+    <block coords="26 316 22 174" ></block>
+    <block coords="1245 316 22 1174" ></block>    
+    
+
+    <block coords="138 448 279 17" ></block>
+    <block coords="207 382 12 66" ></block>
+
+    <block coords="801 448 277 14" ></block>
+    <block coords="1059 394 19 54" ></block>
+   
+    
+    <block coords="48 522 406 20" ></block>
+    <block coords="760 522 485 20" ></block>
+    <block coords="48 688 212 21" ></block>
+    <block coords="963 706 282 21" ></block>
+    <block coords="26 522 22 205" ></block>
+    <block coords="1245 522 23 205" ></block>    
+        
+    <block coords="411 686 341 41" ></block>
+    <block coords="665 620 13 66" ></block>
+    
+    <entry-point coords="600 240"></entry-point>
+    <entry-point coords="935 445"></entry-point>        
+    <entry-point coords="685 549"></entry-point>
+    <entry-point coords="700 1060"></entry-point>	
+</map>
