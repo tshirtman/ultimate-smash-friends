@@ -286,27 +286,10 @@ class Game(object):
                  self.SIZE[0] * 3 / 4,
                  num*self.SIZE[1] / 4))
 
-    def draw_debug_player_movement(self, num, player):
-        """displays current key movement of player, useful for debuging
-        """
-        self.screen.blit(
-                game_font.render(
-                    player.entity_skin.current_animation,
-                    True,
-                    pygame.color.Color('red')),
-                (
-                 0,
-                 num*self.SIZE[1] / 4))
 
     def draw_debug_player_controls(self, num, player, controls):
         """ displays current key sequence of player, useful for debuging
         """
-        #self.screen.blit(
-                #game_font.render(
-                    #str(controls.player_sequences[num]),
-                    #True,
-                    #pygame.color.Color('red')),
-                #(0, num * self.SIZE[1] / 4))
         for i, k in enumerate(controls.player_sequences[num]):
             self.screen.blit(
                     loaders.image(os.path.join(config.sys_data_dir,'misc','key_'+k[0].lower()+'.png'))[0],
@@ -317,9 +300,6 @@ class Game(object):
         for num, player in enumerate(self.players):
             if 'coords' in debug_params:
                 self.draw_debug_player_coords(num, player)
-
-            if debug_params.get('actions', False):
-                self.draw_debug_player_movement(num, player)
 
             if debug_params.get('controls', False):
                 self.draw_debug_player_controls(num, player,

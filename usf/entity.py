@@ -715,7 +715,7 @@ class Entity (object):
                 surface.blit(
                     loaders.text(self.entity_skin.current_animation,
                     fonts['mono']['25']),
-                    (coords[0], coords[1]+self.entity_skin.animation.rect[3]/2))
+                    (coords[0], coords[1] - self.entity_skin.animation.rect[3]))
 
     def draw(self, coords, zoom, surface, debug_params=dict()):
         """

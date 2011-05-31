@@ -68,8 +68,22 @@ class Sequence(object):
             for x in range(len(seq)):
                 if not seq[x][2] and self.local_compare(x, seq):
                     return True
+
         else:
             return False
+
+    def compare(self, seq, player):
+        current = player.entity_skin.current_animation.replace('_upgraded', '')
+        if (not self.condition or current in self.condition
+                and len(seq) >= len(self.keys)):
+            for i, j in enumerate(self.keys):
+                if seq[i][0] != j:
+                    return False
+            if seq[i][2]:
+                return False
+            else:
+                seq[i][2] = True
+                return True
 
     def mark_sequence(self, seq):
         """
@@ -78,12 +92,12 @@ class Sequence(object):
         """
 
         seq[0][2] = True
-        #i = 0
-        #while seq and i < len(self.keys):
-            #if seq[0] != self.keys[i]:
-                #i = 0
-            #else:
-                #i += 1
+        i = 0
+        while seq and i < len(self.keys):
+            if seq[i] != self.keys[i]:
+                i = 0
+            else:
+                i += 1
 
     def __str__():
         return [str(i) for i in self.keys]
@@ -170,7 +184,7 @@ class Controls (object):
                         game_instance,
                         params={'entity': player})
 
-                i.mark_sequence(sequence)
+                #i.mark_sequence(sequence)
 
     def key_shield(self, the_key, player, game_instance):
         if ("_SHIELD" in the_key and
