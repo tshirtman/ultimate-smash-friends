@@ -74,7 +74,6 @@ class Sequence(object):
             # first time this sequence is met, validate!
             else:
                 seq[i + index][2] = True
-                print "ok!"
                 return True
 
     def compare(self, seq, player):
