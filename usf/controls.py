@@ -52,38 +52,36 @@ class Sequence(object):
         self.action = action
         self.condition = condition
 
-    def local_compare(self, index, sequence):
-        """ compare our sequence with the provided sequence, starting from
-        index in the provided sequence
+    def compare_local(self, seq, player, index):
+        """Compare a sequence of key events against our sequence
         """
-        if len(sequence[index:]) >= len(self.keys):
-            for a, b in zip(self.keys, sequence[index:]):
-                if a != b[0]:
-                    return False
-            return True
 
-    def compare(self, seq, player):
         current = player.entity_skin.current_animation.replace('_upgraded', '')
-        if (not self.condition or current in self.condition):
-            for x in range(len(seq)):
-                if not seq[x][2] and self.local_compare(x, seq):
-                    return True
-
-        else:
-            return False
-
-    def compare(self, seq, player):
-        current = player.entity_skin.current_animation.replace('_upgraded', '')
-        if (not self.condition or current in self.condition
-                and len(seq) >= len(self.keys)):
+        # if conditions are matched, and the sequence tested is as least as
+        # long as our
+        if ((not self.condition or current in self.condition)
+                and len(seq) - index >= len(self.keys)):
+            # test keys are the same, up to length of our combination
             for i, j in enumerate(self.keys):
-                if seq[i][0] != j:
+                # not the good one? stop here
+                if seq[i + index][0] != j:
                     return False
-            if seq[i][2]:
+
+            # all keys are good but sequence was already validated? exit
+            if seq[i + index][2]:
                 return False
+
+            # first time this sequence is met, validate!
             else:
-                seq[i][2] = True
+                seq[i + index][2] = True
+                print "ok!"
                 return True
+
+    def compare(self, seq, player):
+        for i, j in enumerate(seq):
+            if self.compare_local(seq, player, i):
+                return True
+        return False
 
     def mark_sequence(self, seq):
         """
@@ -109,8 +107,6 @@ class Controls (object):
     game menu and entity instances. Key configuration are taken from
     sequences.cfg. This class can update and save configuration.
     """
-
-    ai_true = False
 
     def __init__(self):
         #loaders.load_keys()
