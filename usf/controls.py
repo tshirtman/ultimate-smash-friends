@@ -66,23 +66,24 @@ class Sequence(object):
         current = player.entity_skin.current_animation.replace('_upgraded', '')
         if (not self.condition or current in self.condition):
             for x in range(len(seq)):
-                if self.local_compare(x, seq):
+                if not seq[x][2] and self.local_compare(x, seq):
                     return True
         else:
             return False
 
-    def remove_from(self, seq):
+    def mark_sequence(self, seq):
         """
-        remove self.keys keys from sequence, so each sequence is only activated
-        one time.
+        mark self.keys keys in sequence, so each sequence is only activated one
+        time.
         """
 
-        i = 0
-        while seq and i < len(self.keys):
-            if seq.pop(0) != self.keys[i]:
-                i = 0
-            else:
-                i += 1
+        seq[0][2] = True
+        #i = 0
+        #while seq and i < len(self.keys):
+            #if seq[0] != self.keys[i]:
+                #i = 0
+            #else:
+                #i += 1
 
     def __str__():
         return [str(i) for i in self.keys]
@@ -99,6 +100,7 @@ class Controls (object):
 
     def __init__(self):
         #loaders.load_keys()
+        self.player_sequences = [[], [], [], []]
         self.load_keys()
         self.load_sequences()
 
@@ -108,8 +110,6 @@ class Controls (object):
 
     def load_sequences(self):
         self.sequences = []
-        self.player_sequences = [[], [], [], []]
-
         sequences_file = open(os.path.join(
                     config.sys_data_dir,
                     'sequences'+os.extsep+'cfg'), 'r')
@@ -170,7 +170,7 @@ class Controls (object):
                         game_instance,
                         params={'entity': player})
 
-                i.remove_from(sequence)
+                i.mark_sequence(sequence)
 
     def key_shield(self, the_key, player, game_instance):
         if ("_SHIELD" in the_key and
@@ -259,7 +259,7 @@ class Controls (object):
 
                 if not player.ai:
                     self.player_sequences[numplayer].append(
-                            (keyname, game_instance.gametime))
+                            [keyname, game_instance.gametime, False])
 
                     # the player can't do anything if the shield is on
 
