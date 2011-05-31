@@ -25,7 +25,7 @@ import logging
 
 class Frame (object):
     """
-    A Frame is an image of n animation, plus some information on the player
+    A Frame is an image of n animations, plus some information on the player
     when on this instant of the animation:
 
     * The hardshape is an inner rectangle than delimitate the area that can

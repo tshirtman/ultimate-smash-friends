@@ -106,7 +106,6 @@ class Controls (object):
         self.keys = dict([[locals.__dict__[config.keyboard[key]], key]
                          for key in config.keyboard])
 
-
     def load_sequences(self):
         self.sequences = []
         self.player_sequences = [[], [], [], []]

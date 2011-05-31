@@ -127,7 +127,7 @@ class Game(object):
             #logging.debug(player)
         if player.split(os.sep)[1][:2] == 'AI':
             try:
-                ai = int (player[player.index('AI') + 2])
+                ai = int(player[player.index('AI') + 2])
                 player = player.replace('AI'+str(ai), '')
             except ValueError:
                 # support old syntax with no number

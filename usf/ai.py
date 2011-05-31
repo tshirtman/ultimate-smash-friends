@@ -119,6 +119,7 @@ def heuristic_state(game, iam, player, others):
         + (0 if not under_lowest_plateform(game, player) else 1000)
         + (0 if over_some_plateform(game, player) else 30))
 
+
 def heuristic_distance(game, iam, player, others):
     return min((player.dist(p) for p in others))
 
@@ -138,7 +139,8 @@ def search_path(game, iam, max_depth):
 
     if heuristic_distance(game, iam, player, others) > 100:
         if player.ai == 1:
-            return (0, [Movement(gametime, 'static', player.reversed, False),])
+            return (0,
+                    [Movement(gametime, 'static', player.reversed, False), ])
 
         f = displacement_movement
         h = heuristic_distance

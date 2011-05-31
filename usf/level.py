@@ -78,7 +78,9 @@ class Decorum(object):
         real_coords = (int(self.coords[0] * zoom) + coords[0],
                 int(self.coords[1] * zoom) + coords[1])
 
-        surface.blit(loaders.image('data/'+self.texture, zoom=zoom)[0], real_coords)
+        surface.blit(
+                loaders.image('data/'+self.texture, zoom=zoom)[0],
+                real_coords)
 
     def __cmp__(self, other):
         return cmp(self.depth, other.depth)
@@ -436,7 +438,6 @@ class Level(object):
             self.decorums.append(Decorum(frames, coords, depth, update_fctn))
         self.decorums.sort()
 
-
     def draw_before_players(self, surface, level_place, zoom, shapes=False):
         self.draw_background(surface, level_place, zoom)
         self.draw_level(surface, level_place, zoom, shapes)
@@ -502,8 +503,8 @@ class Level(object):
                     pygame.Color('blue'))
 
     def draw_background(self, surface, coords=(0, 0), zoom=1):
-        surface.blit(loaders.image(self.background,
-            scale=self.SIZE)[0], (0,0))
+        surface.blit(loaders.image(
+            self.background, scale=self.SIZE)[0], (0, 0))
 
         for layer in self.layers:
             surface.blit(layer.get_image(), layer.get_pos())
@@ -524,7 +525,6 @@ class Level(object):
         for d in self.decorums:
             if d.depth >= 0:
                 d.draw(surface, coords, zoom)
-
 
     def backup(self):
         return (b.backup() for b in self.moving_blocs)
