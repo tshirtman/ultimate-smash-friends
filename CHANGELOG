@@ -1,0 +1,28 @@
+0.1.7
+=====
+
+Engine
+======
+fixed AI bug after the first game (ai witing a lot of time before starting playing)
+fixed infinite AI jumps
+changed AI heuristics to be more efficient
+ai can now be passed a number (from 1 to 5) to set strength
+implementation of decorums for levels
+reworked controls implementation
+fixed crash with unfinished characters
+pep8 fixes, code cleanup...
+
+Data
+====
+added a simple decorum on pyramid
+added meteor level
+added troglo level
+added animations to pixie
+added dunbarello level
+added a decorum (eol) in pyramid
+
+Utils
+=====
+cv.py now load all possible characters by default (usefull on windows)
+cv.py now search for characters in characters_unfinished too
+
