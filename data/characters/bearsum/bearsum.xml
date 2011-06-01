@@ -11,18 +11,18 @@ Description=""
 shield_center="20 40"
 >
     <movement name="static"
-    duration="300"
+    duration="1000"
     repeat="-1"
     >
         <frame
         time="0"
         image="static1.png"
-        hardshape="0 0 50 59"
+        hardshape="10 5 30 54"
         />
         <frame
-        time="150"
+        time="500"
         image="static2.png"
-        hardshape="0 0 47 56"
+        hardshape="11 5 27 51"
         />
     </movement>
     <movement name="walk"
@@ -32,22 +32,22 @@ shield_center="20 40"
         <frame
         time="0"
         image="walk1.png"
-        hardshape="0 0 43 60"
+        hardshape="10 5 23 55"
         />
         <frame
         time="150"
         image="walk2.png"
-        hardshape="0 0 38 59"
+        hardshape="6 5 23 54"
         />
         <frame
         time="300"
         image="walk3.png"
-        hardshape="0 0 39 60"
+        hardshape="6 5 23 55"
         />
         <frame
         time="450"
         image="walk4.png"
-        hardshape="0 0 38 59"
+        hardshape="6 5 23 54"
         />
     </movement>
     <movement name="hit"
@@ -101,7 +101,7 @@ shield_center="20 40"
         </frame>
     </movement>
     <movement name="jump"
-    duration="1000"
+    duration="100000"
     repeat="0"
     >
         <event
@@ -115,17 +115,17 @@ shield_center="20 40"
         <frame
         time="0"
         image="jump1.png"
-        hardshape="0 0 48 56"
+        hardshape="10 5 28 51"
         > </frame>
         <frame
         time="400"
         image="jump2.png"
-        hardshape="0 0 45 67"
+        hardshape="10 5 28 59"
         > </frame>
         <frame
         time="800"
         image="jump1.png"
-        hardshape="0 0 48 56"
+        hardshape="10 5 28 51"
         > </frame>
     </movement>
     <movement name="take"
@@ -135,14 +135,14 @@ shield_center="20 40"
         <frame
         time="0"
         image="smash-straight1.png"
-	hardshape="0 0 43 56"
+        hardshape="0 0 43 56"
         > </frame>
         <frame
         time="50"
         image="smash-straight2.png"
-	hardshape="0 0 43 53"
+        hardshape="0 0 43 53"
         > </frame>
-    </movement>    
+    </movement>
     <movement name="pick"
     duration="300"
     repeat="0"
@@ -150,12 +150,12 @@ shield_center="20 40"
         <frame
         time="0"
         image="pick1.png"
-        hardshape="0 0 43 56"
+        hardshape="10 4 23 52"
         />
         <frame
         time="150"
         image="pick2.png"
-        hardshape="0 0 43 53"
+        hardshape="4 4 23 49"
         />
     </movement>
     <movement name="roll"
@@ -165,7 +165,7 @@ shield_center="20 40"
         <frame
         time="0"
         image="roll1.png"
-        hardshape="0 0 44 54"
+        hardshape="10 5 24 49"
         > </frame>
         <frame
         time="100"
@@ -192,7 +192,7 @@ shield_center="20 40"
         > </frame>
     </movement>
     <movement name="scnd-jump"
-    duration="200"
+    duration="2000"
     repeat="0"
     >
         <event
@@ -206,17 +206,17 @@ shield_center="20 40"
         <frame
         time="0"
         image="roll1.png"
-        hardshape="0 0 44 54"
+        hardshape="10 5 24 49"
         > </frame>
         <frame
         time="100"
         image="jump-kick.png"
-        hardshape="0 0 43 59"
+        hardshape="10 5 23 59"
         > </frame>
         <frame
         time="100"
         image="jump3.png"
-        hardshape="0 0 45 67"
+        hardshape="10 5 25 62"
         > </frame>
     </movement>
     <movement name="kick-jumping"
@@ -369,17 +369,17 @@ shield_center="20 40"
         <frame
         time="700"
         image="smash-up2.png"
-	hardshape="4 42 33 55"
-	>
-	    <agressiv-point
+        hardshape="4 42 33 55"
+        >
+            <agressiv-point
             coords="36,27"
             vector="0,-500"
             ></agressiv-point>
-	    <agressiv-point
+            <agressiv-point
             coords="30,20"
             vector="-70,-200"
             ></agressiv-point>
-	    <agressiv-point
+            <agressiv-point
             coords="40,20"
             vector="70,-200"
             ></agressiv-point>
