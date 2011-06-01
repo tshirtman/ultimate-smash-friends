@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-04-20 13:02+0200\n"
-"PO-Revision-Date: 2010-08-01 05:37+0000\n"
-"Last-Translator: Moritatux <Unknown>\n"
+"PO-Revision-Date: 2011-06-01 02:25+0000\n"
+"Last-Translator: Ab aeterno <Unknown>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-21 04:51+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-06-01 04:49+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #: game.py:383
 msgid " WON!"
@@ -31,7 +31,7 @@ msgstr "usted está aquí"
 
 #: main.py:55
 msgid "Bad logging level in user.cfg!"
-msgstr ""
+msgstr "Pobre nivel de autenticación en user.cfg"
 
 #: main.py:84
 msgid "Loading..."
@@ -100,7 +100,7 @@ msgstr "Ninguno"
 #. I18N: Artificial Intelligence
 #: screen/characters.py:88
 msgid "AI:"
-msgstr ""
+msgstr "Inteligencia Artificial"
 
 #. I18N: %s is the player number, it can be Player 1, Player2...
 #: screen/characters.py:96
@@ -153,6 +153,7 @@ msgstr "¡ ir !"
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
+"  Ab aeterno https://launchpad.net/~lucas-lucas-lucas24\n"
 "  Carlos Alberto Ospina https://launchpad.net/~atah\n"
 "  DiegoJ https://launchpad.net/~diegojromerolopez\n"
 "  Moritatux https://launchpad.net/~moritatux\n"
