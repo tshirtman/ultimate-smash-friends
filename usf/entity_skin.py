@@ -286,7 +286,10 @@ class Entity_skin (object):
             self.animation.start(t)
 
         if self.animation.playing == 0:
-            self.current_animation = 'static' + upgraded * '_upgraded'
+            a = 'static' + upgraded * '_upgraded'
+            if 'upgraded' in a and a not in self.animations:
+                a = 'static'
+            self.current_animation = a
             self.animation = self.animations[self.current_animation]
             self.animation.start(t)
 

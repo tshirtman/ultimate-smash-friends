@@ -82,20 +82,6 @@ class Sequence(object):
                 return True
         return False
 
-    def mark_sequence(self, seq):
-        """
-        mark self.keys keys in sequence, so each sequence is only activated one
-        time.
-        """
-
-        seq[0][2] = True
-        i = 0
-        while seq and i < len(self.keys):
-            if seq[i] != self.keys[i]:
-                i = 0
-            else:
-                i += 1
-
     def __str__():
         return [str(i) for i in self.keys]
 
@@ -170,6 +156,11 @@ class Controls (object):
         return ret
 
     def test_sequences(self, game_instance, numplayer):
+        """
+        test all sequences against player state/sequence
+        if a sequence is recognized, the animation is applied
+        """
+
         player = game_instance.players[numplayer]
         sequence = self.player_sequences[numplayer]
         for i in self.sequences:
@@ -178,8 +169,6 @@ class Controls (object):
                         i.action,
                         game_instance,
                         params={'entity': player})
-
-                #i.mark_sequence(sequence)
 
     def key_shield(self, the_key, player, game_instance):
         if ("_SHIELD" in the_key and
