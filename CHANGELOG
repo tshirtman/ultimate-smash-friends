@@ -26,3 +26,6 @@ Utils
 cv.py now load all possible characters by default (usefull on windows)
 cv.py now search for characters in characters_unfinished too
 
+Misc
+====
+added a CHANGELOG (at least!)
