@@ -114,11 +114,9 @@ in is or not and
 options = None
 args = None
 
-
 ##############################################################################
 # Plugins (check functions) for physical lines
 ##############################################################################
-
 
 def tabs_or_spaces(physical_line, indent_char):
     """
@@ -159,14 +157,6 @@ def trailing_whitespace(physical_line):
         return len(stripped), "W291 trailing whitespace"
 
 
-#def trailing_blank_lines(physical_line, lines, line_number):
-#    """
-#    JCR: Trailing blank lines are superfluous.
-#    """
-#    if physical_line.strip() == '' and line_number == len(lines):
-#        return 0, "W391 blank line at end of file"
-
-
 def missing_newline(physical_line):
     """
     JCR: The last line should have a newline.
@@ -205,11 +195,9 @@ def crlf_lines(physical_line):
     if pos >= 0:
         return pos, "W293 line contains CR char(s)"
 
-
 ##############################################################################
 # Plugins (check functions) for logical lines
 ##############################################################################
-
 
 def blank_lines(logical_line, blank_lines, indent_level, line_number,
                 previous_logical):
@@ -455,11 +443,9 @@ def dumb_equals_None(logical_line):
     if match:
         return match.start(1), "E799 don't use 'x == None', but just 'x is None' or 'not x'"
 
-
 ##############################################################################
 # Helper functions
 ##############################################################################
-
 
 def expand_indent(line):
     """
@@ -487,11 +473,9 @@ def expand_indent(line):
             break
     return result
 
-
 ##############################################################################
 # Framework to run all checks
 ##############################################################################
-
 
 def message(text):
     """Print a message."""

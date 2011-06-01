@@ -69,6 +69,7 @@ from usf.loaders import image
 from usf.config import Config
 config = Config()
 
+
 class Placeholder(object):
     def __init__(self):
         self.hardshape=(0,0,40,60)
@@ -76,6 +77,7 @@ class Placeholder(object):
         self.time = 0
         self.agressivpoints = []
         self.vectors = []
+
 
 def create_character_xml(path):
     """ create a stub xml character """
@@ -143,6 +145,7 @@ shield_center="20 40"
 </character>
 ''')
     f.close()
+
 
 def load_entities(charnames):
     wds = list()
@@ -421,6 +424,7 @@ def main(charnames):
         pygame.display.flip()
     for wd in wds:
         inotifyx.rm_watch(wd)
+
 
 def usage():
     print "usage: cv.py character_name"

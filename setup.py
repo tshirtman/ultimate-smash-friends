@@ -25,6 +25,7 @@ elif OS == 'windows':
 else:
     from distutils.core import setup
 
+
 def files(path):
     """
     Return all non-python-file filenames in path
