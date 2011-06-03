@@ -29,38 +29,37 @@ from optparse import OptionParser
 import time
 import threading
 import traceback
-from exceptions import AttributeError
-# our modules
-from config import Config
+from usf.config import Config
 
-from game import Game
-from gui import Gui
-from controls import Controls
-import loaders
-import music
-from font import fonts
-from ai import AI
+from usf.game import Game, NetworkServerGame, NetworkClientGame
+from usf.gui import Gui
+from usf.controls import Controls
+import usf.loaders as loaders
+from usf.music import Music
+from usf.font import fonts
+from usf.ai import AI
 
 try:
-    config = Config()
+    CONFIG = Config()
     logging.basicConfig(
-        filename=os.path.join(config.user_data_dir,
-            config.debug['LOG_FILENAME']),
-        level=eval('logging.' + config.debug['LOG_LEVEL']))
+        filename=os.path.join(CONFIG.user_data_dir,
+            CONFIG.debug['LOG_FILENAME']),
+        level=eval('logging.' + CONFIG.debug['LOG_LEVEL']))
 
 except AttributeError:
     logging.basicConfig(
-        filename=os.path.join(config.user_data_dir,
-config.debug['LOG_FILENAME']),
+        filename=os.path.join(CONFIG.user_data_dir,
+
+CONFIG.debug['LOG_FILENAME']),
         level = logging.WARNING)
 
     logging.error(_('Bad logging level in user.cfg!'))
 
-logging.debug("User config file: " + config.user_config_file)
-logging.debug("User config dir: " + config.user_config_dir)
-logging.debug("User data dir: " + config.user_data_dir)
-logging.debug("System config file: " + config.sys_config_file)
-logging.debug("System data dir: " + config.sys_data_dir)
+logging.debug("User config file: " + CONFIG.user_config_file)
+logging.debug("User config dir: " + CONFIG.user_config_dir)
+logging.debug("User data dir: " + CONFIG.user_data_dir)
+logging.debug("System config file: " + CONFIG.sys_config_file)
+logging.debug("System data dir: " + CONFIG.sys_data_dir)
 
 
 class Main(object):
@@ -97,9 +96,17 @@ class Main(object):
             self.init_standalone()
 
     def init_server(self):
+        '''
+        start a server to host a network game
+        '''
+
         self.game = NetworkServerGame()
 
     def init_client(self):
+        '''
+        connect to a server to play a network game
+        '''
+
         self.init_screen()
         self.init_sound()
 
@@ -108,6 +115,10 @@ class Main(object):
         self.menu = Gui(self.screen)
 
     def init_standalone(self):
+        '''
+        start a non network instance of the game
+        '''
+
         self.init_screen()
         try:
             self.text_thread = "Loading sounds and musics..."
@@ -115,7 +126,7 @@ class Main(object):
             thread.start()
 
             self.init_sound()
-            self.ai = AI()
+            self.ai_instance = AI()
 
             # if a level was provided and at least two players in the option
             # immediatly jump into game mode
@@ -145,7 +156,7 @@ class Main(object):
 
         except Exception as e:
             try:
-                if not config.general["DEBUG"]:
+                if not CONFIG.general["DEBUG"]:
                     self.lock.acquire()
                     self.text_thread = (
                             "An error occured:\n" + str(traceback.format_exc()))
@@ -240,29 +251,29 @@ class Main(object):
         self.state = ""
 
     def init_screen(self):
-        SIZE = (config.general['WIDTH'], config.general['HEIGHT'])
-        if (config.general['WIDTH'], config.general['HEIGHT']) == (0, 0):
+        SIZE = (CONFIG.general['WIDTH'], CONFIG.general['HEIGHT'])
+        if (CONFIG.general['WIDTH'], CONFIG.general['HEIGHT']) == (0, 0):
             if (800, 600) in pygame.display.list_modes():
-                (config.general['WIDTH'], config.general['HEIGHT']) = (800, 600)
+                (CONFIG.general['WIDTH'], CONFIG.general['HEIGHT']) = (800, 600)
 
             else:
                 #the old default value...
-                (config.general['WIDTH'], config.general['HEIGHT']) = (800, 480)
-            config.general['FULLSCREEN'] = False
+                (CONFIG.general['WIDTH'], CONFIG.general['HEIGHT']) = (800, 480)
+            CONFIG.general['FULLSCREEN'] = False
 
-        SIZE = (config.general['WIDTH'], config.general['HEIGHT'])
+        SIZE = (CONFIG.general['WIDTH'], CONFIG.general['HEIGHT'])
         self.screen = pygame.display.set_mode(SIZE)
 
         pygame.display.set_caption('Ultimate Smash Friends')
-        icon = loaders.image(os.path.join(config.sys_data_dir, 'icon',
+        icon = loaders.image(os.path.join(CONFIG.sys_data_dir, 'icon',
                                           'icon_50.png'))[0]
         pygame.display.set_icon(icon)
-        if config.general['FULLSCREEN']:
+        if CONFIG.general['FULLSCREEN']:
             pygame.display.toggle_fullscreen()
 
     def init_sound(self):
-        if config.audio['MUSIC']:
-            self.music = music.Music()
+        if CONFIG.audio['MUSIC']:
+            self.music = Music()
 
     def manage_menu(self):
         # return of the menu update function may contain a new game
@@ -271,20 +282,19 @@ class Main(object):
         menu_was = self.menu.screen_current
         newgame, game_ = self.menu.update(self.clock)
         if menu_was == 'keyboard' and self.menu.screen_current != 'keyboard':
-                print True
-                self.controls.load_keys()
-                self.controls.load_sequences()
+            self.controls.load_keys()
+            self.controls.load_sequences()
 
         if newgame:
             self.state = 'game'
             if game_ is not self.game:
                 print "starting game"
-                self.ai = AI()
+                self.ai_instance = AI()
 
                 del(self.game)
                 self.game = game_
 
-        max_fps = 1000/config.general["MAX_GUI_FPS"]
+        max_fps = 1000/CONFIG.general["MAX_GUI_FPS"]
 
         if self.menu.screen_current == 'about':
             self.music_state = 'credits'
@@ -297,7 +307,7 @@ class Main(object):
     def manage_ai(self):
         for i, p in enumerate(self.game.players):
             if p.ai and p.present:
-                self.ai.update(self.game, i)
+                self.ai_instance.update(self.game, i)
 
     def manage_game(self, was_paused):
         d = self.game.update_clock(was_paused or self.game.first_frame)
@@ -307,13 +317,13 @@ class Main(object):
         if self.state in ('game', 'victory'):
             self.game.draw(
                 debug_params={
-                    'controls': config.debug['CONTROLS'] and self.controls,
-                    'action': config.debug['ACTIONS'],
-                    'hardshape': config.debug['HARDSHAPES'],
-                    'footrect': config.debug['FOOTRECT'],
-                    'current_animation': config.debug['CURRENT_ANIMATION'],
-                    'levelshape': config.debug['LEVELSHAPES'],
-                    'levelmap': config.debug['LEVELMAP']})
+                    'controls': CONFIG.debug['CONTROLS'] and self.controls,
+                    'action': CONFIG.debug['ACTIONS'],
+                    'hardshape': CONFIG.debug['HARDSHAPES'],
+                    'footrect': CONFIG.debug['FOOTRECT'],
+                    'current_animation': CONFIG.debug['CURRENT_ANIMATION'],
+                    'levelshape': CONFIG.debug['LEVELSHAPES'],
+                    'levelmap': CONFIG.debug['LEVELMAP']})
 
             self.menu.load = False
         else:
@@ -322,13 +332,13 @@ class Main(object):
         self.music_state = self.state
 
     def display_fps(self):
-            #FPS counter
-            if config.general["SHOW_FPS"]:
-                self.screen.blit(
-                        loaders.text(
-                            "FPS: " + str(self.clock.get_fps()),
-                            fonts["mono"]["38"]),
-                        (10, 5))
+        #FPS counter
+        if CONFIG.general["SHOW_FPS"]:
+            self.screen.blit(
+                    loaders.text(
+                        "FPS: " + str(self.clock.get_fps()),
+                        fonts["mono"]["38"]),
+                    (10, 5))
 
     def go(self):
         """
@@ -354,7 +364,7 @@ class Main(object):
             self.display_fps()
             pygame.display.update()
 
-            if config.audio['MUSIC']:
+            if CONFIG.audio['MUSIC']:
                 self.music.update(self.music_state)
             # verify there is not a QUIT event waiting for us, in case of we
             # have to quit.
@@ -365,13 +375,13 @@ class Main(object):
                 break
 
     def author(self):
-        if 'CREDITS' not in os.listdir(os.path.join(config.sys_data_dir)):
-            logging.info(config.sys_data_dir)
+        if 'CREDITS' not in os.listdir(os.path.join(CONFIG.sys_data_dir)):
+            logging.info(CONFIG.sys_data_dir)
             logging.info(
-                    '\n'.join(os.listdir(os.path.join(config.sys_data_dir))))
-            logging.debug(config.sys_data_dir+'/CREDITS file not found')
+                    '\n'.join(os.listdir(os.path.join(CONFIG.sys_data_dir))))
+            logging.debug(CONFIG.sys_data_dir+'/CREDITS file not found')
         else:
-            author_file = open(os.path.join(config.sys_data_dir, 'CREDITS'))
+            author_file = open(os.path.join(CONFIG.sys_data_dir, 'CREDITS'))
             logging.info(author_file.read())
             author_file.close()
 
@@ -393,7 +403,7 @@ class Main(object):
             self.screen.blit(text, (x, y))
             pygame.display.update()
 
-            max_fps = 1000/config.general["MAX_GUI_FPS"]
+            max_fps = 1000/CONFIG.general["MAX_GUI_FPS"]
             if pygame.time.get_ticks() < max_fps + start_loop:
                 pygame.time.wait(max_fps + start_loop - pygame.time.get_ticks())
 

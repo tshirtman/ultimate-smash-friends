@@ -16,6 +16,11 @@
 # You should have received a copy of the GNU General Public License            #
 # along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.#
 ################################################################################
+'''
+The Gui module provide interfaces to build custom screens with widgets and
+callback to use them.
+
+'''
 
 import pygame
 from pygame.locals import QUIT
@@ -25,19 +30,19 @@ import time
 
 # Our modules
 
-from config import Config
+from usf.config import Config
 
-config = Config()
 
-import loaders
-from game import Game
+import usf.loaders as loaders
+from usf.game import Game
 
-from skin import Skin
+from usf.skin import Skin
 
-from widgets import optimize_size
-from font import fonts
-import screen
+from usf.widgets import optimize_size
+from usf.font import fonts
+import usf.screen as screen
 
+CONFIG = Config()
 
 class Gui(object):
     """
@@ -60,16 +65,12 @@ class Gui(object):
                    'keyboard',
                    'level',
                    'characters']
+
         for name in screens:
             exec("import screen." + name)
             exec('scr = screen.' + name + '.' + name + "('" + name
                     + "',self.screen)")
 
-            #load all image
-            #I don't know why but if we update only one time the scree, the
-            #result is quite strange ?
-            #scr.load()
-            #scr.load()
             self.screens[name] = scr
 
         self.screen_current = 'main_screen'
@@ -79,7 +80,7 @@ class Gui(object):
         self.focus = False
         self.state = "menu"
         self.cursor = loaders.image(
-                config.sys_data_dir + os.sep + 'cursor.png')[0]
+                CONFIG.sys_data_dir + os.sep + 'cursor.png')[0]
         self.update_youhere()
 
     def update(self, clock):
@@ -203,10 +204,10 @@ class Gui(object):
             if reply.split(':')[0] == 'goto':
                 animation = True
                 sound = loaders.track(
-                        os.path.join(config.sys_data_dir, "sounds",
+                        os.path.join(CONFIG.sys_data_dir, "sounds",
                             "mouseClick2.wav"))
 
-                sound.set_volume(config.audio['SOUND_VOLUME']/100.0)
+                sound.set_volume(CONFIG.audio['SOUND_VOLUME']/100.0)
                 sound.play()
                 old_screen = self.screens[self.screen_current]
                 old_surface = self.screens[self.screen_current].widget.draw()
@@ -266,7 +267,7 @@ class Gui(object):
         text = get_text_transparent(old_screen.name)
 
         for i in range(0, 10):
-            time.sleep(1.00/float(config.general['MAX_FPS']))
+            time.sleep(1.00/float(CONFIG.general['MAX_FPS']))
             self.skin.get_background()
             text.set_alpha((i * -1 + 10) * 250 / 10)
             self.screen.blit(text,
@@ -279,7 +280,7 @@ class Gui(object):
         text = get_text_transparent(new_screen.name)
 
         for i in range(0, 10):
-            time.sleep(1.00/float(config.general['MAX_FPS']))
+            time.sleep(1.00/float(CONFIG.general['MAX_FPS']))
             self.skin.get_background()
             text.set_alpha(i*250/10)
             self.screen.blit(text,
@@ -296,7 +297,7 @@ class Gui(object):
 
         for i in range(0, 5):
             back = self.skin.get_background().convert()
-            time.sleep(1.00/float(config.general['MAX_FPS']))
+            time.sleep(1.00/float(CONFIG.general['MAX_FPS']))
             self.screen.blit(self.skin.get_background(), (0, 0))
             text.set_alpha((i* -1 + 5) * 250 / 5)
             self.screen.blit(text, (old_screen.indent_title, 10))
@@ -313,7 +314,7 @@ class Gui(object):
 
         for i in range(0, 5):
             back = self.skin.get_background().convert()
-            time.sleep(1.00/float(config.general['MAX_FPS']))
+            time.sleep(1.00/float(CONFIG.general['MAX_FPS']))
             self.screen.blit(self.skin.get_background(), (0, 0))
             text.set_alpha(i*250/5)
             self.screen.blit(text,
