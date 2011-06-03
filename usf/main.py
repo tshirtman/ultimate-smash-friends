@@ -19,6 +19,13 @@
 # along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.#
 ################################################################################
 
+'''
+This is the main file for ultimate-smash-friends, that initiate configs, parse
+parameters, and initiate games
+
+'''
+
+
 import logging
 import os
 

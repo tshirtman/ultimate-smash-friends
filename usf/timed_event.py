@@ -16,6 +16,11 @@
 # You should have received a copy of the GNU General Public License along with
 # ultimate-smash-friends.  If not, see <http://www.gnu.org/licenses/>.
 ###############################################################################
+'''
+This module allow to create timed and condition based events, to create
+complexe effects and behaviours in the game.
+
+'''
 
 import logging
 import os
@@ -24,9 +29,9 @@ import math
 
 from config import Config
 
-config = Config()
-SIZE = (config.general['WIDTH'],
-        config.general['HEIGHT'])
+CONFIG = Config()
+SIZE = (CONFIG.general['WIDTH'],
+        CONFIG.general['HEIGHT'])
 
 
 class TimedEvent (object):
@@ -43,7 +48,7 @@ class TimedEvent (object):
 
         pass
 
-    def __init__(self, manager, period, params={}):
+    def __init__(self, manager, period, params=dict()):
         """
         Action must be a callable, it will be called every frames in the
         period.
@@ -56,7 +61,7 @@ class TimedEvent (object):
         self.params = params
         self.period = period
         self.done = False
-        self.em = manager
+        self.event_manager = manager
         self.initiate()
 
     def update(self, deltatime, gametime):
@@ -72,12 +77,20 @@ class TimedEvent (object):
             self.execute(deltatime)
 
     def backup(self):
+        """
+        This method return the state of the event in a dict, to restore latter
+        """
+
         backup = {}
         for k in self.__dict__:
             backup[k] = self.__dict__[k]
         return backup
 
     def restore(self, backup):
+        """
+        This method restore the event in a previous state from a backup()
+        """
+
         self.__dict__.update(backup)
 
     def execute(self, dt):
@@ -349,7 +362,8 @@ class InvinciblePlayer(TimedEvent):
     def initiate(self):
         # if we find another invincibility event on the same player we
         # just extend it's time to our limit and we are done.
-        invincibilities = list(self.em.get_events(cls=InvinciblePlayer,
+        invincibilities = list(
+                self.event_manager.get_events(cls=InvinciblePlayer,
                 params={'player': self.params['player']}))
         if len(invincibilities) != 0:
             invincibilities[0].period = self.period
@@ -445,7 +459,7 @@ class DropPlayer(TimedEvent):
             'static',
             self.params['world'])
 
-        self.em.add_event(
+        self.event_manager.add_event(
                 'InvinciblePlayer',
                 (None, self.params['gametime'] + 3),
                 params = {
@@ -464,7 +478,7 @@ class PlayerOut(TimedEvent):
         self.params['entity'].set_lives(self.params['entity'].lives - 1)
         self.params['entity'].set_present(False)
         if self.params['entity'].lives > 0:
-            self.em.add_event(
+            self.event_manager.add_event(
                     'DropPlayer',
                     (None, self.params['gametime'] + 1),
                     params = self.params)
