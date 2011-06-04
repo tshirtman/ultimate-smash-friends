@@ -17,24 +17,31 @@
 # along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.#
 ################################################################################
 
+'''
+Levels implementation, levels are constituted of different parts
+graphics: background, middle and foreground, plus decorum elements
+architecture: blocs, moving blocs, bounching blocs
+
+'''
+
 import os
 import sys
 import pygame
 import logging
-
-import loaders
 import time
-from config import Config
-from usf import skin
-config = Config()
 
-from memoize import memoize
-from debug_utils import draw_rect
+import usf.loaders
+from usf.config import Config
+from usf import skin
+CONFIG = Config()
+
+from usf.memoize import memoize
+from usf.debug_utils import draw_rect
 
 # different in python 2.4 and 2.5
 try:
     from xml.etree import ElementTree
-except:
+except ImportError:
     logging.warning(
             "your python version seems quite old, you should consider"
             " upgrading")
@@ -67,14 +74,16 @@ class Decorum(object):
         self.duration = max(map(lambda x: x[1], frames))
         self.update(1)
 
-    def update(self, time):
+    def update(self, gametime):
+        '''
+        Update position and texture
+        '''
         self.texture = filter(
-                lambda x: x[1] > time % self.duration, self.frames)[0][0]
+                lambda x: x[1] > gametime % self.duration, self.frames)[0][0]
 
-        self.coords = self.update_fctn(self.coords, time)
+        self.coords = self.update_fctn(self.coords, gametime)
 
     def draw(self, surface, coords, zoom):
-        middle = surface.get_size()[0] / 2, surface.get_size()[1] / 2
         real_coords = (int(self.coords[0] * zoom) + coords[0],
                 int(self.coords[1] * zoom) + coords[1])
 
@@ -128,7 +137,7 @@ class VectorBloc (Block):
         self.relative = relative
         try:
             self.texture = os.path.join(
-                    config.sys_data_dir,
+                    CONFIG.sys_data_dir,
                     "levels",
                     levelname,
                     texture)
@@ -137,7 +146,7 @@ class VectorBloc (Block):
             logging.debug("No texture found here: " + str(file))
             try:
                 self.texture = os.path.join(
-                        config.sys_data_dir,
+                        CONFIG.sys_data_dir,
                         "levels",
                         "common",
                         texture)
@@ -182,7 +191,7 @@ class MovingPart (Block):
         self.rects = rects
         try:
             self.texture = os.path.join(
-                    config.sys_data_dir,
+                    CONFIG.sys_data_dir,
                     "levels",
                     levelname,
                     texture)
@@ -191,7 +200,7 @@ class MovingPart (Block):
             logging.debug("No texture found here: " + str(file))
             try:
                 self.texture = os.path.join(
-                        config.sys_data_dir,
+                        CONFIG.sys_data_dir,
                         "levels",
                         "common",
                         texture)
@@ -277,8 +286,8 @@ class Level(object):
         This constructor is currently using two initialisation method, the old,
         based on a map file, and the new based on an xml file.
         """
-        self.SIZE = (config.general['WIDTH'],
-            config.general['HEIGHT'])
+        self.SIZE = (CONFIG.general['WIDTH'],
+            CONFIG.general['HEIGHT'])
 
         xml = self.getXML(levelname)
         attribs = xml.getroot().attrib
@@ -298,7 +307,7 @@ class Level(object):
         return ElementTree.ElementTree(
                 None,
                 os.path.join(
-                    config.sys_data_dir,
+                    CONFIG.sys_data_dir,
                     'levels',
                     levelname,
                     'level.xml'))
@@ -308,20 +317,20 @@ class Level(object):
 
     def load_images(self, attribs, levelname):
         self.background = os.path.join(
-                    config.sys_data_dir,
+                    CONFIG.sys_data_dir,
                     'levels',
                     levelname,
                     attribs['background'])
 
         self.level = os.path.join(
-                    config.sys_data_dir,
+                    CONFIG.sys_data_dir,
                     'levels',
                     levelname,
                     attribs['middle'])
 
         if 'foreground' in attribs:
             self.foreground = os.path.join(
-                        config.sys_data_dir,
+                        CONFIG.sys_data_dir,
                         'levels',
                         levelname,
                         attribs['foreground'])
