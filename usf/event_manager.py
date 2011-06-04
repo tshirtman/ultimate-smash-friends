@@ -18,7 +18,7 @@
 # along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.#
 ################################################################################
 
-from timed_event import event_names
+from timed_event import EVENT_NAMES
 import itertools
 
 

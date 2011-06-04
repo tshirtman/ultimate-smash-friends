@@ -22,8 +22,6 @@ complexe effects and behaviours in the game.
 
 '''
 
-import logging
-import os
 import random
 import math
 
@@ -93,7 +91,7 @@ class TimedEvent (object):
 
         self.__dict__.update(backup)
 
-    def execute(self, dt):
+    def execute(self, deltatime):
         """
         This method must be overriden, it will be called every frame by the
         event.
@@ -131,9 +129,9 @@ class HealEvent(TimedEvent):
     Event used to timely drop a player's percentage to zero.
     """
 
-    def execute(self, dt):
+    def execute(self, deltatime):
         # at this rate it should take 5 seconds to go from 100% to 0%
-        self.params['player'].add_percents(-dt*2)
+        self.params['player'].add_percents(-deltatime*2)
 
     def condition(self):
         return self.params['player'].percents > 0
@@ -145,11 +143,11 @@ class ShieldUpdateEvent(TimedEvent):
     every loop, depending on if it's on or off.
     """
 
-    def execute(self, dt):
+    def execute(self, deltatime):
         if self.params['player'].shield['on']:
-            self.params['player'].shield['power'] -= dt/10
+            self.params['player'].shield['power'] -= deltatime/10
         elif self.params['player'].shield['power'] < 1:
-            self.params['player'].shield['power'] += dt/10
+            self.params['player'].shield['power'] += deltatime/10
         if self.params['player'].shield['power'] <= 0:
             self.params['player'].shield['on'] = False
 
@@ -163,7 +161,7 @@ class DelItemEvent(TimedEvent):
     a timeout.
     """
 
-    def execute(self, dt):
+    def execute(self, deltatime):
         pass
 
     def condition(self):
@@ -182,7 +180,7 @@ class BombExplode(TimedEvent):
     This Event timely trigger the bomb explostion.
     """
 
-    def execute(self, dt):
+    def execute(self, deltatime):
         self.params['entity'].set_gravity(False)
         self.params['entity'].entity_skin.change_animation(
                 'explode',
@@ -199,7 +197,7 @@ class DropRandomItem(TimedEvent):
     Add a random item in game.
     """
 
-    def execute(self, dt):
+    def execute(self, deltatime):
         try:
             self.params['world'].addItem(
                     random.sample(['heal', 'bomb'], 1)[0],
@@ -208,7 +206,6 @@ class DropRandomItem(TimedEvent):
             self.done = True
         except:
             raise
-            pass
 
     def condition(self):
         return True
@@ -219,15 +216,15 @@ class ItemShower(TimedEvent):
     Add periodicaly an item into game.
     """
 
-    def execute(self, dt):
+    def execute(self, deltatime):
         if 'freq' in self.params:
-            freq=self.params['freq']
+            freq = self.params['freq']
         else:
-            freq=2
+            freq = 2
         try:
-            self.elapsed += dt
-        except:
-            self.elapsed = dt
+            self.elapsed += deltatime
+        except AttributeError:
+            self.elapsed = deltatime
 
         if self.elapsed >= freq:
             try:
@@ -245,7 +242,6 @@ class ItemShower(TimedEvent):
                 self.elapsed -= freq
             except:
                 raise
-                pass
 
     def condition(self):
         return True
@@ -298,15 +294,15 @@ class Gost(TimedEvent):
     def execute(self, deltatime):
         self.target_player = None
 
-        for p in (
+        for pla in (
                 player
                 for player in self.params['world'].players
                 if player is not self.params['entity']):
 
-            if self.target_player is None or None <\
-            self.params['entity'].dist(p) <\
-            self.target_player.dist(self.params['entity']):
-                self.target_player = p
+            if (self.target_player is None or
+                    self.params['entity'].dist(pla) <
+                    self.target_player.dist(self.params['entity'])):
+                self.target_player = pla
 
         self.params['entity'].set_vector([
         (self.target_player.place[0] - self.params['entity'].place[0]) * 3,
@@ -401,8 +397,8 @@ class VectorEvent(TimedEvent):
         Return false so the addition is only performed once.
         """
 
-        return self.params['anim_name'] ==\
-            self.params['entity'].entity_skin.current_animation
+        return (self.params['anim_name'] ==
+                self.params['entity'].entity_skin.current_animation)
 
     def delete(self):
         """
@@ -483,7 +479,11 @@ class PlayerOut(TimedEvent):
                     (None, self.params['gametime'] + 1),
                     params = self.params)
 
-        self.xy = self.params['entity'].place
+        self.coords = self.params['entity'].place
+
+
+    def execute(self, deltatime):
+        pass
 
     def condition(self):
         return True
@@ -566,15 +566,15 @@ class BlobSpecial(TimedEvent):
                 (self.entity.place[0] + self.target.place[0]) / 2,
                 (self.entity.place[1] + self.target.place[1]) / 2)
 
-        dx = self.target.place[0] - self.entity.place[0]
-        dy = self.target.place[1] - self.entity.place[1]
+        dx_ = self.target.place[0] - self.entity.place[0]
+        dy_ = self.target.place[1] - self.entity.place[1]
 
-        x = - math.cos(self.angle) * dx / 2 + center[0]
-        y = math.sin(self.angle) * dy / 2 + center[1] + dy * (
+        xx_ = - math.cos(self.angle) * dx_ / 2 + center[0]
+        yy_ = math.sin(self.angle) * dy_ / 2 + center[1] + dy_ * (
                 self.angle / (2 * 3.14159) * (1 if self.angle < 3.14159 else
                     -1))
 
-        self.eye.set_place((x, y))
+        self.eye.set_place((xx_, yy_))
 
     def condition(self):
         if (self.angle <= (2 * 3.14159)
@@ -632,7 +632,7 @@ class XeonCharge(TimedEvent):
 # This list is used to cast an event by name. This is usefull since events are
 # configured in players/items xml files.
 
-event_names = {
+EVENT_NAMES = {
     'BlobSpecial': BlobSpecial,
     'BombExplode': BombExplode,
     'Bounce': Bounce,
