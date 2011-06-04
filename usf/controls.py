@@ -17,12 +17,17 @@
 # along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.#
 ################################################################################
 
+'''
+This module manage controls, mainly on the keyboard, and either trigger
+player's animations, or pass events to the menu system.
+
+'''
+
 # standards import
 import os
 import time
-import logging
 import pygame
-from pygame import locals
+from pygame import locals as pygame_locals
 from pygame.locals import (
         KEYDOWN,
         KEYUP,
@@ -31,12 +36,12 @@ from pygame.locals import (
         MOUSEBUTTONDOWN,
         USEREVENT,
         )
+
 # my imports
 from config import Config
-config = Config()
+CONFIG = Config()
 
 import game
-from ai import AI
 
 
 class Sequence(object):
@@ -100,13 +105,13 @@ class Controls (object):
         self.load_sequences()
 
     def load_keys(self):
-        self.keys = dict([[locals.__dict__[config.keyboard[key]], key]
-                         for key in config.keyboard])
+        self.keys = dict([[pygame_locals.__dict__[CONFIG.keyboard[key]], key]
+                         for key in CONFIG.keyboard])
 
     def load_sequences(self):
         self.sequences = []
         sequences_file = open(os.path.join(
-                    config.sys_data_dir,
+                    CONFIG.sys_data_dir,
                     'sequences'+os.extsep+'cfg'), 'r')
 
         lines = sequences_file.readlines()
@@ -134,7 +139,7 @@ class Controls (object):
                 if self.keys[key] == "MENU_TOGGLE":
                     ret = "game"
                 elif self.keys[key] == "QUIT":
-                    if config.general['CONFIRM_EXIT']:
+                    if CONFIG.general['CONFIRM_EXIT']:
                         pygame.event.post(
                                 pygame.event.Event(
                                     USEREVENT, key=self.keys[key]))
@@ -193,7 +198,7 @@ class Controls (object):
                     game_instance,
                     params={'entity': player})
 
-            player.set_walking_vector([config.general['WALKSPEED'],
+            player.set_walking_vector([CONFIG.general['WALKSPEED'],
                     player.walking_vector[1]])
             player.set_reversed(True)
             return True
@@ -207,7 +212,7 @@ class Controls (object):
                         game_instance,
                         params={'entity': player})
 
-            player.set_walking_vector([config.general['WALKSPEED'],
+            player.set_walking_vector([CONFIG.general['WALKSPEED'],
                 player.walking_vector[1]])
             player.set_reversed(False)
             return True
