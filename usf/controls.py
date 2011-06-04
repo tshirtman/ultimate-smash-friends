@@ -58,7 +58,9 @@ class Sequence(object):
         self.condition = condition
 
     def compare_local(self, seq, player, index):
-        """Compare a sequence of key events against our sequence
+        """
+        compare a sequence of keys events against our sequence starting from
+        index
         """
 
         current = player.entity_skin.current_animation.replace('_upgraded', '')
@@ -67,6 +69,8 @@ class Sequence(object):
         if ((not self.condition or current in self.condition)
                 and len(seq) - index >= len(self.keys)):
             # test keys are the same, up to length of our combination
+
+            i, j = 0, None
             for i, j in enumerate(self.keys):
                 # not the good one? stop here
                 if seq[i + index][0] != j:
@@ -82,12 +86,19 @@ class Sequence(object):
                 return True
 
     def compare(self, seq, player):
-        for i, j in enumerate(seq):
-            if self.compare_local(seq, player, i):
+        """Compare a sequence of key events against our sequence
+        """
+
+        for i in enumerate(seq):
+            if self.compare_local(seq, player, i[0]):
                 return True
+
         return False
 
-    def __str__():
+    def __str__(self):
+        """return a string representation of the sequence
+        """
+
         return [str(i) for i in self.keys]
 
 
@@ -105,10 +116,15 @@ class Controls (object):
         self.load_sequences()
 
     def load_keys(self):
+        """ load player keys from configuration
+        """
         self.keys = dict([[pygame_locals.__dict__[CONFIG.keyboard[key]], key]
                          for key in CONFIG.keyboard])
 
     def load_sequences(self):
+        """ construct player combo sequences, using config (sequences.cfg) and
+        known player keys
+        """
         self.sequences = []
         sequences_file = open(os.path.join(
                     CONFIG.sys_data_dir,
@@ -130,35 +146,6 @@ class Controls (object):
             seq = tmp[0].split('+')
             act = tmp[1]
             self.sequences.append(Sequence(seq, act, condition))
-
-    def handle_menu_key(self, state, key, game):
-        ret = "menu"
-        if state is KEYDOWN:
-            if key in self.keys:
-                #logging.debug(self.keys[key])
-                if self.keys[key] == "MENU_TOGGLE":
-                    ret = "game"
-                elif self.keys[key] == "QUIT":
-                    if CONFIG.general['CONFIRM_EXIT']:
-                        pygame.event.post(
-                                pygame.event.Event(
-                                    USEREVENT, key=self.keys[key]))
-                    else:
-                        pygame.event.post(pygame.event.Event(QUIT))
-
-                elif self.keys[key] == "TOGGLE_FULLSCREEN":
-                    pygame.display.toggle_fullscreen()
-
-                elif self.keys[key] == "VALIDATE":
-                    pygame.event.post(
-                            pygame.event.Event(USEREVENT, key=self.keys[key]))
-                else:
-                    pygame.event.post(
-                        pygame.event.Event(
-                            USEREVENT,
-                            player = int(self.keys[key].split('_')[0][-1]),
-                            key = self.keys[key].split('_')[1]))
-        return ret
 
     def test_sequences(self, game_instance, numplayer):
         """
@@ -326,12 +313,8 @@ class Controls (object):
         else:
             pygame.event.pump()
             for event in pygame.event.get([KEYDOWN, KEYUP]):
-                if state is "game" and game:
-                    state = self.handle_game_key(
-                            event.type, event.key, game_instance)
+                state = self.handle_game_key(event.type, event.key, game_instance)
 
-                elif state is "menu":
-                    state = self.handle_menu_key(event.type, event.key, menu)
 
             # eliminate unwanted events that fill the pool and break the
             # controls.

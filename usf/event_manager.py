@@ -49,7 +49,7 @@ class EventManager(object):
         self.events = filter(lambda x: not x.done, self.events)
 
     def add_event(self, name, *args, **kwargs):
-        self.events.append(event_names[name](self, *args, **kwargs))
+        self.events.append(EVENT_NAMES[name](self, *args, **kwargs))
 
     def get_events(self, cls=None, params=dict()):
         ''' return events filtered by name and target parameters, None mean no

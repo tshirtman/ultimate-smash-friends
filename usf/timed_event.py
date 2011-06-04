@@ -556,7 +556,7 @@ class BlobSpecial(TimedEvent):
     def execute(self, deltatime):
         try:
             self.eye
-        except:
+        except AttributeError:
             self.eye = self.params['world'].addItem('blob-eye',
                     upgraded=self.entity.upgraded, physics=False,
                     reversed=self.entity.reversed)
@@ -589,7 +589,7 @@ class BlobSpecial(TimedEvent):
     def delete(self):
         try:
             self.eye.set_lives(0)
-        except:
+        except AttributeError:
             # happens if there was no suitable target and event was aborted
             pass
 
