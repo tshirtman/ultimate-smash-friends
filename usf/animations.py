@@ -17,10 +17,16 @@
 # along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.#
 ################################################################################
 
-import pygame
+'''
+This module provide animations for entities, animations are composed of frames,
+which are a bit more than an image...
 
-import loaders
+'''
+
+import pygame
 import logging
+
+import usf.loaders
 
 
 class Frame (object):
@@ -38,24 +44,23 @@ class Frame (object):
       this state, this combine with the current direction/speed of the entity.
     """
 
-    def __init__(self, image, gametime, hardshape, name):
+    def __init__(self, image, gametime, hardshape):
         """
         Load a frame from an image, the current gametime, the deplacement/s of
         the player in this frame, it's hardshape.
 
         """
         self.image = image
-        self.bullet = None
         self.time = int(gametime)
         if type(hardshape) is str:
             self.hardshape = pygame.Rect([int(i) for i in hardshape.split(' ')])
         elif type(hardshape) is pygame.Rect:
             self.hardshape = hardshape
         else:
-            log.error('incorrect type for hardshape: ', hardshape)
+            logging.error('incorrect type for hardshape: ', hardshape)
 
         self.hardshape_reverse = (
-            loaders.image(self.image)[1][2]
+            usf.loaders.image(self.image)[1][2]
                 - self.hardshape[0] - self.hardshape[2],
             self.hardshape[1],
             self.hardshape[2],
@@ -64,12 +69,14 @@ class Frame (object):
         self.agressivpoints = []
         self.agressivpoints_reverse = []
 
-    def addAgressivPoint(self, (x, y), (v, j)):
-        self.agressivpoints.append(((x, y), (v, j)))
-        self.agressivpoints_reverse.append(((self.hardshape[2] - x, y), (v, j)))
-
-    def addBullet(self, image):
-        self.bullet = image
+    def add_agressiv_point(self, (c_x, c_y), (vect_x, vect_y)):
+        """
+        add an agressive points of coords, and vector specified, to the list of
+        agressivpoints of the frame
+        """
+        self.agressivpoints.append(((c_x, c_y), (vect_x, vect_y)))
+        self.agressivpoints_reverse.append(
+                ((self.hardshape[2] - c_x, c_y), (vect_x, vect_y)))
 
 
 class PreciseTimedAnimation(object):
@@ -78,11 +85,10 @@ class PreciseTimedAnimation(object):
     entity skin.
     """
 
-    def __init__(self, timedFrames, attribs, server=False):
-        self.frames = timedFrames
-        self.server_mode = server
-        self.image = timedFrames[0].image
-        self.rect = loaders.image(self.image, nodisplay=server)[1]
+    def __init__(self, frames, attribs, server=False):
+        self.frames = frames
+        self.image = frames[0].image
+        self.rect = usf.loaders.image(self.image, nodisplay=server)[1]
         self._start_time = 0
         self.playing = 0
 
@@ -94,6 +100,7 @@ class PreciseTimedAnimation(object):
                         [int(i) for i in attribs['hardshape'].split(' ')]) or 0)
 
         self.update(0, server=server)
+        self.agressivpoints = []
 
     def start(self, gametime):
         """
@@ -102,14 +109,14 @@ class PreciseTimedAnimation(object):
         self._start_time = gametime
         self.playing = 1
 
-    def frame(self, t):
+    def frame(self, time):
         """
         return the current frame depending on the time since the beggining of
         the animation.
         """
-        return filter(lambda x: x.time/1000.0 <= t, self.frames)[-1]
+        return filter(lambda x: x.time/1000.0 <= time, self.frames)[-1]
 
-    def update(self, gametime, reversed=False, server=False):
+    def update(self, gametime, reverse=False, server=False):
         """
         update the state of the animation.
         """
@@ -125,7 +132,7 @@ class PreciseTimedAnimation(object):
                 frame = self.frame(gametime - self._start_time)
                 self.image = frame.image
 
-                if reversed:
+                if reverse:
                     self.agressivpoints = frame.agressivpoints_reverse
                     self.hardshape = frame.hardshape_reverse
 
@@ -133,5 +140,5 @@ class PreciseTimedAnimation(object):
                     self.agressivpoints = frame.agressivpoints
                     self.hardshape = frame.hardshape
 
-            self.rect = loaders.image(self.image, nodisplay=server)[1]
+            self.rect = usf.loaders.image(self.image, nodisplay=server)[1]
 

@@ -68,7 +68,7 @@ class Entity (object):
 
     def __init__(self, num, game,
             entity_skinname='characters'+os.sep+'stick-tiny', place=(550, 1),
-            lives=3, carried_by=None, vector=[0, 0], reversed=False,
+            lives=3, carried_by=None, vector=[0, 0], reverse=False,
             server=False, number=None, visible=False, present=False,
             upgraded=False, physic=True, gravity=True, animation='static',
             physics=True):
@@ -92,7 +92,7 @@ class Entity (object):
         self._vector = [vector[0], vector[1]]
         self._walking_vector = [0.0, 0.0]
         # the entity is reversed when looking at left.
-        self._reversed = reversed
+        self._reversed = reverse
         self._percents = 0
         self._lives = lives
         self._gravity = gravity
@@ -156,41 +156,57 @@ class Entity (object):
         """
         change current number of lives of the entity
         """
+
         assert isinstance(value, int)
         self._lives = value
 
     @property
     def armor(self):
+        """ return current armor state
+        """
+
         return self._armor
 
     @property
     def place(self):
         """
         current position in level of the entity
-
         """
+
         return self._place
 
     def set_place(self, value):
         """
         move the entity to an arbitrary position
-
         """
+
         self._place = value
 
     @property
     def percents(self):
+        """
+        return current percents
+        """
         return self._percents
 
     def set_percents(self, value):
+        """
+        change percents value
+        """
         self._percents = value
 
     def add_percents(self, value):
+        """
+        increment the current player percents
+        """
         self._percents += value
         self._percents = max(self.percents, 0)
 
     @property
     def rect(self):
+        """
+        return current player rect
+        """
         return pygame.Rect(self._rect)
 
     @property
@@ -222,9 +238,15 @@ class Entity (object):
 
     @property
     def upgraded(self):
+        """
+        return True if the player is currently upgraded
+        """
         return self._upgraded
 
     def set_upgraded(self, value):
+        """
+        Set the upgraded state of the player, True or False
+        """
         assert value in (True, False)
         self._upgraded = value
 
@@ -294,6 +316,9 @@ class Entity (object):
         return self._gravity
 
     def set_gravity(self, value):
+        """
+        Set if the player is bound to obey gravity
+        """
         assert value in (True, False)
         self._gravity = value
 
@@ -343,6 +368,10 @@ class Entity (object):
 
     @property
     def physics(self):
+        """
+        Set if the player has to manage collisions properly, if not, it will be
+        destroyed when colliding anything
+        """
         return self._physics
 
     def backup(self):
@@ -372,6 +401,9 @@ class Entity (object):
 
     @property
     def agressiv_points(self):
+        """
+        return agressiv points of the current frame
+        """
         return self.entity_skin.animation.agressivpoints
 
     def test_hit(self, entity):
@@ -466,6 +498,9 @@ class Entity (object):
         self.update_rect()
 
     def foot_collision_rect(self):
+        """
+        return current foot collusion rect
+        """
         return pygame.Rect(
                 self.rect[0] + self.hardshape[0],
                 self.rect[1] + self.hardshape[3],
@@ -494,6 +529,9 @@ class Entity (object):
         return vector
 
     def get_env_collision(self, blocks):
+        """
+        DEPRECATED? react to collision with some environments as water
+        """
         for block in blocks:
             if self.foot_rect.colliderect(block) == 1:
                 if not self.in_water:
@@ -527,6 +565,9 @@ class Entity (object):
         return vector
 
     def point(self, n):
+        """
+        Return a collision point of the entity
+        """
         h = self.hardshape
         r = self._rect
         # i think r[0] and r[1] should be used in this formules, but they break
@@ -662,6 +703,9 @@ class Entity (object):
                     self.move((-2, 0))
 
     def draw_debug(self, coords, zoom, surface, debug_params):
+        """
+        This method just call all specific debug draw methods
+        """
         self.draw_debug_levelmap(coords, zoom, surface, debug_params)
         self.draw_debug_hardshape(coords, zoom, surface, debug_params)
         self.draw_debug_footrect(coords, zoom, surface, debug_params)
@@ -675,6 +719,9 @@ class Entity (object):
                     pygame.Color('red'))
 
     def draw_debug_hardshape(self, coords, zoom, surface, debug_params):
+        """
+        if hardshape debug is set, draw the hardshape of the player on the screen
+        """
         if self.visible:
             if debug_params.get('hardshape', False):
                 draw_rect(
@@ -697,6 +744,9 @@ class Entity (object):
                             pygame.Color('blue'))
 
     def draw_debug_footrect(self, coords, zoom, surface, debug_params):
+        """
+        if footrect debug is set, draw the footrect collision rect to the screen
+        """
         if self.visible:
             if debug_params.get('footrect', False):
                 r = self.foot_rect
@@ -710,6 +760,10 @@ class Entity (object):
                         pygame.Color(255, 255, 0, 127))
 
     def draw_debug_current_animation(self, coords, zoom, surface, debug_params):
+        """
+        if the current_animation debug is set, write the name of the current
+            animation near of the character
+        """
         if self.visible:
             if debug_params.get('current_animation', False):
                 surface.blit(

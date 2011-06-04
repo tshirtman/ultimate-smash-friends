@@ -173,13 +173,12 @@ class Entity_skin (object):
                             frame.attrib['time'],
                             ('hardshape' in frame.attrib
                              and frame.attrib['hardshape']
-                             or self.hardshape),
-                            name=frame.attrib['image']))
+                             or self.hardshape)))
 
                 for agressiv in frame.findall('agressiv-point'):
                     coords = agressiv.attrib['coords'].split(',')
                     vector = agressiv.attrib['vector'].split(',')
-                    frames[-1].addAgressivPoint([int(i) for i in coords],
+                    frames[-1].add_agressiv_point([int(i) for i in coords],
                                                 [int(i) for i in vector])
 
             self.animations[movement.attrib['name']] = PreciseTimedAnimation(
@@ -275,7 +274,7 @@ class Entity_skin (object):
                 logging.debug((self.name, game), 3)
                 raise
 
-    def update(self, t, reversed=False, upgraded=False, server=False):
+    def update(self, t, reverse=False, upgraded=False, server=False):
         """
         Update the skin's animation if necessary.
 
@@ -293,6 +292,6 @@ class Entity_skin (object):
             self.animation = self.animations[self.current_animation]
             self.animation.start(t)
 
-        self.animation.update(t, reversed, server)
+        self.animation.update(t, reverse, server)
         self.hardshape = self.animation.hardshape
 

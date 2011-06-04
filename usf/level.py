@@ -46,7 +46,11 @@ except ImportError:
             "your python version seems quite old, you should consider"
             " upgrading")
 
-    from elementtree import ElementTree
+    try:
+        from elementtree import ElementTree
+    except ImportError:
+        logging.error('unable to import a known xml parser, stopping now!')
+        exit()
 
 
 class Decorum(object):
@@ -72,7 +76,7 @@ class Decorum(object):
         self.depth = depth
         self.update_fctn = update_fctn
         self.duration = max(map(lambda x: x[1], frames))
-        self.update(1)
+        self.texture = self.frames[0][0]
 
     def update(self, gametime):
         '''
@@ -84,6 +88,9 @@ class Decorum(object):
         self.coords = self.update_fctn(self.coords, gametime)
 
     def draw(self, surface, coords, zoom):
+        '''
+        Render the Decorum to a surface
+        '''
         real_coords = (int(self.coords[0] * zoom) + coords[0],
                 int(self.coords[1] * zoom) + coords[1])
 
@@ -92,6 +99,9 @@ class Decorum(object):
                 real_coords)
 
     def __cmp__(self, other):
+        '''
+        sort decorums by order of depth
+        '''
         return cmp(self.depth, other.depth)
 
 
@@ -100,11 +110,13 @@ class Block (object):
     An abstraction class to define methods shared by some level objects.
     """
 
-    def __init__(self):
+    def __init__(self, position, texture):
         """
         Not much to do here.
         """
-        pass
+        self.position = position
+        self.texture = texture
+        self.collide_rects = []
 
     def draw(self, surface, coords=(0, 0), zoom=1):
         """
@@ -209,6 +221,7 @@ class MovingPart (Block):
                 logging.error("Can't load the texture: " + str(file))
         self.patterns = patterns
         self.position = self.patterns[0]['position']
+        self.old_position = None
 
     def get_movement(self):
         """
@@ -239,7 +252,7 @@ class MovingPart (Block):
 
         # get the next position of pattern we will get by.
         # FIXME: maybe avoid filtering all, maybe using an itertool?
-        next = filter(
+        next_place = filter(
                 lambda(x): x['time'] >= level_time * 10000 %
                 self.patterns[-1]['time'],
                 self.patterns)[0]
@@ -248,15 +261,15 @@ class MovingPart (Block):
         # done.
         percent_bettween = (
                 level_time*10000 % self.patterns[-1]['time'] - last['time']) /(
-                        next['time'] - last['time'])
+                        next_place['time'] - last['time'])
 
         self.position[0] = (
             int(last['position'][0] * (1 - percent_bettween) +
-            next['position'][0] * (percent_bettween)))
+            next_place['position'][0] * (percent_bettween)))
 
         self.position[1] = (
             int(last['position'][1] * (1 - percent_bettween)
-            +next['position'][1] * (percent_bettween)))
+            +next_place['position'][1] * (percent_bettween)))
 
         # maybe usefull to cache thoose result too.
         self.collide_rects = map(
@@ -268,10 +281,29 @@ class MovingPart (Block):
              self.rects)
 
     def backup(self):
+        """
+        return old and current position, to restore later
+        """
         return (self.old_position, self.position)
 
     def restore(self, backup):
+        '''
+        restore backed up positions
+        '''
         self.old_position, self.position = backup
+
+
+def get_xml(levelname):
+    '''
+    return xml tree of the level
+    '''
+    return ElementTree.ElementTree(
+            None,
+            os.path.join(
+                CONFIG.sys_data_dir,
+                'levels',
+                levelname,
+                'level.xml'))
 
 
 class Level(object):
@@ -281,15 +313,15 @@ class Level(object):
     collision rects, the size of the leve;t.
     """
 
-    def __init__(self, levelname='baselevel', server=False, clone=None):
+    def __init__(self, levelname='baselevel', server=False):
         """
         This constructor is currently using two initialisation method, the old,
         based on a map file, and the new based on an xml file.
         """
-        self.SIZE = (CONFIG.general['WIDTH'],
+        self.size = (CONFIG.general['WIDTH'],
             CONFIG.general['HEIGHT'])
 
-        xml = self.getXML(levelname)
+        xml = get_xml(levelname)
         attribs = xml.getroot().attrib
         self.name = attribs['name']
 
@@ -303,19 +335,10 @@ class Level(object):
         self.load_vector_blocs(xml, server, levelname)
         self.load_decorums(xml)
 
-    def getXML(self, levelname):
-        return ElementTree.ElementTree(
-                None,
-                os.path.join(
-                    CONFIG.sys_data_dir,
-                    'levels',
-                    levelname,
-                    'level.xml'))
-
-    def __del__(self):
-        logging.debug('deleting level')
-
     def load_images(self, attribs, levelname):
+        ''' create image paths from indications in xml, don't actually load
+        images, as they will be loaded as needed by loaders.image
+        '''
         self.background = os.path.join(
                     CONFIG.sys_data_dir,
                     'levels',
@@ -338,6 +361,9 @@ class Level(object):
             self.foreground = False
 
     def load_borders(self, attribs):
+        ''' calculate actual size of the level, with level image size and
+        borders
+        '''
         #FIXME: should not depend on the initialisation of pygame
         self.rect = usf.loaders.image(self.level)[1]
 
@@ -352,23 +378,30 @@ class Level(object):
             self.border = self.rect.inflate(self.rect[2]/2, self.rect[3]/2)
 
     def load_entrypoints(self, xml):
+        ''' set entry points to the level, from xml, create some if there are
+        none (and log that, there should be some)
+        '''
         self.entrypoints = []
         for point in xml.findall('entry-point'):
-            x, y = point.attrib['coords'].split(' ')
-            self.entrypoints.append([int(x), int(y)])
+            coords = point.attrib['coords'].split(' ')
+            self.entrypoints.append([int(coords[0]), int(coords[1])])
 
         if not self.entrypoints:
             logging.info('no entry point defined for this level')
-            for x in xrange(4):
+            for x_coord in xrange(1, 5):
                 self.entrypoints.append(
-                        [int(x*self.rect[2]/5), self.rect[3]/5])
+                        [int(x_coord * self.rect[2]/5), self.rect[3]/5])
 
     def load_layers(self, xml):
+        ''' load and instanciate layers if any defined in xml
+        '''
         self.layers = []
         for layer in xml.findall('layer'):
             self.layers.append(skin.Layer(layer))
 
     def load_blocs(self, xml):
+        ''' load and instanciate basic blocs defined in the xml
+        '''
         self.map = []
         for block in xml.findall('block'):
             nums = block.attrib['coords'].split(' ')
@@ -376,6 +409,8 @@ class Level(object):
             self.map.append(pygame.Rect(nums))
 
     def load_moving_blocs(self, xml, server, levelname):
+        ''' load and instanciate moving blocs defined in xml
+        '''
         self.moving_blocs = []
         for block in xml.findall('moving-block'):
             texture = block.attrib['texture']
@@ -402,6 +437,8 @@ class Level(object):
                         levelname))
 
     def load_water_blocs(self, xml, server=False):
+        ''' #XXX used anywhere?
+        '''
         self.water_blocs = []
         for block in xml.findall('water'):
             nums = block.attrib['coords'].split(' ')
@@ -409,6 +446,8 @@ class Level(object):
             self.water_blocs.append(pygame.Rect(nums))
 
     def load_vector_blocs(self, xml, server, levelname):
+        ''' load vector blocs defined in xml
+        '''
         self.vector_blocs = []
         for block in xml.findall('vector-block'):
             texture = block.attrib['texture']
@@ -434,20 +473,25 @@ class Level(object):
                             levelname))
 
     def load_decorums(self, xml):
+        ''' load decorums defined in xml
+        '''
         self.decorums = list()
-        for d in xml.findall('decorum'):
+        for decorum in xml.findall('decorum'):
             frames = list()
-            for f in d.findall('frame'):
-                frames.append((f.attrib['image'], float(f.attrib['time'])))
+            for frame in decorum.findall('frame'):
+                frames.append((frame.attrib['image'],
+                    float(frame.attrib['time'])))
 
-            coords = [int(x) for x in d.attrib['coords'].split(',')]
-            depth = float(d.attrib['depth'])
-            update_fctn = eval(d.attrib['update'])
+            coords = [int(x) for x in decorum.attrib['coords'].split(',')]
+            depth = float(decorum.attrib['depth'])
+            update_fctn = eval(decorum.attrib['update'])
 
             self.decorums.append(Decorum(frames, coords, depth, update_fctn))
         self.decorums.sort()
 
     def draw_before_players(self, surface, level_place, zoom, shapes=False):
+        ''' draw everything that need to be drawed before players
+        '''
         self.draw_background(surface, level_place, zoom)
         self.draw_level(surface, level_place, zoom, shapes)
 
@@ -458,11 +502,15 @@ class Level(object):
             block.draw(surface, level_place, zoom)
 
     def draw_after_players(self, surface, level_place, zoom, levelmap=False):
+        ''' draw everything that need to be drawn after players
+        '''
         self.draw_foreground(surface, level_place, zoom)
         if levelmap or usf.loaders.get_gconfig().get("game", "minimap") == "y":
             self.draw_minimap(surface)
 
     def draw_minimap(self, surface):
+        ''' draw minimap in the upper/right corner of the screen, showing blocs
+        '''
         for rect in self.map:
             draw_rect(
                     surface,
@@ -474,6 +522,8 @@ class Level(object):
                     pygame.Color('grey'))
 
     def draw_debug_map(self, surface, level_place, zoom):
+        ''' draw the map before the level, to show the real level shape
+        '''
         draw_rect(
                 surface,
                 pygame.Rect(
@@ -512,41 +562,55 @@ class Level(object):
                     pygame.Color('blue'))
 
     def draw_background(self, surface, coords=(0, 0), zoom=1):
+        ''' Draw the background image of the level on the surface
+        '''
         surface.blit(usf.loaders.image(
-            self.background, scale=self.SIZE)[0], (0, 0))
+            self.background, scale=self.size)[0], (0, 0))
 
         for layer in self.layers:
             surface.blit(layer.get_image(), layer.get_pos())
 
-        for d in self.decorums:
-            if d.depth < 0:
-                d.draw(surface, coords, zoom)
+        for decorum in self.decorums:
+            if decorum.depth < 0:
+                decorum.draw(surface, coords, zoom)
 
     def draw_level(self, surface, coords, zoom, shapes=False):
+        ''' draw the center part of the level
+        '''
         surface.blit(usf.loaders.image(self.level, zoom=zoom)[0], coords)
         if shapes:
             self.draw_debug_map(surface, coords, zoom)
 
     def draw_foreground(self, surface, coords, zoom):
+        ''' draw the decorations of the level that are before the player
+        '''
         if self.foreground:
-            surface.blit(usf.loaders.image(self.foreground, zoom=zoom)[0], coords)
+            surface.blit(
+                    usf.loaders.image(self.foreground, zoom=zoom)[0], coords)
 
         for d in self.decorums:
             if d.depth >= 0:
                 d.draw(surface, coords, zoom)
 
     def backup(self):
+        ''' return a backup of the level state, that mean backup of moving
+        blocs, because it's the only thing that change
+        '''
         return (b.backup() for b in self.moving_blocs)
 
     def restore(self, backup):
+        ''' restore game state from a backup
+        '''
         (bloc.restore(back) for bloc, back in zip(self.moving_blocs, backup))
 
     def update(self, time):
+        ''' Update moving blocs and decorums
+        '''
         for block in self.moving_blocs:
             block.update(time)
 
-        for d in self.decorums:
-            d.update(time)
+        for decorum in self.decorums:
+            decorum.update(time)
 
     def collide_r(self, r):
         if r.collidelist(self.map) != -1:

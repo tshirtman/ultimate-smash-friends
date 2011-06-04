@@ -1,8 +1,16 @@
+'''
+This module provide functions made to make easier the debug work, may diseapear
+in the future.
+
+'''
+
 import pygame
 import logging
 
 
 def draw_rect(surface, rect, color=pygame.Color('white')):
+    ''' a simple function to draw a colored rect on a surface
+    '''
     surface.fill(color, pygame.Rect(rect))
 
 

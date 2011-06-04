@@ -623,7 +623,7 @@ class XeonCharge(TimedEvent):
                     "xeon-charge",
                     upgraded=self.entity.upgraded,
                     animation=str(size),
-                    reversed=self.entity.reversed,
+                    reverse=self.entity.reversed,
                     place=[self.entity.place[0] + (-100 if self.entity.reversed
                         else 100), self.entity.place[1]],
                     vector=[300, 0],
