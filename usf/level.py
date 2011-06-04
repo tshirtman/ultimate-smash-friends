@@ -115,7 +115,25 @@ class Block (object):
         Not much to do here.
         """
         self.position = position
-        self.texture = texture
+        try:
+            self.texture = os.path.join(
+                    CONFIG.sys_data_dir,
+                    "levels",
+                    levelname,
+                    texture)
+            usf.loaders.image(self.texture)
+        except pygame.error:
+            logging.debug("No texture found here: " + str(file))
+            try:
+                self.texture = os.path.join(
+                        CONFIG.sys_data_dir,
+                        "levels",
+                        "common",
+                        texture)
+
+            except pygame.error:
+                logging.error("Can't load the texture: " + str(file))
+
         self.collide_rects = []
 
     def draw(self, surface, coords=(0, 0), zoom=1):
@@ -144,30 +162,10 @@ class VectorBloc (Block):
 
     def __init__(self, rects, position, vector, relative, texture,
             server=False, levelname='biglevel'):
-        Block.__init__(self)
+        Block.__init__(self, position, texture)
         self.rects = rects
         self.relative = relative
-        try:
-            self.texture = os.path.join(
-                    CONFIG.sys_data_dir,
-                    "levels",
-                    levelname,
-                    texture)
-            usf.loaders.image(self.texture)
-        except pygame.error:
-            logging.debug("No texture found here: " + str(file))
-            try:
-                self.texture = os.path.join(
-                        CONFIG.sys_data_dir,
-                        "levels",
-                        "common",
-                        texture)
-
-            except pygame.error:
-                logging.error("Can't load the texture: " + str(file))
-
         self.vector = vector
-        self.position = position
         self.collide_rects = []
         for i in self.rects:
             self.collide_rects.append(
@@ -198,29 +196,10 @@ class MovingPart (Block):
 
     def __init__(self, rects, texture, patterns, server=False,
             levelname="biglevel"):
-        Block.__init__(self)
+        Block.__init__(self, patterns[0]['position'], texture)
         #logging.debug('moving block created')
         self.rects = rects
-        try:
-            self.texture = os.path.join(
-                    CONFIG.sys_data_dir,
-                    "levels",
-                    levelname,
-                    texture)
-            usf.loaders.image(self.texture)
-        except pygame.error:
-            logging.debug("No texture found here: " + str(file))
-            try:
-                self.texture = os.path.join(
-                        CONFIG.sys_data_dir,
-                        "levels",
-                        "common",
-                        texture)
-
-            except pygame.error:
-                logging.error("Can't load the texture: " + str(file))
         self.patterns = patterns
-        self.position = self.patterns[0]['position']
         self.old_position = None
 
     def get_movement(self):
