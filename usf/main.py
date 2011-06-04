@@ -362,7 +362,7 @@ class Main(object):
             state_was = self.state
             if self.state != "menu":
                 self.state = self.controls.poll(
-                        self.game, self.menu, self.state)
+                        self.game, self.menu)
             if self.state == "menu":
                 self.manage_menu()
             else:

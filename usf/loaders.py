@@ -18,10 +18,50 @@
 # You should have received a copy of the GNU General Public License            #
 # along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.#
 ################################################################################
+'''
+pygame_loaders is a set of classes/functions, to use mainly for image
+loadings/processing with pygame, it uses memoization to accelerate successive
+loadings of images, and repeating the same process on the same images, acting
+as a real cache for image loading and manipulations, it help to load tracks and
+such too.
+
+This module was originaly a simple syntaxic sugar for a pygame project,
+
+for performances sake it quickly gained memoization, allowing you to call for
+images, not carring if you already loaded them or not. As you may need to do
+that for result of process on those images, the image loader gained a lot of
+keywords, that allow to call images with a zooms, blending, reversing, scaling,
+rotating, and all sort of combinations, everytime doing only the required parts
+of those processings, and using previous results of processings. Okay, it can
+takes up big memory amounts, but well, i found it's most of the time less of
+the problem than CPU, so if you agree, you will probably agree that for games,
+it's an acceptable tradeoff.
+
+Oh, for convenience sakes, it can load bunch of text and musics, too, the
+processing part is less developped on these ones, but contributions are
+welcomed, and memoization is done for them too.
+
+Anyway, using it is quite simple, simply import the needed loaders from
+loaders.py, and for an image filepath, image() will return a tupple containing
+the image and it's size, no need to store it away, calling the loader a second
+time or more is basically free, thanks to memoization.
+
+pygame must be loaded and display_mode set to perform most image operations.
+
+>>> from pygame_loaders import image
+>>> image('myimage.png') # actual loading
+(<Surface(491x546x32 SW)>, <rect(0, 0, 491, 546)>)
+
+>>> image('myimage.png') # returning same result, without any loading
+>>> image("myimage.png", zoom=1.5) # only performing zoom
+(<Surface(736x819x32 SW)>, <rect(0, 0, 736, 819)>)
+
+>>> image("myimage.png", zoom=1.5, alpha=0.4) # only changing alpha
+(<Surface(736x819x32 SW)>, <rect(0, 0, 736, 819)>)
+
+'''
 
 # standards imports
-import os
-import sys
 import copy
 import pygame
 import logging
@@ -29,22 +69,16 @@ import math
 
 from memoize import memoize
 from config import Config
-config = Config()
+CONFIG = Config()
 from ConfigParser import SafeConfigParser
 
 try:
     from pygame.locals import BLEND_RGB_MAX
-    from pygame.locals import BLEND_RGB_ADD
-    from pygame.locals import BLEND_RGB_SUB
-    from pygame.locals import BLEND_RGB_MULT
-    from pygame.locals import BLEND_RGB_MIN
     from pygame.locals import BLEND_RGBA_MAX
-    from pygame.locals import BLEND_RGBA_ADD
-    from pygame.locals import BLEND_RGBA_SUB
     from pygame.locals import BLEND_RGBA_MULT
-    from pygame.locals import BLEND_RGBA_MIN
-except:
-    Log().log("old version of pygame no BLEND_RGBA_MAX")
+
+except ImportError:
+    logging.info("old version of pygame no BLEND_RGBA_MAX")
     BLEND_RGBA_MAX = None
 
 
@@ -86,12 +120,11 @@ def image(name, *args, **kwargs):
             # this mean this version of pygame is to old to use the effect
             # above, an equivalent method would be a good thing
             logging.warning('pygame version < 1.9 no alpha blend.')
-            pass #nothing for the moment
 
     elif 'alpha' in kwargs and kwargs['alpha'] is not None:
         alpha = kwargs['alpha']
         if not 0 <= alpha <= 1:
-            logging.warning('bad alpha value: %s' % alpha)
+            logging.warning('bad alpha value:'+ str(alpha))
             alpha = min(1, max(0, alpha))
 
         kwargs['alpha'] = None
@@ -103,12 +136,12 @@ def image(name, *args, **kwargs):
 
     elif 'scale' in kwargs and kwargs['scale'] is not None:
         if len(kwargs['scale']) is not 2:
-            raise Exception.ValueError(
+            raise ValueError(
                 "scale parameter should be a tuple of two integers")
 
         scale = kwargs['scale']
         kwargs['scale'] = None
-        if config.general['SMOOTHSCALE']:
+        if CONFIG.general['SMOOTHSCALE']:
             img = pygame.transform.smoothscale(
                 image(name, *args, **kwargs)[0],
                 scale)
@@ -122,7 +155,7 @@ def image(name, *args, **kwargs):
         zoom = kwargs['zoom']
         kwargs['zoom'] = None
         #logging.debug('scaling image '+name+' :'+str(zoom))
-        if config.general['SMOOTHSCALE']:
+        if CONFIG.general['SMOOTHSCALE']:
             img = pygame.transform.smoothscale(
                     image(name, **kwargs)[0],
                     (
@@ -144,29 +177,37 @@ def image(name, *args, **kwargs):
     else:
         try:
             img = pygame.image.load(name)
-        except pygame.error, message:
+        except pygame.error:
             logging.debug('Cannot load image:'+str(name), 2)
-            raise# SystemExit, message
+            raise
         img = img.convert_alpha()
     return img, img.get_rect()
 
 
 @memoize
 def image_layer(first, second, pos=(0, 0)):
+    """ return a copy of the first image, with the second one blitted on it
+    """
     surface = copy.copy(first)
     surface.blit(second, pos)
     return surface
 
 
 @memoize
-def text(text_send, font, r=240, g=240, b=240, a=250):
+def text(text_send, font, red=240, green=240, blue=240, alpha=250):
+    """ return a surface with the text rendered on it, in the color passed in
+    parameter
+    """
     return font.render(text_send.decode('utf-8'),
             True,
-            pygame.color.Color(r, g, b, a))
+            pygame.color.Color(red, green, blue, alpha))
 
 
 @memoize
 def paragraph(text_send, font):
+    """ Load a bunch of text in a surface, formated depending on it's length
+    """
+
     max_len = text("", font)
     for texte in text_send.split('\n'):
         if text(texte, font).get_width() > max_len.get_width():
@@ -187,9 +228,13 @@ def paragraph(text_send, font):
 
 @memoize
 def track(name):
+    """
+    Load an audio file to play in the game
+    """
+
     try:
-        FREQ, BITSIZE, CHANNELS, BUFFER = (44100, -16, 2, 1024)
-        pygame.mixer.init(FREQ, BITSIZE, CHANNELS, BUFFER)
+        freq, bitsize, channels, buff = (44100, -16, 2, 1024)
+        pygame.mixer.init(freq, bitsize, channels, buff)
         return pygame.mixer.Sound(name)
     except (pygame.error):
         # no sound

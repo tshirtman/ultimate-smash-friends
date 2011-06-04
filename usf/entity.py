@@ -31,7 +31,7 @@ from font import fonts
 
 from config import Config
 
-config = Config()
+CONFIG = Config()
 
 from debug_utils import draw_rect
 
@@ -396,7 +396,7 @@ class Entity (object):
         if self.shield['on']:
             self.shield['power'] -= (math.sqrt(
                                 point[1][0]**2 + point[1][1]**2)
-                                / config.general['SHIELD_SOLIDITY'])
+                                / CONFIG.general['SHIELD_SOLIDITY'])
 
             self.shield['power'] = max(0, self.shield['power'])
             self._percents += (math.sqrt(point[1][0] ** 2 + point[1][1]**2)
@@ -497,7 +497,7 @@ class Entity (object):
         for block in blocks:
             if self.foot_rect.colliderect(block) == 1:
                 if not self.in_water:
-                    loaders.track(os.path.join(config.sys_data_dir,
+                    loaders.track(os.path.join(CONFIG.sys_data_dir,
                         "sounds",
                         "splash1.wav")).play()
 
@@ -635,7 +635,7 @@ class Entity (object):
 
             if self.collide_top(game):
                 self._vector[1] = -math.fabs(
-                    self.vector[1] * config.general['BOUNCE'])
+                    self.vector[1] * CONFIG.general['BOUNCE'])
 
                 self._onGround = True
                 self._vector[0] /= 2
@@ -645,7 +645,7 @@ class Entity (object):
             elif self.collide_bottom(game):
                 if self.vector[1] < 0:
                     self._vector[1] = int(
-                            -self.vector[1] * config.general['BOUNCE'])
+                            -self.vector[1] * CONFIG.general['BOUNCE'])
 
                 self._vector[0] /= 2
                 while self.collide_bottom(game):
@@ -761,7 +761,7 @@ class Entity (object):
             if self.shield['on']:
                 image = loaders.image(
                         os.path.sep.join(
-                            (config.sys_data_dir, 'misc', 'shield.png')),
+                            (CONFIG.sys_data_dir, 'misc', 'shield.png')),
                         zoom=zoom*self.shield['power']*3)
 
                 shield_coords = (
@@ -808,14 +808,14 @@ class Entity (object):
 
         # Gravity
         if self.gravity and self.physic and not self.onGround:
-            self._vector[1] += float(config.general['GRAVITY']) * dt
+            self._vector[1] += float(CONFIG.general['GRAVITY']) * dt
 
         elif not self.physic:
             #FIXME : it is a bit hackish
             self._vector[1] += -0.00001
 
         # Application of air friction.
-        F = config.general['AIR_FRICTION'] * environnement_friction
+        F = CONFIG.general['AIR_FRICTION'] * environnement_friction
 
         if self.physic: #FIXME: and not a bullet
             self._vector[0] -= (F * self.vector[0] * dt)

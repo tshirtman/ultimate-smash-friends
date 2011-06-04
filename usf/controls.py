@@ -25,7 +25,6 @@ player's animations, or pass events to the menu system.
 
 # standards import
 import os
-import time
 import pygame
 from pygame import locals as pygame_locals
 from pygame.locals import (
@@ -34,7 +33,6 @@ from pygame.locals import (
         MOUSEMOTION,
         MOUSEBUTTONUP,
         MOUSEBUTTONDOWN,
-        USEREVENT,
         )
 
 # my imports
@@ -42,6 +40,81 @@ from config import Config
 CONFIG = Config()
 
 import game
+
+
+def key_shield(the_key, player, game_instance):
+    """ activate shield if asked by the player, and if possible, return
+    True, if the shield was activated
+    """
+    if ("_SHIELD" in the_key and
+        player.entity_skin.current_animation in (
+        'static', 'static_upgraded',
+        'walk', 'walk_upgraded')):
+        player.shield['on'] = True
+        player.entity_skin.change_animation(
+            'static',
+            game_instance,
+            params={'entity': player})
+
+        player.set_walking_vector((0, player.walking_vector[1]))
+        return True
+    return False
+
+
+def key_down_left(the_key, player, game_instance):
+    """ manage incidence on walk animation if the player push down his left key
+    """
+    if "_LEFT" in the_key:
+        if player.onGround:
+            player.entity_skin.change_animation(
+                'walk',
+                game_instance,
+                params={'entity': player})
+
+        player.set_walking_vector([CONFIG.general['WALKSPEED'],
+                player.walking_vector[1]])
+        player.set_reversed(True)
+        return True
+    return False
+
+
+def key_down_right(the_key, player, game_instance):
+    """ manage incidence on walk animation if the player push down his right key
+    """
+    if "_RIGHT" in the_key:
+        if player.onGround:
+            player.entity_skin.change_animation(
+                    'walk',
+                    game_instance,
+                    params={'entity': player})
+
+        player.set_walking_vector([CONFIG.general['WALKSPEED'],
+            player.walking_vector[1]])
+        player.set_reversed(False)
+        return True
+    return False
+
+
+def key_up_left(player, game_instance):
+    """ manage incidence on walk animation if the player release his left key
+    """
+    if player.reversed:
+        player.set_walking_vector([0, player.walking_vector[1]])
+
+    if (player.entity_skin.current_animation in ('walk', 'walk_upgraded')):
+        player.entity_skin.change_animation("static", game_instance,
+                params={'entity': player})
+
+
+def key_up_right(player, game_instance):
+    """ manage incidence on walk animation if the player release his right key
+    """
+    if not player.reversed:
+        player.set_walking_vector([0, player.walking_vector[1]])
+
+    if (player.entity_skin.current_animation in ('walk', 'walk_upgraded')):
+        player.entity_skin.change_animation("static", game_instance,
+                params={'entity': player})
 
 
 class Sequence(object):
@@ -112,6 +185,8 @@ class Controls (object):
     def __init__(self):
         #loaders.load_keys()
         self.player_sequences = [[], [], [], []]
+        self.keys = {}
+        self.sequences = []
         self.load_keys()
         self.load_sequences()
 
@@ -125,7 +200,6 @@ class Controls (object):
         """ construct player combo sequences, using config (sequences.cfg) and
         known player keys
         """
-        self.sequences = []
         sequences_file = open(os.path.join(
                     CONFIG.sys_data_dir,
                     'sequences'+os.extsep+'cfg'), 'r')
@@ -162,73 +236,12 @@ class Controls (object):
                         game_instance,
                         params={'entity': player})
 
-    def key_shield(self, the_key, player, game_instance):
-        if ("_SHIELD" in the_key and
-            player.entity_skin.current_animation in (
-            'static', 'static_upgraded',
-            'walk', 'walk_upgraded')):
-            player.shield['on'] = True
-            player.entity_skin.change_animation(
-                'static',
-                game_instance,
-                params={'entity': player})
-
-            player.set_walking_vector((0, player.walking_vector[1]))
-            return True
-        return False
-
-    def key_down_left(self, the_key, player, game_instance):
-        if "_LEFT" in the_key:
-            if player.onGround:
-                player.entity_skin.change_animation(
-                    'walk',
-                    game_instance,
-                    params={'entity': player})
-
-            player.set_walking_vector([CONFIG.general['WALKSPEED'],
-                    player.walking_vector[1]])
-            player.set_reversed(True)
-            return True
-        return False
-
-    def key_down_right(self, the_key, player, game_instance):
-        if "_RIGHT" in the_key:
-            if player.onGround:
-                player.entity_skin.change_animation(
-                        'walk',
-                        game_instance,
-                        params={'entity': player})
-
-            player.set_walking_vector([CONFIG.general['WALKSPEED'],
-                player.walking_vector[1]])
-            player.set_reversed(False)
-            return True
-        return False
-
-    def key_up_left(self, player, game_instance):
-        if player.reversed:
-            player.set_walking_vector([0, player.walking_vector[1]])
-
-        if (player.entity_skin.current_animation in ('walk', 'walk_upgraded')):
-            player.entity_skin.change_animation("static", game_instance,
-                    params={'entity': player})
-            return
-        return
-
-    def key_up_right(self, player, game_instance):
-        if not player.reversed:
-            player.set_walking_vector([0, player.walking_vector[1]])
-
-        if (player.entity_skin.current_animation in ('walk', 'walk_upgraded')):
-            player.entity_skin.change_animation("static", game_instance,
-                    params={'entity': player})
-            return
-        return
 
     def handle_game_key_down(self, key, game_instance):
+        """ manage key_down events
+        """
         ret = 'game'
         if key in self.keys:
-            #FIXME: test if the player is not an AI.
             the_key = self.keys[key]
             if the_key == "QUIT":
                 ret = "menu"
@@ -253,18 +266,19 @@ class Controls (object):
 
                     # the player can't do anything if the shield is on
 
-                    (player.shield['on']
-                            or self.key_shield(the_key, player, game_instance)
-                            or self.key_down_left(
-                                the_key, player, game_instance)
-                            or self.key_down_right(
-                                the_key, player, game_instance))
+                    if not player.shield['on']:
+                        if not  key_shield(the_key, player, game_instance):
+                            if not key_down_left(the_key, player,
+                                    game_instance):
+                                key_down_right(the_key, player, game_instance)
 
                     #test sequences
                     self.test_sequences(game_instance, numplayer)
         return ret
 
     def handle_game_key_up(self, key, game_instance):
+        """ manage key up events
+        """
         if key in self.keys:
             the_key = self.keys[key]
 
@@ -282,12 +296,15 @@ class Controls (object):
                     player.shield['on'] = False
 
                 elif "_LEFT" in the_key:
-                    self.key_up_left(player, game_instance)
+                    key_up_left(player, game_instance)
 
                 elif "_RIGHT" in the_key:
-                    self.key_up_right(player, game_instance)
+                    key_up_right(player, game_instance)
 
     def handle_game_key(self, state, key, game_instance):
+        """ Call handle_game_key_down of handle_game_key_up whether if the key
+        event is DOWN or UP
+        """
         if state is KEYDOWN:
             return self.handle_game_key_down(key, game_instance)
 
@@ -295,7 +312,7 @@ class Controls (object):
             self.handle_game_key_up(key, game_instance)
             return "game"
 
-    def poll(self, game_instance, menu, state):
+    def poll(self, game_instance, state):
         """
         This function manages key events aquiered from local keyboard or sent
         by clients in the case of a networkk game.
@@ -313,7 +330,8 @@ class Controls (object):
         else:
             pygame.event.pump()
             for event in pygame.event.get([KEYDOWN, KEYUP]):
-                state = self.handle_game_key(event.type, event.key, game_instance)
+                state = self.handle_game_key(
+                        event.type, event.key, game_instance)
 
 
             # eliminate unwanted events that fill the pool and break the
