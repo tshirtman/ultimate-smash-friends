@@ -234,7 +234,7 @@ class Controls (object):
                 player.entity_skin.change_animation(
                         i.action,
                         game_instance,
-                        params={'entity': player})
+                        params={'entity': player, 'anim_name': i.action})
 
 
     def handle_game_key_down(self, key, game_instance):

@@ -50,14 +50,14 @@ class TimedEvent (object):
         """
         Action must be a callable, it will be called every frames in the
         period.
-        Condition must be a callable if false the event will die.
+        Condition must be a callable, when it return false the event will die.
         Period must be a period of time defined as a tupple of value, if the
         first value is None, then it will replaced by current time and if the
         second is None, the event will happen until dying.
         """
 
         self.params = params
-        self.period = period
+        self.period = period[0], period[1] or None
         self.done = False
         self.event_manager = manager
         self.initiate()
@@ -68,11 +68,15 @@ class TimedEvent (object):
         functions of the event.
         """
 
-        if (self.period[1] is not None and gametime > self.period[1] or not
-                self.condition()):
+        if self.period[1] is not None and gametime > self.period[1]:
             self.done = True
+
         elif gametime > self.period[0]:
-            self.execute(deltatime)
+            if not self.condition():
+                self.done = True
+
+            else:
+                self.execute(deltatime)
 
     def backup(self):
         """
@@ -397,8 +401,9 @@ class VectorEvent(TimedEvent):
         Return false so the addition is only performed once.
         """
 
-        return (self.params['anim_name'] ==
-                self.params['entity'].entity_skin.current_animation)
+        return (self.params['entity'].entity_skin.current_animation in
+                (self.params['anim_name'],
+                    self.params['anim_name']+'_upgraded'))
 
     def delete(self):
         """
@@ -406,7 +411,7 @@ class VectorEvent(TimedEvent):
         """
 
         #logging.debug("vector Event applied")
-        if self.params['entity'].entity_skin.current_animation:
+        if self.condition():
             self.params['entity'].set_vector([
                 self.params['vector'][0],
                 -self.params['vector'][1]])
@@ -505,14 +510,19 @@ class PlayerStaticOnGround(TimedEvent):
         return not self.params['entity'].onGround
 
     def delete(self):
-        if tuple(self.params['entity'].walking_vector) != (0, 0):
-            anim = 'walk'
-        else:
-            anim = 'static'
+        # don't apply if the animation was changed meanwhile
+        if (self.params['entity'].entity_skin.current_animation in
+                (self.params['anim_name'],
+                    self.params['anim_name']+'_upgraded')):
 
-        self.params['entity'].entity_skin.change_animation(
-                anim+self.params['entity'].upgraded*'_upgraded',
-                self.params['world'])
+            if tuple(self.params['entity'].walking_vector) != (0, 0):
+                anim = 'walk'
+            else:
+                anim = 'static'
+
+            self.params['entity'].entity_skin.change_animation(
+                    anim+self.params['entity'].upgraded*'_upgraded',
+                    self.params['world'])
 
 
 class Bounce(TimedEvent):
