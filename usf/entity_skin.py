@@ -217,6 +217,7 @@ class Entity_skin (object):
             self.animation_change = True
             params['world'] = game
             params['gametime'] = game is not None or 0
+            params['anim_name'] = anim_name
             self.add_events(anim_name, game, params)
 
             #logging.debug(self.vectors[anim_name])
