@@ -1,3 +1,6 @@
+Dépendances:
+python (>=2.5), python-pygame (>=1.7) et python-numpy (>=1.5) sont nécessaire pour jouer…
+
 == Linux ==
 Note: toutes les commandes suivantes sont à entrer dans un terminal, celui ci
       étant l'outil commun à toutes les distributions, si vous souhaitez

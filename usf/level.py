@@ -110,7 +110,7 @@ class Block (object):
     An abstraction class to define methods shared by some level objects.
     """
 
-    def __init__(self, position, texture):
+    def __init__(self, position, texture, levelname):
         """
         Not much to do here.
         """
@@ -162,7 +162,7 @@ class VectorBloc (Block):
 
     def __init__(self, rects, position, vector, relative, texture,
             server=False, levelname='biglevel'):
-        Block.__init__(self, position, texture)
+        Block.__init__(self, position, texture, levelname)
         self.rects = rects
         self.relative = relative
         self.vector = vector
@@ -196,7 +196,7 @@ class MovingPart (Block):
 
     def __init__(self, rects, texture, patterns, server=False,
             levelname="biglevel"):
-        Block.__init__(self, patterns[0]['position'], texture)
+        Block.__init__(self, patterns[0]['position'], texture, levelname)
         #logging.debug('moving block created')
         self.rects = rects
         self.patterns = patterns

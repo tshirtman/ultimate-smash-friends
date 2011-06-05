@@ -11,6 +11,8 @@ implementation of decorums for levels
 reworked controls implementation
 fixed crash with unfinished characters
 pep8 fixes, code cleanup...
+fixed errors in vertex events and staticonground events, it's now possible to do a smash-up without jumping
+pylint fixes
 
 Data
 ====
