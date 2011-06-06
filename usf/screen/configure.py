@@ -21,20 +21,22 @@ from screen import Screen
 from usf import widgets
 import copy
 
+from usf.widgets.box import VBox
+from usf.widgets.button import Button
 
 class configure(Screen):
     def init(self):
-        self.add(widgets.VBox())
+        self.add(VBox())
         self.set_name(_("configure"))
 
         #I18N:option screen
-        self.widget.add(widgets.Button(_('Audio')))
+        self.widget.add(Button(_('Audio')))
 
-        self.widget.add(widgets.Button(_('Screen')))
+        self.widget.add(Button(_('Screen')))
 
-        self.widget.add(widgets.Button(_('Keyboard')))
+        self.widget.add(Button(_('Keyboard')))
 
-        self.widget.add(widgets.Button(_('Back')), margin=100)
+        self.widget.add(Button(_('Back')), margin=100)
 
     def callback(self,action):
         if action.text == _('Audio'):

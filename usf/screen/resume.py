@@ -18,15 +18,16 @@
 ################################################################################
 
 from screen import Screen
-from usf import widgets
+from usf.widgets.button import Button
+from usf.widgets.box import VBox
 
 
 class resume(Screen):
     def init(self):
-        self.add(widgets.VBox())
-        self.widget.add(widgets.Button('Resume'))
-        self.widget.add(widgets.Button(_('Configure')))
-        self.widget.add(widgets.Button('Quit the game'))
+        self.add(VBox())
+        self.widget.add(Button('Resume'))
+        self.widget.add(Button(_('Configure')))
+        self.widget.add(Button('Quit the game'))
 
     def callback(self,action):
         if action.text == 'Resume':

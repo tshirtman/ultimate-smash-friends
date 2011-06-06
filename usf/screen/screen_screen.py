@@ -18,7 +18,13 @@
 ################################################################################
 
 from screen import Screen
-from usf import widgets
+from usf.widgets.box import VBox
+from usf.widgets.label import Label
+from usf.widgets.checkbox_text import TextCheckBox
+from usf.widgets.spinner import Spinner
+from usf.widgets.slider import Slider
+from usf.widgets.button import Button
+
 from usf.config import Config
 import pygame
 config = Config()
@@ -27,37 +33,37 @@ config = Config()
 class screen_screen(Screen):
 
     def init(self):
-        self.add(widgets.VBox())
+        self.add(VBox())
         self.set_name(_("screen configuration"))
         modes = []
         for resolution in pygame.display.list_modes():
             if resolution[0] >= 800:
                 modes.append(str(resolution[0]) + "x" + str(resolution[1]))
         modes.reverse()
-        self.resolution = widgets.Spinner(modes, 170)
+        self.resolution = Spinner(modes, 170)
         self.resolution.set_value(str(config.general['WIDTH']) + 'x'
                                     + str(config.general['HEIGHT']))
 
-        self.widget.add(widgets.Label(_('Screen resolution (requires a restart):')))
+        self.widget.add(Label(_('Screen resolution (requires a restart):')))
         self.widget.add(self.resolution)
 
-        self.fullscreen = widgets.TextCheckBox(_('Fullscreen:'))
+        self.fullscreen = TextCheckBox(_('Fullscreen:'))
 
         if config.general['FULLSCREEN']:
             self.fullscreen.set_value(True)
         self.widget.add(self.fullscreen)
-        self.widget.add(widgets.Label(_('Zoom sharpness:')), margin=25)
-        zoom = widgets.Slider('zoom_sharpness')
+        self.widget.add(Label(_('Zoom sharpness:')), margin=25)
+        zoom = Slider('zoom_sharpness')
         self.widget.add(zoom, margin=10, size=(220, 30))
         zoom.set_value(config.general['ZOOM_SHARPNESS']/5)
 
-        self.fps = widgets.TextCheckBox(_('Show FPS:'))
+        self.fps = TextCheckBox(_('Show FPS:'))
 
         if config.general['SHOW_FPS']:
             self.fps.set_value(True)
         self.widget.add(self.fps, margin=25)
 
-        self.widget.add(widgets.Button(_('Back')), margin=30)
+        self.widget.add(Button(_('Back')), margin=30)
 
     def callback(self,action):
         if action == self.resolution:

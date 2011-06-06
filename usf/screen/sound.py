@@ -18,7 +18,11 @@
 ################################################################################
 
 from screen import Screen
-from usf import widgets
+from usf.widgets.box import VBox
+from usf.widgets.slider import Slider
+from usf.widgets.label import Label
+from usf.widgets.button import Button
+
 from usf.config import Config
 
 config = Config()
@@ -26,17 +30,17 @@ config = Config()
 
 class sound(Screen):
     def init(self):
-        self.add(widgets.VBox())
-        self.widget.add(widgets.Label(_('Sound and effects')))
-        sound = widgets.Slider('sound_slider')
+        self.add(VBox())
+        self.widget.add(Label(_('Sound and effects')))
+        sound = Slider('sound_slider')
         self.widget.add(sound, margin=10, size=(220,30))
-        self.widget.add(widgets.Label(_('Music')))
-        music = widgets.Slider('music_slider')
+        self.widget.add(Label(_('Music')))
+        music = Slider('music_slider')
         self.widget.add(music, size=(220,30))
 
         music.set_value(config.audio['MUSIC_VOLUME'])
         sound.set_value(config.audio['SOUND_VOLUME'])
-        self.widget.add(widgets.Button(_('Back')), margin=30)
+        self.widget.add(Button(_('Back')), margin=30)
 
     def callback(self,action):
         if action.text == 'music_slider':

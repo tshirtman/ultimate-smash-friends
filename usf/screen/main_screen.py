@@ -22,16 +22,18 @@ from usf import widgets
 import copy
 import pygame
 
+from usf.widgets.box import VBox
+from usf.widgets.button import Button
 
 class main_screen(Screen):
     def init(self):
         self.set_name("ultimate smash friends")
-        self.add(widgets.VBox())
+        self.add(VBox())
 
-        self.widget.add(widgets.Button(_('Local game')))
-        self.widget.add(widgets.Button(_('Configure')))
-        self.widget.add(widgets.Button(_('Credits')))
-        self.widget.add(widgets.Button(_('Quit')))
+        self.widget.add(Button(_('Local game')))
+        self.widget.add(Button(_('Configure')))
+        self.widget.add(Button(_('Credits')))
+        self.widget.add(Button(_('Quit')))
 
     def callback(self,action):
         if action.text == _('Local game'):

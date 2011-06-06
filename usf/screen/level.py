@@ -23,7 +23,10 @@ import os
 import logging
 #our modules
 from screen import Screen
-from usf import widgets
+from usf.widgets.box import VBox
+from usf.widgets.button import Button
+from usf.widgets.coverflow import Coverflow
+
 from usf import loaders
 #config
 config = loaders.get_config()
@@ -32,7 +35,7 @@ config = loaders.get_config()
 class level(Screen):
 
     def init(self):
-        self.add(widgets.VBox())
+        self.add(VBox())
         basename = join(config.sys_data_dir, "test", "")
 
         coverflow_data = []
@@ -58,10 +61,10 @@ class level(Screen):
                 logging.debug(str(file) +" is not a valid level.")
                 pass
 
-        self.coverflow = widgets.Coverflow(coverflow_data)
+        self.coverflow = Coverflow(coverflow_data)
         self.widget.add(self.coverflow, size=(800, 275))
-        self.widget.add(widgets.Button(_('Go !')), margin_left=290)
-        self.widget.add(widgets.Button(_('Back')), size=(150, 40), margin_left=20, margin=20)
+        self.widget.add(Button(_('Go !')), margin_left=290)
+        self.widget.add(Button(_('Back')), size=(150, 40), margin_left=20, margin=20)
 
     def get_level(self):
         return self.coverflow.get_value()

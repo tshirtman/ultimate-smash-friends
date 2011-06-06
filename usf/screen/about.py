@@ -21,17 +21,20 @@ from screen import Screen
 from usf import widgets
 from usf import loaders
 
+from usf.widgets.box import VBox
+from usf.widgets.button import Button
+from usf.widgets.paragraph import Paragraph
 
 class about(Screen):
 
     def init(self):
         self.set_name(_("about"))
-        self.add(widgets.VBox())
+        self.add(VBox())
 
-        self.widget.add(widgets.Paragraph('CREDITS'),
+        self.widget.add(Paragraph('CREDITS'),
                         size=(490*loaders.get_config().general["WIDTH"]/800, 300*loaders.get_config().general["HEIGHT"]/600))
 
-        self.widget.add(widgets.Button(_('Back')),
+        self.widget.add(Button(_('Back')),
                         margin=55)
 
     def callback(self,action):

@@ -21,7 +21,14 @@ from screen import Screen
 from usf.config import Config
 config = Config()
 
-from usf import widgets, entity_skin
+from usf.widgets.box import VBox, HBox
+from usf.widgets.button import Button
+from usf.widgets.image import Image
+from usf.widgets.spinner import Spinner
+from usf.widgets.label import Label
+from usf.widgets.checkbox_text import TextCheckBox
+
+from usf import entity_skin
 import os
 from usf.game import Game
 from os.path import join
@@ -68,22 +75,22 @@ class characters(Screen):
             except IOError, e:
                 pass
 
-        self.add(widgets.VBox())
+        self.add(VBox())
 
         self.checkboxes_ai = []
         self.portraits = []
         self.player_spinner = []
-        self.player_vbox = [widgets.VBox(), widgets.VBox(), widgets.VBox(), widgets.VBox()]
+        self.player_vbox = [VBox(), VBox(), VBox(), VBox()]
 
         for i in range(0,4):
             #I18N: Artificial Intelligence
-            self.checkboxes_ai.append(widgets.TextCheckBox(_("AI:")))
-            self.portraits.append(widgets.Image(
+            self.checkboxes_ai.append(TextCheckBox(_("AI:")))
+            self.portraits.append(Image(
                     join(self.game_data['character_file'][0], "portrait.png")))
 
-            self.player_spinner.append(widgets.Spinner(self.character))
+            self.player_spinner.append(Spinner(self.character))
             #I18N: %s is the player number, it can be Player 1, Player2...
-            self.player_vbox[i].add(widgets.Label(_("Player %s").replace("%s", str(i+1))))
+            self.player_vbox[i].add(Label(_("Player %s").replace("%s", str(i+1))))
             self.player_vbox[i].add(self.player_spinner[-1])
             self.player_vbox[i].add(self.portraits[-1],
                 margin_left=65,
@@ -92,19 +99,19 @@ class characters(Screen):
             self.player_vbox[i].add(self.checkboxes_ai[-1], margin_left=(180-self.checkboxes_ai[-1].width)/2)
 
 
-        hbox = widgets.HBox()
+        hbox = HBox()
         #adding the two box which contains the spinner and the name of the characters
         for vbox in self.player_vbox:
             hbox.add(vbox, margin=20)
         self.widget.add(hbox, margin=50)
 
         #next button to go to the level screen
-        self.widget.add(widgets.Button(_("Next")),
+        self.widget.add(Button(_("Next")),
             margin=83,
             align="center")
 
         #back button to come back to main screen
-        self.widget.add(widgets.Button(_('Back')),
+        self.widget.add(Button(_('Back')),
             margin=20,
             align="center")
 

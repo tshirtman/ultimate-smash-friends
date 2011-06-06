@@ -18,6 +18,12 @@
 # along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.#
 ################################################################################
 
+'''
+The game module is centered about the core of the game, the Game class initiate
+and update all elements of the game, namely level, entities and events.
+
+'''
+
 # standards import
 import pygame
 import time

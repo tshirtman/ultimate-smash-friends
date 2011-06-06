@@ -17,6 +17,12 @@
 # along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.#
 ################################################################################
 
+'''
+This module provide the Entity classe, that represent any physical object in
+the game, character or item.
+
+'''
+
 # python modules imports.
 import pygame
 import math

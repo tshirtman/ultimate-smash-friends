@@ -38,7 +38,8 @@ from usf.game import Game
 
 from usf.skin import Skin
 
-from usf.widgets import optimize_size
+from usf.widgets.widget import optimize_size
+
 from usf.font import fonts
 import usf.screen as screen
 
