@@ -109,12 +109,16 @@ class PreciseTimedAnimation(object):
         self._start_time = gametime
         self.playing = 1
 
-    def frame(self, time):
+    def frame(self, anim_time):
         """
         return the current frame depending on the time since the beggining of
         the animation.
         """
-        return filter(lambda x: x.time/1000.0 <= time, self.frames)[-1]
+        try:
+            return filter(lambda x: x.time/1000.0 <= anim_time, self.frames)[-1]
+
+        except IndexError:
+            return self.frames[0]
 
     def update(self, gametime, reverse=False, server=False):
         """
