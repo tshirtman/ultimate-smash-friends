@@ -132,14 +132,15 @@ class Entity_skin (object):
             events = []
             sounds = []
             vectors = []
+            trails = []
 
             for event in movement.findall('vector'):
                 #logging.debug('vector found')
                 x, y = [int(n) for n in event.attrib['vector'].split(',')]
                 vectors.append(
                         (
-                        (x, y),
-                         int(event.attrib['time'])))
+                            (x, y),
+                            int(event.attrib['time'])))
 
             self.vectors[movement.attrib['name']] = vectors
 
@@ -167,13 +168,18 @@ class Entity_skin (object):
                             dir_name,
                             frame.attrib['image'])
 
+                trails = (
+                        'trails' in frame.attrib and
+                        frame.attrib['trails'].split(',') or False)
+
                 frames.append(
                         Frame(
                             image,
                             frame.attrib['time'],
                             ('hardshape' in frame.attrib
                              and frame.attrib['hardshape']
-                             or self.hardshape)))
+                             or self.hardshape),
+                            trails=trails))
 
                 for agressiv in frame.findall('agressiv-point'):
                     coords = agressiv.attrib['coords'].split(',')

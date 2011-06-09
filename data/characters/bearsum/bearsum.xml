@@ -126,6 +126,7 @@ shield_center="20 40"
         time="800"
         image="jump1.png"
         hardshape="10 5 28 51"
+        trails="jump1.png,jump1.png,jump1.png"
         > </frame>
     </movement>
     <movement name="take"

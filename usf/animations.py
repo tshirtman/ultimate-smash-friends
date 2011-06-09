@@ -44,13 +44,14 @@ class Frame (object):
       this state, this combine with the current direction/speed of the entity.
     """
 
-    def __init__(self, image, gametime, hardshape):
+    def __init__(self, image, gametime, hardshape, trails=None):
         """
         Load a frame from an image, the current gametime, the deplacement/s of
         the player in this frame, it's hardshape.
 
         """
         self.image = image
+        self.trails = trails
         self.time = int(gametime)
         if type(hardshape) is str:
             self.hardshape = pygame.Rect([int(i) for i in hardshape.split(' ')])
@@ -86,9 +87,8 @@ class PreciseTimedAnimation(object):
     entity skin.
     """
 
-    def __init__(self, frames, attribs, server=False, trails=None):
+    def __init__(self, frames, attribs, server=False):
         self.frames = frames
-        self.trails = trails
         self.image = frames[0].image
         self.rect = usf.loaders.image(self.image, nodisplay=server)[1]
         self._start_time = 0
@@ -137,6 +137,7 @@ class PreciseTimedAnimation(object):
             else:
                 frame = self.frame(gametime - self._start_time)
                 self.image = frame.image
+                self.trails = frame.trails
 
                 if reverse:
                     self.agressivpoints = frame.agressivpoints_reverse

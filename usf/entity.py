@@ -107,6 +107,7 @@ class Entity (object):
         self._visible = visible
         self._onGround = False
         self._physics = physics
+        self.old_pos = []
 
         if entity_skinname is not None:
             self._name = entity_skinname.split(os.sep)[-1]
@@ -807,9 +808,11 @@ class Entity (object):
                     int(place[1]*zoom)+coords[1])
 
             self.draw_debug(real_coords, zoom, surface, debug_params)
-            if self.entity_skin.animation.trails:
+            if self.entity_skin.animation.trails and self.old_pos:
+                print self.old_pos, self.entity_skin.animation.trails
                 for i, p in (
-                        self.entity_skin.animation.trails[len(self.old_pos) - 1: : -1],
+                        self.entity_skin.animation.trails[
+                            len(self.old_pos) - 1: : -1],
                         reversed(self.old_pos)):
                     surface.blit(
                           loaders.image(i, reversed=sef.reversed, zoom=zoom)[0],
