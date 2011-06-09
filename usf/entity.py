@@ -809,16 +809,13 @@ class Entity (object):
 
             self.draw_debug(real_coords, zoom, surface, debug_params)
             if self.entity_skin.animation.trails and self.old_pos:
-                print self.old_pos, self.entity_skin.animation.trails
-                for i, p in (
-                        self.entity_skin.animation.trails[
-                            len(self.old_pos) - 1: : -1],
-                        reversed(self.old_pos)):
+                for i, (x,y) in enumerate(reversed(self.old_pos)):
+                    img = self.entity_skin.animation.trails[len(self.old_pos)-(i+1)]
                     surface.blit(
-                          loaders.image(i, reversed=sef.reversed, zoom=zoom)[0],
+                          loaders.image(img, reversed=self.reversed, zoom=zoom)[0],
                           (
-                              int(p[0] * zoom) + coords[0],
-                              int(p[1] * zoom) + coords[1]))
+                              int(x * zoom) + coords[0] - (not self.reversed and self.hardshape[0] or 0),
+                              int(y * zoom) + coords[1] - self.hardshape[1]))
 
             skin_image = loaders.image(
                     self.entity_skin.animation.image,
@@ -907,6 +904,11 @@ class Entity (object):
         Global function to update everything about entity, dt is the time
         ellapsed since the precedent frame, t is the current time.
         """
+        self.old_pos = [self.rect[:2],] + self.old_pos
+        if (not self.entity_skin.animation.trails or len(self.old_pos) >
+                len(self.entity_skin.animation.trails)):
+            self.old_pos.pop()
+
         if self.present:
             self.entity_skin.update(t, self.reversed, self.upgraded)
             self.update_physics(dt, game)

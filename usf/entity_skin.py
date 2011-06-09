@@ -170,7 +170,10 @@ class Entity_skin (object):
 
                 trails = (
                         'trails' in frame.attrib and
-                        frame.attrib['trails'].split(',') or False)
+                        [os.path.join(
+                            config.sys_data_dir,
+                            dir_name, x) for x in
+                            frame.attrib['trails'].split(',')] or False)
 
                 frames.append(
                         Frame(
