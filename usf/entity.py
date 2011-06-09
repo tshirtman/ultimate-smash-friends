@@ -807,6 +807,15 @@ class Entity (object):
                     int(place[1]*zoom)+coords[1])
 
             self.draw_debug(real_coords, zoom, surface, debug_params)
+            if self.entity_skin.animation.trails:
+                for i, p in (
+                        self.entity_skin.animation.trails[len(self.old_pos) - 1: : -1],
+                        reversed(self.old_pos)):
+                    surface.blit(
+                          loaders.image(i, reversed=sef.reversed, zoom=zoom)[0],
+                          (
+                              int(p[0] * zoom) + coords[0],
+                              int(p[1] * zoom) + coords[1]))
 
             skin_image = loaders.image(
                     self.entity_skin.animation.image,

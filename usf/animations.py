@@ -69,6 +69,7 @@ class Frame (object):
         self.agressivpoints = []
         self.agressivpoints_reverse = []
 
+
     def add_agressiv_point(self, (c_x, c_y), (vect_x, vect_y)):
         """
         add an agressive points of coords, and vector specified, to the list of
@@ -85,8 +86,9 @@ class PreciseTimedAnimation(object):
     entity skin.
     """
 
-    def __init__(self, frames, attribs, server=False):
+    def __init__(self, frames, attribs, server=False, trails=None):
         self.frames = frames
+        self.trails = trails
         self.image = frames[0].image
         self.rect = usf.loaders.image(self.image, nodisplay=server)[1]
         self._start_time = 0
