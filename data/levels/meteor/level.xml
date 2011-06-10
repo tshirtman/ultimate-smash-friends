@@ -15,7 +15,7 @@
     <entry-point
         coords="1350 350">
     </entry-point>
-    
+
     <block
     coords="62 301 35 48"
     ></block>
@@ -28,7 +28,7 @@
     <block
     coords="221 289 26 51"
     ></block>
-    
+
     <block
     coords="247 402 91 127"
     ></block>
@@ -49,8 +49,8 @@
     ></block>
     <block
     coords="657 449 20 66"
-    ></block>    
-    
+    ></block>
+
     <block
     coords="581 217 46 77"
     ></block>
@@ -59,8 +59,8 @@
     ></block>
     <block
     coords="683 210 49 96"
-    ></block>        
-    
+    ></block>
+
     <vector-block
     texture="meteor-rock-left.png"
     vector="0 -1000"
@@ -72,7 +72,7 @@
         ></rect>
         <rect
         coords="71 0 58 58"
-        ></rect> 
+        ></rect>
     </vector-block>
     <vector-block
     texture="meteor-rock-center.png"
@@ -88,6 +88,6 @@
         ></rect>
         <rect
         coords="71 13 47 40"
-        ></rect>        
+        ></rect>
     </vector-block>
 </map>
