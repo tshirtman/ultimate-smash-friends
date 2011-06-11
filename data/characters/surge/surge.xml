@@ -36,51 +36,45 @@ shield_center="20 40"
         />
     </movement>
     <movement name="walk"
-    duration="900"
+    duration="500"
     repeat="-1"
     >
         <vector
         time="0"
-        vector="200,2"/>
+        vector="400,2"/>
         <vector
         time="200"
-        vector="200,2"/>
+        vector="400,2"/>
         <vector
         time="400"
-        vector="200,2"/>
-        <vector
-        time="600"
-        vector="200,2"/>
-        <vector
-        time="800"
-        vector="200,2"/>
+        vector="400,2"/>
         <frame
         time="0"
         image="walk1.png"
         hardshape="10 15 38 51"
         />
         <frame
-        time="150"
+        time="100"
         image="walk2.png"
         hardshape="10 15 37 51"
         />
         <frame
-        time="300"
+        time="200"
         image="walk3.png"
         hardshape="10 15 37 51"
         />
         <frame
-        time="450"
+        time="300"
         image="walk4.png"
         hardshape="10 15 35 51"
         />
         <frame
-        time="600"
+        time="400"
         image="walk5.png"
         hardshape="10 15 35 52"
         />
         <frame
-        time="750"
+        time="400"
         image="walk6.png"
         hardshape="10 15 37 52"
         />
@@ -802,36 +796,45 @@ shield_center="20 40"
         />
     </movement>
     <movement name="walk_upgraded"
-    duration="900"
+    duration="500"
     repeat="-1"
     >
+        <vector
+        time="0"
+        vector="400,2"/>
+        <vector
+        time="200"
+        vector="400,2"/>
+        <vector
+        time="400"
+        vector="400,2"/>
         <frame
         time="0"
-        image="walk1-upgraded.png"
+        image="walk1.png"
         hardshape="10 15 38 51"
         />
         <frame
-        time="150"
+        time="100"
         image="walk2-upgraded.png"
         hardshape="10 15 37 51"
         />
         <frame
-        time="300"
+        time="200"
         image="walk3-upgraded.png"
         hardshape="10 15 37 51"
         />
         <frame
-        time="450"
+        time="300"
         image="walk4-upgraded.png"
         hardshape="10 15 35 51"
         />
         <frame
-        time="600"
+        time="400"
         image="walk5-upgraded.png"
         hardshape="10 15 35 52"
         />
         <frame
-        time="750"
+        time="400"
         image="walk6-upgraded.png"
         hardshape="10 15 37 52"
         />

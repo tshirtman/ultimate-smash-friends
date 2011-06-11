@@ -65,6 +65,7 @@ def key_down_left(the_key, player, game_instance):
     """ manage incidence on walk animation if the player push down his left key
     """
     if "_LEFT" in the_key:
+        print player.onGround
         if player.onGround:
             player.entity_skin.change_animation(
                 'walk',
