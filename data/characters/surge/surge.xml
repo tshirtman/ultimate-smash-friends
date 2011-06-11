@@ -810,7 +810,7 @@ shield_center="20 40"
         vector="400,2"/>
         <frame
         time="0"
-        image="walk1.png"
+        image="walk1-upgraded.png"
         hardshape="10 15 38 51"
         />
         <frame
