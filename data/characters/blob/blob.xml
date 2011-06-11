@@ -134,7 +134,7 @@
         >
             <agressiv-point
             coords="39,4"
-            vector="128,-52"
+            vector="32,-13"
             ></agressiv-point>
         </frame>
         <frame
@@ -144,11 +144,11 @@
         >
             <agressiv-point
             coords="39,4"
-            vector="128,-52"
+            vector="32,-13"
             ></agressiv-point>
             <agressiv-point
             coords="60,2"
-            vector="210,-32"
+            vector="52,-8"
             ></agressiv-point>
         </frame>
         <frame
@@ -158,11 +158,11 @@
         >
             <agressiv-point
             coords="39,4"
-            vector="128,-52"
+            vector="32,-13"
             ></agressiv-point>
             <agressiv-point
             coords="60,2"
-            vector="210,-32"
+            vector="52,-8"
             ></agressiv-point>
         </frame>
         <frame
@@ -172,15 +172,15 @@
         >
             <agressiv-point
             coords="39,4"
-            vector="128,-52"
+            vector="32,-13"
             ></agressiv-point>
             <agressiv-point
             coords="60,2"
-            vector="210,-32"
+            vector="52,-8"
             ></agressiv-point>
             <agressiv-point
             coords="83,3"
-            vector="250,-12"
+            vector="62,-3"
             ></agressiv-point>
         </frame>
     </movement>
@@ -420,7 +420,7 @@
         >
             <agressiv-point
             coords="50,14"
-            vector="64,-30"/>
+            vector="16,-7"/>
         </frame>
         <frame
         time="750"
@@ -429,7 +429,7 @@
         >
             <agressiv-point
             coords="67,12"
-            vector="122,-62"
+            vector="30,-15"
             />
         </frame>
 
@@ -460,7 +460,7 @@
         >
             <agressiv-point
             coords="30,7"
-            vector="60,-58"
+            vector="15,-14"
             ></agressiv-point>
         </frame>
         <frame
@@ -470,7 +470,7 @@
         >
             <agressiv-point
             coords="33,7"
-            vector="110,-80"
+            vector="27,-20"
             ></agressiv-point>
         </frame>
 
@@ -494,16 +494,16 @@
         >
             <agressiv-point
             coords="10,23"
-            vector="-20,118"
+            vector="-5,29"
             ></agressiv-point>
 
             <agressiv-point
             coords="41,21"
-            vector="20,118"
+            vector="5,29"
             ></agressiv-point>
             <agressiv-point
             coords="24,19"
-            vector="0,206"
+            vector="0,51"
             ></agressiv-point>
 
         </frame>
@@ -514,16 +514,16 @@
         >
             <agressiv-point
             coords="10,23"
-            vector="-20,118"
+            vector="-5,29"
             ></agressiv-point>
 
             <agressiv-point
             coords="41,21"
-            vector="20,118"
+            vector="5,29"
             ></agressiv-point>
             <agressiv-point
             coords="24,19"
-            vector="0,206"
+            vector="0,51"
             ></agressiv-point>
 
         </frame>
@@ -535,23 +535,23 @@
         >
             <agressiv-point
             coords="10,23"
-            vector="-20,118"
+            vector="-5,29"
             ></agressiv-point>
             <agressiv-point
             coords="41,21"
-            vector="20,118"
+            vector="5,29"
             ></agressiv-point>
             <agressiv-point
             coords="37,18"
-            vector="144,-28"
+            vector="36,-7"
             ></agressiv-point>
             <agressiv-point
             coords="19,22"
-            vector="-122,-50"
+            vector="-30,-12"
             ></agressiv-point>
             <agressiv-point
             coords="24,19"
-            vector="0,206"
+            vector="0,51"
             ></agressiv-point>
 
         </frame>
@@ -600,7 +600,7 @@
         >
             <agressiv-point
             coords="12,16"
-            vector="0,-118"
+            vector="0,-29"
             ></agressiv-point>
         </frame>
         <frame
@@ -610,7 +610,7 @@
         >
             <agressiv-point
             coords="12,7"
-            vector="0,-118"
+            vector="0,-29"
             ></agressiv-point>
         </frame>
         <frame
@@ -620,15 +620,15 @@
         >
             <agressiv-point
             coords="12,7"
-            vector="0,-218"
+            vector="0,-54"
             ></agressiv-point>
             <agressiv-point
             coords="14,22"
-            vector="24,-178"
+            vector="6,-44"
             ></agressiv-point>
             <agressiv-point
             coords="10,22"
-            vector="-24,-178"
+            vector="-6,-44"
             ></agressiv-point>
         </frame>
         <frame
@@ -638,7 +638,7 @@
         >
             <agressiv-point
             coords="13,7"
-            vector="0,-118"
+            vector="0,-29"
             ></agressiv-point>
         </frame>
         <frame
@@ -678,7 +678,7 @@
         >
             <agressiv-point
             coords="12,16"
-            vector="0,-118"
+            vector="0,-29"
             ></agressiv-point>
         </frame>
         <frame
@@ -688,7 +688,7 @@
         >
             <agressiv-point
             coords="12,7"
-            vector="0,-118"
+            vector="0,-29"
             ></agressiv-point>
         </frame>
         <frame
@@ -698,15 +698,15 @@
         >
             <agressiv-point
             coords="12,7"
-            vector="0,-218"
+            vector="0,-54"
             ></agressiv-point>
             <agressiv-point
             coords="14,22"
-            vector="24,-178"
+            vector="6,-44"
             ></agressiv-point>
             <agressiv-point
             coords="10,22"
-            vector="-24,-178"
+            vector="-6,-44"
             ></agressiv-point>
         </frame>
         <frame
@@ -716,7 +716,7 @@
         >
             <agressiv-point
             coords="13,7"
-            vector="0,-118"
+            vector="0,-29"
             ></agressiv-point>
         </frame>
         <frame
@@ -913,7 +913,7 @@
         >
             <agressiv-point
             coords="39,4"
-            vector="128,-52"
+            vector="32,-13"
             ></agressiv-point>
         </frame>
         <frame
@@ -923,11 +923,11 @@
         >
             <agressiv-point
             coords="39,4"
-            vector="128,-52"
+            vector="32,-13"
             ></agressiv-point>
             <agressiv-point
             coords="60,2"
-            vector="210,-32"
+            vector="52,-8"
             ></agressiv-point>
         </frame>
         <frame
@@ -937,11 +937,11 @@
         >
             <agressiv-point
             coords="39,4"
-            vector="128,-52"
+            vector="32,-13"
             ></agressiv-point>
             <agressiv-point
             coords="60,2"
-            vector="210,-32"
+            vector="52,-8"
             ></agressiv-point>
         </frame>
         <frame
@@ -951,15 +951,15 @@
         >
             <agressiv-point
             coords="39,4"
-            vector="128,-52"
+            vector="32,-13"
             ></agressiv-point>
             <agressiv-point
             coords="60,2"
-            vector="210,-32"
+            vector="52,-8"
             ></agressiv-point>
             <agressiv-point
             coords="83,3"
-            vector="250,-12"
+            vector="62,-3"
             ></agressiv-point>
         </frame>
     </movement>
@@ -1195,7 +1195,7 @@
         >
             <agressiv-point
             coords="50,14"
-            vector="64,-30"/>
+            vector="16,-7"/>
         </frame>
         <frame
         time="750"
@@ -1204,7 +1204,7 @@
         >
             <agressiv-point
             coords="67,12"
-            vector="122,-62"
+            vector="30,-15"
             />
         </frame>
 
@@ -1236,7 +1236,7 @@
         >
             <agressiv-point
             coords="30,7"
-            vector="60,-58"
+            vector="15,-14"
             ></agressiv-point>
         </frame>
         <frame
@@ -1246,7 +1246,7 @@
         >
             <agressiv-point
             coords="33,7"
-            vector="110,-80"
+            vector="27,-20"
             ></agressiv-point>
         </frame>
 
@@ -1270,16 +1270,16 @@
         >
             <agressiv-point
             coords="10,23"
-            vector="-20,118"
+            vector="-5,29"
             ></agressiv-point>
 
             <agressiv-point
             coords="41,21"
-            vector="20,118"
+            vector="5,29"
             ></agressiv-point>
             <agressiv-point
             coords="24,19"
-            vector="0,206"
+            vector="0,51"
             ></agressiv-point>
 
         </frame>
@@ -1290,16 +1290,16 @@
         >
             <agressiv-point
             coords="10,23"
-            vector="-20,118"
+            vector="-5,29"
             ></agressiv-point>
 
             <agressiv-point
             coords="41,21"
-            vector="20,118"
+            vector="5,29"
             ></agressiv-point>
             <agressiv-point
             coords="24,19"
-            vector="0,206"
+            vector="0,51"
             ></agressiv-point>
 
         </frame>
@@ -1311,23 +1311,23 @@
         >
             <agressiv-point
             coords="10,23"
-            vector="-20,118"
+            vector="-5,29"
             ></agressiv-point>
             <agressiv-point
             coords="41,21"
-            vector="20,118"
+            vector="5,29"
             ></agressiv-point>
             <agressiv-point
             coords="37,18"
-            vector="144,-28"
+            vector="36,-7"
             ></agressiv-point>
             <agressiv-point
             coords="19,22"
-            vector="-122,-50"
+            vector="-30,-12"
             ></agressiv-point>
             <agressiv-point
             coords="24,19"
-            vector="0,206"
+            vector="0,51"
             ></agressiv-point>
 
         </frame>
@@ -1376,7 +1376,7 @@
         >
             <agressiv-point
             coords="12,16"
-            vector="0,-118"
+            vector="0,-29"
             ></agressiv-point>
         </frame>
         <frame
@@ -1386,7 +1386,7 @@
         >
             <agressiv-point
             coords="12,7"
-            vector="0,-118"
+            vector="0,-29"
             ></agressiv-point>
         </frame>
         <frame
@@ -1396,15 +1396,15 @@
         >
             <agressiv-point
             coords="12,7"
-            vector="0,-218"
+            vector="0,-54"
             ></agressiv-point>
             <agressiv-point
             coords="14,22"
-            vector="24,-178"
+            vector="6,-44"
             ></agressiv-point>
             <agressiv-point
             coords="10,22"
-            vector="-24,-178"
+            vector="-6,-44"
             ></agressiv-point>
         </frame>
         <frame
@@ -1414,7 +1414,7 @@
         >
             <agressiv-point
             coords="13,7"
-            vector="0,-118"
+            vector="0,-29"
             ></agressiv-point>
         </frame>
         <frame
@@ -1454,7 +1454,7 @@
         >
             <agressiv-point
             coords="12,16"
-            vector="0,-118"
+            vector="0,-29"
             ></agressiv-point>
         </frame>
         <frame
@@ -1464,7 +1464,7 @@
         >
             <agressiv-point
             coords="12,7"
-            vector="0,-118"
+            vector="0,-29"
             ></agressiv-point>
         </frame>
         <frame
@@ -1474,15 +1474,15 @@
         >
             <agressiv-point
             coords="12,7"
-            vector="0,-218"
+            vector="0,-54"
             ></agressiv-point>
             <agressiv-point
             coords="14,22"
-            vector="24,-178"
+            vector="6,-44"
             ></agressiv-point>
             <agressiv-point
             coords="10,22"
-            vector="-24,-178"
+            vector="-6,-44"
             ></agressiv-point>
         </frame>
         <frame
@@ -1492,7 +1492,7 @@
         >
             <agressiv-point
             coords="13,7"
-            vector="0,-118"
+            vector="0,-29"
             ></agressiv-point>
         </frame>
         <frame

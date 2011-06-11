@@ -84,22 +84,22 @@
         <frame
         time="0"
         image="jump1.png"
-	hardshape="8 14 33 50"
+        hardshape="8 14 33 50"
         > </frame>
         <frame
         time="100"
         image="jump2.png"
-	hardshape="8 10 33 50"
+        hardshape="8 10 33 50"
         > </frame>
         <frame
         time="900"
         image="jump3.png"
-	hardshape="8 10 33 61"
+        hardshape="8 10 33 61"
         > </frame>
         <frame
         time="1200"
         image="jump4.png"
-	hardshape="8 10 33 61"
+        hardshape="8 10 33 61"
         > </frame>
         <frame
         time="1400"
@@ -121,17 +121,17 @@
         <frame
         time="0"
         image="roll1.png"
-	hardshape="4 10 33 50"
+        hardshape="4 10 33 50"
         > </frame>
         <frame
         time="100"
         image="kick2.png"
-	hardshape="4 10 33 55"
+        hardshape="4 10 33 55"
         > </frame>
         <frame
         time="300"
         image="jump3.png"
-	hardshape="6 10 33 60"
+        hardshape="6 10 33 60"
         > </frame>
     </movement>
     <movement name="smash-straight"
@@ -145,11 +145,11 @@
         <frame
         time="200"
         image="smash-straight2.png"
-	hardshape="4 10 33 51"
+        hardshape="4 10 33 51"
         >
             <agressiv-point
             coords="59,33"
-            vector="500,-300"
+            vector="125,-75"
             ></agressiv-point>
         </frame>
     </movement>
@@ -174,7 +174,7 @@
         >
             <agressiv-point
             coords="50,38"
-            vector="300,-30"
+            vector="75,-7"
             ></agressiv-point>
         </frame>
         <frame
@@ -189,7 +189,7 @@
         >
             <agressiv-point
             coords="50,38"
-            vector="300,-30"
+            vector="75,-7"
             ></agressiv-point>
         </frame>
     </movement>
@@ -214,7 +214,7 @@
         image="smash-up2.png"
         > <agressiv-point
             coords="48,20"
-            vector="100,-800"
+            vector="25,-200"
             ></agressiv-point>
         </frame>
         <frame
@@ -235,7 +235,7 @@
         image="smash-up2.png"
         > <agressiv-point
             coords="48,20"
-            vector="100,-800"
+            vector="25,-200"
             ></agressiv-point>
         </frame>
         <frame
@@ -269,7 +269,7 @@
         hardshape= "8 0 22 48"
         > <agressiv-point
             coords="28,41"
-            vector="300,-10"
+            vector="75,-2"
             ></agressiv-point>
         </frame>
     </movement-->
@@ -321,14 +321,14 @@
     duration="500"
     repeat="0"
     >
-    	<vector
-	time="200"
-	vector="50,0"
-	/>
-    	<vector
-	time="300"
-	vector="70,0"
-	/>
+        <vector
+        time="200"
+        vector="50,0"
+        />
+        <vector
+        time="300"
+        vector="70,0"
+        />
         <frame
         time="0"
         image="roll1.png"
@@ -397,7 +397,7 @@
         >
             <agressiv-point
             coords="44,35"
-            vector="100,-100"
+            vector="25,-25"
             ></agressiv-point>
         </frame>
         <frame
@@ -412,7 +412,7 @@
         >
             <agressiv-point
             coords="44,35"
-            vector="100,-100"
+            vector="25,-25"
             ></agressiv-point>
         </frame>
     </movement>
@@ -428,27 +428,27 @@
         time="100"
         vector="0,1000"
         ></vector>
-	<vector
-	time="200"
-	vector="100,200"
-	></vector>
+        <vector
+        time="200"
+        vector="100,200"
+        ></vector>
         <frame
         time="0"
         image="jump1.png"
-	hardshape="5 11 33 54"
+        hardshape="5 11 33 54"
         > </frame>
         <frame
         time="200"
         image="jump-kick.png"
-	hardshape="5 11 33 60"
+        hardshape="5 11 33 60"
         >
             <agressiv-point
             coords="51,35"
-            vector="30,-20"
+            vector="7,-5"
             ></agressiv-point>
             <agressiv-point
             coords="37,42"
-            vector="30,-10"
+            vector="7,-2"
             ></agressiv-point>
         </frame>
     </movement>
@@ -493,22 +493,22 @@
         <frame
         time="0"
         image="walk1-upgraded.png"
-	hardshape="8 14 33 54"
+        hardshape="8 14 33 54"
         > </frame>
         <frame
         time="100"
         image="walk2-upgraded.png"
-	hardshape="8 14 33 53"
+        hardshape="8 14 33 53"
         > </frame>
         <frame
         time="200"
         image="walk3-upgraded.png"
-	hardshape="8 14 33 54"
+        hardshape="8 14 33 54"
         > </frame>
         <frame
         time="300"
         image="walk4-upgraded.png"
-	hardshape="8 14 33 53"
+        hardshape="8 14 33 53"
         > </frame>
     </movement>
     <movement name="jump_upgraded"
@@ -526,22 +526,22 @@
         <frame
         time="0"
         image="jump1-upgraded.png"
-	hardshape="8 12 33 56"
+        hardshape="8 12 33 56"
         > </frame>
         <frame
         time="100"
         image="jump2-upgraded.png"
-	hardshape="8 10 33 56"
+        hardshape="8 10 33 56"
         > </frame>
         <frame
         time="900"
         image="jump3-upgraded.png"
-	hardshape="8 10 33 64"
+        hardshape="8 10 33 64"
         > </frame>
         <frame
         time="1200"
         image="jump4-upgraded.png"
-	hardshape="8 10 33 64"
+        hardshape="8 10 33 64"
         > </frame>
         <frame
         time="1400"
@@ -563,17 +563,17 @@
         <frame
         time="0"
         image="roll1-upgraded.png"
-	hardshape="4 10 33 53"
+        hardshape="4 10 33 53"
         > </frame>
         <frame
         time="100"
         image="kick2-upgraded.png"
-	hardshape="6 10 33 58"
+        hardshape="6 10 33 58"
         > </frame>
         <frame
         time="100"
         image="jump3-upgraded.png"
-	hardshape="8 13 33 61"
+        hardshape="8 13 33 61"
         > </frame>
     </movement>
     <movement name="smash-straight_upgraded"
@@ -583,16 +583,16 @@
         <frame
         time="0"
         image="smash-straight1-upgraded.png"
-	hardshape="7 10 33 57"
+        hardshape="7 10 33 57"
         > </frame>
         <frame
         time="200"
         image="smash-straight2-upgraded.png"
-	hardshape="4 10 33 56"
+        hardshape="4 10 33 56"
         >
             <agressiv-point
             coords="59,33"
-            vector="500,-300"
+            vector="125,-75"
             ></agressiv-point>
         </frame>
     </movement>
@@ -617,7 +617,7 @@
         >
             <agressiv-point
             coords="50,38"
-            vector="300,-30"
+            vector="75,-7"
             ></agressiv-point>
         </frame>
         <frame
@@ -632,7 +632,7 @@
         >
             <agressiv-point
             coords="50,38"
-            vector="300,-30"
+            vector="75,-7"
             ></agressiv-point>
         </frame>
     </movement>
@@ -659,7 +659,7 @@
         vector="0,70"
         > <agressiv-point
             coords="48,20"
-            vector="100,-800"
+            vector="25,-200"
             ></agressiv-point>
         </frame>
         <frame
@@ -680,7 +680,7 @@
         image="smash-up2-upgraded.png"
         > <agressiv-point
             coords="48,20"
-            vector="100,-800"
+            vector="25,-200"
             ></agressiv-point>
         </frame>
         <frame
@@ -715,7 +715,7 @@
         hardshape= "8 0 22 48"
         > <agressiv-point
             coords="28,41"
-            vector="300,-10"
+            vector="75,-2"
             ></agressiv-point>
         </frame>
     </movement-->
@@ -761,21 +761,21 @@
         <frame
         time="0"
         image="pickup-upgraded.png"
-	hardshape="6 11 33 50"
+        hardshape="6 11 33 50"
         > </frame>
     </movement>
     <movement name="roll_upgraded"
     duration="500"
     repeat="0"
     >
-    	<vector
-	time="200"
-	vector="50,0"
-	> </vector>
-	<vector
-	time="300"
-	vector="70,0"
-	> </vector>
+        <vector
+        time="200"
+        vector="50,0"
+        > </vector>
+        <vector
+        time="300"
+        vector="70,0"
+        > </vector>
         <frame
         time="0"
         image="roll1-upgraded.png"
@@ -836,12 +836,12 @@
         time="100"
         image="kick2-upgraded.png"
         hardshape="5 13 33 56"
-	>
-		<agressiv-point
-		coords="29,52"
-		vector="52,-16"
-		></agressiv-point>
-	</frame>
+        >
+                <agressiv-point
+                coords="29,52"
+                vector="13,-4"
+                ></agressiv-point>
+        </frame>
         <frame
         time="200"
         image="kick3-upgraded.png"
@@ -849,7 +849,7 @@
         >
             <agressiv-point
             coords="48,37"
-            vector="100,-100"
+            vector="25,-25"
             ></agressiv-point>
         </frame>
         <frame
@@ -857,11 +857,11 @@
         image="kick2-upgraded.png"
         hardshape="5 13 33 56"
         >
-		<agressiv-point
-		coords="29,52"
-		vector="52,-16"
-		></agressiv-point>
-	 </frame>
+                <agressiv-point
+                coords="29,52"
+                vector="13,-4"
+                ></agressiv-point>
+         </frame>
         <frame
         time="400"
         image="kick3-upgraded.png"
@@ -869,7 +869,7 @@
         >
             <agressiv-point
             coords="48,37"
-            vector="100,-100"
+            vector="25,-25"
             ></agressiv-point>
         </frame>
     </movement>
@@ -885,27 +885,27 @@
         time="100"
         vector="0,1000"
         ></vector>
-	<vector
-	time="200"
-	vector="100,60"
-	></vector>
+        <vector
+        time="200"
+        vector="100,60"
+        ></vector>
         <frame
         time="0"
         image="jump1-upgraded.png"
-	hardshape="5 11 33 56"
+        hardshape="5 11 33 56"
         > </frame>
         <frame
         time="200"
         image="jump-kick-upgraded.png"
-	hardshape="5 11 33 62"
+        hardshape="5 11 33 62"
         >
             <agressiv-point
             coords="53,36"
-            vector="30,-20"
+            vector="7,-5"
             ></agressiv-point>
             <agressiv-point
             coords="37,44"
-            vector="30,-10"
+            vector="7,-2"
             ></agressiv-point>
         </frame>
     </movement>

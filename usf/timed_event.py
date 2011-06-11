@@ -261,7 +261,7 @@ class ThrowBomb(TimedEvent):
         self.params['world'].addItem(
                 'bomb',
                 place=(self.params['entity'].rect[0:2]),
-                reversed=self.params['entity'].reversed,
+                reverse=self.params['entity'].reversed,
                 vector=[1000, -1000])
 
     def condition(self):
@@ -282,7 +282,7 @@ class ThrowFireBall(TimedEvent):
         self.params['world'].addItem(
                 'fireball',
                 place=place,
-                reversed=entity.reversed,
+                reverse=entity.reversed,
                 upgraded=entity.upgraded,
                 bullet=True)
 
@@ -346,7 +346,7 @@ class LaunchBullet(TimedEvent):
         self.params['world'].addItem(
                 'bullet',
                 place=place,
-                reversed=entity.reversed,
+                reverse=entity.reversed,
                 upgraded=entity.upgraded,
                 bullet=True)
 
@@ -570,7 +570,7 @@ class BlobSpecial(TimedEvent):
         except AttributeError:
             self.eye = self.params['world'].addItem('blob-eye',
                     upgraded=self.entity.upgraded, physics=False,
-                    reversed=self.entity.reversed)
+                    reverse=self.entity.reversed)
 
         self.angle += deltatime * 2 * 3.14159 # enought precision here
         center = (
