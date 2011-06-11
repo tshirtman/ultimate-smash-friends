@@ -522,7 +522,8 @@ class PlayerStaticOnGround(TimedEvent):
 
             self.params['entity'].entity_skin.change_animation(
                     anim+self.params['entity'].upgraded*'_upgraded',
-                    self.params['world'])
+                    self.params['world'],
+                    params={'entity': self.params['entity']})
 
 
 class Bounce(TimedEvent):

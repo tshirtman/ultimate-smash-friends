@@ -54,7 +54,7 @@ def key_shield(the_key, player, game_instance):
         player.entity_skin.change_animation(
             'static',
             game_instance,
-            params={'entity': player})
+            params={'entity': player, 'anim_name': 'static'})
 
         player.set_walking_vector((0, player.walking_vector[1]))
         return True
@@ -69,7 +69,7 @@ def key_down_left(the_key, player, game_instance):
             player.entity_skin.change_animation(
                 'walk',
                 game_instance,
-                params={'entity': player})
+                params={'entity': player, 'anim_name': 'walk'})
 
         player.set_walking_vector([CONFIG.general['WALKSPEED'],
                 player.walking_vector[1]])
@@ -86,7 +86,7 @@ def key_down_right(the_key, player, game_instance):
             player.entity_skin.change_animation(
                     'walk',
                     game_instance,
-                    params={'entity': player})
+                    params={'entity': player, 'anim_name': 'walk'})
 
         player.set_walking_vector([CONFIG.general['WALKSPEED'],
             player.walking_vector[1]])
