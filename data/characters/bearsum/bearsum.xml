@@ -71,7 +71,7 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="55,30"
-            vector="75,-7"
+            vector="112,-10"
             ></agressiv-point>
         </frame>
     </movement>
@@ -96,7 +96,7 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="45,35"
-            vector="25,-7"
+            vector="37,-10"
             ></agressiv-point>
         </frame>
     </movement>
@@ -250,7 +250,7 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="55,29"
-            vector="50,-15"
+            vector="75,-22"
             ></agressiv-point>
         </frame>
     </movement>
@@ -276,11 +276,11 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="38,29"
-            vector="125, 0"
+            vector="187, 0"
             ></agressiv-point>
             <agressiv-point
             coords="45,33"
-            vector="125,0"
+            vector="187,0"
             ></agressiv-point>
         </frame>
     </movement>
@@ -310,7 +310,7 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="46,43"
-            vector="50,50"
+            vector="75,75"
             ></agressiv-point>
         </frame>
     </movement>
@@ -330,11 +330,11 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="50,29"
-            vector="75,-12"
+            vector="112,-18"
             ></agressiv-point>
             <agressiv-point
             coords="46,33"
-            vector="75,-50"
+            vector="112,-75"
             ></agressiv-point>
         </frame>
         <frame
@@ -364,7 +364,7 @@ shield_center="20 40"
         image="smash-up1.png"
         > <agressiv-point
             coords="38,20"
-            vector="25,-200"
+            vector="37,-300"
             ></agressiv-point>
         </frame>
         <frame
@@ -374,15 +374,15 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="36,27"
-            vector="0,-125"
+            vector="0,-187"
             ></agressiv-point>
             <agressiv-point
             coords="30,20"
-            vector="-17,-50"
+            vector="-25,-75"
             ></agressiv-point>
             <agressiv-point
             coords="40,20"
-            vector="17,-50"
+            vector="25,-75"
             ></agressiv-point>
         </frame>
         <frame
@@ -406,7 +406,7 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="45,35"
-            vector="25,-7"
+            vector="37,-10"
             ></agressiv-point>        
         </frame>
     </movement>

@@ -114,7 +114,7 @@ def heuristic_state(game, iam, player, others):
     return (0
         + (0 if player.rect.colliderect(game.level.rect) else 1000)
         + (0 if player.invincible else 200)      # being invincible is good
-        + (0 if player.onGround else 45)         # more conservative about jumps
+        + (0 if player.onGround else 63)         # more conservative about jumps
         + (0 if player.upgraded else 100)        # being upgraded is cool
         + (0 if not under_lowest_plateform(game, player) else 1000)
         + (0 if over_some_plateform(game, player) else 30))
@@ -131,6 +131,30 @@ def heuristic_fight(game, iam, player, others):
         - sum((p.percents for p in others)))    # hurt people, it's good
 
 
+def try_movement(movement, game, gametime, iam, others, h):
+    s = []
+    for walk, reverse in (
+            (True, True),
+            (True, False),
+            (False, True),
+            (False, False)):
+        M = Movement(gametime, movement, reverse, walk)
+        b = game.backup() #no, this can't be factorized by moving it upper
+
+        player = game.players[iam]
+        others = (p for p in game.players if p is not player)
+
+        simulate(game, iam, M)
+        s.append((
+            h(game, iam, player, others) +
+            heuristic_state(game, iam, player, others),
+            M,
+            game.backup()))
+
+        game.restore(b)
+    return s
+
+
 def search_path(game, iam, max_depth):
     gametime = game.gametime
     scores = []
@@ -139,8 +163,7 @@ def search_path(game, iam, max_depth):
 
     if heuristic_distance(game, iam, player, others) > 100:
         if player.ai == 1:
-            return (0,
-                    [Movement(gametime, 'static', player.reversed, False), ])
+            return (0, [Movement(gametime, 'static', player.reversed, False), ])
 
         f = displacement_movement
         h = heuristic_distance
@@ -155,28 +178,9 @@ def search_path(game, iam, max_depth):
         return (0, [])
 
     for movement in movements:
-        for walk, reverse in (
-                (True, True),
-                (True, False),
-                (False, True),
-                (False, False)):
-            M = Movement(gametime, movement, reverse, walk)
-            b = game.backup() #no, this can't be factorized by moving it upper
-
-            player = game.players[iam]
-            others = (p for p in game.players if p is not player)
-
-            simulate(game, iam, M)
-            scores.append((
-                h(game, iam, player, others) +
-                heuristic_state(game, iam, player, others),
-                M,
-                game.backup()))
-
-            game.restore(b)
+        scores.extend(try_movement(movement, game, gametime, iam, others, h))
 
     scores.sort()
-    #print len(scores), [x[0] for x in scores]
 
     b = game.backup()
     if max_depth == 0:

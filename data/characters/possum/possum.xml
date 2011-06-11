@@ -149,7 +149,7 @@
         >
             <agressiv-point
             coords="59,33"
-            vector="125,-75"
+            vector="187,-112"
             ></agressiv-point>
         </frame>
     </movement>
@@ -174,7 +174,7 @@
         >
             <agressiv-point
             coords="50,38"
-            vector="75,-7"
+            vector="112,-10"
             ></agressiv-point>
         </frame>
         <frame
@@ -189,7 +189,7 @@
         >
             <agressiv-point
             coords="50,38"
-            vector="75,-7"
+            vector="112,-10"
             ></agressiv-point>
         </frame>
     </movement>
@@ -214,7 +214,7 @@
         image="smash-up2.png"
         > <agressiv-point
             coords="48,20"
-            vector="25,-200"
+            vector="37,-300"
             ></agressiv-point>
         </frame>
         <frame
@@ -235,7 +235,7 @@
         image="smash-up2.png"
         > <agressiv-point
             coords="48,20"
-            vector="25,-200"
+            vector="37,-300"
             ></agressiv-point>
         </frame>
         <frame
@@ -269,7 +269,7 @@
         hardshape= "8 0 22 48"
         > <agressiv-point
             coords="28,41"
-            vector="75,-2"
+            vector="112,-3"
             ></agressiv-point>
         </frame>
     </movement-->
@@ -397,7 +397,7 @@
         >
             <agressiv-point
             coords="44,35"
-            vector="25,-25"
+            vector="37,-37"
             ></agressiv-point>
         </frame>
         <frame
@@ -412,7 +412,7 @@
         >
             <agressiv-point
             coords="44,35"
-            vector="25,-25"
+            vector="37,-37"
             ></agressiv-point>
         </frame>
     </movement>
@@ -444,11 +444,11 @@
         >
             <agressiv-point
             coords="51,35"
-            vector="7,-5"
+            vector="10,-7"
             ></agressiv-point>
             <agressiv-point
             coords="37,42"
-            vector="7,-2"
+            vector="10,-3"
             ></agressiv-point>
         </frame>
     </movement>
@@ -592,7 +592,7 @@
         >
             <agressiv-point
             coords="59,33"
-            vector="125,-75"
+            vector="187,-112"
             ></agressiv-point>
         </frame>
     </movement>
@@ -617,7 +617,7 @@
         >
             <agressiv-point
             coords="50,38"
-            vector="75,-7"
+            vector="112,-10"
             ></agressiv-point>
         </frame>
         <frame
@@ -632,7 +632,7 @@
         >
             <agressiv-point
             coords="50,38"
-            vector="75,-7"
+            vector="112,-10"
             ></agressiv-point>
         </frame>
     </movement>
@@ -659,7 +659,7 @@
         vector="0,70"
         > <agressiv-point
             coords="48,20"
-            vector="25,-200"
+            vector="37,-300"
             ></agressiv-point>
         </frame>
         <frame
@@ -680,7 +680,7 @@
         image="smash-up2-upgraded.png"
         > <agressiv-point
             coords="48,20"
-            vector="25,-200"
+            vector="37,-300"
             ></agressiv-point>
         </frame>
         <frame
@@ -715,7 +715,7 @@
         hardshape= "8 0 22 48"
         > <agressiv-point
             coords="28,41"
-            vector="75,-2"
+            vector="112,-3"
             ></agressiv-point>
         </frame>
     </movement-->
@@ -839,7 +839,7 @@
         >
                 <agressiv-point
                 coords="29,52"
-                vector="13,-4"
+                vector="19,-6"
                 ></agressiv-point>
         </frame>
         <frame
@@ -849,7 +849,7 @@
         >
             <agressiv-point
             coords="48,37"
-            vector="25,-25"
+            vector="37,-37"
             ></agressiv-point>
         </frame>
         <frame
@@ -859,7 +859,7 @@
         >
                 <agressiv-point
                 coords="29,52"
-                vector="13,-4"
+                vector="19,-6"
                 ></agressiv-point>
          </frame>
         <frame
@@ -869,7 +869,7 @@
         >
             <agressiv-point
             coords="48,37"
-            vector="25,-25"
+            vector="37,-37"
             ></agressiv-point>
         </frame>
     </movement>
@@ -901,11 +901,11 @@
         >
             <agressiv-point
             coords="53,36"
-            vector="7,-5"
+            vector="10,-7"
             ></agressiv-point>
             <agressiv-point
             coords="37,44"
-            vector="7,-2"
+            vector="10,-3"
             ></agressiv-point>
         </frame>
     </movement>
