@@ -233,17 +233,17 @@ shield_center="20 40"
         vector="0,1000"
         ></vector>
         <frame
-        time="150"
+        time="0"
         image="jump2.png"
         hardshape="0 0 45 67"
         > </frame>
         <frame
-        time="300"
+        time="150"
         image="jump3.png"
         hardshape="0 0 45 67"
         > </frame>
         <frame
-        time="350"
+        time="200"
         image="jump-kick.png"
         hardshape="0 0 40 67"
         vector="100,60"
