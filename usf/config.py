@@ -249,5 +249,9 @@ class Config(object):
             return str(keycode)
 
         else:
-            return 'K_'+pygame.key.name(keycode)
+            if len(pygame.key.name(keycode)) == 1:
+                return 'K_'+pygame.key.name(keycode)
+            else:
+                return 'K_'+pygame.key.name(keycode).upper().replace(
+                'LEFT ','L').replace('RIGHT ', 'R')
 
