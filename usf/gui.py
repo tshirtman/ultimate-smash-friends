@@ -41,7 +41,6 @@ from usf.skin import Skin
 from usf.widgets.widget import optimize_size
 
 from usf.font import fonts
-import usf.screen as screen
 
 CONFIG = Config()
 
@@ -256,8 +255,8 @@ class Gui(object):
 
     def update_youhere(self):
         screen_list = ""
-        for screen in self.screen_history:
-            screen_list += screen + "/"
+        for scr in self.screen_history:
+            screen_list += scr + "/"
 
         screen_list += self.screen_current + "/"
         self.here = loaders.text("> " + _("you are here:") + screen_list,

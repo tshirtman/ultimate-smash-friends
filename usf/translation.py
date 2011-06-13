@@ -4,9 +4,9 @@ import gettext
 #t = gettext.translation('ultimate_smash_friends', 'locale', fallback=True)
 #_ = t.ugettext
 
-from config import Config
+from usf.config import Config
 
-config = Config()
-locale_dir = os.path.join(config.sys_data_dir, "po")
-gettext.install("ultimate-smash-friends", locale_dir)
+CONFIG = Config()
+LOCALE_DIR = os.path.join(CONFIG.sys_data_dir, "po")
+gettext.install("ultimate-smash-friends", LOCALE_DIR)
 _("translator-credits")

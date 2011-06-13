@@ -17,23 +17,25 @@
 # along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.#
 ################################################################################
 
+# system modules
 from os import path
 import pygame
 from copy import deepcopy
-
-import config
-from memoize import memoize
-conf = config.Config()
 from threading import Thread
 import random
 
+# usf modules
+import usf.config
+from usf.memoize import memoize
+
+CONFIG = usf.config.Config()
 #controls = controls.Controls()
 
 TIMESTEP = 0.25
 MAXDEPTH = 1
 
-walkspeed = conf.general['WALKSPEED']
-sequences_file = path.join(conf.sys_data_dir, 'sequences.cfg')
+walkspeed = CONFIG.general['WALKSPEED']
+sequences_file = path.join(CONFIG.sys_data_dir, 'sequences.cfg')
 
 
 @memoize
@@ -101,7 +103,7 @@ def over_some_plateform(game, player):
     return False
 
 
-def heuristic_state(game, iam, player, others):
+def heuristic_state(game, player, others):
     """ return a score for the current state of the game, allow to chose a set
     of movement to do.
 
@@ -120,11 +122,11 @@ def heuristic_state(game, iam, player, others):
         + (0 if over_some_plateform(game, player) else 30))
 
 
-def heuristic_distance(game, iam, player, others):
+def heuristic_distance(game, player, others):
     return min((player.dist(p) for p in others))
 
 
-def heuristic_fight(game, iam, player, others):
+def heuristic_fight(game, player, others):
     return (0
         + player.percents                       # avoid being hurt
         + sum((p.lives for p in others)) * 100  # kill people!
@@ -146,8 +148,8 @@ def try_movement(movement, game, gametime, iam, others, h):
 
         simulate(game, iam, M)
         s.append((
-            h(game, iam, player, others) +
-            heuristic_state(game, iam, player, others),
+            h(game, player, others) +
+            heuristic_state(game, player, others),
             M,
             game.backup()))
 
@@ -161,7 +163,7 @@ def search_path(game, iam, max_depth):
     player = game.players[iam]
     others = (p for p in game.players if p is not player)
 
-    if heuristic_distance(game, iam, player, others) > 100:
+    if heuristic_distance(game, player, others) > 100:
         if player.ai == 1:
             return (0, [Movement(gametime, 'static', player.reversed, False), ])
 

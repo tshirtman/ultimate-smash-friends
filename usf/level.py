@@ -25,10 +25,8 @@ architecture: blocs, moving blocs, bounching blocs
 '''
 
 import os
-import sys
 import pygame
 import logging
-import time
 
 import usf.loaders
 from usf.config import Config
@@ -304,6 +302,19 @@ class Level(object):
         attribs = xml.getroot().attrib
         self.name = attribs['name']
 
+        self.background = ''
+        self.level = ''
+        self.foreground = ''
+        self.layers = []
+        self.entrypoints = []
+        self.water_blocs = []
+        self.decorums = []
+        self.vector_blocs = []
+        self.map = []
+        self.moving_blocs = []
+        self.border = []
+        self.rect = []
+
         self.load_images(attribs, levelname)
         self.load_borders(attribs)
         self.load_entrypoints(xml)
@@ -374,7 +385,6 @@ class Level(object):
     def load_layers(self, xml):
         ''' load and instanciate layers if any defined in xml
         '''
-        self.layers = []
         for layer in xml.findall('layer'):
             self.layers.append(skin.Layer(layer))
 
@@ -390,7 +400,6 @@ class Level(object):
     def load_moving_blocs(self, xml, server, levelname):
         ''' load and instanciate moving blocs defined in xml
         '''
-        self.moving_blocs = []
         for block in xml.findall('moving-block'):
             texture = block.attrib['texture']
             rects = []
@@ -418,7 +427,6 @@ class Level(object):
     def load_water_blocs(self, xml, server=False):
         ''' #XXX used anywhere?
         '''
-        self.water_blocs = []
         for block in xml.findall('water'):
             nums = block.attrib['coords'].split(' ')
             nums = [int(i) for i in nums]
@@ -427,7 +435,6 @@ class Level(object):
     def load_vector_blocs(self, xml, server, levelname):
         ''' load vector blocs defined in xml
         '''
-        self.vector_blocs = []
         for block in xml.findall('vector-block'):
             texture = block.attrib['texture']
             position = [int(i) for i in block.attrib['position'].split(' ')]
@@ -454,7 +461,6 @@ class Level(object):
     def load_decorums(self, xml):
         ''' load decorums defined in xml
         '''
-        self.decorums = list()
         for decorum in xml.findall('decorum'):
             frames = list()
             for frame in decorum.findall('frame'):

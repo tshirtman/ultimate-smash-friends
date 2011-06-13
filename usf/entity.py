@@ -27,19 +27,18 @@ the game, character or item.
 import pygame
 import math
 import os
-import logging
 
 # my modules imports.
-import entity_skin
-import loaders
-import timed_event
-from font import fonts
+from usf.entity_skin import Entity_skin
+import usf.loaders as loaders
 
-from config import Config
+from usf.font import fonts
+
+from usf.config import Config
 
 CONFIG = Config()
 
-from debug_utils import draw_rect
+from usf.debug_utils import draw_rect
 
 
 class Entity (object):
@@ -111,7 +110,7 @@ class Entity (object):
 
         if entity_skinname is not None:
             self._name = entity_skinname.split(os.sep)[-1]
-            self.entity_skin = entity_skin.Entity_skin(
+            self.entity_skin = Entity_skin(
                     entity_skinname,
                     not game or not game.screen,
                     animation=animation)
@@ -661,7 +660,7 @@ class Entity (object):
                 game.level.collide_rect(self.point(self.UPPER_LEFT)) or
                 game.level.collide_rect(self.point(self.LOWER_LEFT))))
 
-    def worldCollide(self, game):
+    def world_collide(self, game):
         """
         This test collision of the entity with the map (game.level.map).
 
@@ -711,12 +710,15 @@ class Entity (object):
         """
         This method just call all specific debug draw methods
         """
-        self.draw_debug_levelmap(coords, zoom, surface, debug_params)
+        self.draw_debug_levelmap(surface, debug_params)
         self.draw_debug_hardshape(coords, zoom, surface, debug_params)
         self.draw_debug_footrect(coords, zoom, surface, debug_params)
         self.draw_debug_current_animation(coords, zoom, surface, debug_params)
 
-    def draw_debug_levelmap(self, coords, zoom, surface, debug_params):
+    def draw_debug_levelmap(self, surface, debug_params):
+        """
+        show the level map directly, usefull to debug
+        """
         if debug_params["levelmap"]:
             draw_rect(
                     surface,
@@ -807,12 +809,18 @@ class Entity (object):
 
             self.draw_debug(real_coords, zoom, surface, debug_params)
             if self.entity_skin.animation.trails and self.old_pos:
-                for i, (x,y) in enumerate(reversed(self.old_pos)):
-                    img = self.entity_skin.animation.trails[len(self.old_pos)-(i+1)]
+                for i, (x, y) in enumerate(reversed(self.old_pos)):
+                    img = self.entity_skin.animation.trails[
+                            len(self.old_pos)-(i+1)]
+
                     surface.blit(
-                          loaders.image(img, reversed=self.reversed, zoom=zoom)[0],
+                          loaders.image(
+                              img,
+                              reversed=self.reversed,
+                              zoom=zoom)[0],
                           (
-                              int(x * zoom) + coords[0] - (not self.reversed and self.hardshape[0] or 0),
+                              int(x * zoom) + coords[0] - (
+                                  not self.reversed and self.hardshape[0] or 0),
                               int(y * zoom) + coords[1] - self.hardshape[1]))
 
             skin_image = loaders.image(
@@ -842,7 +850,7 @@ class Entity (object):
                             - .5 * image[1][3]) * zoom)
                 surface.blit(image[0], shield_coords)
 
-    def update_physics(self, dt, game):
+    def update_physics(self, deltatime, game):
         """
         This function apply current movemements and various environemental
         vectors to the entity, and calculate collisions.
@@ -850,11 +858,13 @@ class Entity (object):
         """
         # Move in walking direction.
         self.move((
-                    self.walking_vector[0] * dt,
-                    self.walking_vector[1] * dt))
+                    self.walking_vector[0] * deltatime,
+                    self.walking_vector[1] * deltatime))
 
         self.foot_rect = self.foot_collision_rect()
-        self._onGround = game.level.collide_rect(self.foot_rect[:2],self.foot_rect[2:])
+        self._onGround = game.level.collide_rect(
+                self.foot_rect[:2],
+                self.foot_rect[2:])
 
         # follow the floor if it's moving
         floor_vector = self.update_floor_vector(game.level.moving_blocs)
@@ -876,7 +886,7 @@ class Entity (object):
 
         # Gravity
         if self.gravity and self.physic and not self.onGround:
-            self._vector[1] += float(CONFIG.general['GRAVITY']) * dt
+            self._vector[1] += float(CONFIG.general['GRAVITY']) * deltatime
 
         elif not self.physic:
             #FIXME : it is a bit hackish
@@ -886,29 +896,31 @@ class Entity (object):
         F = CONFIG.general['AIR_FRICTION'] * environnement_friction
 
         if self.physic: #FIXME: and not a bullet
-            self._vector[0] -= (F * self.vector[0] * dt)
-            self._vector[1] -= (F * self.vector[1] * dt)
+            self._vector[0] -= (F * self.vector[0] * deltatime)
+            self._vector[1] -= (F * self.vector[1] * deltatime)
 
         # apply the vector to entity.
-        self.move((self.vector[0] * dt, self.vector[1] * dt))
+        self.move((self.vector[0] * deltatime, self.vector[1] * deltatime))
 
         if not self.physics:
             return
 
         # Avoid collisions with the map
-        self.worldCollide(game)
+        self.world_collide(game)
 
-    def update(self, dt, t, game, coords=(0, 0), zoom=1):
+    def update(self, deltatime, gametime, game):
         """
-        Global function to update everything about entity, dt is the time
-        ellapsed since the precedent frame, t is the current time.
+        Global function to update everything about entity, deltatime is the
+        time ellapsed since the precedent frame, gametime is the time since
+        beginning of the game
         """
-        self.old_pos = [self.rect[:2],] + self.old_pos
+
+        self.old_pos = [self.rect[:2], ] + self.old_pos
         if (not self.entity_skin.animation.trails or len(self.old_pos) >
                 len(self.entity_skin.animation.trails)):
             self.old_pos.pop()
 
         if self.present:
-            self.entity_skin.update(t, self.reversed, self.upgraded)
-            self.update_physics(dt, game)
+            self.entity_skin.update(gametime, self.reversed, self.upgraded)
+            self.update_physics(deltatime, game)
 

@@ -482,9 +482,7 @@ class Game(object):
             item.update(
                          deltatime,
                          self.gametime,
-                         self,
-                         self.level_place,
-                         self.zoom)
+                         self)
 
             if not item.rect.colliderect(self.level.border):
                 item.set_lives(0)
@@ -497,9 +495,7 @@ class Game(object):
             player.update(
                     deltatime,
                     self.gametime,
-                    self,
-                    self.level_place,
-                    self.zoom)
+                    self)
 
             # if the player is out of the level zone
             if not player.rect.colliderect(self.level.border):

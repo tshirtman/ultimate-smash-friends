@@ -36,7 +36,7 @@ from pygame.locals import (
         )
 
 # my imports
-from config import Config
+from usf.config import Config
 CONFIG = Config()
 
 import game
