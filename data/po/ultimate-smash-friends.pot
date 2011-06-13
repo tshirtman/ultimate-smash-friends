@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-20 13:02+0200\n"
+"POT-Creation-Date: 2011-06-13 15:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,135 +17,135 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: game.py:383
+#: game.py:366
 msgid " WON!"
 msgstr ""
 
-#: game.py:390
+#: game.py:372
 msgid "OOPS... DRAW!!!"
 msgstr ""
 
-#: gui.py:250
+#: gui.py:262
 msgid "you are here:"
 msgstr ""
 
-#: main.py:55
+#: main.py:63
 msgid "Bad logging level in user.cfg!"
 msgstr ""
 
-#: main.py:84
+#: main.py:92
 msgid "Loading..."
 msgstr ""
 
-#: screen/about.py:27
+#: screen/about.py:31
 msgid "about"
 msgstr ""
 
-#: screen/about.py:33 screen/about.py:37 screen/screen_screen.py:60
-#: screen/screen_screen.py:80 screen/characters.py:117
-#: screen/characters.py:142 screen/keyboard.py:61 screen/keyboard.py:68
-#: screen/sound.py:38 screen/sound.py:45 screen/configure.py:37
-#: screen/configure.py:46 screen/level.py:70 screen/level.py:79
+#: screen/about.py:37 screen/about.py:41 screen/screen_screen.py:66
+#: screen/screen_screen.py:86 screen/characters.py:114
+#: screen/characters.py:138 screen/keyboard.py:65 screen/keyboard.py:72
+#: screen/sound.py:43 screen/sound.py:50 screen/configure.py:39
+#: screen/configure.py:48 screen/level.py:67 screen/level.py:76
 msgid "Back"
 msgstr ""
 
-#: screen/main_screen.py:29 screen/main_screen.py:35
+#: screen/main_screen.py:33 screen/main_screen.py:39
 msgid "Local game"
 msgstr ""
 
-#: screen/main_screen.py:30 screen/main_screen.py:37 screen/resume.py:28
-#: screen/resume.py:36
+#: screen/main_screen.py:34 screen/main_screen.py:41 screen/resume.py:29
+#: screen/resume.py:37
 msgid "Configure"
 msgstr ""
 
-#: screen/main_screen.py:31 screen/main_screen.py:39
+#: screen/main_screen.py:35 screen/main_screen.py:43
 msgid "Credits"
 msgstr ""
 
-#: screen/main_screen.py:32 screen/main_screen.py:41
+#: screen/main_screen.py:36 screen/main_screen.py:45
 msgid "Quit"
 msgstr ""
 
-#: screen/screen_screen.py:31
+#: screen/screen_screen.py:37
 msgid "screen configuration"
 msgstr ""
 
-#: screen/screen_screen.py:41
+#: screen/screen_screen.py:47
 msgid "Screen resolution (requires a restart):"
 msgstr ""
 
-#: screen/screen_screen.py:44
+#: screen/screen_screen.py:50
 msgid "Fullscreen:"
 msgstr ""
 
-#: screen/screen_screen.py:49
+#: screen/screen_screen.py:55
 msgid "Zoom sharpness:"
 msgstr ""
 
-#: screen/screen_screen.py:54
+#: screen/screen_screen.py:60
 msgid "Show FPS:"
 msgstr ""
 
 #. I18N: The title of the screen where players can choose their character.
-#: screen/characters.py:42
+#: screen/characters.py:49
 msgid "characters"
 msgstr ""
 
 #. I18N: in the character screen, to select no character for this player
 #. I18N: (with the [?] icon)
-#: screen/characters.py:49
+#: screen/characters.py:56
 msgid "None"
 msgstr ""
 
 #. I18N: Artificial Intelligence
-#: screen/characters.py:88
+#: screen/characters.py:87
 msgid "AI:"
 msgstr ""
 
 #. I18N: %s is the player number, it can be Player 1, Player2...
-#: screen/characters.py:96
+#: screen/characters.py:93
 #, python-format
 msgid "Player %s"
 msgstr ""
 
-#: screen/characters.py:112 screen/characters.py:134
+#: screen/characters.py:109 screen/characters.py:130
 msgid "Next"
 msgstr ""
 
-#: screen/keyboard.py:33
+#: screen/keyboard.py:37
 msgid "keyboard"
 msgstr ""
 
-#: screen/keyboard.py:48
+#: screen/keyboard.py:52
 msgid "Shield"
 msgstr ""
 
-#: screen/sound.py:29
+#: screen/sound.py:34
 msgid "Sound and effects"
 msgstr ""
 
-#: screen/sound.py:32
+#: screen/sound.py:37
 msgid "Music"
 msgstr ""
 
-#: screen/configure.py:28
+#: screen/configure.py:30
 msgid "configure"
 msgstr ""
 
 #. I18N:option screen
-#: screen/configure.py:31 screen/configure.py:40
+#: screen/configure.py:33 screen/configure.py:42
 msgid "Audio"
 msgstr ""
 
-#: screen/configure.py:33 screen/configure.py:42
+#: screen/configure.py:35 screen/configure.py:44
 msgid "Screen"
 msgstr ""
 
-#: screen/configure.py:35 screen/configure.py:44
+#: screen/configure.py:37 screen/configure.py:46
 msgid "Keyboard"
 msgstr ""
 
-#: screen/level.py:69 screen/level.py:76
+#: screen/level.py:66 screen/level.py:73
 msgid "Go !"
 msgstr ""
 

@@ -7,41 +7,45 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-29 17:26+0200\n"
-"PO-Revision-Date: 2010-07-29 17:55+0000\n"
-"Last-Translator: edge_one <Unknown>\n"
+"POT-Creation-Date: 2011-04-20 13:02+0200\n"
+"PO-Revision-Date: 2011-06-01 02:25+0000\n"
+"Last-Translator: Ab aeterno <Unknown>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-07-30 03:45+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-06-02 04:50+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
-#: game.py:308
+#: game.py:383
 msgid " WON!"
-msgstr ""
+msgstr " GANASTE!"
 
-#: game.py:323
+#: game.py:390
 msgid "OOPS... DRAW!!!"
-msgstr ""
+msgstr "OOPS... EMPATE!!!"
 
-#: gui.py:234
+#: gui.py:250
 msgid "you are here:"
 msgstr "usted está aquí"
 
-#: main.py:68
+#: main.py:55
+msgid "Bad logging level in user.cfg!"
+msgstr "Pobre nivel de autenticación en user.cfg"
+
+#: main.py:84
 msgid "Loading..."
 msgstr "Cargando..."
 
 #: screen/about.py:27
 msgid "about"
-msgstr ""
+msgstr "Acerca de"
 
-#: screen/about.py:35 screen/about.py:41 screen/screen_screen.py:66
-#: screen/screen_screen.py:86 screen/characters.py:122
-#: screen/characters.py:143 screen/keyboard.py:61 screen/keyboard.py:66
-#: screen/sound.py:38 screen/sound.py:45 screen/configure.py:41
-#: screen/configure.py:52 screen/level.py:64 screen/level.py:73
+#: screen/about.py:33 screen/about.py:37 screen/screen_screen.py:60
+#: screen/screen_screen.py:80 screen/characters.py:117
+#: screen/characters.py:142 screen/keyboard.py:61 screen/keyboard.py:68
+#: screen/sound.py:38 screen/sound.py:45 screen/configure.py:37
+#: screen/configure.py:46 screen/level.py:70 screen/level.py:79
 msgid "Back"
 msgstr "Volver"
 
@@ -64,46 +68,47 @@ msgstr "Abandonar"
 
 #: screen/screen_screen.py:31
 msgid "screen configuration"
-msgstr "visualización"
+msgstr "Configuración de pantalla"
 
 #: screen/screen_screen.py:41
 msgid "Screen resolution (requires a restart):"
 msgstr "Resolución de pantalla (requiere un reinicio):"
 
-#: screen/screen_screen.py:47
+#: screen/screen_screen.py:44
 msgid "Fullscreen:"
 msgstr "Pantalla completa:"
 
-#: screen/screen_screen.py:51
+#: screen/screen_screen.py:49
 msgid "Zoom sharpness:"
-msgstr ""
+msgstr "Zoom nitidez:"
 
-#: screen/screen_screen.py:62
+#: screen/screen_screen.py:54
 msgid "Show FPS:"
-msgstr ""
+msgstr "Mostrar FPS:"
 
 #. I18N: The title of the screen where players can choose their character.
 #: screen/characters.py:42
 msgid "characters"
-msgstr ""
+msgstr "caractéres"
 
 #. I18N: in the character screen, to select no character for this player
 #. I18N: (with the [?] icon)
 #: screen/characters.py:49
 msgid "None"
-msgstr ""
-
-#: screen/characters.py:94
-#, python-format
-msgid "Player %s"
-msgstr ""
+msgstr "Ninguno"
 
 #. I18N: Artificial Intelligence
-#: screen/characters.py:105
-msgid "AI :"
-msgstr ""
+#: screen/characters.py:88
+msgid "AI:"
+msgstr "Inteligencia Artificial"
 
-#: screen/characters.py:117 screen/characters.py:140
+#. I18N: %s is the player number, it can be Player 1, Player2...
+#: screen/characters.py:96
+#, python-format
+msgid "Player %s"
+msgstr "Jugador %s"
+
+#: screen/characters.py:112 screen/characters.py:134
 msgid "Next"
 msgstr "Siguiente"
 
@@ -113,11 +118,11 @@ msgstr "teclado"
 
 #: screen/keyboard.py:48
 msgid "Shield"
-msgstr ""
+msgstr "Escudo"
 
 #: screen/sound.py:29
 msgid "Sound and effects"
-msgstr ""
+msgstr "Sonidos y efectos"
 
 #: screen/sound.py:32
 msgid "Music"
@@ -128,19 +133,19 @@ msgid "configure"
 msgstr "configurar"
 
 #. I18N:option screen
-#: screen/configure.py:31 screen/configure.py:46
+#: screen/configure.py:31 screen/configure.py:40
 msgid "Audio"
-msgstr ""
+msgstr "Audio"
 
-#: screen/configure.py:35 screen/configure.py:48
+#: screen/configure.py:33 screen/configure.py:42
 msgid "Screen"
 msgstr "Pantalla"
 
-#: screen/configure.py:38 screen/configure.py:50
+#: screen/configure.py:35 screen/configure.py:44
 msgid "Keyboard"
 msgstr "Teclado"
 
-#: screen/level.py:63 screen/level.py:70
+#: screen/level.py:69 screen/level.py:76
 msgid "Go !"
 msgstr "¡ ir !"
 
@@ -148,10 +153,69 @@ msgstr "¡ ir !"
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
+"  Ab aeterno https://launchpad.net/~lucas-lucas-lucas24\n"
 "  Carlos Alberto Ospina https://launchpad.net/~atah\n"
 "  DiegoJ https://launchpad.net/~diegojromerolopez\n"
+"  Moritatux https://launchpad.net/~moritatux\n"
 "  edge_one https://launchpad.net/~ercl-rommel\n"
 "  xapantu https://launchpad.net/~xapantu"
+
+#~ msgid "Left"
+#~ msgstr "Izquierda"
+
+#~ msgid "Right"
+#~ msgstr "Derecha"
+
+#~ msgid "Resume game"
+#~ msgstr "Reanudar juego"
+
+#~ msgid "Choose the level :"
+#~ msgstr "Seleccione el nivel"
+
+#~ msgid "Choose characters : "
+#~ msgstr "Seleccione caracteres : "
+
+#~ msgid "Down"
+#~ msgstr "Abajo"
+
+#~ msgid "Up"
+#~ msgstr "Arriba"
+
+#~ msgid "Quit game"
+#~ msgstr "Abandonar juego"
+
+#~ msgid "-"
+#~ msgstr "-"
+
+#~ msgid "+"
+#~ msgstr "+"
+
+#~ msgid "Sounds"
+#~ msgstr "Sonidos"
+
+#~ msgid "Player 3"
+#~ msgstr "Jugador 3"
+
+#~ msgid "Player 2"
+#~ msgstr "Jugador 2"
+
+#~ msgid "Player 4"
+#~ msgstr "Jugador 4"
+
+#~ msgid "Screen configuration (requires restart)"
+#~ msgstr "Configuración de pantalla (es necesario reiniciar)"
+
+#~ msgid "Yes"
+#~ msgstr "Sí"
+
+#~ msgid "No"
+#~ msgstr "No"
+
+#~ msgid "Player 1"
+#~ msgstr "Jugador 1"
+
+#~ msgid "Sounds configuration"
+#~ msgstr "Configuración de sonido"
 
 #~ msgid "Quit ?"
 #~ msgstr "¿ Dejar ?"
@@ -176,3 +240,6 @@ msgstr ""
 
 #~ msgid "Configure the game"
 #~ msgstr "Configurar el juego"
+
+#~ msgid "AI :"
+#~ msgstr "Al :"
