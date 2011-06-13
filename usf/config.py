@@ -119,6 +119,12 @@ class Config(object):
         self.__parser = SafeConfigParser()
         self.__parser.optionxform = str
 
+        # expose future config interface, for both pylint and user
+        self.debug = None
+        self.general = None
+        self.keyboard = None
+        self.audio = None
+
         (self.user_config_dir, self.sys_config_file, self.user_config_file,
          self.sys_data_dir, self.user_data_dir) = self.__get_locations()
 

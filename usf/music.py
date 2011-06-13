@@ -21,12 +21,12 @@ from pygame import mixer
 import os
 import time
 import random
-import logging
 
-from config import Config
-import loaders
+from usf.config import Config
+import usf.loaders as loaders
+
 mixer.init()
-config = Config()
+CONFIG = Config()
 
 
 class Music (object):
@@ -42,36 +42,32 @@ class Music (object):
         """
         self.previous_state = None
         self.playlists = {}
-        self.music_volume = config.audio['MUSIC_VOLUME']
+        self.music_volume = CONFIG.audio['MUSIC_VOLUME']
 
         preload = ['credits.ogg']
         for plist in ['menu', 'game', 'credits', 'victory']:
             self.playlists[plist] = [
-                                    os.path.join(
-                                    config.sys_data_dir,
-                                    'music',
-                                    'ogg', file)
-                                for file
-                                in os.listdir(os.path.join(
-                                    config.sys_data_dir,
-                                    'music',
-                                    'ogg'))
-                                if plist in file]
+                    os.path.join(
+                        CONFIG.sys_data_dir,
+                        'music',
+                        'ogg', f)
+                    for f in os.listdir(os.path.join(
+                        CONFIG.sys_data_dir,
+                        'music',
+                        'ogg'))
+                    if plist in f]
 
-            for file in os.listdir(os.path.join(
-                            config.sys_data_dir,
-                            'music',
-                            'ogg')):
-                if file in preload:
+            for f in os.listdir(os.path.join(
+                CONFIG.sys_data_dir, 'music', 'ogg')):
+
+                if f in preload:
                     loaders.track(os.path.join(
-                            config.sys_data_dir,
-                            'music',
-                            'ogg',
-                            file))
+                        CONFIG.sys_data_dir, 'music', 'ogg', f))
+
         self.current_track = None
         self.time_begin = 0
 
-    def update(self, state, params={}):
+    def update(self, state):
         """
         This check various parameters (state of game, time since last music
         change), and may choose to change music (with a fading) if it seems
@@ -79,9 +75,9 @@ class Music (object):
         """
 
         if self.current_track is not None:
-            if config.audio['MUSIC_VOLUME'] != self.music_volume:
+            if CONFIG.audio['MUSIC_VOLUME'] != self.music_volume:
                 self.current_track.set_volume(
-                        config.audio['MUSIC_VOLUME'] / 100.0)
+                        CONFIG.audio['MUSIC_VOLUME'] / 100.0)
 
         if (state != self.previous_state or
            (self.current_track and time.time() - self.time_begin
@@ -89,7 +85,7 @@ class Music (object):
            or self.current_track is None):
             self.change_music(self.playlists[state])
 
-        self.music_volume = config.audio['MUSIC_VOLUME']
+        self.music_volume = CONFIG.audio['MUSIC_VOLUME']
         self.previous_state = state
 
     def change_music(self, music, fading=True):
@@ -105,7 +101,7 @@ class Music (object):
             self.current_track = loaders.track(random.choice(music))
             if self.current_track:
                 self.current_track.set_volume(
-                        config.audio['MUSIC_VOLUME'] / 100.0)
+                        CONFIG.audio['MUSIC_VOLUME'] / 100.0)
                 self.current_track.play(fade_ms=3000)
         else:
             self.current_track = music

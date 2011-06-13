@@ -19,9 +19,6 @@
 
 # system modules
 from os import path
-import pygame
-from copy import deepcopy
-from threading import Thread
 import random
 
 # usf modules
@@ -116,7 +113,7 @@ def heuristic_state(game, player, others):
     return (0
         + (0 if player.rect.colliderect(game.level.rect) else 1000)
         + (0 if player.invincible else 200)      # being invincible is good
-        + (0 if player.onGround else 63)         # more conservative about jumps
+        + (0 if player.on_ground else 63)        # more conservative about jumps
         + (0 if player.upgraded else 100)        # being upgraded is cool
         + (0 if not under_lowest_plateform(game, player) else 1000)
         + (0 if over_some_plateform(game, player) else 30))

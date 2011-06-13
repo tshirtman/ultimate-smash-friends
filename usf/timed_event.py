@@ -507,7 +507,7 @@ class PlayerStaticOnGround(TimedEvent):
         Return false if the player is on ground so the event effect occure.
         """
 
-        return not self.params['entity'].onGround
+        return not self.params['entity'].on_ground
 
     def delete(self):
         # don't apply if the animation was changed meanwhile
@@ -532,7 +532,7 @@ class Bounce(TimedEvent):
     """
 
     def execute(self, deltatime):
-        if self.params['entity'].onGround:
+        if self.params['entity'].on_ground:
             self.params['entity'].vector[1] *= -1
 
     def condition(self):

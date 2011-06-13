@@ -73,7 +73,7 @@ class Entity (object):
 
     def __init__(self, num, game,
             entity_skinname='characters'+os.sep+'stick-tiny', place=(550, 1),
-            lives=3, carried_by=None, vector=[0, 0], reverse=False,
+            lives=3, carried_by=None, vector=list((0, 0)), reverse=False,
             server=False, number=None, visible=False, present=False,
             upgraded=False, physic=True, gravity=True, animation='static',
             physics=True):
@@ -104,7 +104,7 @@ class Entity (object):
         self._invincible = False
         self._present = present
         self._visible = visible
-        self._onGround = False
+        self._on_ground = False
         self._physics = physics
         self.old_pos = []
 
@@ -329,11 +329,11 @@ class Entity (object):
         self._gravity = value
 
     @property
-    def onGround(self):
+    def on_ground(self):
         """
         True if the entity is currently in collision with the ground
         """
-        return self._onGround
+        return self._on_ground
 
     @property
     def physic(self):
@@ -862,7 +862,7 @@ class Entity (object):
                     self.walking_vector[1] * deltatime))
 
         self.foot_rect = self.foot_collision_rect()
-        self._onGround = game.level.collide_rect(
+        self._on_ground = game.level.collide_rect(
                 self.foot_rect[:2],
                 self.foot_rect[2:])
 
@@ -885,7 +885,7 @@ class Entity (object):
                 self.place[1] + floor_vector[1]]
 
         # Gravity
-        if self.gravity and self.physic and not self.onGround:
+        if self.gravity and self.physic and not self.on_ground:
             self._vector[1] += float(CONFIG.general['GRAVITY']) * deltatime
 
         elif not self.physic:

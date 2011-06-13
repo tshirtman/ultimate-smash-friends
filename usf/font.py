@@ -19,15 +19,17 @@
 
 #our modules
 from config import Config
-config = Config()
+CONFIG = Config()
 
 #standart imports
 import xml.etree.ElementTree as xml
 from os.path import join
 from os import stat
-from memoize import memoize
+
 #library import
 import pygame
+
+from usf.memoize import memoize
 
 pygame.font.init()
 
@@ -39,17 +41,17 @@ class FontList(object):
         '''#TODO: documentation
         '''
         self.list = {}
-        font_xml = xml.parse(join(config.sys_data_dir, "fonts", "fonts.xml"))
+        font_xml = xml.parse(join(CONFIG.sys_data_dir, "fonts", "fonts.xml"))
         for font in font_xml.findall("font"):
 
             #use theme fonts
             try:
-                font_file = join(config.sys_data_dir, "gui",
-                    config.general['THEME'], font.get('file'))
+                font_file = join(CONFIG.sys_data_dir, "gui",
+                    CONFIG.general['THEME'], font.get('file'))
                 stat(font_file)
             #use default usf fonts
             except:
-                font_file = join(config.sys_data_dir, "fonts", font.get('file'))
+                font_file = join(CONFIG.sys_data_dir, "fonts", font.get('file'))
 
             self.list[font.get('name')] = (Font(font.get('name'),
                 int(font.get('size')), font_file))

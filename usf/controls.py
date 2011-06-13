@@ -39,7 +39,7 @@ from pygame.locals import (
 from usf.config import Config
 CONFIG = Config()
 
-import game
+import usf.game as game
 
 
 def key_shield(the_key, player, game_instance):
@@ -65,7 +65,7 @@ def key_down_left(the_key, player, game_instance):
     """ manage incidence on walk animation if the player push down his left key
     """
     if "_LEFT" in the_key:
-        if player.onGround:
+        if player.on_ground:
             player.entity_skin.change_animation(
                 'walk',
                 game_instance,
@@ -82,7 +82,7 @@ def key_down_right(the_key, player, game_instance):
     """ manage incidence on walk animation if the player push down his right key
     """
     if "_RIGHT" in the_key:
-        if player.onGround:
+        if player.on_ground:
             player.entity_skin.change_animation(
                     'walk',
                     game_instance,

@@ -17,30 +17,22 @@
 # along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.#
 ################################################################################
 
-import pygame
-import logging
-
-from animations import Frame, PreciseTimedAnimation
-import loaders
-import game
-import timed_event
-
-from config import Config
-
-config = Config()
-SIZE = (config.general['WIDTH'],
-        config.general['HEIGHT'])
-
-# different in python 2.4 and 2.5
-# more pythonic
-try:
-    from xml.etree import ElementTree
-except ImportError:
-    from elementtree import ElementTree
-
 import os
 import sys
 import random
+import pygame
+import logging
+from xml.etree import ElementTree
+
+from usf.animations import Frame, PreciseTimedAnimation
+import usf.loaders as loaders
+import usf.timed_event as timed_event
+
+from usf.config import Config
+
+CONFIG = Config()
+SIZE = (CONFIG.general['WIDTH'],
+        CONFIG.general['HEIGHT'])
 
 
 class Entity_skin (object):
@@ -69,7 +61,7 @@ class Entity_skin (object):
 
         else:
             file = os.path.join(
-                        config.sys_data_dir,
+                        CONFIG.sys_data_dir,
                         dir_name,
                         dir_name.split(os.sep)[-1]
                         +os.extsep+'xml')
@@ -87,7 +79,7 @@ class Entity_skin (object):
         self.name = attribs['name']
 
         self.image = os.path.join(
-                    config.sys_data_dir,
+                    CONFIG.sys_data_dir,
                     dir_name,
                     attribs['image'])
 
@@ -156,7 +148,7 @@ class Entity_skin (object):
             for sound in movement.findall('sound'):
                 sounds.append(
                         os.path.join(
-                            config.sys_data_dir,
+                            CONFIG.sys_data_dir,
                             dir_name,
                             sound.attrib['filename']))
 
@@ -164,14 +156,14 @@ class Entity_skin (object):
 
             for frame in movement.findall('frame'):
                 image = os.path.join(
-                            config.sys_data_dir,
+                            CONFIG.sys_data_dir,
                             dir_name,
                             frame.attrib['image'])
 
                 trails = (
                         'trails' in frame.attrib and
                         [os.path.join(
-                            config.sys_data_dir,
+                            CONFIG.sys_data_dir,
                             dir_name, x) for x in
                             frame.attrib['trails'].split(',')] or False)
 

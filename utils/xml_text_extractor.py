@@ -24,7 +24,7 @@
 
 import os
 import re
-from usf_modules.config import config
+from usf.config import config
 
 PATH = os.sep.join((config['MEDIA_DIRECTORY'], 'gui'))
 

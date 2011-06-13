@@ -31,7 +31,6 @@ import os
 
 from pygame.locals import QUIT
 import pygame
-import sys
 from optparse import OptionParser
 import time
 import threading
