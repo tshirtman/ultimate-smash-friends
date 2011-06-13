@@ -7,29 +7,33 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ultimate-smash-friends\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-07-29 17:26+0200\n"
-"PO-Revision-Date: 2010-07-29 16:01+0000\n"
-"Last-Translator: Asphaltsnatch <Paul_fbg@hotmail.fr>\n"
+"POT-Creation-Date: 2011-04-20 13:02+0200\n"
+"PO-Revision-Date: 2011-04-24 21:56+0000\n"
+"Last-Translator: simone.sandri <Unknown>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-07-30 03:45+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-04-25 05:02+0000\n"
+"X-Generator: Launchpad (build 12758)\n"
 
-#: game.py:308
+#: game.py:383
 msgid " WON!"
-msgstr ""
+msgstr " HAI VINTO!"
 
-#: game.py:323
+#: game.py:390
 msgid "OOPS... DRAW!!!"
-msgstr ""
+msgstr "OOPS..HAI PERSO!!!"
 
-#: gui.py:234
+#: gui.py:250
 msgid "you are here:"
 msgstr "siete qui"
 
-#: main.py:68
+#: main.py:55
+msgid "Bad logging level in user.cfg!"
+msgstr "Livello di accesso errato in user.cfg!"
+
+#: main.py:84
 msgid "Loading..."
 msgstr "Caricamento..."
 
@@ -37,13 +41,13 @@ msgstr "Caricamento..."
 msgid "about"
 msgstr "Informazioni"
 
-#: screen/about.py:35 screen/about.py:41 screen/screen_screen.py:66
-#: screen/screen_screen.py:86 screen/characters.py:122
-#: screen/characters.py:143 screen/keyboard.py:61 screen/keyboard.py:66
-#: screen/sound.py:38 screen/sound.py:45 screen/configure.py:41
-#: screen/configure.py:52 screen/level.py:64 screen/level.py:73
+#: screen/about.py:33 screen/about.py:37 screen/screen_screen.py:60
+#: screen/screen_screen.py:80 screen/characters.py:117
+#: screen/characters.py:142 screen/keyboard.py:61 screen/keyboard.py:68
+#: screen/sound.py:38 screen/sound.py:45 screen/configure.py:37
+#: screen/configure.py:46 screen/level.py:70 screen/level.py:79
 msgid "Back"
-msgstr ""
+msgstr "Indietro"
 
 #: screen/main_screen.py:29 screen/main_screen.py:35
 msgid "Local game"
@@ -64,21 +68,21 @@ msgstr "Uscita"
 
 #: screen/screen_screen.py:31
 msgid "screen configuration"
-msgstr ""
+msgstr "configurazione dello schermo"
 
 #: screen/screen_screen.py:41
 msgid "Screen resolution (requires a restart):"
-msgstr ""
+msgstr "Risoluzione dello schermo (richiede un riavvio):"
 
-#: screen/screen_screen.py:47
+#: screen/screen_screen.py:44
 msgid "Fullscreen:"
-msgstr ""
+msgstr "Schermo intero:"
 
-#: screen/screen_screen.py:51
+#: screen/screen_screen.py:49
 msgid "Zoom sharpness:"
-msgstr ""
+msgstr "Precisione dello zoom:"
 
-#: screen/screen_screen.py:62
+#: screen/screen_screen.py:54
 msgid "Show FPS:"
 msgstr "esporre \"frami per sicondi\""
 
@@ -91,33 +95,34 @@ msgstr "caratteri"
 #. I18N: (with the [?] icon)
 #: screen/characters.py:49
 msgid "None"
-msgstr ""
-
-#: screen/characters.py:94
-#, python-format
-msgid "Player %s"
-msgstr ""
+msgstr "Nessuno"
 
 #. I18N: Artificial Intelligence
-#: screen/characters.py:105
-msgid "AI :"
-msgstr "intelligenza artificiale"
+#: screen/characters.py:88
+msgid "AI:"
+msgstr "IA:"
 
-#: screen/characters.py:117 screen/characters.py:140
+#. I18N: %s is the player number, it can be Player 1, Player2...
+#: screen/characters.py:96
+#, python-format
+msgid "Player %s"
+msgstr "Giocatore %s"
+
+#: screen/characters.py:112 screen/characters.py:134
 msgid "Next"
 msgstr "Avanti"
 
 #: screen/keyboard.py:33
 msgid "keyboard"
-msgstr ""
+msgstr "tastiera"
 
 #: screen/keyboard.py:48
 msgid "Shield"
-msgstr ""
+msgstr "Scudo"
 
 #: screen/sound.py:29
 msgid "Sound and effects"
-msgstr ""
+msgstr "Suoni ed effetti"
 
 #: screen/sound.py:32
 msgid "Music"
@@ -128,19 +133,19 @@ msgid "configure"
 msgstr "configura"
 
 #. I18N:option screen
-#: screen/configure.py:31 screen/configure.py:46
+#: screen/configure.py:31 screen/configure.py:40
 msgid "Audio"
 msgstr "Audio"
 
-#: screen/configure.py:35 screen/configure.py:48
+#: screen/configure.py:33 screen/configure.py:42
 msgid "Screen"
 msgstr "Screen"
 
-#: screen/configure.py:38 screen/configure.py:50
+#: screen/configure.py:35 screen/configure.py:44
 msgid "Keyboard"
-msgstr ""
+msgstr "Tastiera"
 
-#: screen/level.py:63 screen/level.py:70
+#: screen/level.py:69 screen/level.py:76
 msgid "Go !"
 msgstr "Andiamo !"
 
@@ -148,4 +153,9 @@ msgstr "Andiamo !"
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  Asphaltsnatch https://launchpad.net/~paul-fbg"
+"  Andrea Amoroso https://launchpad.net/~heiko81\n"
+"  Asphaltsnatch https://launchpad.net/~paul-fbg\n"
+"  simone.sandri https://launchpad.net/~lexluxsox"
+
+#~ msgid "AI :"
+#~ msgstr "intelligenza artificiale"
