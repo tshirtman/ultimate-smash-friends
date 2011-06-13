@@ -190,11 +190,19 @@ class Controls (object):
         self.load_keys()
         self.load_sequences()
 
+    def get_key_code(self, name):
+        try:
+            return pygame_locals.__dict__[CONFIG.keyboard[name]]
+
+        except KeyError:
+            return int(CONFIG.keyboard[name])
+
     def load_keys(self):
         """ load player keys from configuration
         """
-        self.keys = dict([[pygame_locals.__dict__[CONFIG.keyboard[key]], key]
-                         for key in CONFIG.keyboard])
+        self.keys = dict(
+                [[self.get_key_code(key), key]
+                    for key in CONFIG.keyboard])
 
     def load_sequences(self):
         """ construct player combo sequences, using config (sequences.cfg) and

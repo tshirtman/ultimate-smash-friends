@@ -30,7 +30,11 @@ class KeyboardWidget(Widget):
 
     def __init__(self, value):
         self.value = value
-        exec("self.letter = pygame.key.name(pygame." + self.value + ").upper()")
+        try:
+            self.letter = pygame.key.name(pygame.__dict__[self.value]).upper()
+        except KeyError:
+            self.letter = str(self.value)
+
         self.font = fonts['mono']['25']
         #self.set_size(optimize_size((35, 35)))
         self.state = False

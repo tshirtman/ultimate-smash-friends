@@ -144,7 +144,7 @@ class Config(object):
         if OS == 'windows':
             """ from what I can understand, windows saves user data/config info
                 inside of an APPDATA environment variable. I am hold off on
-                writing this portion until we get a working setup.py, py2exe or
+ 10               writing this portion until we get a working setup.py, py2exe or
                 similar so that proper testing can be done. From there, filling
                 in the blanks should be trivial
             """
@@ -245,10 +245,9 @@ class Config(object):
                     name=section))
 
     def reverse_keymap(self, keycode=None):
-        keymap = dict((value, key)
-                      for key, value in pygame.__dict__.iteritems()
-                      if key[:2] in ('K_', 'KM'))
+        if 'world' in pygame.key.name(keycode):
+            return str(keycode)
 
-        if keycode is not None:
-            return keymap[keycode]
+        else:
+            return 'K_'+pygame.key.name(keycode)
 
