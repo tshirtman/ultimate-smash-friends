@@ -43,6 +43,7 @@ from usf.music import Music
 from usf.font import fonts
 from usf.ai import AI
 
+#XXX: there is an ugly border effect here, it creates _ in the namespace
 import translation
 
 try:
@@ -54,10 +55,10 @@ try:
 
 except AttributeError:
     logging.basicConfig(
-        filename=os.path.join(CONFIG.user_data_dir,
-
-CONFIG.debug['LOG_FILENAME']),
-        level = logging.WARNING)
+            filename=os.path.join(
+                CONFIG.user_data_dir,
+                CONFIG.debug['LOG_FILENAME']),
+            level = logging.WARNING)
 
     logging.error(_('Bad logging level in user.cfg!'))
 
@@ -388,9 +389,7 @@ class Main(object):
             self.screen.blit(text, (x, y))
             pygame.display.update()
 
-            max_fps = 1000/CONFIG.general["MAX_GUI_FPS"]
-            if pygame.time.get_ticks() < max_fps + start_loop:
-                pygame.time.wait(max_fps + start_loop - pygame.time.get_ticks())
+            pygame.time.wait(10)
 
 if __name__ == '__main__':
     # Entry point of the game, if not imported from another script, launch the
