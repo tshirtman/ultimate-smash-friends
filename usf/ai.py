@@ -119,11 +119,17 @@ def heuristic_state(game, player, others):
         + (0 if over_some_plateform(game, player) else 30))
 
 
-def heuristic_distance(game, player, others):
+def heuristic_distance(player, others):
+    '''
+    this function evaluate the distance of the player to the next other player
+    '''
     return min((player.dist(p) for p in others))
 
 
-def heuristic_fight(game, player, others):
+def heuristic_fight(player, others):
+    '''
+    this function evaluate a situation, from a fighting point of view
+    '''
     return (0
         + player.percents                       # avoid being hurt
         + sum((p.lives for p in others)) * 100  # kill people!
@@ -145,8 +151,7 @@ def try_movement(movement, game, gametime, iam, others, h):
 
         simulate(game, iam, M)
         s.append((
-            h(game, player, others) +
-            heuristic_state(game, player, others),
+            h(player, others) + heuristic_state(game, player, others),
             M,
             game.backup()))
 
@@ -160,7 +165,7 @@ def search_path(game, iam, max_depth):
     player = game.players[iam]
     others = (p for p in game.players if p is not player)
 
-    if heuristic_distance(game, player, others) > 100:
+    if heuristic_distance(player, others) > 100:
         if player.ai == 1:
             return (0, [Movement(gametime, 'static', player.reversed, False), ])
 
@@ -243,8 +248,6 @@ class AI(object):
             self.sequences_ai[iam] = list()
 
         entity = game.players[iam]
-        open_positions = set()
-        closed_positions = set()
         max_depth = MAXDEPTH # plan depth
 
         s = search_path(game, iam, max_depth)

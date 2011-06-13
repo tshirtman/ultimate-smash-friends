@@ -27,28 +27,15 @@ architecture: blocs, moving blocs, bounching blocs
 import os
 import pygame
 import logging
+from xml.etree import ElementTree
 
 import usf.loaders
-from usf.config import Config
 from usf import skin
-CONFIG = Config()
-
-from usf.memoize import memoize
+from usf.config import Config
 from usf.debug_utils import draw_rect
+from usf.memoize import memoize
 
-# different in python 2.4 and 2.5
-try:
-    from xml.etree import ElementTree
-except ImportError:
-    logging.warning(
-            "your python version seems quite old, you should consider"
-            " upgrading")
-
-    try:
-        from elementtree import ElementTree
-    except ImportError:
-        logging.error('unable to import a known xml parser, stopping now!')
-        exit()
+CONFIG = Config()
 
 
 class Decorum(object):

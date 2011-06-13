@@ -107,6 +107,8 @@ class Entity (object):
         self._on_ground = False
         self._physics = physics
         self.old_pos = []
+        self.foot_rect = None
+        self.in_water = False
 
         if entity_skinname is not None:
             self._name = entity_skinname.split(os.sep)[-1]

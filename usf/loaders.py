@@ -67,8 +67,8 @@ import pygame
 import logging
 import math
 
-from memoize import memoize
-from config import Config
+from usf.memoize import memoize
+from usf.config import Config
 CONFIG = Config()
 from ConfigParser import SafeConfigParser
 

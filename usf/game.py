@@ -36,21 +36,18 @@ import socket
 import SocketServer
 
 # my modules import
-from loaders import image, text
-import animations
-import entity
-import timed_event
-import loaders
+from usf.config import Config
+from usf.debug_utils import draw_rect
+from usf.event_manager import EventManager
+from usf.font import fonts
+from usf.level import Level
+from usf.loaders import image, text
+import usf.animations as animations
+import usf.entity as entity
+import usf.loaders as loaders
+import usf.timed_event as timed_event
 
-from level import Level
-from event_manager import EventManager
-from config import Config
-#module to load fonts
-from font import fonts
-#remove game_font
 game_font = fonts['sans']['normal']
-
-from debug_utils import draw_rect
 
 config = Config()
 
@@ -473,9 +470,9 @@ class Game(object):
             for item in self.items:
                 if player.rect.collidelist([item.rect, ]) != -1:
                         item.entity_skin.change_animation(
-                                'triger',
-                                self,
-                                params={'player': player, 'entity': item})
+                            'triger',
+                            self,
+                            params={'player': player, 'entity': item})
 
     def update_items(self, deltatime):
         for item in self.items:

@@ -18,7 +18,6 @@
 ################################################################################
 
 import os
-import sys
 import random
 import pygame
 import logging
@@ -26,7 +25,6 @@ from xml.etree import ElementTree
 
 from usf.animations import Frame, PreciseTimedAnimation
 import usf.loaders as loaders
-import usf.timed_event as timed_event
 
 from usf.config import Config
 

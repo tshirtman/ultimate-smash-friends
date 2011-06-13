@@ -32,9 +32,7 @@ import os
 from pygame.locals import QUIT
 import pygame
 from optparse import OptionParser
-import time
 import threading
-import traceback
 from usf.config import Config
 
 from usf.game import Game, NetworkServerGame, NetworkClientGame
@@ -44,6 +42,8 @@ import usf.loaders as loaders
 from usf.music import Music
 from usf.font import fonts
 from usf.ai import AI
+
+import translation
 
 try:
     CONFIG = Config()
@@ -116,7 +116,7 @@ class Main(object):
         self.init_screen()
         self.init_sound()
 
-        self.game = NetworkClientGame(level, players)
+        #self.game = NetworkClientGame(level, players)
         self.state = "game"
         self.menu = Gui(self.screen)
 
@@ -126,59 +126,38 @@ class Main(object):
         '''
 
         self.init_screen()
-        try:
-            self.text_thread = "Loading sounds and musics..."
-            thread = threading.Thread(None, self.loading_screen)
-            thread.start()
+        self.text_thread = "Loading sounds and musics..."
+        thread = threading.Thread(None, self.loading_screen)
+        thread.start()
 
-            self.init_sound()
-            self.ai_instance = AI()
+        self.init_sound()
+        self.ai_instance = AI()
 
-            # if a level was provided and at least two players in the option
-            # immediatly jump into game mode
-            if len(self.players) > 1 and self.level is not None:
-                self.game = Game(self.screen, self.level, self.players)
-                self.state = "game"
-                self.menu = Gui(self.screen)
-                self.menu.handle_reply('goto:resume')
+        # if a level was provided and at least two players in the option
+        # immediatly jump into game mode
+        if len(self.players) > 1 and self.level is not None:
+            self.game = Game(self.screen, self.level, self.players)
+            self.state = "game"
+            self.menu = Gui(self.screen)
+            self.menu.handle_reply('goto:resume')
 
-            else:
-                self.lock.acquire()
-                self.text_thread = "Loading GUI..."
-                self.lock.release()
-
-                self.menu = Gui(self.screen)
-
-                self.state = "menu"
-
-                self.game = None
-                self.level = None
-
+        else:
             self.lock.acquire()
-            self.stop_thread = True
+            self.text_thread = "Loading GUI..."
             self.lock.release()
-            thread.join()
-            # end of loading resources
 
-        except Exception as e:
-            try:
-                if not CONFIG.general["DEBUG"]:
-                    self.lock.acquire()
-                    self.text_thread = (
-                            "An error occured:\n" + str(traceback.format_exc()))
+            self.menu = Gui(self.screen)
 
-                    self.lock.release()
-                    time.sleep(5)
-                self.lock.acquire()
-                self.stop_thread = True
-                self.lock.release()
-                raise
-            except:
-                self.lock.acquire()
-                self.stop_thread = True
-                self.lock.release()
-                logging.debug(e)
-                raise
+            self.state = "menu"
+
+            self.game = None
+            self.level = None
+
+        self.lock.acquire()
+        self.stop_thread = True
+        self.lock.release()
+        thread.join()
+        # end of loading resources
 
     def initate_options_parser(self):
         """
@@ -414,10 +393,8 @@ class Main(object):
                 pygame.time.wait(max_fps + start_loop - pygame.time.get_ticks())
 
 if __name__ == '__main__':
-    """
-    Entry point of the game, if not imported from another script, launch the
-    main class with parameters (appart from program self name) if any.
-    """
+    # Entry point of the game, if not imported from another script, launch the
+    # main class with parameters (appart from program self name) if any.
 
     m = Main()
     m.init()
