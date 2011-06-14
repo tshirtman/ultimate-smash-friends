@@ -49,7 +49,7 @@ class Entity_skin (object):
 
         """
         self.animations = {}
-        if xml_from_str is not None:
+        if xml_from_str:
             a = ElementTree.ElementTree()
             # FIXME this is DIRTY
             f = open('/tmp/erf', 'w')
@@ -58,15 +58,14 @@ class Entity_skin (object):
             a.parse('/tmp/erf')
 
         else:
-            file = os.path.join(
+            f = os.path.join(
                         CONFIG.sys_data_dir,
                         dir_name,
                         dir_name.split(os.sep)[-1]
                         +os.extsep+'xml')
-            #logging.debug(file)
-            a = ElementTree.ElementTree(
-                    None,
-                    file)
+            #logging.debug(f)
+            a = ElementTree.ElementTree( None, f)
+
         if keep_xml:
             # keep this to use it for editors
             self.xml = a
