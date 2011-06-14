@@ -22,4 +22,4 @@ from usf import main
 
 m = main.Main()
 m.init()
-m.go()
+m.run()

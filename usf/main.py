@@ -326,7 +326,7 @@ class Main(object):
                         fonts["mono"]["38"]),
                     (10, 5))
 
-    def go(self):
+    def run(self):
         """
         The main game loop, take care of the state of the game/menu.
 
@@ -397,4 +397,4 @@ if __name__ == '__main__':
 
     m = Main()
     m.init()
-    m.go()
+    m.run()
