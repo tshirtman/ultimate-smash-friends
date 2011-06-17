@@ -715,7 +715,7 @@ class Entity (object):
         self.draw_debug_levelmap(surface, debug_params)
         self.draw_debug_hardshape(coords, zoom, surface, debug_params)
         self.draw_debug_footrect(coords, zoom, surface, debug_params)
-        self.draw_debug_current_animation(coords, zoom, surface, debug_params)
+        self.draw_debug_current_animation(coords, surface, debug_params)
 
     def draw_debug_levelmap(self, surface, debug_params):
         """
