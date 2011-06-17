@@ -60,12 +60,16 @@ def possible_movements(movement='static'):
 
 @memoize
 def displacement_movement(s):
+    """ return True if a movement is considered a diplacement movement
+    """
     return s in (
             'walk', 'jump', 'scnd-jump', 'smash-up-jumping', 'roll', 'pick')
 
 
 @memoize
 def fight_movement(s):
+    """ return True if a movement is considered a fight movement
+    """
     return not displacement_movement(s)
 
 
@@ -85,6 +89,9 @@ def simulate(game, iam, m):
 
 
 def under_lowest_plateform(game, player):
+    """ return True if the caracter is currently lower than the lowest
+    plateform
+    """
     for p in game.level.map:
         if p[1] > player.place[1]:
             return False
@@ -93,6 +100,9 @@ def under_lowest_plateform(game, player):
 
 
 def over_some_plateform(game, player):
+    """ return true if the player is currently verticaly over a plateform
+    (that's different than not being lower than the lowest plateform)
+    """
     for p in game.level.map:
         if p[1] > player.place[1] and p[0] < player.place[0] < p[0] + p[2]:
             return True
@@ -137,6 +147,9 @@ def heuristic_fight(player, others):
 
 
 def try_movement(movement, game, gametime, iam, others, h):
+    """ simulate a movement, in all direction, walking or not, and return the
+    scores of these configurations
+    """
     s = []
     for walk, reverse in (
             (True, True),
@@ -160,6 +173,9 @@ def try_movement(movement, game, gametime, iam, others, h):
 
 
 def search_path(game, iam, max_depth):
+    """ from a known position, search the most interresting position availaible
+    in the future, and how to get there.
+    """
     gametime = game.gametime
     scores = []
     player = game.players[iam]

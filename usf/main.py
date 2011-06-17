@@ -44,7 +44,7 @@ from usf.font import fonts
 from usf.ai import AI
 
 #XXX: there is an ugly border effect here, it creates _ in the namespace
-import translation
+import usf.translation
 
 try:
     CONFIG = Config()
@@ -237,7 +237,7 @@ class Main(object):
         self.state = ""
 
     def init_screen(self):
-        SIZE = (CONFIG.general['WIDTH'], CONFIG.general['HEIGHT'])
+        size = (CONFIG.general['WIDTH'], CONFIG.general['HEIGHT'])
         if (CONFIG.general['WIDTH'], CONFIG.general['HEIGHT']) == (0, 0):
             if (800, 600) in pygame.display.list_modes():
                 (CONFIG.general['WIDTH'], CONFIG.general['HEIGHT']) = (800, 600)
@@ -247,8 +247,8 @@ class Main(object):
                 (CONFIG.general['WIDTH'], CONFIG.general['HEIGHT']) = (800, 480)
             CONFIG.general['FULLSCREEN'] = False
 
-        SIZE = (CONFIG.general['WIDTH'], CONFIG.general['HEIGHT'])
-        self.screen = pygame.display.set_mode(SIZE)
+        size = (CONFIG.general['WIDTH'], CONFIG.general['HEIGHT'])
+        self.screen = pygame.display.set_mode(size)
 
         pygame.display.set_caption('Ultimate Smash Friends')
         icon = loaders.image(os.path.join(CONFIG.sys_data_dir, 'icon',
@@ -376,8 +376,6 @@ class Main(object):
         update the screen display during loading
         """
         while not self.stop_thread:
-            start_loop = pygame.time.get_ticks()
-
             self.lock.acquire()
             text = loaders.paragraph(self.text_thread, fonts['mono']['normal'])
             self.lock.release()

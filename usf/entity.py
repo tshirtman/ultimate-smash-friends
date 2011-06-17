@@ -607,15 +607,15 @@ class Entity (object):
         #        for i in xrange(Entity.nb_points)]
 
         # optimised version
-        H2_2 = h[2] / 2
-        H3_2 = h[3] / 2
-        HRX, HRY = h[0] + r[0] + x, h[1] + r[1] + y
+        h2_2 = h[2] / 2
+        h3_2 = h[3] / 2
+        hrx, hry = h[0] + r[0] + x, h[1] + r[1] + y
         l2 = Entity.list_sin_cos_1
 
         return [
                 (
-                    int(l2[i][0] * H2_2 + HRX),
-                    int(l2[i][1] * H3_2 + HRY))
+                    int(l2[i][0] * h2_2 + hrx),
+                    int(l2[i][1] * h3_2 + hry))
                 for i in xrange(n)]
 
     def collide_top(self, game):
@@ -768,7 +768,7 @@ class Entity (object):
                             r[3] * zoom),
                         pygame.Color(255, 255, 0, 127))
 
-    def draw_debug_current_animation(self, coords, zoom, surface, debug_params):
+    def draw_debug_current_animation(self, coords, surface, debug_params):
         """
         if the current_animation debug is set, write the name of the current
             animation near of the character
@@ -895,11 +895,11 @@ class Entity (object):
             self._vector[1] += -0.00001
 
         # Application of air friction.
-        F = CONFIG.general['AIR_FRICTION'] * environnement_friction
+        f = CONFIG.general['AIR_FRICTION'] * environnement_friction
 
         if self.physic: #FIXME: and not a bullet
-            self._vector[0] -= (F * self.vector[0] * deltatime)
-            self._vector[1] -= (F * self.vector[1] * deltatime)
+            self._vector[0] -= (f * self.vector[0] * deltatime)
+            self._vector[1] -= (f * self.vector[1] * deltatime)
 
         # apply the vector to entity.
         self.move((self.vector[0] * deltatime, self.vector[1] * deltatime))

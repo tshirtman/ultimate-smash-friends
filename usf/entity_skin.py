@@ -224,7 +224,7 @@ class Entity_skin (object):
             if self.sounds[anim_name] != []:
                 try:
                     loaders.track(random.choice(self.sounds[anim_name])).play()
-                except e:
+                except (Exception), e:
                     logging.warning(e)
         else:
             #logging.debug( "entity_skin "+self.name+" has no "+anim_name+"\

@@ -18,8 +18,9 @@
 # along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.#
 ################################################################################
 
-from timed_event import EVENT_NAMES
 import itertools
+
+from usf.timed_event import EVENT_NAMES
 
 
 class EventManager(object):
@@ -31,9 +32,13 @@ class EventManager(object):
         self.events = list()
 
     def backup(self):
+        """ return the current state of the events
+        """
         return tuple((self.events[:], (e.backup() for e in self.events)))
 
     def restore(self, backup):
+        """ restore the events to a known state
+        """
         self.events = backup[0]
         for e, b in zip(self.events, backup[1]):
             e.restore(b)
@@ -49,6 +54,9 @@ class EventManager(object):
         self.events = filter(lambda x: not x.done, self.events)
 
     def add_event(self, name, *args, **kwargs):
+        """ add an event of the requested type to the manager, *args and
+        **kwargs are passed to the event creation
+        """
         self.events.append(EVENT_NAMES[name](self, *args, **kwargs))
 
     def get_events(self, cls=None, params=dict()):

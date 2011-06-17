@@ -342,7 +342,7 @@ class Level(object):
         borders
         '''
         #FIXME: should not depend on the initialisation of pygame
-        self.rect = usf.loaders.image(self.level)[1]
+        self.rect = pygame.Rect(usf.loaders.image(self.level)[1])
 
         if 'margins' in attribs:
             margins = [int(i) for i in attribs['margins'].split(',')]
@@ -573,7 +573,8 @@ class Level(object):
     def restore(self, backup):
         ''' restore game state from a backup
         '''
-        (bloc.restore(back) for bloc, back in zip(self.moving_blocs, backup))
+        for bloc, back in zip(self.moving_blocs, backup):
+            bloc.restore(back)
 
     def update(self, time):
         ''' Update moving blocs and decorums
