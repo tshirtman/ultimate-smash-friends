@@ -169,6 +169,9 @@ class VectorBloc (Block):
 
     @memoize
     def collide_rect(self, rect):
+        """
+        return True if the rect collide with our bloc
+        """
         return Block.collide_rect(self, rect)
 
 
@@ -586,6 +589,9 @@ class Level(object):
             decorum.update(time)
 
     def collide_r(self, r):
+        """ return True if the rect r collide with any of the blocs, moving
+        blocs, or bouncing blocs of the level
+        """
         if r.collidelist(self.map) != -1:
             return True
 

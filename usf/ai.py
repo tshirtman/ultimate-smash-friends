@@ -31,7 +31,7 @@ CONFIG = usf.config.Config()
 TIMESTEP = 0.25
 MAXDEPTH = 1
 
-walkspeed = CONFIG.general['WALKSPEED']
+WALKSPEED = CONFIG.general['WALKSPEED']
 sequences_file = path.join(CONFIG.sys_data_dir, 'sequences.cfg')
 
 
@@ -79,7 +79,7 @@ def simulate(game, iam, m):
     """
     entity = game.players[iam]
     entity.set_reversed(m.reverse)
-    entity.set_walking_vector([m.walk and walkspeed or 0, None])
+    entity.set_walking_vector([m.walk and WALKSPEED or 0, None])
     entity.entity_skin.change_animation(
             m.movement,
             game,
@@ -279,5 +279,5 @@ class AI(object):
                     {'entity': entity})
             entity.set_reversed(m.reverse)
             entity.set_walking_vector([m.walk and
-                walkspeed or 0, entity.walking_vector[1]])
+                WALKSPEED or 0, entity.walking_vector[1]])
 

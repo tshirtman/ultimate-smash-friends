@@ -69,6 +69,21 @@ logging.debug("System config file: " + CONFIG.sys_config_file)
 logging.debug("System data dir: " + CONFIG.sys_data_dir)
 
 
+def author():
+    """ print credits in the terminal
+    """
+    if 'CREDITS' not in os.listdir(os.path.join(CONFIG.sys_data_dir)):
+        logging.info(CONFIG.sys_data_dir)
+        logging.info(
+                '\n'.join(os.listdir(os.path.join(CONFIG.sys_data_dir))))
+        logging.debug(CONFIG.sys_data_dir+'/CREDITS file not found')
+
+    else:
+        author_file = open(os.path.join(CONFIG.sys_data_dir, 'CREDITS'))
+        logging.info(author_file.read())
+        author_file.close()
+
+
 class Main(object):
     """
     The main class, load some parameters, sets initial states and takes care of
@@ -201,12 +216,14 @@ class Main(object):
                               "find path values and store them")))
 
     def parse_options(self):
+        """ parse the command line options
+        """
         # set up the comand line parser and its options
         (options, args) = self.parser.parse_args()
 
         # actually parse the command line options
         if options.author:
-            self.author()
+            author()
 
         if options.level:
             self.level = options.level
@@ -237,6 +254,8 @@ class Main(object):
         self.state = ""
 
     def init_screen(self):
+        """ various screen initialisations
+        """
         size = (CONFIG.general['WIDTH'], CONFIG.general['HEIGHT'])
         if (CONFIG.general['WIDTH'], CONFIG.general['HEIGHT']) == (0, 0):
             if (800, 600) in pygame.display.list_modes():
@@ -258,10 +277,14 @@ class Main(object):
             pygame.display.toggle_fullscreen()
 
     def init_sound(self):
+        """ various audio initialisations
+        """
         if CONFIG.audio['MUSIC']:
             self.music = Music()
 
     def manage_menu(self):
+        """ manage input and update menu if we are in the menu state
+        """
         # return of the menu update function may contain a new game
         # instance to switch to.
         start_loop = pygame.time.get_ticks()
@@ -291,11 +314,16 @@ class Main(object):
             pygame.time.wait(max_fps + start_loop - pygame.time.get_ticks())
 
     def manage_ai(self):
+        """ update the ai
+        """
         for i, p in enumerate(self.game.players):
             if p.ai and p.present:
                 self.ai_instance.update(self.game, i)
 
     def manage_game(self, was_paused):
+        """ call the various submethod to update the whole game and render it
+        to the screen
+        """
         d = self.game.update_clock(was_paused or self.game.first_frame)
         self.state = self.game.update(d)
         self.manage_ai()
@@ -318,7 +346,8 @@ class Main(object):
         self.music_state = self.state
 
     def display_fps(self):
-        #FPS counter
+        """ FPS counter
+        """
         if CONFIG.general["SHOW_FPS"]:
             self.screen.blit(
                     loaders.text(
@@ -329,8 +358,8 @@ class Main(object):
     def run(self):
         """
         The main game loop, take care of the state of the game/menu.
-
         """
+
         pygame.mouse.set_visible(False)
         #try:
         while (True):
@@ -360,17 +389,6 @@ class Main(object):
                 pygame.quit()
                 break
 
-    def author(self):
-        if 'CREDITS' not in os.listdir(os.path.join(CONFIG.sys_data_dir)):
-            logging.info(CONFIG.sys_data_dir)
-            logging.info(
-                    '\n'.join(os.listdir(os.path.join(CONFIG.sys_data_dir))))
-            logging.debug(CONFIG.sys_data_dir+'/CREDITS file not found')
-        else:
-            author_file = open(os.path.join(CONFIG.sys_data_dir, 'CREDITS'))
-            logging.info(author_file.read())
-            author_file.close()
-
     def loading_screen(self):
         """
         update the screen display during loading
@@ -393,6 +411,6 @@ if __name__ == '__main__':
     # Entry point of the game, if not imported from another script, launch the
     # main class with parameters (appart from program self name) if any.
 
-    m = Main()
-    m.init()
-    m.run()
+    M = Main()
+    M.init()
+    M.run()
