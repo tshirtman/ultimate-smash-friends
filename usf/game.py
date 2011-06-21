@@ -30,22 +30,15 @@ import time
 import math
 import os
 import logging
-import sys
-
-import socket
-import SocketServer
 
 # my modules import
 from usf.config import Config
-from usf.debug_utils import draw_rect
 from usf.event_manager import EventManager
 from usf.font import fonts
 from usf.level import Level
-from usf.loaders import image, text
-import usf.animations as animations
+from usf.loaders import image
 import usf.entity as entity
 import usf.loaders as loaders
-import usf.timed_event as timed_event
 
 game_font = fonts['sans']['normal']
 
@@ -295,7 +288,10 @@ class Game(object):
         """
         for i, k in enumerate(controls.player_sequences[num]):
             self.screen.blit(
-                    loaders.image(os.path.join(config.sys_data_dir,'misc','key_'+k[0].lower()+'.png'))[0],
+                    loaders.image(
+                        os.path.join(
+                            config.sys_data_dir,
+                            'misc','key_' + k[0].lower() + '.png'))[0],
                     (num * self.SIZE[0] / 4 + i * 50, 0 + 100 * (num % 2)))
 
 
@@ -465,8 +461,8 @@ class Game(object):
                     entity.test_hit(target)
 
         # collision between players and items -- tests and consequences
-        for player in filter(lambda x: "pick" in
-                x.entity_skin.current_animation, self.players):
+        for player in filter(lambda x: "pick" in (
+            x.entity_skin.current_animation, self.players):
             for item in self.items:
                 if player.rect.collidelist([item.rect, ]) != -1:
                         item.entity_skin.change_animation(
