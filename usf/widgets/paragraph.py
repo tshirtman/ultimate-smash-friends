@@ -95,7 +95,7 @@ class Paragraph(Widget):
         mask = pygame.surface.Surface((self.width, self.height))
         mask.blit(self.surface_text, (0, -(self.defil*(self.surface_text.get_height()-self.height)/100)))
         mask.set_colorkey(pygame.color.Color("black"))
-        self.screen.blit(mask, (x,y))
+        self.screen.blit(mask, (x, y))
         del mask
 
         #the slider background
@@ -124,7 +124,7 @@ class Paragraph(Widget):
                           (x, y))
         self.start_anim()
 
-    def handle_mouse(self,event):
+    def handle_mouse(self, event):
         x = event.dict['pos'][0]
         y = event.dict['pos'][1]
 
@@ -139,7 +139,7 @@ class Paragraph(Widget):
 
         if event.type == pygame.MOUSEBUTTONUP:
             self.state = False
-            return self,False
+            return self, False
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             #scroll button (up)
@@ -165,11 +165,11 @@ class Paragraph(Widget):
                     self.diff_pointer_slider = y - self.slider_y
                     self.state = True
                 self.hover = True
-                #return False,self
+                #return False, self
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 self.state = False
                 #self.update_defil()
-                return False,False
+                return False, False
             elif not self.state:
                 self.hover = False
 
@@ -185,9 +185,9 @@ class Paragraph(Widget):
                 self.defil = 100
             self.update_defil()
 
-            return False,self
+            return False, self
 
-        return False,False
+        return False, False
 
     def animation(self):
         """

@@ -40,8 +40,8 @@ class Label(Widget):
 
         try:
             self.background = loaders.image(join(config.sys_data_dir, self.background_path),
-                scale=(self.width,self.height))[0]
-            self.surface = loaders.image_layer(self.background,self.surface_text,(self.txtmargin+self.indent, self.horizontal_indent))
+                scale=(self.width, self.height))[0]
+            self.surface = loaders.image_layer(self.background, self.surface_text,(self.txtmargin+self.indent, self.horizontal_indent))
         except AttributeError:
             self.surface = self.surface_text
         self.screen = pygame.display.get_surface()
@@ -71,7 +71,7 @@ class Label(Widget):
 
         self.init()
 
-    def set_text(self,text):
+    def set_text(self, text):
         """
         Change the text of the widget.
         """

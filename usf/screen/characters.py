@@ -82,7 +82,7 @@ class characters(Screen):
         self.player_spinner = []
         self.player_vbox = [VBox(), VBox(), VBox(), VBox()]
 
-        for i in range(0,4):
+        for i in range(0, 4):
             #I18N: Artificial Intelligence
             self.checkboxes_ai.append(TextCheckBox(_("AI:")))
             self.portraits.append(Image(
@@ -95,7 +95,7 @@ class characters(Screen):
             self.player_vbox[i].add(self.portraits[-1],
                 margin_left=65,
                 margin=5,
-                size=(50,50))
+                size=(50, 50))
             self.player_vbox[i].add(self.checkboxes_ai[-1], margin_left=(180-self.checkboxes_ai[-1].width)/2)
 
 
@@ -115,7 +115,7 @@ class characters(Screen):
             margin=20,
             align="center")
 
-    def callback(self,action):
+    def callback(self, action):
         if action in self.player_spinner :
             #get the index of the player
             player_number = self.player_spinner.index(action)

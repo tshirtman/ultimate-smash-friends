@@ -181,8 +181,8 @@ class Main(object):
         """
         usage = ''.join((
                 'ultimate-smash-friends [-h] [-a][-l level-name] ',
-                '[-p player1,player2...] [-s num] [-C address] [-t',
-                'character,level]\n',
+                '[-p player1, player2...] [-s num] [-C address] [-t',
+                'character, level]\n',
                 'If a level and at least two players are selected, a match is',
                 ' launched immediately.'))
 
@@ -197,7 +197,7 @@ class Main(object):
                           help='select level by name')
         self.parser.add_option('-p', '--players',
                           action='store', dest='players', nargs=1,
-                          metavar='player1,player2..',
+                          metavar='player1, player2..',
                           help='select up to 4 players by name')
         self.parser.add_option('-s', '--server',
                           action='store', dest='server', metavar='num',
@@ -209,7 +209,7 @@ class Main(object):
                                "'address'")
         self.parser.add_option('-t', '--train',
                           action='store', dest='train',
-                          metavar='character,level',
+                          metavar='character, level',
                           help=''.join((
                               "will load 4 times the character in the level,",
                               " and use random moves from every place to ",

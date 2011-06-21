@@ -149,7 +149,7 @@ class Layer(object):
             time.time() when it is -1. It can be useful to specify the time for
             unit testing.
 
-        :rtype: tuple which contains the coordinates of the layer (x,y)
+        :rtype: tuple which contains the coordinates of the layer (x, y)
         """
         if self.type == 0:
             if dt == -1:

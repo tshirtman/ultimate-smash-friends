@@ -37,6 +37,6 @@ class about(Screen):
         self.widget.add(Button(_('Back')),
                         margin=55)
 
-    def callback(self,action):
+    def callback(self, action):
         if action.text == _('Back'):
             return "goto:back"

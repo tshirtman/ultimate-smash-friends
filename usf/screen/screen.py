@@ -46,7 +46,7 @@ class Screen(object):
     def update(self):
         #draw the title of the screen
         self.screen.blit(loaders.text(self.name, fonts['mono']['15']),
-                (self.indent_title,10))
+                (self.indent_title, 10))
 
         #draw all the others widgets
         self.widget.draw()
@@ -143,4 +143,4 @@ class Screen(object):
 
         #this shouldn't happen, excepted if there is no focusable widget
         #in the screen (and it shoudn't happen, since there is back, at least)
-        return False,False
+        return False, False

@@ -38,7 +38,7 @@ class Button(Label):
     """
     posy = 0
 
-    def set_size(self, (w,h)):
+    def set_size(self, (w, h)):
         """
         Set the size of the widget.
         This function is usually called by the container, HBox or VBox.
@@ -80,14 +80,14 @@ class Button(Label):
 
         self.screen.blit(surf, (self.parentpos[0] + self.x, self.parentpos[1] + self.y))
 
-    def handle_mouse(self,event):
+    def handle_mouse(self, event):
         """
         This function handles mouse event. It returns a callback when we
         click on it.
         """
         if event.type == pygame.MOUSEBUTTONUP:
             self.state = False
-            return self,False
+            return self, False
         else:
             x = event.dict['pos'][0]
             y = event.dict['pos'][1]
@@ -96,15 +96,15 @@ class Button(Label):
                 y -= self.parentpos[1] + self.y
             if 0 < x < self.width and 0 < y < self.height:
                 self.state = True
-                return False,self
+                return False, self
             self.state = False
-            return False,False
+            return False, False
 
 
-    def handle_keys(self,event):
+    def handle_keys(self, event):
         if (event.dict["key"] == pygame.K_DOWN or event.dict["key"] == pygame.K_UP) and not self.state:
             self.state = True
-            return False,self
+            return False, self
 
         if event.dict["key"] == pygame.K_RETURN:
             return self, self

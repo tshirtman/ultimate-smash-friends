@@ -94,7 +94,7 @@ class Container(Widget):
             if 'size' in kwargs:
                 size = kwargs['size']
             else:
-                size = (220,50)
+                size = (220, 50)
             widget.set_size((size[0], size[1]))
         if 'margin' in kwargs:
             margin = kwargs['margin']
@@ -113,7 +113,7 @@ class Container(Widget):
         self.update_size()
         self.update_pos()
 
-    def handle_mouse(self,event):
+    def handle_mouse(self, event):
         """
         This function is used for mouse events.
         """
@@ -126,9 +126,9 @@ class Container(Widget):
                 event.dict['pos'] = (x-widget.x, y-widget.y)
                 return widget.handle_mouse(event)
 
-        return (False,False)
+        return (False, False)
 
-    def handle_keys(self,event):
+    def handle_keys(self, event):
         """
         This function is used for keyboard events.
         """

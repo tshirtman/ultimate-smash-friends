@@ -29,7 +29,7 @@ class resume(Screen):
         self.widget.add(Button(_('Configure')))
         self.widget.add(Button('Quit the game'))
 
-    def callback(self,action):
+    def callback(self, action):
         if action.text == 'Resume':
             return "game:continue"
         if action.text == 'Quit the game':

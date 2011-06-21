@@ -36,7 +36,7 @@ class Widget (object):
     y = 0
     margin = 0
     margin_left = 0
-    parentpos = (0,0)
+    parentpos = (0, 0)
     text = ""
     widget_id = ""
     animation_speed = 1.0
@@ -56,7 +56,7 @@ class Widget (object):
         This function can be rewritten in the others widget if the surface
         isn't empty.
         """
-        self.surface = pygame.Surface((self.width,self.height))
+        self.surface = pygame.Surface((self.width, self.height))
         self.screen = pygame.display.get_surface()
 
     def draw(self):
@@ -65,7 +65,7 @@ class Widget (object):
         """
         self.screen.blit(self.surface, (self.parentpos[0] + self.x, self.parentpos[1] + self.y))
 
-    def set_size(self, (w,h)):
+    def set_size(self, (w, h)):
         """
         This function is used to resize a widget.
         """
@@ -73,13 +73,13 @@ class Widget (object):
         self.width = w
         self.init()
 
-    def handle_mouse(self,event):
+    def handle_mouse(self, event):
         """
         This function is used for mouse events.
         """
-        return False,False
+        return False, False
 
-    def set_align(self,align):
+    def set_align(self, align):
         pass
 
     def update_pos(self):
@@ -88,7 +88,7 @@ class Widget (object):
     def update_size(self):
         pass
 
-    def handle_keys(self,event):
+    def handle_keys(self, event):
         return False, False
 
     def set_id(self, value):

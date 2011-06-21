@@ -52,7 +52,7 @@ class Tab(VBox):
         self.update_pos()
         self.update_size()
 
-    def handle_mouse(self,event):
+    def handle_mouse(self, event):
         try:
             self.widgets
         except:
@@ -77,7 +77,7 @@ class Tab(VBox):
                     return widget.handle_mouse(event)
                 break
 
-        return (False,False)
+        return (False, False)
 
 
 class TabBar(HBox):
@@ -85,7 +85,7 @@ class TabBar(HBox):
     Used in the Tab widget
     """
 
-    def handle_mouse(self,event):
+    def handle_mouse(self, event):
         try:
             self.widgets
         except:

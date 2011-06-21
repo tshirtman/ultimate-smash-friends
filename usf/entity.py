@@ -429,7 +429,7 @@ class Entity (object):
     def hit(self, point, reverse):
         """
         enforce the effect of a collision with an aggressive point, the
-        point is a list of x,y,dx,dy coords, and reverse is a flag indicating
+        point is a list of x, y,dx, dy coords, and reverse is a flag indicating
         if the attacking entity is reversed (to apply projection vectors)
         """
 
@@ -587,7 +587,7 @@ class Entity (object):
         """
         creation of points, there are 8 points placed like this:
          7. .0   counted clockwise and starting from the upper right one
-        6.   .1  (in fact it's the opposite but the screen is (0,0) at the
+        6.   .1  (in fact it's the opposite but the screen is (0, 0) at the
         5.   .2  top left, what actualy means right or left is not important
          4. .3   as long as you stay consistent, I hope I do :P).
 

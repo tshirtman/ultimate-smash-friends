@@ -461,7 +461,7 @@ class Game(object):
                     entity.test_hit(target)
 
         # collision between players and items -- tests and consequences
-        for player in filter(lambda x: "pick" in (
+        for player in filter(lambda x: "pick" in
             x.entity_skin.current_animation, self.players):
             for item in self.items:
                 if player.rect.collidelist([item.rect, ]) != -1:

@@ -36,7 +36,7 @@ class Image(Widget):
         self.surface = loaders.image(
                     config.sys_data_dir+
                     os.sep+
-                    self.path, scale=(self.width,self.height))[0]
+                    self.path, scale=(self.width, self.height))[0]
 
         self.screen = pygame.display.get_surface()
 
@@ -47,7 +47,7 @@ class Image(Widget):
         self.init()
         self.state = True
 
-    def set_size(self, (w,h)):
+    def set_size(self, (w, h)):
         """
         Set the size of the image.
         /!\ The width and the height have to be the real value
@@ -58,7 +58,7 @@ class Image(Widget):
         self.width = w
 
 
-    def setImage(self,path):
+    def setImage(self, path):
         """
         With this method, you can change the image.
         'config.sys_data_dir' will be added to 'path'

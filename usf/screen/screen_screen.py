@@ -65,7 +65,7 @@ class screen_screen(Screen):
 
         self.widget.add(Button(_('Back')), margin=30)
 
-    def callback(self,action):
+    def callback(self, action):
         if action == self.resolution:
             value = action.get_value()
             config.general['WIDTH'] = int(value.split('x')[0])

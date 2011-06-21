@@ -35,7 +35,7 @@ class main_screen(Screen):
         self.widget.add(Button(_('Credits')))
         self.widget.add(Button(_('Quit')))
 
-    def callback(self,action):
+    def callback(self, action):
         if action.text == _('Local game'):
             return 'goto:characters'
         if action.text == _('Configure'):

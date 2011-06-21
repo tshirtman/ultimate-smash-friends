@@ -46,22 +46,22 @@ class ImageButton(Image):
         self.set_size((size[0], size[1]))
         self.state = False
 
-    def set_size(self, (w,h)):
+    def set_size(self, (w, h)):
         self.height = h
         self.width = w
         self.surface_static = loaders.image(
                     config.sys_data_dir+
                     os.sep+
-                    self.path, scale=(w,h))[0]
+                    self.path, scale=(w, h))[0]
 
         self.surface_hover = loaders.image(
                     config.sys_data_dir+
                     os.sep+
-                    self.path_hover, scale=(w,h))[0]
+                    self.path_hover, scale=(w, h))[0]
 
         self.surface = self.surface_static
 
-    def handle_mouse(self,event):
+    def handle_mouse(self, event):
         if self.state:
             event.dict['pos'] = (
                     event.dict['pos'][0] - self.parentpos[0] - self.x,
@@ -71,9 +71,9 @@ class ImageButton(Image):
         if 0 < event.dict['pos'][0] < self.width and 0 < event.dict['pos'][1] < self.height:
             self.state = True
             self.surface = self.surface_hover
-            return False,self
+            return False, self
         self.surface = self.surface_static
-        return False,False
+        return False, False
 
     def draw(self):
         """

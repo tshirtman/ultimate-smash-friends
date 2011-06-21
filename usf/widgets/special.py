@@ -43,19 +43,19 @@ class KeyboardWidget(Widget):
     def init(self):
         self.background = loaders.image(config.sys_data_dir +
             os.sep + "gui" + os.sep + config.general['THEME'] + os.sep
-            + "keyboard.png", scale=(self.width,self.height))[0]
+            + "keyboard.png", scale=(self.width, self.height))[0]
         self.background_hover = loaders.image(config.sys_data_dir +
             os.sep + "gui" + os.sep + config.general['THEME'] + os.sep
-            + "keyboard_hover.png", scale=(self.width,self.height))[0]
+            + "keyboard_hover.png", scale=(self.width, self.height))[0]
         text = loaders.text(self.letter, self.font)
         if text.get_width() > self.width:
             text = pygame.transform.smoothscale(text, (self.width, self.width*text.get_height()/text.get_width()))
         posx = self.width/2 - text.get_width()/2
         posy = self.height/2 - text.get_height()/2
         self.surface = loaders.image_layer(self.background_hover,
-                text, (posx,posy))
+                text, (posx, posy))
         self.surface_hover = loaders.image_layer(self.background,
-                text, (posx,posy))
+                text, (posx, posy))
         self.screen = pygame.display.get_surface()
 
     def set_size(self, (w, h)):
@@ -69,13 +69,13 @@ class KeyboardWidget(Widget):
         else:
             self.screen.blit(self.surface_hover, (self.parentpos[0] + self.x, self.parentpos[1] + self.y))
 
-    def handle_mouse(self,event):
+    def handle_mouse(self, event):
         if self.focus:
             return False, self
         if event.type == pygame.MOUSEBUTTONUP:
             self.state = False
             self.focus = True
-            return False,self
+            return False, self
         if self.state:
             event.dict['pos'] = (
                     event.dict['pos'][0] - self.parentpos[0]-self.x,
@@ -83,9 +83,9 @@ class KeyboardWidget(Widget):
 
         if 0 < event.dict['pos'][0] < self.width and 0 < event.dict['pos'][1] < self.height:
             self.state = True
-            return False,self
+            return False, self
         self.state = False
-        return False,False
+        return False, False
 
     def handle_keys(self, event):
         if self.focus:

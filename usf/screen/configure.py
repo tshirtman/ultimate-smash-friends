@@ -38,7 +38,7 @@ class configure(Screen):
 
         self.widget.add(Button(_('Back')), margin=100)
 
-    def callback(self,action):
+    def callback(self, action):
         if action.text == _('Audio'):
             return "goto:sound"
         if action.text == _('Screen'):

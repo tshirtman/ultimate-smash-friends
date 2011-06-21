@@ -36,7 +36,7 @@ class CheckBox(Widget):
     """
 
     def __init__(self):
-        self.set_size(optimize_size((25,25)))
+        self.set_size(optimize_size((25, 25)))
         self.state = False
         self.checked = False
 
@@ -47,7 +47,7 @@ class CheckBox(Widget):
         """
         self.screen = pygame.display.get_surface()
 
-    def set_size(self, (w,h)):
+    def set_size(self, (w, h)):
         """
         Set the size of the widget.
         """
@@ -67,7 +67,7 @@ class CheckBox(Widget):
                                              scale=(w, h))[0]
         self.surface = self.surface_static
 
-    def handle_mouse(self,event):
+    def handle_mouse(self, event):
         if self.state:
             event.dict['pos'] = (
                     event.dict['pos'][0] - self.parentpos[0] - self.x,
@@ -83,9 +83,9 @@ class CheckBox(Widget):
                 self.checked = True
                 self.surface = self.surface_checked
             self.state = True
-            return self,False
+            return self, False
         self.state = False
-        return False,False
+        return False, False
 
     def get_value(self):
         """

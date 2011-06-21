@@ -33,16 +33,16 @@ class sound(Screen):
         self.add(VBox())
         self.widget.add(Label(_('Sound and effects')))
         sound = Slider('sound_slider')
-        self.widget.add(sound, margin=10, size=(220,30))
+        self.widget.add(sound, margin=10, size=(220, 30))
         self.widget.add(Label(_('Music')))
         music = Slider('music_slider')
-        self.widget.add(music, size=(220,30))
+        self.widget.add(music, size=(220, 30))
 
         music.set_value(config.audio['MUSIC_VOLUME'])
         sound.set_value(config.audio['SOUND_VOLUME'])
         self.widget.add(Button(_('Back')), margin=30)
 
-    def callback(self,action):
+    def callback(self, action):
         if action.text == 'music_slider':
             config.audio['MUSIC_VOLUME'] = action.get_value()
         if action.text == 'sound_slider':

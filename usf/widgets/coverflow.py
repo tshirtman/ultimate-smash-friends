@@ -44,7 +44,7 @@ class Coverflow(Widget):
         self.values = values
         for value in self.values:
             #adding (false) size for the image, there will be updated later
-            value.append((0,0))
+            value.append((0, 0))
             value.append(0)
         self.in_anim = False
         self.anim_state = ""
@@ -113,7 +113,7 @@ class Coverflow(Widget):
         self.screen.blit(self.text, (x +self.width/2 - self.text.get_width()/4,
                                       y + self.sizey(30)))
 
-        self.screen.blit(self.foreground, (0,0))
+        self.screen.blit(self.foreground, (0, 0))
         self.need_update = False
         if self.in_anim:
             self.start_anim()
@@ -257,10 +257,10 @@ class Coverflow(Widget):
                 self.need_update = True
 
 
-    def handle_keys(self,event):
+    def handle_keys(self, event):
         if (event.dict["key"] == pygame.K_DOWN or event.dict["key"] == pygame.K_UP) and not self.state:
             self.state = True
-            return False,self
+            return False, self
 
         if event.dict["key"] == pygame.K_RETURN:
             return self, self
@@ -270,7 +270,7 @@ class Coverflow(Widget):
                 self.launch_anim(True)
             if event.dict["key"] == pygame.K_RIGHT:
                 self.launch_anim(False)
-            return self,self
+            return self, self
 
         self.state = False
         return False, False
@@ -303,7 +303,7 @@ class Coverflow(Widget):
         #FIXME: the colorkey should be in a skin configuration file
         text.fill(pygame.color.Color("black"))
         text.set_colorkey(pygame.color.Color("black"))
-        text.blit(loaders.text(name, fonts['mono']['22']), (0,0))
+        text.blit(loaders.text(name, fonts['mono']['22']), (0, 0))
         return text
 
     def get_value(self):

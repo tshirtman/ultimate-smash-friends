@@ -49,7 +49,7 @@ class Spinner(HBox):
         values is an array of string. Each string is an option.
         """
         self.focusable = False
-        self.parentpos = (0,0)
+        self.parentpos = (0, 0)
         self.extend = False
         self.values = values
         self.orientation = True
@@ -58,23 +58,23 @@ class Spinner(HBox):
         self.init()
         self.text = values[0]
         self.state = False
-        self.height = optimize_size((250,30))[1]
-        self.width = optimize_size((25,30))[0]*2 + optimize_size((self.center_width,30))[0]
+        self.height = optimize_size((250, 30))[1]
+        self.width = optimize_size((25, 30))[0]*2 + optimize_size((self.center_width, 30))[0]
 
     def init(self):
-        self.surface = pygame.Surface((self.width,self.height))
+        self.surface = pygame.Surface((self.width, self.height))
         self.widgets = []
         self.left_arrow = ImageButton(join("gui", config.general['THEME'], "spinner_left.png"),
             join("gui", config.general['THEME'], "spinner_left_hover.png"))
-        self.left_arrow.set_size((37,45))
+        self.left_arrow.set_size((37, 45))
         self.add(self.left_arrow, margin = 0)
         self.center = Label(self.values[self.index],
             background="gui" + os.sep + config.general['THEME'] + os.sep + "spinner_center.png",
             align="center")
-        self.add(self.center, margin = 0, size=(self.center_width,45))
+        self.add(self.center, margin = 0, size=(self.center_width, 45))
         self.right_arrow = ImageButton(join("gui", config.general['THEME'], "spinner_right.png"),
             join("gui", config.general['THEME'], "spinner_right_hover.png"))
-        self.right_arrow.set_size((37,45))
+        self.right_arrow.set_size((37, 45))
         self.add(self.right_arrow, margin = 0)
         self.update_pos()
         self.update_size()
@@ -104,10 +104,10 @@ class Spinner(HBox):
                                     self.index =len(self.values)-1
                             self.text = self.values[self.index]
                             self.center.set_text(self.text)
-                            return (self,False)
+                            return (self, False)
             return False, self
         self.state = False
-        return (False,False)
+        return (False, False)
 
     def get_value(self):
         """
@@ -142,12 +142,12 @@ class Spinner(HBox):
         except:
             logging.warning("No entry named: " + str(value))
 
-    def handle_keys(self,event):
+    def handle_keys(self, event):
         if (event.dict["key"] == pygame.K_DOWN or event.dict["key"] == pygame.K_UP) and not self.state:
             self.state = True
             self.right_arrow.state = True
             self.left_arrow.state = True
-            return False,self
+            return False, self
 
         if event.dict["key"] == pygame.K_RIGHT:
             if self.get_index() + 1 < len(self.values):

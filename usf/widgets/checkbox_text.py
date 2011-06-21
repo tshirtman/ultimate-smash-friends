@@ -56,7 +56,7 @@ class TextCheckBox(HBox):
         isn't empty.
         """
         w = self.width
-        self.surface = pygame.Surface((self.width,self.height))
+        self.surface = pygame.Surface((self.width, self.height))
         self.widgets = []
 
         #left radius
@@ -90,7 +90,7 @@ class TextCheckBox(HBox):
         self.update_pos()
         self.update_size()
 
-    def set_size(self, (w,h)):
+    def set_size(self, (w, h)):
         """
         Set the size of the widget.
         """
@@ -98,7 +98,7 @@ class TextCheckBox(HBox):
         self.width = w
         self.init()
 
-    def handle_mouse(self,event):
+    def handle_mouse(self, event):
         if event.type == pygame.MOUSEBUTTONUP:
             if self.checked:
                 self.checked = False
@@ -106,7 +106,7 @@ class TextCheckBox(HBox):
                 self.checked = True
             self.update_image()
 
-            return self,False
+            return self, False
 
         else:
             x = event.dict['pos'][0]
@@ -120,12 +120,12 @@ class TextCheckBox(HBox):
                 self.state = True
                 self.update_image()
 
-                return False,self
+                return False, self
 
             self.state = False
             self.update_image()
 
-            return False,False
+            return False, False
 
     def get_value(self):
         """
@@ -191,12 +191,12 @@ class TextCheckBox(HBox):
 
             self.center.init()
 
-    def handle_keys(self,event):
+    def handle_keys(self, event):
         if (event.dict["key"] == pygame.K_DOWN
                 or event.dict["key"] == pygame.K_UP) and not self.state:
             self.state = True
             self.update_image()
-            return False,self
+            return False, self
 
         if event.dict["key"] == pygame.K_RETURN:
             if self.checked:
