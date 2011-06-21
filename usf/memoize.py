@@ -17,6 +17,35 @@
 # You should have received a copy of the GNU General Public License            #
 # along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.#
 ################################################################################
+'''
+This module provide simple implementation of the memoize pattern, implemented
+as a decorator.
+
+usage:
+
+@memoize
+def my_determinist_pure_function(*args, **kwargs):
+    do stuff
+
+my_determinist_pure_function(some_params) # first call with those params, slow
+...
+
+my_determinist_pure_function(some_params) # return result imediatly
+
+...
+
+my_determinist_pure_function(other_params) # slow again, because new params
+
+...
+
+my_determinist_pure_function(other_params) # return result immediatly
+
+
+of course, if params/results are memory huger, or the function is called with
+lot of different params, that will eat some memory, but if you often need the
+same result, that can bring you a lot of speed.
+
+'''
 
 def memoize(function):
     """
@@ -28,15 +57,22 @@ def memoize(function):
     cache = {}
 
     def decorated_function(*args, **kwargs):
+        """ this docstring will be replaced by function's one when decorator is
+        used
+        """
         params = (args)+tuple(zip(kwargs.keys(), kwargs.values()))
         try:
             return cache[params]
-        except:
+        except KeyError:
             val = function(*args, **kwargs)
             try:
                 cache[params] = val
             except TypeError, e:
                 print e, params
             return val
+
+    decorated_function.__name__ = function.__name__
+    decorated_function.__doc__ = function.__doc__
+
     return decorated_function
 

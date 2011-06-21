@@ -1,5 +1,4 @@
 import pygame
-from pygame.locals import *
 from math import floor
 
 # Try to import Numpy, or Numeric

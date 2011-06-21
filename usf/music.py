@@ -16,6 +16,11 @@
 # You should have received a copy of the GNU General Public License            #
 # along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.#
 ################################################################################
+'''
+USF module to load and play musics depending on the situation, not hightly
+reusable code.
+
+'''
 
 from pygame import mixer
 import os

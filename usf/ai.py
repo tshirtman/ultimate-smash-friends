@@ -16,6 +16,10 @@
 # You should have received a copy of the GNU General Public License            #
 # along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.#
 ################################################################################
+'''
+This module takes care of managing non human players
+
+'''
 
 # system modules
 from os import path

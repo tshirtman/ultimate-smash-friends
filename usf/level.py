@@ -345,7 +345,7 @@ class Level(object):
         borders
         '''
         #FIXME: should not depend on the initialisation of pygame
-        self.rect = pygame.Rect(usf.loaders.image(self.level)[1])
+        self.rect = usf.loaders.image(self.level)[1]
 
         if 'margins' in attribs:
             margins = [int(i) for i in attribs['margins'].split(',')]
@@ -355,7 +355,7 @@ class Level(object):
                 self.rect[2] + margins[0] + margins[2],
                 self.rect[3] + margins[1] + margins[3])
         else:
-            self.border = self.rect.inflate(self.rect[2]/2, self.rect[3]/2)
+            self.border = pygame.Rect(self.rect).inflate(self.rect[2]/2, self.rect[3]/2)
 
     def load_entrypoints(self, xml):
         ''' set entry points to the level, from xml, create some if there are

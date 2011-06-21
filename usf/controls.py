@@ -175,6 +175,17 @@ class Sequence(object):
         return [str(i) for i in self.keys]
 
 
+def get_key_code(name):
+    """ return key code for the key associated with the keyboard config
+    name
+    """
+    try:
+        return pygame_locals.__dict__[CONFIG.keyboard[name]]
+
+    except KeyError:
+        return int(CONFIG.keyboard[name])
+
+
 class Controls (object):
     """
     Catch pygame keyboard events and decides of the interaction with the game,
@@ -190,18 +201,11 @@ class Controls (object):
         self.load_keys()
         self.load_sequences()
 
-    def get_key_code(self, name):
-        try:
-            return pygame_locals.__dict__[CONFIG.keyboard[name]]
-
-        except KeyError:
-            return int(CONFIG.keyboard[name])
-
     def load_keys(self):
         """ load player keys from configuration
         """
         self.keys = dict(
-                [[self.get_key_code(key), key]
+                [[get_key_code(key), key]
                     for key in CONFIG.keyboard])
 
     def load_sequences(self):
