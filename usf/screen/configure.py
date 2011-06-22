@@ -18,7 +18,6 @@
 ################################################################################
 
 from screen import Screen
-from usf import widgets
 import copy
 
 from usf.widgets.box import VBox

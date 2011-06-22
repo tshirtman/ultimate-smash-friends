@@ -30,7 +30,6 @@ from usf.widgets.checkbox_text import TextCheckBox
 
 from usf import entity_skin
 import os
-from usf.game import Game
 from os.path import join
 
 

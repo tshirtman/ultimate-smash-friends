@@ -20,7 +20,7 @@
 import pygame
 import os
 
-from widget import Widget, get_scale, optimize_size
+from widget import Widget
 from usf import loaders
 from usf.font import fonts
 config = loaders.get_config()

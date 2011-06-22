@@ -36,14 +36,14 @@ TIMESTEP = 0.25
 MAXDEPTH = 1
 
 WALKSPEED = CONFIG.general['WALKSPEED']
-sequences_file = path.join(CONFIG.sys_data_dir, 'sequences.cfg')
+SEQUENCES_FILE = path.join(CONFIG.sys_data_dir, 'sequences.cfg')
 
 
 @memoize
 def possible_movements(movement='static'):
     """ return the list of current legal movements for the player
     """
-    with open(sequences_file) as f:
+    with open(SEQUENCES_FILE) as f:
         lines = f.readlines()
 
     result = set(('walk', )) if 'jump' not in movement else set()

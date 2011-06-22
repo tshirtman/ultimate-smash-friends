@@ -17,13 +17,17 @@
 # along with UltimateSmashFriends.                                            #
 # If not, see <http://www.gnu.org/licenses/>.                                 #
 ###############################################################################
+'''
+This file is about saving/loading config from the user files, creating it if
+necessary.
+
+'''
 
 from __future__ import with_statement
 
 from ConfigParser import SafeConfigParser
-from os import environ, makedirs, stat, sep, getcwd
+from os import environ, makedirs, stat, getcwd
 from os.path import join, dirname, abspath
-from sys import prefix
 import logging
 import platform
 import pygame
@@ -34,11 +38,16 @@ OS = platform.system().lower()
 
 @memoize
 def _splitconf(c):
+    """ little helper function to get all values in a line from conf
+    """
     return [value.strip().strip('\'\"') for value in c.split(',')]
 
 
 @memoize
 def _get_value_from_config(c):
+    """ return all values from the conf for a config option, finding the right
+    type to return.
+    """
     values = _splitconf(c)
     for item in values:
         try:
@@ -228,11 +237,12 @@ class Config(object):
             self.__parser.write(config_file)
 
     def read(self, files):
+        """ dynamically create attributes based on sections in the config file,
+        then assign a dictionary of the form "option: value" to each
+        attribute.
+        """
         self.__parser.read(files)
 
-        # dynamically create attributes based on sections in the config file,
-        # then assign a dictionary of the form "option: value" to each
-        # attribute.
 
         for section in self.__parser.sections():
             setattr(self, section, Option(([item for item in
@@ -255,5 +265,6 @@ class Config(object):
                     return 'K_KP'+name[1]
 
                 else:
-                    return 'K_'+name.upper().replace('LEFT ','L').replace('RIGHT ', 'R')
+                    return 'K_'+name.upper().replace(
+                            'LEFT ','L').replace('RIGHT ', 'R')
 

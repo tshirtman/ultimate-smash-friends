@@ -18,8 +18,6 @@
 ################################################################################
 
 from screen import Screen
-from usf import widgets
-import copy
 import pygame
 
 from usf.widgets.box import VBox

@@ -32,7 +32,7 @@ class Widget (object):
 
     width = 0
     height = 0
-    x =0
+    x = 0
     y = 0
     margin = 0
     margin_left = 0

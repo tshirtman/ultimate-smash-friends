@@ -16,6 +16,10 @@
 # You should have received a copy of the GNU General Public License            #
 # along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.#
 ################################################################################
+'''
+this module deal with what's definied in xml files for entities
+
+'''
 
 import os
 import random
@@ -185,6 +189,9 @@ class Entity_skin (object):
                     server)
 
     def valid_animation(self, anim_name):
+        """ return true if the animation is in the character animations and is
+        'static' or not the current animation.
+        """
         return (
                 anim_name in self.animations
                 and (
@@ -232,14 +239,20 @@ class Entity_skin (object):
             pass
 
     def backup(self):
+        """ save current state of the entity skin
+        """
         return (self.current_animation, self.animation,
                 self.animation.playing, self.animation._start_time)
 
     def restore(self, backup):
+        """ restore entity_skin from a backup state
+        """
         (self.current_animation, self.animation, self.animation.playing,
                 self.animation._start_time) = backup
 
     def add_vectors(self, anim_name, game, params):
+        """ add vectors of the animation to the game as events
+        """
         for vector in self.vectors[anim_name]:
             #logging.debug('vector added')
             params2 = params.copy() # because we want to change some of
@@ -252,6 +265,8 @@ class Entity_skin (object):
                     params=params2)
 
     def add_events(self, anim_name, game, params):
+        """ add events of the animation to the game
+        """
         for event in self.action_events[anim_name]:
             if event[1][0] is 0:
                 p1 = None

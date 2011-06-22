@@ -49,17 +49,19 @@ class Skin (object):
 
         if xml_file.find("dialog") is not None:
             conf_d = xml_file.find("dialog")
-            W, H = CONFIG.general["WIDTH"], CONFIG.general["HEIGHT"]
+            w, h = CONFIG.general["WIDTH"], CONFIG.general["HEIGHT"]
 
-            self.dialog["sizex"] = int(conf_d.attrib["sizex"]) * W / 100
-            self.dialog["sizey"] = int(conf_d.attrib["sizey"]) * H / 100
-            self.dialog["posx"] = int(conf_d.attrib["posx"]) * W / 100
-            self.dialog["posy"] = int(conf_d.attrib["posy"]) * H / 100
+            self.dialog["sizex"] = int(conf_d.attrib["sizex"]) * w / 100
+            self.dialog["sizey"] = int(conf_d.attrib["sizey"]) * h / 100
+            self.dialog["posx"] = int(conf_d.attrib["posx"]) * w / 100
+            self.dialog["posy"] = int(conf_d.attrib["posy"]) * h / 100
 
         for node in xml_file.findall("layer"):
             self.layer.append(Layer(node))
 
     def get_background(self):
+        """ FIXME: doc!
+        """
         pygame.display.get_surface().fill(pygame.color.Color("black"))
         for layer in self.layer:
             pygame.display.get_surface().blit(

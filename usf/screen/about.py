@@ -18,7 +18,6 @@
 ################################################################################
 
 from screen import Screen
-from usf import widgets
 from usf import loaders
 
 from usf.widgets.box import VBox

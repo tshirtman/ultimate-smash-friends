@@ -9,7 +9,7 @@ def main_():
             'rizland']
     m = main.Main()
     m.init()
-    cProfile.runctx("m.go()", globals(), locals(), filename="usf.profile")
+    cProfile.runctx("m.run()", globals(), locals(), filename="usf.profile")
 
 
 if __name__ == '__main__':

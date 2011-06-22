@@ -50,7 +50,10 @@ class EventManager(object):
         """
         for e in self.events:
             e.update(deltatime, gametime)
-        [e.del_() for e in self.events if e.done]
+
+            if e.done:
+                e.del_() 
+
         self.events = filter(lambda x: not x.done, self.events)
 
     def add_event(self, name, *args, **kwargs):

@@ -20,10 +20,9 @@
 #standard imports
 import pygame
 import os
-import time
 
 #our module
-from widget import Widget, get_scale, optimize_size
+from widget import Widget
 from usf import loaders
 from usf.font import fonts
 config = loaders.get_config()
