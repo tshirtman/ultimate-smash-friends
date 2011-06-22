@@ -25,7 +25,7 @@ complexe effects and behaviours in the game.
 import random
 import math
 
-from config import Config
+from usf.config import Config
 
 CONFIG = Config()
 SIZE = (CONFIG.general['WIDTH'],
@@ -175,7 +175,11 @@ class DelItemEvent(TimedEvent):
         if self.params is not None and 'entity' in self.params:
             target = self.params['entity']
         else:
-            target = self.target
+            try:
+                target = self.target
+            except AttributeError:
+                logging.error(
+                'DelItemEvent no entity in params, and no self.target!!!')
         target.set_lives(0)
 
 
@@ -203,7 +207,7 @@ class DropRandomItem(TimedEvent):
 
     def execute(self, deltatime):
         try:
-            self.params['world'].addItem(
+            self.params['world'].add_item(
                     random.sample(['heal', 'bomb'], 1)[0],
                     place=(random.random()*SIZE[0], 50))
 
@@ -232,7 +236,7 @@ class ItemShower(TimedEvent):
 
         if self.elapsed >= freq:
             try:
-                self.params['world'].addItem(
+                self.params['world'].add_item(
                         random.sample(
                             [
                             'heal',
@@ -258,7 +262,7 @@ class ThrowBomb(TimedEvent):
 
     def execute(self, deltatime):
         self.done = True
-        self.params['world'].addItem(
+        self.params['world'].add_item(
                 'bomb',
                 place=(self.params['entity'].rect[0:2]),
                 reverse=self.params['entity'].reversed,
@@ -279,7 +283,7 @@ class ThrowFireBall(TimedEvent):
         place = list(entity.place[0:2])
         place[0] += -100 if entity.reversed else entity.rect[2]
         #place[1] -= entity.rect[3]/3
-        self.params['world'].addItem(
+        self.params['world'].add_item(
                 'fireball',
                 place=place,
                 reverse=entity.reversed,
@@ -323,7 +327,7 @@ class ThrowMiniGost(TimedEvent):
 
     def execute(self, deltatime):
         self.done = True
-        self.params['world'].addItem(
+        self.params['world'].add_item(
                 'mini_gost',
                 place=(self.params['entity'].rect[0:2]),
                 vector=[1000, 50])
@@ -343,7 +347,7 @@ class LaunchBullet(TimedEvent):
         place = entity.place[0:2]
         place[0] += entity.reversed and -entity.rect[2] or entity.rect[2]
         place[1] += entity.rect[3]/2
-        self.params['world'].addItem(
+        self.params['world'].add_item(
                 'bullet',
                 place=place,
                 reverse=entity.reversed,
@@ -568,7 +572,7 @@ class BlobSpecial(TimedEvent):
         try:
             self.eye
         except AttributeError:
-            self.eye = self.params['world'].addItem('blob-eye',
+            self.eye = self.params['world'].add_item('blob-eye',
                     upgraded=self.entity.upgraded, physics=False,
                     reverse=self.entity.reversed)
 
@@ -630,7 +634,7 @@ class XeonCharge(TimedEvent):
     def delete(self):
         if self.entity_life == self.entity.percents:
             size = min(int(self.size / (1.7 / 7)), 6)
-            self.world.addItem(
+            self.world.add_item(
                     "xeon-charge",
                     upgraded=self.entity.upgraded,
                     animation=str(size),

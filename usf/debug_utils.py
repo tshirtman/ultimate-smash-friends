@@ -22,6 +22,9 @@ def log_result(function):
         result = function(*args, **kwargs)
         logging.info(str(result))
         return result
+
+    decorated.__name__ = function.name
+    decorated.__doc__ = function.doc
     return decorated
 
 

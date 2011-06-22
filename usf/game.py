@@ -40,9 +40,9 @@ from usf.loaders import image
 import usf.entity as entity
 import usf.loaders as loaders
 
-game_font = fonts['sans']['normal']
+GAME_FONT = fonts['sans']['normal']
 
-config = Config()
+CONFIG = Config()
 
 
 if not pygame.font:
@@ -72,9 +72,9 @@ class Game(object):
         level is the basename of the level in levels/
         """
 
-        self.SIZE = (
-            config.general['WIDTH'],
-            config.general['HEIGHT'])
+        self.size = (
+            CONFIG.general['WIDTH'],
+            CONFIG.general['HEIGHT'])
 
         self.first_frame = True
         self.notif = []
@@ -86,14 +86,14 @@ class Game(object):
         self.gametime = 0
 
         #we load the bool for smooth scrolling here, for a better performance
-        self.smooth_scrolling = config.general["SMOOTH_SCROLLING"]
+        self.smooth_scrolling = CONFIG.general["SMOOTH_SCROLLING"]
 
         self.level = Level(level)
         if screen is not None:
             self.zoom = 1
             # loading level
             self.level_place = [0, 0]
-            self.icon_space = self.SIZE[0]/len(players_)
+            self.icon_space = self.size[0]/len(players_)
 
             # loading players
 
@@ -101,18 +101,23 @@ class Game(object):
 
         #the optional progress bar for the players lives
         self.progress_bar_size = (
-                82.5*config.general["WIDTH"]/800,
-                12.5*config.general["WIDTH"]/800)
+                82.5*CONFIG.general["WIDTH"]/800,
+                12.5*CONFIG.general["WIDTH"]/800)
 
         self.progress_bar_x = (
-                config.general["HEIGHT"] - 25 * config.general["WIDTH"] / 800)
+                CONFIG.general["HEIGHT"] - 25 * CONFIG.general["WIDTH"] / 800)
 
         # a countdown to the game end
         self.ending = 5.0
 
-        self.max_fps = config.general['MAX_FPS']
+        self.max_fps = CONFIG.general['MAX_FPS']
 
     def add_world_event(self):
+        '''
+        #XXX this currently add an itemshower to the game, should probably switch to
+        starting level configured events.
+        '''
+
         self.events.add_event(
                 'ItemShower',
                 (None, None),
@@ -138,7 +143,7 @@ class Game(object):
                     i+1,
                     self,
                     player,
-                    ((i + 1) * self.SIZE[0] / 5, 100)))
+                    ((i + 1) * self.size[0] / 5, 100)))
 
         if ai:
             self.players[len(self.players)-1].ai = ai
@@ -154,7 +159,7 @@ class Game(object):
         for i, player in enumerate(players_):
             self.load_player(i, player)
 
-    def addItem(
+    def add_item(
         self,
         item='heal',
         place=(550, 50),
@@ -169,7 +174,7 @@ class Game(object):
 
         """
         try:
-            os.listdir(os.path.join(config.sys_data_dir, 'items', item))
+            os.listdir(os.path.join(CONFIG.sys_data_dir, 'items', item))
             e = entity.Entity(
                         None,
                         self,
@@ -202,10 +207,12 @@ class Game(object):
         return e
 
     def draw_progress_bar_for_lives(self, player):
+        """ heh, draw progree bar for lives of the player
+        """
         self.screen.blit(
                 image(
                     os.path.join(
-                        config.sys_data_dir,
+                        CONFIG.sys_data_dir,
                         'misc',
                         'progress_bar_bg.png'),
                     scale=self.progress_bar_size)[0],
@@ -218,7 +225,7 @@ class Game(object):
             self.screen.blit(
                     image(
                         os.path.join(
-                            config.sys_data_dir,
+                            CONFIG.sys_data_dir,
                             'misc',
                             'progress_bar.png'),
                         scale=(self.progress_bar_size[0] -
@@ -229,21 +236,23 @@ class Game(object):
                     -0.5*self.icon_space+player.num*self.icon_space,
                 self.progress_bar_x))
 
-    def draw_player_portrait(self, num, player):
+    def draw_player_portrait(self, player):
+        """ draw, like... the player portrait? :D
+        """
         self.screen.blit(
                  image(player.entity_skin.image, scale=(30, 30))[0],
                     (
                     -0.5*self.icon_space+player.num*self.icon_space,
-                    self.SIZE[1]*.9))
+                    self.size[1]*.9))
 
         if loaders.get_gconfig().get("game", "displaylives") == "y":
             self.screen.blit(
-                     game_font.render(str(player.percents*10)[:3]+"%",
+                     GAME_FONT.render(str(player.percents*10)[:3]+"%",
                      True,
                      pygame.color.Color("red")),
                         (
                         -0.5*self.icon_space+player.num*self.icon_space,
-                        self.SIZE[1]*.9))
+                        self.size[1]*.9))
 
         elif loaders.get_gconfig().get("game",
                 "display_progress_bar_for_lives") == "y":
@@ -258,7 +267,7 @@ class Game(object):
             self.screen.blit(
                     image(
                         os.path.join(
-                            config.sys_data_dir,
+                            CONFIG.sys_data_dir,
                             'misc',
                             'heart.png'))[0],
                     (
@@ -266,21 +275,21 @@ class Game(object):
                             player.num * self.icon_space +
                             32 +
                             i * self.icon_space / 40,
-                        self.SIZE[1]*.9+10))
+                        self.size[1]*.9+10))
 
     def draw_debug_player_coords(self, num, player):
         """ draw player coords, useful for debugging.
         """
         self.screen.blit(
-                game_font.render(
+                GAME_FONT.render(
                     str(player.place[0])+
                     ':'+
                     str(player.place[1]),
                     True,
                     pygame.color.Color('red')),
                 (
-                 self.SIZE[0] * 3 / 4,
-                 num*self.SIZE[1] / 4))
+                 self.size[0] * 3 / 4,
+                 num*self.size[1] / 4))
 
 
     def draw_debug_player_controls(self, num, player, controls):
@@ -290,9 +299,9 @@ class Game(object):
             self.screen.blit(
                     loaders.image(
                         os.path.join(
-                            config.sys_data_dir,
+                            CONFIG.sys_data_dir,
                             'misc','key_' + k[0].lower() + '.png'))[0],
-                    (num * self.SIZE[0] / 4 + i * 50, 0 + 100 * (num % 2)))
+                    (num * self.size[0] / 4 + i * 50, 0 + 100 * (num % 2)))
 
 
     def draw_debug(self, debug_params):
@@ -309,16 +318,16 @@ class Game(object):
         Draw player's portraits at bottom of the screen
         """
         #draw the background of the block where the lives are displayed
-        hud_height = 75 * config.general["WIDTH"] / 800
+        hud_height = 75 * CONFIG.general["WIDTH"] / 800
         self.screen.blit(loaders.image(os.path.join(
-            config.sys_data_dir,
+            CONFIG.sys_data_dir,
             "misc",
             "hud.png"),
-            scale=(config.general["WIDTH"], hud_height))[0],
-            (0, config.general["HEIGHT"]-hud_height))
+            scale=(CONFIG.general["WIDTH"], hud_height))[0],
+            (0, CONFIG.general["HEIGHT"]-hud_height))
 
-        for num, player in enumerate(self.players):
-            self.draw_player_portrait(num, player)
+        for player in self.players:
+            self.draw_player_portrait(player)
 
     def draw(self, debug_params={}):
         """
@@ -330,10 +339,10 @@ class Game(object):
             self.screen, self.level_place, self.zoom,
             'levelshape' in debug_params and debug_params['levelshape'])
 
-        for entity in self.players + self.items:
-            entity.present and entity.draw(
-                self.level_place, self.zoom, self.screen,
-                debug_params=debug_params)
+        for e in self.players + self.items:
+            if e.present:
+                e.draw(self.level_place, self.zoom, self.screen,
+                        debug_params=debug_params)
 
         self.level.draw_after_players(
             self.screen, self.level_place, self.zoom,
@@ -358,10 +367,10 @@ class Game(object):
                     loaders.text(
                         alive_players[0].name.capitalize()+_(" WON!"),
                         fonts["bold"][15], 0, 0, 0),
-                    (self.SIZE[0]/2, self.SIZE[1]/2))
+                    (self.size[0]/2, self.size[1]/2))
 
         elif len(alive_players) == 0:
-            self.screen.blit(game_font.render(
+            self.screen.blit(GAME_FONT.render(
                 _("OOPS... DRAW!!!"),
                 True,
                 pygame.color.Color("#"+
@@ -369,21 +378,23 @@ class Game(object):
                     "50"+
                     str(math.sin(self.ending/10)) [3:5]+
                     "30")),
-                (self.SIZE[0]/2, self.SIZE[1]/2))
+                (self.size[0]/2, self.size[1]/2))
 
     def draw_notif(self, notif):
         self.screen.blit(
-                game_font.render(
+                GAME_FONT.render(
                     str(notif[1]),
                     True,
                     pygame.color.Color("black")),
                 (
-                 self.SIZE[0]/4,
-                 self.notif.index(notif)*self.SIZE[1]/20))
+                 self.size[0]/4,
+                 self.notif.index(notif)*self.size[1]/20))
 
     def update_notif(self):
+        """ update and draw notifs,
+        """
         for notif in self.notif:
-            if config.general['NOTIF_EFFECT'] == "True":
+            if CONFIG.general['NOTIF_EFFECT'] == "True":
                 if(len(notif) <3):
                     notif.append(notif[1][0])
                 elif len(notif[2]) is not len(notif[1]):
@@ -406,10 +417,10 @@ class Game(object):
             x = [i.place[0] for i in self.present_players]
             y = [i.place[1] for i in self.present_players]
 
-            L = max(self.SIZE[0], (max(x) - min(x)) * 1.25)
-            H = max(self.SIZE[1], (max(y) - min(y)) * 1.5)
+            L = max(self.size[0], (max(x) - min(x)) * 1.25)
+            H = max(self.size[1], (max(y) - min(y)) * 1.5)
 
-            return min(self.SIZE[0] / L, self.SIZE[1] / H)
+            return min(self.size[0] / L, self.size[1] / H)
 
     @property
     def players_barycenter(self):
@@ -429,15 +440,15 @@ class Game(object):
             # the zoom level to be a limited precision value here, so the
             # image cache is more useful.
             self.zoom = (
-                int(self.precise_zoom * config.general['ZOOM_SHARPNESS'])/
-                (config.general['ZOOM_SHARPNESS'] * 1.0))
+                int(self.precise_zoom * CONFIG.general['ZOOM_SHARPNESS'])/
+                (CONFIG.general['ZOOM_SHARPNESS'] * 1.0))
 
             players_barycenter = self.players_barycenter
             # calculate coordinates of top left corner of level
             # rect the barycenter of players at the center of the screen
             level_place = [
-                 -(players_barycenter[0]) * self.zoom + self.SIZE[0] / 2,
-                 -(players_barycenter[1]) * self.zoom + self.SIZE[1] / 2]
+                 -(players_barycenter[0]) * self.zoom + self.size[0] / 2,
+                 -(players_barycenter[1]) * self.zoom + self.size[1] / 2]
 
             if self.smooth_scrolling:
                 # tends to the ideal position (nicer!)
@@ -465,7 +476,7 @@ class Game(object):
             x.entity_skin.current_animation, self.players):
             for item in self.items:
                 if player.rect.collidelist([item.rect, ]) != -1:
-                        item.entity_skin.change_animation(
+                    item.entity_skin.change_animation(
                             'triger',
                             self,
                             params={'player': player, 'entity': item})

@@ -20,18 +20,15 @@
 
 from __future__ import with_statement
 
-from os import environ, makedirs, stat, sep
-import os
+from ConfigParser import SafeConfigParser
+from os import environ, makedirs, stat, sep, getcwd
 from os.path import join, dirname, abspath
 from sys import prefix
-from memoize import memoize
-
-from ConfigParser import SafeConfigParser
-import platform
 import logging
-
+import platform
 import pygame
 
+from usf.memoize import memoize
 OS = platform.system().lower()
 
 
@@ -209,7 +206,7 @@ class Config(object):
 
             if sys_data_dir == "":
                 print "Error: no valid data directory - aborting"
-                print "Current dir: " + os.getcwd()
+                print "Current dir: " + getcwd()
                 exit(-1)
 
             user_config_file = join(user_config_dir, 'user.cfg')
