@@ -31,8 +31,9 @@ from usf import loaders
 #config
 config = loaders.get_config()
 
+from usf.translation import _
 
-class level(Screen):
+class Level(Screen):
 
     def init(self):
         self.add(VBox())

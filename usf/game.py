@@ -40,6 +40,8 @@ from usf.loaders import image
 import usf.entity as entity
 import usf.loaders as loaders
 
+from usf.translation import _
+
 GAME_FONT = fonts['sans']['normal']
 
 CONFIG = Config()

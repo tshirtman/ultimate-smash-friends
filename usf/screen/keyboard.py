@@ -27,10 +27,12 @@ from usf.widgets.special import KeyboardWidget
 from usf.widgets.image import Image
 
 from usf.config import Config
+from usf.translation import _
+
 config = Config()
 
 
-class keyboard(Screen):
+class Keyboard(Screen):
 
     def init(self):
         self.add(VBox())

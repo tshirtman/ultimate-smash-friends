@@ -22,7 +22,9 @@ from screen import Screen
 from usf.widgets.box import VBox
 from usf.widgets.button import Button
 
-class configure(Screen):
+from usf.translation import _
+
+class Configure(Screen):
     def init(self):
         self.add(VBox())
         self.set_name(_("configure"))

@@ -16,24 +16,35 @@
 # You should have received a copy of the GNU General Public License along with #
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
+'''
+Some Box widgets as base for the GUI classes
 
-import pygame
+'''
+
 from widget import Widget, optimize_size
 from button import Button
 
 from usf import loaders
-config = loaders.get_config()
+CONFIG = loaders.get_config()
 
 
 class Container(Widget):
     """
-    This widget is never used directly, it is used to be a base for the HBox and VBox widget.
+    This widget is never used directly, it is used to be a base for the HBox
+    and VBox widget.
     """
     focusable = True
 
+    def __init__(self, orientation):
+        super(Container, self).__init__()
+        self.init()
+        self.widgets = []
+        self.orientation = orientation
+
     def update_size(self):
         """
-        This function is used to update the container size after adding a widget.
+        This function is used to update the container size after adding a
+        widget.
         """
         sizex = 0
         sizey = 0
@@ -71,7 +82,8 @@ class Container(Widget):
                 posx += widget.width
             else:
                 posy += widget.height
-            widget.parentpos = (self.parentpos[0] + self.x, self.parentpos[1] + self.y)
+            widget.parentpos = (
+                    self.parentpos[0] + self.x, self.parentpos[1] + self.y)
             widget.update_size()
             widget.update_pos()
 
@@ -79,11 +91,10 @@ class Container(Widget):
         """
         This method draw all widgets surfaces in a surface and return it
         """
-        screen = pygame.display.get_surface()
         for widget in self.widgets:
             widget.draw()
 
-    def add(self, widget, *args, **kwargs):
+    def add(self, widget, **kwargs):
         """
         This function is used to add a widget in the conatiner
         """
@@ -100,9 +111,9 @@ class Container(Widget):
         else:
             margin = optimize_size((0, 10))[1]
         if self.orientation:
-            widget.margin = margin*config.general['WIDTH']/800
+            widget.margin = margin*CONFIG.general['WIDTH']/800
         else:
-            widget.margin = margin*config.general['HEIGHT']/480
+            widget.margin = margin*CONFIG.general['HEIGHT']/480
         if 'margin_left' in kwargs:
             widget.margin_left = kwargs['margin_left']
         if 'align' in kwargs:
@@ -121,7 +132,9 @@ class Container(Widget):
         y = event.dict['pos'][1]
 
         for widget in self.widgets:
-            if widget.x < x < widget.x+widget.width and widget.y < y < widget.y+widget.height:
+            if (
+                    widget.x < x < widget.x+widget.width and
+                    widget.y < y < widget.y+widget.height):
                 event.dict['pos'] = (x-widget.x, y-widget.y)
                 return widget.handle_mouse(event)
 
@@ -135,21 +148,20 @@ class Container(Widget):
 
 class HBox(Container):
     """
-    A widget which is able to contain others widgets and align them horizontally.
+    A widget which is able to contain others widgets and align them
+    horizontally.
     """
 
     def __init__(self):
-        self.init()
-        self.widgets = []
-        self.orientation = True
+        super(HBox, self).__init__(orientation=True)
 
 
 class VBox(Container):
     """
-    A widget which is able to contain others widgets and align them vertically.
+    A widget which is able to contain others widgets and align them
+    vertically.
     """
 
     def __init__(self):
-        self.init()
-        self.widgets = []
-        self.orientation = False
+        super(VBox, self).__init__(orientation=False)
+

@@ -24,13 +24,14 @@ from usf.widgets.checkbox_text import TextCheckBox
 from usf.widgets.spinner import Spinner
 from usf.widgets.slider import Slider
 from usf.widgets.button import Button
+from usf.translation import _
 
 from usf.config import Config
 import pygame
 config = Config()
 
 
-class screen_screen(Screen):
+class Screen_screen(Screen):
 
     def init(self):
         self.add(VBox())

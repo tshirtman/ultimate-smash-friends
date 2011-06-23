@@ -28,12 +28,14 @@ from usf.widgets.spinner import Spinner
 from usf.widgets.label import Label
 from usf.widgets.checkbox_text import TextCheckBox
 
+from usf.translation import _
+
 from usf import entity_skin
 import os
 from os.path import join
 
 
-class characters(Screen):
+class Characters(Screen):
     name_pl1 = 0
     name_pl2 = 0
     name_pl3 = 0

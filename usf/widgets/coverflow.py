@@ -59,18 +59,21 @@ class Coverflow(Widget):
         """
         self.center_size = (self.sizex(195), self.sizey(120))
         self.posy_center = self.sizey(60)
-        self.foreground = loaders.image(os.path.join(config.sys_data_dir,
-                                                "gui",
-                                                config.general['THEME'],
-                                                "coverflow",
-                                                "foreground.png"), scale=(config.general["WIDTH"], config.general["HEIGHT"]))[0]
+        self.foreground = loaders.image(
+                os.path.join(config.sys_data_dir,
+                    "gui",
+                    config.general['THEME'],
+                    "coverflow",
+                    "foreground.png"),
+                scale=(config.general["WIDTH"], config.general["HEIGHT"]))[0]
 
-        self.frame = loaders.image(os.path.join(config.sys_data_dir,
-                                                "gui",
-                                                config.general['THEME'],
-                                                "coverflow",
-                                                "frame.png"),
-                                        scale=(self.sizex(137), self.sizey(86)))[0]
+        self.frame = loaders.image(
+                os.path.join(config.sys_data_dir,
+                    "gui",
+                    config.general['THEME'],
+                    "coverflow",
+                    "frame.png"),
+                scale=(self.sizex(137), self.sizey(86)))[0]
 
         self.surface = pygame.surface.Surface((self.width, self.height))
         self.index = 0
@@ -139,8 +142,12 @@ class Coverflow(Widget):
         for i in range(self.index - len(self.values) + 1,
                        self.index - len(self.values) + 4):
             self.screen.blit(self.frame, (x + self.pos, y + self.sizey(82)))
-            self.screen.blit(loaders.image(self.values[i][1], scale=self.values[i][2])[0],
-                 (x + self.pos + self.values[i][3][0], y + self.sizey(82) + self.values[i][3][1]))
+            self.screen.blit(loaders.image(
+                self.values[i][1],
+                scale=self.values[i][2])[0], (
+                    x + self.pos + self.values[i][3][0],
+                    y + self.sizey(82) + self.values[i][3][1]))
+
             self.pos += self.frame.get_width()
 
     def draw_left(self):
@@ -149,11 +156,20 @@ class Coverflow(Widget):
         """
         x, y = (self.parentpos[0] + self.x, self.parentpos[1] + self.y)
         #at left now
-        self.pos = self.width/2 - self.main_frame.get_width()/2 - self.frame.get_width()*3 + self.advance
+        self.pos = (
+                self.width/2
+                - self.main_frame.get_width()/2
+                - self.frame.get_width()*3
+                + self.advance)
+
         for i in range(self.index - 3, self.index):
             self.screen.blit(self.frame, (x + self.pos, y + self.sizey(82)))
-            self.screen.blit(loaders.image(self.values[i][1], scale=self.values[i][2])[0],
-                 (x + self.pos + self.values[i][3][0], y + self.sizey(82) + self.values[i][3][1]))
+            self.screen.blit(loaders.image(
+                self.values[i][1],
+                scale=self.values[i][2])[0], (
+                    x + self.pos + self.values[i][3][0],
+                    y + self.sizey(82) + self.values[i][3][1]))
+
             self.pos += self.frame.get_width()
 
     def next(self):
@@ -257,14 +273,18 @@ class Coverflow(Widget):
 
 
     def handle_keys(self, event):
-        if (event.dict["key"] == pygame.K_DOWN or event.dict["key"] == pygame.K_UP) and not self.state:
+        if (
+                event.dict["key"] == pygame.K_DOWN or
+                event.dict["key"] == pygame.K_UP) and not self.state:
             self.state = True
             return False, self
 
         if event.dict["key"] == pygame.K_RETURN:
             return self, self
 
-        if not self.in_anim and (event.dict["key"] == pygame.K_LEFT or event.dict["key"] == pygame.K_RIGHT):
+        if not self.in_anim and (event.dict["key"] == pygame.K_LEFT
+                or event.dict["key"] == pygame.K_RIGHT):
+
             if event.dict["key"] == pygame.K_LEFT:
                 self.launch_anim(True)
             if event.dict["key"] == pygame.K_RIGHT:
@@ -276,26 +296,30 @@ class Coverflow(Widget):
 
     def load_main_frame(self):
         self.main_frame = loaders.image(os.path.join(config.sys_data_dir,
-                                                "gui",
-                                                config.general['THEME'],
-                                                "coverflow",
-                                                "frame.png"),
-                                        scale=self.center_size)[0]
+            "gui",
+            config.general['THEME'],
+            "coverflow",
+            "frame.png"),
+            scale=self.center_size)[0]
 
         img = loaders.image(self.values[self.index][1])[0]
 
         #keep the image ratio
         if img.get_height() > img.get_width():
-            self.center_image = (self.main_frame.get_width() - self.sizex(25),
-                                 img.get_height() * (self.main_frame.get_width() -
-                                    self.sizex(25)) / img.get_width())
+            self.center_image = (
+                    self.main_frame.get_width() - self.sizex(25),
+                    img.get_height() * (self.main_frame.get_width() -
+                        self.sizex(25)) / img.get_width())
         else:
-            self.center_image = (img.get_width() * (self.main_frame.get_height() -
-                                    self.sizey(25)) / img.get_height(),
-                                 self.main_frame.get_height()- self.sizey(25))
+            self.center_image = (
+                    img.get_width() * (
+                        self.main_frame.get_height() - self.sizey(25))
+                    / img.get_height(),
+                self.main_frame.get_height()- self.sizey(25))
 
-        self.center_image_indent = (self.main_frame.get_width()/2 - self.center_image[0]/2,
-                                    self.main_frame.get_height()/2 - self.center_image[1]/2)
+        self.center_image_indent = (
+                self.main_frame.get_width()/2 - self.center_image[0]/2,
+                self.main_frame.get_height()/2 - self.center_image[1]/2)
 
     def get_text_transparent(self, name):
         text = loaders.text(name, fonts['mono']['10']).convert()
@@ -310,9 +334,10 @@ class Coverflow(Widget):
 
     def sizex(self, x):
         """
-        This method is used to get the real size of an element. All size in the code above
-        are for a widget size = 800*275. So, if the size is different, this function modify it.
-        This function is used for the x axis. Use sizey for y axis.
+        This method is used to get the real size of an element. All size in the
+        code above are for a widget size = 800*275. So, if the size is
+        different, this function modify it.  This function is used for the x
+        axis. Use sizey for y axis.
         """
         return x*self.width/800
 

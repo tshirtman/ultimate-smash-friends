@@ -43,6 +43,8 @@ from usf.music import Music
 from usf.font import fonts
 from usf.ai import AI
 
+from usf.translation import _
+
 #XXX: there is an ugly border effect here, it creates _ in the namespace
 import usf.translation
 

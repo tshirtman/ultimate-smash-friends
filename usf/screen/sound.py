@@ -22,13 +22,14 @@ from usf.widgets.box import VBox
 from usf.widgets.slider import Slider
 from usf.widgets.label import Label
 from usf.widgets.button import Button
+from usf.translation import _
 
 from usf.config import Config
 
 config = Config()
 
 
-class sound(Screen):
+class Sound(Screen):
     def init(self):
         self.add(VBox())
         self.widget.add(Label(_('Sound and effects')))

@@ -42,7 +42,20 @@ from usf.widgets.widget import optimize_size
 
 from usf.font import fonts
 
+from usf.translation import _
+
 CONFIG = Config()
+
+from usf.screen.main_screen import Main_screen
+from usf.screen.configure import Configure
+from usf.screen.about import About
+from usf.screen.resume import Resume
+from usf.screen.sound import Sound
+from usf.screen.screen_screen import Screen_screen
+from usf.screen.keyboard import Keyboard
+from usf.screen.level import Level
+from usf.screen.characters import Characters
+
 
 class Gui(object):
     """
@@ -56,22 +69,16 @@ class Gui(object):
         self.screens = {}
         self.screen_history = []
         #TODO : Use a config file
-        screens = ['main_screen',
-                   'configure',
-                   'about',
-                   'resume',
-                   'sound',
-                   'screen_screen',
-                   'keyboard',
-                   'level',
-                   'characters']
 
-        for name in screens:
-            exec("import screen." + name)
-            exec('scr = screen.' + name + '.' + name + "('" + name
-                    + "',self.screen)")
-
-            self.screens[name] = scr
+        self.screens['main_screen'] = Main_screen('main_screen', self.screen)
+        self.screens['configure'] = Configure('configure', self.screen)
+        self.screens['about'] = About('about', self.screen)
+        self.screens['resume'] = Resume('resume', self.screen)
+        self.screens['sound'] = Sound('sound', self.screen)
+        self.screens['screen_screen'] = Screen_screen('screen_screen', self.screen)
+        self.screens['keyboard'] = Keyboard('keyboard', self.screen)
+        self.screens['level'] = Level('level', self.screen)
+        self.screens['characters'] = Characters('characters', self.screen)
 
         self.screen_current = 'main_screen'
         self.skin = Skin()

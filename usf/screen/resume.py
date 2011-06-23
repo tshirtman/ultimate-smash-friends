@@ -20,9 +20,10 @@
 from screen import Screen
 from usf.widgets.button import Button
 from usf.widgets.box import VBox
+from usf.translation import _
 
 
-class resume(Screen):
+class Resume(Screen):
     def init(self):
         self.add(VBox())
         self.widget.add(Button('Resume'))

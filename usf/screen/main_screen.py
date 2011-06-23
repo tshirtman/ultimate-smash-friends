@@ -22,8 +22,9 @@ import pygame
 
 from usf.widgets.box import VBox
 from usf.widgets.button import Button
+from usf.translation import _
 
-class main_screen(Screen):
+class Main_screen(Screen):
     def init(self):
         self.set_name("ultimate smash friends")
         self.add(VBox())
