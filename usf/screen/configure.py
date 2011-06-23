@@ -18,7 +18,6 @@
 ################################################################################
 
 from screen import Screen
-import copy
 
 from usf.widgets.box import VBox
 from usf.widgets.button import Button

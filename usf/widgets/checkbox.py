@@ -19,13 +19,11 @@
 
 #standards imports
 import pygame
-import os
 from os.path import join
 
 #our modules
-from widget import Widget, get_scale, optimize_size
+from widget import Widget, optimize_size
 from usf import loaders
-from usf.font import fonts
 
 config = loaders.get_config()
 

@@ -20,10 +20,9 @@
 import pygame
 from os.path import join
 
-from widget import Widget, get_scale, optimize_size
+from widget import Widget, optimize_size
 from usf import loaders
-from usf.font import fonts
-config = loaders.get_config()
+CONFIG = loaders.get_config()
 
 
 class Slider(Widget):
@@ -41,38 +40,58 @@ class Slider(Widget):
         self.index = 0
         self.state = False
         self.height = optimize_size((250, 25))[1]
-        self.width = optimize_size((25, 25))[0] + optimize_size((25, 25))[0] + optimize_size((100, 25))[0]
+        self.width = (
+                optimize_size((25, 25))[0] +
+                optimize_size((25, 25))[0] +
+                optimize_size((100, 25))[0])
 
     def init(self):
-        self.background= loaders.image(join(config.sys_data_dir, 'gui',
-                config.general['THEME'], 'slider_background.png'),
-            scale=(self.width, self.height))[0]
-        self.center= loaders.image(join(config.sys_data_dir, 'gui',
-                config.general['THEME'], 'slider_center.png'),
-            scale=(self.height, self.height))[0]
-        self.center_hover= loaders.image(join(config.sys_data_dir, 'gui',
-                config.general['THEME'], 'slider_center_hover.png'),
-            scale=(self.height, self.height))[0]
+        self.background = loaders.image(
+                join(CONFIG.sys_data_dir, 'gui',
+                    CONFIG.general['THEME'], 'slider_background.png'),
+                scale=(self.width, self.height))[0]
+
+        self.center = loaders.image(
+                join(CONFIG.sys_data_dir, 'gui',
+                    CONFIG.general['THEME'], 'slider_center.png'),
+                scale=(self.height, self.height))[0]
+
+        self.center_hover = loaders.image(
+                join(CONFIG.sys_data_dir, 'gui',
+                    CONFIG.general['THEME'], 'slider_center_hover.png'),
+                scale=(self.height, self.height))[0]
+
         self.screen = pygame.display.get_surface()
 
     def handle_mouse(self, event):
         if not self.keyboard:
             if self.state:
-                event.dict['pos'] =(event.dict['pos'][0] - self.parentpos[0] - self.x,
-                                    event.dict['pos'][1] - self.parentpos[1] - self.y)
+                event.dict['pos'] = (
+                        event.dict['pos'][0] - self.parentpos[0] - self.x,
+                        event.dict['pos'][1] - self.parentpos[1] - self.y)
+
             x = event.dict['pos'][0]
             y = event.dict['pos'][1]
             if self.state:
                 if event.type == pygame.MOUSEBUTTONUP:
                     self.state = False
                     return False, False
-                elif event.type == pygame.MOUSEMOTION and x -self.space >0 and x - self.space + self.height < self.width:
+                elif (
+                        event.type == pygame.MOUSEMOTION and
+                        x - self.space > 0 and
+                        x - self.space + self.height < self.width):
                     self.value = x - self.space
-                elif event.type == pygame.MOUSEMOTION  and x -self.space >0:
+
+                elif event.type == pygame.MOUSEMOTION and x - self.space > 0:
                     self.value = self.width-self.height
-                elif event.type == pygame.MOUSEMOTION  and x - self.space + self.height < self.width:
+
+                elif (
+                        event.type == pygame.MOUSEMOTION and
+                        x - self.space + self.height < self.width):
                     self.value = 0
+
                 return self, self
+
             if 0 < x < self.width and 0 < y < self.height:
                 if self.value < x and x < self.value + self.height:
                     if event.type == pygame.MOUSEBUTTONDOWN:
@@ -96,14 +115,26 @@ class Slider(Widget):
 
     def draw(self):
         if self.state:
-            surf = loaders.image_layer(self.background, self.center_hover, (self.value, 0))
+            surf = loaders.image_layer(
+                    self.background,
+                    self.center_hover,
+                    (self.value, 0))
         else:
-            surf = loaders.image_layer(self.background, self.center, (self.value, 0))
-        self.screen.blit(surf, (self.parentpos[0] + self.x, self.parentpos[1] + self.y))
+            surf = loaders.image_layer(
+                    self.background,
+                    self.center,
+                    (self.value, 0))
+
+        self.screen.blit(surf, (
+            self.parentpos[0] + self.x,
+            self.parentpos[1] + self.y))
 
     def handle_keys(self, event):
         self.keyboard = True
-        if (event.dict["key"] == pygame.K_DOWN or event.dict["key"] == pygame.K_UP) and not self.state:
+        if (
+                event.dict["key"] == pygame.K_DOWN or
+                event.dict["key"] == pygame.K_UP) and not self.state:
+
             self.state = True
             return False, self
 

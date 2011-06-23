@@ -26,7 +26,7 @@ from widget import Widget, get_scale, optimize_size
 from box import HBox
 from usf import loaders
 from usf.font import fonts
-from usf.subpixel.subpixelsurface import *
+from usf.subpixel.subpixelsurface import SubPixelSurface
 #config
 config = loaders.get_config()
 
@@ -47,7 +47,8 @@ class Paragraph(Widget):
         self.auto_scroll = True
 
         self.text = open(join(config.sys_data_dir, path), 'r').readlines()
-        self.text_height = loaders.text("", fonts['mono']['normal']).get_height()
+        self.text_height = loaders.text(
+                "", fonts['mono']['normal']).get_height()
         self.init()
 
     def update_defil(self):
@@ -69,8 +70,8 @@ class Paragraph(Widget):
         width = self.width - self.width_slider*2
         if width < 0:
             width = 0
-        self.surface_text = pygame.surface.Surface((width,
-                                                    len(self.text)*self.text_height))
+        self.surface_text = pygame.surface.Surface(
+                (width, len(self.text)*self.text_height))
 
         #draw all the text into the surface
         for i in range(len(self.text)):
@@ -80,11 +81,13 @@ class Paragraph(Widget):
                                    (10, self.text_height*i))
 
         self.screen = pygame.display.get_surface()
-        self.slider = SubPixelSurface(loaders.image(join(config.sys_data_dir,
-                                             "gui",
-                                             config.general['THEME'],
-                                             "sliderh_center.png"),
-                                        scale=(self.width_slider, self.height_slider))[0], x_level=4)
+        self.slider = SubPixelSurface(loaders.image(
+            join(
+                config.sys_data_dir,
+                "gui",
+                config.general['THEME'],
+                "sliderh_center.png"),
+            scale=(self.width_slider, self.height_slider))[0], x_level=4)
 
 
     def draw(self):
@@ -93,18 +96,23 @@ class Paragraph(Widget):
         x = self.parentpos[0] + self.x
         y = self.parentpos[1] + self.y
         mask = pygame.surface.Surface((self.width, self.height))
-        mask.blit(self.surface_text, (0, -(self.defil*(self.surface_text.get_height()-self.height)/100)))
+        mask.blit(
+                self.surface_text,
+                (0,
+                    -(self.defil * (
+                    self.surface_text.get_height() - self.height)/100)))
+
         mask.set_colorkey(pygame.color.Color("black"))
         self.screen.blit(mask, (x, y))
         del mask
 
         #the slider background
         self.screen.blit(loaders.image(join(config.sys_data_dir,
-                                             "gui",
-                                             config.general['THEME'],
-                                             "sliderh_background.png"),
-                                        scale=(self.width_slider, self.height))[0],
-                          (x + self.pos_slider, y))
+            "gui",
+            config.general['THEME'],
+            "sliderh_background.png"),
+            scale=(self.width_slider, self.height))[0],
+            (x + self.pos_slider, y))
 
         #the slider center
         if self.hover:
@@ -117,11 +125,12 @@ class Paragraph(Widget):
 
         #foreground
         self.screen.blit(loaders.image(join(config.sys_data_dir,
-                                             "gui",
-                                             config.general['THEME'],
-                                             "paragraph_foreground.png"),
-                                        scale=(self.width - self.width_slider*2, self.height))[0],
-                          (x, y))
+            "gui",
+            config.general['THEME'],
+            "paragraph_foreground.png"),
+            scale=(self.width - self.width_slider*2, self.height))[0],
+            (x, y))
+
         self.start_anim()
 
     def handle_mouse(self, event):
@@ -157,10 +166,14 @@ class Paragraph(Widget):
             self.update_defil()
 
         #left click or mouse hover
-        if((event.type == pygame.MOUSEBUTTONDOWN and event.dict['button'] == 1) or
-            event.type == pygame.MOUSEMOTION):
-            if (self.pos_slider < event.dict['pos'][0] < self.width and
-                self.slider_y < event.dict['pos'][1] < self.slider_y + self.height_slider):
+        if (
+                (event.type == pygame.MOUSEBUTTONDOWN and
+                    event.dict['button'] == 1) or
+                event.type == pygame.MOUSEMOTION):
+            if (
+                    self.pos_slider < event.dict['pos'][0] < self.width and
+                    self.slider_y < event.dict['pos'][1] < (
+                        self.slider_y + self.height_slider)):
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.diff_pointer_slider = y - self.slider_y
                     self.state = True

@@ -18,11 +18,10 @@
 ################################################################################
 
 import pygame
-from widget import Widget, get_scale, optimize_size
+from widget import Widget, optimize_size
 from button import Button
 
 from usf import loaders
-from usf.font import fonts
 config = loaders.get_config()
 
 
