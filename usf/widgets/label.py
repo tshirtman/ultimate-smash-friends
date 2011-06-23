@@ -20,10 +20,10 @@
 import pygame
 from os.path import join
 
-from widget import Widget, get_scale, optimize_size
+from widget import Widget
 from usf import loaders
 from usf.font import fonts
-config = loaders.get_config()
+CONFIG = loaders.get_config()
 
 
 class Label(Widget):
@@ -39,7 +39,7 @@ class Label(Widget):
         self.horizontal_indent = self.height/2-self.surface_text.get_height()/2
 
         try:
-            self.background = loaders.image(join(config.sys_data_dir, self.background_path),
+            self.background = loaders.image(join(CONFIG.sys_data_dir, self.background_path),
                 scale=(self.width, self.height))[0]
             self.surface = loaders.image_layer(self.background, self.surface_text,(self.txtmargin+self.indent, self.horizontal_indent))
         except AttributeError:

@@ -19,16 +19,13 @@
 
 #standarts imports
 import pygame
-import os
 from os.path import join
 
 #our modules
-from widget import Widget, get_scale, optimize_size
 from usf import loaders
-from usf.font import fonts
 from label import Label
 
-config = loaders.get_config()
+CONFIG = loaders.get_config()
 
 
 class Button(Label):
@@ -59,9 +56,9 @@ class Button(Label):
         #mouse over
         if self.state:
             surf = loaders.image_layer(loaders.image(join(
-                config.sys_data_dir,
+                CONFIG.sys_data_dir,
                 'gui',
-                config.general['THEME'],
+                CONFIG.general['THEME'],
                 'back_button_hover.png'),
                 scale=(self.width, self.height))[0],
                 self.surface_text,
@@ -70,9 +67,9 @@ class Button(Label):
         #normal
         else:
             surf = loaders.image_layer(loaders.image(join(
-                config.sys_data_dir,
+                CONFIG.sys_data_dir,
                 'gui',
-                config.general['THEME'],
+                CONFIG.general['THEME'],
                 'back_button.png'),
                 scale=(self.width, self.height))[0],
                 self.surface_text,
