@@ -94,7 +94,7 @@ DOC[-1][-1].append('README.fr.txt')
 
 CONFIG = [(sep + join('etc', 'ultimate-smash-friends'), ['system.cfg'])]
 
-ICON = [(join('share', 'applications'),
+ICON = [(join('usr', 'share', 'applications'),
               ['ultimate-smash-friends.desktop'])]
 
 ICON_FILE = 'data/icon/icon.ico'
@@ -152,7 +152,7 @@ setup(
         packages=PACKAGES,
         scripts=SCRIPTS,
         requires=REQUIRES,
-        data_files=DATA+CONFIG,
+        data_files=DATA+CONFIG+ICON,
         windows=WINDOWS,
         app=APP)
 
