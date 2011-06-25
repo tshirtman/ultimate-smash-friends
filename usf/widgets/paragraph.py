@@ -40,6 +40,7 @@ class Paragraph(Widget):
 
     animation_speed = 1/30.0
     def __init__(self, path):
+        super(Paragraph, self).__init__()
         self.defil = 0
         self.state = False
         self.slider_y = 0
@@ -49,15 +50,7 @@ class Paragraph(Widget):
         self.text = open(join(config.sys_data_dir, path), 'r').readlines()
         self.text_height = loaders.text(
                 "", fonts['mono']['normal']).get_height()
-        self.init()
 
-    def update_defil(self):
-        """
-        Update the position of the scroll bar.
-        """
-        self.slider_y = self.defil*(self.height - self.height_slider)/100
-
-    def init(self):
         #the slider (at left)
         self.width_slider = 34
         self.height_slider = 125
@@ -89,6 +82,11 @@ class Paragraph(Widget):
                 "sliderh_center.png"),
             scale=(self.width_slider, self.height_slider))[0], x_level=4)
 
+    def update_defil(self):
+        """
+        Update the position of the scroll bar.
+        """
+        self.slider_y = self.defil*(self.height - self.height_slider)/100
 
     def draw(self):
         #clear the surface

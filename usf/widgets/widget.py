@@ -49,13 +49,6 @@ class Widget (object):
         This function can be rewritten in the others widgets to
         have a custom argument lists.
         """
-        self.init()
-
-    def init(self):
-        """
-        This function can be rewritten in the others widget if the surface
-        isn't empty.
-        """
         self.surface = pygame.Surface((self.width, self.height))
         self.screen = pygame.display.get_surface()
 
@@ -63,7 +56,10 @@ class Widget (object):
         """
         Return the widget surface. This fonction is often overrided.
         """
-        self.screen.blit(self.surface, (self.parentpos[0] + self.x, self.parentpos[1] + self.y))
+        self.screen.blit(
+                self.surface, (
+                    self.parentpos[0] + self.x,
+                    self.parentpos[1] + self.y))
 
     def set_size(self, (w, h)):
         """
@@ -71,7 +67,6 @@ class Widget (object):
         """
         self.height = h
         self.width = w
-        self.init()
 
     def handle_mouse(self, event):
         """
@@ -120,6 +115,8 @@ def optimize_size(size):
 
 
 def get_scale(surface):
-    size = (surface.get_width()*800/config.general['WIDTH'], surface.get_height()*480/config.general['HEIGHT'])
-    return size
+    return (
+            surface.get_width() * 800 / config.general['WIDTH'],
+            surface.get_height()*480/config.general['HEIGHT'])
+
 

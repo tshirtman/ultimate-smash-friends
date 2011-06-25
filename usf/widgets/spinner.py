@@ -46,6 +46,7 @@ class Spinner(HBox):
         """
         values is an array of string. Each string is an option.
         """
+        super(Spinner, self).__init__()
         self.focusable = False
         self.parentpos = (0, 0)
         self.extend = False
@@ -53,15 +54,6 @@ class Spinner(HBox):
         self.orientation = True
         self.index = 0
         self.center_width = width
-        self.init()
-        self.text = values[0]
-        self.state = False
-        self.height = optimize_size((250, 30))[1]
-        self.width = (
-                optimize_size((25, 30))[0] * 2 +
-                optimize_size((self.center_width, 30))[0])
-
-    def init(self):
         self.surface = pygame.Surface((self.width, self.height))
         self.widgets = []
         self.left_arrow = ImageButton(
@@ -83,6 +75,13 @@ class Spinner(HBox):
         self.add(self.right_arrow, margin = 0)
         self.update_pos()
         self.update_size()
+
+        self.text = values[0]
+        self.state = False
+        self.height = optimize_size((250, 30))[1]
+        self.width = (
+                optimize_size((25, 30))[0] * 2 +
+                optimize_size((self.center_width, 30))[0])
 
     def handle_mouse(self, event):
         if self.state:

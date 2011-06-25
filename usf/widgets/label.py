@@ -31,10 +31,44 @@ class Label(Widget):
     A simple label widget
     """
 
-    def init(self):
+    def __init__(self, text, *args, **kwargs):
+        super(Label, self).__init__()
+
+        self.properties["focusable"] = False
+
+        if "margin" in kwargs:
+            self.txtmargin= kwargs['margin']
+        else:
+            self.txtmargin = 0
+
+        if "align" in kwargs and kwargs['align'] == "center":
+            self.align = "center"
+        else:
+            self.align = ''
+
+        if "background" in kwargs:
+            self.background_path = kwargs['background']
+
+        self.set_text(text)
+
+        self.state = False
+
+    def set_text(self, text):
+        """ update the text surface
+        """
+        self.text = text
         self.surface_text  = loaders.text(self.text, fonts['sans']['normal'])
+
+        self.height = self.surface_text.get_height()
+        self.width = self.surface_text.get_width()
+
+        self.surface_text  = loaders.text(self.text, fonts['sans']['normal'])
+
         if self.align == "center":
             self.indent = self.width/2-self.surface_text.get_width()/2
+
+        else:
+            self.indent = 0
 
         self.horizontal_indent = self.height/2-self.surface_text.get_height()/2
 
@@ -46,42 +80,9 @@ class Label(Widget):
             self.surface = self.surface_text
         self.screen = pygame.display.get_surface()
 
-    def __init__(self, text, *args, **kwargs):
-        self.properties["focusable"] = False
-        self.text = text
-        self.indent = 0
-        self.horizontal_indent = 0
-        self.state = False
-        self.txtmargin = 0
-        self.align = ""
-        self.surface_text  = loaders.text(self.text, fonts['sans']['normal'])
-
-        self.height = self.surface_text.get_height()
-        self.width = self.surface_text.get_width()
-
-        if "margin" in kwargs:
-            self.txtmargin= kwargs['margin']
-        else:
-            margin = 0
-        if "align" in kwargs and kwargs['align'] == "center":
-            self.align = "center"
-            self.indent = self.width/2-self.surface_text.get_width()/2
-        if "background" in kwargs:
-            self.background_path = kwargs['background']
-
-        self.init()
-
-    def set_text(self, text):
-        """
-        Change the text of the widget.
-        """
-        self.text = text
-        self.init()
-
     def get_text(self):
         """
         Get the current text of the widget.
         """
         return self.text
-
 

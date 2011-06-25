@@ -37,9 +37,8 @@ class Container(Widget):
 
     def __init__(self, orientation):
         super(Container, self).__init__()
-        self.init()
-        self.widgets = []
         self.orientation = orientation
+        self.widgets = []
 
     def update_size(self):
         """
@@ -61,7 +60,8 @@ class Container(Widget):
                 sizex += widget.margin
             else:
                 sizey += widget.margin
-            widget.init()
+            #widget.init() #XXX probably to replace by something :/
+
         self.width = sizex
         self.height = sizey
 

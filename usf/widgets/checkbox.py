@@ -34,15 +34,10 @@ class CheckBox(Widget):
     """
 
     def __init__(self):
+        super(CheckBox, self).__init__()
         self.set_size(optimize_size((25, 25)))
         self.state = False
         self.checked = False
-
-    def init(self):
-        """
-        This function can be rewritten in the others widget if the surface
-        isn't empty.
-        """
         self.screen = pygame.display.get_surface()
 
     def set_size(self, (w, h)):

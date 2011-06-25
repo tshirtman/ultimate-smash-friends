@@ -17,15 +17,29 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
+'''
+A nice coverflow effect for images
+
+'''
+
 #standard imports
 import pygame
 import os
 
 #our module
-from widget import Widget
+from usf.widgets.widget import Widget
 from usf import loaders
 from usf.font import fonts
-config = loaders.get_config()
+CONFIG = loaders.get_config()
+
+
+def get_text_transparent(name):
+    text = loaders.text(name, fonts['mono']['10']).convert()
+    #FIXME: the colorkey should be in a skin configuration file
+    text.fill(pygame.color.Color("black"))
+    text.set_colorkey(pygame.color.Color("black"))
+    text.blit(loaders.text(name, fonts['mono']['22']), (0, 0))
+    return text
 
 
 class Coverflow(Widget):
@@ -35,11 +49,12 @@ class Coverflow(Widget):
     It should be big, about 800 * 275. This widget is animated and requires
     a lot of CPU.
     """
-    #the animation() function wil be called to each frame
+    #the animation() function wil be called each frame
     #FIXME: the animation speed souldn't depend of the computer
     animation_speed = True
 
     def __init__(self, values):
+        super(Coverflow, self).__init__()
         self.values = values
         for value in self.values:
             #adding (false) size for the image, there will be updated later
@@ -48,38 +63,34 @@ class Coverflow(Widget):
         self.in_anim = False
         self.anim_state = ""
         self.advance = 0
-        self.init()
 
         #compatibility with the others widget only
         self.state = False
 
-    def init(self):
-        """
-        This method load the coverflow elements: the frame, the image...
-        """
         self.center_size = (self.sizex(195), self.sizey(120))
         self.posy_center = self.sizey(60)
         self.foreground = loaders.image(
-                os.path.join(config.sys_data_dir,
+                os.path.join(CONFIG.sys_data_dir,
                     "gui",
-                    config.general['THEME'],
+                    CONFIG.general['THEME'],
                     "coverflow",
                     "foreground.png"),
-                scale=(config.general["WIDTH"], config.general["HEIGHT"]))[0]
+                scale=(CONFIG.general["WIDTH"], CONFIG.general["HEIGHT"]))[0]
 
         self.frame = loaders.image(
-                os.path.join(config.sys_data_dir,
+                os.path.join(CONFIG.sys_data_dir,
                     "gui",
-                    config.general['THEME'],
+                    CONFIG.general['THEME'],
                     "coverflow",
                     "frame.png"),
                 scale=(self.sizex(137), self.sizey(86)))[0]
 
         self.surface = pygame.surface.Surface((self.width, self.height))
         self.index = 0
-        self.text = self.get_text_transparent(self.values[self.index][0])
+        self.text = get_text_transparent(self.values[self.index][0])
         self.previous()
         self.load_main_frame()
+
         for value in self.values:
             img = loaders.image(value[1])[0]
             #keep ratio
@@ -102,7 +113,6 @@ class Coverflow(Widget):
         Draw the widget, the surface will be redrawed if the widget is animated.
         You can force redrawing by set need_update to True.
         """
-        size = self.surface.get_size()
         x, y = (self.parentpos[0] + self.x, self.parentpos[1] + self.y)
         self.pos = self.width/2 - self.main_frame.get_width()/2 + self.advance
         self.draw_main()
@@ -180,7 +190,7 @@ class Coverflow(Widget):
             self.index -= 1
         else:
             self.index = len(self.values) - 1
-        self.text = self.get_text_transparent(self.values[self.index][0])
+        self.text = get_text_transparent(self.values[self.index][0])
 
     def previous(self):
         """
@@ -190,7 +200,7 @@ class Coverflow(Widget):
             self.index += 1
         else:
             self.index = 0
-        self.text = self.get_text_transparent(self.values[self.index][0])
+        self.text = get_text_transparent(self.values[self.index][0])
 
     def handle_mouse(self, event):
         """
@@ -199,21 +209,25 @@ class Coverflow(Widget):
         if not self.in_anim:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x = event.dict['pos'][0]
-                y = event.dict['pos'][1]
+                # y = event.dict['pos'][1] #
                 if x > self.width/2 + self.frame.get_width()/2:
                     self.launch_anim(False)
                 elif x < self.width/2 - self.frame.get_width()/2:
                     self.launch_anim(True)
         return False, False
 
-    def launch_anim(self, sens):
+    def launch_anim(self, direction):
+        """ start a translation animation in the direction
+        """
         #self.last_c_update = time.time()
         self.anim_state = "start"
         self.last_index = self.index
         self.in_anim = True
-        self.sens = sens
+        self.sens = direction
 
     def animation(self):
+        """ update the animation
+        """
         if self.in_anim:
             if self.anim_state == "start" or self.anim_state == "slide":
                 if self.center_size[0] - self.sizex(10) > self.sizey(137):
@@ -231,13 +245,13 @@ class Coverflow(Widget):
                 self.load_main_frame()
                 if self.sens:
                     if self.advance + 40 < self.frame.get_width():
-                        self.advance +=40
+                        self.advance += 40
                     else:
                         self.advance = self.frame.get_width()
                         self.anim_state = "change"
                 else:
                     if self.advance - 40 > - (self.frame.get_width()):
-                        self.advance -=40
+                        self.advance -= 40
                     else:
                         self.advance = - self.frame.get_width()
                         self.anim_state = "change"
@@ -273,6 +287,8 @@ class Coverflow(Widget):
 
 
     def handle_keys(self, event):
+        """ manage keyboard input events
+        """
         if (
                 event.dict["key"] == pygame.K_DOWN or
                 event.dict["key"] == pygame.K_UP) and not self.state:
@@ -295,9 +311,11 @@ class Coverflow(Widget):
         return False, False
 
     def load_main_frame(self):
-        self.main_frame = loaders.image(os.path.join(config.sys_data_dir,
+        """ #FIXME get xapantu to document a little! :P
+        """
+        self.main_frame = loaders.image(os.path.join(CONFIG.sys_data_dir,
             "gui",
-            config.general['THEME'],
+            CONFIG.general['THEME'],
             "coverflow",
             "frame.png"),
             scale=self.center_size)[0]
@@ -321,15 +339,9 @@ class Coverflow(Widget):
                 self.main_frame.get_width()/2 - self.center_image[0]/2,
                 self.main_frame.get_height()/2 - self.center_image[1]/2)
 
-    def get_text_transparent(self, name):
-        text = loaders.text(name, fonts['mono']['10']).convert()
-        #FIXME: the colorkey should be in a skin configuration file
-        text.fill(pygame.color.Color("black"))
-        text.set_colorkey(pygame.color.Color("black"))
-        text.blit(loaders.text(name, fonts['mono']['22']), (0, 0))
-        return text
-
     def get_value(self):
+        """ return the currently selected value
+        """
         return self.values[self.index][0]
 
     def sizex(self, x):
@@ -346,3 +358,4 @@ class Coverflow(Widget):
         Same as sizex, but for the y axis.
         """
         return y*self.height/275
+

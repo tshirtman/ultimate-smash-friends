@@ -17,18 +17,22 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
+'''
+This module provide a checkbox with a label beside it.
+
+'''
+
 #standards imports
 import pygame
 from os.path import join
 
 #our modules
 from usf import loaders
-from box import HBox
-from image import Image
+from usf.widgets.box import HBox
+from usf.widgets.image import Image
+from usf.widgets.label import Label
 
-from label import Label
-
-config = loaders.get_config()
+CONFIG = loaders.get_config()
 
 
 class TextCheckBox(HBox):
@@ -37,21 +41,15 @@ class TextCheckBox(HBox):
     """
 
     def __init__(self, text):
-        self.orientation = True
+        super(TextCheckBox, self).__init__()
         self.height = 40
         self.text = text
-        self.init()
         self.widgets = []
         self.widgets = []
         self.state = False
         self.checked = False
         self.focusable = False
 
-    def init(self):
-        """
-        This function can be rewritten in the others widget if the surface
-        isn't empty.
-        """
         w = self.width
         self.surface = pygame.Surface((self.width, self.height))
         self.widgets = []
@@ -59,7 +57,7 @@ class TextCheckBox(HBox):
         #left radius
         self.left_border = Image(join(
             "gui",
-            config.general['THEME'],
+            CONFIG.general['THEME'],
             "checkbox_left.png"))
 
         self.left_border.set_size((12, self.height))
@@ -69,7 +67,7 @@ class TextCheckBox(HBox):
         self.center = Label(
                 self.text + " ",
                 background=join("gui",
-                    config.general['THEME'],
+                    CONFIG.general['THEME'],
                     "checkbox_center.png"),
                 align="center")
 
@@ -80,12 +78,13 @@ class TextCheckBox(HBox):
 
         self.check = Image(join(
             "gui",
-            config.general['THEME'],
+            CONFIG.general['THEME'],
             "checkbox_empty_right.png"))
 
         self.add(self.check, margin = 0, size=(37, self.height))
         self.update_pos()
         self.update_size()
+        self.update_image()
 
     def set_size(self, (w, h)):
         """
@@ -93,7 +92,6 @@ class TextCheckBox(HBox):
         """
         self.height = h
         self.width = w
-        self.init()
 
     def handle_mouse(self, event):
         if event.type == pygame.MOUSEBUTTONUP:
@@ -141,52 +139,52 @@ class TextCheckBox(HBox):
         if self.state:
             self.left_border.setImage(join(
                 "gui",
-                config.general['THEME'],
+                CONFIG.general['THEME'],
                 "checkbox_left_hover.png"))
 
             self.center.background_path = join(
                     "gui",
-                    config.general['THEME'],
+                    CONFIG.general['THEME'],
                     "checkbox_center_hover.png")
 
             if self.checked:
                 self.check.setImage(join(
                     "gui",
-                    config.general['THEME'],
+                    CONFIG.general['THEME'],
                     "checkbox_full_right_hover.png"))
 
             else:
                 self.check.setImage(join(
                     "gui",
-                    config.general['THEME'],
+                    CONFIG.general['THEME'],
                     "checkbox_empty_right_hover.png"))
 
-            self.center.init()
+            #self.center.init()
 
         else:
             self.left_border.setImage(join(
                 "gui",
-                config.general['THEME'],
+                CONFIG.general['THEME'],
                 "checkbox_left.png"))
 
             self.center.background_path = join(
                     "gui",
-                    config.general['THEME'],
+                    CONFIG.general['THEME'],
                     "checkbox_center.png")
 
             if self.checked:
                 self.check.setImage(join(
                     "gui",
-                    config.general['THEME'],
+                    CONFIG.general['THEME'],
                     "checkbox_full_right.png"))
 
             else:
                 self.check.setImage(join(
                     "gui",
-                    config.general['THEME'],
+                    CONFIG.general['THEME'],
                     "checkbox_empty_right.png"))
 
-            self.center.init()
+            #self.center.init()
 
     def handle_keys(self, event):
         if (event.dict["key"] == pygame.K_DOWN

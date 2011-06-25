@@ -29,19 +29,16 @@ from image import Image
 
 class ImageButton(Image):
 
-    def init(self):
-        self.screen = pygame.display.get_surface()
-
     def __init__(self, image, image_hover):
-        #save the path to scale it later -> maybe it is bad for performance, FIXME
-        self.path = image
+        # FIXME save the path to scale it later -> maybe it is bad for
+        # performance?
+        super(ImageButton, self).__init__(image)
         self.path_hover = image_hover
         size = get_scale(loaders.image(
                     config.sys_data_dir+
                     os.sep+
                     image)[0])
 
-        self.init()
         self.set_size((size[0], size[1]))
         self.state = False
 

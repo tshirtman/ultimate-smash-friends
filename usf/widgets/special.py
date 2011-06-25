@@ -29,18 +29,21 @@ config = loaders.get_config()
 class KeyboardWidget(Widget):
 
     def __init__(self, value):
+        super(KeyboardWidget, self).__init__()
         self.value = value
         try:
             self.letter = pygame.key.name(pygame.__dict__[self.value]).upper()
         except KeyError:
             self.letter = str(self.value)
 
-        self.font = fonts['mono']['25']
         #self.set_size(optimize_size((35, 35)))
+        self.font = fonts['mono']['25']
         self.state = False
         self.focus = False
+        self.update()
 
-    def init(self):
+
+    def update(self):
         self.background = loaders.image(config.sys_data_dir +
             os.sep + "gui" + os.sep + config.general['THEME'] + os.sep
             + "keyboard.png", scale=(self.width, self.height))[0]
@@ -49,7 +52,11 @@ class KeyboardWidget(Widget):
             + "keyboard_hover.png", scale=(self.width, self.height))[0]
         text = loaders.text(self.letter, self.font)
         if text.get_width() > self.width:
-            text = pygame.transform.smoothscale(text, (self.width, self.width*text.get_height()/text.get_width()))
+            text = pygame.transform.smoothscale(
+                    text, (
+                        self.width,
+                        self.width * text.get_height() / text.get_width()))
+
         posx = self.width/2 - text.get_width()/2
         posy = self.height/2 - text.get_height()/2
         self.surface = loaders.image_layer(self.background_hover,
@@ -58,16 +65,18 @@ class KeyboardWidget(Widget):
                 text, (posx, posy))
         self.screen = pygame.display.get_surface()
 
-    def set_size(self, (w, h)):
-        self.height = h
-        self.width = w
-        self.init()
-
     def draw(self):
         if self.state or self.focus:
-            self.screen.blit(self.surface, (self.parentpos[0] + self.x, self.parentpos[1] + self.y))
+            self.screen.blit(
+                    self.surface, (
+                        self.parentpos[0] + self.x,
+                        self.parentpos[1] + self.y))
+
         else:
-            self.screen.blit(self.surface_hover, (self.parentpos[0] + self.x, self.parentpos[1] + self.y))
+            self.screen.blit(
+                    self.surface_hover, (
+                        self.parentpos[0] + self.x,
+                        self.parentpos[1] + self.y))
 
     def handle_mouse(self, event):
         if self.focus:
@@ -81,7 +90,9 @@ class KeyboardWidget(Widget):
                     event.dict['pos'][0] - self.parentpos[0]-self.x,
                     event.dict['pos'][1] - self.parentpos[1] - self.y)
 
-        if 0 < event.dict['pos'][0] < self.width and 0 < event.dict['pos'][1] < self.height:
+        if (
+                0 < event.dict['pos'][0] < self.width and
+                0 < event.dict['pos'][1] < self.height):
             self.state = True
             return False, self
         self.state = False
@@ -94,7 +105,7 @@ class KeyboardWidget(Widget):
                 self.value = config.reverse_keymap(event.dict['key'])
                 self.focus = False
                 self.state = False
-                self.init()
+                self.update()
                 return self, False
             return self, False
         return False, False

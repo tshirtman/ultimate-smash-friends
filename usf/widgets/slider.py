@@ -28,6 +28,7 @@ CONFIG = loaders.get_config()
 class Slider(Widget):
 
     def __init__(self, text):
+        super(Slider, self).__init__()
         self.focusable = False
         self.text = text
         self.keyboard = False
@@ -36,16 +37,6 @@ class Slider(Widget):
         self.extend = False
         self.value = 0
         self.orientation = False
-        self.init()
-        self.index = 0
-        self.state = False
-        self.height = optimize_size((250, 25))[1]
-        self.width = (
-                optimize_size((25, 25))[0] +
-                optimize_size((25, 25))[0] +
-                optimize_size((100, 25))[0])
-
-    def init(self):
         self.background = loaders.image(
                 join(CONFIG.sys_data_dir, 'gui',
                     CONFIG.general['THEME'], 'slider_background.png'),
@@ -62,6 +53,13 @@ class Slider(Widget):
                 scale=(self.height, self.height))[0]
 
         self.screen = pygame.display.get_surface()
+        self.index = 0
+        self.state = False
+        self.height = optimize_size((250, 25))[1]
+        self.width = (
+                optimize_size((25, 25))[0] +
+                optimize_size((25, 25))[0] +
+                optimize_size((100, 25))[0])
 
     def handle_mouse(self, event):
         if not self.keyboard:

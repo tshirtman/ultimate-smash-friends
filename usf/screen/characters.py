@@ -17,9 +17,14 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
-from screen import Screen
+'''
+Describe the characters choice UI (for starting a game)
+
+'''
+
+from usf.screen.screen import Screen
 from usf.config import Config
-config = Config()
+CONFIG = Config()
 
 from usf.widgets.box import VBox, HBox
 from usf.widgets.button import Button
@@ -36,6 +41,8 @@ from os.path import join
 
 
 class Characters(Screen):
+    """ the character selection screen
+    """
     name_pl1 = 0
     name_pl2 = 0
     name_pl3 = 0
@@ -56,18 +63,18 @@ class Characters(Screen):
         #I18N: (with the [?] icon)
         self.character.append(_("None"))
         #create a character for every directory in the characters directory.
-        files = os.listdir(join(config.sys_data_dir, 'characters'))
+        files = os.listdir(join(CONFIG.sys_data_dir, 'characters'))
         files.sort()
 
-        for file in files:
+        for f in files:
             try:
-                if file != "none":
+                if f != "none":
                     self.game_data['character_file'].append(join(
                         "characters",
-                        file))
+                        f))
 
                     self.character.append(entity_skin.Entity_skin(
-                                    join('characters', file)).name)
+                                    join('characters', f)).name)
             except OSError, e:
                 if e.errno is 20:
                     pass
@@ -91,17 +98,21 @@ class Characters(Screen):
 
             self.player_spinner.append(Spinner(self.character))
             #I18N: %s is the player number, it can be Player 1, Player2...
-            self.player_vbox[i].add(Label(_("Player %s").replace("%s", str(i+1))))
+            self.player_vbox[i].add(Label(_("Player %s").replace(
+                "%s", str(i+1))))
             self.player_vbox[i].add(self.player_spinner[-1])
             self.player_vbox[i].add(self.portraits[-1],
                 margin_left=65,
                 margin=5,
                 size=(50, 50))
-            self.player_vbox[i].add(self.checkboxes_ai[-1], margin_left=(180-self.checkboxes_ai[-1].width)/2)
+            self.player_vbox[i].add(
+                    self.checkboxes_ai[-1],
+                    margin_left=(180 - self.checkboxes_ai[-1].width) / 2)
 
 
         hbox = HBox()
-        #adding the two box which contains the spinner and the name of the characters
+        # adding the two box which contains the spinner and the name of the
+        # characters
         for vbox in self.player_vbox:
             hbox.add(vbox, margin=20)
         self.widget.add(hbox, margin=50)
@@ -131,7 +142,7 @@ class Characters(Screen):
         if action.text == _("Next"):
             i  = 0
             for player in self.players:
-                if player !=0:
+                if player != 0:
                     i += 1
             if i > 1:
                 return 'goto:level'

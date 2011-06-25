@@ -31,19 +31,12 @@ class Image(Widget):
     buttons.
     """
 
-    def init(self):
-        self.surface = loaders.image(
-                    config.sys_data_dir+
-                    os.sep+
-                    self.path, scale=(self.width, self.height))[0]
-
-        self.screen = pygame.display.get_surface()
-
     def __init__(self, image):
         #save the path to scale it later
-        self.path = image
+        super(Image, self).__init__()
+        self.setImage(image)
 
-        self.init()
+        self.screen = pygame.display.get_surface()
         self.state = True
 
     def set_size(self, (w, h)):
@@ -63,6 +56,9 @@ class Image(Widget):
         'config.sys_data_dir' will be added to 'path'
         """
         self.path = path
-        #reload the image
-        self.init()
+
+        self.surface = loaders.image(
+                    config.sys_data_dir+
+                    os.sep+
+                    self.path, scale=(self.width, self.height))[0]
 
