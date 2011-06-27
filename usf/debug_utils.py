@@ -23,8 +23,8 @@ def log_result(function):
         logging.info(str(result))
         return result
 
-    decorated.__name__ = function.name
-    decorated.__doc__ = function.doc
+    decorated.__name__ = function.__name__
+    decorated.__doc__ = function.__doc__
     return decorated
 
 

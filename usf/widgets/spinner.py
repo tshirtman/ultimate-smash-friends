@@ -64,7 +64,9 @@ class Spinner(HBox):
         self.add(self.left_arrow, margin = 0)
         self.center = Label(self.values[self.index],
             background=join(
-                "gui", config.general['THEME'], "spinner_center.png"),
+                "gui",
+                config.general['THEME'],
+                "spinner_center.png"),
             align="center")
 
         self.add(self.center, margin = 0, size=(self.center_width, 45))
@@ -88,6 +90,7 @@ class Spinner(HBox):
             event.dict['pos'] = (
                     event.dict['pos'][0] - self.parentpos[0] - self.x,
                     event.dict['pos'][1] - self.parentpos[1] - self.y)
+
         x = event.dict['pos'][0]
         y = event.dict['pos'][1]
         self.left_arrow.state = False

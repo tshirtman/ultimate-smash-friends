@@ -42,14 +42,21 @@ class KeyboardWidget(Widget):
         self.focus = False
         self.update()
 
-
     def update(self):
-        self.background = loaders.image(config.sys_data_dir +
-            os.sep + "gui" + os.sep + config.general['THEME'] + os.sep
-            + "keyboard.png", scale=(self.width, self.height))[0]
-        self.background_hover = loaders.image(config.sys_data_dir +
-            os.sep + "gui" + os.sep + config.general['THEME'] + os.sep
-            + "keyboard_hover.png", scale=(self.width, self.height))[0]
+        self.background = loaders.image(
+                os.path.join(
+                    config.sys_data_dir, "gui",
+                    config.general['THEME'],"keyboard.png"),
+                scale=(self.width, self.height))[0]
+
+        self.background_hover = loaders.image(
+                os.path.join(
+                    config.sys_data_dir,
+                    "gui",
+                    config.general['THEME'],
+                    "keyboard_hover.png"),
+                scale=(self.width, self.height))[0]
+
         text = loaders.text(self.letter, self.font)
         if text.get_width() > self.width:
             text = pygame.transform.smoothscale(
