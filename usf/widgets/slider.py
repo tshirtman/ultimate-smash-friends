@@ -17,6 +17,11 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
+'''
+A slider widget to configure values in a range.
+
+'''
+
 import pygame
 from os.path import join
 
@@ -37,6 +42,16 @@ class Slider(Widget):
         self.extend = False
         self.value = 0
         self.orientation = False
+
+        self.screen = pygame.display.get_surface()
+        self.index = 0
+        self.state = False
+        self.height = optimize_size((250, 25))[1]
+        self.width = (
+                optimize_size((25, 25))[0] +
+                optimize_size((25, 25))[0] +
+                optimize_size((100, 25))[0])
+
         self.background = loaders.image(
                 join(CONFIG.sys_data_dir, 'gui',
                     CONFIG.general['THEME'], 'slider_background.png'),
@@ -51,15 +66,6 @@ class Slider(Widget):
                 join(CONFIG.sys_data_dir, 'gui',
                     CONFIG.general['THEME'], 'slider_center_hover.png'),
                 scale=(self.height, self.height))[0]
-
-        self.screen = pygame.display.get_surface()
-        self.index = 0
-        self.state = False
-        self.height = optimize_size((250, 25))[1]
-        self.width = (
-                optimize_size((25, 25))[0] +
-                optimize_size((25, 25))[0] +
-                optimize_size((100, 25))[0])
 
     def handle_mouse(self, event):
         if not self.keyboard:
