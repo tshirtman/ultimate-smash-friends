@@ -20,13 +20,15 @@
 import pygame
 import os
 
-from widget import Widget
+from widget import Widget, optimize_size
 from usf import loaders
 from usf.font import fonts
 config = loaders.get_config()
 
 
 class KeyboardWidget(Widget):
+    ''' actually it should be KeyWidget, if i get it correctly
+    '''
 
     def __init__(self, value):
         super(KeyboardWidget, self).__init__()
@@ -36,10 +38,14 @@ class KeyboardWidget(Widget):
         except KeyError:
             self.letter = str(self.value)
 
-        #self.set_size(optimize_size((35, 35)))
         self.font = fonts['mono']['25']
+        self.set_size(optimize_size((35, 35)))
         self.state = False
         self.focus = False
+
+    def set_size(self, (w, h)):
+        self.width = w
+        self.height = h
         self.update()
 
     def update(self):
@@ -101,6 +107,7 @@ class KeyboardWidget(Widget):
                 0 < event.dict['pos'][0] < self.width and
                 0 < event.dict['pos'][1] < self.height):
             self.state = True
+            self.update()
             return False, self
         self.state = False
         return False, False
