@@ -22,13 +22,12 @@ import pygame
 from os.path import join
 
 #our modules
-from widget import Widget, get_scale, optimize_size
-from box import HBox
+from usf.widgets.widget import Widget
 from usf import loaders
 from usf.font import fonts
 from usf.subpixel.subpixelsurface import SubPixelSurface
-#config
-config = loaders.get_config()
+#CONFIG
+CONFIG = loaders.get_config()
 
 
 class Paragraph(Widget):
@@ -47,38 +46,40 @@ class Paragraph(Widget):
         self.hover = False
         self.auto_scroll = True
 
-        self.text = open(join(config.sys_data_dir, path), 'r').readlines()
-        self.text_height = loaders.text(
-                "", fonts['mono']['normal']).get_height()
+        text = open(join(CONFIG.sys_data_dir, path), 'r').readlines()
+        text_height = loaders.text("", fonts['mono']['normal']).get_height()
 
         #the slider (at left)
         self.width_slider = 34
         self.height_slider = 125
-        self.pos_slider = self.width/20*19
+        self.pos_slider = self.width / 20 * 19
 
         #the main surface
+        self.width = 500
+        self.height = 125
         self.surface = pygame.surface.Surface((self.width, self.height))
 
         #create the surface whiwh will contain _all_ the text
-        width = self.width - self.width_slider*2
+        width = self.width - self.width_slider * 2
         if width < 0:
             width = 0
         self.surface_text = pygame.surface.Surface(
-                (width, len(self.text)*self.text_height))
+                (width, len(text) * text_height))
+        print self.surface_text.get_height(), self.surface_text.get_width()
 
         #draw all the text into the surface
-        for i in range(len(self.text)):
-            self.text[i] = self.text[i].replace('\n', "")
-            self.surface_text.blit(loaders.text(self.text[i],
-                                                fonts['mono']['normal']),
-                                   (10, self.text_height*i))
+        for i, t in enumerate(text):
+            self.surface_text.blit(
+                    loaders.text(
+                        t.replace('\n', ""),
+                        fonts['mono']['normal']),
+                    (0, text_height * i))
 
-        self.screen = pygame.display.get_surface()
         self.slider = SubPixelSurface(loaders.image(
             join(
-                config.sys_data_dir,
+                CONFIG.sys_data_dir,
                 "gui",
-                config.general['THEME'],
+                CONFIG.general['THEME'],
                 "sliderh_center.png"),
             scale=(self.width_slider, self.height_slider))[0], x_level=4)
 
@@ -96,7 +97,7 @@ class Paragraph(Widget):
         mask = pygame.surface.Surface((self.width, self.height))
         mask.blit(
                 self.surface_text,
-                (0,
+                (100,
                     -(self.defil * (
                     self.surface_text.get_height() - self.height)/100)))
 
@@ -105,9 +106,9 @@ class Paragraph(Widget):
         del mask
 
         #the slider background
-        self.screen.blit(loaders.image(join(config.sys_data_dir,
+        self.screen.blit(loaders.image(join(CONFIG.sys_data_dir,
             "gui",
-            config.general['THEME'],
+            CONFIG.general['THEME'],
             "sliderh_background.png"),
             scale=(self.width_slider, self.height))[0],
             (x + self.pos_slider, y))
@@ -122,9 +123,9 @@ class Paragraph(Widget):
                           (x + self.pos_slider, y + self.slider_y))
 
         #foreground
-        self.screen.blit(loaders.image(join(config.sys_data_dir,
+        self.screen.blit(loaders.image(join(CONFIG.sys_data_dir,
             "gui",
-            config.general['THEME'],
+            CONFIG.general['THEME'],
             "paragraph_foreground.png"),
             scale=(self.width - self.width_slider*2, self.height))[0],
             (x, y))
