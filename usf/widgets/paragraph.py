@@ -55,8 +55,8 @@ class Paragraph(Widget):
         self.pos_slider = self.width / 20 * 19
 
         #the main surface
-        self.width = 500
-        self.height = 125
+        self.width = 500 #XXX hardcoded values
+        self.height = 125 #XXX hardcoded values
         self.surface = pygame.surface.Surface((self.width, self.height))
 
         #create the surface whiwh will contain _all_ the text
