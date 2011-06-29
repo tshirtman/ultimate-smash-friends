@@ -49,7 +49,6 @@ class Image(Widget):
         self.height = h
         self.width = w
 
-
     def setImage(self, path):
         """
         With this method, you can change the image.

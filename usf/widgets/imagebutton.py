@@ -64,7 +64,9 @@ class ImageButton(Image):
                     event.dict['pos'][1] - self.parentpos[1] - self.y)
 
             print event.dict['pos']
-        if 0 < event.dict['pos'][0] < self.width and 0 < event.dict['pos'][1] < self.height:
+        if (
+                0 < event.dict['pos'][0] < self.width and
+                0 < event.dict['pos'][1] < self.height):
             self.state = True
             self.surface = self.surface_hover
             return False, self

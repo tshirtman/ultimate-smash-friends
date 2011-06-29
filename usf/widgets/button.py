@@ -23,7 +23,7 @@ from os.path import join
 
 #our modules
 from usf import loaders
-from label import Label
+from usf.widgets.label import Label
 
 CONFIG = loaders.get_config()
 
@@ -75,7 +75,9 @@ class Button(Label):
                 self.surface_text,
                 (self.posx, self.posy))
 
-        self.screen.blit(surf, (self.parentpos[0] + self.x, self.parentpos[1] + self.y))
+        self.screen.blit(surf, (
+            self.parentpos[0] + self.x,
+            self.parentpos[1] + self.y))
 
     def handle_mouse(self, event):
         """
@@ -99,7 +101,9 @@ class Button(Label):
 
 
     def handle_keys(self, event):
-        if (event.dict["key"] == pygame.K_DOWN or event.dict["key"] == pygame.K_UP) and not self.state:
+        if (
+                event.dict["key"] == pygame.K_DOWN or
+                event.dict["key"] == pygame.K_UP) and not self.state:
             self.state = True
             return False, self
 

@@ -37,7 +37,7 @@ class Label(Widget):
         self.properties["focusable"] = False
 
         if "margin" in kwargs:
-            self.txtmargin= kwargs['margin']
+            self.txtmargin = kwargs['margin']
         else:
             self.txtmargin = 0
 
