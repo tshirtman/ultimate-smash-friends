@@ -52,7 +52,6 @@ class Spinner(HBox):
         self.extend = False
         self.values = values
         self.orientation = True
-        self.index = 0
         self.center_width = width
         self.surface = pygame.Surface((self.width, self.height))
         self.widgets = []
@@ -62,12 +61,14 @@ class Spinner(HBox):
 
         self.left_arrow.set_size((37, 45))
         self.add(self.left_arrow, margin = 0)
-        self.center = Label(self.values[self.index],
+        self.center = Label('',
             background=join(
                 "gui",
                 config.general['THEME'],
                 "spinner_center.png"),
-            align="center")
+            align="center",
+            width=100,
+            height=35)
 
         self.add(self.center, margin = 0, size=(self.center_width, 45))
         self.right_arrow = ImageButton(
@@ -84,6 +85,7 @@ class Spinner(HBox):
         self.width = (
                 optimize_size((25, 30))[0] * 2 +
                 optimize_size((self.center_width, 30))[0])
+        self.set_index(0)
 
     def handle_mouse(self, event):
         if self.state:

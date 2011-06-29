@@ -49,6 +49,15 @@ class Label(Widget):
         if "background" in kwargs:
             self.background_path = kwargs['background']
 
+        self.dynamic_size = [True, True]
+
+        if "width" in kwargs:
+            self.dynamic_size[0] = False
+            self.width = kwargs['width']
+        if "height" in kwargs:
+            self.dynamic_size[1] = False
+            self.height = kwargs['height']
+
         self.set_text(text)
 
         self.state = False
@@ -59,23 +68,34 @@ class Label(Widget):
         self.text = text
         self.surface_text  = loaders.text(self.text, fonts['sans']['normal'])
 
-        self.height = self.surface_text.get_height()
-        self.width = self.surface_text.get_width()
+        if self.dynamic_size[0]:
+            self.height = self.surface_text.get_height() + self.txtmargin * 2
+
+        if self.dynamic_size[1]:
+            self.width = self.surface_text.get_width() + self.txtmargin * 2
 
         self.surface_text  = loaders.text(self.text, fonts['sans']['normal'])
 
         if self.align == "center":
-            self.indent = self.width/2-self.surface_text.get_width()/2
+            self.indent = self.width / 2 - self.surface_text.get_width() / 2
 
         else:
             self.indent = 0
 
-        self.horizontal_indent = self.height/2-self.surface_text.get_height()/2
+        self.horizontal_indent = (
+                self.height / 2 - self.surface_text.get_height() / 2)
 
         try:
-            self.background = loaders.image(join(CONFIG.sys_data_dir, self.background_path),
-                scale=(self.width, self.height))[0]
-            self.surface = loaders.image_layer(self.background, self.surface_text,(self.txtmargin+self.indent, self.horizontal_indent))
+            self.background = loaders.image(
+                    join(
+                        CONFIG.sys_data_dir, self.background_path),
+                    scale=(self.width, self.height))[0]
+
+            self.surface = loaders.image_layer(
+                    self.background,
+                    self.surface_text,
+                    (self.txtmargin + self.indent, self.horizontal_indent))
+
         except AttributeError:
             self.surface = self.surface_text
         self.screen = pygame.display.get_surface()
