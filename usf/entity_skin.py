@@ -37,9 +37,9 @@ SIZE = (CONFIG.general['WIDTH'],
         CONFIG.general['HEIGHT'])
 
 
-class Entity_skin (object):
+class EntitySkin (object):
     """
-    An Entity_skin contains all information about a player or an item, which is
+    An EntitySkin contains all information about a player or an item, which is
     mainly animations frames, with their timings and vectors, and less
     importants information as the character/item name and such details.
     """
@@ -244,7 +244,7 @@ class Entity_skin (object):
         """ save current state of the entity skin
         """
         return (self.current_animation, self.animation,
-                self.animation.playing, self.animation._start_time)
+                self.animation.playing, self.animation.start_time)
 
     def restore(self, backup):
         """ restore entity_skin from a backup state

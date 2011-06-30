@@ -64,7 +64,7 @@ except:
 
 sys.path.append(usf_root)
 
-from usf.entity_skin import Entity_skin
+from usf.entity_skin import EntitySkin
 from usf.loaders import image
 from usf.config import Config
 config = Config()
@@ -160,7 +160,7 @@ def load_entities(charnames):
                 os.path.join(path,path.split(os.path.sep)[-1])+".xml"
                 ):
                 create_character_xml(path)
-            skins.append(Entity_skin(path))
+            skins.append(EntitySkin(path))
 
             if inotifyx:
                 wds.append(inotifyx.add_watch(fd, path, inotifyx.IN_MODIFY))
@@ -170,7 +170,7 @@ def load_entities(charnames):
                 os.path.join(path2,path2.split(os.path.sep)[-1])+".xml"
                 ):
                 create_character_xml(path2)
-            skins.append(Entity_skin(path2))
+            skins.append(EntitySkin(path2))
 
             if inotifyx:
                 wds.append(inotifyx.add_watch(fd, path2, inotifyx.IN_MODIFY))

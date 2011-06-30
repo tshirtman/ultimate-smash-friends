@@ -104,6 +104,9 @@ class PreciseTimedAnimation(object):
         self.update(0, server=server)
         self.agressivpoints = []
 
+    def start_time(self):
+        return self._start_time
+
     def start(self, gametime):
         """
         set the animation start as now, and the animation as started.

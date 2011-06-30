@@ -105,8 +105,8 @@ class Layer(object):
                                                  frame.attrib["src"]),
                                             scale=(sizex, sizey))[0]
 
-                    time = float(frame.attrib["time"])
-                    self.frame.append((time, src))
+                    t = float(frame.attrib["time"])
+                    self.frame.append((t, src))
         else:
             self.type = 0
             self.background = loaders.image(join(CONFIG.sys_data_dir,
@@ -116,8 +116,8 @@ class Layer(object):
             for frame in node.findall("frame"):
                 x = int(frame.attrib["x"]) * CONFIG.general['WIDTH']/800
                 y = int(frame.attrib["y"]) * CONFIG.general['HEIGHT']/600
-                time = float(frame.attrib["time"])
-                self.frame.append((time, (x, y)))
+                t = float(frame.attrib["time"])
+                self.frame.append((t, (x, y)))
 
     def get_image(self, dt=-1):
         """

@@ -70,6 +70,98 @@ def _get_value_from_config(c):
         return values
 
 
+
+def get_locations():
+    """ returns the appropriate locations of the config directory, config
+        files, and data directories according to the user's platform
+    """
+
+    # may need to expand once other platforms are tested
+    if OS == 'windows':
+        # from what I can understand, windows saves user data/config info
+        # inside of an APPDATA environment variable. I am hold off on 10
+        # writing this portion until we get a working setup.py, py2exe or similar
+        # so that proper testing can be done. From there, filling in the blanks
+        # should be trivial
+
+        try:
+            sys_data_dir = join(environ['PROGRAMFILES'],
+                    'Ultimate Smash Friends', 'data')
+
+            sys_config_file = join(environ['PROGRAMFILES'],
+                    'Ultimate Smash Friends', 'system.cfg')
+
+            # see if files are installed on the system
+            stat(sys_data_dir)
+
+        except OSError:
+            # files aren't installed on the system so set user_config_dir
+            # to the parent directory of this module
+            user_config_dir = dirname(abspath(join(__file__, '..\..')))
+            sys_data_dir = join(user_config_dir, 'data')
+            sys_config_file = join(user_config_dir, 'system.cfg')
+
+        user_config_dir = join(environ['APPDATA'],
+                'Ultimate Smash Friends')
+        user_config_file = join(user_config_dir, 'user.cfg')
+        user_data_dir = join(user_config_dir, 'user_data')
+
+    else:
+        sys_data_dir = ""
+        #for the devlopment version
+        #"./data/", "./system.cfg"
+
+        #if someone launch launch main.py directly
+        #"../data/", "../system.cfg"
+
+        #an easier way to create a mod
+        #"../usf-data/", "./system.cfg"
+
+        #standard use
+        #"/usr/share/ultimate-smash-friends/data/",
+        #"/etc/ultimate-smash-friends/system.cfg"
+
+        for datadir in [
+            ("../usf-data/", "./system.cfg"),
+            ("./data/", "./system.cfg"),
+            ("../data/", "../system.cfg"),
+            ("/usr/share/ultimate-smash-friends/data/",
+                "/etc/ultimate-smash-friends/system.cfg")]:
+            try:
+                stat(datadir[0])
+                sys_data_dir = datadir[0]
+
+                if 'XDG_CONFIG_HOME' in environ.keys():
+                    user_config_dir = join(environ['XDG_CONFIG_HOME'],
+                            'ultimate-smash-friends')
+                else:
+                    user_config_dir = join(environ['HOME'], '.config',
+                            'ultimate-smash-friends')
+                sys_config_file = datadir[1]
+                break
+            except OSError:
+                pass
+
+        if sys_data_dir == "":
+            print "Error: no valid data directory - aborting"
+            print "Current dir: " + getcwd()
+            exit(-1)
+
+        user_config_file = join(user_config_dir, 'user.cfg')
+        user_data_dir = join(user_config_dir, 'user_data')
+
+    try:
+        # create user config and user data directories
+        makedirs(user_config_dir)
+        makedirs(user_data_dir)
+    except OSError:
+        # paths already exist or user doesn't have permission to create them
+        pass
+
+    return (user_config_dir, sys_config_file, user_config_file,
+            sys_data_dir, user_data_dir)
+
+
 class Option(dict):
     """#FIXME: doc!
     """
@@ -132,7 +224,7 @@ class Config(object):
         self.audio = None
 
         (self.user_config_dir, self.sys_config_file, self.user_config_file,
-         self.sys_data_dir, self.user_data_dir) = self.__get_locations()
+         self.sys_data_dir, self.user_data_dir) = get_locations()
 
         if config_files is None:
             self.read([self.sys_config_file, self.user_config_file])
@@ -140,97 +232,6 @@ class Config(object):
             self.read(config_files)
 
         self.save()
-
-    def __get_locations(self):
-        """ returns the appropriate locations of the config directory, config
-            files, and data directories according to the user's platform
-        """
-
-        # may need to expand once other platforms are tested
-        if OS == 'windows':
-            """ from what I can understand, windows saves user data/config info
-                inside of an APPDATA environment variable. I am hold off on
- 10               writing this portion until we get a working setup.py, py2exe or
-                similar so that proper testing can be done. From there, filling
-                in the blanks should be trivial
-            """
-
-            try:
-                sys_data_dir = join(environ['PROGRAMFILES'],
-                        'Ultimate Smash Friends', 'data')
-
-                sys_config_file = join(environ['PROGRAMFILES'],
-                        'Ultimate Smash Friends', 'system.cfg')
-
-                # see if files are installed on the system
-                stat(sys_data_dir)
-
-            except OSError:
-                # files aren't installed on the system so set user_config_dir
-                # to the parent directory of this module
-                user_config_dir = dirname(abspath(join(__file__, '..\..')))
-                sys_data_dir = join(user_config_dir, 'data')
-                sys_config_file = join(user_config_dir, 'system.cfg')
-
-            user_config_dir = join(environ['APPDATA'],
-                    'Ultimate Smash Friends')
-            user_config_file = join(user_config_dir, 'user.cfg')
-            user_data_dir = join(user_config_dir, 'user_data')
-
-        else:
-            sys_data_dir = ""
-            #for the devlopment version
-            #"./data/", "./system.cfg"
-
-            #if someone launch launch main.py directly
-            #"../data/", "../system.cfg"
-
-            #an easier way to create a mod
-            #"../usf-data/", "./system.cfg"
-
-            #standard use
-            #"/usr/share/ultimate-smash-friends/data/",
-            #"/etc/ultimate-smash-friends/system.cfg"
-
-            for datadir in [
-                ("../usf-data/", "./system.cfg"),
-                ("./data/", "./system.cfg"),
-                ("../data/", "../system.cfg"),
-                ("/usr/share/ultimate-smash-friends/data/",
-                    "/etc/ultimate-smash-friends/system.cfg")]:
-                try:
-                    stat(datadir[0])
-                    sys_data_dir = datadir[0]
-
-                    if 'XDG_CONFIG_HOME' in environ.keys():
-                        user_config_dir = join(environ['XDG_CONFIG_HOME'],
-                                'ultimate-smash-friends')
-                    else:
-                        user_config_dir = join(environ['HOME'], '.config',
-                                'ultimate-smash-friends')
-                    sys_config_file = datadir[1]
-                    break
-                except OSError:
-                    pass
-
-            if sys_data_dir == "":
-                print "Error: no valid data directory - aborting"
-                print "Current dir: " + getcwd()
-                exit(-1)
-
-            user_config_file = join(user_config_dir, 'user.cfg')
-            user_data_dir = join(user_config_dir, 'user_data')
-
-        try:
-            # create user config and user data directories
-            makedirs(user_config_dir)
-            makedirs(user_data_dir)
-        except OSError:
-            # paths already exist or user doesn't have permission to create them
-            pass
-
-        return (user_config_dir, sys_config_file, user_config_file,
-                sys_data_dir, user_data_dir)
 
     def save(self):
         with open(self.user_config_file, 'wb') as config_file:
@@ -251,20 +252,21 @@ class Config(object):
                     config=self.user_config_file,
                     name=section))
 
-    def reverse_keymap(self, keycode=None):
-        if 'world' in pygame.key.name(keycode):
-            return str(keycode)
+
+def reverse_keymap(keycode=None):
+    if 'world' in pygame.key.name(keycode):
+        return str(keycode)
+
+    else:
+        name = pygame.key.name(keycode)
+        if  len(name) == 1:
+            return 'K_'+name
 
         else:
-            name = pygame.key.name(keycode)
-            if  len(name) == 1:
-                return 'K_'+name
+            if '[' in name:
+                return 'K_KP'+name[1]
 
             else:
-                if '[' in name:
-                    return 'K_KP'+name[1]
-
-                else:
-                    return 'K_'+name.upper().replace(
-                            'LEFT ','L').replace('RIGHT ', 'R')
+                return 'K_'+name.upper().replace(
+                        'LEFT ','L').replace('RIGHT ', 'R')
 

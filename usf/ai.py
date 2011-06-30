@@ -160,16 +160,16 @@ def try_movement(movement, game, gametime, iam, others, h):
             (True, False),
             (False, True),
             (False, False)):
-        M = Movement(gametime, movement, reverse, walk)
+        m = Movement(gametime, movement, reverse, walk)
         b = game.backup() #no, this can't be factorized by moving it upper
 
         player = game.players[iam]
         others = (p for p in game.players if p is not player)
 
-        simulate(game, iam, M)
+        simulate(game, iam, m)
         s.append((
             h(player, others) + heuristic_state(game, player, others),
-            M,
+            m,
             game.backup()))
 
         game.restore(b)

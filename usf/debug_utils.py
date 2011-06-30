@@ -19,6 +19,8 @@ def log_result(function):
     """
 
     def decorated(*args, **kwargs):
+        """ this will be overwritten by the decorated function decorator
+        """
         result = function(*args, **kwargs)
         logging.info(str(result))
         return result

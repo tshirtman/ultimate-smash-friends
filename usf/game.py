@@ -331,7 +331,7 @@ class Game(object):
         for player in self.players:
             self.draw_player_portrait(player)
 
-    def draw(self, debug_params={}):
+    def draw(self, debug_params=dict()):
         """
         Draw every parts of the game on the screen.
 
@@ -419,10 +419,9 @@ class Game(object):
             x = [i.place[0] for i in self.present_players]
             y = [i.place[1] for i in self.present_players]
 
-            L = max(self.size[0], (max(x) - min(x)) * 1.25)
-            H = max(self.size[1], (max(y) - min(y)) * 1.5)
-
-            return min(self.size[0] / L, self.size[1] / H)
+            return min(
+                    self.size[0] / max(self.size[0], (max(x) - min(x)) * 1.25),
+                    self.size[1] / max(self.size[1], (max(y) - min(y)) * 1.5))
 
     @property
     def players_barycenter(self):

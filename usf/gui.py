@@ -85,7 +85,7 @@ class Gui(object):
         self.skin = Skin()
         self.last_event = time.time()
         self.image = 0
-        self.focus = False
+        self.focus = None
         self.state = "menu"
         self.cursor = loaders.image(
                 CONFIG.sys_data_dir + os.sep + 'cursor.png')[0]
@@ -147,7 +147,7 @@ class Gui(object):
         else:
             (query, focus) = self.focus.handle_mouse(event)
             if not focus:
-                self.focus = False
+                self.focus = None
 
         if  query:
             reply = self.screens[self.screen_current].callback(query)
@@ -167,20 +167,24 @@ class Gui(object):
         if self.focus:
             (query, focus) = self.focus.handle_keys(event)
             if not focus:
-                self.focus = False
+                self.focus = None
             if  query:
                 reply = self.screens[self.screen_current].callback(query)
                 self.handle_reply(reply)
+
         if not self.focus and (not reply and not query):
             if event.dict['key'] == pygame.K_ESCAPE:
                 self.handle_reply("goto:back")
             else:
                 (query, focus) = (
                         self.screens[self.screen_current].handle_keys(event))
+
                 if not focus:
-                    self.focus = False
+                    self.focus = None
+
                 else:
                     self.focus = focus
+
                 if  query:
                     reply = self.screens[self.screen_current].callback(query)
                     self.handle_reply(reply)

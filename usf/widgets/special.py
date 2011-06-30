@@ -23,7 +23,8 @@ import os
 from widget import Widget, optimize_size
 from usf import loaders
 from usf.font import fonts
-config = loaders.get_config()
+from usf.config import reverse_keymap
+CONFIG = loaders.get_config()
 
 
 class KeyboardWidget(Widget):
@@ -51,15 +52,15 @@ class KeyboardWidget(Widget):
     def update(self):
         self.background = loaders.image(
                 os.path.join(
-                    config.sys_data_dir, "gui",
-                    config.general['THEME'],"keyboard.png"),
+                    CONFIG.sys_data_dir, "gui",
+                    CONFIG.general['THEME'],"keyboard.png"),
                 scale=(self.width, self.height))[0]
 
         self.background_hover = loaders.image(
                 os.path.join(
-                    config.sys_data_dir,
+                    CONFIG.sys_data_dir,
                     "gui",
-                    config.general['THEME'],
+                    CONFIG.general['THEME'],
                     "keyboard_hover.png"),
                 scale=(self.width, self.height))[0]
 
@@ -116,7 +117,7 @@ class KeyboardWidget(Widget):
         if self.focus:
             if event.type == pygame.KEYDOWN:
                 self.letter = pygame.key.name(event.dict['key']).upper()
-                self.value = config.reverse_keymap(event.dict['key'])
+                self.value = reverse_keymap(event.dict['key'])
                 self.focus = False
                 self.state = False
                 self.update()

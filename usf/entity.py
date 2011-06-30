@@ -29,7 +29,7 @@ import math
 import os
 
 # my modules imports.
-from usf.entity_skin import Entity_skin
+from usf.entity_skin import EntitySkin
 import usf.loaders as loaders
 
 from usf.font import fonts
@@ -112,7 +112,7 @@ class Entity (object):
 
         if entity_skinname is not None:
             self._name = entity_skinname.split(os.sep)[-1]
-            self.entity_skin = Entity_skin(
+            self.entity_skin = EntitySkin(
                     entity_skinname,
                     not game or not game.screen,
                     animation=animation)

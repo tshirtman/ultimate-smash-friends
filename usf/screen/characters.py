@@ -73,7 +73,7 @@ class Characters(Screen):
                         "characters",
                         f))
 
-                    self.character.append(entity_skin.Entity_skin(
+                    self.character.append(entity_skin.EntitySkin(
                                     join('characters', f)).name)
             except OSError, e:
                 if e.errno is 20:
