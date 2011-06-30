@@ -35,7 +35,7 @@ from optparse import OptionParser
 import threading
 from usf.config import Config
 
-from usf.game import Game, NetworkServerGame, NetworkClientGame
+from usf.game import Game, NetworkServerGame #, NetworkClientGame
 from usf.gui import Gui
 from usf.controls import Controls
 import usf.loaders as loaders
@@ -45,15 +45,12 @@ from usf.ai import AI
 
 from usf.translation import _
 
-#XXX: there is an ugly border effect here, it creates _ in the namespace
-import usf.translation
-
 try:
     CONFIG = Config()
     logging.basicConfig(
         filename=os.path.join(CONFIG.user_data_dir,
             CONFIG.debug['LOG_FILENAME']),
-        level=eval('logging.' + CONFIG.debug['LOG_LEVEL']))
+        level=('logging.' + CONFIG.debug['LOG_LEVEL']))
 
 except AttributeError:
     logging.basicConfig(
@@ -221,7 +218,7 @@ class Main(object):
         """ parse the command line options
         """
         # set up the comand line parser and its options
-        (options, args) = self.parser.parse_args()
+        options = self.parser.parse_args()[0]
 
         # actually parse the command line options
         if options.author:
@@ -291,7 +288,7 @@ class Main(object):
         # instance to switch to.
         start_loop = pygame.time.get_ticks()
         menu_was = self.menu.screen_current
-        newgame, game_ = self.menu.update(self.clock)
+        newgame, game_ = self.menu.update()
         if menu_was == 'keyboard' and self.menu.screen_current != 'keyboard':
             self.controls.load_keys()
             self.controls.load_sequences()

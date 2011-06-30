@@ -18,7 +18,7 @@
 ################################################################################
 
 #our modules
-from config import Config
+from usf.config import Config
 CONFIG = Config()
 
 #standart imports

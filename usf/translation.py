@@ -1,8 +1,8 @@
 '''
-This module setup translation environment
+This module setup translation environment and provide the _ function, which you
+should import from it to use.
 
-XXX it's a bit magical and "polute" the importing context, which get a _ method
-defined without importing it explicitly.
+from usf.translation import _
 
 '''
 
@@ -14,10 +14,8 @@ CONFIG = Config()
 LOCALE_DIR = os.path.join(CONFIG.sys_data_dir, "po")
 # Set up message catalog access
 
-t = gettext.translation('ultimate-smash-friends', LOCALE_DIR, fallback=True)
-_ = t.gettext
+_ = gettext.translation(
+        'ultimate-smash-friends',
+        LOCALE_DIR,
+        fallback=True).gettext
 
-
-#XXX _ is magicaly definied by the next line :/
-#gettext.install("ultimate-smash-friends", LOCALE_DIR)
-_("translator-credits")

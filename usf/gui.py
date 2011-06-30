@@ -75,7 +75,8 @@ class Gui(object):
         self.screens['about'] = About('about', self.screen)
         self.screens['resume'] = Resume('resume', self.screen)
         self.screens['sound'] = Sound('sound', self.screen)
-        self.screens['screen_screen'] = Screen_screen('screen_screen', self.screen)
+        self.screens['screen_screen'] = Screen_screen('screen_screen',
+                self.screen)
         self.screens['keyboard'] = Keyboard('keyboard', self.screen)
         self.screens['level'] = Level('level', self.screen)
         self.screens['characters'] = Characters('characters', self.screen)
@@ -90,7 +91,7 @@ class Gui(object):
                 CONFIG.sys_data_dir + os.sep + 'cursor.png')[0]
         self.update_youhere()
 
-    def update(self, clock):
+    def update(self):
         """
         Update the GUI, it draws the mouse, and the menu.
         """
@@ -209,30 +210,17 @@ class Gui(object):
 
         if type(reply) == str:
             if reply.split(':')[0] == 'goto':
-                animation = True
                 sound = loaders.track(
                         os.path.join(CONFIG.sys_data_dir, "sounds",
                             "mouseClick2.wav"))
 
                 sound.set_volume(CONFIG.audio['SOUND_VOLUME']/100.0)
                 sound.play()
-                old_screen = self.screens[self.screen_current]
-                old_surface = self.screens[self.screen_current].widget.draw()
                 if reply.split(':')[1] == 'back':
-                    animation = self.screen_back()
+                    pass
                 else:
                     self.screen_history.append(self.screen_current)
                     self.screen_current = reply.split(':')[1]
-                """
-                if animation:
-
-                    self.transition_fading(old_screen,
-                        old_surface,
-                        self.screens[self.screen_current],
-                        self.screens[self.screen_current].widget.draw())
-                    #self.update_youhere()
-                    pygame.event.clear()
-                """
 
             if reply.split(':')[0] == 'game':
                 if reply.split(':')[1] == "new":
@@ -345,7 +333,7 @@ class Gui(object):
         for i in range(0, len(self.screens["characters"].players)):
             if self.screens["characters"].players[i] != 0:
                 file_name = (
-                        self.screens["characters"].game_data['character_file']\
+                        self.screens["characters"].game_data['character_file']
                                 [self.screens["characters"].players[i]])
                 if self.screens["characters"].checkboxes_ai[i].get_value():
                     file_name = file_name.replace(

@@ -199,7 +199,7 @@ class Entity_skin (object):
                     anim_name != self.current_animation))
 
     #FIXME: this should be in the entity class
-    def change_animation(self, anim_name, game=None, params={}):
+    def change_animation(self, anim_name, game=None, params=dict()):
         """
         Change animation of the entity skin, updating hardshape and agressiv
         points. Add associated events to game.
@@ -229,10 +229,12 @@ class Entity_skin (object):
             self.add_vectors(anim_name, game, params)
 
             if self.sounds[anim_name] != []:
-                try:
-                    loaders.track(random.choice(self.sounds[anim_name])).play()
-                except (Exception), e:
-                    logging.warning(e)
+                # XXX reactivate the try/except with the good exception when you
+                # know it
+                #try:
+                loaders.track(random.choice(self.sounds[anim_name])).play()
+                #except (Exception), e:
+                    #logging.warning(e)
         else:
             #logging.debug( "entity_skin "+self.name+" has no "+anim_name+"\
 #animation.")
