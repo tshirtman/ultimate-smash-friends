@@ -37,7 +37,7 @@ from usf.event_manager import EventManager
 from usf.font import fonts
 from usf.level import Level
 from usf.loaders import image
-import usf.entity as entity
+from usf.entity import Entity
 import usf.loaders as loaders
 
 from usf.translation import _
@@ -113,6 +113,7 @@ class Game(object):
         self.ending = 5.0
 
         self.max_fps = CONFIG.general['MAX_FPS']
+        self.last_clock = 0
 
     def add_world_event(self):
         '''
@@ -141,7 +142,7 @@ class Game(object):
             ai = False
 
         self.players.append(
-                entity.Entity(
+                Entity(
                     i+1,
                     self,
                     player,
@@ -177,7 +178,7 @@ class Game(object):
         """
         try:
             os.listdir(os.path.join(CONFIG.sys_data_dir, 'items', item))
-            e = entity.Entity(
+            e = Entity(
                         None,
                         self,
                         os.path.join('items', item),
@@ -294,7 +295,7 @@ class Game(object):
                  num*self.size[1] / 4))
 
 
-    def draw_debug_player_controls(self, num, player, controls):
+    def draw_debug_player_controls(self, num, controls):
         """ displays current key sequence of player, useful for debuging
         """
         for i, k in enumerate(controls.player_sequences[num]):
@@ -305,15 +306,15 @@ class Game(object):
                             'misc','key_' + k[0].lower() + '.png'))[0],
                     (num * self.size[0] / 4 + i * 50, 0 + 100 * (num % 2)))
 
-
     def draw_debug(self, debug_params):
+        """ manae all de debug drawings provided by the class
+        """
         for num, player in enumerate(self.players):
             if 'coords' in debug_params:
                 self.draw_debug_player_coords(num, player)
 
             if debug_params.get('controls', False):
-                self.draw_debug_player_controls(num, player,
-                        debug_params['controls'])
+                self.draw_debug_player_controls(num, debug_params['controls'])
 
     def draw_portraits(self):
         """
@@ -362,7 +363,7 @@ class Game(object):
         game is still running
         """
 
-        alive_players = filter(entity.Entity.alive, self.players)
+        alive_players = filter(Entity.alive, self.players)
 
         if len(alive_players) == 1:
             self.screen.blit(
@@ -383,6 +384,8 @@ class Game(object):
                 (self.size[0]/2, self.size[1]/2))
 
     def draw_notif(self, notif):
+        """ drow notifications on the screen
+        """
         self.screen.blit(
                 GAME_FONT.render(
                     str(notif[1]),
@@ -425,6 +428,9 @@ class Game(object):
 
     @property
     def players_barycenter(self):
+        """ return the barycenter of all present players, to help place the
+        camera
+        """
         if len(self.present_players) == 1:
             return self.present_players[0].rect[0:2]
         else:
@@ -435,6 +441,9 @@ class Game(object):
                     len(self.present_players))
 
     def center_zoom_camera(self):
+        """ set the camera place and zoom to display as much player as
+        possible, without moving the camera too fast.
+        """
         self.present_players = [i for i in self.players if i.present]
         if self.present_players:
             # there is a trade between zoom sharpness and speed so we force
@@ -483,6 +492,8 @@ class Game(object):
                             params={'player': player, 'entity': item})
 
     def update_items(self, deltatime):
+        """ trigger update on all the present items
+        """
         for item in self.items:
             item.update(
                          deltatime,
@@ -496,7 +507,9 @@ class Game(object):
                 del(self.items[self.items.index(item)])
 
     def update_players(self, deltatime):
-        for player in filter(entity.Entity.is_present, self.players):
+        """ trigger update on all the present players
+        """
+        for player in filter(Entity.is_present, self.players):
             player.update(
                     deltatime,
                     self.gametime,
@@ -516,24 +529,38 @@ class Game(object):
                 player.set_present(False)
 
     def backup_items(self):
+        """ return a backup of the state of the items in game
+        """
         return (self.items[:], tuple((i.backup() for i in self.items)))
 
     def restore_items(self, backup):
+        """ restore items and their states from a known backup state in the
+        game
+        """
         self.items = backup[0]
         for i, b in zip(self.items, backup[1]):
             i.restore(b)
 
     def backup_players(self):
+        """ return a backup of the state of the players in game 
+        """
         return tuple((p.backup() for p in self.players))
 
     def restore_players(self, backup):
+        """ restore players and their states from a known backup state in the
+        game
+        """
         for p, b in zip(self.players, backup):
             p.restore(b)
 
     def backup_skins(self):
+        """ return a backup of the entity skins current state 
+        """
         return tuple((e.entity_skin.backup() for e in self.players+self.items))
 
     def restore_skins(self, backup):
+        """ restore skins of entities from a known backup state
+        """
         for e, b in zip(self.players + self.items, backup):
             e.entity_skin.restore(b)
 
@@ -565,6 +592,10 @@ class Game(object):
         self.restore_skins(backup['skins'])
 
     def update_clock(self, was_paused):
+        """ update the clock of the game, and return the time passed since last
+        update, is was_paused is set to True, then deltatime returned is 0 and
+        no calculations are done, time is simply update.
+        """
         if was_paused:
             deltatime = 0
         else:
@@ -615,7 +646,7 @@ class Game(object):
         self.update_physics()
         self.update_items(deltatime)
 
-        players_left = len(filter(entity.Entity.alive, self.players))
+        players_left = len(filter(Entity.alive, self.players))
 
         if players_left <= 1:
             # there is only one player left then the game need to end after a
@@ -634,10 +665,20 @@ class Game(object):
 
 
 class NetworkServerGame(Game):
-    pass
+    """ This class is intended for defining network server game implementation,
+    not yet implemented!
+    """
+    def __init__(self):
+        super(NetworkServerGame, self).__init__(self)
+        raise NotImplementedError("NetworkServerGame is not implemented yet")
 
 
 class NetworkClientGame(Game):
-    pass
+    """ This class is intended for defining network client game implementation,
+    not yet implemented!
+    """
+    def __init__(self):
+        super(NetworkClientGame, self).__init__(self)
+        raise NotImplementedError("NetworkClientGame is not implemented yet")
 
 

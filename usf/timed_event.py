@@ -24,6 +24,7 @@ complexe effects and behaviours in the game.
 
 import random
 import math
+import logging
 
 from usf.config import Config
 

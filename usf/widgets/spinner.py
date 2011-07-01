@@ -109,13 +109,13 @@ class Spinner(HBox):
                         widget.state = True
                         if event.type == pygame.MOUSEBUTTONUP:
                             if widget == self.right_arrow:
-                                self.index +=1
+                                self.index += 1
                                 if self.index > len(self.values)-1:
-                                    self.index =0
+                                    self.index = 0
                             else:
-                                self.index -=1
+                                self.index -= 1
                                 if self.index < 0:
-                                    self.index =len(self.values)-1
+                                    self.index = len(self.values)-1
                             self.text = self.values[self.index]
                             self.center.set_text(self.text)
                             return (self, False)
@@ -140,7 +140,7 @@ class Spinner(HBox):
         Set the index (the range of the current value) of the spinner.
         """
         try:
-            self.index=index
+            self.index = index
             self.text = self.values[self.index]
             self.center.set_text(self.text)
 
@@ -154,7 +154,7 @@ class Spinner(HBox):
         """
         try:
             self.set_index(self.values.index(value))
-        except:
+        except ValueError:
             logging.warning("No entry named: " + str(value))
 
     def handle_keys(self, event):
