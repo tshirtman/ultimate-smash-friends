@@ -17,16 +17,16 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
-from screen import Screen
+from usf.screen.screen import Screen
 from usf.widgets.box import VBox
 from usf.widgets.slider import Slider
 from usf.widgets.label import Label
 from usf.widgets.button import Button
 from usf.translation import _
 
-from usf.config import Config
+from usf.loaders import get_config
 
-config = Config()
+CONFIG = get_config()
 
 
 class Sound(Screen):
@@ -39,14 +39,14 @@ class Sound(Screen):
         music = Slider('music_slider')
         self.widget.add(music, size=(220, 30))
 
-        music.set_value(config.audio['MUSIC_VOLUME'])
-        sound.set_value(config.audio['SOUND_VOLUME'])
+        music.set_value(CONFIG.audio['MUSIC_VOLUME'])
+        sound.set_value(CONFIG.audio['SOUND_VOLUME'])
         self.widget.add(Button(_('Back')), margin=30)
 
     def callback(self, action):
         if action.text == 'music_slider':
-            config.audio['MUSIC_VOLUME'] = action.get_value()
+            CONFIG.audio['MUSIC_VOLUME'] = action.get_value()
         if action.text == 'sound_slider':
-            config.audio['SOUND_VOLUME'] = action.get_value()
+            CONFIG.audio['SOUND_VOLUME'] = action.get_value()
         if action.text == _('Back'):
             return "goto:back"

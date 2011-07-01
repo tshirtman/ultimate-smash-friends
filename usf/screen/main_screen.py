@@ -17,14 +17,14 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
-from screen import Screen
 import pygame
 
+from usf.screen.screen import Screen
 from usf.widgets.box import VBox
 from usf.widgets.button import Button
 from usf.translation import _
 
-class Main_screen(Screen):
+class MainScreen(Screen):
     def init(self):
         self.set_name("ultimate smash friends")
         self.add(VBox())

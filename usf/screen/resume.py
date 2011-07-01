@@ -17,7 +17,7 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
-from screen import Screen
+from usf.screen.screen import Screen
 from usf.widgets.button import Button
 from usf.widgets.box import VBox
 from usf.translation import _

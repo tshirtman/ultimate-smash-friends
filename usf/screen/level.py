@@ -21,15 +21,15 @@
 from os.path import join
 import os
 import logging
+
 #our modules
-from screen import Screen
+from usf.screen.screen import Screen
 from usf.widgets.box import VBox
 from usf.widgets.button import Button
 from usf.widgets.coverflow import Coverflow
 
-from usf import loaders
-#config
-config = loaders.get_config()
+from usf.loaders import get_config
+CONFIG = get_config()
 
 from usf.translation import _
 
@@ -37,35 +37,33 @@ class Level(Screen):
 
     def init(self):
         self.add(VBox())
-        basename = join(config.sys_data_dir, "test", "")
 
         coverflow_data = []
         #create a level image for every directory in the level directory.
-        files = os.listdir(os.path.join( config.sys_data_dir, 'levels'))
+        files = os.listdir(os.path.join( CONFIG.sys_data_dir, 'levels'))
         files.sort()
 
-        for file in files:
+        for f in files:
             try:
-                if 'level.xml' in os.listdir(os.path.join(
-                            config.sys_data_dir,
-                            "levels",
-                            file)) :
+                if 'level.xml' in os.listdir(
+                        os.path.join(CONFIG.sys_data_dir, "levels", f)):
                     coverflow_data.append([])
-                    coverflow_data[-1].append(file)
+                    coverflow_data[-1].append(f)
                     coverflow_data[-1].append(
-                        join(
-                            config.sys_data_dir,
-                            "levels",
-                            file,
-                            "screenshot.png"))
+                            join(
+                                CONFIG.sys_data_dir,
+                                "levels", f, "screenshot.png"))
             except:
-                logging.debug(str(file) +" is not a valid level.")
-                pass
+                logging.debug(str(f) +" is not a valid level.")
 
         self.coverflow = Coverflow(coverflow_data)
         self.widget.add(self.coverflow, size=(800, 275))
         self.widget.add(Button(_('Go !')), margin_left=290)
-        self.widget.add(Button(_('Back')), size=(150, 40), margin_left=20, margin=20)
+        self.widget.add(
+                Button(_('Back')),
+                size=(150, 40),
+                margin_left=20,
+                margin=20)
 
     def get_level(self):
         return self.coverflow.get_value()

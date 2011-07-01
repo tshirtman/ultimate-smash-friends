@@ -18,11 +18,11 @@
 ################################################################################
 
 # Our modules
-from usf.config import Config
-config = Config()
 from usf.font import fonts
 from usf import loaders
 import pygame
+
+CONFIG = loaders.get_config()
 
 
 class Screen(object):
@@ -37,7 +37,9 @@ class Screen(object):
     def add(self, widget):
         self.widget = widget
         #define the position and the size of the top-level widget
-        self.widget.set_size((config.general['WIDTH'],config.general['HEIGHT']))
+        self.widget.set_size((
+            CONFIG.general['WIDTH'],
+            CONFIG.general['HEIGHT']))
         self.widget.x = 0
         self.widget.y = 70
         self.widget.update_size()
@@ -65,17 +67,18 @@ class Screen(object):
         self.name = name.replace('_', ' ')
 
         #center the title
-        self.indent_title = (config.general['WIDTH']/2 -
-                     loaders.text(self.name, fonts['mono']['15']).get_width()/2)
+        self.indent_title = (
+                CONFIG.general['WIDTH']/2 - loaders.text(
+                    self.name, fonts['mono']['15']).get_width()/2)
 
     def update_pos(self):
         self.widget.update_size()
         #center the main container (and all the widgets which are in it)
         #verticaly
-        self.widget.y = ((config.general['HEIGHT'] - 70) / 2 - self.widget.height/2)+70
+        self.widget.y = ((CONFIG.general['HEIGHT'] - 70) / 2 - self.widget.height/2)+70
 
         #center it horizontaly
-        self.widget.x = config.general['WIDTH']/2 - self.widget.width/2
+        self.widget.x = CONFIG.general['WIDTH']/2 - self.widget.width/2
 
         self.widget.update_pos()
 

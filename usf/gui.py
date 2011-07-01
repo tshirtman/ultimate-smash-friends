@@ -22,40 +22,29 @@ callback to use them.
 
 '''
 
+import os
+import time
 import pygame
 from pygame.locals import QUIT
 
-import os
-import time
-
 # Our modules
-
-from usf.config import Config
-
-
-import usf.loaders as loaders
-from usf.game import Game
-
-from usf.skin import Skin
-
-from usf.widgets.widget import optimize_size
-
 from usf.font import fonts
-
-from usf.translation import _
-
-CONFIG = Config()
-
-from usf.screen.main_screen import Main_screen
-from usf.screen.configure import Configure
+from usf.game import Game
 from usf.screen.about import About
-from usf.screen.resume import Resume
-from usf.screen.sound import Sound
-from usf.screen.screen_screen import Screen_screen
+from usf.screen.characters import Characters
+from usf.screen.configure import Configure
 from usf.screen.keyboard import Keyboard
 from usf.screen.level import Level
-from usf.screen.characters import Characters
+from usf.screen.main_screen import MainScreen
+from usf.screen.resume import Resume
+from usf.screen.screen_screen import ScreenScreen
+from usf.screen.sound import Sound
+from usf.skin import Skin
+from usf.translation import _
+from usf.widgets.widget import optimize_size
+import usf.loaders as loaders
 
+CONFIG = loaders.get_config()
 
 class Gui(object):
     """
@@ -70,12 +59,12 @@ class Gui(object):
         self.screen_history = []
         #TODO : Use a config file
 
-        self.screens['main_screen'] = Main_screen('main_screen', self.screen)
+        self.screens['main_screen'] = MainScreen('main_screen', self.screen)
         self.screens['configure'] = Configure('configure', self.screen)
         self.screens['about'] = About('about', self.screen)
         self.screens['resume'] = Resume('resume', self.screen)
         self.screens['sound'] = Sound('sound', self.screen)
-        self.screens['screen_screen'] = Screen_screen('screen_screen',
+        self.screens['screen_screen'] = ScreenScreen('screen_screen',
                 self.screen)
         self.screens['keyboard'] = Keyboard('keyboard', self.screen)
         self.screens['level'] = Level('level', self.screen)

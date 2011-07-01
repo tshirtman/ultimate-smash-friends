@@ -19,17 +19,17 @@
 
 from os.path import join
 
-from screen import Screen
+from usf.screen.screen import Screen
 from usf.widgets.box import VBox, HBox
 from usf.widgets.button import Button
 from usf.widgets.label import Label
 from usf.widgets.special import KeyboardWidget
 from usf.widgets.image import Image
 
-from usf.config import Config
 from usf.translation import _
+from usf.loaders import get_config
 
-config = Config()
+CONFIG = get_config()
 
 
 class Keyboard(Screen):
@@ -43,7 +43,7 @@ class Keyboard(Screen):
         for img in ['left.png', 'right.png', 'top.png', 'bottom.png']:
             hbox.add(Image(join(
                 'gui',
-                config.general['THEME'],
+                CONFIG.general['THEME'],
                 img)),
                 size=(40, 30),
                 margin=30)
@@ -55,12 +55,13 @@ class Keyboard(Screen):
         self.widget.add(hbox)
         action_ = ['Left', 'Right', 'Up', 'Down', 'A', 'B', 'Shield']
 
-        #one repetition by players
+        #one iteration by player
         for i in xrange(4):
             hbox = HBox()
             hbox.add(Label('Player ' + str(i + 1)), size=(80, 50))
             for action in action_:
-                w = KeyboardWidget(config.keyboard['PL' + str(i + 1) + '_' + action.upper()])
+                w = KeyboardWidget(
+                        CONFIG.keyboard['PL' + str(i + 1) + '_' + action.upper()])
                 w.set_id('PL' + str(i + 1) + '_' + action.upper())
                 hbox.add(w, size=(40, 40), margin=30)
             self.widget.add(hbox)
@@ -70,7 +71,7 @@ class Keyboard(Screen):
 
     def callback(self, action):
         if type(action) == KeyboardWidget:
-            config.keyboard[action.get_id()] = action.get_value()
+            CONFIG.keyboard[action.get_id()] = action.get_value()
         if action.text == _('Back'):
             return "goto:back"
 

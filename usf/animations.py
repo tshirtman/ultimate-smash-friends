@@ -104,6 +104,7 @@ class PreciseTimedAnimation(object):
         self.update(0, server=server)
         self.agressivpoints = []
 
+    @property
     def start_time(self):
         return self._start_time
 
