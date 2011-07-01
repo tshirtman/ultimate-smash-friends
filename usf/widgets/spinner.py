@@ -29,7 +29,7 @@ from usf.widgets.label import Label
 from usf.widgets.box import HBox
 from usf import loaders
 
-config = loaders.get_config()
+CONFIG = loaders.get_config()
 
 
 class Spinner(HBox):
@@ -56,15 +56,15 @@ class Spinner(HBox):
         self.surface = pygame.Surface((self.width, self.height))
         self.widgets = []
         self.left_arrow = ImageButton(
-                join("gui", config.general['THEME'], "spinner_left.png"),
-                join("gui", config.general['THEME'], "spinner_left_hover.png"))
+                join("gui", CONFIG.general['THEME'], "spinner_left.png"),
+                join("gui", CONFIG.general['THEME'], "spinner_left_hover.png"))
 
         self.left_arrow.set_size((37, 45))
         self.add(self.left_arrow, margin = 0)
         self.center = Label('',
             background=join(
                 "gui",
-                config.general['THEME'],
+                CONFIG.general['THEME'],
                 "spinner_center.png"),
             align="center",
             width=100,
@@ -72,8 +72,8 @@ class Spinner(HBox):
 
         self.add(self.center, margin = 0, size=(self.center_width, 45))
         self.right_arrow = ImageButton(
-                join("gui", config.general['THEME'], "spinner_right.png"),
-                join("gui", config.general['THEME'], "spinner_right_hover.png"))
+                join("gui", CONFIG.general['THEME'], "spinner_right.png"),
+                join("gui", CONFIG.general['THEME'], "spinner_right_hover.png"))
         self.right_arrow.set_size((37, 45))
         self.add(self.right_arrow, margin = 0)
         self.update_pos()

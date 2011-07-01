@@ -22,7 +22,7 @@ import time
 
 from usf import loaders
 
-config = loaders.get_config()
+CONFIG = loaders.get_config()
 
 
 class Widget (object):
@@ -106,8 +106,8 @@ class Widget (object):
 
 #these functions are used to handle the others screen resolutions
 #FIXME : maybe they could go to loaders ?
-width = config.general['WIDTH']
-height = config.general['HEIGHT']
+width = CONFIG.general['WIDTH']
+height = CONFIG.general['HEIGHT']
 
 
 def optimize_size(size):
@@ -116,7 +116,7 @@ def optimize_size(size):
 
 def get_scale(surface):
     return (
-            surface.get_width() * 800 / config.general['WIDTH'],
-            surface.get_height()*480/config.general['HEIGHT'])
+            surface.get_width() * 800 / CONFIG.general['WIDTH'],
+            surface.get_height()*480/CONFIG.general['HEIGHT'])
 
 

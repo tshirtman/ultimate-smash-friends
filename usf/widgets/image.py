@@ -22,7 +22,7 @@ import os
 
 from widget import Widget
 from usf import loaders
-config = loaders.get_config()
+CONFIG = loaders.get_config()
 
 
 class Image(Widget):
@@ -52,12 +52,12 @@ class Image(Widget):
     def setImage(self, path):
         """
         With this method, you can change the image.
-        'config.sys_data_dir' will be added to 'path'
+        'CONFIG.sys_data_dir' will be added to 'path'
         """
         self.path = path
 
         self.surface = loaders.image(
-                    config.sys_data_dir+
+                    CONFIG.sys_data_dir+
                     os.sep+
                     self.path, scale=(self.width, self.height))[0]
 

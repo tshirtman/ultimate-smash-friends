@@ -65,9 +65,8 @@ except:
 sys.path.append(usf_root)
 
 from usf.entity_skin import EntitySkin
-from usf.loaders import image
-from usf.config import Config
-config = Config()
+from usf.loaders import image, get_config
+CONFIG = loaders.get_config()
 
 
 class Placeholder(object):
@@ -304,12 +303,12 @@ def main(charnames):
                         continue
 
                     bottom_center_hardshape[0] = (window_size[0]/(len(charnames)
-                            * 2)) + (int(time.time() * config.general['WALKSPEED']) % 200 if
+                            * 2)) + (int(time.time() * CONFIG.general['WALKSPEED']) % 200 if
                                     "walk" in animation else 0)
 
                     #if "walk" in animation:
                         #bottom_center_hardshape[0] = int(
-                            #time.time() * config.general['WALKSPEED']
+                            #time.time() * CONFIG.general['WALKSPEED']
                             #) % window_size[0]
                     #else:
                         #bottom_center_hardshape[0] = window_size[0]/(len(charnames) * 2)

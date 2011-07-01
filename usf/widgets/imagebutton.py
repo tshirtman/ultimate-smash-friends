@@ -22,7 +22,7 @@ import os
 
 from widget import get_scale
 from usf import loaders
-config = loaders.get_config()
+CONFIG = loaders.get_config()
 
 from image import Image
 
@@ -35,7 +35,7 @@ class ImageButton(Image):
         super(ImageButton, self).__init__(image)
         self.path_hover = image_hover
         size = get_scale(loaders.image(
-                    config.sys_data_dir+
+                    CONFIG.sys_data_dir+
                     os.sep+
                     image)[0])
 
@@ -46,12 +46,12 @@ class ImageButton(Image):
         self.height = h
         self.width = w
         self.surface_static = loaders.image(
-                    config.sys_data_dir+
+                    CONFIG.sys_data_dir+
                     os.sep+
                     self.path, scale=(w, h))[0]
 
         self.surface_hover = loaders.image(
-                    config.sys_data_dir+
+                    CONFIG.sys_data_dir+
                     os.sep+
                     self.path_hover, scale=(w, h))[0]
 
