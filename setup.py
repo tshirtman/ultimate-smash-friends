@@ -148,7 +148,7 @@ setup(
         maintainer=MAINTAINER,
         maintainer_email=MAINTAINER_EMAIL,
         url=URL,
-        classsifiers=CLASSIFIERS,
+        classifiers=CLASSIFIERS,
         packages=PACKAGES,
         scripts=SCRIPTS,
         requires=REQUIRES,

@@ -48,9 +48,10 @@ from usf.translation import _
 try:
     CONFIG = Config()
     logging.basicConfig(
-        filename=os.path.join(CONFIG.user_data_dir,
-            CONFIG.debug['LOG_FILENAME']),
-        level=('logging.' + CONFIG.debug['LOG_LEVEL']))
+            filename=os.path.join(
+                CONFIG.user_data_dir,
+                CONFIG.debug['LOG_FILENAME']),
+            level=(CONFIG.debug['LOG_LEVEL']))
 
 except AttributeError:
     logging.basicConfig(
