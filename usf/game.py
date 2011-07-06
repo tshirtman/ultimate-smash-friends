@@ -143,10 +143,10 @@ class Game(object):
 
         self.players.append(
                 Entity(
-                    i+1,
-                    self,
-                    player,
-                    ((i + 1) * self.size[0] / 5, 100)))
+                    num=i+1,
+                    game=self,
+                    entity_skinname=player,
+                    place=((i + 1) * self.size[0] / 5, 100)))
 
         if ai:
             self.players[len(self.players)-1].ai = ai

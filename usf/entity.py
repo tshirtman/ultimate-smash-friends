@@ -40,8 +40,30 @@ CONFIG = Config()
 
 from usf.debug_utils import draw_rect
 
+class Actor(object):
+    """
+    
+    """
+    def __init__(self, game, place=(550, 1), vector=list((0, 0)), reverse=False,
+            number=None, present=False, physic=True, gravity=True,
+            physics=True, **kwargs):
 
-class Entity (object):
+        # the 'center' of the entity is at the bottom middle.
+        # so this is the point that move the least beetwen two frames.
+        self._game = game
+        self._gravity = gravity
+        self._on_ground = False
+        self._physic = physic
+        self._physics = physics
+        self._place = place
+        self._present = present
+        self._vector = [vector[0], vector[1]]
+        self._walking_vector = [0.0, 0.0]
+        self.foot_rect = None
+        self.in_water = False
+        self.old_pos = []
+
+class Entity(Actor):
     """
     Provide an entity object, which will take care of lifes, movements,
     collisions of an Entity. Players and Items are Entities.
@@ -63,6 +85,7 @@ class Entity (object):
                 math.sin(i * math.pi / (nb_points/2) + math.pi / nb_points),
                 math.cos(i * math.pi / (nb_points/2) + math.pi / nb_points)]
             for i in range(nb_points)]
+
     list_sin_cos_1 = map(lambda (x, y): (x+1, y+1), list_sin_cos)
 
     # this counter will allow us to correctly update entities.
@@ -71,50 +94,41 @@ class Entity (object):
     (TOP_RIGHT, UPPER_RIGHT, LOWER_RIGHT, BOTTOM_RIGHT, BOTTOM_LEFT, LOWER_LEFT,
      UPPER_LEFT, TOP_LEFT) = range(8)
 
-    def __init__(self, num, game,
-            entity_skinname='characters'+os.sep+'stick-tiny', place=(550, 1),
-            lives=3, carried_by=None, vector=list((0, 0)), reverse=False,
-            server=False, number=None, visible=False, present=False,
-            upgraded=False, physic=True, gravity=True, animation='static',
-            physics=True):
+    def __init__(self, **kwargs):
 
-        if number is None:
-            self._number = Entity.counter
-            Entity.counter += 1
+        super(Entity, self).__init__(**kwargs)
+
+        number = kwargs.get('num')
+
+        if number:
+            self._num = number
+
         else:
-            self._number = number
+            self._num = Entity.counter
+            Entity.counter += 1
 
-        self._game = game
-        self._physic = physic
-        self._num = num
-        self._upgraded = upgraded
+        self._game = kwargs.get('game')
+        self._upgraded = kwargs.get('upgraded', False)
         self._lighten = False
         self._shield = {'on': False, 'power': 1.0, 'date': 0}
-        self._place = place
-        self._carried_by = carried_by
-        # the 'center' of the entity is at the bottom middle.
-        # so this is the point that move the least beetwen two frames.
-        self._vector = [vector[0], vector[1]]
-        self._walking_vector = [0.0, 0.0]
+        self._carried_by = kwargs.get('carried_by', None)
         # the entity is reversed when looking at left.
-        self._reversed = reverse
+        self._reversed = kwargs.get('reverse', False)
         self._percents = 0
-        self._lives = lives
-        self._gravity = gravity
+        self._lives = kwargs.get('lives', 3)
         self._invincible = False
-        self._present = present
-        self._visible = visible
-        self._on_ground = False
-        self._physics = physics
-        self.old_pos = []
-        self.foot_rect = None
-        self.in_water = False
+        self._visible = kwargs.get('visible', False)
+
+        entity_skinname = kwargs.get(
+                'entity_skinname',
+                'characters' + os.sep + 'stick')
 
         if entity_skinname is not None:
+            animation = kwargs.get('animation', 'static')
             self._name = entity_skinname.split(os.sep)[-1]
             self.entity_skin = EntitySkin(
                     entity_skinname,
-                    not game or not game.screen,
+                    not self._game or not self._game.screen,
                     animation=animation)
 
             self._armor = self.entity_skin.armor
@@ -125,12 +139,12 @@ class Entity (object):
 
             self._rect[2:] = self.entity_skin.animation.rect[2:]
             self.entity_skin.update(0,
-                    server=(game is None or game.screen is None))
+                    server=(self._game is None or self._game.screen is None))
 
-            game.events.add_event(
+            self._game.events.add_event(
                     'ShieldUpdateEvent',
                     (None, None),
-                    {'world': game, 'player': self})
+                    {'world': self._game, 'player': self})
 
     @property
     def num(self):
@@ -435,8 +449,8 @@ class Entity (object):
 
         if self.shield['on']:
             self.shield['power'] -= (math.sqrt(
-                                point[1][0]**2 + point[1][1]**2)
-                                / CONFIG.general['SHIELD_SOLIDITY'])
+                point[1][0]**2 + point[1][1]**2)
+                / CONFIG.general['SHIELD_SOLIDITY'])
 
             self.shield['power'] = max(0, self.shield['power'])
             self._percents += (math.sqrt(point[1][0] ** 2 + point[1][1]**2)
