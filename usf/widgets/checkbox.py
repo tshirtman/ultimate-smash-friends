@@ -22,7 +22,7 @@ import pygame
 from os.path import join
 
 #our modules
-from widget import Widget, optimize_size
+from usf.wigets.widget import Widget, optimize_size
 from usf import loaders
 
 CONFIG = loaders.get_config()

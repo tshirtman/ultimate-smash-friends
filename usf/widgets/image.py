@@ -20,7 +20,7 @@
 import pygame
 import os
 
-from widget import Widget
+from usf.widgets.widget import Widget
 from usf import loaders
 CONFIG = loaders.get_config()
 

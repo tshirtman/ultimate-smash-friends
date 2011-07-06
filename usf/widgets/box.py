@@ -21,7 +21,7 @@ Some Box widgets as base for the GUI classes
 
 '''
 
-from widget import Widget, optimize_size
+from usf.widgets.widget import Widget, optimize_size
 from button import Button
 
 from usf import loaders

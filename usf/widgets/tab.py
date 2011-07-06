@@ -18,9 +18,9 @@
 ################################################################################
 
 import pygame
-from widget import Widget, get_scale, optimize_size
-from usf import loaders
-from usf.font import fonts
+#from widget import Widget, get_scale, optimize_size
+#from usf import loaders
+#from usf.font import fonts
 
 from box import HBox, VBox
 

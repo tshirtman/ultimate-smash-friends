@@ -25,7 +25,7 @@ A slider widget to configure values in a range.
 import pygame
 from os.path import join
 
-from widget import Widget, optimize_size
+from usf.widgets.widget import Widget, optimize_size
 from usf import loaders
 CONFIG = loaders.get_config()
 
