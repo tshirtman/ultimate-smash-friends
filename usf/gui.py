@@ -210,7 +210,7 @@ class Gui(object):
                 sound.set_volume(CONFIG.audio['SOUND_VOLUME']/100.0)
                 sound.play()
                 if reply.split(':')[1] == 'back':
-                    pass
+                    self.screen_back()
                 else:
                     self.screen_history.append(self.screen_current)
                     self.screen_current = reply.split(':')[1]
