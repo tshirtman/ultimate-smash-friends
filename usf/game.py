@@ -179,9 +179,9 @@ class Game(object):
         try:
             os.listdir(os.path.join(CONFIG.sys_data_dir, 'items', item))
             e = Entity(
-                        None,
-                        self,
-                        os.path.join('items', item),
+                        num=None,
+                        game=self,
+                        entity_skinname=os.path.join('items', item),
                         place=place,
                         vector=vector,
                         reverse=reverse,
