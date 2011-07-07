@@ -17,6 +17,11 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
+'''
+The base screen class, define base behaviours of screens.
+
+'''
+
 # Our modules
 from usf.font import fonts
 from usf import loaders
@@ -40,6 +45,7 @@ class Screen(object):
         self.widget.set_size((
             CONFIG.general['WIDTH'],
             CONFIG.general['HEIGHT']))
+
         self.widget.x = 0
         self.widget.y = 70
         self.widget.update_size()

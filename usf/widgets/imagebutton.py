@@ -17,14 +17,18 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
-import pygame
+'''
+A Button widget with an image inside, instead of a text.
+
+'''
+
 import os
 
-from widget import get_scale
+from usf.widgets.widget import get_scale
+from usf.widgets.image import Image
 from usf import loaders
 CONFIG = loaders.get_config()
 
-from image import Image
 
 
 class ImageButton(Image):

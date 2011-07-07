@@ -17,6 +17,12 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
+'''
+The main screen of the Gui, the first one shown to the user when game is
+started.
+
+'''
+
 import pygame
 
 from usf.screen.screen import Screen

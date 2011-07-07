@@ -17,6 +17,10 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
+'''
+A button widget, with a label.
+'''
+
 #standarts imports
 import pygame
 from os.path import join

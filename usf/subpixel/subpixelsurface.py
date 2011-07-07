@@ -42,10 +42,10 @@ class SubPixelSurface(object):
         surf_array_a = Numeric.zeros((w, h), BYTE)
         surf_array_a[1:ow+1:, 1:oh+1:] = pygame.surfarray.array_alpha(surface)
 
-        surf_array_rgb[0,::] = surf_array_rgb[1,::]
-        surf_array_rgb[::,0] = surf_array_rgb[::,1]
-        surf_array_rgb[w-1,::] = surf_array_rgb[w-2,::]
-        surf_array_rgb[::,h-1] = surf_array_rgb[::,h-2]
+        surf_array_rgb[0, ::] = surf_array_rgb[1, ::]
+        surf_array_rgb[::, 0] = surf_array_rgb[::, 1]
+        surf_array_rgb[w-1, ::] = surf_array_rgb[w-2, ::]
+        surf_array_rgb[::, h - 1] = surf_array_rgb[::, h-2]
 
         s = Numeric.zeros(surf_array_rgb.shape[:2]+(4,), DWORD)
         s[::-1, ::, :3] = surf_array_rgb

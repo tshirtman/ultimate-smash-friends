@@ -18,6 +18,13 @@
 # along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.#
 ################################################################################
 
+'''
+This module provides a manager/ordonnancer for events in the game, this is a
+simple but critical part, as a lot of mecanisms in the game are implemented
+through events (movements/adding player to games/missiles...)
+
+'''
+
 import itertools
 
 from usf.timed_event import EVENT_NAMES

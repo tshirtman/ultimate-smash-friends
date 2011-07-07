@@ -17,6 +17,12 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
+'''
+The Pause/Resume screen, allow to go to configuration, to leave game or to
+resume playing the current game.
+
+'''
+
 from usf.screen.screen import Screen
 from usf.widgets.button import Button
 from usf.widgets.box import VBox

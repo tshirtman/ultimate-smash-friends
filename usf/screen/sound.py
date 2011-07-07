@@ -17,6 +17,11 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
+'''
+The Sound configuration screen. to manage music and SFX volume.
+
+'''
+
 from usf.screen.screen import Screen
 from usf.widgets.box import VBox
 from usf.widgets.slider import Slider

@@ -17,7 +17,12 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
-from screen import Screen
+'''
+The About/Credit screen.
+
+'''
+
+from usf.screen.screen import Screen
 from usf import loaders
 
 from usf.widgets.box import VBox

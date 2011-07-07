@@ -17,6 +17,12 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
+'''
+The base widget object. Probably lot tu use directly, but used as base for all
+other widgets.
+
+'''
+
 import pygame
 import time
 
@@ -25,7 +31,7 @@ from usf import loaders
 CONFIG = loaders.get_config()
 
 
-class Widget (object):
+class Widget(object):
     """
     This class is the base of all other widget.
     """
@@ -106,10 +112,9 @@ class Widget (object):
 
 #these functions are used to handle the others screen resolutions
 #FIXME : maybe they could go to loaders ?
-width = CONFIG.general['WIDTH']
-height = CONFIG.general['HEIGHT']
 
 
+#XXX WTF? still useful?
 def optimize_size(size):
     return size
 

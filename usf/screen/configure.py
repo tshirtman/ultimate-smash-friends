@@ -17,7 +17,12 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
-from screen import Screen
+'''
+The Base Configuration screen, show buttons to other configuration screens.
+
+'''
+
+from usf.screen.screen import Screen
 
 from usf.widgets.box import VBox
 from usf.widgets.button import Button

@@ -17,10 +17,14 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
+'''
+A label widget, to place text.
+'''
+
 import pygame
 from os.path import join
 
-from widget import Widget
+from usf.widgets.widget import Widget
 from usf import loaders
 from usf.font import fonts
 CONFIG = loaders.get_config()
@@ -31,7 +35,7 @@ class Label(Widget):
     A simple label widget
     """
 
-    def __init__(self, text, *args, **kwargs):
+    def __init__(self, text, **kwargs):
         super(Label, self).__init__()
 
         self.properties["focusable"] = False

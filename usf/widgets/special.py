@@ -17,10 +17,15 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
+'''
+Provide a widget to construct the Keyboard Configuration Interface.
+
+'''
+
 import pygame
 import os
 
-from widget import Widget, optimize_size
+from usf.widgets.widget import Widget, optimize_size
 from usf import loaders
 from usf.font import fonts
 from usf.config import reverse_keymap

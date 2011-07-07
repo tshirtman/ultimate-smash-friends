@@ -17,6 +17,11 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
+'''
+The screen to configure the Keyboard.
+
+'''
+
 from os.path import join
 
 from usf.screen.screen import Screen

@@ -17,6 +17,13 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
+
+'''
+The Screen to choose the level to be played.
+
+'''
+
+
 #standard imports
 from os.path import join
 import os

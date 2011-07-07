@@ -17,12 +17,17 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
+'''
+This module provide a simple checkbox widget.
+
+'''
+
 #standards imports
 import pygame
 from os.path import join
 
 #our modules
-from usf.wigets.widget import Widget, optimize_size
+from usf.widgets.widget import Widget, optimize_size
 from usf import loaders
 
 CONFIG = loaders.get_config()
