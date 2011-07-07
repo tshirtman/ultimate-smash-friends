@@ -41,12 +41,13 @@ CONFIG = Config()
 from usf.debug_utils import draw_rect
 
 class Actor(object):
+    """ An actor is the physical presence of something
     """
-    
-    """
+    (TOP_RIGHT, UPPER_RIGHT, LOWER_RIGHT, BOTTOM_RIGHT, BOTTOM_LEFT, LOWER_LEFT,
+     UPPER_LEFT, TOP_LEFT) = range(8)
+
     def __init__(self, game, place=(550, 1), vector=list((0, 0)), reverse=False,
-            number=None, present=False, physic=True, gravity=True,
-            physics=True, **kwargs):
+            present=False, physic=True, gravity=True, physics=True, **kwargs):
 
         # the 'center' of the entity is at the bottom middle.
         # so this is the point that move the least beetwen two frames.
@@ -57,6 +58,7 @@ class Actor(object):
         self._physics = physics
         self._place = place
         self._present = present
+        self._reversed = reverse
         self._vector = [vector[0], vector[1]]
         self._walking_vector = [0.0, 0.0]
         self.foot_rect = None
@@ -198,42 +200,6 @@ class Actor(object):
         else:
             raise ValueError("param 1 is neither a Rect or an Entity")
 
-    def update_rect(self):
-        """
-        update entity rect using position and harshape place/size, necessary
-        when entity moved or animation frame changed.
-
-        """
-        h = self.hardshape
-        self._rect = [
-                self._place[0] - h[2] / 2 - h[0],
-                self._place[1] - h[1],
-                h[2],
-                h[3]]
-
-    def move(self, (x, y)):
-        """
-        move the entity relatively to his referencial (if he look left, moving
-        positively on x mean going left).
-
-        """
-        if self._reversed:
-            x = -x
-
-        self.set_place((self._place[0]+ x, self._place[1] + y))
-
-        self.update_rect()
-
-    def foot_collision_rect(self):
-        """
-        return current foot collusion rect
-        """
-        return pygame.Rect(
-                self.rect[0] + self.hardshape[0],
-                self.rect[1] + self.hardshape[3],
-                self.hardshape[2],
-                15)
-
     def get_block_vector(self, level_vector_blocs):
         """
         If the entity is in a block associated with a vector, return this
@@ -291,207 +257,6 @@ class Actor(object):
 
         return vector
 
-    def point(self, n):
-        """
-        Return a collision point of the entity
-        """
-        h = self.hardshape
-        r = self._rect
-        # i think r[0] and r[1] should be used in this formules, but they break
-        # it, so maybe i'm wrong
-        return (int(Entity.list_sin_cos_1[n][0] * h[2] / 2 + r[0]),
-                int(Entity.list_sin_cos_1[n][1] * h[3] / 2 + r[1]))
-
-    def update_points(self, x = 0, y = 0):
-        """
-        creation of points, there are 8 points placed like this:
-         7. .0   counted clockwise and starting from the upper right one
-        6.   .1  (in fact it's the opposite but the screen is (0, 0) at the
-        5.   .2  top left, what actualy means right or left is not important
-         4. .3   as long as you stay consistent, I hope I do :P).
-
-         """
-
-        h = self.hardshape
-        r = self._rect
-        n = Entity.nb_points
-
-        # reference version, non optimized and then should be easier to
-        # understand
-        #l = Entity.list_sin_cos
-        #return [
-        #        (
-        #            int(l[i][0] * h[2] / 2 + h[2] / 2 + h[0] + r[0] + x),
-        #            int(l[i][1] * h[3] / 2 + h[3] / 2 + h[1] + r[1] + y))
-        #        for i in xrange(Entity.nb_points)]
-
-        # optimised version
-        h2_2 = h[2] / 2
-        h3_2 = h[3] / 2
-        hrx, hry = h[0] + r[0] + x, h[1] + r[1] + y
-        l2 = Entity.list_sin_cos_1
-
-        return [
-                (
-                    int(l2[i][0] * h2_2 + hrx),
-                    int(l2[i][1] * h3_2 + hry))
-                for i in xrange(n)]
-
-    def collide_top(self, game):
-        """
-        if one of the two lowers points collide, the entity bounce up and it's
-        horizontal speed is lowered
-        """
-        return (game.level.collide_rect(self.point(self.TOP_LEFT))
-                or game.level.collide_rect(self.point(self.TOP_RIGHT)))
-
-    def collide_bottom(self, game):
-        """
-        test of points and consequences on vectors if one of the two uppers
-        points collide, the entity bounce down.
-        """
-        return (game.level.collide_rect(self.point(self.BOTTOM_RIGHT))
-                or game.level.collide_rect(self.point(self.BOTTOM_LEFT)))
-
-    def collide_front(self, game):
-        """
-        if one of the two left points collide and the entity is not
-        reversed or one of the two right points collide and the entity is
-        reversed and the player is pushed forward.
-        """
-
-        return (self.reversed and (
-            game.level.collide_rect(self.point(self.UPPER_RIGHT)) or
-            game.level.collide_rect(self.point(self.LOWER_RIGHT))) or
-            not self.reversed and (
-                game.level.collide_rect(self.point(self.LOWER_LEFT))
-                or game.level.collide_rect(self.point(self.UPPER_LEFT))))
-
-    def collide_back(self, game):
-        """
-        if one of the two left points collide and the entity is reversed or one
-        of the two right points collide and the entity is not reversed and the
-        player bounce back.
-        """
-
-        return (not self.reversed and (
-            game.level.collide_rect(self.point(self.UPPER_RIGHT)) or
-            game.level.collide_rect(self.point(self.LOWER_RIGHT))) or
-            self.reversed and (
-                game.level.collide_rect(self.point(self.UPPER_LEFT)) or
-                game.level.collide_rect(self.point(self.LOWER_LEFT))))
-
-    def world_collide(self, game):
-        """
-        This test collision of the entity with the map (game.level.map).
-
-        Method:
-        Generation of a contact test circle (only 8 points actualy).
-        Then we test points of this circle and modify entity vector based on
-        points that gets collided, moving the entity in the right direction to
-        get out of each collision.
-
-        """
-
-        if not self.physic:
-            if game.level.collide_rect(self.point(self.TOP_LEFT)):
-                self.set_lives(0)
-
-        # this test should optimise most situations.
-        elif game.level.collide_rect(self.rect[:2], self.rect[2:]) != -1:
-
-            if self.collide_top(game):
-                self._vector[1] = -math.fabs(
-                    self.vector[1] * CONFIG.general['BOUNCE'])
-
-                self._vector[0] /= 2
-                while self.collide_top(game):
-                    self.move((0, -1))
-
-            elif self.collide_bottom(game):
-                if self.vector[1] < 0:
-                    self._vector[1] = int(
-                            -self.vector[1] * CONFIG.general['BOUNCE'])
-
-                self._vector[0] /= 2
-                while self.collide_bottom(game):
-                    self.move((0, 1))
-
-            if self.collide_front(game):
-                self._vector[0] = math.fabs(self.vector[0])/2
-                while self.collide_front(game):
-                    self.move((2, 0))
-
-            elif self.collide_back(game):
-                self._vector[0] = -math.fabs(self.vector[0])/2
-                while self.collide_back(game):
-                    self.move((-2, 0))
-
-    def update_physics(self, deltatime, game):
-        """
-        This function apply current movemements and various environemental
-        vectors to the entity, and calculate collisions.
-
-        """
-        # Move in walking direction.
-        self.move((
-                    self.walking_vector[0] * deltatime,
-                    self.walking_vector[1] * deltatime))
-
-        self.foot_rect = self.foot_collision_rect()
-        self._on_ground = game.level.collide_rect(
-                self.foot_rect[:2],
-                self.foot_rect[2:])
-
-        # follow the floor if it's moving
-        floor_vector = self.update_floor_vector(game.level.moving_blocs)
-
-        # get environemental vector if we collide some vector-block
-        environnement_vector = self.get_block_vector(
-                game.level.vector_blocs)
-
-        environnement_friction = self.get_env_collision(
-                game.level.water_blocs)
-
-        self._vector = [
-                self.vector[0] + environnement_vector[0],
-                self.vector[1] + environnement_vector[1]]
-
-        self._place = [
-                self.place[0] + floor_vector[0],
-                self.place[1] + floor_vector[1]]
-
-        # Gravity
-        if self.gravity and self.physic and not self.on_ground:
-            self._vector[1] += float(CONFIG.general['GRAVITY']) * deltatime
-
-        elif not self.physic:
-            #FIXME : it is a bit hackish
-            self._vector[1] += -0.00001
-
-        # Application of air friction.
-        f = CONFIG.general['AIR_FRICTION'] * environnement_friction
-
-        if self.physic: #FIXME: and not a bullet
-            self._vector[0] -= (f * self.vector[0] * deltatime)
-            self._vector[1] -= (f * self.vector[1] * deltatime)
-
-        # apply the vector to entity.
-        self.move((self.vector[0] * deltatime, self.vector[1] * deltatime))
-
-        if not self.physics:
-            return
-
-        # Avoid collisions with the map
-        self.world_collide(game)
-
-    @property
-    def rect(self):
-        """
-        return current player rect
-        """
-        return pygame.Rect(self._rect)
-
 class Entity(Actor):
     """
     Provide an entity object, which will take care of lifes, movements,
@@ -520,9 +285,6 @@ class Entity(Actor):
     # this counter will allow us to correctly update entities.
     counter = 0
 
-    (TOP_RIGHT, UPPER_RIGHT, LOWER_RIGHT, BOTTOM_RIGHT, BOTTOM_LEFT, LOWER_LEFT,
-     UPPER_LEFT, TOP_LEFT) = range(8)
-
     def __init__(self, **kwargs):
 
         super(Entity, self).__init__(**kwargs)
@@ -542,7 +304,6 @@ class Entity(Actor):
         self._shield = {'on': False, 'power': 1.0, 'date': 0}
         self._carried_by = kwargs.get('carried_by', None)
         # the entity is reversed when looking at left.
-        self._reversed = kwargs.get('reverse', False)
         self._percents = 0
         self._lives = kwargs.get('lives', 3)
         self._invincible = False
@@ -938,4 +699,241 @@ class Entity(Actor):
         if self.present:
             self.entity_skin.update(gametime, self.reversed, self.upgraded)
             self.update_physics(deltatime, game)
+
+    def update_rect(self):
+        """
+        update entity rect using position and harshape place/size, necessary
+        when entity moved or animation frame changed.
+
+        """
+        h = self.hardshape
+        self._rect = [
+                self._place[0] - h[2] / 2 - h[0],
+                self._place[1] - h[1],
+                h[2],
+                h[3]]
+
+    def foot_collision_rect(self):
+        """
+        return current foot collusion rect
+        """
+        return pygame.Rect(
+                self.rect[0] + self.hardshape[0],
+                self.rect[1] + self.hardshape[3],
+                self.hardshape[2],
+                15)
+
+    def point(self, n):
+        """
+        Return a collision point of the entity
+        """
+        h = self.hardshape
+        r = self._rect
+        # i think r[0] and r[1] should be used in this formules, but they break
+        # it, so maybe i'm wrong
+        return (int(Entity.list_sin_cos_1[n][0] * h[2] / 2 + r[0]),
+                int(Entity.list_sin_cos_1[n][1] * h[3] / 2 + r[1]))
+
+    def update_points(self, x = 0, y = 0):
+        """
+        creation of points, there are 8 points placed like this:
+         7. .0   counted clockwise and starting from the upper right one
+        6.   .1  (in fact it's the opposite but the screen is (0, 0) at the
+        5.   .2  top left, what actualy means right or left is not important
+         4. .3   as long as you stay consistent, I hope I do :P).
+
+         """
+
+        h = self.hardshape
+        r = self._rect
+        n = Entity.nb_points
+
+        # reference version, non optimized and then should be easier to
+        # understand
+        #l = Entity.list_sin_cos
+        #return [
+        #        (
+        #            int(l[i][0] * h[2] / 2 + h[2] / 2 + h[0] + r[0] + x),
+        #            int(l[i][1] * h[3] / 2 + h[3] / 2 + h[1] + r[1] + y))
+        #        for i in xrange(Entity.nb_points)]
+
+        # optimised version
+        h2_2 = h[2] / 2
+        h3_2 = h[3] / 2
+        hrx, hry = h[0] + r[0] + x, h[1] + r[1] + y
+        l2 = Entity.list_sin_cos_1
+
+        return [
+                (
+                    int(l2[i][0] * h2_2 + hrx),
+                    int(l2[i][1] * h3_2 + hry))
+                for i in xrange(n)]
+
+    def collide_top(self, game):
+        """
+        if one of the two lowers points collide, the entity bounce up and it's
+        horizontal speed is lowered
+        """
+        return (game.level.collide_rect(self.point(self.TOP_LEFT))
+                or game.level.collide_rect(self.point(self.TOP_RIGHT)))
+
+    def collide_bottom(self, game):
+        """
+        test of points and consequences on vectors if one of the two uppers
+        points collide, the entity bounce down.
+        """
+        return (game.level.collide_rect(self.point(self.BOTTOM_RIGHT))
+                or game.level.collide_rect(self.point(self.BOTTOM_LEFT)))
+
+    def collide_front(self, game):
+        """
+        if one of the two left points collide and the entity is not
+        reversed or one of the two right points collide and the entity is
+        reversed and the player is pushed forward.
+        """
+
+        return (self.reversed and (
+            game.level.collide_rect(self.point(self.UPPER_RIGHT)) or
+            game.level.collide_rect(self.point(self.LOWER_RIGHT))) or
+            not self.reversed and (
+                game.level.collide_rect(self.point(self.LOWER_LEFT))
+                or game.level.collide_rect(self.point(self.UPPER_LEFT))))
+
+    def collide_back(self, game):
+        """
+        if one of the two left points collide and the entity is reversed or one
+        of the two right points collide and the entity is not reversed and the
+        player bounce back.
+        """
+
+        return (not self.reversed and (
+            game.level.collide_rect(self.point(self.UPPER_RIGHT)) or
+            game.level.collide_rect(self.point(self.LOWER_RIGHT))) or
+            self.reversed and (
+                game.level.collide_rect(self.point(self.UPPER_LEFT)) or
+                game.level.collide_rect(self.point(self.LOWER_LEFT))))
+
+    def world_collide(self, game):
+        """
+        This test collision of the entity with the map (game.level.map).
+
+        Method:
+        Generation of a contact test circle (only 8 points actualy).
+        Then we test points of this circle and modify entity vector based on
+        points that gets collided, moving the entity in the right direction to
+        get out of each collision.
+
+        """
+
+        if not self.physic:
+            if game.level.collide_rect(self.point(self.TOP_LEFT)):
+                self.set_lives(0)
+
+        # this test should optimise most situations.
+        elif game.level.collide_rect(self.rect[:2], self.rect[2:]) != -1:
+
+            if self.collide_top(game):
+                self._vector[1] = -math.fabs(
+                    self.vector[1] * CONFIG.general['BOUNCE'])
+
+                self._vector[0] /= 2
+                while self.collide_top(game):
+                    self.move((0, -1))
+
+            elif self.collide_bottom(game):
+                if self.vector[1] < 0:
+                    self._vector[1] = int(
+                            -self.vector[1] * CONFIG.general['BOUNCE'])
+
+                self._vector[0] /= 2
+                while self.collide_bottom(game):
+                    self.move((0, 1))
+
+            if self.collide_front(game):
+                self._vector[0] = math.fabs(self.vector[0])/2
+                while self.collide_front(game):
+                    self.move((2, 0))
+
+            elif self.collide_back(game):
+                self._vector[0] = -math.fabs(self.vector[0])/2
+                while self.collide_back(game):
+                    self.move((-2, 0))
+
+    def update_physics(self, deltatime, game):
+        """
+        This function apply current movemements and various environemental
+        vectors to the entity, and calculate collisions.
+
+        """
+        # Move in walking direction.
+        self.move((
+                    self.walking_vector[0] * deltatime,
+                    self.walking_vector[1] * deltatime))
+
+        self.foot_rect = self.foot_collision_rect()
+        self._on_ground = game.level.collide_rect(
+                self.foot_rect[:2],
+                self.foot_rect[2:])
+
+        # follow the floor if it's moving
+        floor_vector = self.update_floor_vector(game.level.moving_blocs)
+
+        # get environemental vector if we collide some vector-block
+        environnement_vector = self.get_block_vector(
+                game.level.vector_blocs)
+
+        environnement_friction = self.get_env_collision(
+                game.level.water_blocs)
+
+        self._vector = [
+                self.vector[0] + environnement_vector[0],
+                self.vector[1] + environnement_vector[1]]
+
+        self._place = [
+                self.place[0] + floor_vector[0],
+                self.place[1] + floor_vector[1]]
+
+        # Gravity
+        if self.gravity and self.physic and not self.on_ground:
+            self._vector[1] += float(CONFIG.general['GRAVITY']) * deltatime
+
+        elif not self.physic:
+            #FIXME : it is a bit hackish
+            self._vector[1] += -0.00001
+
+        # Application of air friction.
+        f = CONFIG.general['AIR_FRICTION'] * environnement_friction
+
+        if self.physic: #FIXME: and not a bullet
+            self._vector[0] -= (f * self.vector[0] * deltatime)
+            self._vector[1] -= (f * self.vector[1] * deltatime)
+
+        # apply the vector to entity.
+        self.move((self.vector[0] * deltatime, self.vector[1] * deltatime))
+
+        if not self.physics:
+            return
+
+        # Avoid collisions with the map
+        self.world_collide(game)
+
+    @property
+    def rect(self):
+        """
+        return current player rect
+        """
+        return pygame.Rect(self._rect)
+
+    def move(self, (x, y)):
+        """
+        move the entity relatively to his referencial (if he look left, moving
+        positively on x mean going left).
+
+        """
+        if self._reversed:
+            x = -x
+
+        self.set_place((self._place[0]+ x, self._place[1] + y))
+
+        self.update_rect()
 
