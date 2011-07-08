@@ -200,7 +200,7 @@ class Actor(object):
         else:
             raise ValueError("param 1 is neither a Rect or an Entity")
 
-    def get_block_vector(self, level_vector_blocs):
+    def _get_block_vector(self, level_vector_blocs):
         """
         If the entity is in a block associated with a vector, return this
         vector.
@@ -221,7 +221,7 @@ class Actor(object):
                     vector[1] + part.vector[1]]
         return vector
 
-    def get_env_collision(self, blocks):
+    def _get_env_collision(self, blocks):
         """
         DEPRECATED? react to collision with some environments as water
         """
@@ -237,7 +237,7 @@ class Actor(object):
         self.in_water = False
         return 1
 
-    def update_floor_vector(self, level_moving_parts):
+    def _update_floor_vector(self, level_moving_parts):
         """
         When the entity is on one (or more) moving (horizontaly) floors, the
         entity should move accordingly to the sum of this movements, This
@@ -271,7 +271,7 @@ class Entity(Actor):
 
     # Precalculation of some sin-cos list to speed up collision detection.
     # number of points cannot be changed currently due to not adaptative
-    # collision method: FIXME someday.
+    # collision method.
     nb_points = 8
     ai = False
     ai_ = None
@@ -540,16 +540,16 @@ class Entity(Actor):
         """
         return self.lives > 0
 
-    def draw_debug(self, coords, zoom, surface, debug_params):
+    def _draw_debug(self, coords, zoom, surface, debug_params):
         """
         This method just call all specific debug draw methods
         """
-        self.draw_debug_levelmap(surface, debug_params)
-        self.draw_debug_hardshape(coords, zoom, surface, debug_params)
-        self.draw_debug_footrect(coords, zoom, surface, debug_params)
-        self.draw_debug_current_animation(coords, surface, debug_params)
+        self._draw_debug_levelmap(surface, debug_params)
+        self._draw_debug_hardshape(coords, zoom, surface, debug_params)
+        self._draw_debug_footrect(coords, zoom, surface, debug_params)
+        self._draw_debug_current_animation(coords, surface, debug_params)
 
-    def draw_debug_levelmap(self, surface, debug_params):
+    def _draw_debug_levelmap(self, surface, debug_params):
         """
         show the level map directly, usefull to debug
         """
@@ -559,7 +559,7 @@ class Entity(Actor):
                     pygame.Rect(self.place[0]/8, self.place[1]/8, 2, 2),
                     pygame.Color('red'))
 
-    def draw_debug_hardshape(self, coords, zoom, surface, debug_params):
+    def _draw_debug_hardshape(self, coords, zoom, surface, debug_params):
         """
         if hardshape debug is set, draw the hardshape of the player on the screen
         """
@@ -584,7 +584,7 @@ class Entity(Actor):
                             n > 3 and pygame.Color('green') or
                             pygame.Color('blue'))
 
-    def draw_debug_footrect(self, coords, zoom, surface, debug_params):
+    def _draw_debug_footrect(self, coords, zoom, surface, debug_params):
         """
         if footrect debug is set, draw the footrect collision rect to the screen
         """
@@ -600,7 +600,7 @@ class Entity(Actor):
                             r[3] * zoom),
                         pygame.Color(255, 255, 0, 127))
 
-    def draw_debug_current_animation(self, coords, surface, debug_params):
+    def _draw_debug_current_animation(self, coords, surface, debug_params):
         """
         if the current_animation debug is set, write the name of the current
             animation near of the character
@@ -641,7 +641,7 @@ class Entity(Actor):
                     int(place[0]*zoom)+coords[0],
                     int(place[1]*zoom)+coords[1])
 
-            self.draw_debug(real_coords, zoom, surface, debug_params)
+            self._draw_debug(real_coords, zoom, surface, debug_params)
             if self.entity_skin.animation.trails and self.old_pos:
                 for i, (x, y) in enumerate(reversed(self.old_pos)):
                     img = self.entity_skin.animation.trails[
@@ -698,9 +698,9 @@ class Entity(Actor):
 
         if self.present:
             self.entity_skin.update(gametime, self.reversed, self.upgraded)
-            self.update_physics(deltatime, game)
+            self._update_physics(deltatime, game)
 
-    def update_rect(self):
+    def _update_rect(self):
         """
         update entity rect using position and harshape place/size, necessary
         when entity moved or animation frame changed.
@@ -713,7 +713,7 @@ class Entity(Actor):
                 h[2],
                 h[3]]
 
-    def foot_collision_rect(self):
+    def _foot_collision_rect(self):
         """
         return current foot collusion rect
         """
@@ -813,7 +813,7 @@ class Entity(Actor):
                 game.level.collide_rect(self.point(self.UPPER_LEFT)) or
                 game.level.collide_rect(self.point(self.LOWER_LEFT))))
 
-    def world_collide(self, game):
+    def _world_collide(self, game):
         """
         This test collision of the entity with the map (game.level.map).
 
@@ -859,7 +859,7 @@ class Entity(Actor):
                 while self.collide_back(game):
                     self.move((-2, 0))
 
-    def update_physics(self, deltatime, game):
+    def _update_physics(self, deltatime, game):
         """
         This function apply current movemements and various environemental
         vectors to the entity, and calculate collisions.
@@ -870,19 +870,19 @@ class Entity(Actor):
                     self.walking_vector[0] * deltatime,
                     self.walking_vector[1] * deltatime))
 
-        self.foot_rect = self.foot_collision_rect()
+        self.foot_rect = self._foot_collision_rect()
         self._on_ground = game.level.collide_rect(
                 self.foot_rect[:2],
                 self.foot_rect[2:])
 
         # follow the floor if it's moving
-        floor_vector = self.update_floor_vector(game.level.moving_blocs)
+        floor_vector = self._update_floor_vector(game.level.moving_blocs)
 
         # get environemental vector if we collide some vector-block
-        environnement_vector = self.get_block_vector(
+        environnement_vector = self._get_block_vector(
                 game.level.vector_blocs)
 
-        environnement_friction = self.get_env_collision(
+        environnement_friction = self._get_env_collision(
                 game.level.water_blocs)
 
         self._vector = [
@@ -915,7 +915,7 @@ class Entity(Actor):
             return
 
         # Avoid collisions with the map
-        self.world_collide(game)
+        self._world_collide(game)
 
     @property
     def rect(self):
@@ -935,5 +935,5 @@ class Entity(Actor):
 
         self.set_place((self._place[0]+ x, self._place[1] + y))
 
-        self.update_rect()
+        self._update_rect()
 

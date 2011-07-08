@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License            #
 # along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.#
 ################################################################################
+
 '''
 This module takes care of managing non human players
 
@@ -43,6 +44,7 @@ SEQUENCES_FILE = path.join(CONFIG.sys_data_dir, 'sequences.cfg')
 def possible_movements(movement='static'):
     """ return the list of current legal movements for the player
     """
+
     with open(SEQUENCES_FILE) as f:
         lines = f.readlines()
 
@@ -66,6 +68,7 @@ def possible_movements(movement='static'):
 def displacement_movement(s):
     """ return True if a movement is considered a diplacement movement
     """
+
     return s in (
             'walk', 'jump', 'scnd-jump', 'smash-up-jumping', 'roll', 'pick')
 
@@ -74,6 +77,7 @@ def displacement_movement(s):
 def fight_movement(s):
     """ return True if a movement is considered a fight movement
     """
+
     return not displacement_movement(s)
 
 
@@ -81,6 +85,7 @@ def simulate(game, iam, m):
     """ change the player movement to movement, and jump TIMESTEP in the future.
     if movement is none, just jump TIMESTEP in the future.
     """
+
     entity = game.players[iam]
     entity.set_reversed(m.reverse)
     entity.set_walking_vector([m.walk and WALKSPEED or 0, None])
@@ -96,6 +101,7 @@ def under_lowest_plateform(game, player):
     """ return True if the caracter is currently lower than the lowest
     plateform
     """
+
     for p in game.level.map:
         if p[1] > player.place[1]:
             return False
@@ -107,6 +113,7 @@ def over_some_plateform(game, player):
     """ return true if the player is currently verticaly over a plateform
     (that's different than not being lower than the lowest plateform)
     """
+
     for p in game.level.map:
         if p[1] > player.place[1] and p[0] < player.place[0] < p[0] + p[2]:
             return True
@@ -124,6 +131,7 @@ def heuristic_state(game, player, others):
         number of lives of others
         % of damages to others
     """
+
     return (0
         + (0 if player.rect.colliderect(game.level.rect) else 1000)
         + (0 if player.invincible else 200)      # being invincible is good
@@ -134,16 +142,17 @@ def heuristic_state(game, player, others):
 
 
 def heuristic_distance(player, others):
+    ''' this function evaluate the distance of the player to the next other
+    player
     '''
-    this function evaluate the distance of the player to the next other player
-    '''
+
     return min((player.dist(p) for p in others))
 
 
 def heuristic_fight(player, others):
+    ''' this function evaluate a situation, from a fighting point of view
     '''
-    this function evaluate a situation, from a fighting point of view
-    '''
+
     return (0
         + player.percents                       # avoid being hurt
         + sum((p.lives for p in others)) * 100  # kill people!
@@ -154,6 +163,7 @@ def try_movement(movement, game, gametime, iam, others, h):
     """ simulate a movement, in all direction, walking or not, and return the
     scores of these configurations
     """
+
     s = []
     for walk, reverse in (
             (True, True),
@@ -180,6 +190,7 @@ def search_path(game, iam, max_depth):
     """ from a known position, search the most interresting position availaible
     in the future, and how to get there.
     """
+
     gametime = game.gametime
     scores = []
     player = game.players[iam]
@@ -227,7 +238,10 @@ def search_path(game, iam, max_depth):
 
 
 class Movement(object):
-    """ #FIXME: doc!
+    """ A simple structure to store a planet movement, contains the planned
+    time of the movement, the direction (reversed or not) of the movement, if
+    the movement is done with walking vectors activated or not, and the name of
+    the movement executed.
     """
 
     def __init__(self, time, movement, reverse, walk):
@@ -241,7 +255,8 @@ class Movement(object):
 
 
 class AI(object):
-    """ #FIXME: doc!
+    """ This object allows to plan and execute movements for a character
+    depending on its situation, trying to do intelligent moves.
     """
 
     def __init__(self):
@@ -250,8 +265,7 @@ class AI(object):
         self.next_update = dict()
 
     def update(self, game, iam):
-        """
-        iam represent the index of the player being controlled in the
+        """ iam represent the index of the player being controlled in the
         game.players list, this method will either create a list of future
         actions to do, or use actions that where planned before if there are
         some left to do.
