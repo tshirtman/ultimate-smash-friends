@@ -39,6 +39,9 @@ from usf.screen.main_screen import MainScreen
 from usf.screen.resume import Resume
 from usf.screen.screen_screen import ScreenScreen
 from usf.screen.sound import Sound
+from usf.screen.network_screen import NetworkScreen
+from usf.screen.network_host_screen import NetworkHostScreen
+from usf.screen.network_join_screen import NetworkJoinScreen
 from usf.skin import Skin
 from usf.translation import _
 from usf.widgets.widget import optimize_size
@@ -69,6 +72,9 @@ class Gui(object):
         self.screens['keyboard'] = Keyboard('keyboard', self.screen)
         self.screens['level'] = Level('level', self.screen)
         self.screens['characters'] = Characters('characters', self.screen)
+        self.screens['network'] = NetworkScreen('network', self.screen)
+        self.screens['network_host'] = NetworkHostScreen('network_host', self.screen)
+        self.screens['network_join'] = NetworkJoinScreen('network_join', self.screen)
 
         self.screen_current = 'main_screen'
         self.skin = Skin()

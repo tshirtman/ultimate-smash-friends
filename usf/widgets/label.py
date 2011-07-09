@@ -78,8 +78,6 @@ class Label(Widget):
         if self.dynamic_size[1]:
             self.width = self.surface_text.get_width() + self.txtmargin * 2
 
-        self.surface_text  = loaders.text(self.text, fonts['sans']['normal'])
-
         if self.align == "center":
             self.indent = self.width / 2 - self.surface_text.get_width() / 2
 
