@@ -29,7 +29,7 @@ from usf.widgets.button import Button
 from usf import loaders
 from usf import font
 from pygame.locals import (K_DOWN, K_UP, K_RETURN, K_LEFT, K_RIGHT, K_BACKSPACE,
-        MOUSEMOTION)
+        MOUSEBUTTONUP)
 from pygame import draw
 from pygame import color
 
@@ -41,7 +41,6 @@ class TextEntry(Button):
     def __init__(self, text, *args, **kwargs):
         super(TextEntry, self).__init__(text, *args, **kwargs)
 
-        self.properties["focusable"] = True
         self.cursor = len(self.text)
         self.posx = 0
         self.posy = 0
@@ -57,7 +56,7 @@ class TextEntry(Button):
         """
         x = event.dict['pos'][0]
         y = event.dict['pos'][1]
-        if event.type == MOUSEMOTION:
+        if event.type == MOUSEBUTTONUP:
             if self.state:
                 x -= self.parentpos[0] + self.x
                 y -= self.parentpos[1] + self.y
@@ -65,17 +64,14 @@ class TextEntry(Button):
                 self.state = True
                 return False, self
 
-        self.state = False
-        return False, False
+            print "out"
+            self.state = False
+            return False, False
+        return False, (self if self.state else False)
 
     def handle_keys(self, event):
         """ manage keyboard input events
         """
-        #if (
-                #event.dict["key"] == K_DOWN or
-                #event.dict["key"] == K_UP) and not self.state:
-            #self.state = True
-            #return False, self
         if not self.state:
             return False, False
 

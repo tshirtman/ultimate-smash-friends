@@ -100,11 +100,11 @@ class Container(Widget):
         """
         self.current_focus = -1
         self.widgets.append(widget)
-        if 'size' in kwargs or type(widget) == Button:
+        if 'size' in kwargs or widget.properties.has_key("size_request"):
             if 'size' in kwargs:
                 size = kwargs['size']
             else:
-                size = (220, 50)
+                size = widget.properties["size_request"]
             widget.set_size((size[0], size[1]))
         if 'margin' in kwargs:
             margin = kwargs['margin']

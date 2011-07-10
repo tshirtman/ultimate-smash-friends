@@ -18,7 +18,7 @@
 ################################################################################
 
 '''
-The base widget object. Probably lot tu use directly, but used as base for all
+The base widget object. Probably not tu use directly, but used as base for all
 other widgets.
 
 '''
@@ -47,7 +47,7 @@ class Widget(object):
     widget_id = ""
     animation_speed = 1.0
     last_animation = 0.0
-    properties = {"focusable": True}
+    properties = {}
     focusable = False
 
     def __init__(self):

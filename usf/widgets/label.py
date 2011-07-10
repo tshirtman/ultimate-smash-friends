@@ -38,8 +38,6 @@ class Label(Widget):
     def __init__(self, text, **kwargs):
         super(Label, self).__init__()
 
-        self.properties["focusable"] = False
-
         if "margin" in kwargs:
             self.txtmargin = kwargs['margin']
         else:

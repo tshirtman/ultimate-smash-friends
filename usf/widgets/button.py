@@ -38,6 +38,11 @@ class Button(Label):
     It returns a callback when we click on it.
     """
     posy = 0
+    posx = 0
+
+    def __init__(self, text):
+        super(Button, self).__init__(text)
+        self.properties["size_request"] = (220, 50)
 
     def set_size(self, (w, h)):
         """
