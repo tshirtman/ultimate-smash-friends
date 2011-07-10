@@ -100,7 +100,7 @@ class Container(Widget):
         """
         self.current_focus = -1
         self.widgets.append(widget)
-        if 'size' in kwargs or widget.properties.has_key("size_request"):
+        if 'size' in kwargs or type(widget) is Button: #.properties.has_key("size_request"):
             if 'size' in kwargs:
                 size = kwargs['size']
             else:
