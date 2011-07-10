@@ -40,8 +40,8 @@ from usf.screen.resume import Resume
 from usf.screen.screen_screen import ScreenScreen
 from usf.screen.sound import Sound
 from usf.screen.network_screen import NetworkScreen
-from usf.screen.network_host_screen import NetworkHostScreen
 from usf.screen.network_join_screen import NetworkJoinScreen
+from usf.screen.network_game_conf_screen import NetworkGameConfScrteen
 from usf.skin import Skin
 from usf.translation import _
 from usf.widgets.widget import optimize_size
@@ -73,8 +73,9 @@ class Gui(object):
         self.screens['level'] = Level('level', self.screen)
         self.screens['characters'] = Characters('characters', self.screen)
         self.screens['network'] = NetworkScreen('network', self.screen)
-        self.screens['network_host'] = NetworkHostScreen('network_host', self.screen)
         self.screens['network_join'] = NetworkJoinScreen('network_join', self.screen)
+        self.screens['network_game_conf_screen'] = NetworkGameConfScrteen(
+                'network_game_conf_screen', self.screen)
 
         self.screen_current = 'main_screen'
         self.skin = Skin()
@@ -200,6 +201,10 @@ class Gui(object):
                 go to the last menu, it is usually used for a back button
             game:new
                 to start a new game
+            game:new_server
+                to start a new game in server mode
+            game:join_server
+                to join a network game
             game:continue
                 to resume the game, it is used in the in-game menu
             game:stop
@@ -227,11 +232,22 @@ class Gui(object):
                     self.screen_current = 'resume'
                     self.screen_history = []
                     self.state = "menu"
-                if reply.split(':')[1] == "continue":
+                elif reply.split(':')[1] == "new_server":
+                    self.game = self.launch_game(server=True)
                     self.screen_current = 'resume'
                     self.screen_history = []
                     self.state = "menu"
-                if reply.split(':')[1] == "stop":
+                elif reply.split(':')[1] == "join_server":
+                    self.game = self.launch_game(
+                            server=self.screens['network_join'].ip)
+                    self.screen_current = 'resume'
+                    self.screen_history = []
+                    self.state = "menu"
+                elif reply.split(':')[1] == "continue":
+                    self.screen_current = 'resume'
+                    self.screen_history = []
+                    self.state = "menu"
+                elif reply.split(':')[1] == "stop":
                     self.state = "menu"
                     self.game = None
                     self.screen_current = 'main_screen'
@@ -322,7 +338,7 @@ class Gui(object):
 
             pygame.display.update()
 
-    def launch_game(self):
+    def launch_game(self, server=False):
         """
         Function to launch the game, use precedant user choices to initiate the
         game with level and characters selected.

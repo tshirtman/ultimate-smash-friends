@@ -25,9 +25,11 @@ a player name.
 '''
 
 from usf.widgets.label import Label
-from pygame.locals import K_DOWN, K_UP, K_RETURN, K_LEFT, K_RIGHT, K_BACKSPACE
+from usf.widgets.button import Button
+from pygame.locals import (K_DOWN, K_UP, K_RETURN, K_LEFT, K_RIGHT, K_BACKSPACE,
+        MOUSEMOTION)
 
-class TextEntry(Label):
+class TextEntry(Button):
     """
     A widget allowing to enter some text
     """
@@ -37,12 +39,30 @@ class TextEntry(Label):
 
         self.properties["focusable"] = True
         self.cursor = len(self.text)
+        self.posx = 0
+        self.posy = 0
 
     def get_text(self):
         """
         Get the current text of the widget.
         """
         return self.text
+
+    def handle_mouse(self, event):
+        """ set focus if the click was on the text entry, so we can type in it
+        """
+        x = event.dict['pos'][0]
+        y = event.dict['pos'][1]
+        if event.type == MOUSEMOTION:
+            if self.state:
+                x -= self.parentpos[0] + self.x
+                y -= self.parentpos[1] + self.y
+            if 0 < x < self.width and 0 < y < self.height:
+                self.state = True
+                return False, self
+
+        self.state = False
+        return False, False
 
     def handle_keys(self, event):
         """ manage keyboard input events
@@ -52,6 +72,8 @@ class TextEntry(Label):
                 #event.dict["key"] == K_UP) and not self.state:
             #self.state = True
             #return False, self
+        if not self.state:
+            return False, False
 
         if event.dict["key"] == K_RETURN:
             return self, self

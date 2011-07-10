@@ -31,14 +31,18 @@ class NetworkJoinScreen(Screen):
         self.set_name("ultimate smash friends")
         self.add(VBox())
 
-        self.widget.add(Label('IP address of server:'))
-        self.widget.add(TextEntry(''))
+        self.widget.add(Label('Address of server:'))
+        self.ip = TextEntry('X.X.X.X')
+        self.widget.add(self.ip)
+        self.widget.add(Label('player name:'))
+        self.player_name = TextEntry('no name')
+        self.widget.add(self.player_name)
         self.widget.add(Button(_('Join game')))
         self.widget.add(Button(_('Back')), margin=30)
 
     def callback(self, action):
         if action.text == _('Join game'):
-            return 'goto:network_join'
+            return 'goto:network_game_conf_screen'
         if action.text == _('Back'):
             return "goto:back"
 

@@ -35,7 +35,7 @@ class NetworkScreen(Screen):
 
     def callback(self, action):
         if action.text == _('Host game'):
-            return 'goto:network_host'
+            return 'goto:network_game_conf_screen'
         if action.text == _('Join game'):
             return 'goto:network_join'
         if action.text == _('Back'):
