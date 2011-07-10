@@ -37,6 +37,7 @@ class ImageButton(Image):
         # FIXME save the path to scale it later -> maybe it is bad for
         # performance?
         super(ImageButton, self).__init__(image)
+        if self.properties.has_key("size_request") : del(self.properties["size_request"])
         self.path_hover = image_hover
         size = get_scale(loaders.image(
                     CONFIG.sys_data_dir+

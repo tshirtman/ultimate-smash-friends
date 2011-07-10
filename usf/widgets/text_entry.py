@@ -40,6 +40,7 @@ class TextEntry(Button):
 
     def __init__(self, text, *args, **kwargs):
         super(TextEntry, self).__init__(text, *args, **kwargs)
+        del(self.properties["size_request"])
 
         self.cursor = len(self.text)
         self.posx = 0
@@ -51,6 +52,18 @@ class TextEntry(Button):
         """
         return self.text
 
+    def move_cursor(self, x):
+        text = self.get_text()
+        diff = self.width
+        self.cursor = 1
+        text_font = font.fonts["sans"]["normal"]
+        for i in range(0, len(text)):
+            diff_temp = min(diff,
+                    abs(x - loaders.text(text[0:i], text_font).get_width()))
+            if diff is not diff_temp:
+                self.cursor = i
+            diff = diff_temp
+
     def handle_mouse(self, event):
         """ set focus if the click was on the text entry, so we can type in it
         """
@@ -61,10 +74,10 @@ class TextEntry(Button):
                 x -= self.parentpos[0] + self.x
                 y -= self.parentpos[1] + self.y
             if 0 < x < self.width and 0 < y < self.height:
+                self.move_cursor(x)
                 self.state = True
                 return False, self
 
-            print "out"
             self.state = False
             return False, False
         return False, (self if self.state else False)
