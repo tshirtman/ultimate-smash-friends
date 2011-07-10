@@ -26,8 +26,12 @@ a player name.
 
 from usf.widgets.label import Label
 from usf.widgets.button import Button
+from usf import loaders
+from usf import font
 from pygame.locals import (K_DOWN, K_UP, K_RETURN, K_LEFT, K_RIGHT, K_BACKSPACE,
         MOUSEMOTION)
+from pygame import draw
+from pygame import color
 
 class TextEntry(Button):
     """
@@ -100,4 +104,22 @@ class TextEntry(Button):
                 self.cursor += 1
 
         return False, False
+
+    def draw(self):
+        # Call parent
+        super(TextEntry, self).draw()
+
+        # Display the cursor
+        if self.state:
+            # Get text width
+            offset = loaders.text(self.get_text()[0:self.cursor],
+                                  font.fonts["sans"]['normal']).get_width()
+            # Draw cursor
+            draw.line(self.screen, color.Color("white"),
+                      (self.parentpos[0] + self.x + offset,
+                       self.parentpos[1] + self.y),
+                      (self.parentpos[0] + self.x + offset,
+                       self.parentpos[1] + self.y + self.height)
+                     )
+
 
