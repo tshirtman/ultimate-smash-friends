@@ -65,7 +65,6 @@ class Paragraph(Widget):
             width = 0
         self.surface_text = pygame.surface.Surface(
                 (width, len(text) * text_height))
-        print self.surface_text.get_height(), self.surface_text.get_width()
 
         #draw all the text into the surface
         for i, t in enumerate(text):

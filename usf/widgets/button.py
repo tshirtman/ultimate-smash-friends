@@ -37,12 +37,14 @@ class Button(Label):
     A simple button.
     It returns a callback when we click on it.
     """
-    posy = 0
-    posx = 0
 
     def __init__(self, text):
-        super(Button, self).__init__(text)
+        background_path = join('gui',
+                               CONFIG.general['THEME'],
+                               'back_button.png')
+        super(Button, self).__init__(text, align="center", background=background_path)
         self.properties["size_request"] = (220, 50)
+        self.dynamic_size = [False, False]
 
     def set_size(self, (w, h)):
         """
@@ -51,42 +53,25 @@ class Button(Label):
         """
         self.height = h
         self.width = w
+        super(Button, self).set_size((w, h))
 
         #center the text vertically
-        self.posy = self.height/2-self.surface_text.get_height()/2
+        #self.posy = self.height/2-self.surface_text.get_height()/2
 
         #center the text horizontally
-        self.posx = self.width/2-self.surface_text.get_width()/2
+        #self.posx = self.width/2-self.surface_text.get_width()/2
 
-    def draw(self):
-        """
-        Draw the widget.
-        """
-        #mouse over
-        if self.state:
-            surf = loaders.image_layer(loaders.image(join(
-                CONFIG.sys_data_dir,
-                'gui',
-                CONFIG.general['THEME'],
-                'back_button_hover.png'),
-                scale=(self.width, self.height))[0],
-                self.surface_text,
-                (self.posx, self.posy))
+    def hover(self):
+        self.background_path = join('gui',
+                           CONFIG.general['THEME'],
+                           'back_button_hover.png')
+        self.set_text(self.text)
 
-        #normal
-        else:
-            surf = loaders.image_layer(loaders.image(join(
-                CONFIG.sys_data_dir,
-                'gui',
-                CONFIG.general['THEME'],
-                'back_button.png'),
-                scale=(self.width, self.height))[0],
-                self.surface_text,
-                (self.posx, self.posy))
-
-        self.screen.blit(surf, (
-            self.parentpos[0] + self.x,
-            self.parentpos[1] + self.y))
+    def out(self):
+        self.background_path = join('gui',
+                           CONFIG.general['THEME'],
+                           'back_button.png')
+        self.set_text(self.text)
 
     def handle_mouse(self, event):
         """
@@ -95,6 +80,7 @@ class Button(Label):
         """
         if event.type == pygame.MOUSEBUTTONUP:
             self.state = False
+            self.out()
             return self, False
         else:
             x = event.dict['pos'][0]
@@ -104,7 +90,9 @@ class Button(Label):
                 y -= self.parentpos[1] + self.y
             if 0 < x < self.width and 0 < y < self.height:
                 self.state = True
+                self.hover()
                 return False, self
+            self.out()
             self.state = False
             return False, False
 

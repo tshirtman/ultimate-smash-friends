@@ -25,6 +25,7 @@ import pygame
 from os.path import join
 
 from usf.widgets.widget import Widget
+import usf
 from usf import loaders
 from usf.font import fonts
 CONFIG = loaders.get_config()
@@ -64,6 +65,14 @@ class Label(Widget):
 
         self.state = False
 
+    def set_size(self, (w, h)):
+        """
+        Set the size of the widget.
+        This function is usually called by the container, HBox or VBox.
+        """
+        super(Label, self).set_size((w, h))
+        self.set_text(self.text)
+
     def set_text(self, text):
         """ update the text surface
         """
@@ -78,7 +87,6 @@ class Label(Widget):
 
         if self.align == "center":
             self.indent = self.width / 2 - self.surface_text.get_width() / 2
-
         else:
             self.indent = 0
 

@@ -32,19 +32,25 @@ from pygame.locals import (K_DOWN, K_UP, K_RETURN, K_LEFT, K_RIGHT, K_BACKSPACE,
         MOUSEBUTTONUP)
 from pygame import draw
 from pygame import color
+from math import sin
 
 class TextEntry(Button):
     """
     A widget allowing to enter some text
     """
 
+    animation_speed = 1/10.0
     def __init__(self, text, *args, **kwargs):
         super(TextEntry, self).__init__(text, *args, **kwargs)
-        del(self.properties["size_request"])
+        self.properties["size_request"] = (220, 20)
 
         self.cursor = len(self.text)
         self.posx = 0
         self.posy = 0
+        self.cursor_red = 0.0
+        self.cursor_green = 0.0
+        self.cursor_blue = 0.0
+        self.cursor_state = 0.0
 
     def get_text(self):
         """
@@ -124,11 +130,18 @@ class TextEntry(Button):
             offset = loaders.text(self.get_text()[0:self.cursor],
                                   font.fonts["sans"]['normal']).get_width()
             # Draw cursor
-            draw.line(self.screen, color.Color("white"),
+            color_value = int(abs(sin(self.cursor_state))*255)/2
+            print color_value
+            color_cursor = color.Color(color_value, color_value, color_value)
+            draw.line(self.screen, color_cursor,
                       (self.parentpos[0] + self.x + offset,
                        self.parentpos[1] + self.y),
                       (self.parentpos[0] + self.x + offset,
                        self.parentpos[1] + self.y + self.height)
                      )
+        self.start_anim()
+
+    def animation(self):
+        self.cursor_state += 0.1
 
 
