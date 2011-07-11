@@ -110,12 +110,16 @@ class Main(object):
         self.parse_options()
 
     def init(self):
-        if self.game_type == 'server':
-            self.init_server()
-        elif self.game_type == 'client':
-            self.init_client()
-        else:
-            self.init_standalone()
+        try:
+            if self.game_type == 'server':
+                self.init_server()
+            elif self.game_type == 'client':
+                self.init_client()
+            else:
+                self.init_standalone()
+        except:
+            self.stop_thread = True
+            raise
 
     def init_server(self):
         '''
