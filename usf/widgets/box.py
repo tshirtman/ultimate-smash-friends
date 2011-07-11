@@ -27,6 +27,7 @@ from usf.widgets.button import Button
 from usf import loaders
 CONFIG = loaders.get_config()
 
+from os.path import join
 
 class Container(Widget):
     """
@@ -35,10 +36,11 @@ class Container(Widget):
     """
     focusable = True
 
-    def __init__(self, orientation):
+    def __init__(self, orientation, border = False):
         super(Container, self).__init__()
         self.orientation = orientation
         self.widgets = []
+        self.border = border
 
     def update_size(self):
         """
@@ -64,6 +66,13 @@ class Container(Widget):
 
         self.width = sizex
         self.height = sizey
+        if self.width > 40 and self.height > 40 and self.border:
+            self.surface = loaders.image(join(CONFIG.sys_data_dir,
+                                              "gui",
+                                              CONFIG.general["theme"],
+                                              "frame1.png"),
+                                         expand=(self.width, self.height, 20)
+                                        )[0]
 
     def update_pos(self):
         """
@@ -91,6 +100,7 @@ class Container(Widget):
         """
         This method draw all widgets surfaces in a surface and return it
         """
+        super(Container, self).draw()
         for widget in self.widgets:
             widget.draw()
 

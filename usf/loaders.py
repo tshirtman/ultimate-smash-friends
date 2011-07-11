@@ -149,7 +149,93 @@ def image(name, *args, **kwargs):
             img = pygame.transform.scale(
                 image(name, *args, **kwargs)[0],
                 scale)
+    
+    elif 'crop' in kwargs and kwargs['crop'] is not None:
+        if len(kwargs['crop']) is not 4:
+            raise ValueError(
+                "crop parameter should be a tuple of four integers: width, height, x, y")
 
+        crop = kwargs['crop']
+        kwargs['crop'] = None
+        img_src = image(name, *args, **kwargs)[0]
+        img = pygame.Surface((crop[0], crop[1]), pygame.locals.SRCALPHA)
+        rect = pygame.Rect(crop[2], crop[3], crop[0], crop[1])
+        img.blit(img_src, (0,0), rect)
+    
+
+    elif 'expand' in kwargs and kwargs['expand'] is not None:
+        if len(kwargs['expand']) is not 3:
+            raise ValueError(
+                "expand parameter should be a tuple of three integers: width, height, corner")
+
+        """
+        This feature can be used for buttons, which have a rounded border. But if we just
+        scale them, the borders look bad, because the rounded corner are also scaled
+
+        So, we have to split it to keep a consistent image.
+        """
+
+        expand = kwargs['expand']
+        corner = expand[2]
+        width = expand[0]
+        height = expand[1]
+        kwargs['expand'] = None
+        img = pygame.Surface((expand[0], expand[1]), pygame.locals.SRCALPHA)
+
+        # Get source image dimensions
+        img_from = image(name)[0]
+        width_image = img_from.get_width()
+        height_image = img_from.get_height()
+
+        # Top left corner
+        img_source = image(name,
+                           crop=(corner, corner, 0, 0))[0]
+        img.blit(img_source, (0,0))
+
+        # Bottom right corner
+        img_source = image(name,
+                           crop=(corner, corner, width_image - corner, 0))[0]
+        img.blit(img_source, (width - corner, 0))
+
+        # Bottom left corner
+        img_source = image(name,
+                           crop=(corner, corner, width_image - corner, height_image - corner))[0]
+        img.blit(img_source, (width - corner, height - corner))
+
+        # Top right corner
+        img_source = image(name,
+                           crop=(corner, corner, 0, height_image - corner))[0]
+        img.blit(img_source, (0, height - corner))
+
+        # Left part
+        img_source = image(name,
+                           crop=(corner, height_image - corner*2, 0, corner),
+                           scale=(corner, height - 2*corner))[0]
+        img.blit(img_source, (0, corner))
+        
+        # Right part
+        img_source = image(name,
+                           crop=(corner, height_image - corner*2, width_image - corner, corner),
+                           scale=(corner, height - 2*corner))[0]
+        img.blit(img_source, (width - corner, corner))
+
+        # Top part
+        img_source = image(name,
+                           crop=(width_image - 2*corner, corner, corner, 0),
+                           scale=(width - 2*corner, corner))[0]
+        img.blit(img_source, (corner, 0))
+
+        # Bottom part
+        img_source = image(name,
+                           crop=(width_image - 2*corner, corner, corner, height_image - corner),
+                           scale=(width - 2*corner, corner))[0]
+        img.blit(img_source, (corner, height - corner))
+        
+        # Center
+        img_source = image(name,
+                           crop=(width_image - 2*corner, height_image - 2*corner, corner, corner),
+                           scale=(width - 2*corner, height - 2*corner))[0]
+        img.blit(img_source, (corner, corner))
 
     elif 'zoom' in kwargs and kwargs['zoom'] not in (None, 1):
         zoom = kwargs['zoom']

@@ -51,6 +51,11 @@ class Label(Widget):
 
         if "background" in kwargs:
             self.background_path = kwargs['background']
+        
+        if "background_expand" in kwargs:
+            self.background_expand = kwargs['background_expand']
+        else:
+            self.background_expand = False
 
         self.dynamic_size = [True, True]
 
@@ -94,7 +99,13 @@ class Label(Widget):
                 self.height / 2 - self.surface_text.get_height() / 2)
 
         try:
-            self.background = loaders.image(
+            if self.background_expand:
+                self.background = loaders.image(
+                    join(
+                        CONFIG.sys_data_dir, self.background_path),
+                    expand=(self.width, self.height, 10))[0]
+            else:
+                self.background = loaders.image(
                     join(
                         CONFIG.sys_data_dir, self.background_path),
                     scale=(self.width, self.height))[0]

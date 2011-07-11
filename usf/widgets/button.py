@@ -42,7 +42,7 @@ class Button(Label):
         background_path = join('gui',
                                CONFIG.general['THEME'],
                                'back_button.png')
-        super(Button, self).__init__(text, align="center", background=background_path)
+        super(Button, self).__init__(text, align="center", background=background_path, background_expand=True)
         self.properties["size_request"] = (220, 50)
         self.dynamic_size = [False, False]
 
