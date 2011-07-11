@@ -39,14 +39,6 @@ class TimedEvent (object):
     certain period of time.
     """
 
-    def initiate(self):
-        """
-        Overriding this fonction allow a better control on initialisation of
-        the event
-        """
-
-        pass
-
     def __init__(self, manager, period, params=dict()):
         """
         Action must be a callable, it will be called every frames in the
@@ -61,7 +53,6 @@ class TimedEvent (object):
         self.period = period[0], period[1] or None
         self.done = False
         self.event_manager = manager
-        self.initiate()
 
     def update(self, deltatime, gametime):
         """
@@ -364,9 +355,10 @@ class InvinciblePlayer(TimedEvent):
     The target player is invincible and half invisible during this event.
     """
 
-    def initiate(self):
+    def __init__(self, manager, period, params=dict()):
         # if we find another invincibility event on the same player we
         # just extend it's time to our limit and we are done.
+        super(InvinciblePlayer, self).__init__(manager, period, params)
         invincibilities = list(
                 self.event_manager.get_events(cls=InvinciblePlayer,
                 params={'player': self.params['player']}))
@@ -394,9 +386,9 @@ class VectorEvent(TimedEvent):
     Used by animations.
     """
 
-    def initiate(self):
+    def __init__(self, manager, period, params=dict()):
         #logging.debug("vector Event created "+ str(self.period))
-        pass
+        super(VectorEvent, self).__init__(manager, period, params)
 
     def execute(self, deltatime):
         pass
@@ -428,7 +420,8 @@ class UpgradePlayer(TimedEvent):
     the player dies.
     """
 
-    def initiate(self):
+    def __init__(self, manager, period, params=dict()):
+        super(UpgradeEvent, self).__init__(manager, period, params)
         self.params['player'].set_upgraded(True)
 
     def execute(self, deltatime):
@@ -443,7 +436,8 @@ class DropPlayer(TimedEvent):
     This event is called to drop a player in game.
     """
 
-    def initiate(self):
+    def __init__(self, manager, period, params=dict()):
+        super(DropPlayer, self).__init__(manager, period, params)
         #logging.debug("inserting player in game")
         self.params['entity'].set_vector([0, 0])
         self.params['entity'].set_walking_vector([0, 0])
@@ -480,7 +474,8 @@ class PlayerOut(TimedEvent):
     This event is called when a player is hitting the level border
     """
 
-    def initiate(self):
+    def __init__(self, manager, period, params=dict()):
+        super(PlayerOut, self).__init__(manager, period, params)
         self.params['entity'].set_lives(self.params['entity'].lives - 1)
         self.params['entity'].set_present(False)
         if self.params['entity'].lives > 0:
@@ -551,7 +546,8 @@ class BlobSpecial(TimedEvent):
     """ A boomerang like attack with the eye of blob
     """
 
-    def initiate(self):
+    def __init__(self, manager, period, params=dict()):
+        super(BlobSpecial, self).__init__(manager, period, params)
         self.entity = self.params['entity']
 
         self.entity_life = self.entity.percents
@@ -614,7 +610,8 @@ class XeonCharge(TimedEvent):
     """ a charge attack for Xeon
     """
 
-    def initiate(self):
+    def __init__(self, manager, period, params=dict()):
+        super(XeonCharge, self).__init__(manager, period, params)
         self.size = 0
         self.entity = self.params['entity']
         self.world = self.params['world']
