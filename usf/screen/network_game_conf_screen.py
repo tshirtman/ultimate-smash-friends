@@ -122,7 +122,7 @@ class NetworkGameConfScrteen(Screen):
         self.widget.add(hbox, margin=50)
 
         #next button to go to the level screen
-        self.widget.add(Button(_("Next")),
+        self.widget.add(Button(_("Start")),
             margin=83,
             align="center")
 
@@ -139,11 +139,11 @@ class NetworkGameConfScrteen(Screen):
             self.players[player_number] = action.get_index()
             #change the portrait
             self.portraits[player_number].setImage(
-                        join(
+                    join(
                         self.game_data['character_file'][action.get_index()],
                         "portrait.png"))
 
-        if action.text == _("Next"):
+        if action.text == _("Start"):
             i  = 0
             for player in self.players:
                 if player != 0:

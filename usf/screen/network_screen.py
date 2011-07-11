@@ -35,6 +35,7 @@ class NetworkScreen(Screen):
 
     def callback(self, action):
         if action.text == _('Host game'):
+            # TODO here we should start a server protocol
             return 'goto:network_game_conf_screen'
         if action.text == _('Join game'):
             return 'goto:network_join'
