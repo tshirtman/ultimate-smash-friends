@@ -104,8 +104,8 @@ class NetworkGameConfScreen(Screen):
         hbox = HBox()
         # adding the two box which contains the spinner and the name of the
         # characters
-        hbox.add(player_vbox, margin=20)
-        self.widget.add(hbox, margin=50)
+        hbox.add(player_vbox, margin=400)
+        self.widget.add(hbox, margin=150)
 
         coverflow_data = []
         #create a level image for every directory in the level directory.
