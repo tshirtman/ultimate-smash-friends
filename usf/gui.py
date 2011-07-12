@@ -41,7 +41,7 @@ from usf.screen.screen_screen import ScreenScreen
 from usf.screen.sound import Sound
 from usf.screen.network_screen import NetworkScreen
 from usf.screen.network_join_screen import NetworkJoinScreen
-from usf.screen.network_game_conf_screen import NetworkGameConfScrteen
+from usf.screen.network_game_conf_screen import NetworkGameConfScreen
 from usf.skin import Skin
 from usf.translation import _
 from usf.widgets.widget import optimize_size
@@ -74,7 +74,7 @@ class Gui(object):
         self.screens['characters'] = Characters('characters', self.screen)
         self.screens['network'] = NetworkScreen('network', self.screen)
         self.screens['network_join'] = NetworkJoinScreen('network_join', self.screen)
-        self.screens['network_game_conf_screen'] = NetworkGameConfScrteen(
+        self.screens['network_game_conf_screen'] = NetworkGameConfScreen(
                 'network_game_conf_screen', self.screen)
 
         self.screen_current = 'main_screen'

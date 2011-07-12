@@ -34,9 +34,6 @@ class NetworkJoinScreen(Screen):
         self.widget.add(Label('Address of server:'))
         self.ip = TextEntry('X.X.X.X')
         self.widget.add(self.ip)
-        self.widget.add(Label('player name:'))
-        self.player_name = TextEntry('no name')
-        self.widget.add(self.player_name)
         self.widget.add(Button(_('Join game')))
         self.widget.add(Button(_('Back')), margin=30)
 

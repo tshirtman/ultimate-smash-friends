@@ -36,6 +36,8 @@ from usf.widgets.image import Image
 from usf.widgets.spinner import Spinner
 from usf.widgets.label import Label
 from usf.widgets.checkbox_text import TextCheckBox
+from usf.widgets.text_entry import TextEntry
+from usf.widgets.coverflow import Coverflow
 
 from usf.translation import _
 
@@ -44,7 +46,7 @@ import os
 from os.path import join
 
 
-class NetworkGameConfScrteen(Screen):
+class NetworkGameConfScreen(Screen):
     """ the network game configuration screen
     """
     name_pl1 = 0
@@ -89,37 +91,42 @@ class NetworkGameConfScrteen(Screen):
 
         self.add(VBox())
 
-        self.checkboxes_ai = []
-        self.portraits = []
-        self.player_spinner = []
-        self.player_vbox = [VBox(), VBox(), VBox(), VBox()]
+        self.portrait = Image(join(self.game_data['character_file'][0],
+            "portrait.png"))
 
-        for i in range(0, 4):
-            #I18N: Artificial Intelligence
-            self.checkboxes_ai.append(TextCheckBox(_("AI:")))
-            self.portraits.append(Image(
-                    join(self.game_data['character_file'][0], "portrait.png")))
-
-            self.player_spinner.append(Spinner(self.character))
-            #I18N: %s is the player number, it can be Player 1, Player2...
-            self.player_vbox[i].add(Label(_("Player %s").replace(
-                "%s", str(i+1))))
-            self.player_vbox[i].add(self.player_spinner[-1])
-            self.player_vbox[i].add(self.portraits[-1],
-                margin_left=65,
-                margin=5,
-                size=(50, 50))
-            self.player_vbox[i].add(
-                    self.checkboxes_ai[-1],
-                    margin_left=(180 - self.checkboxes_ai[-1].width) / 2)
-
+        self.player_spinner = Spinner(self.character)
+        player_vbox = VBox()
+        player_vbox.add(Label(_('Player name'), align='center'))
+        player_vbox.add(TextEntry(_('unnamed player')))
+        player_vbox.add(Spinner(self.character))
+        player_vbox.add(self.portrait, margin_left=65, margin=5, size=(50, 50))
 
         hbox = HBox()
         # adding the two box which contains the spinner and the name of the
         # characters
-        for vbox in self.player_vbox:
-            hbox.add(vbox, margin=20)
+        hbox.add(player_vbox, margin=20)
         self.widget.add(hbox, margin=50)
+
+        coverflow_data = []
+        #create a level image for every directory in the level directory.
+        files = os.listdir(os.path.join( CONFIG.sys_data_dir, 'levels'))
+        files.sort()
+
+        for f in files:
+            try:
+                if 'level.xml' in os.listdir(
+                        os.path.join(CONFIG.sys_data_dir, "levels", f)):
+                    coverflow_data.append([])
+                    coverflow_data[-1].append(f)
+                    coverflow_data[-1].append(
+                            join(
+                                CONFIG.sys_data_dir,
+                                "levels", f, "screenshot.png"))
+            except:
+                logging.debug(str(f) +" is not a valid level.")
+
+        self.coverflow = Coverflow(coverflow_data)
+        self.widget.add(self.coverflow, size=(800, 275))
 
         #next button to go to the level screen
         self.widget.add(Button(_("Start")),
@@ -132,7 +139,7 @@ class NetworkGameConfScrteen(Screen):
             align="center")
 
     def callback(self, action):
-        if action in self.player_spinner :
+        if action is self.player_spinner :
             #get the index of the player
             player_number = self.player_spinner.index(action)
 
