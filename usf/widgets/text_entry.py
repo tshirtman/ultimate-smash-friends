@@ -112,11 +112,14 @@ class TextEntry(Button):
 
         else:
             if event.dict['unicode']:
-                self.set_text(''.join((
-                        self.text[:self.cursor],
-                        event.dict["unicode"],
-                        self.text[self.cursor:])))
-                self.cursor += 1
+                try:
+                    self.set_text(''.join((
+                            self.text[:self.cursor],
+                            event.dict["unicode"],
+                            self.text[self.cursor:])))
+                    self.cursor += 1
+                except UnicodeEncodeError:
+                    pass
 
         return False, False
 
@@ -131,14 +134,14 @@ class TextEntry(Button):
                                   font.fonts["sans"]['normal']).get_width()
             # Draw cursor
             color_value = int(abs(sin(self.cursor_state))*255)/2
-            print color_value
+            #print color_value
             color_cursor = color.Color(color_value, color_value, color_value)
             draw.line(self.screen, color_cursor,
                       (self.parentpos[0] + self.x + offset,
                        self.parentpos[1] + self.y),
                       (self.parentpos[0] + self.x + offset,
-                       self.parentpos[1] + self.y + self.height)
-                     )
+                       self.parentpos[1] + self.y + self.height),
+                     2)
         self.start_anim()
 
     def animation(self):
