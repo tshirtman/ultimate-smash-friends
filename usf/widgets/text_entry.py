@@ -130,8 +130,10 @@ class TextEntry(Button):
         # Display the cursor
         if self.state:
             # Get text width
-            offset = loaders.text(self.get_text()[0:self.cursor],
-                                  font.fonts["sans"]['normal']).get_width()
+            offset = loaders.text(
+                    self.get_text()[0:self.cursor],
+                    font.fonts["sans"]['normal']).get_width() + self.indent
+
             # Draw cursor
             color_value = int(abs(sin(self.cursor_state))*255)/2
             #print color_value
