@@ -43,6 +43,7 @@ class TextEntry(Button):
     def __init__(self, text, *args, **kwargs):
         super(TextEntry, self).__init__(text, *args, **kwargs)
         self.properties["size_request"] = (220, 20)
+        self.dynamic_size[0] = True
 
         self.cursor = len(self.text)
         self.posx = 0
@@ -108,7 +109,7 @@ class TextEntry(Button):
             self.cursor = max(0, self.cursor - 1)
 
         elif event.dict["key"] == K_RIGHT:
-            self.cursor = min(len(self.text), self.cursor + 1)
+            self.cursor = min(len(self.text) + 1, self.cursor + 1)
 
         else:
             if event.dict['unicode']:
@@ -124,7 +125,6 @@ class TextEntry(Button):
         return False, False
 
     def draw(self):
-        # Call parent
         super(TextEntry, self).draw()
 
         # Display the cursor
