@@ -82,7 +82,7 @@ class Label(Widget):
         """ update the text surface
         """
         self.text = text
-        self.surface_text  = loaders.text(self.text, fonts['sans']['normal'])
+        self.surface_text = loaders.text(self.text, fonts['sans']['normal'])
 
         if self.dynamic_size[0]:
             self.height = self.surface_text.get_height() + self.txtmargin * 2
