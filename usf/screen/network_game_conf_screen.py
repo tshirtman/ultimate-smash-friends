@@ -44,6 +44,7 @@ from usf.translation import _
 from usf import entity_skin
 import os
 from os.path import join
+import logging
 
 
 class NetworkGameConfScreen(Screen):
@@ -72,22 +73,7 @@ class NetworkGameConfScreen(Screen):
         files = os.listdir(join(CONFIG.sys_data_dir, 'characters'))
         files.sort()
 
-        for f in files:
-            try:
-                if f != "none":
-                    self.game_data['character_file'].append(join(
-                        "characters",
-                        f))
-
-                    self.character.append(entity_skin.EntitySkin(
-                                    join('characters', f)).name)
-            except OSError, e:
-                if e.errno is 20:
-                    pass
-                else:
-                    raise
-            except IOError, e:
-                pass
+        self.load_chararacters(files)
 
         self.add(VBox())
 
@@ -107,23 +93,11 @@ class NetworkGameConfScreen(Screen):
         hbox.add(player_vbox, margin=400)
         self.widget.add(hbox, margin=150)
 
-        coverflow_data = []
         #create a level image for every directory in the level directory.
         files = os.listdir(os.path.join( CONFIG.sys_data_dir, 'levels'))
         files.sort()
 
-        for f in files:
-            try:
-                if 'level.xml' in os.listdir(
-                        os.path.join(CONFIG.sys_data_dir, "levels", f)):
-                    coverflow_data.append([])
-                    coverflow_data[-1].append(f)
-                    coverflow_data[-1].append(
-                            join(
-                                CONFIG.sys_data_dir,
-                                "levels", f, "screenshot.png"))
-            except:
-                logging.debug(str(f) +" is not a valid level.")
+        coverflow_data = self.load_levels(files)
 
         self.coverflow = Coverflow(coverflow_data)
         self.widget.add(self.coverflow, size=(800, 275))
@@ -137,6 +111,45 @@ class NetworkGameConfScreen(Screen):
         self.widget.add(Button(_('Back')),
             margin=20,
             align="center")
+
+    def load_chararacters(self, files):
+        """ append characters to self.character, loaded from files in "files".
+        """
+        for f in files:
+            try:
+                if f != "none":
+                    self.game_data['character_file'].append(join(
+                        "characters",
+                        f))
+
+                    self.character.append(entity_skin.EntitySkin(
+                                    join('characters', f)).name)
+            except OSError, e:
+                if e.errno is 20:
+                    pass
+                else:
+                    raise
+            except IOError, e:
+                pass
+
+    def load_levels(self, files):
+        """ append a level in self.levels
+        """
+        coverflow_data = []
+        for f in files:
+            try:
+                if 'level.xml' in os.listdir(
+                        os.path.join(CONFIG.sys_data_dir, "levels", f)):
+                    coverflow_data.append([])
+                    coverflow_data[-1].append(f)
+                    coverflow_data[-1].append(
+                            join(
+                                CONFIG.sys_data_dir,
+                                "levels", f, "screenshot.png"))
+            except:
+                #XXX: catch all exceptions: BAD
+                logging.debug(str(f) +" is not a valid level.")
+        return coverflow_data
 
     def callback(self, action):
         if action is self.player_spinner :
