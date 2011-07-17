@@ -85,10 +85,22 @@ class Label(Widget):
         self.surface_text = loaders.text(self.text, fonts['sans']['normal'])
 
         if self.dynamic_size[0]:
-            self.height = self.surface_text.get_height() + self.txtmargin * 2
+            if 'size_request' in self.properties:
+                self.height = max(
+                        self.properties['size_request'][1],
+                        self.surface_text.get_height() + self.txtmargin * 2)
+            else:
+                self.height = (
+                        self.surface_text.get_height() + self.txtmargin * 2)
 
         if self.dynamic_size[1]:
-            self.width = self.surface_text.get_width() + self.txtmargin * 2
+            if 'size_request' in self.properties:
+                self.width = max(
+                        self.properties['size_request'][0],
+                        self.surface_text.get_width() + self.txtmargin * 2)
+
+            else:
+                self.width = self.surface_text.get_width() + self.txtmargin * 2
 
         if self.align == "center":
             self.indent = self.width / 2 - self.surface_text.get_width() / 2

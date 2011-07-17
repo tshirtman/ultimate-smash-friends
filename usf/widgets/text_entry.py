@@ -18,7 +18,7 @@
 ################################################################################
 
 '''
-This moodule provide a widget for UI, allowing to display and edit a line of
+This module provides a widget for UI, allowing to display and edit a line of
 text, it can be used to edit settings like an IP address for a network game, or
 a player name.
 
@@ -43,7 +43,7 @@ class TextEntry(Button):
     def __init__(self, text, *args, **kwargs):
         super(TextEntry, self).__init__(text, *args, **kwargs)
         self.properties["size_request"] = (220, 20)
-        self.dynamic_size[0] = True
+        self.dynamic_size[1] = True
 
         self.cursor = len(self.text)
         self.posx = 0
