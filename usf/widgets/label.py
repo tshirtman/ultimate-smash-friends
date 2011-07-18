@@ -51,7 +51,7 @@ class Label(Widget):
 
         if "background" in kwargs:
             self.background_path = kwargs['background']
-        
+
         if "background_expand" in kwargs:
             self.background_expand = kwargs['background_expand']
         else:

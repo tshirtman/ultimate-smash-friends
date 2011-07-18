@@ -60,11 +60,14 @@ class TextEntry(Button):
         return self.text
 
     def move_cursor(self, x):
+        """ place the cursor at the position nearest of x in the widget
+        """
+        x -= self.indent
         text = self.get_text()
         diff = self.width
         self.cursor = 1
         text_font = font.fonts["sans"]["normal"]
-        for i in range(0, len(text)):
+        for i in range(0, len(text) + 1):
             diff_temp = min(diff,
                     abs(x - loaders.text(text[0:i], text_font).get_width()))
             if diff is not diff_temp:
