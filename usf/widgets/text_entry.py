@@ -29,7 +29,7 @@ from usf.widgets.button import Button
 from usf import loaders
 from usf import font
 from pygame.locals import (K_DOWN, K_UP, K_RETURN, K_LEFT, K_RIGHT, K_BACKSPACE,
-        MOUSEBUTTONUP)
+        MOUSEBUTTONUP, K_DELETE)
 from pygame import draw
 from pygame import color
 from math import sin
@@ -97,6 +97,12 @@ class TextEntry(Button):
 
         if event.dict["key"] == K_RETURN:
             return self, self
+
+        elif event.dict['key'] == K_DELETE:
+            if self.cursor <= len(self.text):
+                self.set_text(''.join((
+                        self.text[:self.cursor],
+                        self.text[self.cursor + 1:])))
 
         elif event.dict['key'] == K_BACKSPACE:
             if self.cursor > 0:
