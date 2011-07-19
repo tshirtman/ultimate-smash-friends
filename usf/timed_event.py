@@ -421,7 +421,7 @@ class UpgradePlayer(TimedEvent):
     """
 
     def __init__(self, manager, period, params=dict()):
-        super(UpgradeEvent, self).__init__(manager, period, params)
+        super(UpgradePlayer, self).__init__(manager, period, params)
         self.params['player'].set_upgraded(True)
 
     def execute(self, deltatime):
