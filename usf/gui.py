@@ -73,7 +73,8 @@ class Gui(object):
         self.screens['level'] = Level('level', self.screen)
         self.screens['characters'] = Characters('characters', self.screen)
         self.screens['network'] = NetworkScreen('network', self.screen)
-        self.screens['network_join'] = NetworkJoinScreen('network_join', self.screen)
+        self.screens['network_join'] = NetworkJoinScreen(
+                'network_join', self.screen)
         self.screens['network_game_conf_screen'] = NetworkGameConfScreen(
                 'network_game_conf_screen', self.screen)
 
@@ -164,7 +165,7 @@ class Gui(object):
             (query, focus) = self.focus.handle_keys(event)
             if not focus:
                 self.focus = None
-            if  query:
+            if query:
                 reply = self.screens[self.screen_current].callback(query)
                 self.handle_reply(reply)
 
