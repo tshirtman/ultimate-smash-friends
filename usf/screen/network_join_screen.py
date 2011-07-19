@@ -26,6 +26,7 @@ from usf.widgets.button import Button
 from usf.widgets.text_entry import TextEntry
 from usf.translation import _
 
+
 class NetworkJoinScreen(Screen):
     def init(self):
         self.set_name("ultimate smash friends")
