@@ -46,6 +46,7 @@ lot of different params, that will eat some memory, but if you often need the
 same result, that can bring you a lot of speed.
 
 '''
+from functools import wraps
 
 def memoize(function):
     """
@@ -56,6 +57,7 @@ def memoize(function):
     """
     cache = {}
 
+    @wraps(function)
     def decorated_function(*args, **kwargs):
         """ this docstring will be replaced by function's one when decorator is
         used
