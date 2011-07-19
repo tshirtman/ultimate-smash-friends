@@ -607,6 +607,7 @@ class Level(object):
         This fonction returns True if the rect at coords (x, y) collides one of
         the rects of the level, including the moving blocks and vector blocks.
 
+        #XXX: any decent optimisation of this welcomed
         """
         r = pygame.Rect((x, y), (h, w))
 
