@@ -496,7 +496,7 @@ class PlayerOut(TimedEvent):
 
 class PlayerStaticOnGround(TimedEvent):
     """
-    This event will set the player on static animation when he tuch the ground
+    This event will set the player on static animation when he touch the ground
     """
 
     def execute(self, deltatime):
