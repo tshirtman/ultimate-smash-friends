@@ -66,11 +66,11 @@ import copy
 import pygame
 import logging
 import math
+from ConfigParser import SafeConfigParser
 
 from usf.memoize import memoize
 from usf.config import Config
 CONFIG = Config()
-from ConfigParser import SafeConfigParser
 
 try:
     from pygame.locals import BLEND_RGB_MAX
@@ -82,22 +82,165 @@ except ImportError:
     BLEND_RGBA_MAX = None
 
 
+def _zoom(name, kwargs):
+    zoom = kwargs['zoom']
+    kwargs['zoom'] = None
+    #logging.debug('scaling image '+name+' :'+str(zoom))
+    if CONFIG.general['SMOOTHSCALE']:
+        img = pygame.transform.smoothscale(
+                image(name, **kwargs)[0],
+                (
+                 int(image(name, **kwargs)[1][2]*zoom),
+                 int(image(name, **kwargs)[1][3]*zoom)))
+    else:
+        img = pygame.transform.scale(
+                image(name, **kwargs)[0],
+                (
+                 int(image(name, **kwargs)[1][2]*zoom),
+                 int(image(name, **kwargs)[1][3]*zoom)))
+
+
+def _expand(name, kwargs):
+    """
+    This feature can be used for buttons, which have a rounded border. But
+    if we just scale them, the borders look bad, because the rounded corner
+    are also scaled
+
+    So, we have to split it to keep a consistent image.
+    """
+    if len(kwargs['expand']) is not 3:
+        raise ValueError(
+            "expand parameter should be a tuple of three integers: width,"
+            " height, corner")
+
+    expand = kwargs['expand']
+    corner = expand[2]
+    width = expand[0]
+    height = expand[1]
+    kwargs['expand'] = None
+    img = pygame.Surface((expand[0], expand[1]), pygame.locals.SRCALPHA)
+
+    # Get source image dimensions
+    img_from = image(name)[0]
+    width_image = img_from.get_width()
+    height_image = img_from.get_height()
+
+    # Top left corner
+    img_source = image(name,
+                       crop=(corner, corner, 0, 0))[0]
+    img.blit(img_source, (0, 0))
+
+    # Bottom right corner
+    img_source = image(name,
+            crop=(corner, corner, width_image - corner, 0))[0]
+
+    img.blit(img_source, (width - corner, 0))
+
+    # Bottom left corner
+    img_source = image(name,
+            crop=(
+                corner,
+                corner,
+                width_image - corner,
+                height_image - corner))[0]
+
+    img.blit(img_source, (width - corner, height - corner))
+
+    # Top right corner
+    img_source = image(name,
+                       crop=(corner, corner, 0, height_image - corner))[0]
+    img.blit(img_source, (0, height - corner))
+
+    # Left part
+    img_source = image(name,
+                       crop=(corner, height_image - corner*2, 0, corner),
+                       scale=(corner, height - 2*corner))[0]
+    img.blit(img_source, (0, corner))
+
+    # Right part
+    img_source = image(name,
+            crop=(
+                corner,
+                height_image - corner*2,
+                width_image - corner, corner),
+            scale=(corner, height - 2*corner))[0]
+    img.blit(img_source, (width - corner, corner))
+
+    # Top part
+    img_source = image(name,
+                       crop=(width_image - 2*corner, corner, corner, 0),
+                       scale=(width - 2*corner, corner))[0]
+    img.blit(img_source, (corner, 0))
+
+    # Bottom part
+    img_source = image(name,
+            crop=(
+                width_image - 2*corner,
+                corner,
+                corner,
+                height_image - corner),
+            scale=(width - 2*corner, corner))[0]
+    img.blit(img_source, (corner, height - corner))
+
+    # Center
+    img_source = image(name,
+            crop=(width_image - 2 * corner,
+                height_image - 2 * corner,
+                corner,
+                corner),
+            scale=(width - 2 * corner, height - 2 * corner))[0]
+    img.blit(img_source, (corner, corner))
+    return img
+
+
+def _crop(name, kwargs):
+    if len(kwargs['crop']) is not 4:
+        raise ValueError(
+            "crop parameter should be a tuple of four integers: width,"
+            "height, x, y")
+
+    crop = kwargs['crop']
+    kwargs['crop'] = None
+    img_src = image(name, **kwargs)[0]
+    img = pygame.Surface((crop[0], crop[1]), pygame.locals.SRCALPHA)
+    rect = pygame.Rect(crop[2], crop[3], crop[0], crop[1])
+    img.blit(img_src, (0, 0), rect)
+    return img
+
+
+def _lighten(name, kwargs):
+    #logging.debug('lightened: '+name)
+    kwargs['lighten'] = False
+    img = image(name, **kwargs)[0].copy()
+    if BLEND_RGBA_MAX is not None:
+        img.fill(
+                pygame.Color('lightgrey'),
+                None,
+                BLEND_RGB_MAX)
+    else:
+        # this mean this version of pygame is to old to use the effect
+        # above, an equivalent method would be a good thing
+        logging.warning('pygame version < 1.9 no alpha blend.')
+    return img
+
+
 @memoize
 def image(name, *args, **kwargs):
     """
-    A function to load an image, shamelessly picked from pygame
-    tutorial, and grossly adjusted for native transparency support of png.
-    Can scale and reverse horizontaly an image, can produce a lightened version
-    of an image.
+    A function to load an image, shamelessly picked from pygame tutorial, and
+    grossly adjusted for native transparency support of png.
+
+    Lots of things added after, ability to:
+        scale,
+        reverse horizontaly,
+        produce a lightened version of an image,
+        change alpha of an image,
+        crop
+        and extand an image.
 
     keywords arguments accepted are the followings:
-        zoom=None, colorkey=None, server=False, lighten=False, reversed=False,
+        zoom=None, colorkey=None, lighten=False, reversed=False,
     """
-
-    # FIXME: should not have to load the image in server mode, we just want
-    # it's size!
-    if 'nodisplay' in kwargs and kwargs['nodisplay']:
-        return None, pygame.Rect((0, 0), pygame.image.load(name).get_size())
 
     if 'reversed' in kwargs and kwargs['reversed']:
         kwargs['reversed'] = False
@@ -108,18 +251,7 @@ def image(name, *args, **kwargs):
             False) #not verticaly
 
     elif 'lighten' in kwargs and kwargs['lighten']:
-        #logging.debug('lightened: '+name)
-        kwargs['lighten'] = False
-        img = image(name, *args, **kwargs)[0].copy()
-        if BLEND_RGBA_MAX is not None:
-            img.fill(
-                    pygame.Color('lightgrey'),
-                    None,
-                    BLEND_RGB_MAX)
-        else:
-            # this mean this version of pygame is to old to use the effect
-            # above, an equivalent method would be a good thing
-            logging.warning('pygame version < 1.9 no alpha blend.')
+        img = _lighten(name, kwargs)
 
     elif 'alpha' in kwargs and kwargs['alpha'] is not None:
         alpha = kwargs['alpha']
@@ -151,125 +283,13 @@ def image(name, *args, **kwargs):
                 scale)
 
     elif 'crop' in kwargs and kwargs['crop'] is not None:
-        if len(kwargs['crop']) is not 4:
-            raise ValueError(
-                "crop parameter should be a tuple of four integers: width,"
-                "height, x, y")
-
-        crop = kwargs['crop']
-        kwargs['crop'] = None
-        img_src = image(name, *args, **kwargs)[0]
-        img = pygame.Surface((crop[0], crop[1]), pygame.locals.SRCALPHA)
-        rect = pygame.Rect(crop[2], crop[3], crop[0], crop[1])
-        img.blit(img_src, (0, 0), rect)
+        img = _crop(name, kwargs)
 
     elif 'expand' in kwargs and kwargs['expand'] is not None:
-        if len(kwargs['expand']) is not 3:
-            raise ValueError(
-                "expand parameter should be a tuple of three integers: width,"
-                " height, corner")
-
-        """
-        This feature can be used for buttons, which have a rounded border. But
-        if we just scale them, the borders look bad, because the rounded corner
-        are also scaled
-
-        So, we have to split it to keep a consistent image.
-        """
-
-        expand = kwargs['expand']
-        corner = expand[2]
-        width = expand[0]
-        height = expand[1]
-        kwargs['expand'] = None
-        img = pygame.Surface((expand[0], expand[1]), pygame.locals.SRCALPHA)
-
-        # Get source image dimensions
-        img_from = image(name)[0]
-        width_image = img_from.get_width()
-        height_image = img_from.get_height()
-
-        # Top left corner
-        img_source = image(name,
-                           crop=(corner, corner, 0, 0))[0]
-        img.blit(img_source, (0, 0))
-
-        # Bottom right corner
-        img_source = image(name,
-                           crop=(corner, corner, width_image - corner, 0))[0]
-        img.blit(img_source, (width - corner, 0))
-
-        # Bottom left corner
-        img_source = image(name,
-                crop=(
-                    corner,
-                    corner,
-                    width_image - corner,
-                    height_image - corner))[0]
-
-        img.blit(img_source, (width - corner, height - corner))
-
-        # Top right corner
-        img_source = image(name,
-                           crop=(corner, corner, 0, height_image - corner))[0]
-        img.blit(img_source, (0, height - corner))
-
-        # Left part
-        img_source = image(name,
-                           crop=(corner, height_image - corner*2, 0, corner),
-                           scale=(corner, height - 2*corner))[0]
-        img.blit(img_source, (0, corner))
-
-        # Right part
-        img_source = image(name,
-                crop=(
-                    corner,
-                    height_image - corner*2,
-                    width_image - corner, corner),
-                scale=(corner, height - 2*corner))[0]
-        img.blit(img_source, (width - corner, corner))
-
-        # Top part
-        img_source = image(name,
-                           crop=(width_image - 2*corner, corner, corner, 0),
-                           scale=(width - 2*corner, corner))[0]
-        img.blit(img_source, (corner, 0))
-
-        # Bottom part
-        img_source = image(name,
-                crop=(
-                    width_image - 2*corner,
-                    corner,
-                    corner,
-                    height_image - corner),
-                scale=(width - 2*corner, corner))[0]
-        img.blit(img_source, (corner, height - corner))
-
-        # Center
-        img_source = image(name,
-                crop=(width_image - 2 * corner,
-                    height_image - 2 * corner,
-                    corner,
-                    corner),
-                scale=(width - 2 * corner, height - 2 * corner))[0]
-        img.blit(img_source, (corner, corner))
+        img = _expand(name, kwargs)
 
     elif 'zoom' in kwargs and kwargs['zoom'] not in (None, 1):
-        zoom = kwargs['zoom']
-        kwargs['zoom'] = None
-        #logging.debug('scaling image '+name+' :'+str(zoom))
-        if CONFIG.general['SMOOTHSCALE']:
-            img = pygame.transform.smoothscale(
-                    image(name, **kwargs)[0],
-                    (
-                     int(image(name, *args, **kwargs)[1][2]*zoom),
-                     int(image(name, *args, **kwargs)[1][3]*zoom)))
-        else:
-            img = pygame.transform.scale(
-                    image(name, **kwargs)[0],
-                    (
-                     int(image(name, *args, **kwargs)[1][2]*zoom),
-                     int(image(name, *args, **kwargs)[1][3]*zoom)))
+        img = _zoom(name, kwargs)
 
     elif 'rotate' in kwargs and kwargs['rotate'] not in (None, 0):
         angle = kwargs['rotate']
