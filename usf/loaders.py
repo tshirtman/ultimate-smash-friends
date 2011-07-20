@@ -224,6 +224,62 @@ def _lighten(name, kwargs):
     return img
 
 
+def _scale(name, kwargs):
+    if len(kwargs['scale']) is not 2:
+        raise ValueError(
+            "scale parameter should be a tuple of two integers")
+
+    scale = kwargs['scale']
+    kwargs['scale'] = None
+    if CONFIG.general['SMOOTHSCALE']:
+        img = pygame.transform.smoothscale(
+            image(name, *args, **kwargs)[0],
+            scale)
+    else:
+        img = pygame.transform.scale(
+            image(name, *args, **kwargs)[0], scale)
+    return img
+
+
+def _alpha(name, kwargs):
+    alpha = kwargs['alpha']
+    if not 0 <= alpha <= 1:
+        logging.warning('bad alpha value:'+ str(alpha))
+        alpha = min(1, max(0, alpha))
+
+    kwargs['alpha'] = None
+    img = image(name, *args, **kwargs)[0].copy()
+    img.fill(
+            pygame.Color(255, 255, 255, int(alpha*255)),
+            image(name, *args, **kwargs)[1],
+            BLEND_RGBA_MULT)
+    return img
+
+
+def _load(name):
+    try:
+        img = pygame.image.load(name)
+    except pygame.error:
+        logging.debug('Cannot load image:'+str(name), 2)
+        raise
+    return img.convert_alpha()
+
+
+def _reverse(name, kwargs):
+    kwargs['reversed'] = False
+    return pygame.transform.flip(
+        image(name, *args, **kwargs)[0],
+        True, #flip horizontaly
+        False) #not verticaly
+
+
+def _rotate(name, kwargs):
+    angle = kwargs['rotate']
+    kwargs['rotate'] = None
+    return pygame.transform.rotate(
+            image(name, **kwargs)[0], angle * 180/math.pi)
+
+
 @memoize
 def image(name, *args, **kwargs):
     """
@@ -243,44 +299,16 @@ def image(name, *args, **kwargs):
     """
 
     if 'reversed' in kwargs and kwargs['reversed']:
-        kwargs['reversed'] = False
-        #logging.debug("reverse "+name)
-        img = pygame.transform.flip(
-            image(name, *args, **kwargs)[0],
-            True, #flip horizontaly
-            False) #not verticaly
+        img = _reverse(name, kwargs)
 
     elif 'lighten' in kwargs and kwargs['lighten']:
         img = _lighten(name, kwargs)
 
     elif 'alpha' in kwargs and kwargs['alpha'] is not None:
-        alpha = kwargs['alpha']
-        if not 0 <= alpha <= 1:
-            logging.warning('bad alpha value:'+ str(alpha))
-            alpha = min(1, max(0, alpha))
-
-        kwargs['alpha'] = None
-        img = image(name, *args, **kwargs)[0].copy()
-        img.fill(
-                pygame.Color(255, 255, 255, int(alpha*255)),
-                image(name, *args, **kwargs)[1],
-                BLEND_RGBA_MULT)
+        img = _alpha(name, kwargs)
 
     elif 'scale' in kwargs and kwargs['scale'] is not None:
-        if len(kwargs['scale']) is not 2:
-            raise ValueError(
-                "scale parameter should be a tuple of two integers")
-
-        scale = kwargs['scale']
-        kwargs['scale'] = None
-        if CONFIG.general['SMOOTHSCALE']:
-            img = pygame.transform.smoothscale(
-                image(name, *args, **kwargs)[0],
-                scale)
-        else:
-            img = pygame.transform.scale(
-                image(name, *args, **kwargs)[0],
-                scale)
+        img = _scale(name, kwargs)
 
     elif 'crop' in kwargs and kwargs['crop'] is not None:
         img = _crop(name, kwargs)
@@ -292,18 +320,11 @@ def image(name, *args, **kwargs):
         img = _zoom(name, kwargs)
 
     elif 'rotate' in kwargs and kwargs['rotate'] not in (None, 0):
-        angle = kwargs['rotate']
-        kwargs['rotate'] = None
-        img = pygame.transform.rotate(
-                image(name, **kwargs)[0], angle * 180/math.pi)
+        img = _rotate(name, kwargs)
 
     else:
-        try:
-            img = pygame.image.load(name)
-        except pygame.error:
-            logging.debug('Cannot load image:'+str(name), 2)
-            raise
-        img = img.convert_alpha()
+        img = _load(name)
+
     return img, img.get_rect()
 
 
