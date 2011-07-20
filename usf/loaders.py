@@ -99,6 +99,8 @@ def _zoom(name, kwargs):
                  int(image(name, **kwargs)[1][2]*zoom),
                  int(image(name, **kwargs)[1][3]*zoom)))
 
+    return img
+
 
 def _expand(name, kwargs):
     """
@@ -233,11 +235,11 @@ def _scale(name, kwargs):
     kwargs['scale'] = None
     if CONFIG.general['SMOOTHSCALE']:
         img = pygame.transform.smoothscale(
-            image(name, *args, **kwargs)[0],
+            image(name, **kwargs)[0],
             scale)
     else:
         img = pygame.transform.scale(
-            image(name, *args, **kwargs)[0], scale)
+            image(name, **kwargs)[0], scale)
     return img
 
 
@@ -248,10 +250,10 @@ def _alpha(name, kwargs):
         alpha = min(1, max(0, alpha))
 
     kwargs['alpha'] = None
-    img = image(name, *args, **kwargs)[0].copy()
+    img = image(name, **kwargs)[0].copy()
     img.fill(
             pygame.Color(255, 255, 255, int(alpha*255)),
-            image(name, *args, **kwargs)[1],
+            image(name, **kwargs)[1],
             BLEND_RGBA_MULT)
     return img
 
@@ -268,7 +270,7 @@ def _load(name):
 def _reverse(name, kwargs):
     kwargs['reversed'] = False
     return pygame.transform.flip(
-        image(name, *args, **kwargs)[0],
+        image(name, **kwargs)[0],
         True, #flip horizontaly
         False) #not verticaly
 
@@ -283,45 +285,29 @@ def _rotate(name, kwargs):
 @memoize
 def image(name, *args, **kwargs):
     """
-    A function to load an image, shamelessly picked from pygame tutorial, and
-    grossly adjusted for native transparency support of png.
-
-    Lots of things added after, ability to:
-        scale,
+    A function to load an image, memoized, and with manipulation capabilities:
+        scale, zoom
         reverse horizontaly,
         produce a lightened version of an image,
         change alpha of an image,
         crop
         and extand an image.
-
-    keywords arguments accepted are the followings:
-        zoom=None, colorkey=None, lighten=False, reversed=False,
     """
+    keywords = {
+            'reversed': _reverse,
+            'lighten': _lighten,
+            'alpha': _alpha,
+            'scale': _scale,
+            'crop': _crop,
+            'expand': _expand,
+            'zoom': _zoom,
+            'rotate': _rotate,
+            }
 
-    if 'reversed' in kwargs and kwargs['reversed']:
-        img = _reverse(name, kwargs)
-
-    elif 'lighten' in kwargs and kwargs['lighten']:
-        img = _lighten(name, kwargs)
-
-    elif 'alpha' in kwargs and kwargs['alpha'] is not None:
-        img = _alpha(name, kwargs)
-
-    elif 'scale' in kwargs and kwargs['scale'] is not None:
-        img = _scale(name, kwargs)
-
-    elif 'crop' in kwargs and kwargs['crop'] is not None:
-        img = _crop(name, kwargs)
-
-    elif 'expand' in kwargs and kwargs['expand'] is not None:
-        img = _expand(name, kwargs)
-
-    elif 'zoom' in kwargs and kwargs['zoom'] not in (None, 1):
-        img = _zoom(name, kwargs)
-
-    elif 'rotate' in kwargs and kwargs['rotate'] not in (None, 0):
-        img = _rotate(name, kwargs)
-
+    for kw in keywords:
+        if kw in kwargs and kwargs[kw]:
+            img = keywords[kw](name, kwargs)
+            break
     else:
         img = _load(name)
 
