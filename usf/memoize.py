@@ -46,6 +46,9 @@ lot of different params, that will eat some memory, but if you often need the
 same result, that can bring you a lot of speed.
 
 '''
+
+# the wraps decorator allow us to define well behaved decorator, that keep the
+# name, doc and other important things of decorated functions
 from functools import wraps
 
 def memoize(function):
@@ -62,19 +65,19 @@ def memoize(function):
         """ this docstring will be replaced by function's one when decorator is
         used
         """
-        params = (args)+tuple(zip(kwargs.keys(), kwargs.values()))
+        params = (args) + tuple(zip(kwargs.keys(), kwargs.values()))
         try:
             return cache[params]
+
         except KeyError:
             val = function(*args, **kwargs)
             try:
                 cache[params] = val
+
             except TypeError, e:
                 print e, params
-            return val
 
-    decorated_function.__name__ = function.__name__
-    decorated_function.__doc__ = function.__doc__
+            return val
 
     return decorated_function
 
