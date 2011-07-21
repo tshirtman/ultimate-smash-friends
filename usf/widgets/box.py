@@ -106,7 +106,7 @@ class Container(Widget):
 
     def add(self, widget, **kwargs):
         """
-        This function is used to add a widget in the conatiner
+        This function is used to add a widget in the container
         """
         self.current_focus = -1
         self.widgets.append(widget)
@@ -154,6 +154,7 @@ class Container(Widget):
         """
         This function is used for keyboard events.
         """
+        pass
 
 
 class HBox(Container):
