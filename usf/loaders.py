@@ -83,6 +83,10 @@ except ImportError:
 
 
 def _zoom(name, kwargs):
+    """ takes care of the zoom argument, and pass the rest to image()
+    zoom is used as a multiplication in size on both dimension of the image.
+    return the end result.
+    """
     zoom = kwargs['zoom']
     kwargs['zoom'] = None
     #logging.debug('scaling image '+name+' :'+str(zoom))
@@ -196,6 +200,12 @@ def _expand(name, kwargs):
 
 
 def _crop(name, kwargs):
+    """
+    return a portion of an image.
+    crop parameter should be a tuple of four integers:
+    width, height, x, y
+    """
+
     if len(kwargs['crop']) is not 4:
         raise ValueError(
             "crop parameter should be a tuple of four integers: width,"
@@ -211,6 +221,8 @@ def _crop(name, kwargs):
 
 
 def _lighten(name, kwargs):
+    """ return the image with a all visible pixels saturated in white
+    """
     #logging.debug('lightened: '+name)
     kwargs['lighten'] = False
     img = image(name, **kwargs)[0].copy()
@@ -227,6 +239,8 @@ def _lighten(name, kwargs):
 
 
 def _scale(name, kwargs):
+    """ XXX: Difference with zoom?
+    """
     if len(kwargs['scale']) is not 2:
         raise ValueError(
             "scale parameter should be a tuple of two integers")
@@ -244,6 +258,8 @@ def _scale(name, kwargs):
 
 
 def _alpha(name, kwargs):
+    """ use BLEND_RGBA_MULT to produce images with different alpha
+    """
     alpha = kwargs['alpha']
     if not 0 <= alpha <= 1:
         logging.warning('bad alpha value:'+ str(alpha))
@@ -259,6 +275,9 @@ def _alpha(name, kwargs):
 
 
 def _load(name):
+    """ Load an image and convert it for faster blit operations, always
+    consider the image to have an alpha channel.
+    """
     try:
         img = pygame.image.load(name)
     except pygame.error:
@@ -268,6 +287,8 @@ def _load(name):
 
 
 def _reverse(name, kwargs):
+    """ return the image flipped horizontaly.
+    """
     kwargs['reversed'] = False
     return pygame.transform.flip(
         image(name, **kwargs)[0],
@@ -276,6 +297,8 @@ def _reverse(name, kwargs):
 
 
 def _rotate(name, kwargs):
+    """ rotate the image of an arbitraty angle.
+    """
     angle = kwargs['rotate']
     kwargs['rotate'] = None
     return pygame.transform.rotate(
