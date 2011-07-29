@@ -191,8 +191,8 @@ class Gui(object):
 
     def handle_reply(self, reply):
         """
-        This function handles the callback return by thz screens
-        with the function event_callback().
+        This function handles the callback return by the screens with the
+        function event_callback().
         This callback needs to be a string; otherwise, it will be ignored.
 
         The reply can be:
