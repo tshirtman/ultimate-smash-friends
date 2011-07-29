@@ -95,7 +95,7 @@ class Block (object):
     An abstraction class to define methods shared by some level objects.
     """
 
-    def __init__(self, position, texture, levelname):
+    def __init__(self, position, texture, levelname, texture_fg):
         """
         Not much to do here.
         """
@@ -108,7 +108,7 @@ class Block (object):
                     texture)
             usf.loaders.image(self.texture)
         except pygame.error:
-            logging.debug("No texture found here: " + str(file))
+            logging.debug("No texture found here: " + self.texture)
             try:
                 self.texture = os.path.join(
                         CONFIG.sys_data_dir,
@@ -117,7 +117,29 @@ class Block (object):
                         texture)
 
             except pygame.error:
-                logging.error("Can't load the texture: " + str(file))
+                logging.error("Can't load the texture: " + texture)
+
+        if texture_fg:
+            try:
+                self.texture_fg = os.path.join(
+                        CONFIG.sys_data_dir,
+                        "levels",
+                        levelname,
+                        texture_fg)
+                usf.loaders.image(self.texture_fg)
+            except pygame.error:
+                logging.debug("No texture found here: " + self.texture_fg)
+                try:
+                    self.texture = os.path.join(
+                            CONFIG.sys_data_dir,
+                            "levels",
+                            "common",
+                            texture_fg)
+
+                except pygame.error:
+                    logging.error("Can't load the texture: " + texture_fg)
+        else:
+            self.texture_fg = None
 
         self.collide_rects = []
 
@@ -132,6 +154,18 @@ class Block (object):
 
         surface.blit(usf.loaders.image(self.texture, zoom=zoom)[0], real_coords)
 
+    def draw_after(self, surface, coords=(0, 0), zoom=1):
+        """
+        Draw this moving bloc foreground on the passed surface, taking account
+        of zoom and placement of camera, if there is one.
+
+        """
+        if self.texture_fg:
+            real_coords = (int(self.position[0] * zoom) + coords[0],
+                    int(self.position[1] * zoom) + coords[1])
+
+            surface.blit(usf.loaders.image(self.texture_fg, zoom=zoom)[0], real_coords)
+
     def collide_rect(self, rect):
         """
         Return True if the point at (x, y) collide this bloc's rects.
@@ -145,9 +179,8 @@ class VectorBloc (Block):
     This define a bloc that apply a vector to any entity falling/walking on it.
     """
 
-    def __init__(self, rects, position, vector, relative, texture,
-            server=False, levelname='biglevel'):
-        Block.__init__(self, position, texture, levelname)
+    def __init__(self, rects, vector, relative, *args, **kwargs):
+        super(VectorBloc, self).__init__(*args, **kwargs)
         self.rects = rects
         self.relative = relative
         self.vector = vector
@@ -155,8 +188,8 @@ class VectorBloc (Block):
         for i in self.rects:
             self.collide_rects.append(
                     pygame.Rect(
-                        i[0]+position[0],
-                        i[1]+position[1],
+                        i[0]+self.position[0],
+                        i[1]+self.position[1],
                         i[2], i[3]))
 
     def apply_vector(self, entity):
@@ -175,17 +208,17 @@ class VectorBloc (Block):
         return Block.collide_rect(self, rect)
 
 
-class MovingPart (Block):
+class MovingPart(Block):
     """
     This define a level bloc that move, with a defined texture, and a defined
     set of collision rects. It moves following a pattern of (position(x, y):
     time( % maxtime)).
     """
 
-    def __init__(self, rects, texture, patterns, server=False,
-            levelname="biglevel"):
-        Block.__init__(self, patterns[0]['position'], texture, levelname)
-        #logging.debug('moving block created')
+    def __init__(self, rects, patterns, *args, **kwargs):
+        print patterns[0]['position'], args
+        super(MovingPart, self).__init__(patterns[0]['position'], *args,
+                **kwargs)
         self.rects = rects
         self.patterns = patterns
         self.old_position = None
@@ -393,6 +426,9 @@ class Level(object):
         '''
         for block in xml.findall('moving-block'):
             texture = block.attrib['texture']
+            texture_fg = (
+                    block.attrib['texture_fg'] if 'texture_fg' in block.attrib
+                    else None)
             rects = []
 
             for rect in block.findall('rect'):
@@ -410,10 +446,10 @@ class Level(object):
             self.moving_blocs.append(
                     MovingPart(
                         rects,
-                        texture,
                         patterns,
-                        server,
-                        levelname))
+                        texture,
+                        levelname,
+                        texture_fg))
 
     def load_water_blocs(self, xml, server=False):
         ''' #XXX used anywhere?
@@ -429,6 +465,9 @@ class Level(object):
         for block in xml.findall('vector-block'):
             texture = block.attrib['texture']
             position = [int(i) for i in block.attrib['position'].split(' ')]
+            texture_fg = (
+                    block.attrib['texture_fg'] if 'texture_fg' in block.attrib
+                    else None)
             vector = [int(i) for i in block.attrib['vector'].split(' ')]
 
             relative = int(block.attrib['relative']) and True or False
@@ -442,12 +481,12 @@ class Level(object):
                 self.vector_blocs.append(
                         VectorBloc(
                             rects,
-                            position,
                             vector,
                             relative,
+                            position,
                             texture,
-                            server,
-                            levelname))
+                            levelname,
+                            texture_fg))
 
     def load_decorums(self, xml):
         ''' load decorums defined in xml
@@ -471,10 +510,7 @@ class Level(object):
         self.draw_background(surface, level_place, zoom)
         self.draw_level(surface, level_place, zoom, shapes)
 
-        for block in self.moving_blocs:
-            block.draw(surface, level_place, zoom)
-
-        for block in self.vector_blocs:
+        for block in self.moving_blocs + self.vector_blocs:
             block.draw(surface, level_place, zoom)
 
     def draw_after_players(self, surface, level_place, zoom, levelmap=False):
@@ -483,6 +519,9 @@ class Level(object):
         self.draw_foreground(surface, level_place, zoom)
         if levelmap or usf.loaders.get_gconfig().get("game", "minimap") == "y":
             self.draw_minimap(surface)
+
+        for block in self.moving_blocs + self.vector_blocs:
+            block.draw_after(surface, level_place, zoom)
 
     def draw_minimap(self, surface):
         ''' draw minimap in the upper/right corner of the screen, showing blocs
