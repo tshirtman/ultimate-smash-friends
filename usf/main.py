@@ -74,8 +74,7 @@ def author():
     """
     if 'CREDITS' not in os.listdir(os.path.join(CONFIG.sys_data_dir)):
         logging.info(CONFIG.sys_data_dir)
-        logging.info(
-                '\n'.join(os.listdir(os.path.join(CONFIG.sys_data_dir))))
+        logging.info('\n'.join(os.listdir(os.path.join(CONFIG.sys_data_dir))))
         logging.debug(CONFIG.sys_data_dir+'/CREDITS file not found')
 
     else:
