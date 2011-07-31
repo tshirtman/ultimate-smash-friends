@@ -39,10 +39,17 @@ class Button(Label):
     """
 
     def __init__(self, text):
-        background_path = join('gui',
-                               CONFIG.general['THEME'],
-                               'back_button.png')
-        super(Button, self).__init__(text, align="center", background=background_path, background_expand=True)
+        background_path = join(
+                'gui',
+                CONFIG.general['THEME'],
+                'back_button.png')
+
+        super(Button, self).__init__(
+                text,
+                align="center",
+                background=background_path,
+                background_expand=True)
+
         self.properties["size_request"] = (220, 50)
         self.dynamic_size = [False, False]
 
@@ -62,15 +69,17 @@ class Button(Label):
         #self.posx = self.width/2-self.surface_text.get_width()/2
 
     def hover(self):
-        self.background_path = join('gui',
-                           CONFIG.general['THEME'],
-                           'back_button_hover.png')
+        self.background_path = join(
+                'gui',
+                CONFIG.general['THEME'],
+                'back_button_hover.png')
         self.set_text(self.text)
 
     def out(self):
-        self.background_path = join('gui',
-                           CONFIG.general['THEME'],
-                           'back_button.png')
+        self.background_path = join(
+                'gui',
+                CONFIG.general['THEME'],
+                'back_button.png')
         self.set_text(self.text)
 
     def handle_mouse(self, event):
