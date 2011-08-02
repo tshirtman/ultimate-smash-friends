@@ -27,6 +27,8 @@ architecture: blocs, moving blocs, bounching blocs
 import os
 import pygame
 import logging
+from math import pi, sin, cos
+from random import random
 from xml.etree import ElementTree
 
 import usf.loaders
@@ -36,6 +38,89 @@ from usf.debug_utils import draw_rect
 from usf.memoize import memoize
 
 CONFIG = Config()
+
+class Particle(object):
+    def __init__(self, position, speed, direction):
+        self.position = list(position)
+        self.speed = speed
+        self.direction = direction
+        self.age = 0
+
+    def update(self, deltatime, friction):
+        self.age += deltatime
+        self.position[0] += cos(self.direction) * self.speed
+        self.position[1] += sin(self.direction) * self.speed
+        self.speed = max(0, self.speed - friction * deltatime)
+
+    def draw(self, surface, texture, pos, zoom, lifetime):
+        real_coords = (int(self.position[0] * zoom) + pos[0],
+                int(self.position[1] * zoom) + pos[1])
+
+        surface.blit(
+                usf.loaders.image(
+                    'data/'+texture,
+                    zoom=zoom,
+                    alpha=1-int(10*self.age/lifetime)/10.0)[0],
+                    real_coords)
+
+class ParticlesGenerator(object):
+    ''' A simple particle generator implementation for levels, to put in
+    levels.
+    '''
+    def __init__(self, attribs):
+        self.params = {
+                'image': 'misc/hit.png',
+                'position': (0, 0),
+                'position_delta': (0, 0),
+                'speed': 10,
+                'rate': 30,
+                'direction': 0,
+                'direction_delta': 2 * pi,
+                'lifetime': 2,
+                'friction': 0.01,
+                }
+
+        if 'position' in attribs:
+            attribs['position'] = [int(x) for x in
+                    attribs['position'].split(',')]
+
+        if 'direction_delta' in attribs:
+            attribs['direction_delta'] = (
+                    pi * float(attribs['direction_delta']))
+
+        self.params.update(attribs)
+        self.time_accumulator = 0
+        self.particles = set()
+        self.frac = 1.0/self.params['rate']
+
+
+    def update(self, deltatime):
+        self.time_accumulator += deltatime
+        to_remove = set()
+        for p in self.particles:
+            p.update(deltatime, self.params['friction'])
+            if p.age > self.params['lifetime']:
+                to_remove.add(p)
+
+        self.particles.difference_update(to_remove)
+
+        while self.time_accumulator > self.frac:
+            self.time_accumulator -= self.frac
+            self.particles.add(Particle(
+                self.params['position'],
+                self.params['speed'],
+                self.params['direction'] +
+                self.params['direction_delta'] * random() -
+                .5 * self.params['direction_delta']))
+
+    def draw(self, surface, pos, zoom):
+        for p in self.particles:
+            p.draw(
+                    surface,
+                    self.params['image'],
+                    pos,
+                    zoom,
+                    self.params['lifetime'])
 
 
 class Decorum(object):
@@ -216,7 +301,6 @@ class MovingPart(Block):
     """
 
     def __init__(self, rects, patterns, *args, **kwargs):
-        print patterns[0]['position'], args
         super(MovingPart, self).__init__(patterns[0]['position'], *args,
                 **kwargs)
         self.rects = rects
@@ -337,6 +421,7 @@ class Level(object):
         self.moving_blocs = []
         self.border = []
         self.rect = []
+        self.particles_generators = []
 
         self.load_images(attribs, levelname)
         self.load_borders(attribs)
@@ -344,9 +429,15 @@ class Level(object):
         self.load_layers(xml)
         self.load_blocs(xml)
         self.load_moving_blocs(xml, server, levelname)
+        self.load_particle_generators(xml)
         self.load_water_blocs(xml, server)
         self.load_vector_blocs(xml, server, levelname)
         self.load_decorums(xml)
+
+    def load_particle_generators(self, xml):
+        for generator in xml.findall('particle-generator'):
+            g = ParticlesGenerator(generator.attrib)
+            self.particles_generators.append(g)
 
     def load_images(self, attribs, levelname):
         ''' create image paths from indications in xml, don't actually load
@@ -523,6 +614,9 @@ class Level(object):
         for block in self.moving_blocs + self.vector_blocs:
             block.draw_after(surface, level_place, zoom)
 
+        for generator in self.particles_generators:
+            generator.draw(surface, level_place, zoom)
+
     def draw_minimap(self, surface):
         ''' draw minimap in the upper/right corner of the screen, showing blocs
         '''
@@ -619,7 +713,7 @@ class Level(object):
         for bloc, back in zip(self.moving_blocs, backup):
             bloc.restore(back)
 
-    def update(self, time):
+    def update(self, time, deltatime):
         ''' Update moving blocs and decorums
         '''
         for block in self.moving_blocs:
@@ -627,6 +721,9 @@ class Level(object):
 
         for decorum in self.decorums:
             decorum.update(time)
+
+        for generator in self.particles_generators:
+            generator.update(deltatime)
 
     def collide_rect(self, (x, y), (h, w)=(1, 1)):
         """

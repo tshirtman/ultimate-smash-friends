@@ -641,7 +641,7 @@ class Game(object):
                             'gametime': self.gametime})
 
         self.events.update(deltatime, self.gametime)
-        self.level.update(self.gametime)
+        self.level.update(self.gametime, deltatime)
         self.update_players(deltatime)
         self.update_physics()
         self.update_items(deltatime)
