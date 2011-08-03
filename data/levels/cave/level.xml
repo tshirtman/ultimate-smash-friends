@@ -28,6 +28,7 @@
     <particle-generator
         position="100, 1000"
         direction="1.5"
+        lifetime="4"
         rate="50"
         direction_delta=".333"
         friction="0.5"
