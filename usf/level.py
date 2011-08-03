@@ -63,6 +63,7 @@ class Particle(object):
                     alpha=1-int(10*self.age/lifetime)/10.0)[0],
                     real_coords)
 
+
 class ParticlesGenerator(object):
     ''' A simple particle generator implementation for levels, to put in
     levels.
@@ -84,9 +85,29 @@ class ParticlesGenerator(object):
             attribs['position'] = [int(x) for x in
                     attribs['position'].split(',')]
 
+        if 'position_delta' in attribs:
+            attribs['position_delta'] = [int(x) for x in
+                    attribs['position_delta'].split(',')]
+
+        if 'speed' in attribs:
+            attribs['speed'] = float(attribs['speed'])
+
+        if 'rate' in attribs:
+            attribs['rate'] = float(attribs['rate'])
+
         if 'direction_delta' in attribs:
             attribs['direction_delta'] = (
                     pi * float(attribs['direction_delta']))
+
+        if 'direction' in attribs:
+            attribs['direction'] = (
+                    pi * float(attribs['direction']))
+
+        if 'lifetime' in attribs:
+            attribs['lifetime'] = float(attribs['lifetime'])
+
+        if 'friction' in attribs:
+            attribs['friction'] = float(attribs['friction'])
 
         self.params.update(attribs)
         self.time_accumulator = 0
@@ -104,14 +125,15 @@ class ParticlesGenerator(object):
 
         self.particles.difference_update(to_remove)
 
+        p = self.params
         while self.time_accumulator > self.frac:
             self.time_accumulator -= self.frac
             self.particles.add(Particle(
-                self.params['position'],
-                self.params['speed'],
-                self.params['direction'] +
-                self.params['direction_delta'] * random() -
-                .5 * self.params['direction_delta']))
+                [
+                    p['position'][0] + p['position_delta'][0] * (random() - .5),
+                    p['position'][1] + p['position_delta'][1] * (random() - .5)],
+                p['speed'],
+                p['direction'] + p['direction_delta'] * (random() - .5)))
 
     def draw(self, surface, pos, zoom):
         for p in self.particles:
