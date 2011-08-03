@@ -25,6 +25,14 @@
     <block coords="15 281 90 69"></block>
     <block coords="771 278 0 0"></block>
     <block coords="680 250 120 41"></block>
+    <particle-generator
+        position="100, 1000"
+        direction="1.5"
+        rate="50"
+        direction_delta=".333"
+        friction="0.5"
+        position_delta="3000, 100"/>
+
 
 
 </map>
