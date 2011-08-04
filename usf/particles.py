@@ -1,5 +1,5 @@
 ################################################################################
-# copyright 2008 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
+# copyright 2008-2011 Gabriel Pettier <gabriel.pettier@gmail.com>              #
 #                                                                              #
 # This file is part of UltimateSmashFriends                                    #
 #                                                                              #
@@ -28,6 +28,13 @@ from random import random
 from usf.loaders import image
 
 class Particle(object):
+    '''
+    A particle object is used as a part of a flow of particles to render
+    effects as watter, smoke, fire or other dynamic elements.
+    This Particle object is not very useful in itself, as it only store
+    position, speed, direction and age of the particle, most of the management
+    being done by the ParticlesGenerator parent object.
+    '''
     def __init__(self, position, speed, direction):
         self.position = list(position)
         self.speed = speed
@@ -53,9 +60,29 @@ class Particle(object):
 
 
 class ParticlesGenerator(object):
-    ''' A simple particle generator implementation for levels, to put in
-    levels.
+    ''' A simple particle generator implementation for levels, Particle
+    generators are used to represent dynamic things like water, fire, rain,
+    smoke, and so on.
+
+    To use a ParticlesGenerator you should override the parametters in
+    self.params with your own (in attribs), note that attribs is managed to
+    extract information from xml files into it, so all data are represented in
+    strings.
+
+    position: the initial (center) position of the particles (in pixels)
+    position_delta: allows to add a range of possible values arount the center
+    speed: initial speed of particles (in pixels/seconds)
+    rate: rate of production of particles (in particles/seconds)
+    direction: the main direction of particle emission, the value is in
+    radian/pi (so 1 mean 1pi, which is 180 degrees, or half a circle, 0 mean
+    left to right.)
+    direction_delta: as for position_delta, allow to provide a range of
+    randomness, same unit as direction
+    lifetime: the lifetime of particles, note that the alpha of particles will
+    decrease linearly to completly diseapear at end of life.
+    friction: speed will decrease of this value each second, up to 0.
     '''
+
     def __init__(self, attribs):
         self.params = {
                 'image': 'misc/hit.png',
@@ -104,6 +131,10 @@ class ParticlesGenerator(object):
 
 
     def update(self, deltatime):
+        ''' update particles, delete too old ones, create new ones if
+        time_accumulator allows it
+        '''
+
         self.time_accumulator += deltatime
         to_remove = set()
         for p in self.particles:
@@ -124,6 +155,9 @@ class ParticlesGenerator(object):
                 p['direction'] + p['direction_delta'] * (random() - .5)))
 
     def draw(self, surface, pos, zoom):
+        """ draw existing particles on surface, needs position and zoom of the
+        camera.
+        """
         for p in self.particles:
             p.draw(
                     surface,
