@@ -70,7 +70,7 @@ class ParticlesGenerator(object):
     strings.
 
     position: the initial (center) position of the particles (in pixels)
-    position_delta: allows to add a range of possible values arount the center
+    position_delta: allows to add a range of possible values around the center
     speed: initial speed of particles (in pixels/seconds)
     rate: rate of production of particles (in particles/seconds)
     direction: the main direction of particle emission, the value is in
