@@ -1,5 +1,5 @@
 ################################################################################
-# copyright 2008 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
+# copyright 2008-2011 Gabriel Pettier <gabriel.pettier@gmail.com>              #
 #                                                                              #
 # This file is part of UltimateSmashFriends                                    #
 #                                                                              #
@@ -46,20 +46,19 @@ class Actor(object):
     (TOP_RIGHT, UPPER_RIGHT, LOWER_RIGHT, BOTTOM_RIGHT, BOTTOM_LEFT, LOWER_LEFT,
      UPPER_LEFT, TOP_LEFT) = range(8)
 
-    def __init__(self, game, place=(550, 1), vector=list((0, 0)), reverse=False,
-            present=False, physic=True, gravity=True, physics=True, **kwargs):
+    def __init__(self, game, **kwargs):
 
         # the 'center' of the entity is at the bottom middle.
         # so this is the point that move the least beetwen two frames.
         self._game = game
-        self._gravity = gravity
+        self._gravity = kwargs.get('gravity', True)
         self._on_ground = False
-        self._physic = physic
-        self._physics = physics
-        self._place = place
-        self._present = present
-        self._reversed = reverse
-        self._vector = [vector[0], vector[1]]
+        self._physic = kwargs.get('physic', True)
+        self._physics = kwargs.get('physics', True)
+        self._place = kwargs.get('place', (550, 1))
+        self._present = kwargs.get('present', False)
+        self._reversed = kwargs.get('reverse', False)
+        self._vector = list(kwargs.get('vector', (0, 0)))
         self._walking_vector = [0.0, 0.0]
         self.foot_rect = None
         self.in_water = False
@@ -286,7 +285,6 @@ class Entity(Actor):
     counter = 0
 
     def __init__(self, **kwargs):
-
         super(Entity, self).__init__(**kwargs)
 
         number = kwargs.get('num')
