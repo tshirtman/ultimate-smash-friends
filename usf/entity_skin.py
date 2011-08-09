@@ -283,8 +283,8 @@ class EntitySkin (object):
             try:
                 game.events.add_event(
                         event[0],
-                         period=(p1, p2),
-                         params=params)
+                        period=(p1, p2),
+                        params=params)
 
             except AttributeError:
                 logging.debug((self.name, game), 3)
