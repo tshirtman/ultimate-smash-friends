@@ -1,6 +1,6 @@
 # set encoding: utf-8
 ################################################################################
-# copyright 2008 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
+# copyright 2008-2011 Gabriel Pettier <gabriel.pettier@gmail.com>              #
 #                                                                              #
 # This file is part of UltimateSmashFriends                                    #
 #                                                                              #
@@ -125,6 +125,9 @@ class Game(object):
                 'ItemShower',
                 (None, None),
                 {'freq': 15, 'world': self})
+
+        for e in self.level.get_events():
+            self.events.add_event(e[0], e[1], {'world':self})
 
     def load_player(self, i, player):
         logging.debug('player '+str(i)+' loaded')

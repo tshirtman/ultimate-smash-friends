@@ -1,5 +1,5 @@
 ################################################################################
-# copyright 2008 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
+# copyright 2008-2011 Gabriel Pettier <gabriel.pettier@gmail.com>              #
 #                                                                              #
 # This file is part of UltimateSmashFriends                                    #
 #                                                                              #
@@ -25,6 +25,7 @@ architecture: blocs, moving blocs, bounching blocs
 '''
 
 import os
+import sys
 import pygame
 import logging
 from xml.etree import ElementTree
@@ -324,6 +325,7 @@ class Level(object):
         xml = get_xml(levelname)
         attribs = xml.getroot().attrib
         self.name = attribs['name']
+        self.levelname = levelname
 
         self.background = ''
         self.level = ''
@@ -338,6 +340,7 @@ class Level(object):
         self.border = []
         self.rect = []
         self.particles_generators = []
+        self.events = []
 
         self.load_images(attribs, levelname)
         self.load_borders(attribs)
@@ -349,6 +352,21 @@ class Level(object):
         self.load_water_blocs(xml, server)
         self.load_vector_blocs(xml, server, levelname)
         self.load_decorums(xml)
+        self.load_events(levelname, xml)
+
+    def load_events(self, name, xml):
+        for event in xml.findall('event'):
+            self.events.append((event.attrib['action'], (None, None)))
+
+    def get_events(self):
+        sys.path.append(os.path.join(
+            CONFIG.sys_data_dir,
+            'levels',
+            self.levelname))
+        import level_events
+        sys.path.pop()
+        for e in self.events:
+            yield e[0], e[1]
 
     def load_particle_generators(self, xml):
         for generator in xml.findall('particle-generator'):

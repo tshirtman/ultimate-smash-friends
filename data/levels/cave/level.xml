@@ -33,5 +33,6 @@
         direction_delta=".333"
         friction="0.5"
         position_delta="3000, 100"/>
+    <event action="CaveTestEvent"/>
 
 </map>
