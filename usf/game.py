@@ -117,17 +117,14 @@ class Game(object):
 
     def add_world_event(self):
         '''
-        #XXX this currently add an itemshower to the game, should probably switch to
-        starting level configured events.
+        Insert level events into the game, those are configured in level.xml of
+        each levels, level-specific events can be defined in level_events.py in
+        the level directory.
         '''
 
-        self.events.add_event(
-                'ItemShower',
-                (None, None),
-                {'freq': 15, 'world': self})
-
         for e in self.level.get_events():
-            self.events.add_event(e[0], e[1], {'world':self})
+            e[2].update({'world': self})
+            self.events.add_event(e[0], e[1], e[2])
 
     def load_player(self, i, player):
         logging.debug('player '+str(i)+' loaded')

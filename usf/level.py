@@ -356,7 +356,17 @@ class Level(object):
 
     def load_events(self, name, xml):
         for event in xml.findall('event'):
-            self.events.append((event.attrib['action'], (None, None)))
+            self.events.append(( event.attrib['action'], (None, None), {}))
+
+            for p in event.attrib:
+                try:
+                    self.events[-1][2][p] = int(event.attrib[p])
+                except ValueError:
+                    try:
+                        self.events[-1][2][p] = [int(x) for x in
+                                event.attrib[p].split(',')]
+                    except ValueError:
+                        self.events[-1][2][p] = event.attrib[p]
 
     def get_events(self):
         sys.path.append(os.path.join(
@@ -366,7 +376,7 @@ class Level(object):
         import level_events
         sys.path.pop()
         for e in self.events:
-            yield e[0], e[1]
+            yield e[0], e[1], e[2]
 
     def load_particle_generators(self, xml):
         for generator in xml.findall('particle-generator'):

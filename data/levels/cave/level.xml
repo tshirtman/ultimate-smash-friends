@@ -34,5 +34,7 @@
         friction="0.5"
         position_delta="3000, 100"/>
     <event action="CaveTestEvent"/>
+    <event action="ItemShower"
+        freq="15"/>
 
 </map>
