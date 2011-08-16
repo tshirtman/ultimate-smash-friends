@@ -66,7 +66,8 @@ sys.path.append(usf_root)
 
 from usf.entity_skin import EntitySkin
 from usf.loaders import image, get_config
-CONFIG = loaders.get_config()
+
+CONFIG = get_config()
 
 
 class Placeholder(object):
