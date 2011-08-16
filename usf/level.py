@@ -373,7 +373,11 @@ class Level(object):
             CONFIG.sys_data_dir,
             'levels',
             self.levelname))
-        import level_events
+        try:
+            import level_events
+        except ImportError:
+            raise StopIteration()
+
         sys.path.pop()
         for e in self.events:
             yield e[0], e[1], e[2]
