@@ -367,7 +367,7 @@ class Main(object):
         #try:
         while (True):
             # update the fps counter
-            self.clock.tick()
+            self.clock.tick(30)
 
             # poll controls and update informations on current state of the UI
             state_was = self.state
