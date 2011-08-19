@@ -323,12 +323,12 @@ class Main(object):
             if p.ai and p.present:
                 self.ai_instance.update(self.game, i)
 
-    def manage_game(self, was_paused):
+    def manage_game(self, dt):
         """ call the various submethod to update the whole game and render it
         to the screen
         """
-        d = self.game.update_clock(was_paused or self.game.first_frame)
-        self.state = self.game.update(d)
+        #d = self.game.update_clock(was_paused or self.game.first_frame)
+        self.state = self.game.update(dt)
         self.manage_ai()
 
         if self.state in ('game', 'victory'):
@@ -364,26 +364,33 @@ class Main(object):
         """
 
         pygame.mouse.set_visible(False)
-        #try:
+        self.clock.tick()
         while (True):
-            # update the fps counter
-            self.clock.tick(30)
-
             # poll controls and update informations on current state of the UI
             state_was = self.state
+
+            dt = self.clock.tick(self.game.max_fps)/1000.0
+
             if self.state != "menu":
-                self.state = self.controls.poll(
-                        self.game, self.menu)
+                self.state = self.controls.poll( self.game, self.menu)
+
+            # this depends on the previous assertion, it's NOT an elif
             if self.state == "menu":
                 self.manage_menu()
+
             else:
-                self.manage_game(state_was == "menu")
+                # update the fps counter
+                if state_was == "menu":
+                    dt = 0
+
+                self.manage_game(dt)
 
             self.display_fps()
             pygame.display.update()
 
             if CONFIG.audio['MUSIC']:
                 self.music.update(self.music_state)
+
             # verify there is not a QUIT event waiting for us, in case of we
             # have to quit.
             self.ended = pygame.event.get(QUIT)

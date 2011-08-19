@@ -602,8 +602,6 @@ class Game(object):
             # calculate elapsed time if we are not in simulation
             # frame limiter
             deltatime = time.time() - self.last_clock
-            while deltatime < 1.0 / self.max_fps:
-                deltatime = time.time() - self.last_clock
 
             if deltatime >= 0.3:
                 deltatime = 0
@@ -621,6 +619,8 @@ class Game(object):
         the next frame before adding players, resolve bug 76585 on slower
         machines.
         """
+        self.gametime += deltatime
+
         if self.first_frame:
             self.first_frame = False
             self.second_frame = True

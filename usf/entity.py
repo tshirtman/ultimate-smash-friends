@@ -816,7 +816,7 @@ class Entity(Actor):
         This test collision of the entity with the map (game.level.map).
 
         Method:
-        Generation of a contact test circle (only 8 points actualy).
+        Generation of a contact test "circle" (only 8 points actualy).
         Then we test points of this circle and modify entity vector based on
         points that gets collided, moving the entity in the right direction to
         get out of each collision.
@@ -931,7 +931,7 @@ class Entity(Actor):
         if self._reversed:
             x = -x
 
-        self.set_place((self._place[0]+ x, self._place[1] + y))
+        self.set_place((self._place[0] + x, self._place[1] + y))
 
         self._update_rect()
 

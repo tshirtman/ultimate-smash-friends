@@ -261,7 +261,7 @@ class MovingPart(Block):
         # get the proportion of travel between last and next we should have
         # done.
         percent_bettween = (
-                level_time*10000 % self.patterns[-1]['time'] - last['time']) /(
+                level_time * 10000 % self.patterns[-1]['time'] - last['time']) /(
                         next_place['time'] - last['time'])
 
         self.position[0] = (
