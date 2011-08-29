@@ -112,9 +112,6 @@ class Game(object):
         # a countdown to the game end
         self.ending = 5.0
 
-        self.max_fps = CONFIG.general['MAX_FPS']
-        self.last_clock = 0
-
     def add_world_event(self):
         '''
         Insert level events into the game, those are configured in level.xml of
@@ -566,7 +563,7 @@ class Game(object):
 
     def backup(self):
         """
-        save last_clock, events, items, levels, players of the game in their
+        save events, items, levels, players of the game in their
         current state
         """
         return {
@@ -590,25 +587,6 @@ class Game(object):
         self.restore_items(backup['items'])
         self.restore_players(backup['players'])
         self.restore_skins(backup['skins'])
-
-    def update_clock(self, was_paused):
-        """ update the clock of the game, and return the time passed since last
-        update, is was_paused is set to True, then deltatime returned is 0 and
-        no calculations are done, time is simply update.
-        """
-        if was_paused:
-            deltatime = 0
-        else:
-            # calculate elapsed time if we are not in simulation
-            # frame limiter
-            deltatime = time.time() - self.last_clock
-
-            if deltatime >= 0.3:
-                deltatime = 0
-            self.gametime += deltatime
-
-        self.last_clock = time.time()
-        return deltatime
 
     def update(self, deltatime):
         """

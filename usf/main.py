@@ -365,11 +365,15 @@ class Main(object):
 
         pygame.mouse.set_visible(False)
         self.clock.tick()
+
         while (True):
             # poll controls and update informations on current state of the UI
             state_was = self.state
 
-            dt = self.clock.tick(self.game.max_fps)/1000.0
+            if self.game:
+                dt = self.clock.tick(CONFIG.general['MAX_FPS']) / 1000.0
+            else:
+                dt = self.clock.tick(CONFIG.general['MAX_GUI_FPS']) / 1000.0
 
             if self.state != "menu":
                 self.state = self.controls.poll( self.game, self.menu)
