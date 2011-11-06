@@ -28,13 +28,11 @@ import logging
 from xml.etree import ElementTree
 
 from usf.animations import Frame, PreciseTimedAnimation
-import usf.loaders as loaders
+from usf import loaders
 
-from usf.config import Config
-
-CONFIG = Config()
-SIZE = (CONFIG.general['WIDTH'],
-        CONFIG.general['HEIGHT'])
+CONFIG = loaders.get_config() 
+SIZE = (CONFIG.general.WIDTH,
+        CONFIG.general.HEIGHT)
 
 
 class EntitySkin (object):
@@ -63,7 +61,7 @@ class EntitySkin (object):
 
         else:
             f = os.path.join(
-                        CONFIG.sys_data_dir,
+                        CONFIG.system_path,
                         dir_name,
                         dir_name.split(os.sep)[-1]
                         +os.extsep+'xml')
@@ -80,7 +78,7 @@ class EntitySkin (object):
         self.name = attribs['name']
 
         self.image = os.path.join(
-                    CONFIG.sys_data_dir,
+                    CONFIG.system_path,
                     dir_name,
                     attribs['image'])
 
@@ -149,7 +147,7 @@ class EntitySkin (object):
             for sound in movement.findall('sound'):
                 sounds.append(
                         os.path.join(
-                            CONFIG.sys_data_dir,
+                            CONFIG.system_path,
                             dir_name,
                             sound.attrib['filename']))
 
@@ -157,14 +155,14 @@ class EntitySkin (object):
 
             for frame in movement.findall('frame'):
                 image = os.path.join(
-                            CONFIG.sys_data_dir,
+                            CONFIG.system_path,
                             dir_name,
                             frame.attrib['image'])
 
                 trails = (
                         'trails' in frame.attrib and
                         [os.path.join(
-                            CONFIG.sys_data_dir,
+                            CONFIG.system_path,
                             dir_name, x) for x in
                             frame.attrib['trails'].split(',')] or False)
 

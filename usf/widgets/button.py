@@ -41,7 +41,7 @@ class Button(Label):
     def __init__(self, text):
         background_path = join(
                 'gui',
-                CONFIG.general['THEME'],
+                CONFIG.general.THEME,
                 'back_button.png')
 
         super(Button, self).__init__(
@@ -71,14 +71,14 @@ class Button(Label):
     def hover(self):
         self.background_path = join(
                 'gui',
-                CONFIG.general['THEME'],
+                CONFIG.general.THEME,
                 'back_button_hover.png')
         self.set_text(self.text)
 
     def out(self):
         self.background_path = join(
                 'gui',
-                CONFIG.general['THEME'],
+                CONFIG.general.THEME,
                 'back_button.png')
         self.set_text(self.text)
 

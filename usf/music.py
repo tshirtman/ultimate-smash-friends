@@ -27,11 +27,11 @@ import os
 import time
 import random
 
-from usf.config import Config
-import usf.loaders as loaders
+
+from usf import loaders
 
 mixer.init()
-CONFIG = Config()
+CONFIG = loaders.get_config()
 
 
 class Music (object):
@@ -47,27 +47,27 @@ class Music (object):
         """
         self.previous_state = None
         self.playlists = {}
-        self.music_volume = CONFIG.audio['MUSIC_VOLUME']
+        self.music_volume = CONFIG.audio.MUSIC_VOLUME
 
         preload = ['credits.ogg']
         for plist in ['menu', 'game', 'credits', 'victory']:
             self.playlists[plist] = [
                     os.path.join(
-                        CONFIG.sys_data_dir,
+                        CONFIG.system_path,
                         'music',
                         'ogg', f)
                     for f in os.listdir(os.path.join(
-                        CONFIG.sys_data_dir,
+                        CONFIG.system_path,
                         'music',
                         'ogg'))
                     if plist in f]
 
             for f in os.listdir(os.path.join(
-                CONFIG.sys_data_dir, 'music', 'ogg')):
+                CONFIG.system_path, 'music', 'ogg')):
 
                 if f in preload:
                     loaders.track(os.path.join(
-                        CONFIG.sys_data_dir, 'music', 'ogg', f))
+                        CONFIG.system_path, 'music', 'ogg', f))
 
         self.current_track = None
         self.time_begin = 0
@@ -80,9 +80,9 @@ class Music (object):
         """
 
         if self.current_track is not None:
-            if CONFIG.audio['MUSIC_VOLUME'] != self.music_volume:
+            if CONFIG.audio.MUSIC_VOLUME != self.music_volume:
                 self.current_track.set_volume(
-                        CONFIG.audio['MUSIC_VOLUME'] / 100.0)
+                        CONFIG.audio.MUSIC_VOLUME / 100.0)
 
         if (state != self.previous_state or
            (self.current_track and time.time() - self.time_begin
@@ -90,7 +90,7 @@ class Music (object):
            or self.current_track is None):
             self.change_music(self.playlists[state])
 
-        self.music_volume = CONFIG.audio['MUSIC_VOLUME']
+        self.music_volume = CONFIG.audio.MUSIC_VOLUME
         self.previous_state = state
 
     def change_music(self, music, fading=True):
@@ -106,7 +106,7 @@ class Music (object):
             self.current_track = loaders.track(random.choice(music))
             if self.current_track:
                 self.current_track.set_volume(
-                        CONFIG.audio['MUSIC_VOLUME'] / 100.0)
+                        CONFIG.audio.MUSIC_VOLUME / 100.0)
                 self.current_track.play(fade_ms=3000)
         else:
             self.current_track = music

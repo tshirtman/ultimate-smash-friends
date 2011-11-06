@@ -85,7 +85,7 @@ class Gui(object):
         self.focus = None
         self.state = "menu"
         self.cursor = loaders.image(
-                CONFIG.sys_data_dir + os.sep + 'cursor.png')[0]
+                CONFIG.system_path + os.sep + 'cursor.png')[0]
         self.update_youhere()
 
     def update(self):
@@ -216,10 +216,10 @@ class Gui(object):
         if type(reply) == str:
             if reply.split(':')[0] == 'goto':
                 sound = loaders.track(
-                        os.path.join(CONFIG.sys_data_dir, "sounds",
+                        os.path.join(CONFIG.system_path, "sounds",
                             "mouseClick2.wav"))
 
-                sound.set_volume(CONFIG.audio['SOUND_VOLUME']/100.0)
+                sound.set_volume(CONFIG.audio.SOUND_VOLUME/100.0)
                 sound.play()
                 if reply.split(':')[1] == 'back':
                     self.screen_back()
@@ -278,7 +278,7 @@ class Gui(object):
         text = get_text_transparent(old_screen.name)
 
         for i in range(0, 10):
-            time.sleep(1.00/float(CONFIG.general['MAX_FPS']))
+            time.sleep(1.00/float(CONFIG.general.MAX_FPS))
             self.skin.get_background()
             text.set_alpha((i * -1 + 10) * 250 / 10)
             self.screen.blit(text,
@@ -291,7 +291,7 @@ class Gui(object):
         text = get_text_transparent(new_screen.name)
 
         for i in range(0, 10):
-            time.sleep(1.00/float(CONFIG.general['MAX_FPS']))
+            time.sleep(1.00/float(CONFIG.general.MAX_FPS))
             self.skin.get_background()
             text.set_alpha(i*250/10)
             self.screen.blit(text,
@@ -308,7 +308,7 @@ class Gui(object):
 
         for i in range(0, 5):
             back = self.skin.get_background().convert()
-            time.sleep(1.00/float(CONFIG.general['MAX_FPS']))
+            time.sleep(1.00/float(CONFIG.general.MAX_FPS))
             self.screen.blit(self.skin.get_background(), (0, 0))
             text.set_alpha((i* -1 + 5) * 250 / 5)
             self.screen.blit(text, (old_screen.indent_title, 10))
@@ -325,7 +325,7 @@ class Gui(object):
 
         for i in range(0, 5):
             back = self.skin.get_background().convert()
-            time.sleep(1.00/float(CONFIG.general['MAX_FPS']))
+            time.sleep(1.00/float(CONFIG.general.MAX_FPS))
             self.screen.blit(self.skin.get_background(), (0, 0))
             text.set_alpha(i*250/5)
             self.screen.blit(text,
