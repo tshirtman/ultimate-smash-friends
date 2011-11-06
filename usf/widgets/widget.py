@@ -121,7 +121,7 @@ def optimize_size(size):
 
 def get_scale(surface):
     return (
-            surface.get_width() * 800 / CONFIG.general['WIDTH'],
-            surface.get_height()*480/CONFIG.general['HEIGHT'])
+            surface.get_width() * 800 / CONFIG.general.WIDTH,
+            surface.get_height()*480/CONFIG.general.HEIGHT)
 
 

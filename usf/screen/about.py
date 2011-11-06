@@ -39,8 +39,8 @@ class About(Screen):
 
         self.widget.add(Paragraph('CREDITS'),
                 size=(
-                    490*loaders.get_config().general["WIDTH"]/800,
-                    300*loaders.get_config().general["HEIGHT"]/600))
+                    490*loaders.get_config().general.WIDTH/800,
+                    300*loaders.get_config().general.HEIGHT/600))
 
         self.widget.add(Button(_('Back')),
                         margin=55)

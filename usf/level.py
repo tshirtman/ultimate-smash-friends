@@ -30,14 +30,14 @@ import pygame
 import logging
 from xml.etree import ElementTree
 
-import usf.loaders
+from usf import loaders
 from usf import skin
-from usf.config import Config
+
 from usf.debug_utils import draw_rect
 from usf.memoize import memoize
 from usf.particles import ParticlesGenerator
 
-CONFIG = Config()
+CONFIG = loaders.get_config()
 
 
 class Decorum(object):
@@ -82,7 +82,7 @@ class Decorum(object):
                 int(self.coords[1] * zoom) + coords[1])
 
         surface.blit(
-                usf.loaders.image('data/'+self.texture, zoom=zoom)[0],
+                loaders.image('data/'+self.texture, zoom=zoom)[0],
                 real_coords)
 
     def __cmp__(self, other):
@@ -104,16 +104,16 @@ class Block (object):
         self.position = position
         try:
             self.texture = os.path.join(
-                    CONFIG.sys_data_dir,
+                    CONFIG.system_path,
                     "levels",
                     levelname,
                     texture)
-            usf.loaders.image(self.texture)
+            loaders.image(self.texture)
         except pygame.error:
             logging.debug("No texture found here: " + self.texture)
             try:
                 self.texture = os.path.join(
-                        CONFIG.sys_data_dir,
+                        CONFIG.system_path,
                         "levels",
                         "common",
                         texture)
@@ -124,16 +124,16 @@ class Block (object):
         if texture_fg:
             try:
                 self.texture_fg = os.path.join(
-                        CONFIG.sys_data_dir,
+                        CONFIG.system_path,
                         "levels",
                         levelname,
                         texture_fg)
-                usf.loaders.image(self.texture_fg)
+                loaders.image(self.texture_fg)
             except pygame.error:
                 logging.debug("No texture found here: " + self.texture_fg)
                 try:
                     self.texture = os.path.join(
-                            CONFIG.sys_data_dir,
+                            CONFIG.system_path,
                             "levels",
                             "common",
                             texture_fg)
@@ -154,7 +154,7 @@ class Block (object):
         real_coords = (int(self.position[0] * zoom) + coords[0],
                 int(self.position[1] * zoom) + coords[1])
 
-        surface.blit(usf.loaders.image(self.texture, zoom=zoom)[0], real_coords)
+        surface.blit(loaders.image(self.texture, zoom=zoom)[0], real_coords)
 
     def draw_after(self, surface, coords=(0, 0), zoom=1):
         """
@@ -166,7 +166,7 @@ class Block (object):
             real_coords = (int(self.position[0] * zoom) + coords[0],
                     int(self.position[1] * zoom) + coords[1])
 
-            surface.blit(usf.loaders.image(self.texture_fg, zoom=zoom)[0], real_coords)
+            surface.blit(loaders.image(self.texture_fg, zoom=zoom)[0], real_coords)
 
     def collide_rect(self, rect):
         """
@@ -301,7 +301,7 @@ def get_xml(levelname):
     return ElementTree.ElementTree(
             None,
             os.path.join(
-                CONFIG.sys_data_dir,
+                CONFIG.system_path,
                 'levels',
                 levelname,
                 'level.xml'))
@@ -319,8 +319,8 @@ class Level(object):
         This constructor is currently using two initialisation method, the old,
         based on a map file, and the new based on an xml file.
         """
-        self.size = (CONFIG.general['WIDTH'],
-            CONFIG.general['HEIGHT'])
+        self.size = (CONFIG.general.WIDTH,
+            CONFIG.general.HEIGHT)
 
         xml = get_xml(levelname)
         attribs = xml.getroot().attrib
@@ -370,7 +370,7 @@ class Level(object):
 
     def get_events(self):
         sys.path.append(os.path.join(
-            CONFIG.sys_data_dir,
+            CONFIG.system_path,
             'levels',
             self.levelname))
         try:
@@ -392,20 +392,20 @@ class Level(object):
         images, as they will be loaded as needed by loaders.image
         '''
         self.background = os.path.join(
-                    CONFIG.sys_data_dir,
+                    CONFIG.system_path,
                     'levels',
                     levelname,
                     attribs['background'])
 
         self.level = os.path.join(
-                    CONFIG.sys_data_dir,
+                    CONFIG.system_path,
                     'levels',
                     levelname,
                     attribs['middle'])
 
         if 'foreground' in attribs:
             self.foreground = os.path.join(
-                        CONFIG.sys_data_dir,
+                        CONFIG.system_path,
                         'levels',
                         levelname,
                         attribs['foreground'])
@@ -417,7 +417,7 @@ class Level(object):
         borders
         '''
         #FIXME: should not depend on the initialisation of pygame
-        self.rect = usf.loaders.image(self.level)[1]
+        self.rect = loaders.image(self.level)[1]
 
         if 'margins' in attribs:
             margins = [int(i) for i in attribs['margins'].split(',')]
@@ -556,7 +556,7 @@ class Level(object):
         ''' draw everything that need to be drawn after players
         '''
         self.draw_foreground(surface, level_place, zoom)
-        if levelmap or usf.loaders.get_gconfig().get("game", "minimap") == "y":
+        if levelmap or loaders.get_gconfig().get("game", "minimap") == "y":
             self.draw_minimap(surface)
 
         for block in self.moving_blocs + self.vector_blocs:
@@ -621,8 +621,8 @@ class Level(object):
     def draw_background(self, surface, coords=(0, 0), zoom=1):
         ''' Draw the background image of the level on the surface
         '''
-        surface.blit(usf.loaders.image(
-            self.background, scale=self.size)[0], (0, 0))
+        surface.blit(loaders.image(self.background, 
+                     scale=self.size)[0], (0, 0))
 
         for layer in self.layers:
             surface.blit(layer.get_image(), layer.get_pos())
@@ -634,7 +634,7 @@ class Level(object):
     def draw_level(self, surface, coords, zoom, shapes=False):
         ''' draw the center part of the level
         '''
-        surface.blit(usf.loaders.image(self.level, zoom=zoom)[0], coords)
+        surface.blit(loaders.image(self.level, zoom=zoom)[0], coords)
         if shapes:
             self.draw_debug_map(surface, coords, zoom)
 
@@ -643,7 +643,7 @@ class Level(object):
         '''
         if self.foreground:
             surface.blit(
-                    usf.loaders.image(self.foreground, zoom=zoom)[0], coords)
+                    loaders.image(self.foreground, zoom=zoom)[0], coords)
 
         for d in self.decorums:
             if d.depth >= 0:

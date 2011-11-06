@@ -30,13 +30,11 @@ import os
 
 # my modules imports.
 from usf.entity_skin import EntitySkin
-import usf.loaders as loaders
+from usf import loaders
 
 from usf.font import fonts
 
-from usf.config import Config
-
-CONFIG = Config()
+CONFIG = loaders.get_config()
 
 from usf.debug_utils import draw_rect
 
@@ -227,7 +225,7 @@ class Actor(object):
         for block in blocks:
             if self.foot_rect.colliderect(block) == 1:
                 if not self.in_water:
-                    loaders.track(os.path.join(CONFIG.sys_data_dir,
+                    loaders.track(os.path.join(CONFIG.system_path,
                         "sounds",
                         "splash1.wav")).play()
 
@@ -512,7 +510,7 @@ class Entity(Actor):
         if self.shield['on']:
             self.shield['power'] -= (math.sqrt(
                 point[1][0]**2 + point[1][1]**2)
-                / CONFIG.general['SHIELD_SOLIDITY'])
+                / CONFIG.general.SHIELD_SOLIDITY)
 
             self.shield['power'] = max(0, self.shield['power'])
             self._percents += (math.sqrt(point[1][0] ** 2 + point[1][1]**2)
@@ -668,7 +666,7 @@ class Entity(Actor):
             if self.shield['on']:
                 image = loaders.image(
                         os.path.sep.join(
-                            (CONFIG.sys_data_dir, 'misc', 'shield.png')),
+                            (CONFIG.system_path, 'misc', 'shield.png')),
                         zoom=zoom*self.shield['power']*3)
 
                 shield_coords = (
@@ -832,7 +830,7 @@ class Entity(Actor):
 
             if self.collide_top(game):
                 self._vector[1] = -math.fabs(
-                    self.vector[1] * CONFIG.general['BOUNCE'])
+                    self.vector[1] * CONFIG.general.BOUNCE)
 
                 self._vector[0] /= 2
                 while self.collide_top(game):
@@ -841,7 +839,7 @@ class Entity(Actor):
             elif self.collide_bottom(game):
                 if self.vector[1] < 0:
                     self._vector[1] = int(
-                            -self.vector[1] * CONFIG.general['BOUNCE'])
+                            -self.vector[1] * CONFIG.general.BOUNCE)
 
                 self._vector[0] /= 2
                 while self.collide_bottom(game):
@@ -893,14 +891,14 @@ class Entity(Actor):
 
         # Gravity
         if self.gravity and self.physic and not self.on_ground:
-            self._vector[1] += float(CONFIG.general['GRAVITY']) * deltatime
+            self._vector[1] += float(CONFIG.general.GRAVITY) * deltatime
 
         elif not self.physic:
             #FIXME : it is a bit hackish
             self._vector[1] += -0.00001
 
         # Application of air friction.
-        f = CONFIG.general['AIR_FRICTION'] * environnement_friction
+        f = CONFIG.general.AIR_FRICTION * environnement_friction
 
         if self.physic: #FIXME: and not a bullet
             self._vector[0] -= (f * self.vector[0] * deltatime)

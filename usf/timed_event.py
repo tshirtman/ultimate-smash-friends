@@ -26,11 +26,11 @@ import random
 import math
 import logging
 
-from usf.config import Config
+from usf import loaders
 
-CONFIG = Config()
-SIZE = (CONFIG.general['WIDTH'],
-        CONFIG.general['HEIGHT'])
+CONFIG = loaders.get_config()
+SIZE = (CONFIG.general.WIDTH,
+        CONFIG.general.HEIGHT)
 
 
 class TimedEvent (object):

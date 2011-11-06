@@ -28,7 +28,7 @@ except:
 
 sys.path.append(os.path.join('..'))
 
-from usf.config import Config
+
 from usf import level
 from usf import loaders
 
@@ -160,7 +160,7 @@ class Tools(object):
             ]:
             entry.set_value(0)
 
-        self.tex_entry.set_text(os.path.join(config.sys_data_dir,
+        self.tex_entry.set_text(os.path.join(config.paths['system'],
                                 'levels','common','pod.png'))
 
         self.rel_check.set_active(False)
@@ -319,7 +319,7 @@ class PygameHandler(object):
         self.start_pt = INVALID
         self.widget = widget
         self.secondary = False
-        self.texture = os.path.join(config.sys_data_dir,
+        self.texture = os.path.join(config.paths['system'],
             'levels', 'common', 'pod.png'
             )
         self.current_entity = [None, None]
@@ -495,7 +495,7 @@ class USFLevelEditor(object):
         """
         Initializes the GUI and pygame surface.
         """
-        glade_file = os.path.join(config.sys_data_dir, 'glade',
+        glade_file = os.path.join(config.paths['system'], 'glade',
                                   'usf_level_editor.glade')
 
         self.wTree = gtk.glade.XML(glade_file, 'mainWindow')
@@ -591,7 +591,7 @@ class USFLevelEditor(object):
 
         if not opener:
             file_loader.set_do_overwrite_confirmation(True)
-        file_loader.set_current_folder(os.sep.join([config.sys_data_dir,
+        file_loader.set_current_folder(os.sep.join([config.paths['system'],
                 'levels']))
 
         return file_loader
@@ -717,7 +717,7 @@ class USFLevelEditor(object):
 
         # TODO: saving???
 
-        self.pyHandle.xml_file = os.path.join(config.sys_data_dir,
+        self.pyHandle.xml_file = os.path.join(config.paths['system'],
                 '../utils/level_editor/emptyLevel')
         self.pyHandle.level = level.Level(self.pyHandle.xml_file)
         self.resize_viewport()
@@ -738,7 +738,7 @@ class USFLevelEditor(object):
         Saves the current level.
         """
 
-        if self.pyHandle.xml_file == os.path.join(config.sys_data_dir,
+        if self.pyHandle.xml_file == os.path.join(config.paths['system'],
                 '../utils/level_editor/emptyLevel'):
             self.callback_menu_file_save_as(None, None)
         else:
@@ -789,7 +789,7 @@ class USFLevelEditor(object):
 
             if file_loader.run() == gtk.RESPONSE_OK:
                 try:
-                    loaders.image(os.path.join(config.sys_data_dir,
+                    loaders.image(os.path.join(config.paths['system'],
                                   'levels',
                                   file_loader.get_filename().split(os.sep)[-1]))
 
@@ -859,7 +859,7 @@ class USFLevelEditor(object):
 
         if file_loader.run() == gtk.RESPONSE_OK:
             try:
-                loaders.image(os.path.join(config.sys_data_dir, 'levels'
+                loaders.image(os.path.join(config.paths['system'], 'levels'
                               ,
                               file_loader.get_filename().split(os.sep)[-1]))
 

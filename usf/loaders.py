@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 ################################################################################
 # copyright 2008 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
@@ -62,6 +61,7 @@ pygame must be loaded and display_mode set to perform most image operations.
 '''
 
 # standards imports
+import os
 import copy
 import pygame
 import logging
@@ -70,7 +70,7 @@ from ConfigParser import SafeConfigParser
 
 from usf.memoize import memoize
 from usf.config import Config
-CONFIG = Config()
+
 
 try:
     from pygame.locals import BLEND_RGB_MAX
@@ -81,6 +81,34 @@ except ImportError:
     logging.info("old version of pygame no BLEND_RGBA_MAX")
     BLEND_RGBA_MAX = None
 
+@memoize
+def get_config():
+    paths = {}
+    for dirs in [('../usf-data', '.'),
+                 ('./data', '.'),
+                 ('../data', '../'),
+                 ('/usr/share/ultimate-smash-friends/data', 
+                     '/etc/ultimate-smash-friends')]:
+        if os.path.isdir(dirs[0]) and os.path.isdir(dirs[1]):
+            paths['system_path'] = dirs[0]
+            paths['config_path'] = dirs[1]
+            break
+
+    if 'XDG_CONFIG_HOME' in os.environ.keys():
+        paths['user_path'] = os.path.join(os.environ['XDG_CONFIG_HOME'],
+                             'ultimate-smash-friends')
+    else:
+        paths['user_path'] = os.path.join(os.environ['HOME'], '.config',
+                             'ultimate-smash-friends')
+    return Config(**paths)
+
+@memoize
+def get_gconfig():
+    parser = SafeConfigParser()
+    parser.optionxform = str
+    parser.read(os.path.join(get_config().system_path, 'game.cfg'))
+    return parser
+
 
 def _zoom(name, kwargs):
     """ takes care of the zoom argument, and pass the rest to image()
@@ -90,7 +118,7 @@ def _zoom(name, kwargs):
     zoom = kwargs['zoom']
     kwargs['zoom'] = None
     #logging.debug('scaling image '+name+' :'+str(zoom))
-    if CONFIG.general['SMOOTHSCALE']:
+    if get_config().general.SMOOTHSCALE:
         img = pygame.transform.smoothscale(
                 image(name, **kwargs)[0],
                 (
@@ -247,7 +275,7 @@ def _scale(name, kwargs):
 
     scale = kwargs['scale']
     kwargs['scale'] = None
-    if CONFIG.general['SMOOTHSCALE']:
+    if get_config().general.SMOOTHSCALE:
         img = pygame.transform.smoothscale(
             image(name, **kwargs)[0],
             scale)
@@ -394,16 +422,4 @@ def track(name):
         logging.info("Unable to initialize audio.")
         return None
 
-
-@memoize
-def get_config():
-    return Config()
-
-
-@memoize
-def get_gconfig():
-    parser = SafeConfigParser()
-    parser.optionxform = str
-    parser.read(get_config().sys_data_dir + "game.cfg")
-    return parser
 

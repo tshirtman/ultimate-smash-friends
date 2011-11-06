@@ -24,9 +24,11 @@
 
 import os
 import re
-from usf.config import config
+from usf import loaders
 
-PATH = os.sep.join((config['MEDIA_DIRECTORY'], 'gui'))
+CONFIG = loaders.get_config()
+
+PATH = os.sep.join((CONFIG.system_path, 'gui'))
 
 regex_str = re.compile('value *= *".*?"')
 

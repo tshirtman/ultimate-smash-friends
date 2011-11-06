@@ -13,6 +13,8 @@ import imp
 from os import environ, sep
 from os.path import abspath, join, splitext, isdir, isfile
 from sys import exit
+
+from usf import settings
 OS = platform.system().lower()
 
 if OS == 'darwin':
@@ -79,6 +81,7 @@ DATA = [(item[0], item[1]) for item in files('data')]
 
 DATA.append('CREDITS.txt')
 
+settings.generate_config('system.cfg')
 DATA.append('system.cfg')
 
 DOC = [(join('share', 'doc', 'ultimate-smash-friends') +
@@ -86,8 +89,7 @@ DOC = [(join('share', 'doc', 'ultimate-smash-friends') +
 
 DOC[-1][-1].append('COPYING.txt')
 
-DOC[-1][-1].append('CREDITS.txt')
-
+DOC[-1][-1].append('CREDITS.txt') 
 DOC[-1][-1].append('README.txt')
 
 DOC[-1][-1].append('README.fr.txt')

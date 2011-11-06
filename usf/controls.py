@@ -36,8 +36,8 @@ from pygame.locals import (
         )
 
 # my imports
-from usf.config import Config
-CONFIG = Config()
+from usf import loaders
+CONFIG = loaders.get_config()
 
 import usf.game as game
 
@@ -71,7 +71,7 @@ def key_down_left(the_key, player, game_instance):
                 game_instance,
                 params={'entity': player, 'anim_name': 'walk'})
 
-        player.set_walking_vector([CONFIG.general['WALKSPEED'],
+        player.set_walking_vector([CONFIG.general.WALKSPEED,
                 player.walking_vector[1]])
         player.set_reversed(True)
         return True
@@ -88,7 +88,7 @@ def key_down_right(the_key, player, game_instance):
                     game_instance,
                     params={'entity': player, 'anim_name': 'walk'})
 
-        player.set_walking_vector([CONFIG.general['WALKSPEED'],
+        player.set_walking_vector([CONFIG.general.WALKSPEED,
             player.walking_vector[1]])
         player.set_reversed(False)
         return True
@@ -180,10 +180,29 @@ def get_key_code(name):
     name
     """
     try:
-        return pygame_locals.__dict__[CONFIG.keyboard[name]]
+        return pygame_locals.__dict__[getattr(CONFIG.keyboard, name)]
 
     except KeyError:
-        return int(CONFIG.keyboard[name])
+        return int(getattr(CONFIG.keyboard, name))
+
+def reverse_keymap(keycode):
+    if 'world' in pygame.key.name(keycode):
+        return str(keycode)
+
+    else:
+        name = pygame.key.name(keycode)
+        if  len(name) == 1:
+            return 'K_'+name
+
+        else:
+            if '[' in name:
+                return 'K_KP'+name[1]
+
+            else:
+                return 'K_'+name.upper().replace(
+                        'LEFT ','L').replace('RIGHT ', 'R')
+
+
 
 
 class Controls (object):
@@ -206,14 +225,14 @@ class Controls (object):
         """
         self.keys = dict(
                 [[get_key_code(key), key]
-                    for key in CONFIG.keyboard])
+                    for key in CONFIG.keyboard.options])
 
     def load_sequences(self):
         """ construct player combo sequences, using config (sequences.cfg) and
         known player keys
         """
         sequences_file = open(os.path.join(
-                    CONFIG.sys_data_dir,
+                    CONFIG.system_path,
                     'sequences'+os.extsep+'cfg'), 'r')
 
         lines = sequences_file.readlines()
