@@ -67,9 +67,9 @@ class Container(Widget):
         self.width = sizex
         self.height = sizey
         if self.width > 40 and self.height > 40 and self.border:
-            self.surface = loaders.image(join(CONFIG.sys_data_dir,
+            self.surface = loaders.image(join(CONFIG.system_path,
                                               "gui",
-                                              CONFIG.general["theme"],
+                                              CONFIG.general.theme,
                                               "frame1.png"),
                                          expand=(self.width, self.height, 20)
                                         )[0]
@@ -121,9 +121,9 @@ class Container(Widget):
         else:
             margin = optimize_size((0, 10))[1]
         if self.orientation:
-            widget.margin = margin*CONFIG.general['WIDTH']/800
+            widget.margin = margin*CONFIG.general.WIDTH/800
         else:
-            widget.margin = margin*CONFIG.general['HEIGHT']/480
+            widget.margin = margin*CONFIG.general.HEIGHT/480
         if 'margin_left' in kwargs:
             widget.margin_left = kwargs['margin_left']
         if 'align' in kwargs:

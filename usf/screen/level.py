@@ -35,8 +35,8 @@ from usf.widgets.box import VBox
 from usf.widgets.button import Button
 from usf.widgets.coverflow import Coverflow
 
-from usf.loaders import get_config
-CONFIG = get_config()
+from usf import loaders
+CONFIG = loaders.get_config()
 
 from usf.translation import _
 
@@ -47,18 +47,18 @@ class Level(Screen):
 
         coverflow_data = []
         #create a level image for every directory in the level directory.
-        files = os.listdir(os.path.join( CONFIG.sys_data_dir, 'levels'))
+        files = os.listdir(os.path.join( CONFIG.system_path, 'levels'))
         files.sort()
 
         for f in files:
             try:
                 if 'level.xml' in os.listdir(
-                        os.path.join(CONFIG.sys_data_dir, "levels", f)):
+                        os.path.join(CONFIG.system_path, "levels", f)):
                     coverflow_data.append([])
                     coverflow_data[-1].append(f)
                     coverflow_data[-1].append(
                             join(
-                                CONFIG.sys_data_dir,
+                                CONFIG.system_path,
                                 "levels", f, "screenshot.png"))
             except:
                 logging.debug(str(f) +" is not a valid level.")

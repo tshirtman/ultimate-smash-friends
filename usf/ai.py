@@ -27,17 +27,17 @@ from os import path
 import random
 
 # usf modules
-import usf.config
+from usf import loaders
 from usf.memoize import memoize
 
-CONFIG = usf.config.Config()
+CONFIG = loaders.get_config()
 #controls = controls.Controls()
 
 TIMESTEP = 0.25
 MAXDEPTH = 1
 
-WALKSPEED = CONFIG.general['WALKSPEED']
-SEQUENCES_FILE = path.join(CONFIG.sys_data_dir, 'sequences.cfg')
+WALKSPEED = CONFIG.general.WALKSPEED
+SEQUENCES_FILE = path.join(CONFIG.system_path, 'sequences.cfg')
 
 
 @memoize

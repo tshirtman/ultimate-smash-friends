@@ -8,10 +8,11 @@ from usf.translation import _
 
 import os
 import gettext
-from usf.config import Config
 
-CONFIG = Config()
-LOCALE_DIR = os.path.join(CONFIG.sys_data_dir, "po")
+from usf import loaders
+
+CONFIG = loaders.get_config()
+LOCALE_DIR = os.path.join(CONFIG.system_path, "po")
 # Set up message catalog access
 
 _ = gettext.translation(

@@ -25,10 +25,10 @@ from xml.etree.ElementTree import ElementTree
 import pygame
 
 # Our modules
-from usf.config import Config
-import usf.loaders as loaders
 
-CONFIG = Config()
+from usf import loaders
+
+CONFIG = loaders.get_config()
 
 
 class Skin (object):
@@ -38,9 +38,9 @@ class Skin (object):
         self.color = pygame.color.Color("white")
         self.layer = []
         xml_file = ElementTree().parse(os.path.join(
-            CONFIG.sys_data_dir,
+            CONFIG.system_path,
             "gui",
-            CONFIG.general["THEME"],
+            CONFIG.general.THEME,
             "theme.xml"))
 
         if xml_file.find("color") is not None:
@@ -49,7 +49,7 @@ class Skin (object):
 
         if xml_file.find("dialog") is not None:
             conf_d = xml_file.find("dialog")
-            w, h = CONFIG.general["WIDTH"], CONFIG.general["HEIGHT"]
+            w, h = CONFIG.general.WIDTH, CONFIG.general.HEIGHT
 
             self.dialog["sizex"] = int(conf_d.attrib["sizex"]) * w / 100
             self.dialog["sizey"] = int(conf_d.attrib["sizey"]) * h / 100
@@ -92,16 +92,16 @@ class Layer(object):
     def __init__(self, node):
         self.last_update = 0
         self.current = 0
-        sizex = int(node.attrib["sizex"]) * CONFIG.general['WIDTH']/800
-        sizey = int(node.attrib["sizey"]) * CONFIG.general['HEIGHT']/600
+        sizex = int(node.attrib["sizex"]) * CONFIG.general.WIDTH/800
+        sizey = int(node.attrib["sizey"]) * CONFIG.general.HEIGHT/600
         self.frame = []
         if "type" in node.attrib:
-            self.x = int(node.attrib["x"]) * CONFIG.general['WIDTH']/800
-            self.y = int(node.attrib["y"]) * CONFIG.general['HEIGHT']/600
+            self.x = int(node.attrib["x"]) * CONFIG.general.WIDTH/800
+            self.y = int(node.attrib["y"]) * CONFIG.general.HEIGHT/600
             if node.attrib["type"] == "framebyframe":
                 self.type = 1
                 for frame in node.findall("frame"):
-                    src = loaders.image(join(CONFIG.sys_data_dir,
+                    src = loaders.image(join(CONFIG.system_path,
                                                  frame.attrib["src"]),
                                             scale=(sizex, sizey))[0]
 
@@ -109,13 +109,13 @@ class Layer(object):
                     self.frame.append((t, src))
         else:
             self.type = 0
-            self.background = loaders.image(join(CONFIG.sys_data_dir,
+            self.background = loaders.image(join(CONFIG.system_path,
                                                  node.attrib["src"]),
                                             scale=(sizex, sizey))[0]
 
             for frame in node.findall("frame"):
-                x = int(frame.attrib["x"]) * CONFIG.general['WIDTH']/800
-                y = int(frame.attrib["y"]) * CONFIG.general['HEIGHT']/600
+                x = int(frame.attrib["x"]) * CONFIG.general.WIDTH/800
+                y = int(frame.attrib["y"]) * CONFIG.general.HEIGHT/600
                 t = float(frame.attrib["time"])
                 self.frame.append((t, (x, y)))
 

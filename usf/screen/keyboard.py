@@ -32,9 +32,9 @@ from usf.widgets.special import KeyboardWidget
 from usf.widgets.image import Image
 
 from usf.translation import _
-from usf.loaders import get_config
+from usf import loaders
 
-CONFIG = get_config()
+CONFIG = loaders.get_config()
 
 
 class Keyboard(Screen):
@@ -48,7 +48,7 @@ class Keyboard(Screen):
         for img in ['left.png', 'right.png', 'top.png', 'bottom.png']:
             hbox.add(Image(join(
                 'gui',
-                CONFIG.general['THEME'],
+                CONFIG.general.THEME,
                 img)),
                 size=(40, 30),
                 margin=30)
@@ -66,7 +66,7 @@ class Keyboard(Screen):
             hbox.add(Label('Player ' + str(i + 1)), size=(80, 50))
             for action in action_:
                 w = KeyboardWidget(
-                        CONFIG.keyboard['PL' + str(i + 1) + '_' + action.upper()])
+			getattr(CONFIG.keyboard, 'PL' + str(i + 1) + '_' + action.upper()))
                 w.set_id('PL' + str(i + 1) + '_' + action.upper())
                 hbox.add(w, size=(40, 40), margin=30)
             self.widget.add(hbox)
@@ -76,7 +76,7 @@ class Keyboard(Screen):
 
     def callback(self, action):
         if type(action) == KeyboardWidget:
-            CONFIG.keyboard[action.get_id()] = action.get_value()
+            setattr(CONFIG.keybaord, action.get_id(), action.get_value)
         if action.text == _('Back'):
             return "goto:back"
 

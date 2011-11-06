@@ -72,17 +72,17 @@ class Coverflow(Widget):
         self.center_size = (self.sizex(195), self.sizey(120))
         self.posy_center = self.sizey(60)
         self.foreground = loaders.image(
-                os.path.join(CONFIG.sys_data_dir,
+                os.path.join(CONFIG.system_path,
                     "gui",
-                    CONFIG.general['THEME'],
+                    CONFIG.general.THEME,
                     "coverflow",
                     "foreground.png"),
-                scale=(CONFIG.general["WIDTH"], CONFIG.general["HEIGHT"]))[0]
+                scale=(CONFIG.general.WIDTH, CONFIG.general.HEIGHT))[0]
 
         self.frame = loaders.image(
-                os.path.join(CONFIG.sys_data_dir,
+                os.path.join(CONFIG.system_path,
                     "gui",
-                    CONFIG.general['THEME'],
+                    CONFIG.general.THEME,
                     "coverflow",
                     "frame.png"),
                 scale=(self.sizex(137), self.sizey(86)))
@@ -321,9 +321,9 @@ class Coverflow(Widget):
     def load_main_frame(self):
         """ #FIXME get xapantu to document a little! :P
         """
-        self.main_frame = loaders.image(os.path.join(CONFIG.sys_data_dir,
+        self.main_frame = loaders.image(os.path.join(CONFIG.system_path,
             "gui",
-            CONFIG.general['THEME'],
+            CONFIG.general.THEME,
             "coverflow",
             "frame.png"),
             scale=self.center_size)[0]

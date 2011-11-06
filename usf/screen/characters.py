@@ -23,8 +23,8 @@ Describe the characters choice UI (for starting a game)
 '''
 
 from usf.screen.screen import Screen
-from usf.config import Config
-CONFIG = Config()
+from usf import loaders
+CONFIG = loaders.get_config()
 
 from usf.widgets.box import VBox, HBox
 from usf.widgets.button import Button
@@ -63,7 +63,7 @@ class Characters(Screen):
         #I18N: (with the [?] icon)
         self.character.append(_("None"))
         #create a character for every directory in the characters directory.
-        files = os.listdir(join(CONFIG.sys_data_dir, 'characters'))
+        files = os.listdir(join(CONFIG.system_path, 'characters'))
         files.sort()
 
         for f in files:

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 ################################################################################
 # copyright 2008 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
 #                                                                              #
