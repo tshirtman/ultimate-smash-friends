@@ -40,7 +40,7 @@ class ImageButton(Image):
         if self.properties.has_key("size_request") : del(self.properties["size_request"])
         self.path_hover = image_hover
         size = get_scale(loaders.image(
-                    CONFIG.sys_data_dir+
+                    CONFIG.system_path+
                     os.sep+
                     image)[0])
 
@@ -51,12 +51,12 @@ class ImageButton(Image):
         self.height = h
         self.width = w
         self.surface_static = loaders.image(
-                    CONFIG.sys_data_dir+
+                    CONFIG.system_path+
                     os.sep+
                     self.path, scale=(w, h))[0]
 
         self.surface_hover = loaders.image(
-                    CONFIG.sys_data_dir+
+                    CONFIG.system_path+
                     os.sep+
                     self.path_hover, scale=(w, h))[0]
 

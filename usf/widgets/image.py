@@ -52,12 +52,12 @@ class Image(Widget):
     def setImage(self, path):
         """
         With this method, you can change the image.
-        'CONFIG.sys_data_dir' will be added to 'path'
+        'CONFIG.system_path' will be added to 'path'
         """
         self.path = path
 
         self.surface = loaders.image(
-                    CONFIG.sys_data_dir+
+                    CONFIG.system_path+
                     os.sep+
                     self.path, scale=(self.width, self.height))[0]
 

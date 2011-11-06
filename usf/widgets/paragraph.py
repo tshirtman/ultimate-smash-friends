@@ -46,7 +46,7 @@ class Paragraph(Widget):
         self.hover = False
         self.auto_scroll = True
 
-        text = open(join(CONFIG.sys_data_dir, path), 'r').readlines()
+        text = open(join(CONFIG.system_path, path), 'r').readlines()
         text_height = loaders.text("", fonts['mono']['normal']).get_height()
 
         #the slider (at left)
@@ -76,9 +76,9 @@ class Paragraph(Widget):
 
         self.slider = SubPixelSurface(loaders.image(
             join(
-                CONFIG.sys_data_dir,
+                CONFIG.system_path,
                 "gui",
-                CONFIG.general['THEME'],
+                CONFIG.general.THEME,
                 "sliderh_center.png"),
             scale=(self.width_slider, self.height_slider))[0], x_level=4)
 
@@ -105,9 +105,9 @@ class Paragraph(Widget):
         del mask
 
         #the slider background
-        self.screen.blit(loaders.image(join(CONFIG.sys_data_dir,
+        self.screen.blit(loaders.image(join(CONFIG.system_path,
             "gui",
-            CONFIG.general['THEME'],
+            CONFIG.general.THEME,
             "sliderh_background.png"),
             scale=(self.width_slider, self.height))[0],
             (x + self.pos_slider, y))
@@ -122,9 +122,9 @@ class Paragraph(Widget):
                           (x + self.pos_slider, y + self.slider_y))
 
         #foreground
-        self.screen.blit(loaders.image(join(CONFIG.sys_data_dir,
+        self.screen.blit(loaders.image(join(CONFIG.system_path,
             "gui",
-            CONFIG.general['THEME'],
+            CONFIG.general.THEME,
             "paragraph_foreground.png"),
             scale=(self.width - self.width_slider*2, self.height))[0],
             (x, y))

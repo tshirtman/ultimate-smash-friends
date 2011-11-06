@@ -52,15 +52,15 @@ class CheckBox(Widget):
 
         self.height = h
         self.width = w
-        self.surface_static = loaders.image(join(CONFIG.sys_data_dir,
+        self.surface_static = loaders.image(join(CONFIG.system_path,
                                                   'gui',
-                                                  CONFIG.general['THEME'],
+                                                  CONFIG.general.THEME,
                                                   'checkbox_empty.png'),
                                              scale=(w, h))[0]
 
-        self.surface_checked = loaders.image(join(CONFIG.sys_data_dir,
+        self.surface_checked = loaders.image(join(CONFIG.system_path,
                                                   'gui',
-                                                  CONFIG.general['THEME'],
+                                                  CONFIG.general.THEME,
                                                   'checkbox_full.png'),
                                              scale=(w, h))[0]
         self.surface = self.surface_static

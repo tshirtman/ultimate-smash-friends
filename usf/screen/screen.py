@@ -43,8 +43,8 @@ class Screen(object):
         self.widget = widget
         #define the position and the size of the top-level widget
         self.widget.set_size((
-            CONFIG.general['WIDTH'],
-            CONFIG.general['HEIGHT']))
+            CONFIG.general.WIDTH,
+            CONFIG.general.HEIGHT))
 
         self.widget.x = 0
         self.widget.y = 70
@@ -74,17 +74,17 @@ class Screen(object):
 
         #center the title
         self.indent_title = (
-                CONFIG.general['WIDTH']/2 - loaders.text(
+                CONFIG.general.WIDTH/2 - loaders.text(
                     self.name, fonts['mono']['15']).get_width()/2)
 
     def update_pos(self):
         self.widget.update_size()
         #center the main container (and all the widgets which are in it)
         #verticaly
-        self.widget.y = ((CONFIG.general['HEIGHT'] - 70) / 2 - self.widget.height/2)+70
+        self.widget.y = ((CONFIG.general.HEIGHT - 70) / 2 - self.widget.height/2)+70
 
         #center it horizontaly
-        self.widget.x = CONFIG.general['WIDTH']/2 - self.widget.width/2
+        self.widget.x = CONFIG.general.WIDTH/2 - self.widget.width/2
 
         self.widget.update_pos()
 

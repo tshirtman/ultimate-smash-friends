@@ -33,52 +33,42 @@ from pygame.locals import QUIT
 import pygame
 from optparse import OptionParser
 import threading
-from usf.config import Config
 
 from usf.game import Game, NetworkServerGame #, NetworkClientGame
 from usf.gui import Gui
 from usf.controls import Controls
-import usf.loaders as loaders
+from usf import loaders
 from usf.music import Music
 from usf.font import fonts
 from usf.ai import AI
 
 from usf.translation import _
 
-try:
-    CONFIG = Config()
-    logging.basicConfig(
-            filename=os.path.join(
-                CONFIG.user_data_dir,
-                CONFIG.debug['LOG_FILENAME']),
-            level=(CONFIG.debug['LOG_LEVEL']))
 
-except AttributeError:
-    logging.basicConfig(
-            filename=os.path.join(
-                CONFIG.user_data_dir,
-                CONFIG.debug['LOG_FILENAME']),
-            level = logging.WARNING)
+CONFIG = loaders.get_config()
+logging.basicConfig(
+        filename=os.path.join(
+            CONFIG.user_path,
+            CONFIG.debug.LOG_FILENAME),
+        level=(CONFIG.debug.LOG_LEVEL))
 
-    logging.error(_('Bad logging level in user.cfg!'))
+logging.debug("""Paths:
+        Config:
+        System: {0}
+        User: {1}
 
-logging.debug("User config file: " + CONFIG.user_config_file)
-logging.debug("User config dir: " + CONFIG.user_config_dir)
-logging.debug("User data dir: " + CONFIG.user_data_dir)
-logging.debug("System config file: " + CONFIG.sys_config_file)
-logging.debug("System data dir: " + CONFIG.sys_data_dir)
-
+        Filename: {2}""".format(*CONFIG.paths.keys() + [CONFIG.filename]))
 
 def author():
     """ print credits in the terminal
     """
-    if 'CREDITS' not in os.listdir(os.path.join(CONFIG.sys_data_dir)):
-        logging.info(CONFIG.sys_data_dir)
-        logging.info('\n'.join(os.listdir(os.path.join(CONFIG.sys_data_dir))))
-        logging.debug(CONFIG.sys_data_dir+'/CREDITS file not found')
+    if 'CREDITS' not in os.listdir(os.path.join(CONFIG.system_path)):
+        logging.info(CONFIG.system_path)
+        logging.info('\n'.join(os.listdir(os.path.join(CONFIG.system_path))))
+        logging.debug(CONFIG.system_path +'/CREDITS file not found')
 
     else:
-        author_file = open(os.path.join(CONFIG.sys_data_dir, 'CREDITS'))
+        author_file = open(os.path.join(CONFIG.system_path, 'CREDITS'))
         logging.info(author_file.read())
         author_file.close()
 
@@ -89,11 +79,16 @@ class Main(object):
     the game main loop.
     """
 
-    def __init__(self):
+    def __init__(self, init=True, run=True):
         """
         The constructor, create the render surface, set the menu initial state,
         parse command line params if any, launch the menu or the game depending
         on parameters.
+
+        The init parameter determines if the Main object should be initialized 
+        once instanciated. The run parameter determines if the game should be run
+        once the object is instantiated and initiated.
+        
         """
 
         self.lock = threading.Lock()
@@ -104,9 +99,15 @@ class Main(object):
         self.num = None
         self.address = None
         self.text_thread = _("Loading...")
+        self.initialized = False
 
         self.initate_options_parser()
         self.parse_options()
+
+        if init:
+            self.init()
+            if run:
+                self.run()
 
     def init(self):
         try:
@@ -116,8 +117,10 @@ class Main(object):
                 self.init_client()
             else:
                 self.init_standalone()
+            self.initialized = True
         except:
             self.stop_thread = True
+            self.initialized = False
             raise
 
     def init_server(self):
@@ -259,30 +262,30 @@ class Main(object):
     def init_screen(self):
         """ various screen initialisations
         """
-        size = (CONFIG.general['WIDTH'], CONFIG.general['HEIGHT'])
-        if (CONFIG.general['WIDTH'], CONFIG.general['HEIGHT']) == (0, 0):
+        size = (CONFIG.general.WIDTH, CONFIG.general.HEIGHT)
+        if (CONFIG.general.WIDTH, CONFIG.general.HEIGHT) == (0, 0):
             if (800, 600) in pygame.display.list_modes():
-                (CONFIG.general['WIDTH'], CONFIG.general['HEIGHT']) = (800, 600)
+                (CONFIG.general.WIDTH, CONFIG.general.HEIGHT) = (800, 600)
 
             else:
                 #the old default value...
-                (CONFIG.general['WIDTH'], CONFIG.general['HEIGHT']) = (800, 480)
-            CONFIG.general['FULLSCREEN'] = False
+                (CONFIG.general.WIDTH, CONFIG.general.HEIGHT) = (800, 480)
+            CONFIG.general.FULLSCREEN = False
 
-        size = (CONFIG.general['WIDTH'], CONFIG.general['HEIGHT'])
+        size = (CONFIG.general.WIDTH, CONFIG.general.HEIGHT)
         self.screen = pygame.display.set_mode(size)
 
         pygame.display.set_caption('Ultimate Smash Friends')
-        icon = loaders.image(os.path.join(CONFIG.sys_data_dir, 'icon',
+        icon = loaders.image(os.path.join(CONFIG.system_path, 'icon',
                                           'icon_50.png'))[0]
         pygame.display.set_icon(icon)
-        if CONFIG.general['FULLSCREEN']:
+        if CONFIG.general.FULLSCREEN:
             pygame.display.toggle_fullscreen()
 
     def init_sound(self):
         """ various audio initialisations
         """
-        if CONFIG.audio['MUSIC']:
+        if CONFIG.audio.MUSIC:
             self.music = Music()
 
     def manage_menu(self):
@@ -306,7 +309,7 @@ class Main(object):
                 del(self.game)
                 self.game = game_
 
-        max_fps = 1000/CONFIG.general["MAX_GUI_FPS"]
+        max_fps = 1000/CONFIG.general.MAX_GUI_FPS
 
         if self.menu.screen_current == 'about':
             self.music_state = 'credits'
@@ -334,13 +337,13 @@ class Main(object):
         if self.state in ('game', 'victory'):
             self.game.draw(
                 debug_params={
-                    'controls': CONFIG.debug['CONTROLS'] and self.controls,
-                    'action': CONFIG.debug['ACTIONS'],
-                    'hardshape': CONFIG.debug['HARDSHAPES'],
-                    'footrect': CONFIG.debug['FOOTRECT'],
-                    'current_animation': CONFIG.debug['CURRENT_ANIMATION'],
-                    'levelshape': CONFIG.debug['LEVELSHAPES'],
-                    'levelmap': CONFIG.debug['LEVELMAP']})
+                    'controls': CONFIG.debug.CONTROLS and self.controls,
+                    'action': CONFIG.debug.ACTIONS,
+                    'hardshape': CONFIG.debug.HARDSHAPES,
+                    'footrect': CONFIG.debug.FOOTRECT,
+                    'current_animation': CONFIG.debug.CURRENT_ANIMATION,
+                    'levelshape': CONFIG.debug.LEVELSHAPES,
+                    'levelmap': CONFIG.debug.LEVELMAP})
 
             self.menu.load = False
         else:
@@ -351,7 +354,7 @@ class Main(object):
     def display_fps(self):
         """ FPS counter
         """
-        if CONFIG.general["SHOW_FPS"]:
+        if CONFIG.general.SHOW_FPS:
             self.screen.blit(
                     loaders.text(
                         "FPS: " + str(self.clock.get_fps()),
@@ -363,6 +366,9 @@ class Main(object):
         The main game loop, take care of the state of the game/menu.
         """
 
+        if not self.initialized:
+            return False
+
         pygame.mouse.set_visible(False)
         self.clock.tick()
 
@@ -371,9 +377,9 @@ class Main(object):
             state_was = self.state
 
             if self.game:
-                dt = self.clock.tick(CONFIG.general['MAX_FPS']) / 1000.0
+                dt = self.clock.tick(CONFIG.general.MAX_FPS) / 1000.0
             else:
-                dt = self.clock.tick(CONFIG.general['MAX_GUI_FPS']) / 1000.0
+                dt = self.clock.tick(CONFIG.general.MAX_GUI_FPS) / 1000.0
 
             if self.state != "menu":
                 self.state = self.controls.poll( self.game, self.menu)
@@ -392,7 +398,7 @@ class Main(object):
             self.display_fps()
             pygame.display.update()
 
-            if CONFIG.audio['MUSIC']:
+            if CONFIG.audio.MUSIC:
                 self.music.update(self.music_state)
 
             # verify there is not a QUIT event waiting for us, in case of we
@@ -426,5 +432,3 @@ if __name__ == '__main__':
     # main class with parameters (appart from program self name) if any.
 
     M = Main()
-    M.init()
-    M.run()

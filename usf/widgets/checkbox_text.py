@@ -57,7 +57,7 @@ class TextCheckBox(HBox):
         #left radius
         self.left_border = Image(join(
             "gui",
-            CONFIG.general['THEME'],
+            CONFIG.general.THEME,
             "checkbox_left.png"))
 
         self.left_border.set_size((12, self.height))
@@ -67,7 +67,7 @@ class TextCheckBox(HBox):
         self.center = Label(
                 self.text + " ",
                 background=join("gui",
-                    CONFIG.general['THEME'],
+                    CONFIG.general.THEME,
                     "checkbox_center.png"),
                 align="center")
 
@@ -78,7 +78,7 @@ class TextCheckBox(HBox):
 
         self.check = Image(join(
             "gui",
-            CONFIG.general['THEME'],
+            CONFIG.general.THEME,
             "checkbox_empty_right.png"))
 
         self.add(self.check, margin = 0, size=(37, self.height))
@@ -139,24 +139,24 @@ class TextCheckBox(HBox):
         if self.state:
             self.left_border.setImage(join(
                 "gui",
-                CONFIG.general['THEME'],
+                CONFIG.general.THEME,
                 "checkbox_left_hover.png"))
 
             self.center.background_path = join(
                     "gui",
-                    CONFIG.general['THEME'],
+                    CONFIG.general.THEME,
                     "checkbox_center_hover.png")
 
             if self.checked:
                 self.check.setImage(join(
                     "gui",
-                    CONFIG.general['THEME'],
+                    CONFIG.general.THEME,
                     "checkbox_full_right_hover.png"))
 
             else:
                 self.check.setImage(join(
                     "gui",
-                    CONFIG.general['THEME'],
+                    CONFIG.general.THEME,
                     "checkbox_empty_right_hover.png"))
 
             #self.center.init()
@@ -164,24 +164,24 @@ class TextCheckBox(HBox):
         else:
             self.left_border.setImage(join(
                 "gui",
-                CONFIG.general['THEME'],
+                CONFIG.general.THEME,
                 "checkbox_left.png"))
 
             self.center.background_path = join(
                     "gui",
-                    CONFIG.general['THEME'],
+                    CONFIG.general.THEME,
                     "checkbox_center.png")
 
             if self.checked:
                 self.check.setImage(join(
                     "gui",
-                    CONFIG.general['THEME'],
+                    CONFIG.general.THEME,
                     "checkbox_full_right.png"))
 
             else:
                 self.check.setImage(join(
                     "gui",
-                    CONFIG.general['THEME'],
+                    CONFIG.general.THEME,
                     "checkbox_empty_right.png"))
 
             #self.center.init()

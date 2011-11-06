@@ -114,12 +114,12 @@ class Label(Widget):
             if self.background_expand:
                 self.background = loaders.image(
                     join(
-                        CONFIG.sys_data_dir, self.background_path),
+                        CONFIG.system_path, self.background_path),
                     expand=(self.width, self.height, 10))[0]
             else:
                 self.background = loaders.image(
                     join(
-                        CONFIG.sys_data_dir, self.background_path),
+                        CONFIG.system_path, self.background_path),
                     scale=(self.width, self.height))[0]
 
             self.surface = loaders.image_layer(

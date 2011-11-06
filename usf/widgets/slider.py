@@ -53,18 +53,18 @@ class Slider(Widget):
                 optimize_size((100, 25))[0])
 
         self.background = loaders.image(
-                join(CONFIG.sys_data_dir, 'gui',
-                    CONFIG.general['THEME'], 'slider_background.png'),
+                join(CONFIG.system_path, 'gui',
+                    CONFIG.general.THEME, 'slider_background.png'),
                 scale=(self.width, self.height))[0]
 
         self.center = loaders.image(
-                join(CONFIG.sys_data_dir, 'gui',
-                    CONFIG.general['THEME'], 'slider_center.png'),
+                join(CONFIG.system_path, 'gui',
+                    CONFIG.general.THEME, 'slider_center.png'),
                 scale=(self.height, self.height))[0]
 
         self.center_hover = loaders.image(
-                join(CONFIG.sys_data_dir, 'gui',
-                    CONFIG.general['THEME'], 'slider_center_hover.png'),
+                join(CONFIG.system_path, 'gui',
+                    CONFIG.general.THEME, 'slider_center_hover.png'),
                 scale=(self.height, self.height))[0]
 
     def handle_mouse(self, event):

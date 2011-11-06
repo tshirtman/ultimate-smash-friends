@@ -27,8 +27,8 @@ game" button (maybe with some time delay, and with possibility to cancel?).
 '''
 
 from usf.screen.screen import Screen
-from usf.config import Config
-CONFIG = Config()
+from usf import loaders
+CONFIG = loaders.get_config()
 
 from usf.widgets.box import VBox, HBox
 from usf.widgets.button import Button
@@ -70,7 +70,7 @@ class NetworkGameConfScreen(Screen):
         #I18N: (with the [?] icon)
         self.character.append(_("None"))
         #create a character for every directory in the characters directory.
-        files = os.listdir(join(CONFIG.sys_data_dir, 'characters'))
+        files = os.listdir(join(CONFIG.system_path, 'characters'))
         files.sort()
 
         self.load_chararacters(files)
@@ -94,7 +94,7 @@ class NetworkGameConfScreen(Screen):
         self.widget.add(hbox, margin=150)
 
         #create a level image for every directory in the level directory.
-        files = os.listdir(os.path.join( CONFIG.sys_data_dir, 'levels'))
+        files = os.listdir(os.path.join( CONFIG.system_path, 'levels'))
         files.sort()
 
         coverflow_data = self.load_levels(files)
@@ -139,12 +139,12 @@ class NetworkGameConfScreen(Screen):
         for f in files:
             try:
                 if 'level.xml' in os.listdir(
-                        os.path.join(CONFIG.sys_data_dir, "levels", f)):
+                        os.path.join(CONFIG.system_path, "levels", f)):
                     coverflow_data.append([])
                     coverflow_data[-1].append(f)
                     coverflow_data[-1].append(
                             join(
-                                CONFIG.sys_data_dir,
+                                CONFIG.system_path,
                                 "levels", f, "screenshot.png"))
             except:
                 #XXX: catch all exceptions: BAD

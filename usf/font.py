@@ -18,8 +18,8 @@
 ################################################################################
 
 #our modules
-from usf.config import Config
-CONFIG = Config()
+from usf import loaders
+CONFIG = loaders.get_config()
 
 #standart imports
 import xml.etree.ElementTree as xml
@@ -41,17 +41,17 @@ class FontList(object):
         '''#TODO: documentation
         '''
         self.list = {}
-        font_xml = xml.parse(join(CONFIG.sys_data_dir, "fonts", "fonts.xml"))
+        font_xml = xml.parse(join(CONFIG.system_path, "fonts", "fonts.xml"))
         for font in font_xml.findall("font"):
 
             #use theme fonts
             try:
-                font_file = join(CONFIG.sys_data_dir, "gui",
-                    CONFIG.general['THEME'], font.get('file'))
+                font_file = join(CONFIG.system_path, "gui",
+                    CONFIG.general.THEME, font.get('file'))
                 stat(font_file)
             #use default usf fonts
             except:
-                font_file = join(CONFIG.sys_data_dir, "fonts", font.get('file'))
+                font_file = join(CONFIG.system_path, "fonts", font.get('file'))
 
             self.list[font.get('name')] = (Font(font.get('name'),
                 int(font.get('size')), font_file))

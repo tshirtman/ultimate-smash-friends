@@ -28,7 +28,7 @@ import os
 from usf.widgets.widget import Widget, optimize_size
 from usf import loaders
 from usf.font import fonts
-from usf.config import reverse_keymap
+from usf.controls import reverse_keymap
 CONFIG = loaders.get_config()
 
 
@@ -57,15 +57,15 @@ class KeyboardWidget(Widget):
     def update(self):
         self.background = loaders.image(
                 os.path.join(
-                    CONFIG.sys_data_dir, "gui",
-                    CONFIG.general['THEME'],"keyboard.png"),
+                    CONFIG.system_path, "gui",
+                    CONFIG.general.THEME,"keyboard.png"),
                 scale=(self.width, self.height))[0]
 
         self.background_hover = loaders.image(
                 os.path.join(
-                    CONFIG.sys_data_dir,
+                    CONFIG.system_path,
                     "gui",
-                    CONFIG.general['THEME'],
+                    CONFIG.general.THEME,
                     "keyboard_hover.png"),
                 scale=(self.width, self.height))[0]
 

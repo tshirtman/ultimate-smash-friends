@@ -32,19 +32,17 @@ import os
 import logging
 
 # my modules import
-from usf.config import Config
 from usf.event_manager import EventManager
 from usf.font import fonts
 from usf.level import Level
-from usf.loaders import image
 from usf.entity import Entity
-import usf.loaders as loaders
+from usf import loaders
 
 from usf.translation import _
 
 GAME_FONT = fonts['sans']['normal']
 
-CONFIG = Config()
+CONFIG = loaders.get_config() 
 
 
 if not pygame.font:
@@ -75,8 +73,8 @@ class Game(object):
         """
 
         self.size = (
-            CONFIG.general['WIDTH'],
-            CONFIG.general['HEIGHT'])
+            CONFIG.general.WIDTH,
+            CONFIG.general.HEIGHT)
 
         self.first_frame = True
         self.notif = []
@@ -88,7 +86,7 @@ class Game(object):
         self.gametime = 0
 
         #we load the bool for smooth scrolling here, for a better performance
-        self.smooth_scrolling = CONFIG.general["SMOOTH_SCROLLING"]
+        self.smooth_scrolling = CONFIG.general.SMOOTH_SCROLLING
 
         self.level = Level(level)
         if screen is not None:
@@ -103,11 +101,11 @@ class Game(object):
 
         #the optional progress bar for the players lives
         self.progress_bar_size = (
-                82.5*CONFIG.general["WIDTH"]/800,
-                12.5*CONFIG.general["WIDTH"]/800)
+                82.5*CONFIG.general.WIDTH/800,
+                12.5*CONFIG.general.WIDTH/800)
 
         self.progress_bar_x = (
-                CONFIG.general["HEIGHT"] - 25 * CONFIG.general["WIDTH"] / 800)
+                CONFIG.general.HEIGHT - 25 * CONFIG.general.WIDTH / 800)
 
         # a countdown to the game end
         self.ending = 5.0
@@ -174,7 +172,7 @@ class Game(object):
 
         """
         try:
-            os.listdir(os.path.join(CONFIG.sys_data_dir, 'items', item))
+            os.listdir(os.path.join(CONFIG.system_path, 'items', item))
             e = Entity(
                         num=None,
                         game=self,
@@ -210,9 +208,9 @@ class Game(object):
         """ heh, draw progree bar for lives of the player
         """
         self.screen.blit(
-                image(
+                loaders.image(
                     os.path.join(
-                        CONFIG.sys_data_dir,
+                        CONFIG.system_path,
                         'misc',
                         'progress_bar_bg.png'),
                     scale=self.progress_bar_size)[0],
@@ -223,9 +221,9 @@ class Game(object):
         if (self.progress_bar_size[0] -
                 self.progress_bar_size[0] * (player.percents * 0.1 + 0.01) > 0):
             self.screen.blit(
-                    image(
+                    loaders.image(
                         os.path.join(
-                            CONFIG.sys_data_dir,
+                            CONFIG.system_path,
                             'misc',
                             'progress_bar.png'),
                         scale=(self.progress_bar_size[0] -
@@ -240,7 +238,7 @@ class Game(object):
         """ draw, like... the player portrait? :D
         """
         self.screen.blit(
-                 image(player.entity_skin.image, scale=(30, 30))[0],
+                 loaders.image(player.entity_skin.image, scale=(30, 30))[0],
                     (
                     -0.5*self.icon_space+player.num*self.icon_space,
                     self.size[1]*.9))
@@ -265,9 +263,9 @@ class Game(object):
         """
         for i in range(player.lives):
             self.screen.blit(
-                    image(
+                    loaders.image(
                         os.path.join(
-                            CONFIG.sys_data_dir,
+                            CONFIG.system_path,
                             'misc',
                             'heart.png'))[0],
                     (
@@ -299,7 +297,7 @@ class Game(object):
             self.screen.blit(
                     loaders.image(
                         os.path.join(
-                            CONFIG.sys_data_dir,
+                            CONFIG.system_path,
                             'misc','key_' + k[0].lower() + '.png'))[0],
                     (num * self.size[0] / 4 + i * 50, 0 + 100 * (num % 2)))
 
@@ -318,13 +316,13 @@ class Game(object):
         Draw player's portraits at bottom of the screen
         """
         #draw the background of the block where the lives are displayed
-        hud_height = 75 * CONFIG.general["WIDTH"] / 800
+        hud_height = 75 * CONFIG.general.WIDTH / 800
         self.screen.blit(loaders.image(os.path.join(
-            CONFIG.sys_data_dir,
+            CONFIG.system_path,
             "misc",
             "hud.png"),
-            scale=(CONFIG.general["WIDTH"], hud_height))[0],
-            (0, CONFIG.general["HEIGHT"]-hud_height))
+            scale=(CONFIG.general.WIDTH, hud_height))[0],
+            (0, CONFIG.general.HEIGHT))
 
         for player in self.players:
             self.draw_player_portrait(player)
@@ -396,7 +394,7 @@ class Game(object):
         """ update and draw notifs,
         """
         for notif in self.notif:
-            if CONFIG.general['NOTIF_EFFECT'] == "True":
+            if CONFIG.general.NOTIF_EFFECT == "True":
                 if(len(notif) <3):
                     notif.append(notif[1][0])
                 elif len(notif[2]) is not len(notif[1]):
@@ -447,8 +445,8 @@ class Game(object):
             # the zoom level to be a limited precision value here, so the
             # image cache is more useful.
             self.zoom = (
-                int(self.precise_zoom * CONFIG.general['ZOOM_SHARPNESS'])/
-                (CONFIG.general['ZOOM_SHARPNESS'] * 1.0))
+                int(self.precise_zoom * CONFIG.general.ZOOM_SHARPNESS)/
+                (CONFIG.general.ZOOM_SHARPNESS * 1.0))
 
             players_barycenter = self.players_barycenter
             # calculate coordinates of top left corner of level

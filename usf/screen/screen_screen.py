@@ -30,10 +30,10 @@ from usf.widgets.spinner import Spinner
 from usf.widgets.slider import Slider
 from usf.widgets.button import Button
 from usf.translation import _
-from usf.loaders import get_config
+from usf import loaders
 import pygame
 
-CONFIG = get_config()
+CONFIG = loaders.get_config()
 
 
 class ScreenScreen(Screen):
@@ -47,25 +47,25 @@ class ScreenScreen(Screen):
                 modes.append(str(resolution[0]) + "x" + str(resolution[1]))
         modes.reverse()
         self.resolution = Spinner(modes, 170)
-        self.resolution.set_value(str(CONFIG.general['WIDTH']) + 'x'
-                                    + str(CONFIG.general['HEIGHT']))
+        self.resolution.set_value(str(CONFIG.general.WIDTH) + 'x'
+                                    + str(CONFIG.general.HEIGHT))
 
         self.widget.add(Label(_('Screen resolution (requires a restart):')))
         self.widget.add(self.resolution)
 
         self.fullscreen = TextCheckBox(_('Fullscreen:'))
 
-        if CONFIG.general['FULLSCREEN']:
+        if CONFIG.general.FULLSCREEN:
             self.fullscreen.set_value(True)
         self.widget.add(self.fullscreen)
         self.widget.add(Label(_('Zoom sharpness:')), margin=25)
         zoom = Slider('zoom_sharpness')
         self.widget.add(zoom, margin=10, size=(220, 30))
-        zoom.set_value(CONFIG.general['ZOOM_SHARPNESS']/5)
+        zoom.set_value(CONFIG.general.ZOOM_SHARPNESS/5)
 
         self.fps = TextCheckBox(_('Show FPS:'))
 
-        if CONFIG.general['SHOW_FPS']:
+        if CONFIG.general.SHOW_FPS:
             self.fps.set_value(True)
         self.widget.add(self.fps, margin=25)
 
@@ -74,21 +74,21 @@ class ScreenScreen(Screen):
     def callback(self, action):
         if action == self.resolution:
             value = action.get_value()
-            CONFIG.general['WIDTH'] = int(value.split('x')[0])
-            CONFIG.general['HEIGHT'] = int(value.split('x')[1])
+            CONFIG.general.WIDTH = int(value.split('x')[0])
+            CONFIG.general.HEIGHT = int(value.split('x')[1])
         if action == self.fullscreen:
             pygame.display.toggle_fullscreen()
-            if CONFIG.general['FULLSCREEN']:
-                CONFIG.general['FULLSCREEN'] = False
+            if CONFIG.general.FULLSCREEN:
+                CONFIG.general.FULLSCREEN = False
             else:
-                CONFIG.general['FULLSCREEN'] = True
+                CONFIG.general.FULLSCREEN = True
         if action == self.fps:
-            if CONFIG.general['SHOW_FPS']:
-                CONFIG.general['SHOW_FPS'] = False
+            if CONFIG.general.SHOW_FPS:
+                CONFIG.general.SHOW_FPS = False
             else:
-                CONFIG.general['SHOW_FPS'] = True
+                CONFIG.general.SHOW_FPS = True
         if action.text == 'zoom_sharpness':
-            CONFIG.general['ZOOM_SHARPNESS'] = (action.get_value()+1)*5
+            CONFIG.general.ZOOM_SHARPNESS = (action.get_value()+1)*5
         if action.text == _('Back'):
             return "goto:back"
 
