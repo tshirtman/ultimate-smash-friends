@@ -1,7 +1,7 @@
-UltimateSmashFriends
+Ultimate Smash Friends
 ====================
 
-UltimateSmashFriends is a game which aim at creating quick and fun multiplayer
+Ultimate Smash Friends is a game which aim at creating quick and fun multiplayer
 entertainment. With nice 2d bitmap graphics and arcade gameplay we hope to
 deliver hours of fun.
 
@@ -10,18 +10,33 @@ How to install
 
 see INSTALL file if you have not already installed the game.
 
+Configuring
+===========
+
+Global configuration resides in the system.cfg file. If this file does not exist
+(because you didn't install Ultimate Smash Friends), you can generate it from the
+commmand line as follows:
+$ python2 -m usf.config
+
+Local Configuration resides in user.cfg, whose location depends on your platform
 
 Launching the game
 ==================
 
-Just launch ultimate-smash-friends.py, by double clicking it or from a shell
-with ./ultimate-smash-friends.py in the ultimate smash friends path. Then use
-the menu to lauch a game.
+In a graphical desktop environment, the game may be launched by double-clicking
+on the 'ultimate-smash-friends' script.
+
+Alternatively, the game may be launched from a terminal by typing the following:
+python2 -m usf.main
+
+Or, from within the ultimate-smash-friends directory:
+./ultimate-smash-friends
 
 You can directly launch a game by passing level and player parameters, separate
 players name by a comma, like this:
 
 ./ultimate-smash-friends --level rizland --players xeon,blob
+
 
 (--level can be abreviated as -l and --players as -p)
 you can add an artificial intelligence player by adding "AI" before the name of

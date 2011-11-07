@@ -81,6 +81,7 @@ DATA = [(item[0], item[1]) for item in files('data')]
 
 DATA.append('CREDITS.txt')
 
+# makes sure an up-to-date config is always present when a package is built
 settings.generate_config('system.cfg')
 DATA.append('system.cfg')
 
