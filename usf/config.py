@@ -35,6 +35,7 @@
     where filename is an optional name for the config file (system.cfg by default)
 """
 
+from __future__ import with_statement
 import os
 import sys
 import platform
