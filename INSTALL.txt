@@ -27,15 +27,17 @@ A. Source Archive
 
    3. Install Ultimate Smash Friends (optional)*
       a. Sytem-wide
-         # python setup.py --record install_files
+         # python2 setup.py --record install_files
       b. User-Specific
-         $ python setup.py --record install_files --home=~
+         $ python2 setup.py --record install_files --home=~
 
    4. Run
       a. If you installed as listed above:
-         $ ultimate-smash-friends.pyw
+         $ ultimate-smash-friends
       b. If you did not install:
-         $ ./ultimate-smash-friends.pyw
+         $ ./ultimate-smash-friends
+      c. Alternatively, you may launch a game with:
+         $ python2 -m usf.main
 
    5. Uninstall
       a. If installed by using step 3 above:
@@ -70,7 +72,7 @@ C. Arch Linux PKGBUILD
       $ makepkg -si
 
    3. Run
-      $ ultimate-smash-friends.pyw
+      $ ultimate-smash-friends
 
    4. Uninstall
       # pacman -Rsn usf-bzr

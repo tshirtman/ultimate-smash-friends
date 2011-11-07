@@ -20,5 +20,3 @@ Linux
     you need python (>= 2.6, <3.0), python-pygame (>=1.9), python-numpy (>= 1.5), python-stdeb (>= 0.6)
     rm -r build deb_dist dist
     python setup.py --command-packages=stdeb.command bdist_deb
-
-
