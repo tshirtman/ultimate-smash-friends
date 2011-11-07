@@ -17,7 +17,7 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 '''
-This module profide the screen/display configuration screen (resolution,
+This module profide the display configuration screen (resolution,
 fullscreen, display fps...)
 
 '''
@@ -36,11 +36,11 @@ import pygame
 CONFIG = loaders.get_config()
 
 
-class ScreenScreen(Screen):
+class Display(Screen):
 
     def init(self):
         self.add(VBox())
-        self.set_name(_("screen configuration"))
+        self.set_name(_("display configuration"))
         modes = []
         for resolution in pygame.display.list_modes():
             if resolution[0] >= 800:
@@ -55,8 +55,7 @@ class ScreenScreen(Screen):
 
         self.fullscreen = TextCheckBox(_('Fullscreen:'))
 
-        if CONFIG.general.FULLSCREEN:
-            self.fullscreen.set_value(True)
+        self.fullscreen.set_value(CONFIG.general.FULLSCREEN)
         self.widget.add(self.fullscreen)
         self.widget.add(Label(_('Zoom sharpness:')), margin=25)
         zoom = Slider('zoom_sharpness')
@@ -65,8 +64,7 @@ class ScreenScreen(Screen):
 
         self.fps = TextCheckBox(_('Show FPS:'))
 
-        if CONFIG.general.SHOW_FPS:
-            self.fps.set_value(True)
+        self.fps.set_value(CONFIG.general.SHOW_FPS)
         self.widget.add(self.fps, margin=25)
 
         self.widget.add(Button(_('Back')), margin=30)
@@ -91,4 +89,6 @@ class ScreenScreen(Screen):
             CONFIG.general.ZOOM_SHARPNESS = (action.get_value()+1)*5
         if action.text == _('Back'):
             return "goto:back"
+
+        CONFIG.write()
 

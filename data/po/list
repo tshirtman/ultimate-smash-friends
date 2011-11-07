@@ -15,7 +15,7 @@ main.py
 music.py
 screen/about.py
 screen/main_screen.py
-screen/screen_screen.py
+screen/display.py
 screen/characters.py
 screen/keyboard.py
 screen/resume.py
