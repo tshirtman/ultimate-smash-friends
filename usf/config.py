@@ -214,6 +214,7 @@ class Section(object):
     def values(self):
         """ Returns a list of existing values """
         entries = self.entries
+        print entries.values()
         return entries.values()
 
 
@@ -252,24 +253,23 @@ class Config(object):
                              generated.
             @type filename: string
         """
-        self.filename = filename
-        self.config_file = ''
-        
-        self.paths = {}
+        self._filename = filename
+        self._config_file = []
+        self._paths = {}
+
         if not system_path and not user_path and not config_path:
             # use platform-specific values as paths
-            (self.paths['system'], 
-             self.paths['user'], 
-             self.paths['config']) = self.platform_paths()
+            (self._paths['system'], 
+             self._paths['user'], 
+             self._paths['config']) = self.platform_paths()
         else:
             # convert supplied paths to absolute paths
             abs_paths = [os.path.expanduser(path)
                          for path in [system_path, user_path, config_path]]
-            (self.paths['system'], self.paths['user'],
-             self.paths['config']) = abs_paths
+            (self._paths['system'], self._paths['user'],
+             self._paths['config']) = abs_paths
 
         self.read()
-
 
     def __getattr__(self, name):
         """ Returns a Section object to be used for assignment, creating one
@@ -278,10 +278,10 @@ class Config(object):
             @param name: name of section to be retrieved
             @type name: string
         """
-        if not self.__dict__.has_key(name):
+        if not self.__dict__.has_key(name) and not name.startswith('_'):
             setattr(self, name, Section(name))
 
-        return getattr(self, name)
+        return object.__getattribute__(self, name)
 
     @staticmethod
     def platform_paths(system=None):
@@ -326,7 +326,7 @@ class Config(object):
         #TODO: error detection (try/except)
 
         if filename is None:
-            filename = os.path.join(self.user_path, self.filename)
+            filename = os.path.join(self.user_path, self._filename)
 
         default_options = []
         new_options = []
@@ -365,8 +365,9 @@ class Config(object):
         """
 
         if filenames is None:
-            filenames = [os.path.join(self.paths['config'], 'system.cfg'),
-                         os.path.join(self.paths['user'], self.filename)]
+            filenames = [os.path.join(self._paths['config'], 'system.cfg'),
+                         os.path.join(self._paths['user'], self._filename)]
+
         elif hasattr(filenames, 'split'):
             filenames = [filenames]
 
@@ -374,7 +375,7 @@ class Config(object):
             section = None
             if os.path.exists(filename):
                 try:
-                    self.config_file = open(filename, 'r').readlines()
+                    self._config_file = open(filename, 'r').readlines()
                 except IOError as (errno, strerror):
                     if errno == 2:
                         if os.path.basename(filename).startswith('system'):
@@ -387,7 +388,7 @@ class Config(object):
                         print 'Error No. {0}: {1} {2}'.format(errno, filename, strerror)
                         sys.exit(1)
 
-                for line in self.config_file:
+                for line in self._config_file:
                     if line.startswith('#') or line.strip() == '':
                         continue
                     elif line.startswith('[') and line.endswith(']\n'):
@@ -398,6 +399,8 @@ class Config(object):
                                          for item in line.split('=', 1)]
                         setattr(getattr(self, section), option, value)
 
+        self._config_read = True
+
     def write(self, filename=None):
         """ Writes a config file based on the config object's 
             sections and options
@@ -407,66 +410,64 @@ class Config(object):
             @type path: string
         """
         if filename is None:
-            filename = os.path.join(self.paths['user'], 'user.cfg')
+            filename = os.path.join(self.user_path, 'user.cfg')
 
         for section in self.sections:
-
-            if '[{0}]\n'.format(section) not in self.config_file:
-                self.config_file.append('\n[{0}]\n'.format(section))
-                for option, value in getattr(self, section).options.iteritems():
-                    template = '{0} = {1}\n'.format(option, value)
-                    self.config_file.append(template)
-            else:
-                start_of_section = (self.config_file
-                                        .index('[{0}]\n'.format(section)) + 1)
+            section_tag = "[{0}]\n".format(section)
+            # add new sections to config file
+            if section_tag not in self._config_file:
+                self._config_file.append(section_tag)
 
                 for option, value in getattr(self, 
-                                             section).options.iteritems():
-                    if hasattr(value, 'sort'):
-                        value = '[{0}]'.format(', '.join(value))
-
-                    new_option = False
-                    template = '{0} = {1}\n'.format(option, value)
-                    for index, line in enumerate(self.config_file[:]):
-                        if option in line:
-                            new_option = False
-                            if str(value) not in line:
-                                self.config_file[index] = template
-
+                                             section).entries.iteritems():
+                    self._config_file.append("{0} = {1}").format(option, value)
+            else:
+                # find new options and place them in the appropriate section
+                end_of_section = self._config_file.index(section_tag) + 1
+                for option, value in (getattr(self, 
+                                      section).entries.iteritems()):
+                    end_of_section += 1
+                    template = "{0} = {1}\n".format(option, str(value))
+                    
+                    for index, line in enumerate(self._config_file[:]):
+                        if line.startswith(option):
+                            isNewOption = False
+                            self._config_file[index] = template
                             break
                         else:
-                            new_option = True
-                    if new_option:
-                        while self.config_file[start_of_section].startswith('#'):
-                            start_of_section += 1
+                            isNewOption = True
 
-                        self.config_file.insert(start_of_section, template)
+                    if isNewOption:
+                        self._config_file[end_of_section] = template
 
-        with open(filename, 'w') as out_stream:
-            for line in self.config_file:
-                out_stream.write(line)
+        # write file
+        with open(filename, 'w') as outfile:
+            for line in self._config_file:
+                outfile.write(line)
 
     @property
     def sections(self):
         """ Returns a list of existing sections"""
+        return [key for key in self.__dict__.keys() if not key.startswith('_')]
         sections = self.__dict__.keys()
-        sections.pop(sections.index('config_file'))
-        sections.pop(sections.index('paths'))
-        sections.pop(sections.index('filename'))
-        
+
         return sections
 
     @property
+    def paths(self):
+        return self._paths
+
+    @property
     def system_path(self):
-        return self.paths['system']
+        return self._paths['system']
 
     @property
     def user_path(self):
-        return self.paths['user']
+        return self._paths['user']
 
     @property
     def config_path(self):
-        return self.paths['config']
+        return self._paths['config']
 
 
 if __name__ == '__main__':

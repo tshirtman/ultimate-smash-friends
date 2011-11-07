@@ -80,3 +80,5 @@ class Keyboard(Screen):
         if action.text == _('Back'):
             return "goto:back"
 
+        CONFIG.write()
+
