@@ -41,8 +41,8 @@ msgstr "Chargement..."
 msgid "about"
 msgstr "à propos"
 
-#: screen/about.py:33 screen/about.py:37 screen/screen_screen.py:60
-#: screen/screen_screen.py:80 screen/characters.py:117
+#: screen/about.py:33 screen/about.py:37 screen/display.py:60
+#: screen/display.py:80 screen/characters.py:117
 #: screen/characters.py:142 screen/keyboard.py:61 screen/keyboard.py:68
 #: screen/sound.py:38 screen/sound.py:45 screen/configure.py:37
 #: screen/configure.py:46 screen/level.py:70 screen/level.py:79
@@ -66,23 +66,23 @@ msgstr "A propos"
 msgid "Quit"
 msgstr "Quitter"
 
-#: screen/screen_screen.py:31
+#: screen/display.py:31
 msgid "screen configuration"
 msgstr "affichage"
 
-#: screen/screen_screen.py:41
+#: screen/display.py:41
 msgid "Screen resolution (requires a restart):"
 msgstr "Résolution (nécessite un redémarrage):"
 
-#: screen/screen_screen.py:44
+#: screen/display.py:44
 msgid "Fullscreen:"
 msgstr "Plein écran :"
 
-#: screen/screen_screen.py:49
+#: screen/display.py:49
 msgid "Zoom sharpness:"
 msgstr "Qualité du zoom :"
 
-#: screen/screen_screen.py:54
+#: screen/display.py:54
 msgid "Show FPS:"
 msgstr "Voir les FPS"
 
