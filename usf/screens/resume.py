@@ -17,28 +17,30 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
-import pygame
+'''
+The Pause/Resume screen, allow to go to configuration, to leave game or to
+resume playing the current game.
 
-from usf.screen.screen import Screen
-from usf.widgets.box import VBox
+'''
+
+from usf.screens.screen import Screen
 from usf.widgets.button import Button
+from usf.widgets.box import VBox
 from usf.translation import _
 
-class NetworkScreen(Screen):
-    def init(self):
-        self.set_name("ultimate smash friends")
-        self.add(VBox())
 
-        self.widget.add(Button(_('Host game')))
-        self.widget.add(Button(_('Join game')))
-        self.widget.add(Button(_('Back')), margin=30)
+class Resume(Screen):
+    def init(self):
+        self.add(VBox())
+        self.widget.add(Button('Resume'))
+        self.widget.add(Button(_('Configure')))
+        self.widget.add(Button('Quit the game'))
 
     def callback(self, action):
-        if action.text == _('Host game'):
-            # TODO here we should start a server protocol
-            return 'goto:network_game_conf_screen'
-        if action.text == _('Join game'):
-            return 'goto:network_join'
-        if action.text == _('Back'):
-            return "goto:back"
+        if action.text == 'Resume':
+            return "game:continue"
+        if action.text == 'Quit the game':
+            return 'game:stop'
+        if action.text == _('Configure'):
+            return 'goto:configure'
 
