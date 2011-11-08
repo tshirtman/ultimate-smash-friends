@@ -38,16 +38,15 @@ from usf.screens.level import Level
 from usf.screens.main_screen import MainScreen
 from usf.screens.resume import Resume
 from usf.screens.display import Display
-from usf.screens.sound import Sound
+from usf.screens.audio import Audio
 from usf.screens.network_screen import NetworkScreen
 from usf.screens.network_join_screen import NetworkJoinScreen
 from usf.screens.network_game_conf_screen import NetworkGameConfScreen
 from usf.skin import Skin
 from usf.translation import _
 from usf.widgets.widget import optimize_size
-import usf.loaders as loaders
-
-CONFIG = loaders.get_config()
+from usf import loaders
+from usf import CONFIG
 
 class Gui(object):
     """
@@ -66,7 +65,7 @@ class Gui(object):
         self.screens['configure'] = Configure('configure', self.screen)
         self.screens['about'] = About('about', self.screen)
         self.screens['resume'] = Resume('resume', self.screen)
-        self.screens['sound'] = Sound('sound', self.screen)
+        self.screens['sound'] = Audio('sound', self.screen)
         self.screens['display'] = Display('display',
                 self.screen)
         self.screens['keyboard'] = Keyboard('keyboard', self.screen)

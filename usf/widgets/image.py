@@ -22,7 +22,7 @@ import os
 
 from usf.widgets.widget import Widget
 from usf import loaders
-CONFIG = loaders.get_config()
+from usf import CONFIG
 
 
 class Image(Widget):

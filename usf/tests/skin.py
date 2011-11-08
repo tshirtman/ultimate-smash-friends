@@ -23,7 +23,7 @@
 # TODO: skin.Skin is not tested
 
 from usf import skin
-from usf import loaders
+
 
 import unittest
 from xml.etree.ElementTree import ElementTree
@@ -42,7 +42,7 @@ class TestLayer(unittest.TestCase):
 
         # Read the xml file of blobplanet level
         attrib = ElementTree()
-        attrib.parse(loaders.get_config().paths['system'] +
+        attrib.parse(CONFIG.paths['system'] +
                 "levels/blobplanet/level.xml")
 
         # Let's use the first layer node, we know it values

@@ -25,10 +25,10 @@ import pygame
 from os.path import join
 
 from usf.widgets.widget import Widget
-import usf
-from usf import loaders
+
 from usf.font import fonts
-CONFIG = loaders.get_config()
+from usf import loaders
+from usf import CONFIG
 
 
 class Label(Widget):

@@ -23,11 +23,11 @@ from os.path import join
 
 #our modules
 from usf.widgets.widget import Widget
-from usf import loaders
+
 from usf.font import fonts
 from usf.subpixel.subpixelsurface import SubPixelSurface
-#CONFIG
-CONFIG = loaders.get_config()
+from usf import loaders
+from usf import CONFIG
 
 
 class Paragraph(Widget):

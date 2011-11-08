@@ -37,7 +37,7 @@ import threading
 from usf.game import Game, NetworkServerGame #, NetworkClientGame
 from usf.gui import Gui
 from usf.controls import Controls
-from usf import loaders
+
 from usf.music import Music
 from usf.font import fonts
 from usf.ai import AI
@@ -45,7 +45,9 @@ from usf.ai import AI
 from usf.translation import _
 
 
-CONFIG = loaders.get_config()
+from usf import loaders
+from usf import CONFIG
+
 logging.basicConfig(
         filename=os.path.join(
             CONFIG.user_path,
@@ -285,8 +287,7 @@ class Main(object):
     def init_sound(self):
         """ various audio initialisations
         """
-        if CONFIG.audio.MUSIC:
-            self.music = Music()
+        self.music = Music()
 
     def manage_menu(self):
         """ manage input and update menu if we are in the menu state
