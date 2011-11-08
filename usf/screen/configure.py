@@ -47,7 +47,7 @@ class Configure(Screen):
         if action.text == _('Audio'):
             return "goto:sound"
         if action.text == _('Screen'):
-            return "goto:screen_screen"
+            return "goto:display"
         if action.text == _('Keyboard'):
             return "goto:keyboard"
         if action.text == _('Back'):

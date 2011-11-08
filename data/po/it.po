@@ -41,8 +41,8 @@ msgstr "Caricamento..."
 msgid "about"
 msgstr "Informazioni"
 
-#: screen/about.py:33 screen/about.py:37 screen/screen_screen.py:60
-#: screen/screen_screen.py:80 screen/characters.py:117
+#: screen/about.py:33 screen/about.py:37 screen/display.py:60
+#: screen/display.py:80 screen/characters.py:117
 #: screen/characters.py:142 screen/keyboard.py:61 screen/keyboard.py:68
 #: screen/sound.py:38 screen/sound.py:45 screen/configure.py:37
 #: screen/configure.py:46 screen/level.py:70 screen/level.py:79
@@ -66,23 +66,23 @@ msgstr "Ringraziamenti"
 msgid "Quit"
 msgstr "Uscita"
 
-#: screen/screen_screen.py:31
+#: screen/display.py:31
 msgid "screen configuration"
 msgstr "configurazione dello schermo"
 
-#: screen/screen_screen.py:41
+#: screen/display.py:41
 msgid "Screen resolution (requires a restart):"
 msgstr "Risoluzione dello schermo (richiede un riavvio):"
 
-#: screen/screen_screen.py:44
+#: screen/display.py:44
 msgid "Fullscreen:"
 msgstr "Schermo intero:"
 
-#: screen/screen_screen.py:49
+#: screen/display.py:49
 msgid "Zoom sharpness:"
 msgstr "Precisione dello zoom:"
 
-#: screen/screen_screen.py:54
+#: screen/display.py:54
 msgid "Show FPS:"
 msgstr "esporre \"frami per sicondi\""
 

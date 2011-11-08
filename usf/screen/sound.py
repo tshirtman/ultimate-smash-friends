@@ -27,6 +27,7 @@ from usf.widgets.box import VBox
 from usf.widgets.slider import Slider
 from usf.widgets.label import Label
 from usf.widgets.button import Button
+from usf.widgets.checkbox_text import TextCheckBox
 from usf.translation import _
 
 from usf import loaders
@@ -36,22 +37,44 @@ CONFIG = loaders.get_config()
 
 class Sound(Screen):
     def init(self):
+        # create widgets
         self.add(VBox())
-        self.widget.add(Label(_('Sound and effects')))
-        sound = Slider('sound_slider')
-        self.widget.add(sound, margin=10, size=(220, 30))
-        self.widget.add(Label(_('Music')))
-        music = Slider('music_slider')
-        self.widget.add(music, size=(220, 30))
+        self.widget.add(Label(_('Sound and Music')))
 
-        music.set_value(CONFIG.audio.MUSIC_VOLUME)
-        sound.set_value(CONFIG.audio.SOUND_VOLUME)
+        self.sound = TextCheckBox(_('Sound'))
+        self.sound_volume = Slider('Sound Volume')
+        self.music = TextCheckBox(_('Music'))
+        self.music_volume = Slider('Music Volume')
+
+        # set values from config
+        self.sound.set_value(CONFIG.audio.SOUND)
+        self.sound_volume.set_value(CONFIG.audio.SOUND_VOLUME)
+        self.music.set_value(CONFIG.audio.MUSIC)
+        self.music_volume.set_value(CONFIG.audio.MUSIC_VOLUME)
+
+        # add widgets
+        self.widget.add(self.sound)
+        self.widget.add(self.sound_volume, margin=10, size=(220, 30))
+        self.widget.add(self.music)
+        self.widget.add(self.music_volume, margin=10, size=(220, 30))
         self.widget.add(Button(_('Back')), margin=30)
-
+                
     def callback(self, action):
-        if action.text == 'music_slider':
+        if action.text == 'Music Volume':
             CONFIG.audio.MUSIC_VOLUME = action.get_value()
-        if action.text == 'sound_slider':
+        if action.text == 'Sound Volume':
             CONFIG.audio.SOUND_VOLUME = action.get_value()
+        if action.text == 'Music':
+            if CONFIG.audio.MUSIC:
+                CONFIG.audio.MUSIC = False
+            else:
+                CONFIG.audio.MUSIC = True
+        if action.text == 'Sound':
+            if CONFIG.audio.SOUND:
+                CONFIG.audio.SOUND = False
+            else:
+                CONFIG.audio.SOUND = True
         if action.text == _('Back'):
             return "goto:back"
+
+        CONFIG.write()

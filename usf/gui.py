@@ -37,7 +37,7 @@ from usf.screen.keyboard import Keyboard
 from usf.screen.level import Level
 from usf.screen.main_screen import MainScreen
 from usf.screen.resume import Resume
-from usf.screen.screen_screen import ScreenScreen
+from usf.screen.display import Display
 from usf.screen.sound import Sound
 from usf.screen.network_screen import NetworkScreen
 from usf.screen.network_join_screen import NetworkJoinScreen
@@ -67,7 +67,7 @@ class Gui(object):
         self.screens['about'] = About('about', self.screen)
         self.screens['resume'] = Resume('resume', self.screen)
         self.screens['sound'] = Sound('sound', self.screen)
-        self.screens['screen_screen'] = ScreenScreen('screen_screen',
+        self.screens['display'] = Display('display',
                 self.screen)
         self.screens['keyboard'] = Keyboard('keyboard', self.screen)
         self.screens['level'] = Level('level', self.screen)
