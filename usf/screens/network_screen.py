@@ -1,5 +1,5 @@
 ################################################################################
-# copyright 2009 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
+# copyright 2010 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
 #                                                                              #
 # This file is part of Ultimate Smash Friends.                                 #
 #                                                                              #
@@ -17,38 +17,28 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
-'''
-The Base Configuration screen, show buttons to other configuration screens.
+import pygame
 
-'''
-
-from usf.screen.screen import Screen
-
+from usf.screens.screen import Screen
 from usf.widgets.box import VBox
 from usf.widgets.button import Button
-
 from usf.translation import _
 
-class Configure(Screen):
+class NetworkScreen(Screen):
     def init(self):
+        self.name = "ultimate smash friends"
         self.add(VBox())
-        self.set_name(_("configure"))
 
-        #I18N:option screen
-        self.widget.add(Button(_('Audio')))
-
-        self.widget.add(Button(_('Screen')))
-
-        self.widget.add(Button(_('Keyboard')))
-
-        self.widget.add(Button(_('Back')), margin=100)
+        self.widget.add(Button(_('Host game')))
+        self.widget.add(Button(_('Join game')))
+        self.widget.add(Button(_('Back')), margin=30)
 
     def callback(self, action):
-        if action.text == _('Audio'):
-            return "goto:sound"
-        if action.text == _('Screen'):
-            return "goto:display"
-        if action.text == _('Keyboard'):
-            return "goto:keyboard"
+        if action.text == _('Host game'):
+            # TODO here we should start a server protocol
+            return 'goto:network_game_conf_screen'
+        if action.text == _('Join game'):
+            return 'goto:network_join'
         if action.text == _('Back'):
             return "goto:back"
+

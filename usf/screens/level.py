@@ -17,64 +17,67 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
+
 '''
-The Sound configuration screen. to manage music and SFX volume.
+The Screen to choose the level to be played.
 
 '''
 
-from usf.screen.screen import Screen
+
+#standard imports
+from os.path import join
+import os
+import logging
+
+#our modules
+from usf.screens.screen import Screen
 from usf.widgets.box import VBox
-from usf.widgets.slider import Slider
-from usf.widgets.label import Label
 from usf.widgets.button import Button
-from usf.widgets.checkbox_text import TextCheckBox
-from usf.translation import _
+from usf.widgets.coverflow import Coverflow
 
 from usf import loaders
-
 CONFIG = loaders.get_config()
 
+from usf.translation import _
 
-class Sound(Screen):
+class Level(Screen):
+
     def init(self):
-        # create widgets
         self.add(VBox())
-        self.widget.add(Label(_('Sound and Music')))
 
-        self.sound = TextCheckBox(_('Sound'))
-        self.sound_volume = Slider('Sound Volume')
-        self.music = TextCheckBox(_('Music'))
-        self.music_volume = Slider('Music Volume')
+        coverflow_data = []
+        #create a level image for every directory in the level directory.
+        files = os.listdir(os.path.join( CONFIG.system_path, 'levels'))
+        files.sort()
 
-        # set values from config
-        self.sound.set_value(CONFIG.audio.SOUND)
-        self.sound_volume.set_value(CONFIG.audio.SOUND_VOLUME)
-        self.music.set_value(CONFIG.audio.MUSIC)
-        self.music_volume.set_value(CONFIG.audio.MUSIC_VOLUME)
+        for f in files:
+            try:
+                if 'level.xml' in os.listdir(
+                        os.path.join(CONFIG.system_path, "levels", f)):
+                    coverflow_data.append([])
+                    coverflow_data[-1].append(f)
+                    coverflow_data[-1].append(
+                            join(
+                                CONFIG.system_path,
+                                "levels", f, "screenshot.png"))
+            except:
+                logging.debug(str(f) +" is not a valid level.")
 
-        # add widgets
-        self.widget.add(self.sound)
-        self.widget.add(self.sound_volume, margin=10, size=(220, 30))
-        self.widget.add(self.music)
-        self.widget.add(self.music_volume, margin=10, size=(220, 30))
-        self.widget.add(Button(_('Back')), margin=30)
-                
+        self.coverflow = Coverflow(coverflow_data)
+        self.widget.add(self.coverflow, size=(800, 275))
+        self.widget.add(Button(_('Go !')), margin_left=290)
+        self.widget.add(
+                Button(_('Back')),
+                size=(150, 40),
+                margin_left=20,
+                margin=20)
+
+    def get_level(self):
+        return self.coverflow.get_value()
+
     def callback(self, action):
-        if action.text == 'Music Volume':
-            CONFIG.audio.MUSIC_VOLUME = action.get_value()
-        if action.text == 'Sound Volume':
-            CONFIG.audio.SOUND_VOLUME = action.get_value()
-        if action.text == 'Music':
-            if CONFIG.audio.MUSIC:
-                CONFIG.audio.MUSIC = False
-            else:
-                CONFIG.audio.MUSIC = True
-        if action.text == 'Sound':
-            if CONFIG.audio.SOUND:
-                CONFIG.audio.SOUND = False
-            else:
-                CONFIG.audio.SOUND = True
+        if action.text == _('Go !'):
+            return "game:new"
+
         if action.text == _('Back'):
             return "goto:back"
-
-        CONFIG.write()

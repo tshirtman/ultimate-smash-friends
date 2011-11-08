@@ -17,67 +17,68 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
+'''
+The screen to configure the Keyboard.
 
 '''
-The Screen to choose the level to be played.
 
-'''
-
-
-#standard imports
 from os.path import join
-import os
-import logging
 
-#our modules
-from usf.screen.screen import Screen
-from usf.widgets.box import VBox
+from usf.screens.screen import Screen
+from usf.widgets.box import VBox, HBox
 from usf.widgets.button import Button
-from usf.widgets.coverflow import Coverflow
-
-from usf import loaders
-CONFIG = loaders.get_config()
+from usf.widgets.label import Label
+from usf.widgets.special import KeyboardWidget
+from usf.widgets.image import Image
 
 from usf.translation import _
+from usf import loaders
 
-class Level(Screen):
+CONFIG = loaders.get_config()
+
+
+class Keyboard(Screen):
 
     def init(self):
         self.add(VBox())
+        self.name = _("keyboard")
 
-        coverflow_data = []
-        #create a level image for every directory in the level directory.
-        files = os.listdir(os.path.join( CONFIG.system_path, 'levels'))
-        files.sort()
+        hbox = HBox()
+        hbox.add(Label(" "), size=(80, 20))
+        for img in ['left.png', 'right.png', 'top.png', 'bottom.png']:
+            hbox.add(Image(join(
+                'gui',
+                CONFIG.general.THEME,
+                img)),
+                size=(40, 30),
+                margin=30)
 
-        for f in files:
-            try:
-                if 'level.xml' in os.listdir(
-                        os.path.join(CONFIG.system_path, "levels", f)):
-                    coverflow_data.append([])
-                    coverflow_data[-1].append(f)
-                    coverflow_data[-1].append(
-                            join(
-                                CONFIG.system_path,
-                                "levels", f, "screenshot.png"))
-            except:
-                logging.debug(str(f) +" is not a valid level.")
 
-        self.coverflow = Coverflow(coverflow_data)
-        self.widget.add(self.coverflow, size=(800, 275))
-        self.widget.add(Button(_('Go !')), margin_left=290)
-        self.widget.add(
-                Button(_('Back')),
-                size=(150, 40),
-                margin_left=20,
-                margin=20)
+        hbox.add(Label('B'), size=(30, 40), margin=40, align="center")
+        hbox.add(Label('A'), size=(30, 40), margin=40, align="center")
+        hbox.add(Label(_("Shield")), size=(60, 40), margin=10, align="center")
+        self.widget.add(hbox)
+        action_ = ['Left', 'Right', 'Up', 'Down', 'A', 'B', 'Shield']
 
-    def get_level(self):
-        return self.coverflow.get_value()
+        #one iteration by player
+        for i in xrange(4):
+            hbox = HBox()
+            hbox.add(Label('Player ' + str(i + 1)), size=(80, 50))
+            for action in action_:
+                w = KeyboardWidget(
+			getattr(CONFIG.keyboard, 'PL' + str(i + 1) + '_' + action.upper()))
+                w.set_id('PL' + str(i + 1) + '_' + action.upper())
+                hbox.add(w, size=(40, 40), margin=30)
+            self.widget.add(hbox)
+        self.widget.add(Button(_('Back')), align="center")
+
+        self.widget.update_pos()
 
     def callback(self, action):
-        if action.text == _('Go !'):
-            return "game:new"
-
+        if type(action) == KeyboardWidget:
+            setattr(CONFIG.keybaord, action.get_id(), action.get_value)
         if action.text == _('Back'):
             return "goto:back"
+
+        CONFIG.write()
+
