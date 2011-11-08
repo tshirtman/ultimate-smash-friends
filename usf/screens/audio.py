@@ -18,67 +18,63 @@
 ################################################################################
 
 '''
-The screen to configure the Keyboard.
+The Sound configuration screen. to manage music and SFX volume.
 
 '''
 
-from os.path import join
-
-from usf.screen.screen import Screen
-from usf.widgets.box import VBox, HBox
-from usf.widgets.button import Button
+from usf.screens.screen import Screen
+from usf.widgets.box import VBox
+from usf.widgets.slider import Slider
 from usf.widgets.label import Label
-from usf.widgets.special import KeyboardWidget
-from usf.widgets.image import Image
-
+from usf.widgets.button import Button
+from usf.widgets.checkbox_text import TextCheckBox
 from usf.translation import _
+
 from usf import loaders
 
 CONFIG = loaders.get_config()
 
 
-class Keyboard(Screen):
-
+class Audio(Screen):
     def init(self):
+        # create widgets
         self.add(VBox())
-        self.set_name(_("keyboard"))
+        self.widget.add(Label(_('Sound and Music')))
 
-        hbox = HBox()
-        hbox.add(Label(" "), size=(80, 20))
-        for img in ['left.png', 'right.png', 'top.png', 'bottom.png']:
-            hbox.add(Image(join(
-                'gui',
-                CONFIG.general.THEME,
-                img)),
-                size=(40, 30),
-                margin=30)
+        self.sound = TextCheckBox(_('Sound'))
+        self.sound_volume = Slider('Sound Volume')
+        self.music = TextCheckBox(_('Music'))
+        self.music_volume = Slider('Music Volume')
 
+        # set values from config
+        self.sound.set_value(CONFIG.audio.SOUND)
+        self.sound_volume.set_value(CONFIG.audio.SOUND_VOLUME)
+        self.music.set_value(CONFIG.audio.MUSIC)
+        self.music_volume.set_value(CONFIG.audio.MUSIC_VOLUME)
 
-        hbox.add(Label('B'), size=(30, 40), margin=40, align="center")
-        hbox.add(Label('A'), size=(30, 40), margin=40, align="center")
-        hbox.add(Label(_("Shield")), size=(60, 40), margin=10, align="center")
-        self.widget.add(hbox)
-        action_ = ['Left', 'Right', 'Up', 'Down', 'A', 'B', 'Shield']
-
-        #one iteration by player
-        for i in xrange(4):
-            hbox = HBox()
-            hbox.add(Label('Player ' + str(i + 1)), size=(80, 50))
-            for action in action_:
-                w = KeyboardWidget(
-			getattr(CONFIG.keyboard, 'PL' + str(i + 1) + '_' + action.upper()))
-                w.set_id('PL' + str(i + 1) + '_' + action.upper())
-                hbox.add(w, size=(40, 40), margin=30)
-            self.widget.add(hbox)
-        self.widget.add(Button(_('Back')), align="center")
-
-        self.widget.update_pos()
-
+        # add widgets
+        self.widget.add(self.sound)
+        self.widget.add(self.sound_volume, margin=10, size=(220, 30))
+        self.widget.add(self.music)
+        self.widget.add(self.music_volume, margin=10, size=(220, 30))
+        self.widget.add(Button(_('Back')), margin=30)
+                
     def callback(self, action):
-        if type(action) == KeyboardWidget:
-            setattr(CONFIG.keybaord, action.get_id(), action.get_value)
+        if action.text == 'Music Volume':
+            CONFIG.audio.MUSIC_VOLUME = action.get_value()
+        if action.text == 'Sound Volume':
+            CONFIG.audio.SOUND_VOLUME = action.get_value()
+        if action.text == 'Music':
+            if CONFIG.audio.MUSIC:
+                CONFIG.audio.MUSIC = False
+            else:
+                CONFIG.audio.MUSIC = True
+        if action.text == 'Sound':
+            if CONFIG.audio.SOUND:
+                CONFIG.audio.SOUND = False
+            else:
+                CONFIG.audio.SOUND = True
         if action.text == _('Back'):
             return "goto:back"
 
         CONFIG.write()
-

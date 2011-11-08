@@ -22,7 +22,7 @@ fullscreen, display fps...)
 
 '''
 
-from usf.screen.screen import Screen
+from usf.screens.screen import Screen
 from usf.widgets.box import VBox
 from usf.widgets.label import Label
 from usf.widgets.checkbox_text import TextCheckBox
@@ -40,7 +40,7 @@ class Display(Screen):
 
     def init(self):
         self.add(VBox())
-        self.set_name(_("display configuration"))
+        self.name = _("display configuration")
         modes = []
         for resolution in pygame.display.list_modes():
             if resolution[0] >= 800:
