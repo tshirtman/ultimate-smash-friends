@@ -32,10 +32,12 @@ CONFIG = loaders.get_config()
 
 class Screen(object):
 
-    def __init__(self, name, screen):
+    def __init__(self, name, surface):
+        self._name = name
+        self.indent_title = 0
+        self.surface = surface
+        
         self.current_focus = -1
-        self.set_name(name)
-        self.screen = screen
         self.init()
         self.update_pos()
 
@@ -52,8 +54,8 @@ class Screen(object):
         self.widget.update_pos()
 
     def update(self):
-        #draw the title of the screen
-        self.screen.blit(loaders.text(self.name, fonts['mono']['15']),
+        #draw the title of the surface
+        self.surface.blit(loaders.text(self.name, fonts['mono']['15']),
                 (self.indent_title, 10))
 
         #draw all the others widgets
@@ -69,13 +71,18 @@ class Screen(object):
     def callback(self, action):
         pass
 
-    def set_name(self, name):
-        self.name = name.replace('_', ' ')
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter 
+    def name(self, name):
+        self._name = name.replace('_', ' ')
 
         #center the title
         self.indent_title = (
                 CONFIG.general.WIDTH/2 - loaders.text(
-                    self.name, fonts['mono']['15']).get_width()/2)
+                    self._name, fonts['mono']['15']).get_width()/2)
 
     def update_pos(self):
         self.widget.update_size()
@@ -151,5 +158,5 @@ class Screen(object):
                     self.current_focus += 1
 
         #this shouldn't happen, excepted if there is no focusable widget
-        #in the screen (and it shoudn't happen, since there is back, at least)
+        #in the surface (and it shoudn't happen, since there is back, at least)
         return False, False

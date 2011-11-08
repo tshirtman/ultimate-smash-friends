@@ -1,5 +1,5 @@
 ################################################################################
-# copyright 2010 Lucas Baudin <xapantu@gmail.com>                              #
+# copyright 2009 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
 #                                                                              #
 # This file is part of Ultimate Smash Friends.                                 #
 #                                                                              #
@@ -18,33 +18,37 @@
 ################################################################################
 
 '''
-The About/Credit screen.
+The Base Configuration screen, show buttons to other configuration screens.
 
 '''
 
-from usf.screen.screen import Screen
-from usf import loaders
+from usf.screens.screen import Screen
 
 from usf.widgets.box import VBox
 from usf.widgets.button import Button
-from usf.widgets.paragraph import Paragraph
 
 from usf.translation import _
 
-class About(Screen):
-
+class Configure(Screen):
     def init(self):
-        self.set_name(_("about"))
         self.add(VBox())
+        self.name = _("configure")
 
-        self.widget.add(Paragraph('CREDITS'),
-                size=(
-                    490*loaders.get_config().general.WIDTH/800,
-                    300*loaders.get_config().general.HEIGHT/600))
+        #I18N:option screen
+        self.widget.add(Button(_('Audio')))
 
-        self.widget.add(Button(_('Back')),
-                        margin=55)
+        self.widget.add(Button(_('Screen')))
+
+        self.widget.add(Button(_('Keyboard')))
+
+        self.widget.add(Button(_('Back')), margin=100)
 
     def callback(self, action):
+        if action.text == _('Audio'):
+            return "goto:sound"
+        if action.text == _('Screen'):
+            return "goto:display"
+        if action.text == _('Keyboard'):
+            return "goto:keyboard"
         if action.text == _('Back'):
             return "goto:back"

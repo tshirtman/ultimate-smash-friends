@@ -17,36 +17,39 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
+'''
+The main screen of the Gui, the first one shown to the user when game is
+started.
+
+'''
+
 import pygame
 
-from usf.screen.screen import Screen
+from usf.screens.screen import Screen
 from usf.widgets.box import VBox
-from usf.widgets.label import Label
 from usf.widgets.button import Button
-from usf.widgets.text_entry import TextEntry
 from usf.translation import _
 
-
-class NetworkJoinScreen(Screen):
+class MainScreen(Screen):
     def init(self):
-        self.set_name("ultimate smash friends")
+        self.name = "ultimate smash friends"
         self.add(VBox())
 
-        self.widget.add(Label('Address of server:'))
-        self.ip = TextEntry('X.X.X.X')
-        self.widget.add(self.ip)
-        self.widget.add(Button(_('Join game')))
-        self.widget.add(Button(_('Back')), margin=30)
+        self.widget.add(Button(_('Local game')))
+        self.widget.add(Button(_('Network game')))
+        self.widget.add(Button(_('Configure')))
+        self.widget.add(Button(_('Credits')))
+        self.widget.add(Button(_('Quit')))
 
     def callback(self, action):
-        if action.text == _('Join game'):
-            # TODO: disable button
-
-            # TODO: start a connection attempt at self.ip
-
-            # if succeed, go to shared conf screen
-            return 'goto:network_game_conf_screen'
-
-        if action.text == _('Back'):
-            return "goto:back"
+        if action.text == _('Local game'):
+            return 'goto:characters'
+        if action.text == _('Network game'):
+            return 'goto:network'
+        if action.text == _('Configure'):
+            return 'goto:configure'
+        if action.text == _('Credits'):
+            return 'goto:about'
+        if action.text == _('Quit'):
+            pygame.event.post( pygame.event.Event(pygame.QUIT) )
 
