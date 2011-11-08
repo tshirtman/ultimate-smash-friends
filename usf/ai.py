@@ -27,10 +27,10 @@ from os import path
 import random
 
 # usf modules
-from usf import loaders
+
 from usf.memoize import memoize
 
-CONFIG = loaders.get_config()
+from usf import CONFIG
 #controls = controls.Controls()
 
 TIMESTEP = 0.25

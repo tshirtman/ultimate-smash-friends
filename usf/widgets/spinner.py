@@ -27,9 +27,9 @@ from usf.widgets.widget import optimize_size
 from usf.widgets.imagebutton import ImageButton
 from usf.widgets.label import Label
 from usf.widgets.box import HBox
-from usf import loaders
 
-CONFIG = loaders.get_config()
+
+from usf import CONFIG
 
 
 class Spinner(HBox):

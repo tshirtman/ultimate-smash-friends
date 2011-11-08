@@ -36,13 +36,12 @@ from usf.event_manager import EventManager
 from usf.font import fonts
 from usf.level import Level
 from usf.entity import Entity
-from usf import loaders
-
 from usf.translation import _
-
+from usf import loaders
+from usf import CONFIG 
 GAME_FONT = fonts['sans']['normal']
 
-CONFIG = loaders.get_config() 
+
 
 
 if not pygame.font:

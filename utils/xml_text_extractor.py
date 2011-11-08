@@ -24,9 +24,9 @@
 
 import os
 import re
-from usf import loaders
 
-CONFIG = loaders.get_config()
+
+from usf import CONFIG
 
 PATH = os.sep.join((CONFIG.system_path, 'gui'))
 

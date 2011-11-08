@@ -26,10 +26,10 @@ import pygame
 import os
 
 from usf.widgets.widget import Widget, optimize_size
-from usf import loaders
 from usf.font import fonts
 from usf.controls import reverse_keymap
-CONFIG = loaders.get_config()
+from usf import loaders
+from usf import CONFIG
 
 
 class KeyboardWidget(Widget):

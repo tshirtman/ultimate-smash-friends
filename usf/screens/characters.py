@@ -23,8 +23,8 @@ Describe the characters choice UI (for starting a game)
 '''
 
 from usf.screens.screen import Screen
-from usf import loaders
-CONFIG = loaders.get_config()
+
+from usf import CONFIG
 
 from usf.widgets.box import VBox, HBox
 from usf.widgets.button import Button

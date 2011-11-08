@@ -29,8 +29,8 @@ from xml.etree import ElementTree
 
 from usf.animations import Frame, PreciseTimedAnimation
 from usf import loaders
+from usf import CONFIG 
 
-CONFIG = loaders.get_config() 
 SIZE = (CONFIG.general.WIDTH,
         CONFIG.general.HEIGHT)
 

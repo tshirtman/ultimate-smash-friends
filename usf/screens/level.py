@@ -35,8 +35,8 @@ from usf.widgets.box import VBox
 from usf.widgets.button import Button
 from usf.widgets.coverflow import Coverflow
 
-from usf import loaders
-CONFIG = loaders.get_config()
+
+from usf import CONFIG
 
 from usf.translation import _
 

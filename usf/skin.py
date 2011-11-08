@@ -25,10 +25,8 @@ from xml.etree.ElementTree import ElementTree
 import pygame
 
 # Our modules
-
 from usf import loaders
-
-CONFIG = loaders.get_config()
+from usf import CONFIG
 
 
 class Skin (object):

@@ -30,16 +30,15 @@ from usf.widgets.button import Button
 from usf.widgets.checkbox_text import TextCheckBox
 from usf.translation import _
 
-from usf import loaders
 
-CONFIG = loaders.get_config()
+from usf import CONFIG
 
 
 class Audio(Screen):
     def init(self):
         # create widgets
         self.add(VBox())
-        self.widget.add(Label(_('Sound and Music')))
+        self.name = _('Audio Options')
 
         self.sound = TextCheckBox(_('Sound'))
         self.sound_volume = Slider('Sound Volume')

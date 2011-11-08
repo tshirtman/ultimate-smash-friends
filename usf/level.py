@@ -30,14 +30,13 @@ import pygame
 import logging
 from xml.etree import ElementTree
 
-from usf import loaders
-from usf import skin
 
+from usf import skin
 from usf.debug_utils import draw_rect
 from usf.memoize import memoize
 from usf.particles import ParticlesGenerator
-
-CONFIG = loaders.get_config()
+from usf import loaders
+from usf import CONFIG
 
 
 class Decorum(object):

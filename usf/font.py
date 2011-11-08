@@ -18,8 +18,8 @@
 ################################################################################
 
 #our modules
-from usf import loaders
-CONFIG = loaders.get_config()
+
+from usf import CONFIG
 
 #standart imports
 import xml.etree.ElementTree as xml

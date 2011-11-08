@@ -30,17 +30,16 @@ from usf.widgets.spinner import Spinner
 from usf.widgets.slider import Slider
 from usf.widgets.button import Button
 from usf.translation import _
-from usf import loaders
-import pygame
 
-CONFIG = loaders.get_config()
+from usf import CONFIG
+import pygame
 
 
 class Display(Screen):
 
     def init(self):
         self.add(VBox())
-        self.name = _("display configuration")
+        self.name = _("Display Options")
         modes = []
         for resolution in pygame.display.list_modes():
             if resolution[0] >= 800:

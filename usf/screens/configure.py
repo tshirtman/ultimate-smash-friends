@@ -37,7 +37,7 @@ class Configure(Screen):
         #I18N:option screen
         self.widget.add(Button(_('Audio')))
 
-        self.widget.add(Button(_('Screen')))
+        self.widget.add(Button(_('Display')))
 
         self.widget.add(Button(_('Keyboard')))
 
@@ -46,7 +46,7 @@ class Configure(Screen):
     def callback(self, action):
         if action.text == _('Audio'):
             return "goto:sound"
-        if action.text == _('Screen'):
+        if action.text == _('Display'):
             return "goto:display"
         if action.text == _('Keyboard'):
             return "goto:keyboard"
