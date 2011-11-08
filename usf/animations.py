@@ -26,7 +26,7 @@ which are a bit more than an image...
 import pygame
 import logging
 
-import usf.loaders
+from usf import loaders
 
 
 class Frame (object):
@@ -61,7 +61,7 @@ class Frame (object):
             logging.error('incorrect type for hardshape: ', hardshape)
 
         self.hardshape_reverse = (
-            usf.loaders.image(self.image)[1][2]
+            loaders.image(self.image)[1][2]
                 - self.hardshape[0] - self.hardshape[2],
             self.hardshape[1],
             self.hardshape[2],
@@ -90,7 +90,7 @@ class PreciseTimedAnimation(object):
     def __init__(self, frames, attribs, server=False):
         self.frames = frames
         self.image = frames[0].image
-        self.rect = usf.loaders.image(self.image, nodisplay=server)[1]
+        self.rect = loaders.image(self.image, nodisplay=server)[1]
         self._start_time = 0
         self.playing = 0
 
@@ -151,5 +151,5 @@ class PreciseTimedAnimation(object):
                     self.agressivpoints = frame.agressivpoints
                     self.hardshape = frame.hardshape
 
-            self.rect = usf.loaders.image(self.image, nodisplay=server)[1]
+            self.rect = loaders.image(self.image, nodisplay=server)[1]
 

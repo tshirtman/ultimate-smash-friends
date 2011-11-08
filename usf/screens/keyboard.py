@@ -32,16 +32,15 @@ from usf.widgets.special import KeyboardWidget
 from usf.widgets.image import Image
 
 from usf.translation import _
-from usf import loaders
 
-CONFIG = loaders.get_config()
+from usf import CONFIG
 
 
 class Keyboard(Screen):
 
     def init(self):
         self.add(VBox())
-        self.name = _("keyboard")
+        self.name = _("Keyboard Options")
 
         hbox = HBox()
         hbox.add(Label(" "), size=(80, 20))

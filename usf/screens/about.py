@@ -23,7 +23,7 @@ The About/Credit screen.
 '''
 
 from usf.screens.screen import Screen
-from usf import loaders
+from usf import CONFIG
 
 from usf.widgets.box import VBox
 from usf.widgets.button import Button
@@ -39,8 +39,8 @@ class About(Screen):
 
         self.widget.add(Paragraph('CREDITS'),
                 size=(
-                    490*loaders.get_config().general.WIDTH/800,
-                    300*loaders.get_config().general.HEIGHT/600))
+                    490*CONFIG.general.WIDTH/800,
+                    300*CONFIG.general.HEIGHT/600))
 
         self.widget.add(Button(_('Back')),
                         margin=55)

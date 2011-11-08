@@ -9,9 +9,9 @@ from usf.translation import _
 import os
 import gettext
 
-from usf import loaders
 
-CONFIG = loaders.get_config()
+
+from usf import CONFIG
 LOCALE_DIR = os.path.join(CONFIG.system_path, "po")
 # Set up message catalog access
 

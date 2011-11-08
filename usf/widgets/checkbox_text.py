@@ -27,12 +27,12 @@ import pygame
 from os.path import join
 
 #our modules
-from usf import loaders
+
 from usf.widgets.box import HBox
 from usf.widgets.image import Image
 from usf.widgets.label import Label
 
-CONFIG = loaders.get_config()
+from usf import CONFIG
 
 
 class TextCheckBox(HBox):

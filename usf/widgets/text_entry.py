@@ -26,8 +26,9 @@ a player name.
 
 from usf.widgets.label import Label
 from usf.widgets.button import Button
-from usf import loaders
+
 from usf import font
+from usf import loaders
 from pygame.locals import (K_DOWN, K_UP, K_RETURN, K_LEFT, K_RIGHT, K_BACKSPACE,
         MOUSEBUTTONUP, K_DELETE)
 from pygame import draw

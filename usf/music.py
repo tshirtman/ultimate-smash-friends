@@ -27,11 +27,10 @@ import os
 import time
 import random
 
-
 from usf import loaders
+from usf import CONFIG
 
 mixer.init()
-CONFIG = loaders.get_config()
 
 
 class Music (object):

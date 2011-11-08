@@ -37,7 +37,7 @@ class Configure(Screen):
         #I18N:option screen
         self.widget.add(Button(_('Audio')))
 
-        self.widget.add(Button(_('Screen')))
+        self.widget.add(Button(_('Display')))
 
         self.widget.add(Button(_('Keyboard')))
 

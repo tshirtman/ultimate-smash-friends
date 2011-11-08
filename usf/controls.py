@@ -37,9 +37,8 @@ from pygame.locals import (
 
 # my imports
 from usf import loaders
-CONFIG = loaders.get_config()
-
-import usf.game as game
+from usf import CONFIG
+from usf import game
 
 
 def key_shield(the_key, player, game_instance):

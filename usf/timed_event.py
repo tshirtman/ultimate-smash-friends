@@ -26,9 +26,9 @@ import random
 import math
 import logging
 
-from usf import loaders
 
-CONFIG = loaders.get_config()
+
+from usf import CONFIG
 SIZE = (CONFIG.general.WIDTH,
         CONFIG.general.HEIGHT)
 
