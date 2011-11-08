@@ -46,7 +46,7 @@ class Configure(Screen):
     def callback(self, action):
         if action.text == _('Audio'):
             return "goto:sound"
-        if action.text == _('Screen'):
+        if action.text == _('Display'):
             return "goto:display"
         if action.text == _('Keyboard'):
             return "goto:keyboard"
