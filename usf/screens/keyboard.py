@@ -57,27 +57,29 @@ class Keyboard(Screen):
         hbox.add(Label('A'), size=(30, 40), margin=40, align="center")
         hbox.add(Label(_("Shield")), size=(60, 40), margin=10, align="center")
         self.widget.add(hbox)
-        action_ = ['Left', 'Right', 'Up', 'Down', 'A', 'B', 'Shield']
+        actions = ['Left', 'Right', 'Up', 'Down', 'A', 'B', 'Shield']
 
-        #one iteration by player
-        for i in xrange(4):
+        #one iteration per player
+        for i in xrange(1, 5):
             hbox = HBox()
             hbox.add(Label('Player ' + str(i + 1)), size=(80, 50))
-            for action in action_:
-                w = KeyboardWidget(
-			getattr(CONFIG.keyboard, 'PL' + str(i + 1) + '_' + action.upper()))
-                w.set_id('PL' + str(i + 1) + '_' + action.upper())
-                hbox.add(w, size=(40, 40), margin=30)
-            self.widget.add(hbox)
-        self.widget.add(Button(_('Back')), align="center")
 
+            for action in actions:
+                w = KeyboardWidget(getattr(CONFIG.keyboard, 
+                                       "PL{0}_{1}".format(i, action.upper())))
+                w.set_id("PL{0}_{1}".format(i, action.upper()))
+                hbox.add(w, size=(40, 40), margin=30)
+
+            self.widget.add(hbox)
+
+        self.widget.add(Button(_('Back')), align="center")
         self.widget.update_pos()
 
     def callback(self, action):
-        if type(action) == KeyboardWidget:
-            setattr(CONFIG.keybaord, action.get_id(), action.get_value)
+        if hasattr(action, 'letter'):
+            setattr(CONFIG.keyboard, action.get_id(), action.get_value())
+
         if action.text == _('Back'):
             return "goto:back"
 
         CONFIG.write()
-
