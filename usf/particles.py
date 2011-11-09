@@ -25,7 +25,7 @@ initial speed and friction.
 '''
 from math import pi, sin, cos
 from random import random
-from usf.loaders import image
+from loaders import image
 
 class Particle(object):
     '''

@@ -28,9 +28,10 @@ import os
 
 #our module
 from usf.widgets.widget import Widget
-from usf import loaders
+
 from usf.font import fonts
-CONFIG = loaders.get_config()
+from usf import loaders
+from usf import CONFIG
 
 
 def get_text_transparent(name):

@@ -27,7 +27,7 @@ import os
 from usf.widgets.widget import get_scale
 from usf.widgets.image import Image
 from usf import loaders
-CONFIG = loaders.get_config()
+from usf import CONFIG
 
 
 

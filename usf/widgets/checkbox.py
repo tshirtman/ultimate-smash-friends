@@ -28,9 +28,9 @@ from os.path import join
 
 #our modules
 from usf.widgets.widget import Widget, optimize_size
-from usf import loaders
 
-CONFIG = loaders.get_config()
+
+from usf import CONFIG
 
 
 class CheckBox(Widget):

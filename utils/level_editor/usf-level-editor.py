@@ -9,7 +9,7 @@ import math
 import getopt
 import time
 from xml.parsers.expat import ExpatError
-import logging
+import loggingl
 
 try:
     import pygtk
@@ -28,9 +28,9 @@ except:
 
 sys.path.append(os.path.join('..'))
 
-
+from usf import loader
 from usf import level
-from usf import loaders
+
 
 config = Config()
 

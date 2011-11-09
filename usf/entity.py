@@ -31,11 +31,8 @@ import os
 # my modules imports.
 from usf.entity_skin import EntitySkin
 from usf import loaders
-
 from usf.font import fonts
-
-CONFIG = loaders.get_config()
-
+from usf import CONFIG
 from usf.debug_utils import draw_rect
 
 class Actor(object):

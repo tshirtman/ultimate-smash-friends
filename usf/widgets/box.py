@@ -24,8 +24,8 @@ Some Box widgets as base for the GUI classes
 from usf.widgets.widget import Widget, optimize_size
 from usf.widgets.button import Button
 
-from usf import loaders
-CONFIG = loaders.get_config()
+
+from usf import CONFIG
 
 from os.path import join
 

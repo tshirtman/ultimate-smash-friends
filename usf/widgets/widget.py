@@ -26,9 +26,9 @@ other widgets.
 import pygame
 import time
 
-from usf import loaders
 
-CONFIG = loaders.get_config()
+
+from usf import CONFIG
 
 
 class Widget(object):

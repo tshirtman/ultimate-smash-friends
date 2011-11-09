@@ -27,8 +27,8 @@ game" button (maybe with some time delay, and with possibility to cancel?).
 '''
 
 from usf.screens.screen import Screen
-from usf import loaders
-CONFIG = loaders.get_config()
+
+from usf import CONFIG
 
 from usf.widgets.box import VBox, HBox
 from usf.widgets.button import Button
