@@ -21,4 +21,4 @@
 
 from usf.main import Main
 
-Main()
+m = Main()
