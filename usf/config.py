@@ -420,7 +420,7 @@ class Config(object):
 
                 for option, value in getattr(self, 
                                              section).entries.iteritems():
-                    self._config_file.append("{0} = {1}").format(option, value)
+                    self._config_file.append("{0} = {1}".format(option, value))
             else:
                 # find new options and place them in the appropriate section
                 end_of_section = self._config_file.index(section_tag) + 1
@@ -438,7 +438,7 @@ class Config(object):
                             isNewOption = True
 
                     if isNewOption:
-                        self._config_file[end_of_section] = template
+                        self._config_file.insert(end_of_section, template)
 
         # write file
         with open(filename, 'w') as outfile:
