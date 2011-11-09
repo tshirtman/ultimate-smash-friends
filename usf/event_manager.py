@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 ################################################################################
 # copyright 2008 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
 #                                                                              #
@@ -82,4 +81,3 @@ class EventManager(object):
                     [(i in event.params and event.params[i] == params[i])
                         for i in params])),
                 self.events)
-
