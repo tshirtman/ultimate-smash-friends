@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 """ The files method was adapted from the AutoDataDiscovery solution in the
     official Distutils Cookbook:
@@ -14,7 +14,7 @@ from os import environ, sep
 from os.path import abspath, join, splitext, isdir, isfile
 from sys import exit
 
-from usf import settings
+from usf.config import Config
 OS = platform.system().lower()
 
 if OS == 'darwin':
@@ -82,7 +82,7 @@ DATA = [(item[0], item[1]) for item in files('data')]
 DATA.append('CREDITS.txt')
 
 # makes sure an up-to-date config is always present when a package is built
-settings.generate_config('system.cfg')
+Config.generate('system.cfg')
 DATA.append('system.cfg')
 
 DOC = [(join('share', 'doc', 'ultimate-smash-friends') +
@@ -107,7 +107,7 @@ SCRIPTS = ['ultimate-smash-friends',
            'utils/tolevel.py',
            'utils/xml_text_extractor.py']
 
-PACKAGES = ['usf', 'usf.widgets', 'usf.screen', 'usf.subpixel']
+PACKAGES = ['usf', 'usf.widgets', 'usf.screens', 'usf.subpixel']
 
 REQUIRES = ['pygame (>=1.6)', 'python (>=2.5)', 'numpy']
 
