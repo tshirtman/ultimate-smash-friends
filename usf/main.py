@@ -432,4 +432,4 @@ if __name__ == '__main__':
     # Entry point of the game, if not imported from another script, launch the
     # main class with parameters (appart from program self name) if any.
 
-    M = Main()
+    m = Main()
