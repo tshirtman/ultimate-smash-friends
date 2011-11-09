@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 """ The files method was adapted from the AutoDataDiscovery solution in the
     official Distutils Cookbook:

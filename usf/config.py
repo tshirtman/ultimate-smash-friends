@@ -214,7 +214,6 @@ class Section(object):
     def values(self):
         """ Returns a list of existing values """
         entries = self.entries
-        print entries.values()
         return entries.values()
 
 
@@ -222,6 +221,7 @@ class Config(object):
     """ An object that represents a config file, its sectons,
         and the options defined within those sections.
     """
+
     def __init__(self, config_path='', system_path='', user_path='',
                  filename='user.cfg'):
         """ initializes a new config object. If no paths are given, they are
@@ -268,6 +268,12 @@ class Config(object):
                          for path in [system_path, user_path, config_path]]
             (self._paths['system'], self._paths['user'],
              self._paths['config']) = abs_paths
+
+        # create paths if they don't exist
+        #TODO: exception handling for unwritable paths
+        for path in self._paths.values():
+            if not os.path.exists(path):
+                os.makedirs(path)
 
         self.read()
 
@@ -373,33 +379,28 @@ class Config(object):
 
         for filename in filenames:
             section = None
-            if os.path.exists(filename):
-                try:
-                    self._config_file = open(filename, 'r').readlines()
-                except IOError as (errno, strerror):
-                    if errno == 2:
-                        if os.path.basename(filename).startswith('system'):
-                            print ('{0} could not be found. Please supply a '
-                                   'different path or generate a system config '
-                                   'file with:\n'
-                                   'python2 -m usf.config').format(filename)
-                            sys.exit(1)
-                    else:
-                        print 'Error No. {0}: {1} {2}'.format(errno, filename, strerror)
-                        sys.exit(1)
+            try:
+                self._config_file = open(filename, 'r').readlines()
+            except IOError as (errno, strerror):
+                # file not found
+                if errno == 2:
+                    if os.path.basename(filename).startswith('system'):
+                        self.generate(filename)
+                        self.read()
+                else:
+                    print 'Error No. {0}: {1} {2}'.format(errno, filename, strerror)
+                    sys.exit(1)
 
-                for line in self._config_file:
-                    if line.startswith('#') or line.strip() == '':
-                        continue
-                    elif line.startswith('[') and line.endswith(']\n'):
-                        getattr(self, line[1:-2])
-                        section = line[1:-2]
-                    else:
-                        option, value = [item.strip() 
-                                         for item in line.split('=', 1)]
-                        setattr(getattr(self, section), option, value)
-
-        self._config_read = True
+            for line in self._config_file:
+                if line.startswith('#') or line.strip() == '':
+                    continue
+                elif line.startswith('[') and line.endswith(']\n'):
+                    getattr(self, line[1:-2])
+                    section = line[1:-2]
+                else:
+                    option, value = [item.strip() 
+                                     for item in line.split('=', 1)]
+                    setattr(getattr(self, section), option, value)
 
     def write(self, filename=None):
         """ Writes a config file based on the config object's 
