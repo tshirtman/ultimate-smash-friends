@@ -457,6 +457,10 @@ class Config(object):
         return sections
 
     @property
+    def filename(self):
+        return self._filename
+
+    @property
     def paths(self):
         return self._paths
 

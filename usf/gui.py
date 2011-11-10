@@ -215,6 +215,7 @@ class Gui(object):
             sound.set_volume(CONFIG.audio.SOUND_VOLUME/100.0)
             sound.play()
 
+            # not using elifs so that replies may be complex
             if reply.get('goto'):
 
                 if reply['goto'] == 'back':
@@ -222,7 +223,8 @@ class Gui(object):
                 else:
                     self.screen_history.append(self.current_screen)
                     self.current_screen = reply['goto']
-            elif reply.get('game'):
+
+            if reply.get('game'):
                 if reply['game'] == 'new':
                     self.game = self.launch_game()
                     self.current_screen = 'resume'
@@ -255,8 +257,9 @@ class Gui(object):
         """
         if len(self.screen_history) > 0:
             self.current_screen = self.screen_history[-1]
-            del self.screen_history[-1]
+            self.screen_history.pop()
             return True
+
         return False
 
     def update_youhere(self):
