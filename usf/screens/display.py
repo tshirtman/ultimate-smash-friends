@@ -54,7 +54,7 @@ class Display(Screen):
 
         self.fullscreen = TextCheckBox(_('Fullscreen:'))
 
-        self.fullscreen.set_value(CONFIG.general.FULLSCREEN)
+        self.fullscreen.set_value(CONFIG.display.FULLSCREEN)
         self.widget.add(self.fullscreen)
         self.widget.add(Label(_('Zoom sharpness:')), margin=25)
         zoom = Slider('zoom_sharpness')
@@ -63,7 +63,7 @@ class Display(Screen):
 
         self.fps = TextCheckBox(_('Show FPS:'))
 
-        self.fps.set_value(CONFIG.general.SHOW_FPS)
+        self.fps.set_value(CONFIG.display.SHOW_FPS)
         self.widget.add(self.fps, margin=25)
 
         self.widget.add(Button(_('Back')), margin=30)
@@ -75,15 +75,15 @@ class Display(Screen):
             CONFIG.general.HEIGHT = int(value.split('x')[1])
         if action == self.fullscreen:
             pygame.display.toggle_fullscreen()
-            if CONFIG.general.FULLSCREEN:
-                CONFIG.general.FULLSCREEN = False
+            if CONFIG.display.FULLSCREEN:
+                CONFIG.display.FULLSCREEN = False
             else:
-                CONFIG.general.FULLSCREEN = True
+                CONFIG.display.FULLSCREEN = True
         if action == self.fps:
-            if CONFIG.general.SHOW_FPS:
-                CONFIG.general.SHOW_FPS = False
+            if CONFIG.display.SHOW_FPS:
+                CONFIG.display.SHOW_FPS = False
             else:
-                CONFIG.general.SHOW_FPS = True
+                CONFIG.display.SHOW_FPS = True
         if action.text == 'zoom_sharpness':
             CONFIG.general.ZOOM_SHARPNESS = (action.get_value()+1)*5
         if action.text == _('Back'):
