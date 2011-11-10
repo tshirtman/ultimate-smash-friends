@@ -45,8 +45,8 @@ class NetworkJoinScreen(Screen):
             # TODO: start a connection attempt at self.ip
 
             # if succeed, go to shared conf screen
-            return 'goto:network_game_conf_screen'
+            return {'goto': 'network_game_conf_screen'}
 
         if action.text == _('Back'):
-            return "goto:back"
+            return {'goto': 'back'}
 

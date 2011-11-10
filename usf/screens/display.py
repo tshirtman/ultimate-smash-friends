@@ -87,7 +87,7 @@ class Display(Screen):
         if action.text == 'zoom_sharpness':
             CONFIG.general.ZOOM_SHARPNESS = (action.get_value()+1)*5
         if action.text == _('Back'):
-            return "goto:back"
+            return {'goto': 'back'}
 
         CONFIG.write()
 

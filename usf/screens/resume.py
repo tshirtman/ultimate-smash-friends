@@ -38,9 +38,9 @@ class Resume(Screen):
 
     def callback(self, action):
         if action.text == 'Resume':
-            return "game:continue"
+            return {'game': 'continue'}
         if action.text == 'Quit the game':
-            return 'game:stop'
+            return {'game': 'stop'}
         if action.text == _('Configure'):
-            return 'goto:configure'
+            return {'goto': 'configure'}
 
