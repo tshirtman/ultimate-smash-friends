@@ -272,7 +272,7 @@ class Main(object):
             else:
                 #the old default value...
                 (CONFIG.general.WIDTH, CONFIG.general.HEIGHT) = (800, 480)
-            CONFIG.general.FULLSCREEN = False
+            CONFIG.display.FULLSCREEN = False
 
         size = (CONFIG.general.WIDTH, CONFIG.general.HEIGHT)
         self.screen = pygame.display.set_mode(size)
@@ -281,7 +281,7 @@ class Main(object):
         icon = loaders.image(os.path.join(CONFIG.system_path, 'icon',
                                           'icon_50.png'))[0]
         pygame.display.set_icon(icon)
-        if CONFIG.general.FULLSCREEN:
+        if CONFIG.display.FULLSCREEN:
             pygame.display.toggle_fullscreen()
 
     def init_sound(self):
@@ -355,7 +355,7 @@ class Main(object):
     def display_fps(self):
         """ FPS counter
         """
-        if CONFIG.general.SHOW_FPS:
+        if CONFIG.display.SHOW_FPS:
             self.screen.blit(
                     loaders.text(
                         "FPS: " + str(self.clock.get_fps()),
