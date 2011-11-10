@@ -59,15 +59,13 @@ class Gui(object):
         self.game = None
         self.screens = {}
         self.screen_history = []
-        #TODO : Use a config file
 
         self.screens['main_screen'] = MainScreen('main_screen', self.screen)
         self.screens['configure'] = Configure('configure', self.screen)
         self.screens['about'] = About('about', self.screen)
         self.screens['resume'] = Resume('resume', self.screen)
         self.screens['sound'] = Audio('sound', self.screen)
-        self.screens['display'] = Display('display',
-                self.screen)
+        self.screens['display'] = Display('display', self.screen)
         self.screens['keyboard'] = Keyboard('keyboard', self.screen)
         self.screens['level'] = Level('level', self.screen)
         self.screens['characters'] = Characters('characters', self.screen)
@@ -77,7 +75,7 @@ class Gui(object):
         self.screens['network_game_conf_screen'] = NetworkGameConfScreen(
                 'network_game_conf_screen', self.screen)
 
-        self.screen_current = 'main_screen'
+        self.current_screen = 'main_screen'
         self.skin = Skin()
         self.last_event = time.time()
         self.image = 0
@@ -95,7 +93,7 @@ class Gui(object):
         #draw the background
         self.skin.get_background()
 
-        self.screens[self.screen_current].update()
+        self.screens[self.current_screen].update()
 
         while(True):
             event = pygame.event.poll()
@@ -134,11 +132,11 @@ class Gui(object):
         """
         if not self.focus:
             event.dict['pos'] = (
-              event.dict['pos'][0] - self.screens[self.screen_current].widget.x,
-              event.dict['pos'][1] - self.screens[self.screen_current].widget.y)
+              event.dict['pos'][0] - self.screens[self.current_screen].widget.x,
+              event.dict['pos'][1] - self.screens[self.current_screen].widget.y)
 
             (query, self.focus) = (
-                self.screens[self.screen_current].widget.handle_mouse(event))
+                self.screens[self.current_screen].widget.handle_mouse(event))
 
         else:
             (query, focus) = self.focus.handle_mouse(event)
@@ -146,7 +144,7 @@ class Gui(object):
                 self.focus = None
 
         if  query:
-            reply = self.screens[self.screen_current].callback(query)
+            reply = self.screens[self.current_screen].callback(query)
             self.handle_reply(reply)
         #remove the event for performance, maybe it is useless
         del(event)
@@ -165,15 +163,15 @@ class Gui(object):
             if not focus:
                 self.focus = None
             if query:
-                reply = self.screens[self.screen_current].callback(query)
+                reply = self.screens[self.current_screen].callback(query)
                 self.handle_reply(reply)
 
         if not self.focus and (not reply and not query):
             if event.dict['key'] == pygame.K_ESCAPE:
-                self.handle_reply("goto:back")
+                self.handle_reply({'goto': 'back'})
             else:
                 (query, focus) = (
-                        self.screens[self.screen_current].handle_keys(event))
+                        self.screens[self.current_screen].handle_keys(event))
 
                 if not focus:
                     self.focus = None
@@ -182,7 +180,7 @@ class Gui(object):
                     self.focus = focus
 
                 if  query:
-                    reply = self.screens[self.screen_current].callback(query)
+                    reply = self.screens[self.current_screen].callback(query)
                     self.handle_reply(reply)
 
         #remove the event for performance, maybe it is useless
@@ -192,65 +190,63 @@ class Gui(object):
         """
         This function handles the callback return by the screens with the
         function event_callback().
-        This callback needs to be a string; otherwise, it will be ignored.
+        This callback needs to be a dictionary, otherwise, it will be ignored.
 
         The reply can be:
-            goto:myscreen
+            {'goto': 'myscreen'}
                 where my screen is the name of the screen loaded in __init__()
-            goto:back
+            {'goto': 'back'}
                 go to the last menu, it is usually used for a back button
-            game:new
+            {'game': 'new'}
                 to start a new game
-            game:new_server
+            {'game': 'new_server'}
                 to start a new game in server mode
-            game:join_server
+            {'game': 'join_server'}
                 to join a network game
-            game:continue
+            {'game': 'continue'}
                 to resume the game, it is used in the in-game menu
-            game:stop
+            {'game': 'stop' }
                 to stop the game, it is used to qui the game in the
                 in-game menu
         """
+        if hasattr(reply, 'get'):
+            sound = loaders.track(os.path.join(CONFIG.system_path, 
+                                  "sounds", "mouseClick2.wav"))
+            sound.set_volume(CONFIG.audio.SOUND_VOLUME/100.0)
+            sound.play()
 
-        if type(reply) == str:
-            if reply.split(':')[0] == 'goto':
-                sound = loaders.track(
-                        os.path.join(CONFIG.system_path, "sounds",
-                            "mouseClick2.wav"))
+            if reply.get('goto'):
 
-                sound.set_volume(CONFIG.audio.SOUND_VOLUME/100.0)
-                sound.play()
-                if reply.split(':')[1] == 'back':
+                if reply['goto'] == 'back':
                     self.screen_back()
                 else:
-                    self.screen_history.append(self.screen_current)
-                    self.screen_current = reply.split(':')[1]
-
-            if reply.split(':')[0] == 'game':
-                if reply.split(':')[1] == "new":
+                    self.screen_history.append(self.current_screen)
+                    self.current_screen = reply['goto']
+            elif reply.get('game'):
+                if reply['game'] == 'new':
                     self.game = self.launch_game()
-                    self.screen_current = 'resume'
+                    self.current_screen = 'resume'
                     self.screen_history = []
                     self.state = "menu"
-                elif reply.split(':')[1] == "new_server":
+                elif reply['game'] == 'new_server':
                     self.game = self.launch_game(server=True)
-                    self.screen_current = 'resume'
+                    self.current_screen = 'resume'
                     self.screen_history = []
                     self.state = "menu"
-                elif reply.split(':')[1] == "join_server":
+                elif reply['game'] == 'join_server':
                     self.game = self.launch_game(
                             server=self.screens['network_join'].ip)
-                    self.screen_current = 'resume'
+                    self.current_screen = 'resume'
                     self.screen_history = []
                     self.state = "menu"
-                elif reply.split(':')[1] == "continue":
-                    self.screen_current = 'resume'
+                elif reply['game'] == 'continue':
+                    self.current_screen = 'resume'
                     self.screen_history = []
                     self.state = "menu"
-                elif reply.split(':')[1] == "stop":
+                elif reply['game'] == 'stop':
                     self.state = "menu"
                     self.game = None
-                    self.screen_current = 'main_screen'
+                    self.current_screen = 'main_screen'
                     self.screen_history = []
 
     def screen_back(self):
@@ -258,7 +254,7 @@ class Gui(object):
         Go to the last screen.
         """
         if len(self.screen_history) > 0:
-            self.screen_current = self.screen_history[-1]
+            self.current_screen = self.screen_history[-1]
             del self.screen_history[-1]
             return True
         return False
@@ -268,7 +264,7 @@ class Gui(object):
         for scr in self.screen_history:
             screen_list += scr + "/"
 
-        screen_list += self.screen_current + "/"
+        screen_list += self.current_screen + "/"
         self.here = loaders.text("> " + _("you are here:") + screen_list,
             fonts['mono']['30'])
 
@@ -294,10 +290,10 @@ class Gui(object):
             self.skin.get_background()
             text.set_alpha(i*250/10)
             self.screen.blit(text,
-                    (self.screens[self.screen_current].indent_title, 10))
+                    (self.screens[self.current_screen].indent_title, 10))
             self.screen.blit(new_surface,
                 (optimize_size((i*8*10-800, 0))[0],
-                self.screens[self.screen_current].widget.y))
+                self.screens[self.current_screen].widget.y))
 
             pygame.display.update()
 
@@ -328,7 +324,7 @@ class Gui(object):
             self.screen.blit(self.skin.get_background(), (0, 0))
             text.set_alpha(i*250/5)
             self.screen.blit(text,
-                    (self.screens[self.screen_current].indent_title, 10))
+                    (self.screens[self.current_screen].indent_title, 10))
 
             #new_surface.set_alpha(i *250/5)
             back.set_alpha((i * -1 + 5) * 250 / 5)

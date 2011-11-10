@@ -145,8 +145,8 @@ class Characters(Screen):
                 if player != 0:
                     i += 1
             if i > 1:
-                return 'goto:level'
+                return {'goto': 'level'}
 
         if action.text == _('Back'):
-            return "goto:back"
+            return {'goto': 'back'}
 
