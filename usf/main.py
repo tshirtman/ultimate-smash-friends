@@ -163,7 +163,7 @@ class Main(object):
             self.game = Game(self.screen, self.level, self.players)
             self.state = "game"
             self.menu = Gui(self.screen)
-            self.menu.handle_reply('goto:resume')
+            self.menu.handle_reply({'goto': 'configure'})
 
         else:
             self.lock.acquire()
@@ -272,7 +272,7 @@ class Main(object):
             else:
                 #the old default value...
                 (CONFIG.general.WIDTH, CONFIG.general.HEIGHT) = (800, 480)
-            CONFIG.general.FULLSCREEN = False
+            CONFIG.display.FULLSCREEN = False
 
         size = (CONFIG.general.WIDTH, CONFIG.general.HEIGHT)
         self.screen = pygame.display.set_mode(size)
@@ -281,7 +281,7 @@ class Main(object):
         icon = loaders.image(os.path.join(CONFIG.system_path, 'icon',
                                           'icon_50.png'))[0]
         pygame.display.set_icon(icon)
-        if CONFIG.general.FULLSCREEN:
+        if CONFIG.display.FULLSCREEN:
             pygame.display.toggle_fullscreen()
 
     def init_sound(self):
@@ -295,9 +295,9 @@ class Main(object):
         # return of the menu update function may contain a new game
         # instance to switch to.
         start_loop = pygame.time.get_ticks()
-        menu_was = self.menu.screen_current
+        menu_was = self.menu.current_screen
         newgame, game_ = self.menu.update()
-        if menu_was == 'keyboard' and self.menu.screen_current != 'keyboard':
+        if menu_was == 'keyboard' and self.menu.current_screen != 'keyboard':
             self.controls.load_keys()
             self.controls.load_sequences()
 
@@ -312,7 +312,7 @@ class Main(object):
 
         max_fps = 1000/CONFIG.general.MAX_GUI_FPS
 
-        if self.menu.screen_current == 'about':
+        if self.menu.current_screen == 'about':
             self.music_state = 'credits'
         else:
             self.music_state = self.state
@@ -348,14 +348,14 @@ class Main(object):
 
             self.menu.load = False
         else:
-            self.menu.screen_current = "main_screen"
+            self.menu.current_screen = "main_screen"
 
         self.music_state = self.state
 
     def display_fps(self):
         """ FPS counter
         """
-        if CONFIG.general.SHOW_FPS:
+        if CONFIG.display.SHOW_FPS:
             self.screen.blit(
                     loaders.text(
                         "FPS: " + str(self.clock.get_fps()),

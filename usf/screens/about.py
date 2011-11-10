@@ -47,4 +47,4 @@ class About(Screen):
 
     def callback(self, action):
         if action.text == _('Back'):
-            return "goto:back"
+            return {'goto': 'back'}

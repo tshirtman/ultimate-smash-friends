@@ -43,13 +43,13 @@ class MainScreen(Screen):
 
     def callback(self, action):
         if action.text == _('Local Game'):
-            return 'goto:characters'
+            return {'goto': 'characters'}
         if action.text == _('Network Game'):
-            return 'goto:network'
+            return {'goto': 'network'}
         if action.text == _('Configure'):
-            return 'goto:configure'
+            return {'goto': 'configure'}
         if action.text == _('Credits'):
-            return 'goto:about'
+            return {'goto': 'about'}
         if action.text == _('Quit'):
             pygame.event.post( pygame.event.Event(pygame.QUIT) )
 

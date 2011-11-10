@@ -80,6 +80,6 @@ class Keyboard(Screen):
             setattr(CONFIG.keyboard, action.get_id(), action.get_value())
 
         if action.text == _('Back'):
-            return "goto:back"
+            return {'goto': 'back'}
 
         CONFIG.write()
