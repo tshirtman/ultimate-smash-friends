@@ -74,6 +74,6 @@ class Audio(Screen):
             else:
                 CONFIG.audio.SOUND = True
         if action.text == _('Back'):
-            return "goto:back"
+            return {'goto': 'back'}
 
         CONFIG.write()

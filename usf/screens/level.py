@@ -77,7 +77,7 @@ class Level(Screen):
 
     def callback(self, action):
         if action.text == _('Go !'):
-            return "game:new"
+            return {'game': 'new'}
 
         if action.text == _('Back'):
-            return "goto:back"
+            return {'goto': 'back'}
