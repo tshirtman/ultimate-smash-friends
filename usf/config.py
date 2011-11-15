@@ -84,11 +84,12 @@ SOUND_VOLUME = 100
 MUSIC = True
 MUSIC_VOLUME = 100
 
-[general]
-DEBUG = True
+[display]
 SHOW_FPS = False
-NETWORK_PORT = 8421
 FULLSCREEN = False
+
+[general]
+NETWORK_PORT = 8421
 NOTIF_EFFECT = True
 WIDTH = 0
 MAX_FPS = 30
@@ -110,6 +111,7 @@ SMOOTH_SCROLLING = True
 BOUNCE = .2
 
 [debug]
+DEBUG = True
 CONTROLS = False
 ACTIONS = False
 HARDSHAPES = False
@@ -453,6 +455,10 @@ class Config(object):
         sections = self.__dict__.keys()
 
         return sections
+
+    @property
+    def filename(self):
+        return self._filename
 
     @property
     def paths(self):
