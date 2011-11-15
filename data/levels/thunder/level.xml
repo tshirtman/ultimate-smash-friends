@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map
+    name="thunder"
+    background="thunder-background.png"
+    foreground="thunder-foreground.png"
+    middle="thunder-middle.png"
+    margins="1000,1000,1000,1000"
+    >
+     
+    <block
+    coords="118 794 228 186"
+    ></block>
+    <block
+    coords="442 766 113 214"
+    ></block>    
+    <block
+    coords="634 836 228 144"
+    ></block>
+    <block
+    coords="978 674 202 306"
+    ></block>  
+
+    <block
+    coords="118 584 64 62"
+    ></block>    
+    <block
+    coords="182 552 284 122"
+    ></block>
+    <block
+    coords="732 532 54 52"
+    ></block>  
+    <block
+    coords="786 513 219 122"
+    ></block>    
+
+    <!-- decorum
+        coords="286, 0"
+        depth="-1"
+        update="lambda coords, t: coords"
+        >
+        <frame
+            image="thunder-eclair1.png"
+                time="0.1"
+                />
+        <frame
+            image="pixel.png"
+                time="0.5"
+                />
+        <frame
+            image="thunder-eclair2.png"
+                time="0.7"
+                />
+        <frame
+            image="pixel.png"
+                time="0.9"
+                />
+    </decorum -->
+
+        <decorum
+                coords="286, 0"
+                depth="-1"
+                update="lambda coords, t: coords"
+                >
+                <frame
+                    image="misc/thunder-light/thunder-eclair1.png"
+                        time="0.1"
+                        />
+                <frame
+                    image="misc/thunder-light/pixel.png"
+                        time="0.2"
+                        />
+                <frame
+                    image="misc/thunder-light/thunder-eclair2.png"
+                        time="0.3"
+                        />
+                <frame
+                    image="misc/thunder-light/pixel.png"
+                        time="0.4"
+                        />
+
+        </decorum>
+        
+</map>
+
