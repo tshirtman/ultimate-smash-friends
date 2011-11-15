@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map 
+        name="pyramid"
+        background="pyramid-background.png"
+        foreground="pyramid-foreground.png"
+        middle="pyramid-middle.png"
+        margins="750,750,750,750"
+        >
+        <block coords="76 373 270 46" ></block>
+        <block coords="343 241 190 44" ></block>
+        <block coords="594 419 229 47" ></block>
+        <block coords="542 108 286 46" ></block>
+
+        <entry-point coords="120 100"></entry-point>
+        <entry-point coords="240 100"></entry-point>
+        <entry-point coords="430 100"></entry-point>
+        <entry-point coords="600 100"></entry-point>
+        <entry-point coords="710 200"></entry-point>
+        <decorum
+                coords="100, 90"
+                depth="-1"
+                update="lambda coords, t: coords"
+                >
+                <frame
+                    image="misc/eol/eol2.png"
+                        time="0.1"
+                        />
+                <frame
+                    image="misc/eol/eol2.png"
+                        time="0.2"
+                        />
+                <frame
+                    image="misc/eol/eol3.png"
+                        time="0.3"
+                        />
+                <frame
+                    image="misc/eol/eol4.png"
+                        time="0.4"
+                        />
+                <frame
+                    image="misc/eol/eol5.png"
+                        time="0.5"
+                        />
+                <frame
+                    image="misc/eol/eol6.png"
+                        time="0.6"
+                        />
+                <frame
+                    image="misc/eol/eol7.png"
+                        time="0.7"
+                        />
+                <frame
+                    image="misc/eol/eol8.png"
+                        time="0.7"
+                        />
+                <frame
+                    image="misc/eol/eol9.png"
+                        time="0.8"
+                        />
+                <frame
+                    image="misc/eol/eol10.png"
+                        time="0.9"
+                        />
+                <frame
+                    image="misc/eol/eol11.png"
+                        time="1.0"
+                        />
+                <frame
+                    image="misc/eol/eol12.png"
+                        time="1.1"
+                        />
+                <frame
+                    image="misc/eol/eol13.png"
+                        time="1.2"
+                        />
+                <frame
+                    image="misc/eol/eol14.png"
+                        time="1.3"
+                        />
+                <frame
+                    image="misc/eol/eol15.png"
+                        time="1.4"
+                        />
+                <frame
+                    image="misc/eol/eol16.png"
+                        time="1.5"
+                        />
+                <frame
+                    image="misc/eol/eol17.png"
+                        time="1.6"
+                        />
+                <frame
+                    image="misc/eol/eol18.png"
+                        time="1.7"
+                        />
+                <frame
+                    image="misc/eol/eol19.png"
+                        time="1.8"
+                        />
+                <frame
+                    image="misc/eol/eol20.png"
+                        time="1.9"
+                        />
+                <frame
+                    image="misc/eol/eol21.png"
+                        time="2.0"
+                        />
+                <frame
+                    image="misc/eol/eol22.png"
+                        time="2.2"
+                        />
+        </decorum>
+</map>
