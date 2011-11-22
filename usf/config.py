@@ -36,9 +36,11 @@
 """
 
 from __future__ import with_statement
+
+import logging
 import os
-import sys
 import platform
+import sys
 
 DEFAULT_CONFIG = """\
 [keyboard]
@@ -123,8 +125,6 @@ LOG_LEVEL = WARN
 LEVELMAP = False
 """
 
-
-#TODO: add logging to replace print statements
 class Section(object):
     """ An object that represents a section in a config file.
 
@@ -390,7 +390,7 @@ class Config(object):
                         self.generate(filename)
                         self.read()
                 else:
-                    print 'Error No. {0}: {1} {2}'.format(errno, filename, strerror)
+                    logging.critical('Error No. {0}: {1} {2}'.format(errno, filename, strerror))
                     sys.exit(1)
 
             for line in self._config_file:
