@@ -406,7 +406,6 @@ class Config(object):
                 else:
                     option, value = [item.strip() 
                                      for item in line.split('=', 1)]
-                    print getattr(self, section)
                     setattr(getattr(self, section), option, value)
 
     def write(self, filename=None):
