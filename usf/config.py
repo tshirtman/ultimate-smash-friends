@@ -36,9 +36,11 @@
 """
 
 from __future__ import with_statement
+
+import logging
 import os
-import sys
 import platform
+import sys
 
 DEFAULT_CONFIG = """\
 [keyboard]
@@ -123,8 +125,6 @@ LOG_LEVEL = WARN
 LEVELMAP = False
 """
 
-
-#TODO: add logging to replace print statements
 class Section(object):
     """ An object that represents a section in a config file.
 
@@ -325,13 +325,13 @@ class Config(object):
             for line in DEFAULT_CONFIG:
                 f.write(line)
 
-    def update(self, filename=None):
-        """ This method simply removes invalid options from the config
-            file. If the file is not writable, a useful error message is 
-            thrown.
-        """
+    def sanitize(self, filename):
+        """ Scrubs filename, removing options that don't exist, and appending
+            those that are missing.
 
-        #TODO: error detection (try/except)
+            @param filename: file to be sanitized
+            @type filename: string
+        """
 
         if filename is None:
             filename = os.path.join(self.user_path, self._filename)
@@ -350,19 +350,15 @@ class Config(object):
                 if not line.startswith('[') and len(line) != 0:
                     new_options.append(line.split(' ')[0])
 
-        # find items that are in new_options but not in default_options
         differences = set(new_options).difference(set(default_options))
-
-        # ignore line breaks
         differences = [option for option in list(differences) if option != '\n']
 
         with open(filename, 'w') as outfile:
             for line in lines:
-                for option in differences:
-                    if option not in line:
-                        outfile.write(line)
+                if not line.split(' ')[0] in differences:
+                    outfile.write(line)
 
-    def read(self, filenames=None):
+    def read(self, filenames=None, sanitize=True):
         """ Reads a config file and populates the config object 
             with its sections and options. Calling this method without
             any arguments simply re-reads the previously defined filename
@@ -370,6 +366,9 @@ class Config(object):
 
             @param filenames: name of files to be parsed. 
             @type path: string or list
+
+            @param sanitize: whether or not to scrub the last file read or not
+            @type sanitize: boolean
         """
 
         if filenames is None:
@@ -379,10 +378,13 @@ class Config(object):
         elif hasattr(filenames, 'split'):
             filenames = [filenames]
 
+        if sanitize and os.path.isfile(filenames[-1]):
+            self.sanitize(filenames[-1])
+
         for filename in filenames:
             section = None
             try:
-                self._config_file = open(filename, 'r').readlines()
+                self.config_file = open(filename, 'r').readlines()
             except IOError as (errno, strerror):
                 # file not found
                 if errno == 2:
@@ -390,13 +392,15 @@ class Config(object):
                         self.generate(filename)
                         self.read()
                 else:
-                    print 'Error No. {0}: {1} {2}'.format(errno, filename, strerror)
+                    logging.critical('Error No. {0}: {1} {2}'.format(errno, filename, strerror))
                     sys.exit(1)
 
-            for line in self._config_file:
+            for line in self.config_file:
+                # ignore comments and blank lines
                 if line.startswith('#') or line.strip() == '':
                     continue
                 elif line.startswith('[') and line.endswith(']\n'):
+                    # line is a section 
                     getattr(self, line[1:-2])
                     section = line[1:-2]
                 else:
@@ -413,39 +417,40 @@ class Config(object):
             @type path: string
         """
         if filename is None:
-            filename = os.path.join(self.user_path, 'user.cfg')
+            filename = os.path.join(self.user_path, self.filename)
 
         for section in self.sections:
             section_tag = "[{0}]\n".format(section)
             # add new sections to config file
-            if section_tag not in self._config_file:
-                self._config_file.append(section_tag)
+            if section_tag not in self.config_file:
+                self.config_file.append('\n')
+                self.config_file.append(section_tag)
 
                 for option, value in getattr(self, 
                                              section).entries.iteritems():
-                    self._config_file.append("{0} = {1}".format(option, value))
+                    self.config_file.append("{0} = {1}\n".format(option, value))
             else:
                 # find new options and place them in the appropriate section
-                end_of_section = self._config_file.index(section_tag) + 1
+                end_of_section = self.config_file.index(section_tag) + 1
                 for option, value in (getattr(self, 
                                       section).entries.iteritems()):
                     end_of_section += 1
                     template = "{0} = {1}\n".format(option, str(value))
                     
-                    for index, line in enumerate(self._config_file[:]):
+                    for index, line in enumerate(self.config_file[:]):
                         if line.startswith(option):
                             isNewOption = False
-                            self._config_file[index] = template
+                            self.config_file[index] = template
                             break
                         else:
                             isNewOption = True
 
                     if isNewOption:
-                        self._config_file.insert(end_of_section, template)
+                        self.config_file.insert(end_of_section, template)
 
-        # write file
+        # TODO: try/except
         with open(filename, 'w') as outfile:
-            for line in self._config_file:
+            for line in self.config_file:
                 outfile.write(line)
 
     @property
@@ -471,6 +476,15 @@ class Config(object):
     @property
     def user_path(self):
         return self._paths['user']
+
+
+    @property
+    def config_file(self):
+        return self._config_file
+
+    @config_file.setter
+    def config_file(self, value):
+        self._config_file = value
 
     @property
     def config_path(self):
