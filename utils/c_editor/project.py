@@ -15,7 +15,7 @@ class CharacterProject:
         for mov in self.doc.getElementsByTagName('movement'):
             self.movements.append(mov.getAttribute('name'))
 
-    def get_picture(self, movement):
-        mov = self.doc.getElementsByTagName('movement')[0]
+    def get_picture(self, nb=0):
+        mov = self.doc.getElementsByTagName('movement')[nb]
         img = mov.getElementsByTagName('frame')[0].getAttribute('image')
         return self.directory + img
