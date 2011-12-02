@@ -65,7 +65,7 @@ except:
 sys.path.append(usf_root)
 
 from usf.entity_skin import EntitySkin
-from loaders import image, get_config
+from usf.loaders import image, get_gconfig
 
 from usf import CONFIG
 
@@ -160,6 +160,7 @@ def load_entities(charnames):
                 os.path.join(path,path.split(os.path.sep)[-1])+".xml"
                 ):
                 create_character_xml(path)
+
             skins.append(EntitySkin(path))
 
             if inotifyx:
@@ -304,7 +305,7 @@ def main(charnames):
                         continue
 
                     bottom_center_hardshape[0] = (window_size[0]/(len(charnames)
-                            * 2)) + (int(time.time() * CONFIG.general.WALKSPEED']) % 200 if
+                            * 2)) + (int(time.time() * CONFIG.general.WALKSPEED) % 200 if
                                     "walk" in animation else 0)
 
                     #if "walk" in animation:
