@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<character
+name=""
+image=""
+hardshape=""
+creator=""
+weight="1"
+auto-reverse="True"
+age="Not Disclosed"
+Description=""
+shield_center="20 40"
+>
+    <movement name="static"></movement>
+    <movement name="take"></movement>
+    <movement name="walk"></movement>
+    <movement name="jump"></movement>
+    <movement name="scnd-jump"></movement>
+    <movement name="smash-straight"></movement>
+    <movement name="kick"></movement>
+    <movement name="hit"></movement>
+    <movement name="smash-up-jumping"></movement>
+    <movement name="smash-up"></movement>
+    <movement name="smash-down"></movement>
+    <movement name="special2"></movement>
+    <movement name="pick"></movement>
+    <movement name="roll"></movement>
+    <movement name="specialhit"></movement>
+    <movement name="static_upgraded"></movement>
+    <movement name="take_upgraded"></movement>
+    <movement name="walk_upgraded"></movement>
+    <movement name="jump_upgraded"></movement>
+    <movement name="scnd-jump_upgraded"></movement>
+    <movement name="smash-straight_upgraded"></movement>
+    <movement name="kick_upgraded"></movement>
+    <movement name="hit_upgraded"></movement>
+    <movement name="smash-up_upgraded"></movement>
+    <movement name="smash-up-jumping_upgraded"></movement>
+    <movement name="smash-down_upgraded"></movement>
+    <movement name="special2_upgraded"></movement>
+    <movement name="pick_upgraded"></movement>
+    <movement name="roll_upgraded"></movement>
+    <movement name="specialhit_upgraded"></movement>
+</character>
