@@ -106,22 +106,24 @@ class Menu:
         character_s.set_active(0)
 
         # get movements list
-        cp = CP(first_character)
-        movements = gtk.combo_box_new_text()
-        for mov in cp.movements:
-            movements.append_text(mov)
+        self.cp = CP(first_character)
+        self.movements = gtk.combo_box_new_text()
+        for mov in self.cp.movements:
+            self.movements.append_text(mov)
 
-        movements.set_active(0)
+        self.movements.set_active(0)
 
         self.image = gtk.Image()
-        self.image.set_from_file(cp.get_picture(movements.get_active()))
+        self.image.set_from_file(
+            self.cp.get_picture(self.movements.get_active())
+            )
         self.image.show()
 
-        character_s.connect('changed', self.character_s)
-        movements.connect('changed', self.movements)
+        character_s.connect('changed', self.__character_s)
+        self.movements.connect('changed', self.__movements)
 
         vbox.pack_start(character_s, False)
-        vbox.pack_start(movements, False)
+        vbox.pack_start(self.movements, False)
         vbox.pack_start(self.image, False)
 
         window.show_all()
@@ -144,12 +146,26 @@ class Menu:
         #TODO : question if the xml should be save
         gtk.main_quit()
 
-    def character_s(self, action):
-        print 'cool'
-        action.get_property("active")
+    def __character_s(self, action):
+        new_c = action.get_model()[action.get_property('active')][0]
+        new_xml = CHARACTER_PATH + new_c +'/' + new_c +'.xml'
 
-    def movements(self, action):
-        pass
+        self.movements.get_model().clear()
+
+        self.cp = CP(new_xml)
+        for mov in self.cp.movements:
+            self.movements.append_text(mov)
+
+        self.movements.set_active(0)
+
+        self.image.set_from_file(
+            self.cp.get_picture(self.movements.get_active())
+            )
+
+    def __movements(self, action):
+        self.image.set_from_file(
+            self.cp.get_picture(action.get_active())
+            )
 
 def main():
     Menu()

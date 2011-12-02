@@ -6,7 +6,7 @@ class CharacterProject:
         self.doc = parse(path)
         root = self.doc.getElementsByTagName('character')[0]
         #root = self.doc.DocumentElement
-        directory = os.path.dirname(path) + '/'
+        self.directory = os.path.dirname(path) + '/'
 
         image = root.getAttribute('image')
 
@@ -15,6 +15,7 @@ class CharacterProject:
         for mov in self.doc.getElementsByTagName('movement'):
             self.movements.append(mov.getAttribute('name'))
 
-    def get_picture(self, movement):
-        mov = self.doc.getElementsByTagName('movement')[0]
-        return mov.getElementsByTagName('frame')[0].getAttribute('image')
+    def get_picture(self, movement, nb=0):
+        mov = self.doc.getElementsByTagName('movement')[nb]
+        img = mov.getElementsByTagName('frame')[0].getAttribute('image')
+        return self.directory + img
