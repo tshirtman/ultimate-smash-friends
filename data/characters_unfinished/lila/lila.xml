@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<character
+name="lila"
+image="portrait.png"
+hardshape="10 10 10 10"
+creator=""
+weight="1"
+auto-reverse="True"
+age=""
+Description=""
+shield_center="20 40"
+>
+    <movement name="static"
+    duration="450"
+    repeat="-1"
+    >
+        <frame
+        time="0"
+        image="static1.png"
+        hardshape="0 0 31 72"
+        />
+        <frame
+        time="150"
+        image="static2.png"
+        hardshape="0 0 33 73"
+        />
+        <frame
+        time="300"
+        image="static3.png"
+        hardshape="0 0 32 72"
+        />
+    </movement>
+    <movement name="hit"
+    duration="1200"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="hit1.png"
+        hardshape="0 0 32 73"
+        />
+        <frame
+        time="150"
+        image="hit2.png"
+        hardshape="0 0 42 71"
+        />
+        <frame
+        time="300"
+        image="hit3.png"
+        hardshape="0 0 42 70"
+        />
+        <frame
+        time="450"
+        image="hit4.png"
+        hardshape="0 0 39 70"
+        />
+        <frame
+        time="600"
+        image="hit5.png"
+        hardshape="0 0 54 65"
+        />
+        <frame
+        time="750"
+        image="hit6.png"
+        hardshape="0 0 39 71"
+        />
+        <frame
+        time="900"
+        image="hit7.png"
+        hardshape="0 0 40 72"
+        />
+        <frame
+        time="1050"
+        image="hit8.png"
+        hardshape="0 0 38 73"
+        />
+    </movement>
+    <movement name="kick"
+    duration="1200"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="kick1.png"
+        hardshape="0 0 30 71"
+        />
+        <frame
+        time="150"
+        image="kick2.png"
+        hardshape="0 0 32 71"
+        />
+        <frame
+        time="300"
+        image="kick3.png"
+        hardshape="0 0 37 71"
+        />
+        <frame
+        time="450"
+        image="kick4.png"
+        hardshape="0 0 58 72"
+        />
+        <frame
+        time="600"
+        image="kick5.png"
+        hardshape="0 0 56 72"
+        />
+        <frame
+        time="750"
+        image="kick6.png"
+        hardshape="0 0 54 72"
+        />
+        <frame
+        time="900"
+        image="kick7.png"
+        hardshape="0 0 41 72"
+        />
+        <frame
+        time="1050"
+        image="kick8.png"
+        hardshape="0 0 30 72"
+        />
+    </movement>
+    <movement name="walk"
+    duration="1200"
+    repeat="-1"
+    >
+        <frame
+        time="0"
+        image="walk1.png"
+        hardshape="0 0 34 71"
+        />
+        <frame
+        time="150"
+        image="walk2.png"
+        hardshape="0 0 28 71"
+        />
+        <frame
+        time="300"
+        image="walk3.png"
+        hardshape="0 0 28 71"
+        />
+        <frame
+        time="450"
+        image="walk4.png"
+        hardshape="0 0 32 71"
+        />
+        <frame
+        time="600"
+        image="walk5.png"
+        hardshape="0 0 35 70"
+        />
+        <frame
+        time="750"
+        image="walk6.png"
+        hardshape="0 0 31 71"
+        />
+        <frame
+        time="900"
+        image="walk7.png"
+        hardshape="0 0 28 71"
+        />
+        <frame
+        time="1050"
+        image="walk8.png"
+        hardshape="0 0 31 71"
+        />
+    </movement>
+</character>
