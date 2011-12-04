@@ -454,9 +454,11 @@ if __name__ == '__main__':
     if len(sys.argv) < 2 or sys.argv[1] == "help":
         usage()
         l = (
-                os.listdir(os.path.join(usf_root, 'data', 'characters'))+
-                os.listdir(os.path.join(usf_root, 'data',
-                'characters_unfinished')))
+                os.listdir(os.path.join(usf_root, 'data', 'characters'))
+                #+
+                #os.listdir(os.path.join(usf_root, 'data',
+                #'characters_unfinished'))
+                )
 
         main(filter(lambda x: x != 'none', l))
     else:
