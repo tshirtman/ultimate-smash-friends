@@ -51,8 +51,8 @@ class RemoteControl():
         self.frame = Frame()
         self.frame.img = self.img
         self.frame.path = self.project_path
-        self.frames = itertools.cycle(self.cp.get_frames())
-        #self.iterateur = self.frames.__iter__()
+        self.frames = self.cp.get_frames()
+        print self.cp.get_frames()
 
     def __del__(self):
         print self.frame
@@ -61,27 +61,35 @@ class RemoteControl():
             self.frame.stop()
         print 'huuu'
 
+    def stop(self):
+        if self.frame.isAlive():
+            self.frame.stop()
+            self.frame = Frame()
+            self.frame.img = self.img
+            self.frame.path = self.project_path
+            self.action.set_stock_id(gtk.STOCK_MEDIA_PLAY)
+            self.action.set_tooltip(_('Play animation'))
+
     def begin(self, action):
         print self.frames.next()
+
     def previous(self, action):
         pass
+
     def play(self, action):
         print self.frame
         self.action.set_stock_id(gtk.STOCK_MEDIA_STOP)
         self.action.set_tooltip(_('Stop animation'))
         if self.frame.isAlive():
-            self.frame.stop()
+            self.stop()
             print 'stop'
-            self.action.set_stock_id(gtk.STOCK_MEDIA_PLAY)
-            self.action.set_tooltip(_('Play animation'))
-            self.frame = Frame()
-            self.frame.img = self.img
-            self.frame.path = self.project_path
             return
-        self.frame.frames = self.frames
+        self.frame.frames = itertools.cycle(self.frames)
+        self.frame.path = self.project_path
         self.frame.restart()
         #self.img.set_from_file()
     def next(self, action):
         pass
+
     def end(self, action):
         pass
