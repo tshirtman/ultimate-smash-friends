@@ -29,10 +29,9 @@ class CharacterProject:
             i += 1
             attributes = []
             if i == len(frames_e):
-                time = self.duration
+                time = self.duration - float(frame.getAttribute('time'))
             else:
                 time = float(frames_e[i].getAttribute('time'))
-                self.duration = self.duration - time
             frames.append([
                 time / 1000,
                 frame.getAttribute('image'),

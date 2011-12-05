@@ -195,19 +195,21 @@ class Menu:
         self.image.set_from_file(
             self.cp.get_picture(self.movements.get_active())
             )
-        print 'delete?'
+        print 'delete?', self.project_path
         print self.remote
-        self.remote.__del__()
-        self.remote = RC(self.image, self.project_path, self.cp)
-        self.remote.action = self.actions_g.get_action("Play")
+        self.remote.stop()
+        self.remote.img = self.image
+        self.remote.project_path = self.project_path
+        self.remote.frames = self.cp.get_frames()
 
     def __movements(self, action):
         self.image.set_from_file(
             self.cp.get_picture(action.get_active())
             )
-        print 'ahhh!'
-        #self.remote.__del__()
-        #self.remote = RC(self.image, self.project_path, self.cp)
+        self.remote.stop()
+        self.remote.img = self.image
+        self.remote.project_path = self.project_path
+        self.remote.frames = self.cp.get_frames()
 
 def main():
     Menu()
