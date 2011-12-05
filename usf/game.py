@@ -435,33 +435,19 @@ class Game(object):
                     len(self.present_players))
 
     def center_zoom_camera(self):
-        """ set the camera place and zoom to display as much player as
-        possible, without moving the camera too fast.
+        """
+        alternative camera settings
         """
         self.present_players = [i for i in self.players if i.present]
-        if self.present_players:
-            # there is a trade between zoom sharpness and speed so we force
-            # the zoom level to be a limited precision value here, so the
-            # image cache is more useful.
-            self.zoom = (
-                int(self.precise_zoom * CONFIG.general.ZOOM_SHARPNESS)/
-                (CONFIG.general.ZOOM_SHARPNESS * 1.0))
+        m = 1
+        for p in self.present_players:
+            m = max(m, p.dist(self.level.rect))
 
-            players_barycenter = self.players_barycenter
-            # calculate coordinates of top left corner of level
-            # rect the barycenter of players at the center of the screen
-            level_place = [
-                 -(players_barycenter[0]) * self.zoom + self.size[0] / 2,
-                 -(players_barycenter[1]) * self.zoom + self.size[1] / 2]
+        self.zoom = min(1, max(0, ((self.size[0] / 2) ** 2 + (self.size[1] / 2) ** 2) ** .5 / m))
 
-            if self.smooth_scrolling:
-                # tends to the ideal position (nicer!)
-                self.level_place[0] += (level_place[0] - self.level_place[0])/4
-                self.level_place[1] += (level_place[1] - self.level_place[1])/4
-
-            else:
-                # move immediatly to the ideal position
-                self.level_place = level_place
+        self.level_place = [
+                self.size[0] / 2 - self.level.size[0] / 2 * self.zoom,
+                self.size[1] / 2 - self.level.size[1] / 2 * self.zoom]
 
     def update_physics(self):
         """
