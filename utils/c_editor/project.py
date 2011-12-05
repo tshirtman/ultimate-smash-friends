@@ -4,11 +4,11 @@ from xml.dom.minidom import parse
 class CharacterProject:
     def __init__(self, path):
         self.doc = parse(path)
-        root = self.doc.getElementsByTagName('character')[0]
-        #root = self.doc.DocumentElement
+        self.root = self.doc.getElementsByTagName('character')[0]
+        self.mov = self.doc.getElementsByTagName('movement')[0]
+        self.duration = int(self.mov.getAttribute('duration'))
         self.directory = os.path.dirname(path) + '/'
-
-        image = root.getAttribute('image')
+        image = self.root.getAttribute('image')
 
         # movements
         self.movements = []
@@ -16,6 +16,26 @@ class CharacterProject:
             self.movements.append(mov.getAttribute('name'))
 
     def get_picture(self, nb=0):
-        mov = self.doc.getElementsByTagName('movement')[nb]
-        img = mov.getElementsByTagName('frame')[0].getAttribute('image')
+        self.mov = self.doc.getElementsByTagName('movement')[nb]
+        self.duration = int(self.mov.getAttribute('duration'))
+        img = self.mov.getElementsByTagName('frame')[0].getAttribute('image')
         return self.directory + img
+
+    def get_frames(self):
+        frames = []
+        frames_e = self.mov.getElementsByTagName('frame')
+        i = 0
+        for frame in frames_e:
+            i += 1
+            attributes = []
+            if i == len(frames_e):
+                time = self.duration
+            else:
+                time = float(frames_e[i].getAttribute('time'))
+                self.duration = self.duration - time
+            frames.append([
+                time / 1000,
+                frame.getAttribute('image'),
+                frame.getAttribute('hardshape')
+            ])
+        return frames
