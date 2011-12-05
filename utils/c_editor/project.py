@@ -8,7 +8,7 @@ class CharacterProject:
         self.mov = self.doc.getElementsByTagName('movement')[0]
         self.duration = int(self.mov.getAttribute('duration'))
         self.directory = os.path.dirname(path) + '/'
-        image = self.root.getAttribute('image')
+        #image = self.root.getAttribute('image')
 
         # movements
         self.movements = []
@@ -27,7 +27,7 @@ class CharacterProject:
         i = 0
         for frame in frames_e:
             i += 1
-            attributes = []
+            #attributes = []
             if i == len(frames_e):
                 time = self.duration - float(frame.getAttribute('time'))
             else:

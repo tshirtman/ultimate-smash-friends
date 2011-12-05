@@ -12,7 +12,7 @@ assert gtk.ver >= required,\
 from gettext import gettext as _
 
 from color import color
-import gobject
+#import gobject
 from project import CharacterProject as CP
 from remote import RemoteControl as RC
 
