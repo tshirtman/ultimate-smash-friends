@@ -12,48 +12,24 @@ assert gtk.ver >= required,\
 from gettext import gettext as _
 
 from color import color
-#import gobject
+
 from project import CharacterProject as CP
 from remote import RemoteControl as RC
 
 CHARACTER_PATH = '../data/characters/'
 
+
 def validate_xml(xml_path):
     '''Validate form of xml file'''
     return True
 
-class Menu:
-    ui = '''<ui>
-    <menubar name="Menu_Bar">
-        <menu action="File">
-            <menuitem action="New"/>
-            <menuitem action="Save"/>
-            <menuitem action="Reload"/>
-            <menuitem action="Quit"/>
-        </menu>
-        <menu action="Help">
-            <menuitem action="About"/>
-        </menu>
-    </menubar>
-    <toolbar name="ToolBar">
-        <toolitem name="New character" action="New"/>
-        <toolitem name="Save" action="Save"/>
-        <toolitem name="Reload" action="Reload"/>
-        <separator expand="true"/>
-    </toolbar>
-    <toolbar name="RemoteControl">
-        <toolitem name="Begin" action="Begin"/>
-        <toolitem name="Previous" action="Previous"/>
-        <toolitem name="Play" action="Play"/>
-        <toolitem name="Next" action="Next"/>
-        <toolitem name="End" action="End"/>
-    </toolbar>
-    </ui>'''
 
+class Menu:
     def __init__(self):
+        self.ui = open('c_editor/ui.xml', 'r').read()
+
         window = gtk.Window()
         window.set_title(_('Character Editor'))
-        window.connect('destroy', lambda w: gtk.main_quit())
         window.set_size_request(800, 600)
         vbox = gtk.VBox()
         window.add(vbox)
@@ -73,7 +49,7 @@ class Menu:
         #search character project
         first_character = None
         for path in os.listdir(CHARACTER_PATH):
-            xml_path = CHARACTER_PATH + path +'/' + path +'.xml'
+            xml_path = CHARACTER_PATH + path + '/' + path + '.xml'
             if not os.path.isfile(xml_path):
                 color(_("project directory '" + path \
                     + "' don't use xml file!"), 'red')
@@ -129,7 +105,7 @@ class Menu:
             ('Next', gtk.STOCK_MEDIA_NEXT, _('Next'),
                 None, _('go to next frame...'), self.remote.next),
             ('End', gtk.STOCK_MEDIA_FORWARD, _('End'),
-                None, _('go to last frame...'), self.remote.end),
+                None, _('go to last frame...'), self.remote.end)
             ])
 
         self.actions_g.get_action('Quit').set_property('short-label', '_Quit')
@@ -156,10 +132,22 @@ class Menu:
         remoteC = ui.get_widget('/RemoteControl')
         vbox.pack_end(remoteC, False)
 
-        self.remote.action = self.actions_g.get_action("Play")
-
         window.show_all()
         window.connect('destroy', self.quit)
+        #self.connect('event-after', gtk.main_quit)
+
+    def main(self):
+        gtk.main()
+
+    def quit(self, b):
+        ''' Graphical usage to quit application '''
+        #TODO : question if the xml should be save
+        gtk.main_quit()
+        self.__del__()
+
+    def __del__(self):
+        ''' CTRL + C usage to quit application '''
+        self.remote.__del__()
 
     def about(self, action):
         # TODO : about window
@@ -174,15 +162,10 @@ class Menu:
     def reload_file(self, action):
         pass
 
-    def quit(self, b):
-        #TODO : question if the xml should be save
-        self.remote.__del__()
-        gtk.main_quit()
-
     def __character_s(self, action):
         new_c = action.get_model()[action.get_property('active')][0]
-        self.project_path = CHARACTER_PATH + new_c +'/'
-        new_xml = self.project_path + new_c +'.xml'
+        self.project_path = CHARACTER_PATH + new_c + '/'
+        new_xml = self.project_path + new_c + '.xml'
 
         self.movements.get_model().clear()
 
@@ -197,20 +180,24 @@ class Menu:
             )
         print 'delete?', self.project_path
         print self.remote
-        self.remote.stop()
         self.remote.img = self.image
         self.remote.project_path = self.project_path
         self.remote.frames = self.cp.get_frames()
+        self.remote.stop(self.actions_g.get_action("Play"))
 
     def __movements(self, action):
         self.image.set_from_file(
             self.cp.get_picture(action.get_active())
             )
-        self.remote.stop()
         self.remote.img = self.image
         self.remote.project_path = self.project_path
         self.remote.frames = self.cp.get_frames()
+        self.remote.stop(self.actions_g.get_action("Play"))
+
 
 def main():
-    Menu()
-    gtk.main()
+    menu = Menu()
+    try:
+        menu.main()
+    except KeyboardInterrupt:
+        menu.__del__()
