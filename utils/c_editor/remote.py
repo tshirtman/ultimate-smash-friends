@@ -8,10 +8,11 @@ from gettext import gettext as _
 # Initializing the gtk's thread engine
 gtk.gdk.threads_init()
 
+
 class Frame(threading.Thread):
     #Thread event, stops the thread if it is set.
     stopthread = threading.Event()
-    frames = []
+    frames = None
     img = None
     path = ''
 
@@ -23,8 +24,8 @@ class Frame(threading.Thread):
             # Acquiring the gtk global mutex
             gtk.gdk.threads_enter()
             n_frame = self.frames.next()
-            print 'frame...', self.path  + n_frame[1]
-            self.img.set_from_file(self.path  + n_frame[1])
+            print 'frame...', self.path + n_frame[1]
+            self.img.set_from_file(self.path + n_frame[1])
             # Releasing the gtk global mutex
             gtk.gdk.threads_leave()
             sleep(n_frame[0])
@@ -34,61 +35,77 @@ class Frame(threading.Thread):
         self.stopthread.set()
 
     def restart(self):
-        print 'restart'
         if self.stopthread.isSet():
-            print 're'
             self.stopthread.clear()
-        print 'start'
         # Re-Initializing the gtk's thread engine
         gtk.gdk.threads_init()
         self.start()
+
 
 class RemoteControl():
     def __init__(self, img, project_path, cp):
         self.img = img
         self.project_path = project_path
         self.cp = cp
+        self.frames = self.cp.get_frames()
+
         self.frame = Frame()
         self.frame.img = self.img
         self.frame.path = self.project_path
-        self.frames = self.cp.get_frames()
-        print self.cp.get_frames()
+        self.frame.frames = itertools.cycle(self.frames)
+        self.frame.frames.next()
 
     def __del__(self):
-        print self.frame
         if self.frame.isAlive():
-            print 'quit...'
             self.frame.stop()
-        print 'huuu'
 
-    def stop(self):
+    def stop(self, action):
         if self.frame.isAlive():
             self.frame.stop()
-            self.frame = Frame()
-            self.frame.img = self.img
-            self.frame.path = self.project_path
-            self.action.set_stock_id(gtk.STOCK_MEDIA_PLAY)
-            self.action.set_tooltip(_('Play animation'))
+            action.set_stock_id(gtk.STOCK_MEDIA_PLAY)
+            action.set_tooltip(_('Play animation'))
+        self.frame = Frame()
+        self.frame.img = self.img
+        self.frame.path = self.project_path
+        self.frame.frames = itertools.cycle(self.frames)
 
     def begin(self, action):
-        print self.frames.next()
+        frames = itertools.cycle(self.frames)
+        self.img.set_from_file(self.project_path + frames.next()[1])
+        self.frame.frames = frames
 
     def previous(self, action):
-        pass
+        iteration = len(self.frames)
+        frames = self.frame.frames
+        while iteration > 0:
+            frames.next()
+            iteration -= 1
+        self.img.set_from_file(
+            self.project_path + frames.next()[1]
+            )
 
     def play(self, action):
-        print self.frame
-        self.action.set_stock_id(gtk.STOCK_MEDIA_STOP)
-        self.action.set_tooltip(_('Stop animation'))
+        action.set_stock_id(gtk.STOCK_MEDIA_STOP)
+        action.set_tooltip(_('Stop animation'))
+        iter_frames = self.frame.frames
         if self.frame.isAlive():
-            self.stop()
-            print 'stop'
+            self.stop(action)
+            self.frame.frames = iter_frames
             return
         self.frame.frames = itertools.cycle(self.frames)
         self.frame.path = self.project_path
         self.frame.restart()
+
     def next(self, action):
-        pass
+        self.img.set_from_file(
+            self.project_path + self.frame.frames.next()[1]
+            )
 
     def end(self, action):
-        pass
+        iteration = len(self.frames) - 1
+        frames = itertools.cycle(self.frames)
+        while iteration > 0:
+            frames.next()
+            iteration -= 1
+        self.img.set_from_file(self.project_path + frames.next()[1])
+        self.frame.frames = frames

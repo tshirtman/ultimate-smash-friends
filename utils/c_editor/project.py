@@ -1,6 +1,7 @@
 import os
 from xml.dom.minidom import parse
 
+
 class CharacterProject:
     def __init__(self, path):
         self.doc = parse(path)
@@ -8,7 +9,6 @@ class CharacterProject:
         self.mov = self.doc.getElementsByTagName('movement')[0]
         self.duration = int(self.mov.getAttribute('duration'))
         self.directory = os.path.dirname(path) + '/'
-        #image = self.root.getAttribute('image')
 
         # movements
         self.movements = []

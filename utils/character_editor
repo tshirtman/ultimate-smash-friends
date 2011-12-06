@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # _*_ coding: utf_8 _*_
 
-__version__ = '0.3dev'
+__version__ = '0.1dev'
 __author__ = u'Ferry Jérémie <ferryjeremie@mothsart.com'
 
 import c_editor

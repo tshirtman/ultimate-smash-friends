@@ -1,0 +1,26 @@
+<ui>
+    <menubar name="Menu_Bar">
+        <menu action="File">
+            <menuitem action="New"/>
+            <menuitem action="Save"/>
+            <menuitem action="Reload"/>
+            <menuitem action="Quit"/>
+        </menu>
+        <menu action="Help">
+            <menuitem action="About"/>
+        </menu>
+    </menubar>
+    <toolbar name="ToolBar">
+        <toolitem name="New character" action="New"/>
+        <toolitem name="Save" action="Save"/>
+        <toolitem name="Reload" action="Reload"/>
+        <separator expand="true"/>
+    </toolbar>
+    <toolbar name="RemoteControl">
+        <toolitem name="Begin" action="Begin"/>
+        <toolitem name="Previous" action="Previous"/>
+        <toolitem name="Play" action="Play"/>
+        <toolitem name="Next" action="Next"/>
+        <toolitem name="End" action="End"/>
+    </toolbar>
+</ui>
