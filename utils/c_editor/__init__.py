@@ -31,8 +31,8 @@ class Menu:
         window = gtk.Window()
         window.set_title(_('Character Editor'))
         window.set_size_request(800, 600)
-        vbox = gtk.VBox()
-        window.add(vbox)
+        self.vbox = gtk.VBox()
+        window.add(self.vbox)
 
         # UIManager
         ui = gtk.UIManager()
@@ -79,9 +79,6 @@ class Menu:
             )
         self.image.show()
 
-        character_s.connect('changed', self.__character_s)
-        self.movements.connect('changed', self.__movements)
-
         self.remote = RC(self.image, self.project_path, self.cp)
         # actions
         self.actions_g.add_actions([
@@ -115,7 +112,7 @@ class Menu:
         ui.add_ui_from_string(self.ui)
 
         menu_bar = ui.get_widget('/Menu_Bar')
-        vbox.pack_start(menu_bar, False)
+        self.vbox.pack_start(menu_bar, False)
 
         toolbar = ui.get_widget('/ToolBar')
         tool_item = gtk.ToolItem()
@@ -125,13 +122,19 @@ class Menu:
         tool_item.add(self.movements)
         toolbar.insert(tool_item, 5)
 
-        vbox.pack_start(toolbar, False)
+        self.vbox.pack_start(toolbar, False)
 
-        vbox.pack_start(self.image, expand=True)
+        self.vbox.pack_start(self.image, expand=True)
+
+        self.timeline = self.remote.timeline
+        self.vbox.pack_start(self.timeline, False)
 
         remoteC = ui.get_widget('/RemoteControl')
-        vbox.pack_end(remoteC, False)
+        self.vbox.pack_end(remoteC, False)
 
+        character_s.connect('changed', self.__character_s)
+        self.movements.connect('changed', self.__movements)
+        self.window = window
         window.show_all()
         window.connect('destroy', self.quit)
         #self.connect('event-after', gtk.main_quit)
@@ -163,6 +166,7 @@ class Menu:
         pass
 
     def __character_s(self, action):
+        #print '---->', action
         new_c = action.get_model()[action.get_property('active')][0]
         self.project_path = CHARACTER_PATH + new_c + '/'
         new_xml = self.project_path + new_c + '.xml'
@@ -178,14 +182,17 @@ class Menu:
         self.image.set_from_file(
             self.cp.get_picture(self.movements.get_active())
             )
-        print 'delete?', self.project_path
-        print self.remote
+
         self.remote.img = self.image
         self.remote.project_path = self.project_path
         self.remote.frames = self.cp.get_frames()
         self.remote.stop(self.actions_g.get_action("Play"))
+        self.remote.cp = self.cp
+
+        self.__timeline()
 
     def __movements(self, action):
+        #print 'mov...'
         self.image.set_from_file(
             self.cp.get_picture(action.get_active())
             )
@@ -193,6 +200,15 @@ class Menu:
         self.remote.project_path = self.project_path
         self.remote.frames = self.cp.get_frames()
         self.remote.stop(self.actions_g.get_action("Play"))
+        self.remote.cp = self.cp
+        self.__timeline()
+
+    def __timeline(self):
+        self.vbox.remove(self.timeline)
+        self.timeline = self.remote.timeline
+        self.vbox.pack_start(self.timeline, False)
+        self.timeline.show_all()
+        self.vbox.show_all()
 
 
 def main():

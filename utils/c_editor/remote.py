@@ -10,6 +10,7 @@ gtk.gdk.threads_init()
 
 
 class Frame(threading.Thread):
+    '''Process thread to return the proper frame of the character'''
     #Thread event, stops the thread if it is set.
     stopthread = threading.Event()
     frames = None
@@ -42,7 +43,22 @@ class Frame(threading.Thread):
         self.start()
 
 
+class TimeLine(gtk.ScrolledWindow):
+    def __init__(self, cp):
+        gtk.ScrolledWindow.__init__(self)
+        self.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_NEVER)
+        hbox = gtk.HBox()
+        for frame in cp.get_frames():
+            button = gtk.Button()
+            button.set_label(frame[1])
+            #print frame[0] * 1000
+            button.set_size_request(int(frame[0] * 1000), 100)
+            hbox.pack_start(button, False)
+        self.add_with_viewport(hbox)
+
+
 class RemoteControl():
+    '''Class that orchestrates all animate frame interaction'''
     def __init__(self, img, project_path, cp):
         self.img = img
         self.project_path = project_path
@@ -55,19 +71,26 @@ class RemoteControl():
         self.frame.frames = itertools.cycle(self.frames)
         self.frame.frames.next()
 
+        self.timeline = TimeLine(self.cp)
+
     def __del__(self):
         if self.frame.isAlive():
             self.frame.stop()
+
+    def _pause(self):
+        self.frame = Frame()
+        self.frame.img = self.img
+        self.frame.path = self.project_path
+        self.frame.frames = itertools.cycle(self.frames)
 
     def stop(self, action):
         if self.frame.isAlive():
             self.frame.stop()
             action.set_stock_id(gtk.STOCK_MEDIA_PLAY)
             action.set_tooltip(_('Play animation'))
-        self.frame = Frame()
-        self.frame.img = self.img
-        self.frame.path = self.project_path
-        self.frame.frames = itertools.cycle(self.frames)
+        self._pause()
+        #print 'timeline'
+        self.timeline = TimeLine(self.cp)
 
     def begin(self, action):
         frames = itertools.cycle(self.frames)
@@ -87,9 +110,12 @@ class RemoteControl():
     def play(self, action):
         action.set_stock_id(gtk.STOCK_MEDIA_STOP)
         action.set_tooltip(_('Stop animation'))
-        iter_frames = self.frame.frames
         if self.frame.isAlive():
-            self.stop(action)
+            iter_frames = self.frame.frames
+            self.frame.stop()
+            action.set_stock_id(gtk.STOCK_MEDIA_PLAY)
+            action.set_tooltip(_('Play animation'))
+            self._pause()
             self.frame.frames = iter_frames
             return
         self.frame.frames = itertools.cycle(self.frames)
