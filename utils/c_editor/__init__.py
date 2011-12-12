@@ -1,20 +1,21 @@
 #!/usr/bin/env python
-# -*- coding:utf-8 -*-
+#coding=utf-8
 import os
+
+from gettext import gettext as _
 
 import pygtk
 pygtk.require('2.0')
 import gtk
 required = (2, 16, 0)
 assert gtk.ver >= required,\
-'You need to upgrade PyGTK, at least version %d.%d.%d is required.' % required
-
-from gettext import gettext as _
+_('You need to upgrade PyGTK, at least version %d.%d.%d is required.')\
+% required
 
 from color import color
 
 from project import CharacterProject as CP
-from remote import RemoteControl as RC
+from remote import RemoteControl as RC, TimeLine as TM
 
 CHARACTER_PATH = '../data/characters/'
 
@@ -79,7 +80,8 @@ class Menu:
             )
         self.image.show()
 
-        self.remote = RC(self.image, self.project_path, self.cp)
+        self.timeline = TM(self.cp.get_frames())
+        self.remote = RC(self.image, self.project_path, self.cp, self.timeline)
         # actions
         self.actions_g.add_actions([
             ('File', None, 'File'),
@@ -126,7 +128,6 @@ class Menu:
 
         self.vbox.pack_start(self.image, expand=True)
 
-        self.timeline = self.remote.timeline
         self.vbox.pack_start(self.timeline, False)
 
         remoteC = ui.get_widget('/RemoteControl')
@@ -166,7 +167,6 @@ class Menu:
         pass
 
     def __character_s(self, action):
-        #print '---->', action
         new_c = action.get_model()[action.get_property('active')][0]
         self.project_path = CHARACTER_PATH + new_c + '/'
         new_xml = self.project_path + new_c + '.xml'
@@ -192,7 +192,6 @@ class Menu:
         self.__timeline()
 
     def __movements(self, action):
-        #print 'mov...'
         self.image.set_from_file(
             self.cp.get_picture(action.get_active())
             )
@@ -201,14 +200,16 @@ class Menu:
         self.remote.frames = self.cp.get_frames()
         self.remote.stop(self.actions_g.get_action("Play"))
         self.remote.cp = self.cp
+
         self.__timeline()
 
     def __timeline(self):
         self.vbox.remove(self.timeline)
-        self.timeline = self.remote.timeline
+        self.timeline = TM(self.cp.get_frames())
+        self.remote.timeline = self.timeline
         self.vbox.pack_start(self.timeline, False)
-        self.timeline.show_all()
-        self.vbox.show_all()
+        self.remote.create_frame(self.timeline.frames)
+        #self.vbox.set_focus_child(self.timeline)
 
 
 def main():
