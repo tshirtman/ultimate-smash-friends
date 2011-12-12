@@ -12,10 +12,14 @@ gtk.gdk.threads_init()
 class Frame(threading.Thread):
     '''Process thread to return the proper frame of the character'''
     #Thread event, stops the thread if it is set.
-    stopthread = threading.Event()
     frames = None
     img = None
+    timeline = None
     path = ''
+
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.stopthread = threading.Event()
 
     def run(self):
         """Run method, this is the code that runs while thread is alive."""
@@ -25,8 +29,10 @@ class Frame(threading.Thread):
             # Acquiring the gtk global mutex
             gtk.gdk.threads_enter()
             n_frame = self.frames.next()
-            print 'frame...', self.path + n_frame[1]
+            #print 'frame...', n_frame[1], self
             self.img.set_from_file(self.path + n_frame[1])
+            self.timeline.frame = n_frame[3]
+            self.timeline.set_focus()
             # Releasing the gtk global mutex
             gtk.gdk.threads_leave()
             sleep(n_frame[0])
@@ -35,103 +41,145 @@ class Frame(threading.Thread):
         """Stop method, sets the event to terminate the thread's main loop"""
         self.stopthread.set()
 
-    def restart(self):
-        if self.stopthread.isSet():
-            self.stopthread.clear()
-        # Re-Initializing the gtk's thread engine
-        gtk.gdk.threads_init()
-        self.start()
-
 
 class TimeLine(gtk.ScrolledWindow):
-    def __init__(self, cp):
+    def __init__(self, frames):
         gtk.ScrolledWindow.__init__(self)
         self.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_NEVER)
-        hbox = gtk.HBox()
-        for frame in cp.get_frames():
+
+        self.frames = frames
+        self.hbox = gtk.HBox()
+        for frame in self.frames:
             button = gtk.Button()
             button.set_label(frame[1])
-            #print frame[0] * 1000
             button.set_size_request(int(frame[0] * 1000), 100)
-            hbox.pack_start(button, False)
-        self.add_with_viewport(hbox)
+            frame.append(button)
+            self.hbox.pack_start(button, False)
+
+        self.n_style = self.frames[0][3].get_modifier_style().copy()
+
+        self.add_with_viewport(self.hbox)
+        self.show_all()
+
+    def set_focus(self):
+        #print '>', self.get_child().get_child()
+        for frame in self.frames:
+            if frame[3] == self.frame:
+                #print '=============', self.frame, frame[3]
+                frame[3].modify_bg(gtk.STATE_NORMAL,
+                gtk.gdk.color_parse("green"))
+                frame[3].modify_bg(gtk.STATE_PRELIGHT,
+                gtk.gdk.color_parse("green"))
+                x = frame[3].get_allocation().x
+                hadjust = self.get_hadjustment()
+                hadjust.set_value(x)
+            else:
+                #print '<------', frame[3].get_label()
+                frame[3].modify_style(self.n_style)
 
 
 class RemoteControl():
     '''Class that orchestrates all animate frame interaction'''
-    def __init__(self, img, project_path, cp):
+    def __init__(self, img, project_path, cp, timeline):
         self.img = img
         self.project_path = project_path
         self.cp = cp
-        self.frames = self.cp.get_frames()
 
-        self.frame = Frame()
-        self.frame.img = self.img
-        self.frame.path = self.project_path
-        self.frame.frames = itertools.cycle(self.frames)
-        self.frame.frames.next()
+        self.timeline = timeline
+        self.frames = self.timeline.frames
 
-        self.timeline = TimeLine(self.cp)
+        self.create_frame(self.timeline.frames)
 
     def __del__(self):
         if self.frame.isAlive():
             self.frame.stop()
 
-    def _pause(self):
+    def create_frame(self, iter_frames):
         self.frame = Frame()
         self.frame.img = self.img
         self.frame.path = self.project_path
-        self.frame.frames = itertools.cycle(self.frames)
+        self.frame.frames = itertools.cycle(iter_frames)
+
+        self.frame.timeline = self.timeline
+
+        n_frame = self.frame.frames.next()
+        #print 'create', n_frame
+        self.frame.timeline.frame = n_frame[3]
+        self.frame.timeline.set_focus()
 
     def stop(self, action):
         if self.frame.isAlive():
             self.frame.stop()
             action.set_stock_id(gtk.STOCK_MEDIA_PLAY)
             action.set_tooltip(_('Play animation'))
-        self._pause()
-        #print 'timeline'
-        self.timeline = TimeLine(self.cp)
+
+    def restart(self, iter_frames):
+        if self.frame.isAlive():
+            self.frame.stop()
+            self.create_frame(iter_frames)
+            self.frame.start()
+
+    def travel(self, frames, subtract=0):
+        iteration = len(self.timeline.frames) - subtract
+        #print 'iteration', iteration
+        while iteration > 0:
+            n_frame = frames.next()
+            #print '--->'
+            iteration -= 1
+        self.frame.timeline.frame = n_frame[3]
+        self.img.set_from_file(self.project_path + n_frame[1])
+        self.frame.timeline.set_focus()
 
     def begin(self, action):
-        frames = itertools.cycle(self.frames)
-        self.img.set_from_file(self.project_path + frames.next()[1])
+        frames = itertools.cycle(self.timeline.frames)
+        if self.frame.isAlive():
+            self.frame.stop()
+            self.create_frame(frames)
+            self.frame.start()
+        else:
+            self.travel(frames, len(self.timeline.frames) - 1)
         self.frame.frames = frames
 
     def previous(self, action):
-        iteration = len(self.frames)
-        frames = self.frame.frames
-        while iteration > 0:
-            frames.next()
-            iteration -= 1
-        self.img.set_from_file(
-            self.project_path + frames.next()[1]
-            )
+        iter_frames = self.frame.frames
+        if self.frame.isAlive():
+            self.travel(iter_frames, 3)
+            self.frame.stop()
+            self.create_frame(iter_frames)
+            self.frame.start()
+        else:
+            self.travel(iter_frames, 1)
 
     def play(self, action):
         action.set_stock_id(gtk.STOCK_MEDIA_STOP)
         action.set_tooltip(_('Stop animation'))
         if self.frame.isAlive():
-            iter_frames = self.frame.frames
-            self.frame.stop()
             action.set_stock_id(gtk.STOCK_MEDIA_PLAY)
             action.set_tooltip(_('Play animation'))
-            self._pause()
-            self.frame.frames = iter_frames
-            return
-        self.frame.frames = itertools.cycle(self.frames)
-        self.frame.path = self.project_path
-        self.frame.restart()
+            iter_frames = self.frame.frames
+            self.travel(iter_frames, 1)
+            self.frame.stop()
+            self.create_frame(iter_frames)
+        else:
+            self.frame.start()
 
     def next(self, action):
-        self.img.set_from_file(
-            self.project_path + self.frame.frames.next()[1]
-            )
+        iter_frames = self.frame.frames
+        if self.frame.isAlive():
+            self.travel(iter_frames, 1)
+            self.frame.stop()
+            self.create_frame(iter_frames)
+            self.frame.start()
+        else:
+            self.travel(iter_frames, len(self.timeline.frames) - 1)
 
     def end(self, action):
-        iteration = len(self.frames) - 1
-        frames = itertools.cycle(self.frames)
-        while iteration > 0:
-            frames.next()
-            iteration -= 1
-        self.img.set_from_file(self.project_path + frames.next()[1])
+        frames = itertools.cycle(self.timeline.frames)
+        if self.frame.isAlive():
+            self.travel(frames, 2)
+            self.frame.stop()
+            self.create_frame(frames)
+            self.frame.start()
+        else:
+            self.travel(frames, 0)
         self.frame.frames = frames
