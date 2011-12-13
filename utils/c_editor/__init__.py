@@ -80,8 +80,17 @@ class Menu:
             )
         self.image.show()
 
+        # zoom selector
+        zoom = gtk.combo_box_new_text()
+        self.zoom_sizes = [0.25, 0.5, 1, 2, 3]
+        for size in self.zoom_sizes:
+            zoom.append_text(str(int(size * 100)) + ' %')
+        self.size = 1000
+        zoom.set_active(2)
+
         self.timeline = TM(self.cp.get_frames())
         self.remote = RC(self.image, self.project_path, self.cp, self.timeline)
+        self.remote.zoom = zoom
         # actions
         self.actions_g.add_actions([
             ('File', None, 'File'),
@@ -131,27 +140,6 @@ class Menu:
         self.vbox.pack_start(self.timeline, False)
 
         remoteC = ui.get_widget('/RemoteControl')
-        zoom = gtk.combo_box_new_text()
-        self.zoom_sizes = [0.25, 0.5, 1, 2, 3]
-        for size in self.zoom_sizes:
-            zoom.append_text(str(int(size * 100)) + ' %')
-        zoom.set_active(2)
-        #adjustment = gtk.Adjustment(0, 1, 5, 1)
-        #slider = gtk.HScale(adjustment)
-        ##adjustment.set_value(100)
-        ##adjustment.set_lower(25)
-        ##adjustment.set_upper(300)
-        #slider.set_update_policy(gtk.UPDATE_CONTINUOUS)
-        #slider.set_digits(0)
-        ##slider.set_draw_value(25)
-        #slider.set_draw_value(False)
-        #slider.add_mark(0, gtk.POS_TOP, None)
-        #slider.add_mark(1, gtk.POS_TOP, None)
-        #slider.add_mark(2, gtk.POS_TOP, None)
-        #slider.add_mark(3, gtk.POS_TOP, None)
-        #slider.add_mark(4, gtk.POS_TOP, None)
-
-        #slider.set_size_request(200, 50)
         tool_item = gtk.ToolItem()
         tool_item.add(zoom)
         remoteC.insert(tool_item, 5)
@@ -230,20 +218,34 @@ class Menu:
 
     def __timeline(self):
         self.vbox.remove(self.timeline)
-        self.timeline = TM(self.cp.get_frames())
+        self.timeline = TM(self.cp.get_frames(), self.size)
         self.remote.timeline = self.timeline
         self.vbox.pack_start(self.timeline, False)
         self.remote.create_frame(self.timeline.frames)
+        self.remote.zoom.set_sensitive(True)
         #self.vbox.set_focus_child(self.timeline)
 
     def __zoom(self, action):
-        size = self.zoom_sizes[action.get_active()]
-        self.vbox.remove(self.timeline)
-        self.timeline = TM(self.cp.get_frames(), size * 1000)
-        self.remote.timeline = self.timeline
-        self.vbox.pack_start(self.timeline, False)
+        self.size = self.zoom_sizes[action.get_active()] * 1000
+        if not self.remote.frame.isAlive():
+            frames = self.remote.timeline.frames
+            inc = 0
+            for frame in frames:
+                if frame[3] == self.remote.frame.timeline.frame:
+                    break
+                inc += 1
 
-        self.remote.zoom()
+            self.vbox.remove(self.timeline)
+            self.timeline = TM(self.cp.get_frames(), self.size)
+            self.remote.timeline = self.timeline
+            self.remote.frame.timeline = self.timeline
+            self.vbox.pack_start(self.timeline, False)
+            self.remote.create_frame(self.timeline.frames)
+
+            import itertools
+            self.remote.travel(
+                itertools.cycle(self.timeline.frames), len(frames) - inc - 1
+                )
 
 
 def main():

@@ -47,16 +47,17 @@ class TimeLine(gtk.ScrolledWindow):
         gtk.ScrolledWindow.__init__(self)
         self.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_NEVER)
         self.frames = frames
-        self.hbox = gtk.HBox()
-        self.add_with_viewport(self.hbox)
 
+        self.size = size
+        self.hbox = gtk.HBox()
         for frame in self.frames:
             button = gtk.Button()
             button.set_label(frame[1])
-            button.set_size_request(int(frame[0] * size), 100)
+            button.set_size_request(int(frame[0] * self.size), 100)
             frame.append(button)
             self.hbox.pack_start(button, False)
         self.n_style = self.frames[0][3].get_modifier_style().copy()
+        self.add_with_viewport(self.hbox)
         self.show_all()
 
     def set_focus(self):
@@ -68,12 +69,19 @@ class TimeLine(gtk.ScrolledWindow):
                 gtk.gdk.color_parse("green"))
                 frame[3].modify_bg(gtk.STATE_PRELIGHT,
                 gtk.gdk.color_parse("green"))
-                x = frame[3].get_allocation().x
-                hadjust = self.get_hadjustment()
-                hadjust.set_value(x)
             else:
                 #print '<------', frame[3].get_label()
                 frame[3].modify_style(self.n_style)
+                frame[3].modify_bg(gtk.STATE_NORMAL,
+                gtk.gdk.color_parse("grey"))
+                frame[3].modify_bg(gtk.STATE_PRELIGHT,
+                gtk.gdk.color_parse("grey"))
+                frame[3].set_state(gtk.STATE_NORMAL)
+
+        x = self.frame.get_allocation().x
+        hadjust = self.get_hadjustment()
+        # TODO : complicate gitter to eliminate
+        hadjust.set_value(x)
 
 
 class RemoteControl():
@@ -101,7 +109,6 @@ class RemoteControl():
         self.frame.timeline = self.timeline
 
         n_frame = self.frame.frames.next()
-        #print 'create', n_frame
         self.frame.timeline.frame = n_frame[3]
         self.frame.timeline.set_focus()
 
@@ -119,23 +126,15 @@ class RemoteControl():
 
     def travel(self, frames, subtract=0):
         iteration = len(self.timeline.frames) - subtract
-        #print 'iteration', iteration
         while iteration > 0:
             n_frame = frames.next()
-            #print '--->'
             iteration -= 1
         self.frame.timeline.frame = n_frame[3]
         self.img.set_from_file(self.project_path + n_frame[1])
         self.frame.timeline.set_focus()
 
-    def zoom(self):
-        frames = itertools.cycle(self.timeline.frames)
-        if self.frame.isAlive():
-            self.frame.stop()
-            self.create_frame(frames)
-            self.frame.start()
-        else:
-            self.create_frame(frames)
+    def zoom(self, size=1000):
+        pass
 
     def begin(self, action):
         frames = itertools.cycle(self.timeline.frames)
@@ -160,14 +159,18 @@ class RemoteControl():
     def play(self, action):
         action.set_stock_id(gtk.STOCK_MEDIA_STOP)
         action.set_tooltip(_('Stop animation'))
+        # supress zoom possibility when play timeline
+        # no good solutions to correct this...
         if self.frame.isAlive():
             action.set_stock_id(gtk.STOCK_MEDIA_PLAY)
             action.set_tooltip(_('Play animation'))
+            self.zoom.set_sensitive(True)
             iter_frames = self.frame.frames
             self.travel(iter_frames, 1)
             self.frame.stop()
             self.create_frame(iter_frames)
         else:
+            self.zoom.set_sensitive(False)
             self.frame.start()
 
     def next(self, action):
