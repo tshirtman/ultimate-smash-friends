@@ -43,22 +43,20 @@ class Frame(threading.Thread):
 
 
 class TimeLine(gtk.ScrolledWindow):
-    def __init__(self, frames):
+    def __init__(self, frames, size=1000):
         gtk.ScrolledWindow.__init__(self)
         self.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_NEVER)
-
         self.frames = frames
         self.hbox = gtk.HBox()
+        self.add_with_viewport(self.hbox)
+
         for frame in self.frames:
             button = gtk.Button()
             button.set_label(frame[1])
-            button.set_size_request(int(frame[0] * 1000), 100)
+            button.set_size_request(int(frame[0] * size), 100)
             frame.append(button)
             self.hbox.pack_start(button, False)
-
         self.n_style = self.frames[0][3].get_modifier_style().copy()
-
-        self.add_with_viewport(self.hbox)
         self.show_all()
 
     def set_focus(self):
@@ -129,6 +127,15 @@ class RemoteControl():
         self.frame.timeline.frame = n_frame[3]
         self.img.set_from_file(self.project_path + n_frame[1])
         self.frame.timeline.set_focus()
+
+    def zoom(self):
+        frames = itertools.cycle(self.timeline.frames)
+        if self.frame.isAlive():
+            self.frame.stop()
+            self.create_frame(frames)
+            self.frame.start()
+        else:
+            self.create_frame(frames)
 
     def begin(self, action):
         frames = itertools.cycle(self.timeline.frames)
