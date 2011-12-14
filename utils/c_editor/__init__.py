@@ -88,7 +88,7 @@ class Menu:
         self.size = 1000
         zoom.set_active(2)
 
-        self.timeline = TM(self.cp.get_frames())
+        self.timeline = TM(self.cp)
         self.remote = RC(self.image, self.project_path, self.cp, self.timeline)
         self.remote.zoom = zoom
         # actions
@@ -218,7 +218,7 @@ class Menu:
 
     def __timeline(self):
         self.vbox.remove(self.timeline)
-        self.timeline = TM(self.cp.get_frames(), self.size)
+        self.timeline = TM(self.cp, self.size)
         self.remote.timeline = self.timeline
         self.vbox.pack_start(self.timeline, False)
         self.remote.create_frame(self.timeline.frames)
@@ -236,7 +236,7 @@ class Menu:
                 inc += 1
 
             self.vbox.remove(self.timeline)
-            self.timeline = TM(self.cp.get_frames(), self.size)
+            self.timeline = TM(self.cp, self.size)
             self.remote.timeline = self.timeline
             self.remote.frame.timeline = self.timeline
             self.vbox.pack_start(self.timeline, False)
