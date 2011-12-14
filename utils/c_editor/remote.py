@@ -5,6 +5,7 @@ import gtk
 
 from gettext import gettext as _
 
+from editor import FrameEdit as FE
 # Initializing the gtk's thread engine
 gtk.gdk.threads_init()
 
@@ -43,10 +44,11 @@ class Frame(threading.Thread):
 
 
 class TimeLine(gtk.ScrolledWindow):
-    def __init__(self, frames, size=1000):
+    def __init__(self, cp, size=1000):
         gtk.ScrolledWindow.__init__(self)
         self.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_NEVER)
-        self.frames = frames
+        self.cp = cp
+        self.frames = cp.get_frames()
 
         self.size = size
         self.hbox = gtk.HBox()
@@ -55,10 +57,14 @@ class TimeLine(gtk.ScrolledWindow):
             button.set_label(frame[1])
             button.set_size_request(int(frame[0] * self.size), 100)
             frame.append(button)
+            button.connect("clicked", self.dialog, self, frame)
             self.hbox.pack_start(button, False)
         self.n_style = self.frames[0][3].get_modifier_style().copy()
         self.add_with_viewport(self.hbox)
         self.show_all()
+
+    def dialog(self, widget, timeline, properties):
+        FE(widget, timeline, properties)
 
     def set_focus(self):
         #print '>', self.get_child().get_child()
