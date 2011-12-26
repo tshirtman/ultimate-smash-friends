@@ -66,13 +66,12 @@ class Game(object):
         level is the basename of the level in levels/
         """
 
-        self.size = (
-            CONFIG.general.WIDTH,
-            CONFIG.general.HEIGHT)
+        self.width = CONFIG.general.WIDTH
+        self.height = CONFIG.general.HEIGHT
 
         self.first_frame = True
         self.notif = []
-        self.type = 'local'
+        self.game_type = 'local'
         self.screen = screen
 
         self.items = []
@@ -83,26 +82,36 @@ class Game(object):
         self.smooth_scrolling = CONFIG.general.SMOOTH_SCROLLING
 
         self.level = Level(level)
-        if screen is not None:
-            self.zoom = 1
-            # loading level
-            self.level_place = [0, 0]
-            self.icon_space = self.size[0]/len(players_)
+        self.zoom = 1
+        # loading level
+        self.level_place = [0, 0]
+        self.icon_space = self.width/len(players_)
 
-            # loading players
+        # loading players
 
         self.load_players(players_)
 
         #the optional progress bar for the players lives
         self.progress_bar_size = (
-                82.5*CONFIG.general.WIDTH/800,
-                12.5*CONFIG.general.WIDTH/800)
+            82.5 * self.width / 800,
+            12.5 * self.width / 800
+        )
 
-        self.progress_bar_x = (
-                CONFIG.general.HEIGHT - 25 * CONFIG.general.WIDTH / 800)
+        self.progress_bar_x = (self.height - 25 * self.width / 800)
 
         # a countdown to the game end
         self.ending = 5.0
+
+    @property
+    def size(self):
+        return (self.width, self.height)
+
+    @size.setter
+    def size(self, dimensions):
+        self.width = dimensions[0]
+
+        if len(dimensions) > 1:
+            self.height = dimensions[1]
 
     def add_world_event(self):
         '''
@@ -310,13 +319,13 @@ class Game(object):
         Draw player's portraits at bottom of the screen
         """
         #draw the background of the block where the lives are displayed
-        hud_height = 75 * CONFIG.general.WIDTH / 800
+        hud_height = 75 * self.width / 800
         self.screen.blit(loaders.image(os.path.join(
             CONFIG.system_path,
             "misc",
             "hud.png"),
-            scale=(CONFIG.general.WIDTH, hud_height))[0],
-            (0, CONFIG.general.HEIGHT))
+            scale=(self.width, hud_height))[0],
+            (0, self.height))
 
         for player in self.players:
             self.draw_player_portrait(player)
