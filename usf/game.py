@@ -448,10 +448,11 @@ class Game(object):
             m = max(m, p.dist(self.level.rect))
 
         self.zoom = min(1, max(0, ((self.size[0] / 2) ** 2 + (self.size[1] / 2) ** 2) ** .5 / m))
+        print self.zoom
 
         self.level_place = [
-                self.size[0] / 2 - self.level.size[0] / 2 * self.zoom,
-                self.size[1] / 2 - self.level.size[1] / 2 * self.zoom]
+                self.size[0] / 2 - self.level.width / 2 * self.zoom,
+                self.size[1] / 2 - self.level.width / 2 * self.zoom]
 
     def update_physics(self):
         """

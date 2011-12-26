@@ -315,8 +315,8 @@ class Level(object):
         This constructor is currently using two initialisation method, the old,
         based on a map file, and the new based on an xml file.
         """
-        self.size = (CONFIG.general.WIDTH,
-            CONFIG.general.HEIGHT)
+        self.width = CONFIG.general.WIDTH
+        self.height = CONFIG.general.HEIGHT
 
         xml = get_xml(levelname)
         attribs = xml.getroot().attrib
@@ -349,6 +349,17 @@ class Level(object):
         self.load_vector_blocs(xml, server, levelname)
         self.load_decorums(xml)
         self.load_events(levelname, xml)
+
+    @property
+    def size(self):
+        return (self.width, self.height)
+
+    @size.setter
+    def size(self, dimensions):
+        self.width = dimensions[0]
+
+        if len(dimensions) > 1:
+            self.height = dimensions[1]
 
     def load_events(self, name, xml):
         for event in xml.findall('event'):
