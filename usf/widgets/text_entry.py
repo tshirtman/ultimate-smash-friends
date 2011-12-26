@@ -23,17 +23,17 @@ text, it can be used to edit settings like an IP address for a network game, or
 a player name.
 
 '''
-
-from usf.widgets.label import Label
-from usf.widgets.button import Button
-
-from usf import font
-from usf import loaders
-from pygame.locals import (K_DOWN, K_UP, K_RETURN, K_LEFT, K_RIGHT, K_BACKSPACE,
-        MOUSEBUTTONUP, K_DELETE)
-from pygame import draw
-from pygame import color
 from math import sin
+
+from pygame import color, draw
+from pygame.locals import (
+    K_DOWN, K_UP, K_RETURN, K_LEFT, K_RIGHT, K_BACKSPACE, MOUSEBUTTONUP, 
+    K_DELETE
+)
+
+from usf import font, loaders
+from usf.widgets.button import Button
+from usf.widgets.label import Label
 
 class TextEntry(Button):
     """

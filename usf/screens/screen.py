@@ -1,5 +1,5 @@
 ################################################################################
-# copyright 2009 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
+# copyright 2009-2011 Gabriel Pettier <gabriel.pettier@gmail.com>              #
 #                                                                              #
 # This file is part of Ultimate Smash Friends.                                 #
 #                                                                              #
@@ -23,11 +23,8 @@ The base screen class, define base behaviours of screens.
 '''
 import pygame
 
-# Our modules
+from usf import CONFIG, loaders
 from usf.font import fonts
-
-from usf import loaders
-from usf import CONFIG
 
 
 class Screen(object):

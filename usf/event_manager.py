@@ -1,5 +1,5 @@
 ################################################################################
-# copyright 2008 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
+# copyright 2008-2011 Gabriel Pettier <gabriel.pettier@gmail.com>              #
 #                                                                              #
 # This file is part of UltimateSmashFriends                                    #
 #                                                                              #
@@ -23,7 +23,6 @@ simple but critical part, as a lot of mecanisms in the game are implemented
 through events (movements/adding player to games/missiles...)
 
 '''
-
 import itertools
 
 from usf.timed_event import EVENT_NAMES

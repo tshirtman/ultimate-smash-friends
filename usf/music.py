@@ -1,5 +1,5 @@
 ################################################################################
-# copyright 2008 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
+# copyright 2008-2011 Gabriel Pettier <gabriel.pettier@gmail.com>              #
 #                                                                              #
 # This file is part of UltimateSmashFriends                                    #
 #                                                                              #
@@ -16,19 +16,19 @@
 # You should have received a copy of the GNU General Public License            #
 # along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.#
 ################################################################################
+
 '''
 USF module to load and play musics depending on the situation, not hightly
 reusable code.
 
 '''
+import os
+import random
+import time
 
 from pygame import mixer
-import os
-import time
-import random
 
-from usf import loaders
-from usf import CONFIG
+from usf import CONFIG, loaders
 
 mixer.init()
 

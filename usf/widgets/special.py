@@ -21,15 +21,14 @@
 Provide a widget to construct the Keyboard Configuration Interface.
 
 '''
-
-import pygame
 import os
 
-from usf.widgets.widget import Widget, optimize_size
-from usf.font import fonts
+import pygame
+
+from usf import CONFIG, loaders
 from usf.controls import reverse_keymap
-from usf import loaders
-from usf import CONFIG
+from usf.font import fonts
+from usf.widgets.widget import optimize_size, Widget
 
 
 class KeyboardWidget(Widget):

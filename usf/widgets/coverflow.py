@@ -21,17 +21,14 @@
 A nice coverflow effect for images
 
 '''
-
-#standard imports
-import pygame
 import os
 
-#our module
-from usf.widgets.widget import Widget
+import pygame
 
-from usf.font import fonts
-from usf import loaders
 from usf import CONFIG
+from usf import loaders
+from usf.font import fonts
+from usf.widgets.widget import Widget
 
 
 def get_text_transparent(name):

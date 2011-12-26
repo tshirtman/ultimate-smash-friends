@@ -17,12 +17,13 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
-import pygame
 import os
 
-from usf.widgets.widget import Widget
+import pygame
+
+from usf import CONFIG, loaders
 from usf import loaders
-from usf import CONFIG
+from usf.widgets.widget import Widget
 
 
 class Image(Widget):

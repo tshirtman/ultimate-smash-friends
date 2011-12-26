@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ################################################################################
-# copyright 2008 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
+# copyright 2008-2011 Gabriel Pettier <gabriel.pettier@gmail.com>              #
 #                                                                              #
 # This file is part of UltimateSmashFriends                                    #
 #                                                                              #
@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License            #
 # along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.#
 ################################################################################
+
 '''
 pygame_loaders is a set of classes/functions, to use mainly for image
 loadings/processing with pygame, it uses memoization to accelerate successive
@@ -60,22 +61,20 @@ pygame must be loaded and display_mode set to perform most image operations.
 
 '''
 
-# standards imports
-import os
 import copy
-import pygame
 import logging
 import math
+import os
 from ConfigParser import SafeConfigParser
 
-from usf.memoize import memoize
+import pygame
+from pygame.locals import BLEND_RGB_MAX, BLEND_RGBA_MULT
+
 from usf import CONFIG
+from usf.memoize import memoize
 
 try:
-    from pygame.locals import BLEND_RGB_MAX
     from pygame.locals import BLEND_RGBA_MAX
-    from pygame.locals import BLEND_RGBA_MULT
-
 except ImportError:
     logging.info("old version of pygame no BLEND_RGBA_MAX")
     BLEND_RGBA_MAX = None
@@ -85,8 +84,8 @@ def get_gconfig():
     parser = SafeConfigParser()
     parser.optionxform = str
     parser.read(os.path.join(CONFIG.system_path, 'game.cfg'))
-    return parser
 
+    return parser
 
 def _zoom(name, kwargs):
     """ takes care of the zoom argument, and pass the rest to image()

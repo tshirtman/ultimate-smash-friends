@@ -21,16 +21,12 @@
 This module provide a simple checkbox widget.
 
 '''
-
-#standards imports
-import pygame
 from os.path import join
 
-#our modules
-from usf.widgets.widget import Widget, optimize_size
-
+import pygame
 
 from usf import CONFIG
+from usf.widgets.widget import Widget, optimize_size
 
 
 class CheckBox(Widget):

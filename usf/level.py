@@ -23,20 +23,17 @@ graphics: background, middle and foreground, plus decorum elements
 architecture: blocs, moving blocs, bounching blocs
 
 '''
-
+import logging
 import os
 import sys
-import pygame
-import logging
 from xml.etree import ElementTree
 
+import pygame
 
-from usf import skin
+from usf import CONFIG, loaders, skin
 from usf.debug_utils import draw_rect
 from usf.memoize import memoize
 from usf.particles import ParticlesGenerator
-from usf import loaders
-from usf import CONFIG
 
 
 class Decorum(object):
@@ -318,8 +315,8 @@ class Level(object):
         This constructor is currently using two initialisation method, the old,
         based on a map file, and the new based on an xml file.
         """
-        self.size = (CONFIG.general.WIDTH,
-            CONFIG.general.HEIGHT)
+        self.width = CONFIG.general.WIDTH
+        self.height = CONFIG.general.HEIGHT
 
         xml = get_xml(levelname)
         attribs = xml.getroot().attrib
@@ -352,6 +349,17 @@ class Level(object):
         self.load_vector_blocs(xml, server, levelname)
         self.load_decorums(xml)
         self.load_events(levelname, xml)
+
+    @property
+    def size(self):
+        return (self.width, self.height)
+
+    @size.setter
+    def size(self, dimensions):
+        self.width = dimensions[0]
+
+        if len(dimensions) > 1:
+            self.height = dimensions[1]
 
     def load_events(self, name, xml):
         for event in xml.findall('event'):

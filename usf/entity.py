@@ -22,18 +22,16 @@ This module provide the Entity classe, that represent any physical object in
 the game, character or item.
 
 '''
-
-# python modules imports.
-import pygame
 import math
 import os
 
-# my modules imports.
-from usf.entity_skin import EntitySkin
-from usf import loaders
-from usf.font import fonts
-from usf import CONFIG
+import pygame
+
+from usf import CONFIG, loaders
 from usf.debug_utils import draw_rect
+from usf.entity_skin import EntitySkin
+from usf.font import fonts
+
 
 class Actor(object):
     """ An actor is the physical presence of something
