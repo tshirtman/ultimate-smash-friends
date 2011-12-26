@@ -36,7 +36,7 @@ from usf import CONFIG, loaders
 from usf.ai import AI
 from usf.controls import Controls
 from usf.font import fonts
-from usf.game import Game, '''NetworkClientGame, '''NetworkServerGame
+from usf.game import Game, NetworkServerGame#, NetworkClientGame
 from usf.gui import Gui
 from usf.music import Music
 from usf.translation import _
