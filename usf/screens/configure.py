@@ -21,13 +21,11 @@
 The Base Configuration screen, show buttons to other configuration screens.
 
 '''
-
+from usf.translation import _
 from usf.screens.screen import Screen
-
 from usf.widgets.box import VBox
 from usf.widgets.button import Button
 
-from usf.translation import _
 
 class Configure(Screen):
     def init(self):

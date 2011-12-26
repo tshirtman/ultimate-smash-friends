@@ -21,18 +21,14 @@
 This module provide a checkbox with a label beside it.
 
 '''
-
-#standards imports
-import pygame
 from os.path import join
 
-#our modules
+import pygame
 
+from usf import CONFIG
 from usf.widgets.box import HBox
 from usf.widgets.image import Image
 from usf.widgets.label import Label
-
-from usf import CONFIG
 
 
 class TextCheckBox(HBox):

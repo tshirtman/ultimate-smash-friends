@@ -21,17 +21,14 @@
 The Sound configuration screen. to manage music and SFX volume.
 
 '''
-
+from usf import CONFIG
+from usf.translation import _
 from usf.screens.screen import Screen
 from usf.widgets.box import VBox
-from usf.widgets.slider import Slider
-from usf.widgets.label import Label
 from usf.widgets.button import Button
 from usf.widgets.checkbox_text import TextCheckBox
-from usf.translation import _
-
-
-from usf import CONFIG
+from usf.widgets.label import Label
+from usf.widgets.slider import Slider
 
 
 class Audio(Screen):

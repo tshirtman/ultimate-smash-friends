@@ -19,12 +19,12 @@
 
 import pygame
 
+from usf.translation import _
 from usf.screens.screen import Screen
 from usf.widgets.box import VBox
-from usf.widgets.label import Label
 from usf.widgets.button import Button
+from usf.widgets.label import Label
 from usf.widgets.text_entry import TextEntry
-from usf.translation import _
 
 
 class NetworkJoinScreen(Screen):

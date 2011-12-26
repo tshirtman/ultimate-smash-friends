@@ -22,11 +22,9 @@ The base widget object. Probably not tu use directly, but used as base for all
 other widgets.
 
 '''
-
-import pygame
 import time
 
-
+import pygame
 
 from usf import CONFIG
 

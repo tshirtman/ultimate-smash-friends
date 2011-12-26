@@ -24,11 +24,9 @@ A Button widget with an image inside, instead of a text.
 
 import os
 
-from usf.widgets.widget import get_scale
+from usf import CONFIG, loaders
 from usf.widgets.image import Image
-from usf import loaders
-from usf import CONFIG
-
+from usf.widgets.widget import get_scale
 
 
 class ImageButton(Image):

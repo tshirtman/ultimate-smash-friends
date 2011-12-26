@@ -22,11 +22,10 @@ The Pause/Resume screen, allow to go to configuration, to leave game or to
 resume playing the current game.
 
 '''
-
-from usf.screens.screen import Screen
-from usf.widgets.button import Button
-from usf.widgets.box import VBox
 from usf.translation import _
+from usf.screens.screen import Screen
+from usf.widgets.box import VBox
+from usf.widgets.button import Button
 
 
 class Resume(Screen):

@@ -16,21 +16,19 @@
 # You should have received a copy of the GNU General Public License along with #
 # ultimate-smash-friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
+
 '''
 This module allow to create timed and condition based events, to create
 complexe effects and behaviours in the game.
 
 '''
-
-import random
-import math
 import logging
-
-
+import math
+import random
 
 from usf import CONFIG
-SIZE = (CONFIG.general.WIDTH,
-        CONFIG.general.HEIGHT)
+
+SIZE = (CONFIG.general.WIDTH, CONFIG.general.HEIGHT)
 
 
 class TimedEvent (object):

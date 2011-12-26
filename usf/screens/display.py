@@ -16,23 +16,23 @@
 # You should have received a copy of the GNU General Public License along with #
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
+
 '''
 This module profide the display configuration screen (resolution,
 fullscreen, display fps...)
 
 '''
-
-from usf.screens.screen import Screen
-from usf.widgets.box import VBox
-from usf.widgets.label import Label
-from usf.widgets.checkbox_text import TextCheckBox
-from usf.widgets.spinner import Spinner
-from usf.widgets.slider import Slider
-from usf.widgets.button import Button
-from usf.translation import _
+import pygame
 
 from usf import CONFIG
-import pygame
+from usf.translation import _
+from usf.screens.screen import Screen
+from usf.widgets.box import VBox
+from usf.widgets.button import Button
+from usf.widgets.checkbox_text import TextCheckBox
+from usf.widgets.label import Label
+from usf.widgets.slider import Slider
+from usf.widgets.spinner import Spinner
 
 
 class Display(Screen):

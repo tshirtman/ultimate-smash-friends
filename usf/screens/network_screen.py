@@ -19,10 +19,10 @@
 
 import pygame
 
+from usf.translation import _
 from usf.screens.screen import Screen
 from usf.widgets.box import VBox
 from usf.widgets.button import Button
-from usf.translation import _
 
 class NetworkScreen(Screen):
     def init(self):

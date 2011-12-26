@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 ################################################################################
 # copyright 2008-2011 Gabriel Pettier <gabriel.pettier@gmail.com>              #
@@ -24,35 +24,30 @@ This is the main file for ultimate-smash-friends, that initiate configs, parse
 parameters, and initiate games
 
 '''
-
-
 import logging
 import os
+from optparse import OptionParser
 
 from pygame.locals import QUIT
 import pygame
-from optparse import OptionParser
 import threading
 
-from usf.game import Game, NetworkServerGame #, NetworkClientGame
-from usf.gui import Gui
-from usf.controls import Controls
-
-from usf.music import Music
-from usf.font import fonts
+from usf import CONFIG, loaders
 from usf.ai import AI
-
+from usf.controls import Controls
+from usf.font import fonts
+from usf.game import Game, '''NetworkClientGame, '''NetworkServerGame
+from usf.gui import Gui
+from usf.music import Music
 from usf.translation import _
 
-
-from usf import loaders
-from usf import CONFIG
-
 logging.basicConfig(
-        filename=os.path.join(
-            CONFIG.user_path,
-            CONFIG.debug.LOG_FILENAME),
-        level=(CONFIG.debug.LOG_LEVEL))
+    filename=os.path.join(
+        CONFIG.user_path,
+        CONFIG.debug.LOG_FILENAME
+    ),
+    level=(CONFIG.debug.LOG_LEVEL)
+)
 
 logging.debug("""Paths:
         Config:

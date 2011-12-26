@@ -23,20 +23,17 @@ graphics: background, middle and foreground, plus decorum elements
 architecture: blocs, moving blocs, bounching blocs
 
 '''
-
+import logging
 import os
 import sys
-import pygame
-import logging
 from xml.etree import ElementTree
 
+import pygame
 
-from usf import skin
+from usf import CONFIG, loaders, skin
 from usf.debug_utils import draw_rect
 from usf.memoize import memoize
 from usf.particles import ParticlesGenerator
-from usf import loaders
-from usf import CONFIG
 
 
 class Decorum(object):

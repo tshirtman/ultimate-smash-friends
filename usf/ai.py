@@ -21,16 +21,11 @@
 This module takes care of managing non human players
 
 '''
-
-# system modules
-from os import path
 import random
-
-# usf modules
-
-from usf.memoize import memoize
+from os import path
 
 from usf import CONFIG
+from usf.memoize import memoize
 #controls = controls.Controls()
 
 TIMESTEP = 0.25

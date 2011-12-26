@@ -22,13 +22,13 @@ The main screen of the Gui, the first one shown to the user when game is
 started.
 
 '''
-
 import pygame
 
+from usf.translation import _
 from usf.screens.screen import Screen
 from usf.widgets.box import VBox
 from usf.widgets.button import Button
-from usf.translation import _
+
 
 class MainScreen(Screen):
     def init(self):

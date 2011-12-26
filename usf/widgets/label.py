@@ -20,15 +20,13 @@
 '''
 A label widget, to place text.
 '''
-
-import pygame
 from os.path import join
 
-from usf.widgets.widget import Widget
+import pygame
 
+from usf import CONFIG, loaders
 from usf.font import fonts
-from usf import loaders
-from usf import CONFIG
+from usf.widgets.widget import Widget
 
 
 class Label(Widget):

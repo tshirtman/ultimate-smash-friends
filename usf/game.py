@@ -19,36 +19,31 @@
 ################################################################################
 
 '''
-The game module is centered about the core of the game, the Game class initiate
-and update all elements of the game, namely level, entities and events.
-
+The core game logic is defined in the game module. The Game class is responsible
+for initializing and updating all aspects of the game, namely the level, entities,
+and events.
 '''
 
-# standards import
-import pygame
-import time
+import logging
 import math
 import os
-import logging
+import time
 
-# my modules import
+import pygame
+
+from usf import CONFIG, loaders
+from usf.entity import Entity
 from usf.event_manager import EventManager
 from usf.font import fonts
 from usf.level import Level
-from usf.entity import Entity
 from usf.translation import _
-from usf import loaders
-from usf import CONFIG 
+
 GAME_FONT = fonts['sans']['normal']
-
-
-
 
 if not pygame.font:
     logging.debug('Warning, fonts disabled')
 if not pygame.mixer:
     logging.debug('Warning, sound disabled')
-
 
 class BadPlayersNetworkParamError(Exception):
     """

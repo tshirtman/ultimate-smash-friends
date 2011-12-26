@@ -17,19 +17,16 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
-#standards imports
-import pygame
 import logging
 from os.path import join
 
-#our modules
-from usf.widgets.widget import optimize_size
-from usf.widgets.imagebutton import ImageButton
-from usf.widgets.label import Label
-from usf.widgets.box import HBox
-
+import pygame
 
 from usf import CONFIG
+from usf.widgets.box import HBox
+from usf.widgets.imagebutton import ImageButton
+from usf.widgets.label import Label
+from usf.widgets.widget import optimize_size
 
 
 class Spinner(HBox):

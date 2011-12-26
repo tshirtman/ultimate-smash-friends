@@ -1,12 +1,12 @@
-import pygame
 from math import floor
+
+import pygame
 
 # Try to import Numpy, or Numeric
 try:
     import numpy as Numeric
     BYTE = "u1"
     DWORD = "u4"
-
 except ImportError:
     try:
         import Numeric

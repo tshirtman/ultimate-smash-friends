@@ -1,7 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
+
 import cProfile
-from usf import main
 import sys
+
+from usf import main
 
 
 def main_():

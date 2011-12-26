@@ -17,16 +17,14 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
+import time
 import os
 from os.path import join
-import time
 from xml.etree.ElementTree import ElementTree
 
 import pygame
 
-# Our modules
-from usf import loaders
-from usf import CONFIG
+from usf import CONFIG, loaders
 
 
 class Skin (object):

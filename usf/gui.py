@@ -21,32 +21,32 @@ The Gui module provide interfaces to build custom screens with widgets and
 callback to use them.
 
 '''
-
 import os
 import time
+
 import pygame
 from pygame.locals import QUIT
 
-# Our modules
+from usf import CONFIG
+from usf import loaders
 from usf.font import fonts
 from usf.game import Game
+from usf.skin import Skin
+from usf.translation import _
 from usf.screens.about import About
+from usf.screens.audio import Audio
 from usf.screens.characters import Characters
 from usf.screens.configure import Configure
+from usf.screens.display import Display
 from usf.screens.keyboard import Keyboard
 from usf.screens.level import Level
 from usf.screens.main_screen import MainScreen
-from usf.screens.resume import Resume
-from usf.screens.display import Display
-from usf.screens.audio import Audio
 from usf.screens.network_screen import NetworkScreen
 from usf.screens.network_join_screen import NetworkJoinScreen
 from usf.screens.network_game_conf_screen import NetworkGameConfScreen
-from usf.skin import Skin
-from usf.translation import _
+from usf.screens.resume import Resume
 from usf.widgets.widget import optimize_size
-from usf import loaders
-from usf import CONFIG
+
 
 class Gui(object):
     """

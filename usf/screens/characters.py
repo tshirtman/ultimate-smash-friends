@@ -21,19 +21,15 @@
 Describe the characters choice UI (for starting a game)
 
 '''
-
-from usf.screens.screen import Screen
-
 from usf import CONFIG
-
-from usf.widgets.box import VBox, HBox
+from usf.translation import _
+from usf.screens.screen import Screen
+from usf.widgets.box import HBox, VBox
 from usf.widgets.button import Button
+from usf.widgets.checkbox_text import TextCheckBox
 from usf.widgets.image import Image
 from usf.widgets.spinner import Spinner
 from usf.widgets.label import Label
-from usf.widgets.checkbox_text import TextCheckBox
-
-from usf.translation import _
 
 from usf import entity_skin
 import os

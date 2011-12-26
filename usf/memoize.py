@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License            #
 # along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.#
 ################################################################################
+
 '''
 This module provide simple implementation of the memoize pattern, implemented
 as a decorator.
@@ -46,7 +47,6 @@ lot of different params, that will eat some memory, but if you often need the
 same result, that can bring you a lot of speed.
 
 '''
-
 # the wraps decorator allow us to define well behaved decorator, that keep the
 # name, doc and other important things of decorated functions
 from functools import wraps

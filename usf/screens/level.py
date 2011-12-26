@@ -17,28 +17,21 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
-
 '''
 The Screen to choose the level to be played.
 
 '''
-
-
-#standard imports
-from os.path import join
 import os
 import logging
+from os.path import join
 
-#our modules
+from usf import CONFIG
+from usf.translation import _
 from usf.screens.screen import Screen
 from usf.widgets.box import VBox
 from usf.widgets.button import Button
 from usf.widgets.coverflow import Coverflow
 
-
-from usf import CONFIG
-
-from usf.translation import _
 
 class Level(Screen):
 
