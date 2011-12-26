@@ -1,5 +1,5 @@
 ################################################################################
-# copyright 2010 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
+# copyright 2010-2011 Gabriel Pettier <gabriel.pettier@gmail.com>              #
 #                                                                              #
 # This file is part of Ultimate Smash Friends.                                 #
 #                                                                              #
