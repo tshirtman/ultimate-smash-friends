@@ -21,13 +21,12 @@
 A slider widget to configure values in a range.
 
 '''
-
-import pygame
 from os.path import join
 
-from usf.widgets.widget import Widget, optimize_size
-from usf import loaders
-from usf import CONFIG
+import pygame
+
+from usf import CONFIG, loaders
+from usf.widgets.widget import optimize_size, Widget
 
 
 class Slider(Widget):

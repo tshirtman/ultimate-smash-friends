@@ -20,16 +20,11 @@
 '''
 A button widget, with a label.
 '''
-
-#standarts imports
 import pygame
 from os.path import join
 
-#our modules
-
-from usf.widgets.label import Label
-
 from usf import CONFIG
+from usf.widgets.label import Label
 
 
 class Button(Label):

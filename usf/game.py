@@ -19,36 +19,31 @@
 ################################################################################
 
 '''
-The game module is centered about the core of the game, the Game class initiate
-and update all elements of the game, namely level, entities and events.
-
+The core game logic is defined in the game module. The Game class is responsible
+for initializing and updating all aspects of the game, namely the level, entities,
+and events.
 '''
 
-# standards import
-import pygame
-import time
+import logging
 import math
 import os
-import logging
+import time
 
-# my modules import
+import pygame
+
+from usf import CONFIG, loaders
+from usf.entity import Entity
 from usf.event_manager import EventManager
 from usf.font import fonts
 from usf.level import Level
-from usf.entity import Entity
 from usf.translation import _
-from usf import loaders
-from usf import CONFIG 
+
 GAME_FONT = fonts['sans']['normal']
-
-
-
 
 if not pygame.font:
     logging.debug('Warning, fonts disabled')
 if not pygame.mixer:
     logging.debug('Warning, sound disabled')
-
 
 class BadPlayersNetworkParamError(Exception):
     """
@@ -71,13 +66,12 @@ class Game(object):
         level is the basename of the level in levels/
         """
 
-        self.size = (
-            CONFIG.general.WIDTH,
-            CONFIG.general.HEIGHT)
+        self.width = CONFIG.general.WIDTH
+        self.height = CONFIG.general.HEIGHT
 
         self.first_frame = True
         self.notif = []
-        self.type = 'local'
+        self.game_type = 'local'
         self.screen = screen
 
         self.items = []
@@ -88,26 +82,36 @@ class Game(object):
         self.smooth_scrolling = CONFIG.general.SMOOTH_SCROLLING
 
         self.level = Level(level)
-        if screen is not None:
-            self.zoom = 1
-            # loading level
-            self.level_place = [0, 0]
-            self.icon_space = self.size[0]/len(players_)
+        self.zoom = 1
+        # loading level
+        self.level_place = [0, 0]
+        self.icon_space = self.width/len(players_)
 
-            # loading players
+        # loading players
 
         self.load_players(players_)
 
         #the optional progress bar for the players lives
         self.progress_bar_size = (
-                82.5*CONFIG.general.WIDTH/800,
-                12.5*CONFIG.general.WIDTH/800)
+            82.5 * self.width / 800,
+            12.5 * self.width / 800
+        )
 
-        self.progress_bar_x = (
-                CONFIG.general.HEIGHT - 25 * CONFIG.general.WIDTH / 800)
+        self.progress_bar_x = (self.height - 25 * self.width / 800)
 
         # a countdown to the game end
         self.ending = 5.0
+
+    @property
+    def size(self):
+        return (self.width, self.height)
+
+    @size.setter
+    def size(self, dimensions):
+        self.width = dimensions[0]
+
+        if len(dimensions) > 1:
+            self.height = dimensions[1]
 
     def add_world_event(self):
         '''
@@ -315,13 +319,13 @@ class Game(object):
         Draw player's portraits at bottom of the screen
         """
         #draw the background of the block where the lives are displayed
-        hud_height = 75 * CONFIG.general.WIDTH / 800
+        hud_height = 75 * self.width / 800
         self.screen.blit(loaders.image(os.path.join(
             CONFIG.system_path,
             "misc",
             "hud.png"),
-            scale=(CONFIG.general.WIDTH, hud_height))[0],
-            (0, CONFIG.general.HEIGHT))
+            scale=(self.width, hud_height))[0],
+            (0, self.height))
 
         for player in self.players:
             self.draw_player_portrait(player)
@@ -435,33 +439,19 @@ class Game(object):
                     len(self.present_players))
 
     def center_zoom_camera(self):
-        """ set the camera place and zoom to display as much player as
-        possible, without moving the camera too fast.
+        """
+        alternative camera settings
         """
         self.present_players = [i for i in self.players if i.present]
-        if self.present_players:
-            # there is a trade between zoom sharpness and speed so we force
-            # the zoom level to be a limited precision value here, so the
-            # image cache is more useful.
-            self.zoom = (
-                int(self.precise_zoom * CONFIG.general.ZOOM_SHARPNESS)/
-                (CONFIG.general.ZOOM_SHARPNESS * 1.0))
+        m = 1
+        for p in self.present_players:
+            m = max(m, p.dist(self.level.rect))
 
-            players_barycenter = self.players_barycenter
-            # calculate coordinates of top left corner of level
-            # rect the barycenter of players at the center of the screen
-            level_place = [
-                 -(players_barycenter[0]) * self.zoom + self.size[0] / 2,
-                 -(players_barycenter[1]) * self.zoom + self.size[1] / 2]
+        self.zoom = min(1, max(0, ((self.size[0] / 2) ** 2 + (self.size[1] / 2) ** 2) ** .5 / m))
 
-            if self.smooth_scrolling:
-                # tends to the ideal position (nicer!)
-                self.level_place[0] += (level_place[0] - self.level_place[0])/4
-                self.level_place[1] += (level_place[1] - self.level_place[1])/4
-
-            else:
-                # move immediatly to the ideal position
-                self.level_place = level_place
+        self.level_place = [
+                self.size[0] / 2 - self.level.size[0] / 2 * self.zoom,
+                self.size[1] / 2 - self.level.size[1] / 2 * self.zoom]
 
     def update_physics(self):
         """

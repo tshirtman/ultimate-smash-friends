@@ -25,26 +25,22 @@ be chosen by both, the game start when both player have clicked the "start
 game" button (maybe with some time delay, and with possibility to cancel?).
 
 '''
-
-from usf.screens.screen import Screen
-
-from usf import CONFIG
-
-from usf.widgets.box import VBox, HBox
-from usf.widgets.button import Button
-from usf.widgets.image import Image
-from usf.widgets.spinner import Spinner
-from usf.widgets.label import Label
-from usf.widgets.checkbox_text import TextCheckBox
-from usf.widgets.text_entry import TextEntry
-from usf.widgets.coverflow import Coverflow
-
-from usf.translation import _
-
-from usf import entity_skin
+import logging
 import os
 from os.path import join
-import logging
+
+from usf import CONFIG
+from usf import entity_skin
+from usf.translation import _
+from usf.screens.screen import Screen
+from usf.widgets.box import VBox, HBox
+from usf.widgets.button import Button
+from usf.widgets.checkbox_text import TextCheckBox
+from usf.widgets.coverflow import Coverflow
+from usf.widgets.image import Image
+from usf.widgets.label import Label
+from usf.widgets.spinner import Spinner
+from usf.widgets.text_entry import TextEntry
 
 
 class NetworkGameConfScreen(Screen):

@@ -16,18 +16,17 @@
 # You should have received a copy of the GNU General Public License along with #
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
+
 '''
 Some Box widgets as base for the GUI classes
 
 '''
-
-from usf.widgets.widget import Widget, optimize_size
-from usf.widgets.button import Button
-
+from os.path import join
 
 from usf import CONFIG
+from usf.widgets.button import Button
+from usf.widgets.widget import optimize_size, Widget
 
-from os.path import join
 
 class Container(Widget):
     """

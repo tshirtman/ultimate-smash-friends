@@ -23,8 +23,9 @@ probably only need to manipulate the later. This allow you to generate textured
 particles with variable initial coordinate, variable direction, and custome
 initial speed and friction.
 '''
-from math import pi, sin, cos
+from math import cos, sin, pi
 from random import random
+
 from loaders import image
 
 class Particle(object):
