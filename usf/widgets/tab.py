@@ -18,11 +18,10 @@
 ################################################################################
 
 import pygame
-#from widget import Widget, get_scale, optimize_size
-#
-#from usf.font import fonts
 
 from box import HBox, VBox
+#from widget import get_scale, optimize_size, Widget
+#from usf.font import fonts
 
 
 class Tab(VBox):

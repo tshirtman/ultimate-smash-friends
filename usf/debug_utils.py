@@ -1,9 +1,27 @@
+################################################################################
+# copyright 2008-2011 Gabriel Pettier <gabriel.pettier@gmail.com>              #
+#                                                                              #
+# This file is part of UltimateSmashFriends                                    #
+#                                                                              #
+# UltimateSmashFriends is free software: you can redistribute it and/or modify #
+# it under the terms of the GNU General Public License as published by         #
+# the Free Software Foundation, either version 3 of the License, or            #
+# (at your option) any later version.                                          #
+#                                                                              #
+# UltimateSmashFriends is distributed in the hope that it will be useful,      #
+# but WITHOUT ANY WARRANTY; without even the implied warranty of               #
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                #
+# GNU General Public License for more details.                                 #
+#                                                                              #
+# You should have received a copy of the GNU General Public License            #
+# along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.#
+################################################################################
+
 '''
 This module provide functions made to make easier the debug work, may diseapear
 in the future.
 
 '''
-
 import pygame
 import logging
 
@@ -23,10 +41,10 @@ def log_result(function):
         """
         result = function(*args, **kwargs)
         logging.info(str(result))
+
         return result
 
     decorated.__name__ = function.__name__
     decorated.__doc__ = function.__doc__
+
     return decorated
-
-

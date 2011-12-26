@@ -1,6 +1,6 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
-from usf.timed_event import TimedEvent, EVENT_NAMES
+from usf.timed_event import EVENT_NAMES, TimedEvent
 
 class test(TimedEvent):
     def __init__(self, *args, **kwargs):

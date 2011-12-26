@@ -1,5 +1,5 @@
 ################################################################################
-# copyright 2008 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
+# copyright 2008-2011 Gabriel Pettier <gabriel.pettier@gmail.com>              #
 #                                                                              #
 # This file is part of UltimateSmashFriends                                    #
 #                                                                              #
@@ -16,20 +16,21 @@
 # You should have received a copy of the GNU General Public License            #
 # along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.#
 ################################################################################
+
 '''
 this module deal with what's definied in xml files for entities
 
 '''
-
+import logging
 import os
 import random
-import pygame
-import logging
 from xml.etree import ElementTree
 
-from usf.animations import Frame, PreciseTimedAnimation
-from usf import loaders
-from usf import CONFIG 
+import pygame
+
+from usf import CONFIG, loaders
+from usf.animations import Frame
+from usf.animations import PreciseTimedAnimation
 
 SIZE = (CONFIG.general.WIDTH,
         CONFIG.general.HEIGHT)

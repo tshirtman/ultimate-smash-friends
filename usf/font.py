@@ -17,18 +17,13 @@
 # along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.#
 ################################################################################
 
-#our modules
-
-from usf import CONFIG
-
-#standart imports
-import xml.etree.ElementTree as xml
-from os.path import join
 from os import stat
+from os.path import join
+from xml.etree import ElementTree
 
-#library import
 import pygame
 
+from usf import CONFIG
 from usf.memoize import memoize
 
 pygame.font.init()
@@ -41,7 +36,8 @@ class FontList(object):
         '''#TODO: documentation
         '''
         self.list = {}
-        font_xml = xml.parse(join(CONFIG.system_path, "fonts", "fonts.xml"))
+        font_xml = ElementTree.parse(join(CONFIG.system_path, "fonts", 
+                                          "fonts.xml"))
         for font in font_xml.findall("font"):
 
             #use theme fonts

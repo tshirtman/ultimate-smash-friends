@@ -1,5 +1,5 @@
 ################################################################################
-# copyright 2008 Gabriel Pettier <gabriel.pettier@gmail.com>                   #
+# copyright 2008-2011 Gabriel Pettier <gabriel.pettier@gmail.com>              #
 #                                                                              #
 # This file is part of UltimateSmashFriends                                    #
 #                                                                              #
@@ -23,22 +23,14 @@ player's animations, or pass events to the menu system.
 
 '''
 
-# standards import
 import os
-import pygame
-from pygame import locals as pygame_locals
-from pygame.locals import (
-        KEYDOWN,
-        KEYUP,
-        MOUSEMOTION,
-        MOUSEBUTTONUP,
-        MOUSEBUTTONDOWN,
-        )
 
-# my imports
-from usf import loaders
-from usf import CONFIG
-from usf import game
+import pygame
+from pygame.locals import (
+    KEYDOWN, KEYUP, MOUSEMOTION, MOUSEBUTTONUP, MOUSEBUTTONDOWN,
+)
+
+from usf import CONFIG, game, loaders
 
 
 def key_shield(the_key, player, game_instance):
@@ -179,7 +171,7 @@ def get_key_code(name):
     name
     """
     try:
-        return pygame_locals.__dict__[getattr(CONFIG.keyboard, name)]
+        return pygame.locals.__dict__[getattr(CONFIG.keyboard, name)]
 
     except KeyError:
         return int(getattr(CONFIG.keyboard, name))

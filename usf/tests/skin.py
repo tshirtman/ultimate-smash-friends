@@ -22,12 +22,12 @@
 # This file contains a testsuite for skin.Layer
 # TODO: skin.Skin is not tested
 
-from usf import skin
-
-
 import unittest
 from xml.etree.ElementTree import ElementTree
+
 import pygame
+
+from usf import skin
 
 
 class TestLayer(unittest.TestCase):

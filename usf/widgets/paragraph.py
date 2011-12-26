@@ -17,17 +17,15 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
-#standards imports
-import pygame
 from os.path import join
 
-#our modules
+import pygame
+
 from usf.widgets.widget import Widget
 
+from usf import CONFIG, loaders
 from usf.font import fonts
 from usf.subpixel.subpixelsurface import SubPixelSurface
-from usf import loaders
-from usf import CONFIG
 
 
 class Paragraph(Widget):
