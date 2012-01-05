@@ -1,11 +1,12 @@
-from time import sleep
-import itertools
 import threading
 import gtk
 
+from time import sleep
+import itertools
+import copy
+
 from gettext import gettext as _
 
-from editor import FrameEdit as FE
 # Initializing the gtk's thread engine
 gtk.gdk.threads_init()
 
@@ -30,10 +31,8 @@ class Frame(threading.Thread):
             # Acquiring the gtk global mutex
             gtk.gdk.threads_enter()
             n_frame = self.frames.next()
-            #print 'frame...', n_frame[1], self
-            self.img.set_from_file(self.path + n_frame[1])
+            self.img.draw(self.path, n_frame)
             self.timeline.frame = n_frame[3]
-            self.timeline.set_focus()
             # Releasing the gtk global mutex
             gtk.gdk.threads_leave()
             sleep(n_frame[0])
@@ -44,11 +43,12 @@ class Frame(threading.Thread):
 
 
 class TimeLine(gtk.ScrolledWindow):
-    def __init__(self, cp, size=1000):
+    def __init__(self, frames, size=1000):
         gtk.ScrolledWindow.__init__(self)
         self.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_NEVER)
-        self.cp = cp
-        self.frames = cp.get_frames()
+
+        self.frames = copy.deepcopy(frames)
+        self._frame = None
 
         self.size = size
         self.hbox = gtk.HBox()
@@ -57,56 +57,71 @@ class TimeLine(gtk.ScrolledWindow):
             button.set_label(frame[1])
             button.set_size_request(int(frame[0] * self.size), 100)
             frame.append(button)
-            button.connect("clicked", self.dialog, self, frame)
             self.hbox.pack_start(button, False)
         self.n_style = self.frames[0][3].get_modifier_style().copy()
         self.add_with_viewport(self.hbox)
         self.show_all()
 
-    def dialog(self, widget, timeline, properties):
-        FE(widget, timeline, properties)
+    @property
+    def frame(self):
+        '''frame property'''
+        return self._frame
 
-    def set_focus(self):
-        #print '>', self.get_child().get_child()
+    @frame.setter
+    def frame(self, value):
         for frame in self.frames:
-            if frame[3] == self.frame:
-                #print '=============', self.frame, frame[3]
-                frame[3].modify_bg(gtk.STATE_NORMAL,
-                gtk.gdk.color_parse("green"))
-                frame[3].modify_bg(gtk.STATE_PRELIGHT,
-                gtk.gdk.color_parse("green"))
+            if frame[3] == value:
+                value.modify_bg(gtk.STATE_NORMAL,
+                    gtk.gdk.color_parse("green"))
+                value.modify_bg(gtk.STATE_PRELIGHT,
+                    gtk.gdk.color_parse("green"))
+                value.modify_bg(gtk.STATE_SELECTED,
+                    gtk.gdk.color_parse("green"))
+                value.grab_focus()
             else:
-                #print '<------', frame[3].get_label()
                 frame[3].modify_style(self.n_style)
                 frame[3].modify_bg(gtk.STATE_NORMAL,
-                gtk.gdk.color_parse("grey"))
+                    gtk.gdk.color_parse("grey"))
                 frame[3].modify_bg(gtk.STATE_PRELIGHT,
-                gtk.gdk.color_parse("grey"))
-                frame[3].set_state(gtk.STATE_NORMAL)
+                    gtk.gdk.color_parse("grey"))
 
-        x = self.frame.get_allocation().x
+        x = value.get_allocation().x
         hadjust = self.get_hadjustment()
         # TODO : complicate gitter to eliminate
         hadjust.set_value(x)
 
+        self._frame = value
+
 
 class RemoteControl():
     '''Class that orchestrates all animate frame interaction'''
-    def __init__(self, img, project_path, cp, timeline):
+    def __init__(self, img, project_path, timeline):
         self.img = img
         self.project_path = project_path
-        self.cp = cp
 
         self.timeline = timeline
         self.frames = self.timeline.frames
 
+        self.handlers_id = []
         self.create_frame(self.timeline.frames)
 
     def __del__(self):
         if self.frame.isAlive():
             self.frame.stop()
 
+    def _is_handler(self, button):
+        for handler_id in self.handlers_id:
+            if button.handler_is_connected(handler_id):
+                return True
+        return False
+
     def create_frame(self, iter_frames):
+        # Get clicked Buttons on timeline
+        for frame in self.timeline.frames:
+            if not self._is_handler(frame[3]):
+                h_id = frame[3].connect("clicked", self._select_frame)
+                self.handlers_id.append(h_id)
+
         self.frame = Frame()
         self.frame.img = self.img
         self.frame.path = self.project_path
@@ -116,9 +131,8 @@ class RemoteControl():
 
         n_frame = self.frame.frames.next()
         self.frame.timeline.frame = n_frame[3]
-        self.frame.timeline.set_focus()
 
-    def stop(self, action):
+    def stop(self, action=None):
         if self.frame.isAlive():
             self.frame.stop()
             action.set_stock_id(gtk.STOCK_MEDIA_PLAY)
@@ -136,8 +150,24 @@ class RemoteControl():
             n_frame = frames.next()
             iteration -= 1
         self.frame.timeline.frame = n_frame[3]
-        self.img.set_from_file(self.project_path + n_frame[1])
-        self.frame.timeline.set_focus()
+        self.img.draw(self.project_path, n_frame)
+
+    def _select_frame(self, button):
+        frames = itertools.cycle(self.timeline.frames)
+        self.frame.timeline.frame = button
+        while True:
+            n_frame = frames.next()
+            if n_frame[3] == button:
+                break
+        if self.frame.isAlive():
+            self.frame.stop()
+            self.travel(frames, 1)
+            self.img.draw(self.project_path, n_frame)
+            self.create_frame(frames)
+            self.frame.start()
+        else:
+            self.img.draw(self.project_path, n_frame)
+        self.frame.frames = frames
 
     def zoom(self, size=1000):
         pass

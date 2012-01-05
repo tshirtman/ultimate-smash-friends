@@ -16,6 +16,7 @@ from color import color
 
 from project import CharacterProject as CP
 from remote import RemoteControl as RC, TimeLine as TM
+from sidebar import FrameEdit as FE
 
 CHARACTER_PATH = '../data/characters/'
 
@@ -27,11 +28,12 @@ def validate_xml(xml_path):
 
 class Menu:
     def __init__(self):
+        self.redraw = True
         self.ui = open('c_editor/ui.xml', 'r').read()
 
         window = gtk.Window()
         window.set_title(_('Character Editor'))
-        window.set_size_request(800, 600)
+        window.set_size_request(1024, 768)
         self.vbox = gtk.VBox()
         window.add(self.vbox)
 
@@ -74,11 +76,7 @@ class Menu:
 
         self.movements.set_active(0)
 
-        self.image = gtk.Image()
-        self.image.set_from_file(
-            self.cp.get_picture(self.movements.get_active())
-            )
-        self.image.show()
+        self.frame_e = FE(self.cp, self.movements.get_active())
 
         # zoom selector
         zoom = gtk.combo_box_new_text()
@@ -88,8 +86,10 @@ class Menu:
         self.size = 1000
         zoom.set_active(2)
 
-        self.timeline = TM(self.cp)
-        self.remote = RC(self.image, self.project_path, self.cp, self.timeline)
+        self.timeline = TM(self.cp.get_frames(0))
+        self.remote = RC(
+            self.frame_e, self.project_path, self.timeline
+            )
         self.remote.zoom = zoom
         # actions
         self.actions_g.add_actions([
@@ -135,8 +135,7 @@ class Menu:
 
         self.vbox.pack_start(toolbar, False)
 
-        self.vbox.pack_start(self.image, expand=True)
-
+        self.vbox.pack_start(self.frame_e, expand=True)
         self.vbox.pack_start(self.timeline, False)
 
         remoteC = ui.get_widget('/RemoteControl')
@@ -149,8 +148,8 @@ class Menu:
         self.movements.connect('changed', self.__movements)
         zoom.connect('changed', self.__zoom)
         self.window = window
-        window.show_all()
         window.connect('destroy', self.quit)
+        window.show_all()
         #self.connect('event-after', gtk.main_quit)
 
     def main(self):
@@ -180,6 +179,7 @@ class Menu:
         pass
 
     def __character_s(self, action):
+        self.redraw = False
         new_c = action.get_model()[action.get_property('active')][0]
         self.project_path = CHARACTER_PATH + new_c + '/'
         new_xml = self.project_path + new_c + '.xml'
@@ -191,44 +191,46 @@ class Menu:
             self.movements.append_text(mov)
 
         self.movements.set_active(0)
-
-        self.image.set_from_file(
-            self.cp.get_picture(self.movements.get_active())
+        self.frame_e.draw(
+            self.project_path,
+            self.cp.get_frames(self.movements.get_active())[0]
             )
 
-        self.remote.img = self.image
         self.remote.project_path = self.project_path
-        self.remote.frames = self.cp.get_frames()
+        self.remote.frames = self.cp.frames[0]
         self.remote.stop(self.actions_g.get_action("Play"))
-        self.remote.cp = self.cp
 
         self.__timeline()
+
+        self.redraw = True
 
     def __movements(self, action):
-        self.image.set_from_file(
-            self.cp.get_picture(action.get_active())
-            )
-        self.remote.img = self.image
-        self.remote.project_path = self.project_path
-        self.remote.frames = self.cp.get_frames()
-        self.remote.stop(self.actions_g.get_action("Play"))
-        self.remote.cp = self.cp
+        if self.redraw:
+            self.frame_e.draw(
+                self.project_path,
+                self.cp.get_frames(self.movements.get_active())[0]
+                )
 
-        self.__timeline()
+        self.remote.project_path = self.project_path
+        self.remote.frames = self.cp.frames
+        self.remote.stop(self.actions_g.get_action("Play"))
+
+        if self.redraw:
+            self.__timeline()
 
     def __timeline(self):
         self.vbox.remove(self.timeline)
-        self.timeline = TM(self.cp, self.size)
+        self.timeline = TM(self.cp.frames, self.size)
         self.remote.timeline = self.timeline
         self.vbox.pack_start(self.timeline, False)
         self.remote.create_frame(self.timeline.frames)
         self.remote.zoom.set_sensitive(True)
-        #self.vbox.set_focus_child(self.timeline)
 
     def __zoom(self, action):
         self.size = self.zoom_sizes[action.get_active()] * 1000
         if not self.remote.frame.isAlive():
             frames = self.remote.timeline.frames
+
             inc = 0
             for frame in frames:
                 if frame[3] == self.remote.frame.timeline.frame:
@@ -236,7 +238,7 @@ class Menu:
                 inc += 1
 
             self.vbox.remove(self.timeline)
-            self.timeline = TM(self.cp, self.size)
+            self.timeline = TM(self.cp.frames, self.size)
             self.remote.timeline = self.timeline
             self.remote.frame.timeline = self.timeline
             self.vbox.pack_start(self.timeline, False)
