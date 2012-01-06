@@ -69,7 +69,6 @@ class Picture(gtk.DrawingArea):
             exit(0)
 
         if self.g_hardshape.get_active():
-            print 'yo'
             self.get_hardshape()
 
     def get_hardshape(self, button=None):
@@ -122,22 +121,25 @@ class FrameEdit(gtk.HPaned):
         # Hardshape spin buttons
         spins_hbox = gtk.HBox()
 
-        labels = [['x', self.d_area.x, 0, self.d_area.width - 1],
-            ['y', self.d_area.y, 0, self.d_area.height - 1],
-            ['width', self.d_area.width, 1,
-                self.d_area.width - self.d_area.x - 1],
-            ['height', self.d_area.height, 1,
-                self.d_area.height - self.d_area.y - 1]]
+        self.adj_x = gtk.Adjustment(self.d_area.x, -1, 10000, 1, 1, 0)
+        self.adj_y = gtk.Adjustment(self.d_area.y, -1, 10000, 1, 1, 0)
+        self.adj_w = gtk.Adjustment(self.d_area.width, 0, 10000, 1, 1, 0)
+        self.adj_h = gtk.Adjustment(self.d_area.height, 0, 10000, 1, 1, 0)
 
-        for l, pos, lower, uper in labels:
+        labels = [[self.adj_x, 'x'],
+            [self.adj_y, 'y'],
+            [self.adj_w, 'width'],
+            [self.adj_h, 'height']]
+
+        for adj, l in labels:
             label = gtk.Label(_('%s : ' % l))
+
             spins_hbox.pack_start(label)
 
-            adj = gtk.Adjustment(pos, lower, uper, 1, 1, 0)
             spin = gtk.SpinButton(adj, 0.0, 0)
             spin.set_wrap(True)
-            spin.value = l
-            spin.connect("value-changed", self.change_hardshape)
+            #spin.value = l
+            adj.connect("value-changed", self.change_hardshape)
             spins_hbox.pack_start(spin)
 
         spins_hbox.show_all()
@@ -180,6 +182,11 @@ class FrameEdit(gtk.HPaned):
 
         if os.path.exists(self.picture_path):
             self.chooser.set_filename(self.picture_path)
+
+        self.adj_x.set_value(self.d_area.x)
+        self.adj_y.set_value(self.d_area.y)
+        self.adj_w.set_value(self.d_area.width)
+        self.adj_h.set_value(self.d_area.height)
 
     def overview(self, d_area, event):
         coord = event.get_coords()
@@ -225,22 +232,53 @@ class FrameEdit(gtk.HPaned):
                 )
 
     def change_hardshape(self, widget):
-        print 'change : ', int(widget.get_value()), widget.value
+        #print 'change : ', int(widget.get_value()), widget.value
         value = int(widget.get_value())
         #x, y, width, height = self.d_area.get_allocation()
-        x = self.d_area.x
-        y = self.d_area.y
-        width = self.d_area.width
-        height = self.d_area.height
-        if widget.value == 'x':
-            if value < self.d_area.p_width:
-                x = value
+        if self.adj_x == widget:
+            if value + self.d_area.width == self.d_area.p_width:
+                return
+            if value + self.d_area.width > self.d_area.p_width:
+                widget.set_value(value - 1)
+                return
+            if value == -1:
+                widget.set_value(0)
+                return
+            self.d_area.x = value
+        if self.adj_y == widget:
+            if value + self.d_area.height == self.d_area.p_height:
+                return
+            if value + self.d_area.height > self.d_area.p_height:
+                widget.set_value(value - 1)
+                return
+            if value == -1:
+                widget.set_value(0)
+                return
+            self.d_area.y = value
+        if self.adj_w == widget:
+            if value + self.d_area.x == self.d_area.p_width:
+                return
+            if value + self.d_area.x > self.d_area.p_width:
+                widget.set_value(value - 1)
+                return
+            if value == 0:
+                widget.set_value(1)
+                return
+            self.d_area.width = value
+        if self.adj_h == widget:
+            if value + self.d_area.y == self.d_area.p_height:
+                return
+            if value + self.d_area.y > self.d_area.p_height:
+                widget.set_value(value - 1)
+                return
+            if value == 0:
+                widget.set_value(1)
+                return
+            self.d_area.height = value
 
         self.d_area.draw()
         self.d_area.modify_bg(gtk.STATE_NORMAL,
                gtk.gdk.color_parse("white"))
-        #self.d_area.draw()
-
         #pixmap = gtk.gdk.Pixmap(self.d_area.window, width, height)
         #pixmap.draw_rectangle(self.d_area.get_style().white_gc,
         #                  True, 0, 0, width, height)
