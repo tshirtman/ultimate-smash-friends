@@ -36,7 +36,6 @@ from pygame.locals import (
         )
 
 # my imports
-from usf import loaders
 from usf import CONFIG
 from usf import game
 
@@ -185,6 +184,11 @@ def get_key_code(name):
         return int(getattr(CONFIG.keyboard, name))
 
 def reverse_keymap(keycode):
+    """
+    provide a name of key for a codekey, should not break on weird
+    international keyboards
+
+    """
     if 'world' in pygame.key.name(keycode):
         return str(keycode)
 
