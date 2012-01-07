@@ -225,7 +225,7 @@ class FrameEdit(gtk.HPaned):
         self._redraw()
 
     def _bottom(self, mouse_y):
-        total = mouse_y + self.d_area.y - self.d_area.margin_y
+        #total = mouse_y + self.d_area.y - self.d_area.margin_y
         if mouse_y + self.d_area.y\
         - self.d_area.margin_y > self.d_area.p_height:
             self.d_area.height = self.d_area.p_height - self.d_area.y
