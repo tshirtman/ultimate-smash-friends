@@ -24,7 +24,6 @@ class Picture(gtk.DrawingArea):
         self.g_hardshape.connect('clicked', self.get_hardshape)
 
         self.connect("expose-event", self.draw)
-        #self.connect("motion_notify_event", self.overview)
         self.get_hardshape()
 
     @property
@@ -50,8 +49,6 @@ class Picture(gtk.DrawingArea):
         self.y = int(value[1])
         self.width = int(value[2])
         self.height = int(value[3])
-        self.x1 = self.margin_x + int(value[2]) + int(value[0])
-        self.y1 = self.margin_y + int(value[3]) + int(value[1])
         self._hardshape = value
 
     def draw(self, d_area=None, event=None):
@@ -89,6 +86,7 @@ class FrameEdit(gtk.HPaned):
     def __init__(self, cp, picture_path):
         gtk.HPaned.__init__(self)
         self.properties = cp.get_frames()[0]
+        self.h_bar = ''
 
         #Choose the good picture
         chooser_dialog = gtk.FileChooserDialog(
@@ -111,12 +109,11 @@ class FrameEdit(gtk.HPaned):
         self.picture_path = cp.directory + self.properties[1]
         if os.path.exists(self.picture_path):
             self.chooser.set_filename(self.picture_path)
-        self.chooser.show()
 
         #Select good picture
         self.d_area = Picture(
             cp.get_picture(picture_path), self.properties[2].split())
-        self.d_area.show()
+        self.d_area.connect("motion_notify_event", self.overview)
 
         # Hardshape spin buttons
         spins_hbox = gtk.HBox()
@@ -133,16 +130,11 @@ class FrameEdit(gtk.HPaned):
 
         for adj, l in labels:
             label = gtk.Label(_('%s : ' % l))
-
             spins_hbox.pack_start(label)
-
             spin = gtk.SpinButton(adj, 0.0, 0)
             spin.set_wrap(True)
-            #spin.value = l
             adj.connect("value-changed", self.change_hardshape)
             spins_hbox.pack_start(spin)
-
-        spins_hbox.show_all()
 
         # Duration
         duration_hbox = gtk.HBox()
@@ -157,7 +149,6 @@ class FrameEdit(gtk.HPaned):
 
         label = gtk.Label(_('ms'))
         duration_hbox.pack_start(label)
-        duration_hbox.show_all()
 
         #Sidebar options
         self.pack1(self.d_area, True, False)
@@ -167,15 +158,14 @@ class FrameEdit(gtk.HPaned):
         vbox.pack_start(spins_hbox, False)
         vbox.pack_start(duration_hbox, False)
         self.pack2(vbox, False, False)
+        self.show_all()
 
     def draw(self, path, frame):
-        #print frame
         if not path:
             return
         self.picture_path = path
         if frame:
             self.picture_path += frame[1]
-            #print 'draw============>', frame
             self.d_area.hardshape = frame[2].split()
 
         self.d_area.path = self.picture_path
@@ -183,58 +173,180 @@ class FrameEdit(gtk.HPaned):
         if os.path.exists(self.picture_path):
             self.chooser.set_filename(self.picture_path)
 
+        self._refresh_spins()
+
+    def _refresh_spins(self):
         self.adj_x.set_value(self.d_area.x)
         self.adj_y.set_value(self.d_area.y)
         self.adj_w.set_value(self.d_area.width)
         self.adj_h.set_value(self.d_area.height)
 
+    def _redraw(self):
+        self.d_area.draw()
+        self.d_area.modify_bg(gtk.STATE_NORMAL,
+               gtk.gdk.color_parse("white"))
+        self._refresh_spins()
+
+    def _left(self, mouse_x):
+        diff = mouse_x - self.d_area.margin_x - self.d_area.x
+
+        if self.d_area.x + int(diff / 2) < 0:
+            self.d_area.width = self.d_area.x + self.d_area.width
+            self.d_area.x = 0
+        elif self.d_area.width - int(diff / 2) < 1:
+            self.d_area.x = self.d_area.x + self.d_area.width - 1
+            self.d_area.width = 1
+        else:
+            self.d_area.x += int(diff / 2)
+            self.d_area.width -= int(diff / 2)
+        self._redraw()
+
+    def _right(self, mouse_x):
+        if mouse_x - self.d_area.margin_x > self.d_area.p_width:
+            self.d_area.width = self.d_area.p_width - self.d_area.x
+        elif mouse_x - self.d_area.x - self.d_area.margin_x < 1:
+            self.d_area.width = 1
+        else:
+            self.d_area.width = mouse_x - self.d_area.x - self.d_area.margin_x
+        self._redraw()
+
+    def _top(self, mouse_y):
+        diff = mouse_y - self.d_area.margin_y - self.d_area.y
+
+        if self.d_area.y + int(diff / 2) < 0:
+            self.d_area.height = self.d_area.y + self.d_area.height
+            self.d_area.y = 0
+        elif self.d_area.height - int(diff / 2) < 1:
+            self.d_area.y = self.d_area.y + self.d_area.height - 1
+            self.d_area.height = 1
+        else:
+            self.d_area.y += int(diff / 2)
+            self.d_area.height -= int(diff / 2)
+        self._redraw()
+
+    def _bottom(self, mouse_y):
+        total = mouse_y + self.d_area.y - self.d_area.margin_y
+        if mouse_y + self.d_area.y\
+        - self.d_area.margin_y > self.d_area.p_height:
+            self.d_area.height = self.d_area.p_height - self.d_area.y
+        elif mouse_y - self.d_area.y - self.d_area.margin_y < 1:
+            self.d_area.height = 1
+        else:
+            self.d_area.height = mouse_y - self.d_area.y - self.d_area.margin_y
+        self._redraw()
+
     def overview(self, d_area, event):
+        if not self.d_area.g_hardshape.get_active():
+            return
         coord = event.get_coords()
         mouse_x = int(coord[0])
         mouse_y = int(coord[1])
 
+        x = self.d_area.margin_x + self.d_area.x
+        y = self.d_area.margin_y + self.d_area.y
+        x1 = x + self.d_area.width
+        y1 = y + self.d_area.height
+
+        if event.state & gtk.gdk.BUTTON1_MASK:
+            if self.h_bar == 'left':
+                self._left(mouse_x)
+                return
+            elif self.h_bar == 'top':
+                self._top(mouse_y)
+                return
+            elif self.h_bar == 'right':
+                self._right(mouse_x)
+                return
+            elif self.h_bar == 'bottom':
+                self._bottom(mouse_y)
+                return
+            elif self.h_bar == 'left_top':
+                self._left(mouse_x)
+                self._top(mouse_y)
+                return
+            elif self.h_bar == 'right_top':
+                self._right(mouse_x)
+                self._top(mouse_y)
+                return
+            elif self.h_bar == 'left_bottom':
+                self._left(mouse_x)
+                self._bottom(mouse_y)
+                return
+            elif self.h_bar == 'right_bottom':
+                self._right(mouse_x)
+                self._bottom(mouse_y)
+                return
+        else:
+            self.h_bar = None
+
         self.d_area.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.LEFT_PTR))
-        if self.__compare(self.x, mouse_x):
+        if self.__compare(x, mouse_x):
             self.d_area.window.set_cursor(
                 gtk.gdk.Cursor(gtk.gdk.LEFT_SIDE)
                 )
-        if self.__compare(self.y, mouse_y):
+            if event.state & gtk.gdk.BUTTON1_MASK:
+                self.h_bar = 'left'
+                self._left(mouse_x)
+        if self.__compare(y, mouse_y):
             self.d_area.window.set_cursor(
                 gtk.gdk.Cursor(gtk.gdk.TOP_SIDE)
                 )
-        if self.__compare(self.x1, mouse_x):
+            if event.state & gtk.gdk.BUTTON1_MASK:
+                self.h_bar = 'top'
+                self._top(mouse_y)
+        if self.__compare(x1, mouse_x):
             self.d_area.window.set_cursor(
                 gtk.gdk.Cursor(gtk.gdk.RIGHT_SIDE)
                 )
-        if self.__compare(self.y1, mouse_y):
+            if event.state & gtk.gdk.BUTTON1_MASK:
+                self.h_bar = 'right'
+                self._right(mouse_x)
+        if self.__compare(y1, mouse_y):
             self.d_area.window.set_cursor(gtk.gdk.Cursor(
                 gtk.gdk.BOTTOM_SIDE)
                 )
-        if self.__compare(self.x, mouse_x)\
-        and self.__compare(self.y, mouse_y):
+            if event.state & gtk.gdk.BUTTON1_MASK:
+                self.h_bar = 'bottom'
+                self._bottom(mouse_y)
+        if self.__compare(x, mouse_x)\
+        and self.__compare(y, mouse_y):
             self.d_area.window.set_cursor(
                 gtk.gdk.Cursor(gtk.gdk.TOP_LEFT_CORNER)
                 )
-        if self.__compare(self.x1, mouse_x)\
-        and self.__compare(self.y, mouse_y):
+            if event.state & gtk.gdk.BUTTON1_MASK:
+                self.h_bar = 'left_top'
+                self._left(mouse_x)
+                self._top(mouse_y)
+        if self.__compare(x1, mouse_x)\
+        and self.__compare(y, mouse_y):
             self.d_area.window.set_cursor(
                 gtk.gdk.Cursor(gtk.gdk.TOP_RIGHT_CORNER)
                 )
-        if self.__compare(self.x, mouse_x)\
-        and self.__compare(self.y1, mouse_y):
+            if event.state & gtk.gdk.BUTTON1_MASK:
+                self.h_bar = 'right_top'
+                self._right(mouse_x)
+                self._top(mouse_y)
+        if self.__compare(x, mouse_x)\
+        and self.__compare(y1, mouse_y):
             self.d_area.window.set_cursor(
                 gtk.gdk.Cursor(gtk.gdk.BOTTOM_LEFT_CORNER)
                 )
-        if self.__compare(self.x1, mouse_x)\
-        and self.__compare(self.y1, mouse_y):
+            if event.state & gtk.gdk.BUTTON1_MASK:
+                self.h_bar = 'left_bottom'
+                self._left(mouse_x)
+                self._bottom(mouse_y)
+        if self.__compare(x1, mouse_x)\
+        and self.__compare(y1, mouse_y):
             self.d_area.window.set_cursor(gtk.gdk.Cursor(
                 gtk.gdk.BOTTOM_RIGHT_CORNER)
                 )
+            if event.state & gtk.gdk.BUTTON1_MASK:
+                self.h_bar = 'right_bottom'
+                self._right(mouse_x)
+                self._bottom(mouse_y)
 
     def change_hardshape(self, widget):
-        #print 'change : ', int(widget.get_value()), widget.value
         value = int(widget.get_value())
-        #x, y, width, height = self.d_area.get_allocation()
         if self.adj_x == widget:
             if value + self.d_area.width == self.d_area.p_width:
                 return
@@ -279,18 +391,6 @@ class FrameEdit(gtk.HPaned):
         self.d_area.draw()
         self.d_area.modify_bg(gtk.STATE_NORMAL,
                gtk.gdk.color_parse("white"))
-        #pixmap = gtk.gdk.Pixmap(self.d_area.window, width, height)
-        #pixmap.draw_rectangle(self.d_area.get_style().white_gc,
-        #                  True, 0, 0, width, height)
-
-        #if widget.value == 'x':
-            #style = self.d_area.get_style()
-            #context_graph = style.fg_gc[gtk.STATE_NORMAL]
-
-            #self.d_area.window.draw_drawable(
-            #    self.d_area.get_style().fg_gc[gtk.STATE_NORMAL],
-            #    pixmap, x, y, x, y, width, height)
-            #print 'ok'
 
     def cancel(self, widget):
         pass
