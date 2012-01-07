@@ -1,29 +1,31 @@
 #!/usr/bin/env python2
+################################################################################
+#  Copyright (C) 2011  Edwin Marshall <emarshall85@gmail.com>                  #
+#                                                                              #
+# This file is part of Ultimate Smash Friends                                  #
+#                                                                              #
+# Ultimate Smash Friends is free software: you can redistribute it and/or      #
+# modify it under the terms of the GNU General Public License as published by  #
+# the Free Software Foundation, either version 3 of the License, or (at your   #
+# option) any later version.                                                   #
+#                                                                              #
+# Ultimate Smash Friends is distributed in the hope that it will be useful, but#
+# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or#
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for    #
+# more details.                                                                #
+#                                                                              #
+# You should have received a copy of the GNU General Public License along with #
+# Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
+################################################################################
 
-#  Copyright (C) 2011  Edwin Marshall <emarshall85@gmail.com>
-
-#   This file is part of Ultimate Smash Friends.
-#
-#   Ultimate Smash Friends is free software: you can redistribute it and/or modify
-#   it under the terms of the GNU General Public License as published by
-#   the Free Software Foundation, either version 3 of the License, or
-#   (at your option) any later version.
-#
-#   Ultimate Smash Friends is distributed in the hope that it will be useful,
-#   but WITHOUT ANY WARRANTY; without even the implied warranty of
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#   GNU General Public License for more details.
-#
-#   You should have received a copy of the GNU General Public License
-#   along with Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.
 
 """ Provides a class used for reading and writing various configurable options
     throughout the game
 
     This class produces an INI formated config file as opposed to an XML
-    formatted one. The reason that python's built-in ConfigurationParser isn't 
+    formatted one. The reason that python's built-in ConfigurationParser isn't
     sufficient is because comments aren't preserved when writing a config
-    file, the order in which the options are written isn't preserved, and the 
+    file, the order in which the options are written isn't preserved, and the
     interface used with this class is arguably more convenient that
     ConfigParser's.
 
@@ -39,7 +41,6 @@ from __future__ import with_statement
 
 import logging
 import os
-import platform
 import sys
 
 DEFAULT_CONFIG = """\
@@ -128,7 +129,7 @@ LEVELMAP = False
 class Section(object):
     """ An object that represents a section in a config file.
 
-        Options can be added to a section by simply assigning a value to an 
+        Options can be added to a section by simply assigning a value to an
         attribute: section.foo = baz
         would produce:
             [section]
@@ -136,12 +137,12 @@ class Section(object):
         in the config file. Options that do not exist on assignment
         are created dynamcially.
 
-        Values are automatically converted to the appropriate python type. 
+        Values are automatically converted to the appropriate python type.
         Options that begin and end with brackets([, ]) are converted to lists,
-        and options that are double-quoted (") are converted to strings. 
+        and options that are double-quoted (") are converted to strings.
         Section also recognizes booleans regardless of case, in addition to the
-        literals 'yes' and 'no' of any case. Except in the case of 
-        double-quoted strings, extra white-space is trimmed, so you need not 
+        literals 'yes' and 'no' of any case. Except in the case of
+        double-quoted strings, extra white-space is trimmed, so you need not
         worry. For example:
             foo = bar
         is equivalent to :
@@ -188,7 +189,7 @@ class Section(object):
         return_value = object.__getattribute__(self, option)
         try:
             for key, value in return_value.iteritems():
-                if (hasattr(value, 'split') and 
+                if (hasattr(value, 'split') and
                     value.startswith("\"") and value.endswith("\"")):
                     return_value[key] = value[1:-1]
         except AttributeError:
@@ -230,11 +231,11 @@ class Config(object):
             guessed based on whatever platform the script was run on.
 
             Examples:
-                paths = ['/etc/ultimate-smash-friends', 
+                paths = ['/etc/ultimate-smash-friends',
                          '/home/user_name/.config/ultimate-smash-friends']
                 config = Config(*paths)
-                
-                paths = {'system': '/etc/ultimate-smash-friends', 
+
+                paths = {'system': '/etc/ultimate-smash-friends',
                          'user': '/home/user_name/.config/ultimate-smash-friends'}
                 config = Config(**paths)
 
@@ -246,12 +247,12 @@ class Config(object):
             @type system_path: string (must be a valid path)
 
             @param user_path: Path to the user config file. Options that
-                              are missing from this file are propogated 
+                              are missing from this file are propogated
                               from the system config file and saved on
                               request
             @type user_path: string (must be a valid path)
-            
-            @param filename: Filename of the user config file that will be 
+
+            @param filename: Filename of the user config file that will be
                              generated.
             @type filename: string
         """
@@ -261,8 +262,8 @@ class Config(object):
 
         if not system_path and not user_path and not config_path:
             # use platform-specific values as paths
-            (self._paths['system'], 
-             self._paths['user'], 
+            (self._paths['system'],
+             self._paths['user'],
              self._paths['config']) = self.platform_paths()
         else:
             # convert supplied paths to absolute paths
@@ -295,7 +296,7 @@ class Config(object):
     def platform_paths(system=None):
         if system is None:
             system = os.name
-        
+
         if system in ['posix', 'linux']:
             return (os.path.join(os.sep, 'usr', 'share', 'ultimate-smash-friends'),
                     os.path.join(os.environ['XDG_CONFIG_HOME'], 'ultimate-smash-friends'),
@@ -305,19 +306,19 @@ class Config(object):
                     os.path.join(os.environ['USERDATA'], 'Ultimate Smash Friends'),
                     os.path.join(os.environ['PROGRAMFILES'], 'Ultimate Smash Friends'))
         elif system in ['mac']:
-            return (os.path.join(os.sep, 'Library', 'Application Support', 
+            return (os.path.join(os.sep, 'Library', 'Application Support',
                                  'Ultimate Smash Friends'),
-                    os.path.join(os.environ['HOME'], 'Library', 
-                                 'Application Support', 
+                    os.path.join(os.environ['HOME'], 'Library',
+                                 'Application Support',
                                  'Ultimate Smash Friends'),
-                    os.path.join(os.sep, 'Library', 'Preferences', 
+                    os.path.join(os.sep, 'Library', 'Preferences',
                                  'Ultimate Smash Friends'))
         else:
             return None
 
     @staticmethod
     def generate(filename):
-        """ Takes filename and generates a default config file using 
+        """ Takes filename and generates a default config file using
             DEFAULT_CONFIG
         """
 
@@ -359,12 +360,12 @@ class Config(object):
                     outfile.write(line)
 
     def read(self, filenames=None, sanitize=True):
-        """ Reads a config file and populates the config object 
+        """ Reads a config file and populates the config object
             with its sections and options. Calling this method without
             any arguments simply re-reads the previously defined filename
             and paths
 
-            @param filenames: name of files to be parsed. 
+            @param filenames: name of files to be parsed.
             @type path: string or list
 
             @param sanitize: whether or not to scrub the last file read or not
@@ -400,16 +401,16 @@ class Config(object):
                 if line.startswith('#') or line.strip() == '':
                     continue
                 elif line.startswith('[') and line.endswith(']\n'):
-                    # line is a section 
+                    # line is a section
                     getattr(self, line[1:-2])
                     section = line[1:-2]
                 else:
-                    option, value = [item.strip() 
+                    option, value = [item.strip()
                                      for item in line.split('=', 1)]
                     setattr(getattr(self, section), option, value)
 
     def write(self, filename=None):
-        """ Writes a config file based on the config object's 
+        """ Writes a config file based on the config object's
             sections and options
 
             @param filename: Name of file to save to. By default, this is
@@ -426,17 +427,17 @@ class Config(object):
                 self.config_file.append('\n')
                 self.config_file.append(section_tag)
 
-                for option, value in getattr(self, 
+                for option, value in getattr(self,
                                              section).entries.iteritems():
                     self.config_file.append("{0} = {1}\n".format(option, value))
             else:
                 # find new options and place them in the appropriate section
                 end_of_section = self.config_file.index(section_tag) + 1
-                for option, value in (getattr(self, 
+                for option, value in (getattr(self,
                                       section).entries.iteritems()):
                     end_of_section += 1
                     template = "{0} = {1}\n".format(option, str(value))
-                    
+
                     for index, line in enumerate(self.config_file[:]):
                         if line.startswith(option):
                             isNewOption = False
@@ -501,5 +502,5 @@ if __name__ == '__main__':
                       help='Filename of output configuration file')
 
     opts, args = parser.parse_args()
-    
+
     Config.generate(opts.filename)
