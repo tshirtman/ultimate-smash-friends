@@ -17,6 +17,11 @@
 # Ultimate Smash Friends.  If not, see <http://www.gnu.org/licenses/>.         #
 ################################################################################
 
+"""
+This module allows to customize GUI representation
+
+"""
+
 import os
 from os.path import join
 import time
@@ -30,6 +35,9 @@ from usf import CONFIG
 
 
 class Skin (object):
+    """
+    Skin class contains GUI configuration informations.
+    """
 
     def __init__(self):
         self.dialog = {}
