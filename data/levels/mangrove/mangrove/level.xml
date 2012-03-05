@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map
+    name="mangrove"
+    background="mangrove-background.png"
+    foreground="mangrove-foreground.png"
+    middle="mangrove-middle.png"
+    margins="500,500,500,500">
+
+    <entry-point coords="400 0"></entry-point>
+
+    <block coords="728 252 164 20"></block>
+    <block coords="196 308 322 20"></block>
+    <block coords="140 498 134 20"></block>
+    <block coords="392 546 414 20"></block>
+    <block coords="848 454 186 20"></block>
+
+
+</map>
