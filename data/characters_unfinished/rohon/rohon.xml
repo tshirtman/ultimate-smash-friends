@@ -107,7 +107,7 @@
         image="hit3.png"
         hardshape="7 7 37 59"
         >  <agressiv-point
-            coords="53,38"
+            coords="52,38"
             vector="300,-30"
             ></agressiv-point>
         </frame>
@@ -117,7 +117,7 @@
         hardshape="7 7 33 59"
         >
             <agressiv-point
-            coords="569,38"
+            coords="54,38"
             vector="300,-30"
             ></agressiv-point>
         </frame>
@@ -313,8 +313,8 @@
         image="smash-straight3.png"
         hardshape="7 5 33 63"
         >  <agressiv-point
-	    coords="49,35"
-	    vector="200,-100"
+	    coords="30,35"
+	    vector="200,-50"
 	    > </agressiv-point>        
         </frame>
         <frame
@@ -324,7 +324,11 @@
         >  <agressiv-point
 	    coords="49,35"
 	    vector="500,-100"
-	    > </agressiv-point>        
+	    > </agressiv-point>  
+	   <agressiv-point
+	    coords="35,35"
+	    vector="200,-50"
+	    > </agressiv-point>   	          
         </frame> 
         <frame
         time="800"
@@ -380,22 +384,22 @@
         <frame
         time="0"
         image="jump1.png"
-        hardshape="7 7 30 63"
+        hardshape="7 7 30 65"
         > </frame> 
         <frame
         time="200"
         image="jump2.png"
-        hardshape="7 7 30 63"
+        hardshape="7 7 30 65"
         > </frame>   
         <frame
         time="400"
         image="smash-up2.png"
-        hardshape="7 7 30 63"
+        hardshape="7 7 30 65"
         > </frame>     
         <frame
         time="600"
         image="smash-up3.png"
-        hardshape="7 7 30 63"
+        hardshape="7 7 30 65"
         > <agressiv-point
             coords="38,5"
             vector="70,-400"
@@ -404,7 +408,7 @@
         <frame
         time="800"
         image="jump2.png"
-        hardshape="7 7 30 63"
+        hardshape="7 7 30 65"
         > </frame>
     </movement>
     <movement name="smash-down"
@@ -534,6 +538,505 @@
         <frame
         time="500"
         image="roll2.png"
+	hardshape="7 7 56 36"
+        > <agressiv-point
+            coords="60,10"
+            vector="300,-60"
+            ></agressiv-point>
+	</frame>
+    </movement> 
+
+    <movement name="static_upgraded"
+    duration="400"
+    repeat="-1"
+    >
+        <frame
+        time="0"
+        image="static1-upgraded.png"
+        hardshape="7 7 30 63"
+        > </frame>
+        <frame
+        time="200"
+        image="static2-upgraded.png"
+        hardshape="7 7 30 60"
+        > </frame>
+        <frame
+        time="300"
+        image="static3-upgraded.png"
+        hardshape="7 7 30 59"
+        > </frame>        
+    </movement>
+    <movement name="walk_upgraded"
+    duration="800"
+    repeat="-1"
+    >
+        <frame
+        time="0"
+        image="walk1-upgraded.png"
+        hardshape="3 3 30 65"
+        > </frame>
+        <frame
+        time="200"
+        image="walk2-upgraded.png"
+        hardshape="12 3 30 65"
+        > </frame>
+        <frame
+        time="400"
+        image="walk3-upgraded.png"
+        hardshape="21 3 30 65"
+        > </frame>
+        <frame
+        time="600"
+        image="walk4-upgraded.png"
+        hardshape="7 3 30 66"
+        > </frame>
+    </movement>
+    <movement name="jump_upgraded"
+    duration="700"
+    repeat="0"
+    >
+        <event
+        period="350,0"
+        action="PlayerStaticOnGround"
+        ></event>
+        <vector
+        time="300"
+        vector="0,1500"
+        ></vector>
+        <frame
+        time="0"
+        image="jump1-upgraded.png"
+        hardshape="7 7 30 58"
+        > </frame>
+        <frame
+        time="200"
+        image="jump2-upgraded.png"
+        hardshape="7 7 30 65"
+        vector="0,110"
+        > </frame>
+        <frame
+        time="400"
+        image="jump3-upgraded.png"
+        hardshape="7 7 30 65"
+        > </frame>
+        <frame
+        time="500"
+        image="jump4-upgraded.png"
+        hardshape="7 7 30 65"
+        > </frame>
+    </movement>
+    <movement name="hit_upgraded"
+    duration="500"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="static3-upgraded.png"
+        hardshape="7 6 33 61"
+        > </frame>
+        <frame
+        time="200"
+        image="hit2-upgraded.png"
+        hardshape="7 7 33 61"
+        > </frame>
+        <frame
+        time="400"
+        image="hit3-upgraded.png"
+        hardshape="7 7 37 59"
+        >  <agressiv-point
+            coords="74,36"
+            vector="300,-30"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="600"
+        image="hit4-upgraded.png"
+        hardshape="7 7 33 59"
+        >
+            <agressiv-point
+            coords="71,24"
+            vector="300,-30"
+            ></agressiv-point>
+        </frame>
+    </movement>
+    <movement name="pick_upgraded"
+    duration="600"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="roll1-upgraded.png"
+        hardshape="7 7 30 57"
+        > </frame>
+        <frame
+        time="100"
+        image="roll1-upgraded.png"
+        hardshape="7 7 30 57"
+        > </frame> 
+        <frame
+        time="400"
+        image="pick-upgraded.png"
+        hardshape="7 7 30 56"
+        > </frame>          
+    </movement>
+    <movement name="kick_upgraded"
+    duration="400"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="kick1-upgraded.png"
+        hardshape="7 7 30 62"
+        > </frame>
+        <frame
+        time="200"
+        image="kick2-upgraded.png"
+        hardshape="7 7 37 63"
+        >  <agressiv-point
+            coords="57,37"
+            vector="200,-80"
+            ></agressiv-point>
+        </frame>      
+    </movement>
+    <movement name="kick-jumping_upgraded"
+    duration="500"
+    repeat="0"
+    >
+        <event
+        period="150,0"
+        action="PlayerStaticOnGround"
+        ></event>
+        <vector
+        time="200"
+        vector="0,1000"
+        ></vector>
+        <frame
+        time="0"
+        image="jump1-upgraded.png"
+        hardshape="7 7 32 59"
+        > </frame>
+        <frame
+        time="200"
+        image="jump2-upgraded.png"
+        hardshape="7 7 33 67"
+        > </frame>
+        <frame
+        time="300"
+        image="jump4-upgraded.png"
+        hardshape="7 7 33 67"
+        > </frame>
+        <frame
+        time="400"
+        image="kick2-upgraded.png"
+        hardshape="7 7 34 65"
+        vector="100,60"
+        >
+            <agressiv-point
+            coords="58,37"
+            vector="80,-20"
+            ></agressiv-point>
+        </frame>
+    </movement>
+    <movement name="roll_upgraded"
+    duration="1200"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="roll1-upgraded.png"
+        hardshape="7 7 30 58"
+        > </frame>
+        <frame
+        time="200"
+        image="roll2-upgraded.png"
+        hardshape="7 7 53 36"
+        > </frame>
+        <frame
+        time="400"
+        image="roll3-upgraded.png"
+        hardshape="16 0 30 60"
+        vector="50,0"
+        > </frame>
+        <frame
+        time="600"
+        image="roll4-upgraded.png"
+        hardshape="0 39 64 27"
+        vector="70,0"
+        > </frame>
+        <frame
+        time="800"
+        image="roll5-upgraded.png"
+        hardshape="7 7 33 57"
+        vector="70,0"
+        > </frame>
+        <frame
+        time="1000"
+        image="roll6-upgraded.png"
+        hardshape="7 7 30 58"
+        vector="70,0"
+        > </frame>        
+    </movement>
+    <movement name="scnd-jump_upgraded"
+    duration="800"
+    repeat="0"
+    >
+        <event
+        period="150,0"
+        action="PlayerStaticOnGround"
+        > </event>
+        <vector
+        time="300"
+        vector="0,1200"
+        ></vector>
+        <frame
+        time="0"
+        image="smash-up2-upgraded.png"
+        hardshape="3 7 32 65"
+        > </frame>
+        <frame
+        time="600"
+        image="smash-down3-upgraded.png"
+        hardshape="3 7 32 68"
+        > </frame>
+    </movement>
+    <movement name="take_upgraded"
+    duration="800"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="take1-upgraded.png"
+        hardshape="7 7 30 62"
+        > </frame>
+        <frame
+        time="400"
+        image="roll6-upgraded.png"
+        hardshape="7 7 30 58"
+        > </frame>
+        <frame
+        time="600"
+        image="roll1-upgraded.png"
+        hardshape="7 7 30 58"
+        > </frame>
+    </movement>
+
+    <movement name="smash-straight_upgraded"
+    duration="1000"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="smash-straight1-upgraded.png"
+        hardshape="7 5 30 64"
+        > </frame>
+        <frame
+        time="200"
+        image="smash-straight2-upgraded.png"
+        hardshape="7 5 30 64"
+        >
+        </frame>
+        <frame
+        time="400"
+        image="smash-straight3-upgraded.png"
+        hardshape="7 5 33 63"
+        >   <agressiv-point
+	    coords="35,35"
+	    vector="200,-50"
+	    > </agressiv-point>        
+        </frame>
+        <frame
+        time="500"
+        image="smash-straight4-upgraded.png"
+        hardshape="7 5 34 62"
+        >  <agressiv-point
+	    coords="72,30"
+	    vector="500,-100"
+	    > </agressiv-point> 
+   	    <agressiv-point
+	    coords="35,35"
+	    vector="200,-50"
+	    > </agressiv-point> 	           
+        </frame> 
+        <frame
+        time="800"
+        image="smash-straight2-upgraded.png"
+        hardshape="7 5 30 64"
+        >
+        </frame>        
+    </movement>  
+    <movement name="smash-up-jumping_upgraded"
+    duration="700"
+    repeat="0"
+    >
+        <event
+        period="150,0"
+        action="PlayerStaticOnGround"
+        > </event>
+        <vector
+        time="300"
+        vector="0,1500"
+        ></vector>
+        <frame
+        time="0"
+        image="roll1-upgraded.png"
+        hardshape="7 7 30 59"
+        vector="0,70"
+        > </frame>
+        <frame
+        time="150"
+        image="smash-up1-upgraded.png"
+        hardshape="7 7 30 65"
+        vector="0,70"
+        > </frame>
+        <frame
+        time="300"
+        image="smash-up2-upgraded.png"
+        hardshape="7 7 30 65"
+        vector="0,70"
+        >  <agressiv-point
+	    coords="40,5"
+	    vector="100,-300"
+	    > </agressiv-point>        
+        </frame>
+        <frame
+        time="500"
+        image="smash-up1-upgraded.png"
+        hardshape="7 7 30 65"
+        > </frame>
+    </movement>
+    <movement name="smash-up_upgraded"
+    duration="1000"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="smash-up2-upgraded.png"
+        hardshape="7 7 30 63"
+        > </frame>     
+        <frame
+        time="400"
+        image="smash-up3-upgraded.png"
+        hardshape="7 22 30 70"
+        > <agressiv-point
+            coords="38,5"
+            vector="70,-400"
+            ></agressiv-point>
+        </frame>
+        <frame
+        time="800"
+        image="jump2-upgraded.png"
+        hardshape="7 7 30 63"
+        > </frame>
+    </movement>
+    <movement name="smash-down_upgraded"
+    duration="400"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="smash-down2-upgraded.png"
+        hardshape="7 7 30 70"
+        > </frame>
+        <frame
+        time="200"
+        image="smash-down3-upgraded.png"
+        vector="0,-50"
+        hardshape= "7 7 30 69"
+        > <agressiv-point
+            coords="60,63"
+            vector="100,100"
+            ></agressiv-point>
+	  <agressiv-point
+            coords="13,47"
+            vector="100,100"
+            ></agressiv-point>
+        </frame>
+    </movement>
+    <movement name="special_upgraded"
+    duration="1000"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="special1-upgraded.png"
+        hardshape="7 7 30 61"
+        vector="10,0"
+        > </frame>
+        <frame
+        time="200"
+        image="special5-upgraded.png"
+        hardshape="7 5 30 63"
+        > </frame>
+        <frame
+        time="400"
+        image="special6-upgraded.png"
+        hardshape="7 9 30 61"
+        > 	     
+        </frame> 
+        <frame
+        time="800"
+        image="special7-upgraded.png"
+        hardshape="7 7 30 61"
+        >   <agressiv-point
+            coords="65,10"
+            vector="300,-130"
+            ></agressiv-point> 
+        </frame>     
+    </movement>  
+
+    <movement name="special2_upgraded"
+    duration="1000"
+    repeat="0"
+    hardshape="0 0 157 40"
+    >
+        <frame
+        time="0"
+        image="take1-upgraded.png"
+	hardshape="7 7 30 63"
+        > </frame>
+        <frame
+        time="500"
+        image="roll4-upgraded.png"
+	hardshape="7 30 56 40"
+        > <agressiv-point
+            coords="35,0"
+            vector="50,-200"
+            ></agressiv-point>
+ 	  <agressiv-point
+            coords="60,42"
+            vector="300,-100"
+            ></agressiv-point>
+	</frame>
+        <frame
+        time="700"
+        image="roll5-upgraded.png"
+	hardshape="7 7 40 56"
+        > </frame>
+    </movement> 
+
+    <movement name="specialhit_upgraded"
+    duration="800"
+    repeat="0"
+    hardshape="0 0 157 40"
+    >
+        <frame
+        time="0"
+        image="roll6-upgraded.png"
+	hardshape="7 7 30 57"
+        > </frame>
+        <frame
+        time="200"
+        image="roll1-upgraded.png"
+	hardshape="7 7 30 57"
+        > </frame>
+        <frame
+        time="300"
+        image="roll2-upgraded.png"
+	hardshape="7 7 56 36"
+        > </frame>
+        <frame
+        time="500"
+        image="roll2-upgraded.png"
 	hardshape="7 7 56 36"
         > <agressiv-point
             coords="60,10"
