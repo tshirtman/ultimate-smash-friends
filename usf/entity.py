@@ -824,8 +824,10 @@ class Entity(Actor):
 
         # this test should optimise most situations.
         elif game.level.collide_rect(self.rect[:2], self.rect[2:]) != -1:
+            self._on_ground = False
 
             if self.collide_top(game):
+                self._on_ground = True
                 self._vector[1] = -math.fabs(
                     self.vector[1] * CONFIG.general.BOUNCE)
 
@@ -864,9 +866,9 @@ class Entity(Actor):
                     self.walking_vector[1] * deltatime))
 
         self.foot_rect = self._foot_collision_rect()
-        self._on_ground = game.level.collide_rect(
-                self.foot_rect[:2],
-                self.foot_rect[2:])
+        #self._on_ground = game.level.collide_rect(
+                #self.foot_rect[:2],
+                #self.foot_rect[2:])
 
         # follow the floor if it's moving
         floor_vector = self._update_floor_vector(game.level.moving_blocs)
