@@ -35,6 +35,7 @@ from usf import skin
 from usf.debug_utils import draw_rect
 from usf.memoize import memoize
 from usf.particles import ParticlesGenerator
+from usf.script import secure_eval
 from usf import loaders
 from usf import CONFIG
 
@@ -537,7 +538,7 @@ class Level(object):
 
             coords = [int(x) for x in decorum.attrib['coords'].split(',')]
             depth = float(decorum.attrib['depth'])
-            update_fctn = eval(decorum.attrib['update'])
+            update_fctn = secure_eval(decorum.attrib['update'])
 
             self.decorums.append(Decorum(frames, coords, depth, update_fctn))
         self.decorums.sort()
