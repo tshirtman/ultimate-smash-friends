@@ -173,3 +173,12 @@ doctest:
 	$(SPHINXBUILD) -b doctest $(ALLSPHINXOPTS) $(BUILDDIR)/doctest
 	@echo "Testing of doctests in the sources finished, look at the " \
 	      "results in $(BUILDDIR)/doctest/output.txt."
+
+publish_html: html
+	mv build/html/ /tmp
+	git co gh-pages
+	cp -r /tmp/html build
+	git ci build/html -m "publish doc"
+	git push
+	git co master
+
