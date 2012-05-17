@@ -4,8 +4,8 @@
 # You can set these variables from the command line.
 SPHINXOPTS    = -W
 APIOPTS	      = -o source/api_reference -T ../usf
-SPHINXAPIDOC  = sphinx-apidoc2
-SPHINXBUILD   = sphinx-build2
+SPHINXAPIDOC  = sphinx-apidoc
+SPHINXBUILD   = sphinx-build
 PAPER         =
 BUILDDIR      = build
 
