@@ -728,13 +728,18 @@ class Entity(Actor):
                 int(Entity.list_sin_cos_1[n][1] * h[3] / 2 + r[1]))
 
     def update_points(self, x = 0, y = 0):
-        """
-        creation of points, there are 8 points placed like this:
-         7. .0   counted clockwise and starting from the upper right one
-        6.   .1  (in fact it's the opposite but the screen is (0, 0) at the
-        5.   .2  top left, what actualy means right or left is not important
-         4. .3   as long as you stay consistent, I hope I do :P).
+        """ Points are created as follows::
 
+                +-------------------+
+                |       7   0       |
+                |   6           1   |
+                |                   |
+                |   5           2   |
+                |       4   3       |
+                +-------------------+
+
+            As can be seen, they are oriented clock-wise, beginning in the
+            upper-right corner and ending in the upper-left.
          """
 
         h = self.hardshape
