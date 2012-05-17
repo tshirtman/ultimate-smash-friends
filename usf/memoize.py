@@ -21,11 +21,11 @@
 This module provide simple implementation of the memoize pattern, implemented
 as a decorator.
 
-usage:
+usage::
 
-@memoize
-def my_determinist_pure_function(*args, **kwargs):
-    do stuff
+    @memoize
+    def my_determinist_pure_function(*args, **kwargs):
+        do stuff
 
 my_determinist_pure_function(some_params) # first call with those params, slow
 ...

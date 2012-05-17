@@ -58,13 +58,13 @@ class EventManager(object):
             e.update(deltatime, gametime)
 
             if e.done:
-                e.del_() 
+                e.del_()
 
         self.events = filter(lambda x: not x.done, self.events)
 
     def add_event(self, name, *args, **kwargs):
-        """ add an event of the requested type to the manager, *args and
-        **kwargs are passed to the event creation
+        """ add an event of the requested type to the manager, args and
+            kwargs are passed to the event creation
         """
         self.events.append(EVENT_NAMES[name](self, *args, **kwargs))
 
