@@ -1,0 +1,495 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>usf.loaders &mdash; Ultimate Smash Friends 0.1.6 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.6',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Ultimate Smash Friends 0.1.6 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Ultimate Smash Friends 0.1.6 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for usf.loaders</h1><div class="highlight"><pre>
+<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="c">################################################################################</span>
+<span class="c"># copyright 2008 Gabriel Pettier &lt;gabriel.pettier@gmail.com&gt;                   #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># This file is part of UltimateSmashFriends                                    #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># UltimateSmashFriends is free software: you can redistribute it and/or modify #</span>
+<span class="c"># it under the terms of the GNU General Public License as published by         #</span>
+<span class="c"># the Free Software Foundation, either version 3 of the License, or            #</span>
+<span class="c"># (at your option) any later version.                                          #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># UltimateSmashFriends is distributed in the hope that it will be useful,      #</span>
+<span class="c"># but WITHOUT ANY WARRANTY; without even the implied warranty of               #</span>
+<span class="c"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                #</span>
+<span class="c"># GNU General Public License for more details.                                 #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># You should have received a copy of the GNU General Public License            #</span>
+<span class="c"># along with UltimateSmashFriends.  If not, see &lt;http://www.gnu.org/licenses/&gt;.#</span>
+<span class="c">################################################################################</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">pygame_loaders is a set of classes/functions, to use mainly for image</span>
+<span class="sd">loadings/processing with pygame, it uses memoization to accelerate successive</span>
+<span class="sd">loadings of images, and repeating the same process on the same images, acting</span>
+<span class="sd">as a real cache for image loading and manipulations, it help to load tracks and</span>
+<span class="sd">such too.</span>
+
+<span class="sd">This module was originaly a simple syntaxic sugar for a pygame project,</span>
+
+<span class="sd">for performances sake it quickly gained memoization, allowing you to call for</span>
+<span class="sd">images, not carring if you already loaded them or not. As you may need to do</span>
+<span class="sd">that for result of process on those images, the image loader gained a lot of</span>
+<span class="sd">keywords, that allow to call images with a zooms, blending, reversing, scaling,</span>
+<span class="sd">rotating, and all sort of combinations, everytime doing only the required parts</span>
+<span class="sd">of those processings, and using previous results of processings. Okay, it can</span>
+<span class="sd">takes up big memory amounts, but well, i found it&#39;s most of the time less of</span>
+<span class="sd">the problem than CPU, so if you agree, you will probably agree that for games,</span>
+<span class="sd">it&#39;s an acceptable tradeoff.</span>
+
+<span class="sd">Oh, for convenience sakes, it can load bunch of text and musics, too, the</span>
+<span class="sd">processing part is less developped on these ones, but contributions are</span>
+<span class="sd">welcomed, and memoization is done for them too.</span>
+
+<span class="sd">Anyway, using it is quite simple, simply import the needed loaders from</span>
+<span class="sd">loaders.py, and for an image filepath, image() will return a tupple containing</span>
+<span class="sd">the image and it&#39;s size, no need to store it away, calling the loader a second</span>
+<span class="sd">time or more is basically free, thanks to memoization.</span>
+
+<span class="sd">pygame must be loaded and display_mode set to perform most image operations.</span>
+
+<span class="sd">&gt;&gt;&gt; from pygame_loaders import image</span>
+<span class="sd">&gt;&gt;&gt; image(&#39;myimage.png&#39;) # actual loading</span>
+<span class="sd">(&lt;Surface(491x546x32 SW)&gt;, &lt;rect(0, 0, 491, 546)&gt;)</span>
+
+<span class="sd">&gt;&gt;&gt; image(&#39;myimage.png&#39;) # returning same result, without any loading</span>
+<span class="sd">&gt;&gt;&gt; image(&quot;myimage.png&quot;, zoom=1.5) # only performing zoom</span>
+<span class="sd">(&lt;Surface(736x819x32 SW)&gt;, &lt;rect(0, 0, 736, 819)&gt;)</span>
+
+<span class="sd">&gt;&gt;&gt; image(&quot;myimage.png&quot;, zoom=1.5, alpha=0.4) # only changing alpha</span>
+<span class="sd">(&lt;Surface(736x819x32 SW)&gt;, &lt;rect(0, 0, 736, 819)&gt;)</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="c"># standards imports</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">pygame</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">ConfigParser</span> <span class="kn">import</span> <span class="n">SafeConfigParser</span>
+
+<span class="kn">from</span> <span class="nn">usf.memoize</span> <span class="kn">import</span> <span class="n">memoize</span>
+<span class="kn">from</span> <span class="nn">usf</span> <span class="kn">import</span> <span class="n">CONFIG</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">pygame.locals</span> <span class="kn">import</span> <span class="n">BLEND_RGB_MAX</span>
+    <span class="kn">from</span> <span class="nn">pygame.locals</span> <span class="kn">import</span> <span class="n">BLEND_RGBA_MAX</span>
+    <span class="kn">from</span> <span class="nn">pygame.locals</span> <span class="kn">import</span> <span class="n">BLEND_RGBA_MULT</span>
+
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;old version of pygame no BLEND_RGBA_MAX&quot;</span><span class="p">)</span>
+    <span class="n">BLEND_RGBA_MAX</span> <span class="o">=</span> <span class="bp">None</span>
+
+<span class="nd">@memoize</span>
+<div class="viewcode-block" id="get_gconfig"><a class="viewcode-back" href="../../api_reference/usf.html#usf.loaders.get_gconfig">[docs]</a><span class="k">def</span> <span class="nf">get_gconfig</span><span class="p">():</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">SafeConfigParser</span><span class="p">()</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">optionxform</span> <span class="o">=</span> <span class="nb">str</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">system_path</span><span class="p">,</span> <span class="s">&#39;game.cfg&#39;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">parser</span>
+
+</div>
+<span class="k">def</span> <span class="nf">_zoom</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; takes care of the zoom argument, and pass the rest to image()</span>
+<span class="sd">    zoom is used as a multiplication in size on both dimension of the image.</span>
+<span class="sd">    return the end result.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">zoom</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;zoom&#39;</span><span class="p">]</span>
+    <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;zoom&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="c">#logging.debug(&#39;scaling image &#39;+name+&#39; :&#39;+str(zoom))</span>
+    <span class="k">if</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">SMOOTHSCALE</span><span class="p">:</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">smoothscale</span><span class="p">(</span>
+                <span class="n">image</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="p">(</span>
+                 <span class="nb">int</span><span class="p">(</span><span class="n">image</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">zoom</span><span class="p">),</span>
+                 <span class="nb">int</span><span class="p">(</span><span class="n">image</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)[</span><span class="mi">1</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="n">zoom</span><span class="p">)))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span>
+                <span class="n">image</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="p">(</span>
+                 <span class="nb">int</span><span class="p">(</span><span class="n">image</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">zoom</span><span class="p">),</span>
+                 <span class="nb">int</span><span class="p">(</span><span class="n">image</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)[</span><span class="mi">1</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="n">zoom</span><span class="p">)))</span>
+
+    <span class="k">return</span> <span class="n">img</span>
+
+
+<span class="k">def</span> <span class="nf">_expand</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This feature can be used for buttons, which have a rounded border. But</span>
+<span class="sd">    if we just scale them, the borders look bad, because the rounded corner</span>
+<span class="sd">    are also scaled</span>
+
+<span class="sd">    So, we have to split it to keep a consistent image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;expand&#39;</span><span class="p">])</span> <span class="ow">is</span> <span class="ow">not</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s">&quot;expand parameter should be a tuple of three integers: width,&quot;</span>
+            <span class="s">&quot; height, corner&quot;</span><span class="p">)</span>
+
+    <span class="n">expand</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;expand&#39;</span><span class="p">]</span>
+    <span class="n">corner</span> <span class="o">=</span> <span class="n">expand</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="n">expand</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="n">expand</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;expand&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Surface</span><span class="p">((</span><span class="n">expand</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">expand</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">pygame</span><span class="o">.</span><span class="n">locals</span><span class="o">.</span><span class="n">SRCALPHA</span><span class="p">)</span>
+
+    <span class="c"># Get source image dimensions</span>
+    <span class="n">img_from</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="n">name</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">width_image</span> <span class="o">=</span> <span class="n">img_from</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span>
+    <span class="n">height_image</span> <span class="o">=</span> <span class="n">img_from</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span>
+
+    <span class="c"># Top left corner</span>
+    <span class="n">img_source</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="n">name</span><span class="p">,</span>
+                       <span class="n">crop</span><span class="o">=</span><span class="p">(</span><span class="n">corner</span><span class="p">,</span> <span class="n">corner</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">img</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">img_source</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+    <span class="c"># Bottom right corner</span>
+    <span class="n">img_source</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">crop</span><span class="o">=</span><span class="p">(</span><span class="n">corner</span><span class="p">,</span> <span class="n">corner</span><span class="p">,</span> <span class="n">width_image</span> <span class="o">-</span> <span class="n">corner</span><span class="p">,</span> <span class="mi">0</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">img</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">img_source</span><span class="p">,</span> <span class="p">(</span><span class="n">width</span> <span class="o">-</span> <span class="n">corner</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+    <span class="c"># Bottom left corner</span>
+    <span class="n">img_source</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">crop</span><span class="o">=</span><span class="p">(</span>
+                <span class="n">corner</span><span class="p">,</span>
+                <span class="n">corner</span><span class="p">,</span>
+                <span class="n">width_image</span> <span class="o">-</span> <span class="n">corner</span><span class="p">,</span>
+                <span class="n">height_image</span> <span class="o">-</span> <span class="n">corner</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">img</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">img_source</span><span class="p">,</span> <span class="p">(</span><span class="n">width</span> <span class="o">-</span> <span class="n">corner</span><span class="p">,</span> <span class="n">height</span> <span class="o">-</span> <span class="n">corner</span><span class="p">))</span>
+
+    <span class="c"># Top right corner</span>
+    <span class="n">img_source</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="n">name</span><span class="p">,</span>
+                       <span class="n">crop</span><span class="o">=</span><span class="p">(</span><span class="n">corner</span><span class="p">,</span> <span class="n">corner</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">height_image</span> <span class="o">-</span> <span class="n">corner</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">img</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">img_source</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">height</span> <span class="o">-</span> <span class="n">corner</span><span class="p">))</span>
+
+    <span class="c"># Left part</span>
+    <span class="n">img_source</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="n">name</span><span class="p">,</span>
+                       <span class="n">crop</span><span class="o">=</span><span class="p">(</span><span class="n">corner</span><span class="p">,</span> <span class="n">height_image</span> <span class="o">-</span> <span class="n">corner</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">corner</span><span class="p">),</span>
+                       <span class="n">scale</span><span class="o">=</span><span class="p">(</span><span class="n">corner</span><span class="p">,</span> <span class="n">height</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">corner</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">img</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">img_source</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">corner</span><span class="p">))</span>
+
+    <span class="c"># Right part</span>
+    <span class="n">img_source</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">crop</span><span class="o">=</span><span class="p">(</span>
+                <span class="n">corner</span><span class="p">,</span>
+                <span class="n">height_image</span> <span class="o">-</span> <span class="n">corner</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span>
+                <span class="n">width_image</span> <span class="o">-</span> <span class="n">corner</span><span class="p">,</span> <span class="n">corner</span><span class="p">),</span>
+            <span class="n">scale</span><span class="o">=</span><span class="p">(</span><span class="n">corner</span><span class="p">,</span> <span class="n">height</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">corner</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">img</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">img_source</span><span class="p">,</span> <span class="p">(</span><span class="n">width</span> <span class="o">-</span> <span class="n">corner</span><span class="p">,</span> <span class="n">corner</span><span class="p">))</span>
+
+    <span class="c"># Top part</span>
+    <span class="n">img_source</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="n">name</span><span class="p">,</span>
+                       <span class="n">crop</span><span class="o">=</span><span class="p">(</span><span class="n">width_image</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">corner</span><span class="p">,</span> <span class="n">corner</span><span class="p">,</span> <span class="n">corner</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                       <span class="n">scale</span><span class="o">=</span><span class="p">(</span><span class="n">width</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">corner</span><span class="p">,</span> <span class="n">corner</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">img</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">img_source</span><span class="p">,</span> <span class="p">(</span><span class="n">corner</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+    <span class="c"># Bottom part</span>
+    <span class="n">img_source</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">crop</span><span class="o">=</span><span class="p">(</span>
+                <span class="n">width_image</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">corner</span><span class="p">,</span>
+                <span class="n">corner</span><span class="p">,</span>
+                <span class="n">corner</span><span class="p">,</span>
+                <span class="n">height_image</span> <span class="o">-</span> <span class="n">corner</span><span class="p">),</span>
+            <span class="n">scale</span><span class="o">=</span><span class="p">(</span><span class="n">width</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">corner</span><span class="p">,</span> <span class="n">corner</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">img</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">img_source</span><span class="p">,</span> <span class="p">(</span><span class="n">corner</span><span class="p">,</span> <span class="n">height</span> <span class="o">-</span> <span class="n">corner</span><span class="p">))</span>
+
+    <span class="c"># Center</span>
+    <span class="n">img_source</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">crop</span><span class="o">=</span><span class="p">(</span><span class="n">width_image</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">corner</span><span class="p">,</span>
+                <span class="n">height_image</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">corner</span><span class="p">,</span>
+                <span class="n">corner</span><span class="p">,</span>
+                <span class="n">corner</span><span class="p">),</span>
+            <span class="n">scale</span><span class="o">=</span><span class="p">(</span><span class="n">width</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">corner</span><span class="p">,</span> <span class="n">height</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">corner</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">img</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">img_source</span><span class="p">,</span> <span class="p">(</span><span class="n">corner</span><span class="p">,</span> <span class="n">corner</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">img</span>
+
+
+<span class="k">def</span> <span class="nf">_crop</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    return a portion of an image.</span>
+<span class="sd">    crop parameter should be a tuple of four integers:</span>
+<span class="sd">    width, height, x, y</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;crop&#39;</span><span class="p">])</span> <span class="ow">is</span> <span class="ow">not</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s">&quot;crop parameter should be a tuple of four integers: width,&quot;</span>
+            <span class="s">&quot;height, x, y&quot;</span><span class="p">)</span>
+
+    <span class="n">crop</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;crop&#39;</span><span class="p">]</span>
+    <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;crop&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">img_src</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Surface</span><span class="p">((</span><span class="n">crop</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">crop</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">pygame</span><span class="o">.</span><span class="n">locals</span><span class="o">.</span><span class="n">SRCALPHA</span><span class="p">)</span>
+    <span class="n">rect</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">crop</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">crop</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">crop</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">crop</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">img</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">img_src</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">rect</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">img</span>
+
+
+<span class="k">def</span> <span class="nf">_lighten</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; return the image with a all visible pixels saturated in white</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c">#logging.debug(&#39;lightened: &#39;+name)</span>
+    <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;lighten&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">BLEND_RGBA_MAX</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">img</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span>
+                <span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="s">&#39;lightgrey&#39;</span><span class="p">),</span>
+                <span class="bp">None</span><span class="p">,</span>
+                <span class="n">BLEND_RGB_MAX</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c"># this mean this version of pygame is to old to use the effect</span>
+        <span class="c"># above, an equivalent method would be a good thing</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&#39;pygame version &lt; 1.9 no alpha blend.&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">img</span>
+
+
+<span class="k">def</span> <span class="nf">_scale</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; XXX: Difference with zoom?</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;scale&#39;</span><span class="p">])</span> <span class="ow">is</span> <span class="ow">not</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s">&quot;scale parameter should be a tuple of two integers&quot;</span><span class="p">)</span>
+
+    <span class="n">scale</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;scale&#39;</span><span class="p">]</span>
+    <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;scale&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">if</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">SMOOTHSCALE</span><span class="p">:</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">smoothscale</span><span class="p">(</span>
+            <span class="n">image</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">scale</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span>
+            <span class="n">image</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">scale</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">img</span>
+
+
+<span class="k">def</span> <span class="nf">_alpha</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; use BLEND_RGBA_MULT to produce images with different alpha</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;alpha&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">alpha</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s">&#39;bad alpha value:&#39;</span><span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">alpha</span><span class="p">))</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">))</span>
+
+    <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;alpha&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">image</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">img</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">alpha</span><span class="o">*</span><span class="mi">255</span><span class="p">)),</span>
+            <span class="n">image</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">BLEND_RGBA_MULT</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">img</span>
+
+
+<span class="k">def</span> <span class="nf">_load</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Load an image and convert it for faster blit operations, always</span>
+<span class="sd">    consider the image to have an alpha channel.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">pygame</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;Cannot load image:&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">raise</span>
+    <span class="k">return</span> <span class="n">img</span><span class="o">.</span><span class="n">convert_alpha</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">_reverse</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; return the image flipped horizontaly.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;reversed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="k">return</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span>
+        <span class="n">image</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="bp">True</span><span class="p">,</span> <span class="c">#flip horizontaly</span>
+        <span class="bp">False</span><span class="p">)</span> <span class="c">#not verticaly</span>
+
+
+<span class="k">def</span> <span class="nf">_rotate</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; rotate the image of an arbitraty angle.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">angle</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;rotate&#39;</span><span class="p">]</span>
+    <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;rotate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">return</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span>
+            <span class="n">image</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">angle</span> <span class="o">*</span> <span class="mi">180</span><span class="o">/</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+
+
+<span class="nd">@memoize</span>
+<div class="viewcode-block" id="image"><a class="viewcode-back" href="../../api_reference/usf.html#usf.loaders.image">[docs]</a><span class="k">def</span> <span class="nf">image</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A function to load an image, memoized, and with manipulation capabilities:</span>
+<span class="sd">        scale, zoom</span>
+<span class="sd">        reverse horizontaly,</span>
+<span class="sd">        produce a lightened version of an image,</span>
+<span class="sd">        change alpha of an image,</span>
+<span class="sd">        crop</span>
+<span class="sd">        and extand an image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">keywords</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&#39;reversed&#39;</span><span class="p">:</span> <span class="n">_reverse</span><span class="p">,</span>
+            <span class="s">&#39;lighten&#39;</span><span class="p">:</span> <span class="n">_lighten</span><span class="p">,</span>
+            <span class="s">&#39;alpha&#39;</span><span class="p">:</span> <span class="n">_alpha</span><span class="p">,</span>
+            <span class="s">&#39;scale&#39;</span><span class="p">:</span> <span class="n">_scale</span><span class="p">,</span>
+            <span class="s">&#39;crop&#39;</span><span class="p">:</span> <span class="n">_crop</span><span class="p">,</span>
+            <span class="s">&#39;expand&#39;</span><span class="p">:</span> <span class="n">_expand</span><span class="p">,</span>
+            <span class="s">&#39;zoom&#39;</span><span class="p">:</span> <span class="n">_zoom</span><span class="p">,</span>
+            <span class="s">&#39;rotate&#39;</span><span class="p">:</span> <span class="n">_rotate</span><span class="p">,</span>
+            <span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">kw</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">kw</span><span class="p">]:</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">keywords</span><span class="p">[</span><span class="n">kw</span><span class="p">](</span><span class="n">name</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">break</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">_load</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">img</span><span class="p">,</span> <span class="n">img</span><span class="o">.</span><span class="n">get_rect</span><span class="p">()</span>
+
+</div>
+<span class="nd">@memoize</span>
+<div class="viewcode-block" id="image_layer"><a class="viewcode-back" href="../../api_reference/usf.html#usf.loaders.image_layer">[docs]</a><span class="k">def</span> <span class="nf">image_layer</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot; return a copy of the first image, with the second one blitted on it</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">surface</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">first</span><span class="p">)</span>
+    <span class="n">surface</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">second</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">surface</span>
+
+</div>
+<span class="nd">@memoize</span>
+<div class="viewcode-block" id="text"><a class="viewcode-back" href="../../api_reference/usf.html#usf.loaders.text">[docs]</a><span class="k">def</span> <span class="nf">text</span><span class="p">(</span><span class="n">text_send</span><span class="p">,</span> <span class="n">font</span><span class="p">,</span> <span class="n">red</span><span class="o">=</span><span class="mi">240</span><span class="p">,</span> <span class="n">green</span><span class="o">=</span><span class="mi">240</span><span class="p">,</span> <span class="n">blue</span><span class="o">=</span><span class="mi">240</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">250</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; return a surface with the text rendered on it, in the color passed in</span>
+<span class="sd">    parameter</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">font</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">text_send</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">&#39;utf-8&#39;</span><span class="p">),</span>
+            <span class="bp">True</span><span class="p">,</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="n">red</span><span class="p">,</span> <span class="n">green</span><span class="p">,</span> <span class="n">blue</span><span class="p">,</span> <span class="n">alpha</span><span class="p">))</span>
+
+</div>
+<span class="nd">@memoize</span>
+<div class="viewcode-block" id="paragraph"><a class="viewcode-back" href="../../api_reference/usf.html#usf.loaders.paragraph">[docs]</a><span class="k">def</span> <span class="nf">paragraph</span><span class="p">(</span><span class="n">text_send</span><span class="p">,</span> <span class="n">font</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Load a bunch of text in a surface, formated depending on it&#39;s length</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">max_len</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">font</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">texte</span> <span class="ow">in</span> <span class="n">text_send</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">text</span><span class="p">(</span><span class="n">texte</span><span class="p">,</span> <span class="n">font</span><span class="p">)</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">max_len</span><span class="o">.</span><span class="n">get_width</span><span class="p">():</span>
+            <span class="n">max_len</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="n">texte</span><span class="p">,</span> <span class="n">font</span><span class="p">)</span>
+
+    <span class="n">text_re</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">Surface</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">max_len</span><span class="o">.</span><span class="n">get_width</span><span class="p">(),</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">text_send</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">))</span><span class="o">*</span><span class="n">text</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">font</span><span class="p">)</span><span class="o">.</span><span class="n">get_height</span><span class="p">()))</span>
+
+    <span class="n">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">for</span> <span class="n">texte</span> <span class="ow">in</span> <span class="n">text_send</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">):</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">surf</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="n">texte</span><span class="p">,</span> <span class="n">font</span><span class="p">)</span>
+        <span class="n">text_re</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span> <span class="p">(</span><span class="n">text_re</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="n">surf</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
+            <span class="n">i</span> <span class="o">*</span> <span class="n">surf</span><span class="o">.</span><span class="n">get_height</span><span class="p">()))</span>
+    <span class="k">return</span> <span class="n">text_re</span>
+
+</div>
+<span class="nd">@memoize</span>
+<div class="viewcode-block" id="track"><a class="viewcode-back" href="../../api_reference/usf.html#usf.loaders.track">[docs]</a><span class="k">def</span> <span class="nf">track</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load an audio file to play in the game</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">freq</span><span class="p">,</span> <span class="n">bitsize</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">buff</span> <span class="o">=</span> <span class="p">(</span><span class="mi">44100</span><span class="p">,</span> <span class="o">-</span><span class="mi">16</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">freq</span><span class="p">,</span> <span class="n">bitsize</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">buff</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">Sound</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">error</span><span class="p">):</span>
+        <span class="c"># no sound</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Unable to initialize audio.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">None</span>
+</pre></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Ultimate Smash Friends 0.1.6 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Gabirel Pettier.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

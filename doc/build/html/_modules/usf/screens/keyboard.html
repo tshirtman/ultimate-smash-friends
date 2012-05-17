@@ -1,0 +1,179 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>usf.screens.keyboard &mdash; Ultimate Smash Friends 0.1.6 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1.6',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Ultimate Smash Friends 0.1.6 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">Ultimate Smash Friends 0.1.6 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for usf.screens.keyboard</h1><div class="highlight"><pre>
+<span class="c">################################################################################</span>
+<span class="c"># copyright 2009 Gabriel Pettier &lt;gabriel.pettier@gmail.com&gt;                   #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># This file is part of Ultimate Smash Friends.                                 #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># Ultimate Smash Friends is free software: you can redistribute it and/or      #</span>
+<span class="c"># modify it under the terms of the GNU General Public License as published by  #</span>
+<span class="c"># the Free Software Foundation, either version 3 of the License, or (at your   #</span>
+<span class="c"># option) any later version.                                                   #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># Ultimate Smash Friends is distributed in the hope that it will be useful, but#</span>
+<span class="c"># WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or#</span>
+<span class="c"># FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for    #</span>
+<span class="c"># more details.                                                                #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># You should have received a copy of the GNU General Public License along with #</span>
+<span class="c"># Ultimate Smash Friends.  If not, see &lt;http://www.gnu.org/licenses/&gt;.         #</span>
+<span class="c">################################################################################</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">The screen to configure the Keyboard.</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span>
+
+<span class="kn">from</span> <span class="nn">usf.screens.screen</span> <span class="kn">import</span> <span class="n">Screen</span>
+<span class="kn">from</span> <span class="nn">usf.widgets.box</span> <span class="kn">import</span> <span class="n">VBox</span><span class="p">,</span> <span class="n">HBox</span>
+<span class="kn">from</span> <span class="nn">usf.widgets.button</span> <span class="kn">import</span> <span class="n">Button</span>
+<span class="kn">from</span> <span class="nn">usf.widgets.label</span> <span class="kn">import</span> <span class="n">Label</span>
+<span class="kn">from</span> <span class="nn">usf.widgets.special</span> <span class="kn">import</span> <span class="n">KeyboardWidget</span>
+<span class="kn">from</span> <span class="nn">usf.widgets.image</span> <span class="kn">import</span> <span class="n">Image</span>
+
+<span class="kn">from</span> <span class="nn">usf.translation</span> <span class="kn">import</span> <span class="n">_</span>
+
+<span class="kn">from</span> <span class="nn">usf</span> <span class="kn">import</span> <span class="n">CONFIG</span>
+
+
+<div class="viewcode-block" id="Keyboard"><a class="viewcode-back" href="../../../api_reference/usf.screens.html#usf.screens.keyboard.Keyboard">[docs]</a><span class="k">class</span> <span class="nc">Keyboard</span><span class="p">(</span><span class="n">Screen</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Keyboard.init"><a class="viewcode-back" href="../../../api_reference/usf.screens.html#usf.screens.keyboard.Keyboard.init">[docs]</a>    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">VBox</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s">&quot;Keyboard Options&quot;</span><span class="p">)</span>
+
+        <span class="n">hbox</span> <span class="o">=</span> <span class="n">HBox</span><span class="p">()</span>
+        <span class="n">hbox</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Label</span><span class="p">(</span><span class="s">&quot; &quot;</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">img</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&#39;left.png&#39;</span><span class="p">,</span> <span class="s">&#39;right.png&#39;</span><span class="p">,</span> <span class="s">&#39;top.png&#39;</span><span class="p">,</span> <span class="s">&#39;bottom.png&#39;</span><span class="p">]:</span>
+            <span class="n">hbox</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Image</span><span class="p">(</span><span class="n">join</span><span class="p">(</span>
+                <span class="s">&#39;gui&#39;</span><span class="p">,</span>
+                <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">THEME</span><span class="p">,</span>
+                <span class="n">img</span><span class="p">)),</span>
+                <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span>
+                <span class="n">margin</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+
+
+        <span class="n">hbox</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Label</span><span class="p">(</span><span class="s">&#39;B&#39;</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span> <span class="n">margin</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s">&quot;center&quot;</span><span class="p">)</span>
+        <span class="n">hbox</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Label</span><span class="p">(</span><span class="s">&#39;A&#39;</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span> <span class="n">margin</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s">&quot;center&quot;</span><span class="p">)</span>
+        <span class="n">hbox</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Label</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s">&quot;Shield&quot;</span><span class="p">)),</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span> <span class="n">margin</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="s">&quot;center&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">hbox</span><span class="p">)</span>
+        <span class="n">actions</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Left&#39;</span><span class="p">,</span> <span class="s">&#39;Right&#39;</span><span class="p">,</span> <span class="s">&#39;Up&#39;</span><span class="p">,</span> <span class="s">&#39;Down&#39;</span><span class="p">,</span> <span class="s">&#39;A&#39;</span><span class="p">,</span> <span class="s">&#39;B&#39;</span><span class="p">,</span> <span class="s">&#39;Shield&#39;</span><span class="p">]</span>
+
+        <span class="c">#one iteration per player</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+            <span class="n">hbox</span> <span class="o">=</span> <span class="n">HBox</span><span class="p">()</span>
+            <span class="n">hbox</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Label</span><span class="p">(</span><span class="s">&#39;Player &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>
+
+            <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">actions</span><span class="p">:</span>
+                <span class="n">w</span> <span class="o">=</span> <span class="n">KeyboardWidget</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">keyboard</span><span class="p">,</span> 
+                                       <span class="s">&quot;PL{0}_{1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">action</span><span class="o">.</span><span class="n">upper</span><span class="p">())))</span>
+                <span class="n">w</span><span class="o">.</span><span class="n">set_id</span><span class="p">(</span><span class="s">&quot;PL{0}_{1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">action</span><span class="o">.</span><span class="n">upper</span><span class="p">()))</span>
+                <span class="n">hbox</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span> <span class="n">margin</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">hbox</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Button</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s">&#39;Back&#39;</span><span class="p">)),</span> <span class="n">align</span><span class="o">=</span><span class="s">&quot;center&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">update_pos</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="Keyboard.callback"><a class="viewcode-back" href="../../../api_reference/usf.screens.html#usf.screens.keyboard.Keyboard.callback">[docs]</a>    <span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s">&#39;letter&#39;</span><span class="p">):</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">keyboard</span><span class="p">,</span> <span class="n">action</span><span class="o">.</span><span class="n">get_id</span><span class="p">(),</span> <span class="n">action</span><span class="o">.</span><span class="n">get_value</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="n">action</span><span class="o">.</span><span class="n">text</span> <span class="o">==</span> <span class="n">_</span><span class="p">(</span><span class="s">&#39;Back&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s">&#39;goto&#39;</span><span class="p">:</span> <span class="s">&#39;back&#39;</span><span class="p">}</span>
+
+        <span class="n">CONFIG</span><span class="o">.</span><span class="n">write</span><span class="p">()</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">Ultimate Smash Friends 0.1.6 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Gabirel Pettier.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

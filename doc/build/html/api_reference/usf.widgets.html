@@ -1,0 +1,916 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>widgets Package &mdash; Ultimate Smash Friends 0.1.6 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1.6',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Ultimate Smash Friends 0.1.6 documentation" href="../index.html" />
+    <link rel="prev" title="subpixel Package" href="usf.subpixel.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="usf.subpixel.html" title="subpixel Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Ultimate Smash Friends 0.1.6 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="widgets-package">
+<h1>widgets Package<a class="headerlink" href="#widgets-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">widgets</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-usf.widgets"></span><p>This module contains all widgets used to construct the screens of the GUI</p>
+</div>
+<div class="section" id="module-usf.widgets.box">
+<span id="box-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">box</span></tt> Module<a class="headerlink" href="#module-usf.widgets.box" title="Permalink to this headline">¶</a></h2>
+<p>Some Box widgets as base for the GUI classes</p>
+<dl class="class">
+<dt id="usf.widgets.box.Container">
+<em class="property">class </em><tt class="descclassname">usf.widgets.box.</tt><tt class="descname">Container</tt><big>(</big><em>orientation</em>, <em>border=False</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/box.html#Container"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.box.Container" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#usf.widgets.widget.Widget" title="usf.widgets.widget.Widget"><tt class="xref py py-class docutils literal"><span class="pre">usf.widgets.widget.Widget</span></tt></a></p>
+<p>This widget is never used directly, it is used to be a base for the HBox
+and VBox widget.</p>
+<dl class="method">
+<dt id="usf.widgets.box.Container.add">
+<tt class="descname">add</tt><big>(</big><em>widget</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/box.html#Container.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.box.Container.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is used to add a widget in the container</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.box.Container.draw">
+<tt class="descname">draw</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/box.html#Container.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.box.Container.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method draw all widgets surfaces in a surface and return it</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="usf.widgets.box.Container.focusable">
+<tt class="descname">focusable</tt><em class="property"> = True</em><a class="headerlink" href="#usf.widgets.box.Container.focusable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.box.Container.handle_keys">
+<tt class="descname">handle_keys</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/box.html#Container.handle_keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.box.Container.handle_keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is used for keyboard events.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.box.Container.handle_mouse">
+<tt class="descname">handle_mouse</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/box.html#Container.handle_mouse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.box.Container.handle_mouse" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is used for mouse events.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.box.Container.update_pos">
+<tt class="descname">update_pos</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/box.html#Container.update_pos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.box.Container.update_pos" title="Permalink to this definition">¶</a></dt>
+<dd><p>updating the position of all widgets in the container</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.box.Container.update_size">
+<tt class="descname">update_size</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/box.html#Container.update_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.box.Container.update_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is used to update the container size after adding a
+widget.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="usf.widgets.box.HBox">
+<em class="property">class </em><tt class="descclassname">usf.widgets.box.</tt><tt class="descname">HBox</tt><a class="reference internal" href="../_modules/usf/widgets/box.html#HBox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.box.HBox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#usf.widgets.box.Container" title="usf.widgets.box.Container"><tt class="xref py py-class docutils literal"><span class="pre">usf.widgets.box.Container</span></tt></a></p>
+<p>A widget which is able to contain others widgets and align them
+horizontally.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="usf.widgets.box.VBox">
+<em class="property">class </em><tt class="descclassname">usf.widgets.box.</tt><tt class="descname">VBox</tt><a class="reference internal" href="../_modules/usf/widgets/box.html#VBox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.box.VBox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#usf.widgets.box.Container" title="usf.widgets.box.Container"><tt class="xref py py-class docutils literal"><span class="pre">usf.widgets.box.Container</span></tt></a></p>
+<p>A widget which is able to contain others widgets and align them
+vertically.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-usf.widgets.button">
+<span id="button-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">button</span></tt> Module<a class="headerlink" href="#module-usf.widgets.button" title="Permalink to this headline">¶</a></h2>
+<p>A button widget, with a label.</p>
+<dl class="class">
+<dt id="usf.widgets.button.Button">
+<em class="property">class </em><tt class="descclassname">usf.widgets.button.</tt><tt class="descname">Button</tt><big>(</big><em>text</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/button.html#Button"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.button.Button" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#usf.widgets.label.Label" title="usf.widgets.label.Label"><tt class="xref py py-class docutils literal"><span class="pre">usf.widgets.label.Label</span></tt></a></p>
+<p>A simple button.
+It returns a callback when we click on it.</p>
+<dl class="method">
+<dt id="usf.widgets.button.Button.handle_keys">
+<tt class="descname">handle_keys</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/button.html#Button.handle_keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.button.Button.handle_keys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.button.Button.handle_mouse">
+<tt class="descname">handle_mouse</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/button.html#Button.handle_mouse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.button.Button.handle_mouse" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function handles mouse event. It returns a callback when we
+click on it.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.button.Button.hover">
+<tt class="descname">hover</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/button.html#Button.hover"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.button.Button.hover" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.button.Button.out">
+<tt class="descname">out</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/button.html#Button.out"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.button.Button.out" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.button.Button.set_size">
+<tt class="descname">set_size</tt><big>(</big><em>(w</em>, <em>h)</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/button.html#Button.set_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.button.Button.set_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the size of the widget.
+This function is usually called by the container, HBox or VBox.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-usf.widgets.checkbox">
+<span id="checkbox-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">checkbox</span></tt> Module<a class="headerlink" href="#module-usf.widgets.checkbox" title="Permalink to this headline">¶</a></h2>
+<p>This module provide a simple checkbox widget.</p>
+<dl class="class">
+<dt id="usf.widgets.checkbox.CheckBox">
+<em class="property">class </em><tt class="descclassname">usf.widgets.checkbox.</tt><tt class="descname">CheckBox</tt><a class="reference internal" href="../_modules/usf/widgets/checkbox.html#CheckBox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.checkbox.CheckBox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#usf.widgets.widget.Widget" title="usf.widgets.widget.Widget"><tt class="xref py py-class docutils literal"><span class="pre">usf.widgets.widget.Widget</span></tt></a></p>
+<p>A checkbox widget.</p>
+<dl class="method">
+<dt id="usf.widgets.checkbox.CheckBox.get_value">
+<tt class="descname">get_value</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/checkbox.html#CheckBox.get_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.checkbox.CheckBox.get_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value of the checkbox, it returns a boolean.
+(true of checked and false if unchecked)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.checkbox.CheckBox.handle_mouse">
+<tt class="descname">handle_mouse</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/checkbox.html#CheckBox.handle_mouse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.checkbox.CheckBox.handle_mouse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.checkbox.CheckBox.set_size">
+<tt class="descname">set_size</tt><big>(</big><em>(w</em>, <em>h)</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/checkbox.html#CheckBox.set_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.checkbox.CheckBox.set_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the size of the widget.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.checkbox.CheckBox.set_value">
+<tt class="descname">set_value</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/checkbox.html#CheckBox.set_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.checkbox.CheckBox.set_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the value of the checkbox, it must be a boolean.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-usf.widgets.checkbox_text">
+<span id="checkbox-text-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">checkbox_text</span></tt> Module<a class="headerlink" href="#module-usf.widgets.checkbox_text" title="Permalink to this headline">¶</a></h2>
+<p>This module provide a checkbox with a label beside it.</p>
+<dl class="class">
+<dt id="usf.widgets.checkbox_text.TextCheckBox">
+<em class="property">class </em><tt class="descclassname">usf.widgets.checkbox_text.</tt><tt class="descname">TextCheckBox</tt><big>(</big><em>text</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/checkbox_text.html#TextCheckBox"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.checkbox_text.TextCheckBox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#usf.widgets.box.HBox" title="usf.widgets.box.HBox"><tt class="xref py py-class docutils literal"><span class="pre">usf.widgets.box.HBox</span></tt></a></p>
+<p>A checkbox widget.</p>
+<dl class="method">
+<dt id="usf.widgets.checkbox_text.TextCheckBox.get_value">
+<tt class="descname">get_value</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/checkbox_text.html#TextCheckBox.get_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.checkbox_text.TextCheckBox.get_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value of the checkbox, it returns a boolean.
+(true of checked and false if unchecked)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.checkbox_text.TextCheckBox.handle_keys">
+<tt class="descname">handle_keys</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/checkbox_text.html#TextCheckBox.handle_keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.checkbox_text.TextCheckBox.handle_keys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.checkbox_text.TextCheckBox.handle_mouse">
+<tt class="descname">handle_mouse</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/checkbox_text.html#TextCheckBox.handle_mouse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.checkbox_text.TextCheckBox.handle_mouse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.checkbox_text.TextCheckBox.set_size">
+<tt class="descname">set_size</tt><big>(</big><em>(w</em>, <em>h)</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/checkbox_text.html#TextCheckBox.set_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.checkbox_text.TextCheckBox.set_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the size of the widget.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.checkbox_text.TextCheckBox.set_value">
+<tt class="descname">set_value</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/checkbox_text.html#TextCheckBox.set_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.checkbox_text.TextCheckBox.set_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the value of the checkbox, it must be a boolean.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.checkbox_text.TextCheckBox.update_image">
+<tt class="descname">update_image</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/checkbox_text.html#TextCheckBox.update_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.checkbox_text.TextCheckBox.update_image" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-usf.widgets.coverflow">
+<span id="coverflow-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">coverflow</span></tt> Module<a class="headerlink" href="#module-usf.widgets.coverflow" title="Permalink to this headline">¶</a></h2>
+<p>A nice coverflow effect for images</p>
+<dl class="class">
+<dt id="usf.widgets.coverflow.Coverflow">
+<em class="property">class </em><tt class="descclassname">usf.widgets.coverflow.</tt><tt class="descname">Coverflow</tt><big>(</big><em>values</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/coverflow.html#Coverflow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.coverflow.Coverflow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#usf.widgets.widget.Widget" title="usf.widgets.widget.Widget"><tt class="xref py py-class docutils literal"><span class="pre">usf.widgets.widget.Widget</span></tt></a></p>
+<p>The coverflow widget is used to display many image and choose one of
+the them.
+It should be big, about 800 * 275. This widget is animated and requires
+a lot of CPU.</p>
+<dl class="method">
+<dt id="usf.widgets.coverflow.Coverflow.animation">
+<tt class="descname">animation</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/coverflow.html#Coverflow.animation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.coverflow.Coverflow.animation" title="Permalink to this definition">¶</a></dt>
+<dd><p>update the animation</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="usf.widgets.coverflow.Coverflow.animation_speed">
+<tt class="descname">animation_speed</tt><em class="property"> = True</em><a class="headerlink" href="#usf.widgets.coverflow.Coverflow.animation_speed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.coverflow.Coverflow.draw">
+<tt class="descname">draw</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/coverflow.html#Coverflow.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.coverflow.Coverflow.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw the widget, the surface will be redrawed if the widget is animated.
+You can force redrawing by set need_update to True.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.coverflow.Coverflow.draw_left">
+<tt class="descname">draw_left</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/coverflow.html#Coverflow.draw_left"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.coverflow.Coverflow.draw_left" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw three small image at left.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.coverflow.Coverflow.draw_main">
+<tt class="descname">draw_main</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/coverflow.html#Coverflow.draw_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.coverflow.Coverflow.draw_main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw the selected image, it is bigger than the other and in the center</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.coverflow.Coverflow.draw_right">
+<tt class="descname">draw_right</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/coverflow.html#Coverflow.draw_right"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.coverflow.Coverflow.draw_right" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw three small image at right.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.coverflow.Coverflow.get_value">
+<tt class="descname">get_value</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/coverflow.html#Coverflow.get_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.coverflow.Coverflow.get_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>return the currently selected value</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.coverflow.Coverflow.handle_keys">
+<tt class="descname">handle_keys</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/coverflow.html#Coverflow.handle_keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.coverflow.Coverflow.handle_keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>manage keyboard input events</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.coverflow.Coverflow.handle_mouse">
+<tt class="descname">handle_mouse</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/coverflow.html#Coverflow.handle_mouse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.coverflow.Coverflow.handle_mouse" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function handle all mouse events which are on the widget.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.coverflow.Coverflow.launch_anim">
+<tt class="descname">launch_anim</tt><big>(</big><em>direction</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/coverflow.html#Coverflow.launch_anim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.coverflow.Coverflow.launch_anim" title="Permalink to this definition">¶</a></dt>
+<dd><p>start a translation animation in the direction</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.coverflow.Coverflow.load_main_frame">
+<tt class="descname">load_main_frame</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/coverflow.html#Coverflow.load_main_frame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.coverflow.Coverflow.load_main_frame" title="Permalink to this definition">¶</a></dt>
+<dd><p>#FIXME get xapantu to document a little! :P</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.coverflow.Coverflow.next">
+<tt class="descname">next</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/coverflow.html#Coverflow.next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.coverflow.Coverflow.next" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select the next item.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.coverflow.Coverflow.previous">
+<tt class="descname">previous</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/coverflow.html#Coverflow.previous"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.coverflow.Coverflow.previous" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select the previous item.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.coverflow.Coverflow.sizex">
+<tt class="descname">sizex</tt><big>(</big><em>x</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/coverflow.html#Coverflow.sizex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.coverflow.Coverflow.sizex" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is used to get the real size of an element. All size in the
+code above are for a widget size = 800*275. So, if the size is
+different, this function modify it.  This function is used for the x
+axis. Use sizey for y axis.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.coverflow.Coverflow.sizey">
+<tt class="descname">sizey</tt><big>(</big><em>y</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/coverflow.html#Coverflow.sizey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.coverflow.Coverflow.sizey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as sizex, but for the y axis.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="usf.widgets.coverflow.get_text_transparent">
+<tt class="descclassname">usf.widgets.coverflow.</tt><tt class="descname">get_text_transparent</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/coverflow.html#get_text_transparent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.coverflow.get_text_transparent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-usf.widgets.image">
+<span id="image-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">image</span></tt> Module<a class="headerlink" href="#module-usf.widgets.image" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="usf.widgets.image.Image">
+<em class="property">class </em><tt class="descclassname">usf.widgets.image.</tt><tt class="descname">Image</tt><big>(</big><em>image</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/image.html#Image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.image.Image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#usf.widgets.widget.Widget" title="usf.widgets.widget.Widget"><tt class="xref py py-class docutils literal"><span class="pre">usf.widgets.widget.Widget</span></tt></a></p>
+<p>An image widget which can be used as a base for others widgets like
+buttons.</p>
+<dl class="method">
+<dt id="usf.widgets.image.Image.setImage">
+<tt class="descname">setImage</tt><big>(</big><em>path</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/image.html#Image.setImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.image.Image.setImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>With this method, you can change the image.
+&#8216;CONFIG.system_path&#8217; will be added to &#8216;path&#8217;</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.image.Image.set_size">
+<tt class="descname">set_size</tt><big>(</big><em>(w</em>, <em>h)</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/image.html#Image.set_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.image.Image.set_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the size of the image.
+/!The width and the height have to be the real value
+(not the value only for 800x480)</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-usf.widgets.imagebutton">
+<span id="imagebutton-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">imagebutton</span></tt> Module<a class="headerlink" href="#module-usf.widgets.imagebutton" title="Permalink to this headline">¶</a></h2>
+<p>A Button widget with an image inside, instead of a text.</p>
+<dl class="class">
+<dt id="usf.widgets.imagebutton.ImageButton">
+<em class="property">class </em><tt class="descclassname">usf.widgets.imagebutton.</tt><tt class="descname">ImageButton</tt><big>(</big><em>image</em>, <em>image_hover</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/imagebutton.html#ImageButton"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.imagebutton.ImageButton" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#usf.widgets.image.Image" title="usf.widgets.image.Image"><tt class="xref py py-class docutils literal"><span class="pre">usf.widgets.image.Image</span></tt></a></p>
+<dl class="method">
+<dt id="usf.widgets.imagebutton.ImageButton.draw">
+<tt class="descname">draw</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/imagebutton.html#ImageButton.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.imagebutton.ImageButton.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the widget surface. This fonction is often overrided.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.imagebutton.ImageButton.handle_mouse">
+<tt class="descname">handle_mouse</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/imagebutton.html#ImageButton.handle_mouse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.imagebutton.ImageButton.handle_mouse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.imagebutton.ImageButton.set_size">
+<tt class="descname">set_size</tt><big>(</big><em>(w</em>, <em>h)</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/imagebutton.html#ImageButton.set_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.imagebutton.ImageButton.set_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-usf.widgets.label">
+<span id="label-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">label</span></tt> Module<a class="headerlink" href="#module-usf.widgets.label" title="Permalink to this headline">¶</a></h2>
+<p>A label widget, to place text.</p>
+<dl class="class">
+<dt id="usf.widgets.label.Label">
+<em class="property">class </em><tt class="descclassname">usf.widgets.label.</tt><tt class="descname">Label</tt><big>(</big><em>text</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/label.html#Label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.label.Label" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#usf.widgets.widget.Widget" title="usf.widgets.widget.Widget"><tt class="xref py py-class docutils literal"><span class="pre">usf.widgets.widget.Widget</span></tt></a></p>
+<p>A simple label widget</p>
+<dl class="method">
+<dt id="usf.widgets.label.Label.get_text">
+<tt class="descname">get_text</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/label.html#Label.get_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.label.Label.get_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the current text of the widget.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.label.Label.set_size">
+<tt class="descname">set_size</tt><big>(</big><em>(w</em>, <em>h)</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/label.html#Label.set_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.label.Label.set_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the size of the widget.
+This function is usually called by the container, HBox or VBox.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.label.Label.set_text">
+<tt class="descname">set_text</tt><big>(</big><em>text</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/label.html#Label.set_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.label.Label.set_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>update the text surface</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-usf.widgets.paragraph">
+<span id="paragraph-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">paragraph</span></tt> Module<a class="headerlink" href="#module-usf.widgets.paragraph" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="usf.widgets.paragraph.Paragraph">
+<em class="property">class </em><tt class="descclassname">usf.widgets.paragraph.</tt><tt class="descname">Paragraph</tt><big>(</big><em>path</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/paragraph.html#Paragraph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.paragraph.Paragraph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#usf.widgets.widget.Widget" title="usf.widgets.widget.Widget"><tt class="xref py py-class docutils literal"><span class="pre">usf.widgets.widget.Widget</span></tt></a></p>
+<p>A simple paragraph widget. It reads a text which is in the
+data/text directory. It include a scroll bar but doesn&#8217;t support
+(yet) auto word wrap.</p>
+<dl class="method">
+<dt id="usf.widgets.paragraph.Paragraph.animation">
+<tt class="descname">animation</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/paragraph.html#Paragraph.animation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.paragraph.Paragraph.animation" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is used for auto scroll.
+It is called by the start_anim method which is in the
+Widget class.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="usf.widgets.paragraph.Paragraph.animation_speed">
+<tt class="descname">animation_speed</tt><em class="property"> = 0.03333333333333333</em><a class="headerlink" href="#usf.widgets.paragraph.Paragraph.animation_speed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.paragraph.Paragraph.draw">
+<tt class="descname">draw</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/paragraph.html#Paragraph.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.paragraph.Paragraph.draw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.paragraph.Paragraph.handle_mouse">
+<tt class="descname">handle_mouse</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/paragraph.html#Paragraph.handle_mouse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.paragraph.Paragraph.handle_mouse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.paragraph.Paragraph.update_defil">
+<tt class="descname">update_defil</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/paragraph.html#Paragraph.update_defil"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.paragraph.Paragraph.update_defil" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the position of the scroll bar.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-usf.widgets.slider">
+<span id="slider-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">slider</span></tt> Module<a class="headerlink" href="#module-usf.widgets.slider" title="Permalink to this headline">¶</a></h2>
+<p>A slider widget to configure values in a range.</p>
+<dl class="class">
+<dt id="usf.widgets.slider.Slider">
+<em class="property">class </em><tt class="descclassname">usf.widgets.slider.</tt><tt class="descname">Slider</tt><big>(</big><em>text</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/slider.html#Slider"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.slider.Slider" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#usf.widgets.widget.Widget" title="usf.widgets.widget.Widget"><tt class="xref py py-class docutils literal"><span class="pre">usf.widgets.widget.Widget</span></tt></a></p>
+<dl class="method">
+<dt id="usf.widgets.slider.Slider.draw">
+<tt class="descname">draw</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/slider.html#Slider.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.slider.Slider.draw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.slider.Slider.get_value">
+<tt class="descname">get_value</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/slider.html#Slider.get_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.slider.Slider.get_value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.slider.Slider.handle_keys">
+<tt class="descname">handle_keys</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/slider.html#Slider.handle_keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.slider.Slider.handle_keys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.slider.Slider.handle_mouse">
+<tt class="descname">handle_mouse</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/slider.html#Slider.handle_mouse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.slider.Slider.handle_mouse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.slider.Slider.set_value">
+<tt class="descname">set_value</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/slider.html#Slider.set_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.slider.Slider.set_value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-usf.widgets.special">
+<span id="special-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">special</span></tt> Module<a class="headerlink" href="#module-usf.widgets.special" title="Permalink to this headline">¶</a></h2>
+<p>Provide a widget to construct the Keyboard Configuration Interface.</p>
+<dl class="class">
+<dt id="usf.widgets.special.KeyboardWidget">
+<em class="property">class </em><tt class="descclassname">usf.widgets.special.</tt><tt class="descname">KeyboardWidget</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/special.html#KeyboardWidget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.special.KeyboardWidget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#usf.widgets.widget.Widget" title="usf.widgets.widget.Widget"><tt class="xref py py-class docutils literal"><span class="pre">usf.widgets.widget.Widget</span></tt></a></p>
+<p>actually it should be KeyWidget, if i get it correctly</p>
+<dl class="method">
+<dt id="usf.widgets.special.KeyboardWidget.draw">
+<tt class="descname">draw</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/special.html#KeyboardWidget.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.special.KeyboardWidget.draw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.special.KeyboardWidget.get_value">
+<tt class="descname">get_value</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/special.html#KeyboardWidget.get_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.special.KeyboardWidget.get_value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.special.KeyboardWidget.handle_keys">
+<tt class="descname">handle_keys</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/special.html#KeyboardWidget.handle_keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.special.KeyboardWidget.handle_keys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.special.KeyboardWidget.handle_mouse">
+<tt class="descname">handle_mouse</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/special.html#KeyboardWidget.handle_mouse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.special.KeyboardWidget.handle_mouse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.special.KeyboardWidget.set_size">
+<tt class="descname">set_size</tt><big>(</big><em>(w</em>, <em>h)</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/special.html#KeyboardWidget.set_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.special.KeyboardWidget.set_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.special.KeyboardWidget.update">
+<tt class="descname">update</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/special.html#KeyboardWidget.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.special.KeyboardWidget.update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-usf.widgets.spinner">
+<span id="spinner-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">spinner</span></tt> Module<a class="headerlink" href="#module-usf.widgets.spinner" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="usf.widgets.spinner.Spinner">
+<em class="property">class </em><tt class="descclassname">usf.widgets.spinner.</tt><tt class="descname">Spinner</tt><big>(</big><em>values</em>, <em>width=100</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/spinner.html#Spinner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.spinner.Spinner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#usf.widgets.box.HBox" title="usf.widgets.box.HBox"><tt class="xref py py-class docutils literal"><span class="pre">usf.widgets.box.HBox</span></tt></a></p>
+<p>A spinner widget. (which could be called &#8220;select&#8221; too)
+It looks like this:
+&lt;- text -&gt;</p>
+<p>It can be used to select an option (like a character, a game
+mode, etc...).</p>
+<dl class="method">
+<dt id="usf.widgets.spinner.Spinner.get_index">
+<tt class="descname">get_index</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/spinner.html#Spinner.get_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.spinner.Spinner.get_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the index (the range of the current value).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.spinner.Spinner.get_value">
+<tt class="descname">get_value</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/spinner.html#Spinner.get_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.spinner.Spinner.get_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the current value of the spinner.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.spinner.Spinner.handle_keys">
+<tt class="descname">handle_keys</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/spinner.html#Spinner.handle_keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.spinner.Spinner.handle_keys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.spinner.Spinner.handle_mouse">
+<tt class="descname">handle_mouse</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/spinner.html#Spinner.handle_mouse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.spinner.Spinner.handle_mouse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.spinner.Spinner.set_index">
+<tt class="descname">set_index</tt><big>(</big><em>index</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/spinner.html#Spinner.set_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.spinner.Spinner.set_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the index (the range of the current value) of the spinner.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.spinner.Spinner.set_value">
+<tt class="descname">set_value</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/spinner.html#Spinner.set_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.spinner.Spinner.set_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the value of the spinner. The value must be in the array that was
+passed in the __init__ function.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-usf.widgets.tab">
+<span id="tab-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">tab</span></tt> Module<a class="headerlink" href="#module-usf.widgets.tab" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="usf.widgets.tab.Tab">
+<em class="property">class </em><tt class="descclassname">usf.widgets.tab.</tt><tt class="descname">Tab</tt><a class="reference internal" href="../_modules/usf/widgets/tab.html#Tab"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.tab.Tab" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#usf.widgets.box.VBox" title="usf.widgets.box.VBox"><tt class="xref py py-class docutils literal"><span class="pre">usf.widgets.box.VBox</span></tt></a></p>
+<p>/!This widget isn&#8217;t finished at all
+TODO</p>
+<dl class="method">
+<dt id="usf.widgets.tab.Tab.add_tab">
+<tt class="descname">add_tab</tt><big>(</big><em>tab</em>, <em>box</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/tab.html#Tab.add_tab"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.tab.Tab.add_tab" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.tab.Tab.handle_mouse">
+<tt class="descname">handle_mouse</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/tab.html#Tab.handle_mouse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.tab.Tab.handle_mouse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="usf.widgets.tab.TabBar">
+<em class="property">class </em><tt class="descclassname">usf.widgets.tab.</tt><tt class="descname">TabBar</tt><a class="reference internal" href="../_modules/usf/widgets/tab.html#TabBar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.tab.TabBar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#usf.widgets.box.HBox" title="usf.widgets.box.HBox"><tt class="xref py py-class docutils literal"><span class="pre">usf.widgets.box.HBox</span></tt></a></p>
+<p>Used in the Tab widget</p>
+<dl class="method">
+<dt id="usf.widgets.tab.TabBar.handle_mouse">
+<tt class="descname">handle_mouse</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/tab.html#TabBar.handle_mouse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.tab.TabBar.handle_mouse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-usf.widgets.text_entry">
+<span id="text-entry-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">text_entry</span></tt> Module<a class="headerlink" href="#module-usf.widgets.text_entry" title="Permalink to this headline">¶</a></h2>
+<p>This module provides a widget for UI, allowing to display and edit a line of
+text, it can be used to edit settings like an IP address for a network game, or
+a player name.</p>
+<dl class="class">
+<dt id="usf.widgets.text_entry.TextEntry">
+<em class="property">class </em><tt class="descclassname">usf.widgets.text_entry.</tt><tt class="descname">TextEntry</tt><big>(</big><em>text</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/text_entry.html#TextEntry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.text_entry.TextEntry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#usf.widgets.button.Button" title="usf.widgets.button.Button"><tt class="xref py py-class docutils literal"><span class="pre">usf.widgets.button.Button</span></tt></a></p>
+<p>A widget allowing to enter some text</p>
+<dl class="method">
+<dt id="usf.widgets.text_entry.TextEntry.animation">
+<tt class="descname">animation</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/text_entry.html#TextEntry.animation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.text_entry.TextEntry.animation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="usf.widgets.text_entry.TextEntry.animation_speed">
+<tt class="descname">animation_speed</tt><em class="property"> = 0.1</em><a class="headerlink" href="#usf.widgets.text_entry.TextEntry.animation_speed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.text_entry.TextEntry.draw">
+<tt class="descname">draw</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/text_entry.html#TextEntry.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.text_entry.TextEntry.draw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.text_entry.TextEntry.get_text">
+<tt class="descname">get_text</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/text_entry.html#TextEntry.get_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.text_entry.TextEntry.get_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the current text of the widget.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.text_entry.TextEntry.handle_keys">
+<tt class="descname">handle_keys</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/text_entry.html#TextEntry.handle_keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.text_entry.TextEntry.handle_keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>manage keyboard input events</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.text_entry.TextEntry.handle_mouse">
+<tt class="descname">handle_mouse</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/text_entry.html#TextEntry.handle_mouse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.text_entry.TextEntry.handle_mouse" title="Permalink to this definition">¶</a></dt>
+<dd><p>set focus if the click was on the text entry, so we can type in it</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.text_entry.TextEntry.move_cursor">
+<tt class="descname">move_cursor</tt><big>(</big><em>x</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/text_entry.html#TextEntry.move_cursor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.text_entry.TextEntry.move_cursor" title="Permalink to this definition">¶</a></dt>
+<dd><p>place the cursor at the position nearest of x in the widget</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-usf.widgets.widget">
+<span id="widget-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">widget</span></tt> Module<a class="headerlink" href="#module-usf.widgets.widget" title="Permalink to this headline">¶</a></h2>
+<p>The base widget object. Probably not tu use directly, but used as base for all
+other widgets.</p>
+<dl class="class">
+<dt id="usf.widgets.widget.Widget">
+<em class="property">class </em><tt class="descclassname">usf.widgets.widget.</tt><tt class="descname">Widget</tt><a class="reference internal" href="../_modules/usf/widgets/widget.html#Widget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.widget.Widget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>This class is the base of all other widget.</p>
+<dl class="method">
+<dt id="usf.widgets.widget.Widget.animation">
+<tt class="descname">animation</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/widget.html#Widget.animation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.widget.Widget.animation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="usf.widgets.widget.Widget.animation_speed">
+<tt class="descname">animation_speed</tt><em class="property"> = 1.0</em><a class="headerlink" href="#usf.widgets.widget.Widget.animation_speed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.widget.Widget.draw">
+<tt class="descname">draw</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/widget.html#Widget.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.widget.Widget.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the widget surface. This fonction is often overrided.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="usf.widgets.widget.Widget.focusable">
+<tt class="descname">focusable</tt><em class="property"> = False</em><a class="headerlink" href="#usf.widgets.widget.Widget.focusable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.widget.Widget.get_id">
+<tt class="descname">get_id</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/widget.html#Widget.get_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.widget.Widget.get_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.widget.Widget.handle_keys">
+<tt class="descname">handle_keys</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/widget.html#Widget.handle_keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.widget.Widget.handle_keys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.widget.Widget.handle_mouse">
+<tt class="descname">handle_mouse</tt><big>(</big><em>event</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/widget.html#Widget.handle_mouse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.widget.Widget.handle_mouse" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is used for mouse events.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="usf.widgets.widget.Widget.height">
+<tt class="descname">height</tt><em class="property"> = 0</em><a class="headerlink" href="#usf.widgets.widget.Widget.height" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="usf.widgets.widget.Widget.last_animation">
+<tt class="descname">last_animation</tt><em class="property"> = 0.0</em><a class="headerlink" href="#usf.widgets.widget.Widget.last_animation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="usf.widgets.widget.Widget.margin">
+<tt class="descname">margin</tt><em class="property"> = 0</em><a class="headerlink" href="#usf.widgets.widget.Widget.margin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="usf.widgets.widget.Widget.margin_left">
+<tt class="descname">margin_left</tt><em class="property"> = 0</em><a class="headerlink" href="#usf.widgets.widget.Widget.margin_left" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="usf.widgets.widget.Widget.parentpos">
+<tt class="descname">parentpos</tt><em class="property"> = (0, 0)</em><a class="headerlink" href="#usf.widgets.widget.Widget.parentpos" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="usf.widgets.widget.Widget.properties">
+<tt class="descname">properties</tt><em class="property"> = {}</em><a class="headerlink" href="#usf.widgets.widget.Widget.properties" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.widget.Widget.set_align">
+<tt class="descname">set_align</tt><big>(</big><em>align</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/widget.html#Widget.set_align"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.widget.Widget.set_align" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.widget.Widget.set_id">
+<tt class="descname">set_id</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/widget.html#Widget.set_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.widget.Widget.set_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.widget.Widget.set_size">
+<tt class="descname">set_size</tt><big>(</big><em>(w</em>, <em>h)</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/widget.html#Widget.set_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.widget.Widget.set_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is used to resize a widget.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.widget.Widget.start_anim">
+<tt class="descname">start_anim</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/widget.html#Widget.start_anim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.widget.Widget.start_anim" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="usf.widgets.widget.Widget.text">
+<tt class="descname">text</tt><em class="property"> = ''</em><a class="headerlink" href="#usf.widgets.widget.Widget.text" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.widget.Widget.update_pos">
+<tt class="descname">update_pos</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/widget.html#Widget.update_pos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.widget.Widget.update_pos" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="usf.widgets.widget.Widget.update_size">
+<tt class="descname">update_size</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/usf/widgets/widget.html#Widget.update_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.widget.Widget.update_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="usf.widgets.widget.Widget.widget_id">
+<tt class="descname">widget_id</tt><em class="property"> = ''</em><a class="headerlink" href="#usf.widgets.widget.Widget.widget_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="usf.widgets.widget.Widget.width">
+<tt class="descname">width</tt><em class="property"> = 0</em><a class="headerlink" href="#usf.widgets.widget.Widget.width" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="usf.widgets.widget.Widget.x">
+<tt class="descname">x</tt><em class="property"> = 0</em><a class="headerlink" href="#usf.widgets.widget.Widget.x" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="usf.widgets.widget.Widget.y">
+<tt class="descname">y</tt><em class="property"> = 0</em><a class="headerlink" href="#usf.widgets.widget.Widget.y" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="usf.widgets.widget.get_scale">
+<tt class="descclassname">usf.widgets.widget.</tt><tt class="descname">get_scale</tt><big>(</big><em>surface</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/widget.html#get_scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.widget.get_scale" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="usf.widgets.widget.optimize_size">
+<tt class="descclassname">usf.widgets.widget.</tt><tt class="descname">optimize_size</tt><big>(</big><em>size</em><big>)</big><a class="reference internal" href="../_modules/usf/widgets/widget.html#optimize_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#usf.widgets.widget.optimize_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">widgets Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">widgets</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-usf.widgets.box"><tt class="docutils literal"><span class="pre">box</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-usf.widgets.button"><tt class="docutils literal"><span class="pre">button</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-usf.widgets.checkbox"><tt class="docutils literal"><span class="pre">checkbox</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-usf.widgets.checkbox_text"><tt class="docutils literal"><span class="pre">checkbox_text</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-usf.widgets.coverflow"><tt class="docutils literal"><span class="pre">coverflow</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-usf.widgets.image"><tt class="docutils literal"><span class="pre">image</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-usf.widgets.imagebutton"><tt class="docutils literal"><span class="pre">imagebutton</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-usf.widgets.label"><tt class="docutils literal"><span class="pre">label</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-usf.widgets.paragraph"><tt class="docutils literal"><span class="pre">paragraph</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-usf.widgets.slider"><tt class="docutils literal"><span class="pre">slider</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-usf.widgets.special"><tt class="docutils literal"><span class="pre">special</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-usf.widgets.spinner"><tt class="docutils literal"><span class="pre">spinner</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-usf.widgets.tab"><tt class="docutils literal"><span class="pre">tab</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-usf.widgets.text_entry"><tt class="docutils literal"><span class="pre">text_entry</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-usf.widgets.widget"><tt class="docutils literal"><span class="pre">widget</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="usf.subpixel.html"
+                        title="previous chapter">subpixel Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/api_reference/usf.widgets.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="usf.subpixel.html" title="subpixel Package"
+             >previous</a> |</li>
+        <li><a href="../index.html">Ultimate Smash Friends 0.1.6 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Gabirel Pettier.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

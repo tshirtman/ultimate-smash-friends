@@ -1,0 +1,529 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>usf.main &mdash; Ultimate Smash Friends 0.1.6 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.6',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Ultimate Smash Friends 0.1.6 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Ultimate Smash Friends 0.1.6 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for usf.main</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/env python</span>
+<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="c">################################################################################</span>
+<span class="c"># copyright 2008-2011 Gabriel Pettier &lt;gabriel.pettier@gmail.com&gt;              #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># This file is part of UltimateSmashFriends                                    #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># UltimateSmashFriends is free software: you can redistribute it and/or modify #</span>
+<span class="c"># it under the terms of the GNU General Public License as published by         #</span>
+<span class="c"># the Free Software Foundation, either version 3 of the License, or            #</span>
+<span class="c"># (at your option) any later version.                                          #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># UltimateSmashFriends is distributed in the hope that it will be useful,      #</span>
+<span class="c"># but WITHOUT ANY WARRANTY; without even the implied warranty of               #</span>
+<span class="c"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                #</span>
+<span class="c"># GNU General Public License for more details.                                 #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># You should have received a copy of the GNU General Public License            #</span>
+<span class="c"># along with UltimateSmashFriends.  If not, see &lt;http://www.gnu.org/licenses/&gt;.#</span>
+<span class="c">################################################################################</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">This is the main file for ultimate-smash-friends, that initiate configs, parse</span>
+<span class="sd">parameters, and initiate games</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">pygame.locals</span> <span class="kn">import</span> <span class="n">QUIT</span>
+<span class="kn">import</span> <span class="nn">pygame</span>
+<span class="kn">from</span> <span class="nn">optparse</span> <span class="kn">import</span> <span class="n">OptionParser</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+
+<span class="kn">from</span> <span class="nn">usf.game</span> <span class="kn">import</span> <span class="n">Game</span><span class="p">,</span> <span class="n">NetworkServerGame</span> <span class="c">#, NetworkClientGame</span>
+<span class="kn">from</span> <span class="nn">usf.gui</span> <span class="kn">import</span> <span class="n">Gui</span>
+<span class="kn">from</span> <span class="nn">usf.controls</span> <span class="kn">import</span> <span class="n">Controls</span>
+
+<span class="kn">from</span> <span class="nn">usf.music</span> <span class="kn">import</span> <span class="n">Music</span>
+<span class="kn">from</span> <span class="nn">usf.font</span> <span class="kn">import</span> <span class="n">fonts</span>
+<span class="kn">from</span> <span class="nn">usf.ai</span> <span class="kn">import</span> <span class="n">AI</span>
+
+<span class="kn">from</span> <span class="nn">usf.translation</span> <span class="kn">import</span> <span class="n">_</span>
+
+
+<span class="kn">from</span> <span class="nn">usf</span> <span class="kn">import</span> <span class="n">loaders</span>
+<span class="kn">from</span> <span class="nn">usf</span> <span class="kn">import</span> <span class="n">CONFIG</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
+        <span class="n">filename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">CONFIG</span><span class="o">.</span><span class="n">user_path</span><span class="p">,</span>
+            <span class="n">CONFIG</span><span class="o">.</span><span class="n">debug</span><span class="o">.</span><span class="n">LOG_FILENAME</span><span class="p">),</span>
+        <span class="n">level</span><span class="o">=</span><span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">debug</span><span class="o">.</span><span class="n">LOG_LEVEL</span><span class="p">))</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;&quot;&quot;Paths:</span>
+<span class="s">        Config:</span>
+<span class="s">        System: {0}</span>
+<span class="s">        User: {1}</span>
+
+<span class="s">        Filename: {2}&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">filename</span><span class="p">]))</span>
+
+<div class="viewcode-block" id="author"><a class="viewcode-back" href="../../api_reference/usf.html#usf.main.author">[docs]</a><span class="k">def</span> <span class="nf">author</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; print credits in the terminal</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s">&#39;CREDITS&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">system_path</span><span class="p">)):</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">system_path</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">system_path</span><span class="p">))))</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">system_path</span> <span class="o">+</span><span class="s">&#39;/CREDITS file not found&#39;</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">author_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">system_path</span><span class="p">,</span> <span class="s">&#39;CREDITS&#39;</span><span class="p">))</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">author_file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="n">author_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+</div>
+<div class="viewcode-block" id="Main"><a class="viewcode-back" href="../../api_reference/usf.html#usf.main.Main">[docs]</a><span class="k">class</span> <span class="nc">Main</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The main class, load some parameters, sets initial states and takes care of</span>
+<span class="sd">    the game main loop.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">run</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The constructor, create the render surface, set the menu initial state,</span>
+<span class="sd">        parse command line params if any, launch the menu or the game depending</span>
+<span class="sd">        on parameters.</span>
+
+<span class="sd">        The init parameter determines if the Main object should be initialized </span>
+<span class="sd">        once instanciated. The run parameter determines if the game should be run</span>
+<span class="sd">        once the object is instantiated and initiated.</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_thread</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">game_type</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">address</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">text_thread</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s">&quot;Loading...&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="bp">False</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">initate_options_parser</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parse_options</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">init</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">run</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Main.init"><a class="viewcode-back" href="../../api_reference/usf.html#usf.main.Main.init">[docs]</a>    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_type</span> <span class="o">==</span> <span class="s">&#39;server&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">init_server</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_type</span> <span class="o">==</span> <span class="s">&#39;client&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">init_client</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">init_standalone</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stop_thread</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="k">raise</span>
+</div>
+<div class="viewcode-block" id="Main.init_server"><a class="viewcode-back" href="../../api_reference/usf.html#usf.main.Main.init_server">[docs]</a>    <span class="k">def</span> <span class="nf">init_server</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        start a server to host a network game</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">game</span> <span class="o">=</span> <span class="n">NetworkServerGame</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="Main.init_client"><a class="viewcode-back" href="../../api_reference/usf.html#usf.main.Main.init_client">[docs]</a>    <span class="k">def</span> <span class="nf">init_client</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        connect to a server to play a network game</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_screen</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_sound</span><span class="p">()</span>
+
+        <span class="c">#self.game = NetworkClientGame(level, players)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s">&quot;game&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">menu</span> <span class="o">=</span> <span class="n">Gui</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Main.init_standalone"><a class="viewcode-back" href="../../api_reference/usf.html#usf.main.Main.init_standalone">[docs]</a>    <span class="k">def</span> <span class="nf">init_standalone</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        start a non network instance of the game</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_screen</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">text_thread</span> <span class="o">=</span> <span class="s">&quot;Loading sounds and musics...&quot;</span>
+        <span class="n">thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">loading_screen</span><span class="p">)</span>
+        <span class="n">thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_sound</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ai_instance</span> <span class="o">=</span> <span class="n">AI</span><span class="p">()</span>
+
+        <span class="c"># if a level was provided and at least two players in the option</span>
+        <span class="c"># immediatly jump into game mode</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">level</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game</span> <span class="o">=</span> <span class="n">Game</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s">&quot;game&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">menu</span> <span class="o">=</span> <span class="n">Gui</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">menu</span><span class="o">.</span><span class="n">handle_reply</span><span class="p">({</span><span class="s">&#39;goto&#39;</span><span class="p">:</span> <span class="s">&#39;configure&#39;</span><span class="p">})</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">text_thread</span> <span class="o">=</span> <span class="s">&quot;Loading GUI...&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">menu</span> <span class="o">=</span> <span class="n">Gui</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s">&quot;menu&quot;</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">game</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_thread</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+        <span class="n">thread</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+        <span class="c"># end of loading resources</span>
+</div>
+<div class="viewcode-block" id="Main.initate_options_parser"><a class="viewcode-back" href="../../api_reference/usf.html#usf.main.Main.initate_options_parser">[docs]</a>    <span class="k">def</span> <span class="nf">initate_options_parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set options and usage to parse users choices</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">usage</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span>
+                <span class="s">&#39;ultimate-smash-friends [-h] [-a][-l level-name] &#39;</span><span class="p">,</span>
+                <span class="s">&#39;[-p player1, player2...] [-s num] [-C address] [-t&#39;</span><span class="p">,</span>
+                <span class="s">&#39;character, level]</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">,</span>
+                <span class="s">&#39;If a level and at least two players are selected, a match is&#39;</span><span class="p">,</span>
+                <span class="s">&#39; launched immediately.&#39;</span><span class="p">))</span>
+
+        <span class="n">version</span> <span class="o">=</span> <span class="s">&#39;%prog 0.1.3&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">parser</span> <span class="o">=</span> <span class="n">OptionParser</span><span class="p">(</span><span class="n">usage</span><span class="o">=</span><span class="n">usage</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s">&#39;-a&#39;</span><span class="p">,</span> <span class="s">&#39;--authors&#39;</span><span class="p">,</span>
+                          <span class="n">action</span><span class="o">=</span><span class="s">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s">&#39;author&#39;</span><span class="p">,</span>
+                          <span class="n">help</span><span class="o">=</span><span class="s">&#39;See authors of this game.&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s">&#39;-l&#39;</span><span class="p">,</span> <span class="s">&#39;--level&#39;</span><span class="p">,</span>
+                          <span class="n">action</span><span class="o">=</span><span class="s">&#39;store&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s">&#39;level&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&#39;levelname&#39;</span><span class="p">,</span>
+                          <span class="n">help</span><span class="o">=</span><span class="s">&#39;select level by name&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s">&#39;-p&#39;</span><span class="p">,</span> <span class="s">&#39;--players&#39;</span><span class="p">,</span>
+                          <span class="n">action</span><span class="o">=</span><span class="s">&#39;store&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s">&#39;players&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                          <span class="n">metavar</span><span class="o">=</span><span class="s">&#39;player1, player2..&#39;</span><span class="p">,</span>
+                          <span class="n">help</span><span class="o">=</span><span class="s">&#39;select up to 4 players by name&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s">&#39;-s&#39;</span><span class="p">,</span> <span class="s">&#39;--server&#39;</span><span class="p">,</span>
+                          <span class="n">action</span><span class="o">=</span><span class="s">&#39;store&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s">&#39;server&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&#39;num&#39;</span><span class="p">,</span>
+                          <span class="n">help</span><span class="o">=</span><span class="s">&quot;will launch a game server accepting &#39;num&#39; &quot;</span> \
+                               <span class="s">&quot;players before launching the bame.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s">&#39;-C&#39;</span><span class="p">,</span> <span class="s">&#39;--client&#39;</span><span class="p">,</span>
+                          <span class="n">action</span><span class="o">=</span><span class="s">&#39;store&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s">&#39;client&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s">&#39;address&#39;</span><span class="p">,</span>
+                          <span class="n">help</span><span class="o">=</span><span class="s">&quot;will attempt to connect to a game server at &quot;</span> \
+                               <span class="s">&quot;&#39;address&#39;&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s">&#39;-t&#39;</span><span class="p">,</span> <span class="s">&#39;--train&#39;</span><span class="p">,</span>
+                          <span class="n">action</span><span class="o">=</span><span class="s">&#39;store&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s">&#39;train&#39;</span><span class="p">,</span>
+                          <span class="n">metavar</span><span class="o">=</span><span class="s">&#39;character, level&#39;</span><span class="p">,</span>
+                          <span class="n">help</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span>
+                              <span class="s">&quot;will load 4 times the character in the level,&quot;</span><span class="p">,</span>
+                              <span class="s">&quot; and use random moves from every place to &quot;</span><span class="p">,</span>
+                              <span class="s">&quot;find path values and store them&quot;</span><span class="p">)))</span>
+</div>
+<div class="viewcode-block" id="Main.parse_options"><a class="viewcode-back" href="../../api_reference/usf.html#usf.main.Main.parse_options">[docs]</a>    <span class="k">def</span> <span class="nf">parse_options</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; parse the command line options</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># set up the comand line parser and its options</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c"># actually parse the command line options</span>
+        <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">author</span><span class="p">:</span>
+            <span class="n">author</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">level</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">level</span>
+
+        <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">players</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span>
+                    <span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="s">&#39;characters&#39;</span><span class="o">+</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="o">+</span><span class="n">p</span><span class="p">,</span>
+                    <span class="n">options</span><span class="o">.</span><span class="n">players</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">server</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game_type</span> <span class="o">=</span> <span class="s">&#39;server&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">server</span>
+
+        <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">client</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game_type</span> <span class="o">=</span> <span class="s">&#39;client&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">address</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">client</span>
+
+        <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">train</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">=</span> <span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="p">)</span><span class="o">*</span><span class="mi">4</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game_type</span> <span class="o">=</span> <span class="s">&#39;training&#39;</span>
+
+        <span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">clock</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Clock</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controls</span> <span class="o">=</span> <span class="n">Controls</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">menu</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+</div>
+<div class="viewcode-block" id="Main.init_screen"><a class="viewcode-back" href="../../api_reference/usf.html#usf.main.Main.init_screen">[docs]</a>    <span class="k">def</span> <span class="nf">init_screen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; various screen initialisations</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">WIDTH</span><span class="p">,</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">HEIGHT</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">WIDTH</span><span class="p">,</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">HEIGHT</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span> <span class="ow">in</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">list_modes</span><span class="p">():</span>
+                <span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">WIDTH</span><span class="p">,</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">HEIGHT</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c">#the old default value...</span>
+                <span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">WIDTH</span><span class="p">,</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">HEIGHT</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="mi">800</span><span class="p">,</span> <span class="mi">480</span><span class="p">)</span>
+            <span class="n">CONFIG</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">FULLSCREEN</span> <span class="o">=</span> <span class="bp">False</span>
+
+        <span class="n">size</span> <span class="o">=</span> <span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">WIDTH</span><span class="p">,</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">HEIGHT</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+
+        <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_caption</span><span class="p">(</span><span class="s">&#39;Ultimate Smash Friends&#39;</span><span class="p">)</span>
+        <span class="n">icon</span> <span class="o">=</span> <span class="n">loaders</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">system_path</span><span class="p">,</span> <span class="s">&#39;icon&#39;</span><span class="p">,</span>
+                                          <span class="s">&#39;icon_50.png&#39;</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_icon</span><span class="p">(</span><span class="n">icon</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">FULLSCREEN</span><span class="p">:</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">toggle_fullscreen</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="Main.init_sound"><a class="viewcode-back" href="../../api_reference/usf.html#usf.main.Main.init_sound">[docs]</a>    <span class="k">def</span> <span class="nf">init_sound</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; various audio initialisations</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">music</span> <span class="o">=</span> <span class="n">Music</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="Main.manage_menu"><a class="viewcode-back" href="../../api_reference/usf.html#usf.main.Main.manage_menu">[docs]</a>    <span class="k">def</span> <span class="nf">manage_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; manage input and update menu if we are in the menu state</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># return of the menu update function may contain a new game</span>
+        <span class="c"># instance to switch to.</span>
+        <span class="n">start_loop</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">get_ticks</span><span class="p">()</span>
+        <span class="n">menu_was</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">menu</span><span class="o">.</span><span class="n">current_screen</span>
+        <span class="n">newgame</span><span class="p">,</span> <span class="n">game_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">menu</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">menu_was</span> <span class="o">==</span> <span class="s">&#39;keyboard&#39;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">menu</span><span class="o">.</span><span class="n">current_screen</span> <span class="o">!=</span> <span class="s">&#39;keyboard&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">controls</span><span class="o">.</span><span class="n">load_keys</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">controls</span><span class="o">.</span><span class="n">load_sequences</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">newgame</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s">&#39;game&#39;</span>
+            <span class="k">if</span> <span class="n">game_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="p">:</span>
+                <span class="k">print</span> <span class="s">&quot;starting game&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ai_instance</span> <span class="o">=</span> <span class="n">AI</span><span class="p">()</span>
+
+                <span class="k">del</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">game</span> <span class="o">=</span> <span class="n">game_</span>
+
+        <span class="n">max_fps</span> <span class="o">=</span> <span class="mi">1000</span><span class="o">/</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">MAX_GUI_FPS</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">menu</span><span class="o">.</span><span class="n">current_screen</span> <span class="o">==</span> <span class="s">&#39;about&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">music_state</span> <span class="o">=</span> <span class="s">&#39;credits&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">music_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span>
+
+        <span class="k">if</span> <span class="n">pygame</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">get_ticks</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">max_fps</span> <span class="o">+</span> <span class="n">start_loop</span><span class="p">:</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">max_fps</span> <span class="o">+</span> <span class="n">start_loop</span> <span class="o">-</span> <span class="n">pygame</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">get_ticks</span><span class="p">())</span>
+</div>
+<div class="viewcode-block" id="Main.manage_ai"><a class="viewcode-back" href="../../api_reference/usf.html#usf.main.Main.manage_ai">[docs]</a>    <span class="k">def</span> <span class="nf">manage_ai</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; update the ai</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">players</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">ai</span> <span class="ow">and</span> <span class="n">p</span><span class="o">.</span><span class="n">present</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ai_instance</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Main.manage_game"><a class="viewcode-back" href="../../api_reference/usf.html#usf.main.Main.manage_game">[docs]</a>    <span class="k">def</span> <span class="nf">manage_game</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; call the various submethod to update the whole game and render it</span>
+<span class="sd">        to the screen</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c">#d = self.game.update_clock(was_paused or self.game.first_frame)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">manage_ai</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;game&#39;</span><span class="p">,</span> <span class="s">&#39;victory&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span>
+                <span class="n">debug_params</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s">&#39;controls&#39;</span><span class="p">:</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">debug</span><span class="o">.</span><span class="n">CONTROLS</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">controls</span><span class="p">,</span>
+                    <span class="s">&#39;action&#39;</span><span class="p">:</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">debug</span><span class="o">.</span><span class="n">ACTIONS</span><span class="p">,</span>
+                    <span class="s">&#39;hardshape&#39;</span><span class="p">:</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">debug</span><span class="o">.</span><span class="n">HARDSHAPES</span><span class="p">,</span>
+                    <span class="s">&#39;footrect&#39;</span><span class="p">:</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">debug</span><span class="o">.</span><span class="n">FOOTRECT</span><span class="p">,</span>
+                    <span class="s">&#39;current_animation&#39;</span><span class="p">:</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">debug</span><span class="o">.</span><span class="n">CURRENT_ANIMATION</span><span class="p">,</span>
+                    <span class="s">&#39;levelshape&#39;</span><span class="p">:</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">debug</span><span class="o">.</span><span class="n">LEVELSHAPES</span><span class="p">,</span>
+                    <span class="s">&#39;levelmap&#39;</span><span class="p">:</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">debug</span><span class="o">.</span><span class="n">LEVELMAP</span><span class="p">})</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">menu</span><span class="o">.</span><span class="n">load</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">menu</span><span class="o">.</span><span class="n">current_screen</span> <span class="o">=</span> <span class="s">&quot;main_screen&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">music_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span>
+</div>
+<div class="viewcode-block" id="Main.display_fps"><a class="viewcode-back" href="../../api_reference/usf.html#usf.main.Main.display_fps">[docs]</a>    <span class="k">def</span> <span class="nf">display_fps</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; FPS counter</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">SHOW_FPS</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span>
+                    <span class="n">loaders</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+                        <span class="s">&quot;FPS: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clock</span><span class="o">.</span><span class="n">get_fps</span><span class="p">()),</span>
+                        <span class="n">fonts</span><span class="p">[</span><span class="s">&quot;mono&quot;</span><span class="p">][</span><span class="s">&quot;38&quot;</span><span class="p">]),</span>
+                    <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="Main.run"><a class="viewcode-back" href="../../api_reference/usf.html#usf.main.Main.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The main game loop, take care of the state of the game/menu.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+
+        <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clock</span><span class="o">.</span><span class="n">tick</span><span class="p">()</span>
+
+        <span class="k">while</span> <span class="p">(</span><span class="bp">True</span><span class="p">):</span>
+            <span class="c"># poll controls and update informations on current state of the UI</span>
+            <span class="n">state_was</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="p">:</span>
+                <span class="n">dt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clock</span><span class="o">.</span><span class="n">tick</span><span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">MAX_FPS</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clock</span><span class="o">.</span><span class="n">tick</span><span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">MAX_GUI_FPS</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.0</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="s">&quot;menu&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controls</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">menu</span><span class="p">)</span>
+
+            <span class="c"># this depends on the previous assertion, it&#39;s NOT an elif</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="s">&quot;menu&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">manage_menu</span><span class="p">()</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c"># update the fps counter</span>
+                <span class="k">if</span> <span class="n">state_was</span> <span class="o">==</span> <span class="s">&quot;menu&quot;</span><span class="p">:</span>
+                    <span class="n">dt</span> <span class="o">=</span> <span class="mi">0</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">manage_game</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">display_fps</span><span class="p">()</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">audio</span><span class="o">.</span><span class="n">MUSIC</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">music</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">music_state</span><span class="p">)</span>
+
+            <span class="c"># verify there is not a QUIT event waiting for us, in case of we</span>
+            <span class="c"># have to quit.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ended</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">QUIT</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ended</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;fps = &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clock</span><span class="o">.</span><span class="n">get_fps</span><span class="p">()))</span>
+                <span class="n">pygame</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+                <span class="k">break</span>
+</div>
+<div class="viewcode-block" id="Main.loading_screen"><a class="viewcode-back" href="../../api_reference/usf.html#usf.main.Main.loading_screen">[docs]</a>    <span class="k">def</span> <span class="nf">loading_screen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        update the screen display during loading</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">stop_thread</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">loaders</span><span class="o">.</span><span class="n">paragraph</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">text_thread</span><span class="p">,</span> <span class="n">fonts</span><span class="p">[</span><span class="s">&#39;mono&#39;</span><span class="p">][</span><span class="s">&#39;normal&#39;</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="n">text</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span><span class="o">/</span><span class="mi">2</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="n">text</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span><span class="o">/</span><span class="mi">2</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="s">&quot;black&quot;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+            <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+            <span class="n">pygame</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</div></div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="c"># Entry point of the game, if not imported from another script, launch the</span>
+    <span class="c"># main class with parameters (appart from program self name) if any.</span>
+
+    <span class="n">m</span> <span class="o">=</span> <span class="n">Main</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Ultimate Smash Friends 0.1.6 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Gabirel Pettier.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

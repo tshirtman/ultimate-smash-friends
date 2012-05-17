@@ -1,0 +1,763 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>usf.timed_event &mdash; Ultimate Smash Friends 0.1.6 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.6',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Ultimate Smash Friends 0.1.6 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Ultimate Smash Friends 0.1.6 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for usf.timed_event</h1><div class="highlight"><pre>
+<span class="c">################################################################################</span>
+<span class="c"># copyright 2008-2011 Gabriel Pettier &lt;gabriel.pettier@gmail.com&gt;              #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># This file is part of ultimate-smash-friends                                  #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># ultimate-smash-friends is free software: you can redistribute it and/or      #</span>
+<span class="c"># modify it under the terms of the GNU General Public License as published by  #</span>
+<span class="c"># the Free Software Foundation, either version 3 of the License, or (at your   #</span>
+<span class="c"># option) any later version.                                                   #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># ultimate-smash-friends is distributed in the hope that it will be useful, but#</span>
+<span class="c"># WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or#</span>
+<span class="c"># FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for    #</span>
+<span class="c"># more details.                                                                #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># You should have received a copy of the GNU General Public License along with #</span>
+<span class="c"># ultimate-smash-friends.  If not, see &lt;http://www.gnu.org/licenses/&gt;.         #</span>
+<span class="c">################################################################################</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">This module allow to create timed and condition based events, to create</span>
+<span class="sd">complexe effects and behaviours in the game.</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+
+
+<span class="kn">from</span> <span class="nn">usf</span> <span class="kn">import</span> <span class="n">CONFIG</span>
+<span class="n">SIZE</span> <span class="o">=</span> <span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">WIDTH</span><span class="p">,</span>
+        <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">HEIGHT</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="TimedEvent"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.TimedEvent">[docs]</a><span class="k">class</span> <span class="nc">TimedEvent</span> <span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An event allow to define a function to be executed later and/or during a</span>
+<span class="sd">    certain period of time.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manager</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="nb">dict</span><span class="p">()):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Action must be a callable, it will be called every frames in the</span>
+<span class="sd">        period.</span>
+<span class="sd">        Condition must be a callable, when it return false the event will die.</span>
+<span class="sd">        Period must be a period of time defined as a tupple of value, if the</span>
+<span class="sd">        first value is None, then it will replaced by current time and if the</span>
+<span class="sd">        second is None, the event will happen until dying.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">params</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">period</span> <span class="o">=</span> <span class="n">period</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">period</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">or</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">done</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event_manager</span> <span class="o">=</span> <span class="n">manager</span>
+
+<div class="viewcode-block" id="TimedEvent.update"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.TimedEvent.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltatime</span><span class="p">,</span> <span class="n">gametime</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method make the event up to date, by executing the various</span>
+<span class="sd">        functions of the event.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">period</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">gametime</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">period</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">done</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="k">elif</span> <span class="n">gametime</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">period</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">done</span> <span class="o">=</span> <span class="bp">True</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">deltatime</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="TimedEvent.backup"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.TimedEvent.backup">[docs]</a>    <span class="k">def</span> <span class="nf">backup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method return the state of the event in a dict, to restore latter</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">backup</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">:</span>
+            <span class="n">backup</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">backup</span>
+</div>
+<div class="viewcode-block" id="TimedEvent.restore"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.TimedEvent.restore">[docs]</a>    <span class="k">def</span> <span class="nf">restore</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backup</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method restore the event in a previous state from a backup()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">backup</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="TimedEvent.execute"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.TimedEvent.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltatime</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method must be overriden, it will be called every frame by the</span>
+<span class="sd">        event.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</div>
+<div class="viewcode-block" id="TimedEvent.condition"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.TimedEvent.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method must be overriden, it will be called every frame by the</span>
+<span class="sd">        event, to verify if the event must continue.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</div>
+<div class="viewcode-block" id="TimedEvent.delete"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.TimedEvent.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        you can override this one if you want special behaviour</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">pass</span>
+</div>
+<div class="viewcode-block" id="TimedEvent.del_"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.TimedEvent.del_">[docs]</a>    <span class="k">def</span> <span class="nf">del_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        please don&#39;t override this method if you want a special behaviour,</span>
+<span class="sd">        override &quot;delete&quot; method instead.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c">#logging.info(str(self.__class__) + &#39; event deleted&#39;)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+
+</div></div>
+<div class="viewcode-block" id="HealEvent"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.HealEvent">[docs]</a><span class="k">class</span> <span class="nc">HealEvent</span><span class="p">(</span><span class="n">TimedEvent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event used to timely drop a player&#39;s percentage to zero.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="HealEvent.execute"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.HealEvent.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltatime</span><span class="p">):</span>
+        <span class="c"># at this rate it should take 5 seconds to go from 100% to 0%</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;player&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">add_percents</span><span class="p">(</span><span class="o">-</span><span class="n">deltatime</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="HealEvent.condition"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.HealEvent.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;player&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">percents</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+</div></div>
+<div class="viewcode-block" id="ShieldUpdateEvent"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.ShieldUpdateEvent">[docs]</a><span class="k">class</span> <span class="nc">ShieldUpdateEvent</span><span class="p">(</span><span class="n">TimedEvent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This event, launched for one character, update the energy of it&#39;s shield at</span>
+<span class="sd">    every loop, depending on if it&#39;s on or off.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ShieldUpdateEvent.execute"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.ShieldUpdateEvent.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltatime</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;player&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shield</span><span class="p">[</span><span class="s">&#39;on&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;player&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shield</span><span class="p">[</span><span class="s">&#39;power&#39;</span><span class="p">]</span> <span class="o">-=</span> <span class="n">deltatime</span><span class="o">/</span><span class="mi">10</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;player&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shield</span><span class="p">[</span><span class="s">&#39;power&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;player&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shield</span><span class="p">[</span><span class="s">&#39;power&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">deltatime</span><span class="o">/</span><span class="mi">10</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;player&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shield</span><span class="p">[</span><span class="s">&#39;power&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;player&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shield</span><span class="p">[</span><span class="s">&#39;on&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+</div>
+<div class="viewcode-block" id="ShieldUpdateEvent.condition"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.ShieldUpdateEvent.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">True</span>
+
+</div></div>
+<div class="viewcode-block" id="DelItemEvent"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.DelItemEvent">[docs]</a><span class="k">class</span> <span class="nc">DelItemEvent</span><span class="p">(</span><span class="n">TimedEvent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event used to timely delete an item, because it was used, or because it got</span>
+<span class="sd">    a timeout.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DelItemEvent.execute"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.DelItemEvent.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltatime</span><span class="p">):</span>
+        <span class="k">pass</span>
+</div>
+<div class="viewcode-block" id="DelItemEvent.condition"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.DelItemEvent.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">True</span>
+</div>
+<div class="viewcode-block" id="DelItemEvent.delete"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.DelItemEvent.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="s">&#39;entity&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">:</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span>
+            <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s">&#39;DelItemEvent no entity in params, and no self.target!!!&#39;</span><span class="p">)</span>
+        <span class="n">target</span><span class="o">.</span><span class="n">set_lives</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+</div></div>
+<div class="viewcode-block" id="BombExplode"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.BombExplode">[docs]</a><span class="k">class</span> <span class="nc">BombExplode</span><span class="p">(</span><span class="n">TimedEvent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This Event timely trigger the bomb explostion.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="BombExplode.execute"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.BombExplode.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltatime</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_gravity</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">entity_skin</span><span class="o">.</span><span class="n">change_animation</span><span class="p">(</span>
+                <span class="s">&#39;explode&#39;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;world&#39;</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">done</span> <span class="o">=</span> <span class="bp">True</span>
+</div>
+<div class="viewcode-block" id="BombExplode.condition"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.BombExplode.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">True</span>
+
+</div></div>
+<div class="viewcode-block" id="DropRandomItem"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.DropRandomItem">[docs]</a><span class="k">class</span> <span class="nc">DropRandomItem</span><span class="p">(</span><span class="n">TimedEvent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Add a random item in game.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DropRandomItem.execute"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.DropRandomItem.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltatime</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;world&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span>
+                    <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">([</span><span class="s">&#39;heal&#39;</span><span class="p">,</span> <span class="s">&#39;bomb&#39;</span><span class="p">],</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="n">place</span><span class="o">=</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span><span class="o">*</span><span class="n">SIZE</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">50</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">done</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span>
+</div>
+<div class="viewcode-block" id="DropRandomItem.condition"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.DropRandomItem.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">True</span>
+
+</div></div>
+<div class="viewcode-block" id="ItemShower"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.ItemShower">[docs]</a><span class="k">class</span> <span class="nc">ItemShower</span><span class="p">(</span><span class="n">TimedEvent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Add periodicaly an item into game.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ItemShower.execute"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.ItemShower.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltatime</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s">&#39;freq&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">:</span>
+            <span class="n">freq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;freq&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">freq</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">elapsed</span> <span class="o">+=</span> <span class="n">deltatime</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">elapsed</span> <span class="o">=</span> <span class="n">deltatime</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">elapsed</span> <span class="o">&gt;=</span> <span class="n">freq</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;world&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span>
+                        <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+                            <span class="p">[</span>
+                            <span class="s">&#39;heal&#39;</span><span class="p">,</span>
+                            <span class="s">&#39;invincibility&#39;</span><span class="p">,</span>
+                            <span class="s">&#39;trunk&#39;</span><span class="p">,</span>
+                            <span class="s">&#39;bomb&#39;</span><span class="p">,</span>
+                            <span class="p">],</span>
+                            <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+                        <span class="n">place</span><span class="o">=</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span><span class="o">*</span><span class="n">SIZE</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">50</span><span class="p">))</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">elapsed</span> <span class="o">-=</span> <span class="n">freq</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">raise</span>
+</div>
+<div class="viewcode-block" id="ItemShower.condition"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.ItemShower.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">True</span>
+
+</div></div>
+<div class="viewcode-block" id="ThrowBomb"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.ThrowBomb">[docs]</a><span class="k">class</span> <span class="nc">ThrowBomb</span><span class="p">(</span><span class="n">TimedEvent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Launch a bomb in front of the player.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ThrowBomb.execute"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.ThrowBomb.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltatime</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">done</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;world&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span>
+                <span class="s">&#39;bomb&#39;</span><span class="p">,</span>
+                <span class="n">place</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rect</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]),</span>
+                <span class="n">reverse</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">reversed</span><span class="p">,</span>
+                <span class="n">vector</span><span class="o">=</span><span class="p">[</span><span class="mi">1000</span><span class="p">,</span> <span class="o">-</span><span class="mi">1000</span><span class="p">])</span>
+</div>
+<div class="viewcode-block" id="ThrowBomb.condition"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.ThrowBomb.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">True</span>
+
+</div></div>
+<div class="viewcode-block" id="ThrowFireBall"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.ThrowFireBall">[docs]</a><span class="k">class</span> <span class="nc">ThrowFireBall</span><span class="p">(</span><span class="n">TimedEvent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Launch a fireball in front of the player.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ThrowFireBall.execute"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.ThrowFireBall.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltatime</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">done</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">entity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span>
+        <span class="n">place</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">entity</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">place</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="o">-</span><span class="mi">100</span> <span class="k">if</span> <span class="n">entity</span><span class="o">.</span><span class="n">reversed</span> <span class="k">else</span> <span class="n">entity</span><span class="o">.</span><span class="n">rect</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="c">#place[1] -= entity.rect[3]/3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;world&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span>
+                <span class="s">&#39;fireball&#39;</span><span class="p">,</span>
+                <span class="n">place</span><span class="o">=</span><span class="n">place</span><span class="p">,</span>
+                <span class="n">reverse</span><span class="o">=</span><span class="n">entity</span><span class="o">.</span><span class="n">reversed</span><span class="p">,</span>
+                <span class="n">upgraded</span><span class="o">=</span><span class="n">entity</span><span class="o">.</span><span class="n">upgraded</span><span class="p">,</span>
+                <span class="n">bullet</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="ThrowFireBall.condition"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.ThrowFireBall.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">True</span>
+
+</div></div>
+<div class="viewcode-block" id="Gost"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.Gost">[docs]</a><span class="k">class</span> <span class="nc">Gost</span><span class="p">(</span><span class="n">TimedEvent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Chasing &#39;AI&#39; for a little chasing gost.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Gost.execute"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.Gost.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltatime</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_player</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="k">for</span> <span class="n">pla</span> <span class="ow">in</span> <span class="p">(</span>
+                <span class="n">player</span>
+                <span class="k">for</span> <span class="n">player</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;world&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">players</span>
+                <span class="k">if</span> <span class="n">player</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]):</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_player</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dist</span><span class="p">(</span><span class="n">pla</span><span class="p">)</span> <span class="o">&lt;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">target_player</span><span class="o">.</span><span class="n">dist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">])):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">target_player</span> <span class="o">=</span> <span class="n">pla</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_vector</span><span class="p">([</span>
+        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_player</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_player</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="mi">3</span><span class="p">])</span>
+</div>
+<div class="viewcode-block" id="Gost.condition"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.Gost.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">True</span>
+
+</div></div>
+<div class="viewcode-block" id="ThrowMiniGost"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.ThrowMiniGost">[docs]</a><span class="k">class</span> <span class="nc">ThrowMiniGost</span><span class="p">(</span><span class="n">TimedEvent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Insert a little chasing gost in game.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ThrowMiniGost.execute"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.ThrowMiniGost.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltatime</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">done</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;world&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span>
+                <span class="s">&#39;mini_gost&#39;</span><span class="p">,</span>
+                <span class="n">place</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rect</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]),</span>
+                <span class="n">vector</span><span class="o">=</span><span class="p">[</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">50</span><span class="p">])</span>
+</div>
+<div class="viewcode-block" id="ThrowMiniGost.condition"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.ThrowMiniGost.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">True</span>
+
+</div></div>
+<div class="viewcode-block" id="LaunchBullet"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.LaunchBullet">[docs]</a><span class="k">class</span> <span class="nc">LaunchBullet</span><span class="p">(</span><span class="n">TimedEvent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Launch a fireball in front of the player.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="LaunchBullet.execute"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.LaunchBullet.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltatime</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">done</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">entity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span>
+        <span class="n">place</span> <span class="o">=</span> <span class="n">entity</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">place</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">entity</span><span class="o">.</span><span class="n">reversed</span> <span class="ow">and</span> <span class="o">-</span><span class="n">entity</span><span class="o">.</span><span class="n">rect</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">or</span> <span class="n">entity</span><span class="o">.</span><span class="n">rect</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">place</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">entity</span><span class="o">.</span><span class="n">rect</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;world&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span>
+                <span class="s">&#39;bullet&#39;</span><span class="p">,</span>
+                <span class="n">place</span><span class="o">=</span><span class="n">place</span><span class="p">,</span>
+                <span class="n">reverse</span><span class="o">=</span><span class="n">entity</span><span class="o">.</span><span class="n">reversed</span><span class="p">,</span>
+                <span class="n">upgraded</span><span class="o">=</span><span class="n">entity</span><span class="o">.</span><span class="n">upgraded</span><span class="p">,</span>
+                <span class="n">bullet</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="LaunchBullet.condition"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.LaunchBullet.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">True</span>
+
+</div></div>
+<div class="viewcode-block" id="InvinciblePlayer"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.InvinciblePlayer">[docs]</a><span class="k">class</span> <span class="nc">InvinciblePlayer</span><span class="p">(</span><span class="n">TimedEvent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The target player is invincible and half invisible during this event.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manager</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="nb">dict</span><span class="p">()):</span>
+        <span class="c"># if we find another invincibility event on the same player we</span>
+        <span class="c"># just extend it&#39;s time to our limit and we are done.</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">InvinciblePlayer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">manager</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="n">invincibilities</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">event_manager</span><span class="o">.</span><span class="n">get_events</span><span class="p">(</span><span class="n">cls</span><span class="o">=</span><span class="n">InvinciblePlayer</span><span class="p">,</span>
+                <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;player&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;player&#39;</span><span class="p">]}))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">invincibilities</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">invincibilities</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">period</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">period</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">done</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;player&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_invincible</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="InvinciblePlayer.execute"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.InvinciblePlayer.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltatime</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;player&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_invincible</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;player&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_lighten</span><span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;player&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lighten</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="InvinciblePlayer.condition"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.InvinciblePlayer.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">True</span>
+</div>
+<div class="viewcode-block" id="InvinciblePlayer.delete"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.InvinciblePlayer.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;player&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_lighten</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;player&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_invincible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+
+</div></div>
+<div class="viewcode-block" id="VectorEvent"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.VectorEvent">[docs]</a><span class="k">class</span> <span class="nc">VectorEvent</span><span class="p">(</span><span class="n">TimedEvent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This event is used to assign time-based vector (accelerations) to a player.</span>
+<span class="sd">    Used by animations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manager</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="nb">dict</span><span class="p">()):</span>
+        <span class="c">#logging.debug(&quot;vector Event created &quot;+ str(self.period))</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">VectorEvent</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">manager</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+
+<div class="viewcode-block" id="VectorEvent.execute"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.VectorEvent.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltatime</span><span class="p">):</span>
+        <span class="k">pass</span>
+</div>
+<div class="viewcode-block" id="VectorEvent.condition"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.VectorEvent.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return false so the addition is only performed once.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">entity_skin</span><span class="o">.</span><span class="n">current_animation</span> <span class="ow">in</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;anim_name&#39;</span><span class="p">],</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;anim_name&#39;</span><span class="p">]</span><span class="o">+</span><span class="s">&#39;_upgraded&#39;</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="VectorEvent.delete"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.VectorEvent.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add the vector to the player vector.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c">#logging.debug(&quot;vector Event applied&quot;)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_vector</span><span class="p">([</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;vector&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;vector&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]])</span>
+
+</div></div>
+<div class="viewcode-block" id="UpgradePlayer"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.UpgradePlayer">[docs]</a><span class="k">class</span> <span class="nc">UpgradePlayer</span><span class="p">(</span><span class="n">TimedEvent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This event will upgrade the player to his upper state, that state ends when</span>
+<span class="sd">    the player dies.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manager</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="nb">dict</span><span class="p">()):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">UpgradePlayer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">manager</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;player&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_upgraded</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="UpgradePlayer.execute"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.UpgradePlayer.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltatime</span><span class="p">):</span>
+        <span class="k">pass</span>
+</div>
+<div class="viewcode-block" id="UpgradePlayer.condition"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.UpgradePlayer.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">False</span>
+
+</div></div>
+<div class="viewcode-block" id="DropPlayer"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.DropPlayer">[docs]</a><span class="k">class</span> <span class="nc">DropPlayer</span><span class="p">(</span><span class="n">TimedEvent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This event is called to drop a player in game.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manager</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="nb">dict</span><span class="p">()):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DropPlayer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">manager</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="c">#logging.debug(&quot;inserting player in game&quot;)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_vector</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_walking_vector</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_percents</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_upgraded</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+        <span class="n">entry</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;world&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">entrypoints</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_place</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DropPlayer.execute"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.DropPlayer.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltatime</span><span class="p">):</span>
+        <span class="k">pass</span>
+</div>
+<div class="viewcode-block" id="DropPlayer.condition"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.DropPlayer.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">True</span>
+</div>
+<div class="viewcode-block" id="DropPlayer.delete"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.DropPlayer.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_present</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">entity_skin</span><span class="o">.</span><span class="n">change_animation</span><span class="p">(</span>
+            <span class="s">&#39;static&#39;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;world&#39;</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">event_manager</span><span class="o">.</span><span class="n">add_event</span><span class="p">(</span>
+                <span class="s">&#39;InvinciblePlayer&#39;</span><span class="p">,</span>
+                <span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;gametime&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">3</span><span class="p">),</span>
+                <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s">&#39;player&#39;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">],</span>
+                    <span class="s">&#39;world&#39;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;world&#39;</span><span class="p">]})</span>
+
+</div></div>
+<div class="viewcode-block" id="PlayerOut"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.PlayerOut">[docs]</a><span class="k">class</span> <span class="nc">PlayerOut</span><span class="p">(</span><span class="n">TimedEvent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This event is called when a player is hitting the level border</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manager</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="nb">dict</span><span class="p">()):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PlayerOut</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">manager</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_lives</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lives</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_present</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lives</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">event_manager</span><span class="o">.</span><span class="n">add_event</span><span class="p">(</span>
+                    <span class="s">&#39;DropPlayer&#39;</span><span class="p">,</span>
+                    <span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;gametime&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+                    <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">coords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">place</span>
+
+
+<div class="viewcode-block" id="PlayerOut.execute"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.PlayerOut.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltatime</span><span class="p">):</span>
+        <span class="k">pass</span>
+</div>
+<div class="viewcode-block" id="PlayerOut.condition"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.PlayerOut.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">True</span>
+
+</div></div>
+<div class="viewcode-block" id="PlayerStaticOnGround"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.PlayerStaticOnGround">[docs]</a><span class="k">class</span> <span class="nc">PlayerStaticOnGround</span><span class="p">(</span><span class="n">TimedEvent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This event will set the player on static animation when he touch the ground</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PlayerStaticOnGround.execute"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.PlayerStaticOnGround.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltatime</span><span class="p">):</span>
+        <span class="k">pass</span>
+</div>
+<div class="viewcode-block" id="PlayerStaticOnGround.condition"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.PlayerStaticOnGround.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return false if the player is on ground so the event effect occure.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">on_ground</span>
+</div>
+<div class="viewcode-block" id="PlayerStaticOnGround.delete"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.PlayerStaticOnGround.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># don&#39;t apply if the animation was changed meanwhile</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">entity_skin</span><span class="o">.</span><span class="n">current_animation</span> <span class="ow">in</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;anim_name&#39;</span><span class="p">],</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;anim_name&#39;</span><span class="p">]</span><span class="o">+</span><span class="s">&#39;_upgraded&#39;</span><span class="p">)):</span>
+
+            <span class="k">if</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">walking_vector</span><span class="p">)</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="n">anim</span> <span class="o">=</span> <span class="s">&#39;walk&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">anim</span> <span class="o">=</span> <span class="s">&#39;static&#39;</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">entity_skin</span><span class="o">.</span><span class="n">change_animation</span><span class="p">(</span>
+                    <span class="n">anim</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">upgraded</span><span class="o">*</span><span class="s">&#39;_upgraded&#39;</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;world&#39;</span><span class="p">],</span>
+                    <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;entity&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]})</span>
+
+</div></div>
+<div class="viewcode-block" id="Bounce"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.Bounce">[docs]</a><span class="k">class</span> <span class="nc">Bounce</span><span class="p">(</span><span class="n">TimedEvent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This event will make the entity bounce when touching the ground</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Bounce.execute"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.Bounce.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltatime</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">on_ground</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+</div>
+<div class="viewcode-block" id="Bounce.condition"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.Bounce.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">True</span>
+</div>
+<div class="viewcode-block" id="Bounce.delete"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.Bounce.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+</div></div>
+<div class="viewcode-block" id="BlobSpecial"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.BlobSpecial">[docs]</a><span class="k">class</span> <span class="nc">BlobSpecial</span><span class="p">(</span><span class="n">TimedEvent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A boomerang like attack with the eye of blob</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manager</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="nb">dict</span><span class="p">()):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BlobSpecial</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">manager</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">entity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">entity_life</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">percents</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">dist</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;world&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">players</span>
+                <span class="k">if</span> <span class="n">e</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity</span> <span class="ow">and</span>
+                <span class="p">((</span><span class="n">e</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span>\
+                        <span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">reversed</span><span class="p">)])[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="c"># no suitable target, abort</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">done</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">angle</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="BlobSpecial.execute"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.BlobSpecial.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltatime</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">eye</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">eye</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;world&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="s">&#39;blob-eye&#39;</span><span class="p">,</span>
+                    <span class="n">upgraded</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">upgraded</span><span class="p">,</span> <span class="n">physics</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                    <span class="n">reverse</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">reversed</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">angle</span> <span class="o">+=</span> <span class="n">deltatime</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="mf">3.14159</span> <span class="c"># enought precision here</span>
+        <span class="n">center</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">dx_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">dy_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">xx_</span> <span class="o">=</span> <span class="o">-</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx_</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">yy_</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="p">)</span> <span class="o">*</span> <span class="n">dy_</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">dy_</span> <span class="o">*</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">angle</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="mf">3.14159</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">angle</span> <span class="o">&lt;</span> <span class="mf">3.14159</span> <span class="k">else</span>
+                    <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">eye</span><span class="o">.</span><span class="n">set_place</span><span class="p">((</span><span class="n">xx_</span><span class="p">,</span> <span class="n">yy_</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="BlobSpecial.condition"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.BlobSpecial.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">angle</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="mf">3.14159</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity_life</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">percents</span><span class="p">):</span>
+            <span class="c">#and</span>
+            <span class="c">#   &quot;special&quot; in self.entity.entity_skin.current_animation</span>
+            <span class="k">return</span> <span class="bp">True</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+</div>
+<div class="viewcode-block" id="BlobSpecial.delete"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.BlobSpecial.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">eye</span><span class="o">.</span><span class="n">set_lives</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="c"># happens if there was no suitable target and event was aborted</span>
+            <span class="k">pass</span>
+
+</div></div>
+<div class="viewcode-block" id="XeonCharge"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.XeonCharge">[docs]</a><span class="k">class</span> <span class="nc">XeonCharge</span><span class="p">(</span><span class="n">TimedEvent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; a charge attack for Xeon</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manager</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="nb">dict</span><span class="p">()):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">XeonCharge</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">manager</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">entity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">world</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s">&#39;world&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">entity_life</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">percents</span>
+
+<div class="viewcode-block" id="XeonCharge.execute"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.XeonCharge.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltatime</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">+=</span> <span class="n">deltatime</span>
+</div>
+<div class="viewcode-block" id="XeonCharge.condition"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.XeonCharge.condition">[docs]</a>    <span class="k">def</span> <span class="nf">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;=</span> <span class="mi">1700</span> <span class="ow">and</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">entity_life</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">percents</span> <span class="ow">and</span>
+                <span class="s">&quot;special2&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">entity_skin</span><span class="o">.</span><span class="n">current_animation</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">True</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+</div>
+<div class="viewcode-block" id="XeonCharge.delete"><a class="viewcode-back" href="../../api_reference/usf.html#usf.timed_event.XeonCharge.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity_life</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">percents</span><span class="p">:</span>
+            <span class="n">size</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.7</span> <span class="o">/</span> <span class="mi">7</span><span class="p">)),</span> <span class="mi">6</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span>
+                    <span class="s">&quot;xeon-charge&quot;</span><span class="p">,</span>
+                    <span class="n">upgraded</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">upgraded</span><span class="p">,</span>
+                    <span class="n">animation</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">size</span><span class="p">),</span>
+                    <span class="n">reverse</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">reversed</span><span class="p">,</span>
+                    <span class="n">place</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="o">-</span><span class="mi">100</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">reversed</span>
+                        <span class="k">else</span> <span class="mi">100</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+                    <span class="n">vector</span><span class="o">=</span><span class="p">[</span><span class="mi">300</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                    <span class="n">bullet</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="c"># This list is used to cast an event by name. This is usefull since events are</span>
+<span class="c"># configured in players/items xml files.</span>
+</div></div>
+<span class="n">EVENT_NAMES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;BlobSpecial&#39;</span><span class="p">:</span> <span class="n">BlobSpecial</span><span class="p">,</span>
+    <span class="s">&#39;BombExplode&#39;</span><span class="p">:</span> <span class="n">BombExplode</span><span class="p">,</span>
+    <span class="s">&#39;Bounce&#39;</span><span class="p">:</span> <span class="n">Bounce</span><span class="p">,</span>
+    <span class="s">&#39;DelItemEvent&#39;</span><span class="p">:</span> <span class="n">DelItemEvent</span><span class="p">,</span>
+    <span class="s">&#39;DropPlayer&#39;</span><span class="p">:</span> <span class="n">DropPlayer</span><span class="p">,</span>
+    <span class="s">&#39;DropRandomItem&#39;</span><span class="p">:</span> <span class="n">DropRandomItem</span><span class="p">,</span>
+    <span class="s">&#39;Gost&#39;</span><span class="p">:</span> <span class="n">Gost</span><span class="p">,</span>
+    <span class="s">&#39;HealEvent&#39;</span><span class="p">:</span> <span class="n">HealEvent</span><span class="p">,</span>
+    <span class="s">&#39;InvinciblePlayer&#39;</span><span class="p">:</span> <span class="n">InvinciblePlayer</span><span class="p">,</span>
+    <span class="s">&#39;ItemShower&#39;</span><span class="p">:</span> <span class="n">ItemShower</span><span class="p">,</span>
+    <span class="s">&#39;LaunchBullet&#39;</span><span class="p">:</span> <span class="n">LaunchBullet</span><span class="p">,</span>
+    <span class="s">&#39;PlayerOut&#39;</span><span class="p">:</span> <span class="n">PlayerOut</span><span class="p">,</span>
+    <span class="s">&#39;PlayerStaticOnGround&#39;</span><span class="p">:</span> <span class="n">PlayerStaticOnGround</span><span class="p">,</span>
+    <span class="s">&#39;ShieldUpdateEvent&#39;</span><span class="p">:</span> <span class="n">ShieldUpdateEvent</span><span class="p">,</span>
+    <span class="s">&#39;ThrowBomb&#39;</span><span class="p">:</span> <span class="n">ThrowBomb</span><span class="p">,</span>
+    <span class="s">&#39;ThrowFireBall&#39;</span><span class="p">:</span> <span class="n">ThrowFireBall</span><span class="p">,</span>
+    <span class="s">&#39;ThrowMiniGost&#39;</span><span class="p">:</span> <span class="n">ThrowMiniGost</span><span class="p">,</span>
+    <span class="s">&#39;UpgradePlayer&#39;</span><span class="p">:</span> <span class="n">UpgradePlayer</span><span class="p">,</span>
+    <span class="s">&#39;VectorEvent&#39;</span><span class="p">:</span> <span class="n">VectorEvent</span><span class="p">,</span>
+    <span class="s">&#39;XeonCharge&#39;</span><span class="p">:</span> <span class="n">XeonCharge</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Ultimate Smash Friends 0.1.6 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Gabirel Pettier.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

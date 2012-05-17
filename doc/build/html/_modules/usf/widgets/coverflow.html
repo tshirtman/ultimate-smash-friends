@@ -1,0 +1,463 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>usf.widgets.coverflow &mdash; Ultimate Smash Friends 0.1.6 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1.6',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Ultimate Smash Friends 0.1.6 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">Ultimate Smash Friends 0.1.6 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for usf.widgets.coverflow</h1><div class="highlight"><pre>
+<span class="c">################################################################################</span>
+<span class="c"># copyright 2010 Lucas Baudin &lt;xapantu@gmail.com&gt;                              #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># This file is part of Ultimate Smash Friends.                                 #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># Ultimate Smash Friends is free software: you can redistribute it and/or      #</span>
+<span class="c"># modify it under the terms of the GNU General Public License as published by  #</span>
+<span class="c"># the Free Software Foundation, either version 3 of the License, or (at your   #</span>
+<span class="c"># option) any later version.                                                   #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># Ultimate Smash Friends is distributed in the hope that it will be useful, but#</span>
+<span class="c"># WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or#</span>
+<span class="c"># FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for    #</span>
+<span class="c"># more details.                                                                #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># You should have received a copy of the GNU General Public License along with #</span>
+<span class="c"># Ultimate Smash Friends.  If not, see &lt;http://www.gnu.org/licenses/&gt;.         #</span>
+<span class="c">################################################################################</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">A nice coverflow effect for images</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="c">#standard imports</span>
+<span class="kn">import</span> <span class="nn">pygame</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="c">#our module</span>
+<span class="kn">from</span> <span class="nn">usf.widgets.widget</span> <span class="kn">import</span> <span class="n">Widget</span>
+
+<span class="kn">from</span> <span class="nn">usf.font</span> <span class="kn">import</span> <span class="n">fonts</span>
+<span class="kn">from</span> <span class="nn">usf</span> <span class="kn">import</span> <span class="n">loaders</span>
+<span class="kn">from</span> <span class="nn">usf</span> <span class="kn">import</span> <span class="n">CONFIG</span>
+
+
+<div class="viewcode-block" id="get_text_transparent"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.coverflow.get_text_transparent">[docs]</a><span class="k">def</span> <span class="nf">get_text_transparent</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">loaders</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">fonts</span><span class="p">[</span><span class="s">&#39;mono&#39;</span><span class="p">][</span><span class="s">&#39;10&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">convert</span><span class="p">()</span>
+    <span class="c">#FIXME: the colorkey should be in a skin configuration file</span>
+    <span class="n">text</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="s">&quot;black&quot;</span><span class="p">))</span>
+    <span class="n">text</span><span class="o">.</span><span class="n">set_colorkey</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="s">&quot;black&quot;</span><span class="p">))</span>
+    <span class="n">text</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">loaders</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">fonts</span><span class="p">[</span><span class="s">&#39;mono&#39;</span><span class="p">][</span><span class="s">&#39;22&#39;</span><span class="p">]),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">text</span>
+
+</div>
+<div class="viewcode-block" id="Coverflow"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.coverflow.Coverflow">[docs]</a><span class="k">class</span> <span class="nc">Coverflow</span><span class="p">(</span><span class="n">Widget</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The coverflow widget is used to display many image and choose one of</span>
+<span class="sd">    the them.</span>
+<span class="sd">    It should be big, about 800 * 275. This widget is animated and requires</span>
+<span class="sd">    a lot of CPU.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c">#the animation() function wil be called each frame</span>
+    <span class="c">#FIXME: the animation speed souldn&#39;t depend of the computer</span>
+    <span class="n">animation_speed</span> <span class="o">=</span> <span class="bp">True</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Coverflow</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="n">values</span>
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+            <span class="c">#adding (false) size for the image, there will be updated later</span>
+            <span class="n">value</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">))</span>
+            <span class="n">value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_anim</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">anim_state</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">advance</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c">#compatibility with the others widget only</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="bp">False</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_size</span><span class="p">((</span><span class="mi">800</span><span class="p">,</span> <span class="mi">230</span><span class="p">))</span> <span class="c"># FIXME hardcoded value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">center_size</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sizex</span><span class="p">(</span><span class="mi">195</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizey</span><span class="p">(</span><span class="mi">120</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">posy_center</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizey</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">foreground</span> <span class="o">=</span> <span class="n">loaders</span><span class="o">.</span><span class="n">image</span><span class="p">(</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">system_path</span><span class="p">,</span>
+                    <span class="s">&quot;gui&quot;</span><span class="p">,</span>
+                    <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">THEME</span><span class="p">,</span>
+                    <span class="s">&quot;coverflow&quot;</span><span class="p">,</span>
+                    <span class="s">&quot;foreground.png&quot;</span><span class="p">),</span>
+                <span class="n">scale</span><span class="o">=</span><span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">WIDTH</span><span class="p">,</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">HEIGHT</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">loaders</span><span class="o">.</span><span class="n">image</span><span class="p">(</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">system_path</span><span class="p">,</span>
+                    <span class="s">&quot;gui&quot;</span><span class="p">,</span>
+                    <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">THEME</span><span class="p">,</span>
+                    <span class="s">&quot;coverflow&quot;</span><span class="p">,</span>
+                    <span class="s">&quot;frame.png&quot;</span><span class="p">),</span>
+                <span class="n">scale</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sizex</span><span class="p">(</span><span class="mi">137</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizey</span><span class="p">(</span><span class="mi">86</span><span class="p">)))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">surface</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">Surface</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">get_text_transparent</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">previous</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_main_frame</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+            <span class="n">size</span> <span class="o">=</span> <span class="n">loaders</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">size</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">size</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+                <span class="n">value</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizex</span><span class="p">(</span><span class="mi">25</span><span class="p">),</span>
+                        <span class="n">size</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizex</span><span class="p">(</span><span class="mi">25</span><span class="p">))</span> <span class="o">/</span> <span class="n">size</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">value</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">size</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizex</span><span class="p">(</span><span class="mi">25</span><span class="p">))</span> <span class="o">/</span> <span class="n">size</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizey</span><span class="p">(</span><span class="mi">25</span><span class="p">))</span>
+
+            <span class="n">value</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">value</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">value</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">need_update</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">get_surface</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Coverflow.draw"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.coverflow.Coverflow.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw the widget, the surface will be redrawed if the widget is animated.</span>
+<span class="sd">        You can force redrawing by set need_update to True.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parentpos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parentpos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_frame</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">advance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_main</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_right</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_left</span><span class="p">()</span>
+        <span class="n">reflection</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">surface</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="n">reflection</span><span class="o">.</span><span class="n">set_colorkey</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="s">&quot;black&quot;</span><span class="p">))</span>
+        <span class="c">#reflection.set_alpha(20)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">reflection</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizey</span><span class="p">(</span><span class="mi">100</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="p">(</span>
+            <span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span>
+            <span class="n">y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizey</span><span class="p">(</span><span class="mi">30</span><span class="p">)))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">foreground</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">need_update</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_anim</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">start_anim</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="Coverflow.draw_main"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.coverflow.Coverflow.draw_main">[docs]</a>    <span class="k">def</span> <span class="nf">draw_main</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw the selected image, it is bigger than the other and in the center</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parentpos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parentpos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+        <span class="c">#main frame</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_frame</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">posy_center</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">loaders</span><span class="o">.</span><span class="n">image</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">scale</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">center_image</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span>
+                <span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_image_indent</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="n">y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">posy_center</span>  <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_image_indent</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pos</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_frame</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="Coverflow.draw_right"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.coverflow.Coverflow.draw_right">[docs]</a>    <span class="k">def</span> <span class="nf">draw_right</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw three small image at right.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parentpos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parentpos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="o">+</span> <span class="mi">4</span><span class="p">):</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizey</span><span class="p">(</span><span class="mi">82</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">loaders</span><span class="o">.</span><span class="n">image</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+                <span class="n">scale</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">])[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span>
+                    <span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">3</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="n">y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizey</span><span class="p">(</span><span class="mi">82</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">3</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">pos</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+</div>
+<div class="viewcode-block" id="Coverflow.draw_left"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.coverflow.Coverflow.draw_left">[docs]</a>    <span class="k">def</span> <span class="nf">draw_left</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw three small image at left.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parentpos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parentpos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+        <span class="c">#at left now</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="o">/</span><span class="mi">2</span>
+                <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_frame</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span><span class="o">/</span><span class="mi">2</span>
+                <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span>
+                <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">advance</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">-</span> <span class="mi">3</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizey</span><span class="p">(</span><span class="mi">82</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">loaders</span><span class="o">.</span><span class="n">image</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+                <span class="n">scale</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">])[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span>
+                    <span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">3</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="n">y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizey</span><span class="p">(</span><span class="mi">82</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">3</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">pos</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+</div>
+<div class="viewcode-block" id="Coverflow.next"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.coverflow.Coverflow.next">[docs]</a>    <span class="k">def</span> <span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Select the next item.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">get_text_transparent</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+</div>
+<div class="viewcode-block" id="Coverflow.previous"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.coverflow.Coverflow.previous">[docs]</a>    <span class="k">def</span> <span class="nf">previous</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Select the previous item.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">get_text_transparent</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+</div>
+<div class="viewcode-block" id="Coverflow.handle_mouse"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.coverflow.Coverflow.handle_mouse">[docs]</a>    <span class="k">def</span> <span class="nf">handle_mouse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function handle all mouse events which are on the widget.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_anim</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">MOUSEBUTTONDOWN</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&#39;pos&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="c"># y = event.dict[&#39;pos&#39;][1] #</span>
+                <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">launch_anim</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">launch_anim</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">False</span>
+</div>
+<div class="viewcode-block" id="Coverflow.launch_anim"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.coverflow.Coverflow.launch_anim">[docs]</a>    <span class="k">def</span> <span class="nf">launch_anim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direction</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; start a translation animation in the direction</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c">#self.last_c_update = time.time()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">anim_state</span> <span class="o">=</span> <span class="s">&quot;start&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_anim</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sens</span> <span class="o">=</span> <span class="n">direction</span>
+</div>
+<div class="viewcode-block" id="Coverflow.animation"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.coverflow.Coverflow.animation">[docs]</a>    <span class="k">def</span> <span class="nf">animation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; update the animation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_anim</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">anim_state</span> <span class="o">==</span> <span class="s">&quot;start&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">anim_state</span> <span class="o">==</span> <span class="s">&quot;slide&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizex</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizey</span><span class="p">(</span><span class="mi">137</span><span class="p">):</span>
+                    <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizex</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+                    <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">w</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="c">#self.advance += self.sizex(5)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">get_alpha</span><span class="p">()</span> <span class="o">-</span> <span class="mi">50</span><span class="p">)</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">anim_state</span> <span class="o">=</span> <span class="s">&quot;slide&quot;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizey</span><span class="p">(</span><span class="mi">137</span><span class="p">)</span>
+                    <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizey</span><span class="p">(</span><span class="mi">86</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">posy_center</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizey</span><span class="p">(</span><span class="mi">125</span><span class="p">)</span> <span class="o">-</span> <span class="n">h</span><span class="o">/</span><span class="mi">2</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">center_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">load_main_frame</span><span class="p">()</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sens</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">advance</span> <span class="o">+</span> <span class="mi">40</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">advance</span> <span class="o">+=</span> <span class="mi">40</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">advance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">anim_state</span> <span class="o">=</span> <span class="s">&quot;change&quot;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">advance</span> <span class="o">-</span> <span class="mi">40</span> <span class="o">&gt;</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">advance</span> <span class="o">-=</span> <span class="mi">40</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">advance</span> <span class="o">=</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">anim_state</span> <span class="o">=</span> <span class="s">&quot;change&quot;</span>
+
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">anim_state</span> <span class="o">==</span> <span class="s">&quot;change&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sens</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">previous</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">advance</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">anim_state</span> <span class="o">=</span> <span class="s">&quot;end&quot;</span>
+
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">anim_state</span> <span class="o">==</span> <span class="s">&quot;end&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizey</span><span class="p">(</span><span class="mi">195</span><span class="p">):</span>
+                    <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizex</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+                    <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">w</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="c">#self.advance -= self.sizex(5)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">get_alpha</span><span class="p">()</span> <span class="o">+</span> <span class="mi">50</span><span class="p">)</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizex</span><span class="p">(</span><span class="mi">195</span><span class="p">)</span>
+                    <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizey</span><span class="p">(</span><span class="mi">120</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="mi">250</span><span class="p">)</span>
+                    <span class="c">#self.in_anim = False</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">anim_state</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">advance</span> <span class="o">=</span> <span class="mi">0</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">posy_center</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizey</span><span class="p">(</span><span class="mi">125</span><span class="p">)</span> <span class="o">-</span> <span class="n">h</span><span class="o">/</span><span class="mi">2</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">center_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">load_main_frame</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">need_update</span> <span class="o">=</span> <span class="bp">True</span>
+
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">anim_state</span> <span class="o">==</span> <span class="s">&quot;&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">in_anim</span> <span class="o">=</span> <span class="bp">False</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">need_update</span> <span class="o">=</span> <span class="bp">True</span>
+
+</div>
+<div class="viewcode-block" id="Coverflow.handle_keys"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.coverflow.Coverflow.handle_keys">[docs]</a>    <span class="k">def</span> <span class="nf">handle_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; manage keyboard input events</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span>
+                <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&quot;key&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_DOWN</span> <span class="ow">or</span>
+                <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&quot;key&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_UP</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">self</span>
+
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&quot;key&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_RETURN</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_anim</span> <span class="ow">and</span> <span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&quot;key&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_LEFT</span>
+                <span class="ow">or</span> <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&quot;key&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_RIGHT</span><span class="p">):</span>
+
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&quot;key&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_LEFT</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">launch_anim</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&quot;key&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_RIGHT</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">launch_anim</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">False</span>
+</div>
+<div class="viewcode-block" id="Coverflow.load_main_frame"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.coverflow.Coverflow.load_main_frame">[docs]</a>    <span class="k">def</span> <span class="nf">load_main_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; #FIXME get xapantu to document a little! :P</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_frame</span> <span class="o">=</span> <span class="n">loaders</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">system_path</span><span class="p">,</span>
+            <span class="s">&quot;gui&quot;</span><span class="p">,</span>
+            <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">THEME</span><span class="p">,</span>
+            <span class="s">&quot;coverflow&quot;</span><span class="p">,</span>
+            <span class="s">&quot;frame.png&quot;</span><span class="p">),</span>
+            <span class="n">scale</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">center_size</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">img</span> <span class="o">=</span> <span class="n">loaders</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">][</span><span class="mi">1</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c">#keep the image ratio</span>
+        <span class="k">if</span> <span class="n">img</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">img</span><span class="o">.</span><span class="n">get_width</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">center_image</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">main_frame</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizex</span><span class="p">(</span><span class="mi">25</span><span class="p">),</span>
+                    <span class="n">img</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_frame</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">-</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">sizex</span><span class="p">(</span><span class="mi">25</span><span class="p">))</span> <span class="o">/</span> <span class="n">img</span><span class="o">.</span><span class="n">get_width</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">center_image</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">img</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">main_frame</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizey</span><span class="p">(</span><span class="mi">25</span><span class="p">))</span>
+                    <span class="o">/</span> <span class="n">img</span><span class="o">.</span><span class="n">get_height</span><span class="p">(),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">main_frame</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span><span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizey</span><span class="p">(</span><span class="mi">25</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">center_image_indent</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">main_frame</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_image</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">main_frame</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_image</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Coverflow.get_value"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.coverflow.Coverflow.get_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; return the currently selected value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+</div>
+<div class="viewcode-block" id="Coverflow.sizex"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.coverflow.Coverflow.sizex">[docs]</a>    <span class="k">def</span> <span class="nf">sizex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method is used to get the real size of an element. All size in the</span>
+<span class="sd">        code above are for a widget size = 800*275. So, if the size is</span>
+<span class="sd">        different, this function modify it.  This function is used for the x</span>
+<span class="sd">        axis. Use sizey for y axis.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">/</span> <span class="mi">800</span>
+</div>
+<div class="viewcode-block" id="Coverflow.sizey"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.coverflow.Coverflow.sizey">[docs]</a>    <span class="k">def</span> <span class="nf">sizey</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Same as sizex, but for the y axis.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">y</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">/</span> <span class="mi">275</span>
+</pre></div></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">Ultimate Smash Friends 0.1.6 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Gabirel Pettier.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

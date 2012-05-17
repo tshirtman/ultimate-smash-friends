@@ -1,0 +1,254 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>usf.widgets.text_entry &mdash; Ultimate Smash Friends 0.1.6 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1.6',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Ultimate Smash Friends 0.1.6 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">Ultimate Smash Friends 0.1.6 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for usf.widgets.text_entry</h1><div class="highlight"><pre>
+<span class="c">################################################################################</span>
+<span class="c"># copyright 2010 Lucas Baudin &lt;xapantu@gmail.com&gt;                              #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># This file is part of Ultimate Smash Friends.                                 #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># Ultimate Smash Friends is free software: you can redistribute it and/or      #</span>
+<span class="c"># modify it under the terms of the GNU General Public License as published by  #</span>
+<span class="c"># the Free Software Foundation, either version 3 of the License, or (at your   #</span>
+<span class="c"># option) any later version.                                                   #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># Ultimate Smash Friends is distributed in the hope that it will be useful, but#</span>
+<span class="c"># WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or#</span>
+<span class="c"># FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for    #</span>
+<span class="c"># more details.                                                                #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># You should have received a copy of the GNU General Public License along with #</span>
+<span class="c"># Ultimate Smash Friends.  If not, see &lt;http://www.gnu.org/licenses/&gt;.         #</span>
+<span class="c">################################################################################</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">This module provides a widget for UI, allowing to display and edit a line of</span>
+<span class="sd">text, it can be used to edit settings like an IP address for a network game, or</span>
+<span class="sd">a player name.</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">from</span> <span class="nn">usf.widgets.label</span> <span class="kn">import</span> <span class="n">Label</span>
+<span class="kn">from</span> <span class="nn">usf.widgets.button</span> <span class="kn">import</span> <span class="n">Button</span>
+
+<span class="kn">from</span> <span class="nn">usf</span> <span class="kn">import</span> <span class="n">font</span>
+<span class="kn">from</span> <span class="nn">usf</span> <span class="kn">import</span> <span class="n">loaders</span>
+<span class="kn">from</span> <span class="nn">pygame.locals</span> <span class="kn">import</span> <span class="p">(</span><span class="n">K_DOWN</span><span class="p">,</span> <span class="n">K_UP</span><span class="p">,</span> <span class="n">K_RETURN</span><span class="p">,</span> <span class="n">K_LEFT</span><span class="p">,</span> <span class="n">K_RIGHT</span><span class="p">,</span> <span class="n">K_BACKSPACE</span><span class="p">,</span>
+        <span class="n">MOUSEBUTTONUP</span><span class="p">,</span> <span class="n">K_DELETE</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">pygame</span> <span class="kn">import</span> <span class="n">draw</span>
+<span class="kn">from</span> <span class="nn">pygame</span> <span class="kn">import</span> <span class="n">color</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sin</span>
+
+<div class="viewcode-block" id="TextEntry"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.text_entry.TextEntry">[docs]</a><span class="k">class</span> <span class="nc">TextEntry</span><span class="p">(</span><span class="n">Button</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A widget allowing to enter some text</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">animation_speed</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mf">10.0</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TextEntry</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s">&quot;size_request&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">220</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dynamic_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cursor</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">posx</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">posy</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cursor_red</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cursor_green</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cursor_blue</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cursor_state</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+<div class="viewcode-block" id="TextEntry.get_text"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.text_entry.TextEntry.get_text">[docs]</a>    <span class="k">def</span> <span class="nf">get_text</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the current text of the widget.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">text</span>
+</div>
+<div class="viewcode-block" id="TextEntry.move_cursor"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.text_entry.TextEntry.move_cursor">[docs]</a>    <span class="k">def</span> <span class="nf">move_cursor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; place the cursor at the position nearest of x in the widget</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">indent</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cursor</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">text_font</span> <span class="o">=</span> <span class="n">font</span><span class="o">.</span><span class="n">fonts</span><span class="p">[</span><span class="s">&quot;sans&quot;</span><span class="p">][</span><span class="s">&quot;normal&quot;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">diff_temp</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">diff</span><span class="p">,</span>
+                    <span class="nb">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">loaders</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">text</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">i</span><span class="p">],</span> <span class="n">text_font</span><span class="p">)</span><span class="o">.</span><span class="n">get_width</span><span class="p">()))</span>
+            <span class="k">if</span> <span class="n">diff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">diff_temp</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cursor</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="n">diff</span> <span class="o">=</span> <span class="n">diff_temp</span>
+</div>
+<div class="viewcode-block" id="TextEntry.handle_mouse"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.text_entry.TextEntry.handle_mouse">[docs]</a>    <span class="k">def</span> <span class="nf">handle_mouse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; set focus if the click was on the text entry, so we can type in it</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&#39;pos&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&#39;pos&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">MOUSEBUTTONUP</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parentpos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span>
+                <span class="n">y</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parentpos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
+            <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">move_cursor</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">self</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="k">else</span> <span class="bp">False</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="TextEntry.handle_keys"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.text_entry.TextEntry.handle_keys">[docs]</a>    <span class="k">def</span> <span class="nf">handle_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; manage keyboard input events</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">False</span>
+
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&quot;key&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">K_RETURN</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span>
+
+        <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&#39;key&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">K_DELETE</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set_text</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">cursor</span><span class="p">],</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">cursor</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:])))</span>
+
+        <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&#39;key&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">K_BACKSPACE</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set_text</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">cursor</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">cursor</span><span class="p">:])))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cursor</span> <span class="o">-=</span> <span class="mi">1</span>
+
+        <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&quot;key&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">K_LEFT</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cursor</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&quot;key&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">K_RIGHT</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cursor</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&#39;unicode&#39;</span><span class="p">]:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">set_text</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">cursor</span><span class="p">],</span>
+                            <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&quot;unicode&quot;</span><span class="p">],</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">cursor</span><span class="p">:])))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">cursor</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">except</span> <span class="ne">UnicodeEncodeError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+        <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">False</span>
+</div>
+<div class="viewcode-block" id="TextEntry.draw"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.text_entry.TextEntry.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TextEntry</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+        <span class="c"># Display the cursor</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span>
+            <span class="c"># Get text width</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="n">loaders</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">get_text</span><span class="p">()[</span><span class="mi">0</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">cursor</span><span class="p">],</span>
+                    <span class="n">font</span><span class="o">.</span><span class="n">fonts</span><span class="p">[</span><span class="s">&quot;sans&quot;</span><span class="p">][</span><span class="s">&#39;normal&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">indent</span>
+
+            <span class="c"># Draw cursor</span>
+            <span class="n">color_value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cursor_state</span><span class="p">))</span><span class="o">*</span><span class="mi">255</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
+            <span class="c">#print color_value</span>
+            <span class="n">color_cursor</span> <span class="o">=</span> <span class="n">color</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="n">color_value</span><span class="p">,</span> <span class="n">color_value</span><span class="p">,</span> <span class="n">color_value</span><span class="p">)</span>
+            <span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span> <span class="n">color_cursor</span><span class="p">,</span>
+                      <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parentpos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">offset</span><span class="p">,</span>
+                       <span class="bp">self</span><span class="o">.</span><span class="n">parentpos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">),</span>
+                      <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parentpos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">offset</span><span class="p">,</span>
+                       <span class="bp">self</span><span class="o">.</span><span class="n">parentpos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">),</span>
+                     <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_anim</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="TextEntry.animation"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.text_entry.TextEntry.animation">[docs]</a>    <span class="k">def</span> <span class="nf">animation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cursor_state</span> <span class="o">+=</span> <span class="mf">0.1</span>
+</pre></div></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">Ultimate Smash Friends 0.1.6 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Gabirel Pettier.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

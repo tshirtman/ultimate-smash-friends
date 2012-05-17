@@ -1,0 +1,404 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>usf.entity_skin &mdash; Ultimate Smash Friends 0.1.6 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.6',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Ultimate Smash Friends 0.1.6 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Ultimate Smash Friends 0.1.6 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for usf.entity_skin</h1><div class="highlight"><pre>
+<span class="c">################################################################################</span>
+<span class="c"># copyright 2008 Gabriel Pettier &lt;gabriel.pettier@gmail.com&gt;                   #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># This file is part of UltimateSmashFriends                                    #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># UltimateSmashFriends is free software: you can redistribute it and/or modify #</span>
+<span class="c"># it under the terms of the GNU General Public License as published by         #</span>
+<span class="c"># the Free Software Foundation, either version 3 of the License, or            #</span>
+<span class="c"># (at your option) any later version.                                          #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># UltimateSmashFriends is distributed in the hope that it will be useful,      #</span>
+<span class="c"># but WITHOUT ANY WARRANTY; without even the implied warranty of               #</span>
+<span class="c"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                #</span>
+<span class="c"># GNU General Public License for more details.                                 #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># You should have received a copy of the GNU General Public License            #</span>
+<span class="c"># along with UltimateSmashFriends.  If not, see &lt;http://www.gnu.org/licenses/&gt;.#</span>
+<span class="c">################################################################################</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">this module deal with what&#39;s definied in xml files for entities</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">pygame</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">xml.etree</span> <span class="kn">import</span> <span class="n">ElementTree</span>
+
+<span class="kn">from</span> <span class="nn">usf.animations</span> <span class="kn">import</span> <span class="n">Frame</span><span class="p">,</span> <span class="n">PreciseTimedAnimation</span>
+<span class="kn">from</span> <span class="nn">usf</span> <span class="kn">import</span> <span class="n">loaders</span>
+<span class="kn">from</span> <span class="nn">usf</span> <span class="kn">import</span> <span class="n">CONFIG</span> 
+
+<span class="n">SIZE</span> <span class="o">=</span> <span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">WIDTH</span><span class="p">,</span>
+        <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">HEIGHT</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="EntitySkin"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity_skin.EntitySkin">[docs]</a><span class="k">class</span> <span class="nc">EntitySkin</span> <span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An EntitySkin contains all information about a player or an item, which is</span>
+<span class="sd">    mainly animations frames, with their timings and vectors, and less</span>
+<span class="sd">    importants information as the character/item name and such details.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dir_name</span><span class="p">,</span> <span class="n">server</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">xml_from_str</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+            <span class="n">keep_xml</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">animation</span><span class="o">=</span><span class="s">&#39;static&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The dir_name is the relative path of the directory where the item/player</span>
+<span class="sd">        is defined, the class search for an xml file of the same name as the</span>
+<span class="sd">        directory there.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">animations</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">xml_from_str</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">ElementTree</span><span class="o">.</span><span class="n">ElementTree</span><span class="p">()</span>
+            <span class="c"># FIXME this is DIRTY</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;/tmp/erf&#39;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">xml_from_str</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&#39;/tmp/erf&#39;</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                        <span class="n">CONFIG</span><span class="o">.</span><span class="n">system_path</span><span class="p">,</span>
+                        <span class="n">dir_name</span><span class="p">,</span>
+                        <span class="n">dir_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="o">+</span><span class="n">os</span><span class="o">.</span><span class="n">extsep</span><span class="o">+</span><span class="s">&#39;xml&#39;</span><span class="p">)</span>
+            <span class="c">#logging.debug(f)</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">ElementTree</span><span class="o">.</span><span class="n">ElementTree</span><span class="p">(</span> <span class="bp">None</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">keep_xml</span><span class="p">:</span>
+            <span class="c"># keep this to use it for editors</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">xml</span> <span class="o">=</span> <span class="n">a</span>
+
+        <span class="n">attribs</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">getroot</span><span class="p">()</span><span class="o">.</span><span class="n">attrib</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">dir_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">attribs</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="n">CONFIG</span><span class="o">.</span><span class="n">system_path</span><span class="p">,</span>
+                    <span class="n">dir_name</span><span class="p">,</span>
+                    <span class="n">attribs</span><span class="p">[</span><span class="s">&#39;image&#39;</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">attribs</span><span class="p">[</span><span class="s">&#39;weight&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s">&#39;armor&#39;</span> <span class="ow">in</span> <span class="n">attribs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">armor</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">attribs</span><span class="p">[</span><span class="s">&#39;armor&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">armor</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_events</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sounds</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vectors</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">hardshape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_hardshape</span><span class="p">(</span><span class="n">attribs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shield_center</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_shield_center</span><span class="p">(</span><span class="n">attribs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_movements</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">dir_name</span><span class="p">,</span> <span class="n">server</span><span class="p">)</span>
+
+        <span class="c"># FIXME: this is about the state of the player, should be in the entity</span>
+        <span class="c"># class</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_animation</span> <span class="o">=</span> <span class="n">animation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">animation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">animations</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_animation</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">animation_change</span> <span class="o">=</span> <span class="bp">True</span>
+
+<div class="viewcode-block" id="EntitySkin.load_hardshape"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity_skin.EntitySkin.load_hardshape">[docs]</a>    <span class="k">def</span> <span class="nf">load_hardshape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attribs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">attribs</span><span class="p">[</span><span class="s">&#39;hardshape&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="p">)])</span>
+</div>
+<div class="viewcode-block" id="EntitySkin.load_shield_center"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity_skin.EntitySkin.load_shield_center">[docs]</a>    <span class="k">def</span> <span class="nf">load_shield_center</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attribs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s">&#39;shield_center&#39;</span> <span class="ow">in</span> <span class="n">attribs</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">attribs</span><span class="p">[</span><span class="s">&#39;shield_center&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s">&#39;warning, entity &#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s">&#39; has no attribute shield_center&#39;</span><span class="o">+</span>
+                <span class="s">&#39;, guessing from hardshape&#39;</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">hardshape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="o">.</span><span class="mi">5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">hardshape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">hardshape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="o">.</span><span class="mi">5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">hardshape</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+</div>
+<div class="viewcode-block" id="EntitySkin.load_movements"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity_skin.EntitySkin.load_movements">[docs]</a>    <span class="k">def</span> <span class="nf">load_movements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">dir_name</span><span class="p">,</span> <span class="n">server</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">movement</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s">&#39;movement&#39;</span><span class="p">):</span>
+            <span class="n">frames</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">events</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">sounds</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">vectors</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">trails</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">movement</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s">&#39;vector&#39;</span><span class="p">):</span>
+                <span class="c">#logging.debug(&#39;vector found&#39;)</span>
+                <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">event</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s">&#39;vector&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">)]</span>
+                <span class="n">vectors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="p">(</span>
+                            <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span>
+                            <span class="nb">int</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s">&#39;time&#39;</span><span class="p">])))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">vectors</span><span class="p">[</span><span class="n">movement</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">vectors</span>
+
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">movement</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s">&#39;event&#39;</span><span class="p">):</span>
+                <span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="p">(</span>
+                            <span class="n">event</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s">&#39;action&#39;</span><span class="p">],</span>
+                            <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span>
+                                <span class="n">event</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s">&#39;period&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">)]))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">action_events</span><span class="p">[</span><span class="n">movement</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">events</span>
+
+            <span class="k">for</span> <span class="n">sound</span> <span class="ow">in</span> <span class="n">movement</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s">&#39;sound&#39;</span><span class="p">):</span>
+                <span class="n">sounds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                            <span class="n">CONFIG</span><span class="o">.</span><span class="n">system_path</span><span class="p">,</span>
+                            <span class="n">dir_name</span><span class="p">,</span>
+                            <span class="n">sound</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s">&#39;filename&#39;</span><span class="p">]))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">sounds</span><span class="p">[</span><span class="n">movement</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">sounds</span>
+
+            <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">movement</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s">&#39;frame&#39;</span><span class="p">):</span>
+                <span class="n">image</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                            <span class="n">CONFIG</span><span class="o">.</span><span class="n">system_path</span><span class="p">,</span>
+                            <span class="n">dir_name</span><span class="p">,</span>
+                            <span class="n">frame</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s">&#39;image&#39;</span><span class="p">])</span>
+
+                <span class="n">trails</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="s">&#39;trails&#39;</span> <span class="ow">in</span> <span class="n">frame</span><span class="o">.</span><span class="n">attrib</span> <span class="ow">and</span>
+                        <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                            <span class="n">CONFIG</span><span class="o">.</span><span class="n">system_path</span><span class="p">,</span>
+                            <span class="n">dir_name</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span>
+                            <span class="n">frame</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s">&#39;trails&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">)]</span> <span class="ow">or</span> <span class="bp">False</span><span class="p">)</span>
+
+                <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">Frame</span><span class="p">(</span>
+                            <span class="n">image</span><span class="p">,</span>
+                            <span class="n">frame</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s">&#39;time&#39;</span><span class="p">],</span>
+                            <span class="p">(</span><span class="s">&#39;hardshape&#39;</span> <span class="ow">in</span> <span class="n">frame</span><span class="o">.</span><span class="n">attrib</span>
+                             <span class="ow">and</span> <span class="n">frame</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s">&#39;hardshape&#39;</span><span class="p">]</span>
+                             <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">hardshape</span><span class="p">),</span>
+                            <span class="n">trails</span><span class="o">=</span><span class="n">trails</span><span class="p">))</span>
+
+                <span class="k">for</span> <span class="n">agressiv</span> <span class="ow">in</span> <span class="n">frame</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s">&#39;agressiv-point&#39;</span><span class="p">):</span>
+                    <span class="n">coords</span> <span class="o">=</span> <span class="n">agressiv</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s">&#39;coords&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
+                    <span class="n">vector</span> <span class="o">=</span> <span class="n">agressiv</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s">&#39;vector&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
+                    <span class="n">frames</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">add_agressiv_point</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">coords</span><span class="p">],</span>
+                                                <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">vector</span><span class="p">])</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">animations</span><span class="p">[</span><span class="n">movement</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">PreciseTimedAnimation</span><span class="p">(</span>
+                    <span class="n">frames</span><span class="p">,</span>
+                    <span class="n">movement</span><span class="o">.</span><span class="n">attrib</span><span class="p">,</span>
+                    <span class="n">server</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="EntitySkin.valid_animation"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity_skin.EntitySkin.valid_animation">[docs]</a>    <span class="k">def</span> <span class="nf">valid_animation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">anim_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; return true if the animation is in the character animations and is</span>
+<span class="sd">        &#39;static&#39; or not the current animation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span>
+                <span class="n">anim_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">animations</span>
+                <span class="ow">and</span> <span class="p">(</span>
+                    <span class="n">anim_name</span> <span class="o">==</span> <span class="s">&#39;static&#39;</span> <span class="ow">or</span>
+                    <span class="n">anim_name</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_animation</span><span class="p">))</span>
+
+    <span class="c">#FIXME: this should be in the entity class</span></div>
+<div class="viewcode-block" id="EntitySkin.change_animation"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity_skin.EntitySkin.change_animation">[docs]</a>    <span class="k">def</span> <span class="nf">change_animation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">anim_name</span><span class="p">,</span> <span class="n">game</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="nb">dict</span><span class="p">()):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Change animation of the entity skin, updating hardshape and agressiv</span>
+<span class="sd">        points. Add associated events to game.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">valid_animation</span><span class="p">(</span><span class="n">anim_name</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s">&#39;entity&#39;</span> <span class="ow">in</span> <span class="n">params</span> <span class="ow">and</span> <span class="n">params</span><span class="p">[</span><span class="s">&#39;entity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">upgraded</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">anim_name</span> <span class="o">+</span> <span class="s">&#39;_upgraded&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">animations</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">current_animation</span> <span class="o">=</span> <span class="n">anim_name</span> <span class="o">+</span> <span class="s">&#39;_upgraded&#39;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                            <span class="s">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                <span class="s">&#39;character has no upgraded version of &#39;</span><span class="p">,</span>
+                                <span class="n">anim_name</span><span class="p">,</span> <span class="s">&#39;falling back to normal version&#39;</span><span class="p">)))</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">current_animation</span> <span class="o">=</span> <span class="n">anim_name</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">current_animation</span> <span class="o">=</span> <span class="n">anim_name</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">animation_change</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="n">params</span><span class="p">[</span><span class="s">&#39;world&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">game</span>
+            <span class="n">params</span><span class="p">[</span><span class="s">&#39;gametime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">game</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">or</span> <span class="mi">0</span>
+            <span class="n">params</span><span class="p">[</span><span class="s">&#39;anim_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">anim_name</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_events</span><span class="p">(</span><span class="n">anim_name</span><span class="p">,</span> <span class="n">game</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+
+            <span class="c">#logging.debug(self.vectors[anim_name])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_vectors</span><span class="p">(</span><span class="n">anim_name</span><span class="p">,</span> <span class="n">game</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sounds</span><span class="p">[</span><span class="n">anim_name</span><span class="p">]</span> <span class="o">!=</span> <span class="p">[]:</span>
+                <span class="c"># XXX reactivate the try/except with the good exception when you</span>
+                <span class="c"># know it</span>
+                <span class="c">#try:</span>
+                <span class="n">loaders</span><span class="o">.</span><span class="n">track</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sounds</span><span class="p">[</span><span class="n">anim_name</span><span class="p">]))</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+                <span class="c">#except (Exception), e:</span>
+                    <span class="c">#logging.warning(e)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c">#logging.debug( &quot;entity_skin &quot;+self.name+&quot; has no &quot;+anim_name+&quot;\</span>
+<span class="c">#animation.&quot;)</span>
+            <span class="k">pass</span>
+</div>
+<div class="viewcode-block" id="EntitySkin.backup"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity_skin.EntitySkin.backup">[docs]</a>    <span class="k">def</span> <span class="nf">backup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; save current state of the entity skin</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_animation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">animation</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">playing</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">start_time</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="EntitySkin.restore"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity_skin.EntitySkin.restore">[docs]</a>    <span class="k">def</span> <span class="nf">restore</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backup</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; restore entity_skin from a backup state</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_animation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">animation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">playing</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">_start_time</span><span class="p">)</span> <span class="o">=</span> <span class="n">backup</span>
+</div>
+<div class="viewcode-block" id="EntitySkin.add_vectors"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity_skin.EntitySkin.add_vectors">[docs]</a>    <span class="k">def</span> <span class="nf">add_vectors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">anim_name</span><span class="p">,</span> <span class="n">game</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; add vectors of the animation to the game as events</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">vector</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectors</span><span class="p">[</span><span class="n">anim_name</span><span class="p">]:</span>
+            <span class="c">#logging.debug(&#39;vector added&#39;)</span>
+            <span class="n">params2</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="c"># because we want to change some of</span>
+                                    <span class="c"># them for this time.</span>
+            <span class="n">params2</span><span class="p">[</span><span class="s">&#39;vector&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">params2</span><span class="p">[</span><span class="s">&#39;anim_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">anim_name</span>
+            <span class="n">game</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">add_event</span><span class="p">(</span>
+                    <span class="s">&#39;VectorEvent&#39;</span><span class="p">,</span>
+                    <span class="n">period</span><span class="o">=</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">game</span><span class="o">.</span><span class="n">gametime</span><span class="o">+</span><span class="n">vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mf">1000.0</span><span class="p">),</span>
+                    <span class="n">params</span><span class="o">=</span><span class="n">params2</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="EntitySkin.add_events"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity_skin.EntitySkin.add_events">[docs]</a>    <span class="k">def</span> <span class="nf">add_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">anim_name</span><span class="p">,</span> <span class="n">game</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; add events of the animation to the game</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_events</span><span class="p">[</span><span class="n">anim_name</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">event</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">p1</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">p1</span> <span class="o">=</span> <span class="n">game</span><span class="o">.</span><span class="n">gametime</span><span class="o">+</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mf">1000.0</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">event</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">p2</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">p2</span> <span class="o">=</span> <span class="n">game</span><span class="o">.</span><span class="n">gametime</span><span class="o">+</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mf">1000.0</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">game</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">add_event</span><span class="p">(</span>
+                        <span class="n">event</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                        <span class="n">period</span><span class="o">=</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">),</span>
+                        <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+
+            <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">game</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+                <span class="k">raise</span>
+</div>
+<div class="viewcode-block" id="EntitySkin.update"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity_skin.EntitySkin.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">upgraded</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">server</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the skin&#39;s animation if necessary.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">animation_change</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">animation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">animations</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_animation</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">animation_change</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">playing</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="s">&#39;static&#39;</span> <span class="o">+</span> <span class="n">upgraded</span> <span class="o">*</span> <span class="s">&#39;_upgraded&#39;</span>
+            <span class="k">if</span> <span class="s">&#39;upgraded&#39;</span> <span class="ow">in</span> <span class="n">a</span> <span class="ow">and</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">animations</span><span class="p">:</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="s">&#39;static&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_animation</span> <span class="o">=</span> <span class="n">a</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">animation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">animations</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_animation</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">reverse</span><span class="p">,</span> <span class="n">server</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hardshape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">hardshape</span>
+</pre></div></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Ultimate Smash Friends 0.1.6 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Gabirel Pettier.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

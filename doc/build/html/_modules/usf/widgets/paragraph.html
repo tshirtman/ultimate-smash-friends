@@ -1,0 +1,305 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>usf.widgets.paragraph &mdash; Ultimate Smash Friends 0.1.6 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1.6',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Ultimate Smash Friends 0.1.6 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">Ultimate Smash Friends 0.1.6 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for usf.widgets.paragraph</h1><div class="highlight"><pre>
+<span class="c">################################################################################</span>
+<span class="c"># copyright 2010 Lucas Baudin &lt;xapantu@gmail.com&gt;                              #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># This file is part of Ultimate Smash Friends.                                 #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># Ultimate Smash Friends is free software: you can redistribute it and/or      #</span>
+<span class="c"># modify it under the terms of the GNU General Public License as published by  #</span>
+<span class="c"># the Free Software Foundation, either version 3 of the License, or (at your   #</span>
+<span class="c"># option) any later version.                                                   #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># Ultimate Smash Friends is distributed in the hope that it will be useful, but#</span>
+<span class="c"># WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or#</span>
+<span class="c"># FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for    #</span>
+<span class="c"># more details.                                                                #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># You should have received a copy of the GNU General Public License along with #</span>
+<span class="c"># Ultimate Smash Friends.  If not, see &lt;http://www.gnu.org/licenses/&gt;.         #</span>
+<span class="c">################################################################################</span>
+
+<span class="c">#standards imports</span>
+<span class="kn">import</span> <span class="nn">pygame</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span>
+
+<span class="c">#our modules</span>
+<span class="kn">from</span> <span class="nn">usf.widgets.widget</span> <span class="kn">import</span> <span class="n">Widget</span>
+
+<span class="kn">from</span> <span class="nn">usf.font</span> <span class="kn">import</span> <span class="n">fonts</span>
+<span class="kn">from</span> <span class="nn">usf.subpixel.subpixelsurface</span> <span class="kn">import</span> <span class="n">SubPixelSurface</span>
+<span class="kn">from</span> <span class="nn">usf</span> <span class="kn">import</span> <span class="n">loaders</span>
+<span class="kn">from</span> <span class="nn">usf</span> <span class="kn">import</span> <span class="n">CONFIG</span>
+
+
+<div class="viewcode-block" id="Paragraph"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.paragraph.Paragraph">[docs]</a><span class="k">class</span> <span class="nc">Paragraph</span><span class="p">(</span><span class="n">Widget</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A simple paragraph widget. It reads a text which is in the</span>
+<span class="sd">    data/text directory. It include a scroll bar but doesn&#39;t support</span>
+<span class="sd">    (yet) auto word wrap.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">animation_speed</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mf">30.0</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Paragraph</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">defil</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">slider_y</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hover</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auto_scroll</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="n">text</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">system_path</span><span class="p">,</span> <span class="n">path</span><span class="p">),</span> <span class="s">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        <span class="n">text_height</span> <span class="o">=</span> <span class="n">loaders</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">fonts</span><span class="p">[</span><span class="s">&#39;mono&#39;</span><span class="p">][</span><span class="s">&#39;normal&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span>
+
+        <span class="c">#the slider (at left)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width_slider</span> <span class="o">=</span> <span class="mi">34</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height_slider</span> <span class="o">=</span> <span class="mi">125</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pos_slider</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">/</span> <span class="mi">20</span> <span class="o">*</span> <span class="mi">19</span>
+
+        <span class="c">#the main surface</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="mi">500</span> <span class="c">#XXX hardcoded values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="mi">125</span> <span class="c">#XXX hardcoded values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">surface</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">Surface</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">))</span>
+
+        <span class="c">#create the surface whiwh will contain _all_ the text</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">width_slider</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="k">if</span> <span class="n">width</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">width</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">surface_text</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">Surface</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">*</span> <span class="n">text_height</span><span class="p">))</span>
+
+        <span class="c">#draw all the text into the surface</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">surface_text</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span>
+                    <span class="n">loaders</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+                        <span class="n">t</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">),</span>
+                        <span class="n">fonts</span><span class="p">[</span><span class="s">&#39;mono&#39;</span><span class="p">][</span><span class="s">&#39;normal&#39;</span><span class="p">]),</span>
+                    <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">text_height</span> <span class="o">*</span> <span class="n">i</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">slider</span> <span class="o">=</span> <span class="n">SubPixelSurface</span><span class="p">(</span><span class="n">loaders</span><span class="o">.</span><span class="n">image</span><span class="p">(</span>
+            <span class="n">join</span><span class="p">(</span>
+                <span class="n">CONFIG</span><span class="o">.</span><span class="n">system_path</span><span class="p">,</span>
+                <span class="s">&quot;gui&quot;</span><span class="p">,</span>
+                <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">THEME</span><span class="p">,</span>
+                <span class="s">&quot;sliderh_center.png&quot;</span><span class="p">),</span>
+            <span class="n">scale</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width_slider</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_slider</span><span class="p">))[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x_level</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Paragraph.update_defil"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.paragraph.Paragraph.update_defil">[docs]</a>    <span class="k">def</span> <span class="nf">update_defil</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the position of the scroll bar.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">slider_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">defil</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_slider</span><span class="p">)</span><span class="o">/</span><span class="mi">100</span>
+</div>
+<div class="viewcode-block" id="Paragraph.draw"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.paragraph.Paragraph.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c">#clear the surface</span>
+        <span class="c">#draw the text</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parentpos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parentpos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">Surface</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">))</span>
+        <span class="n">mask</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">surface_text</span><span class="p">,</span>
+                <span class="p">(</span><span class="mi">100</span><span class="p">,</span>
+                    <span class="o">-</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">defil</span> <span class="o">*</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">surface_text</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)</span><span class="o">/</span><span class="mi">100</span><span class="p">)))</span>
+
+        <span class="n">mask</span><span class="o">.</span><span class="n">set_colorkey</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="s">&quot;black&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+        <span class="k">del</span> <span class="n">mask</span>
+
+        <span class="c">#the slider background</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">loaders</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">system_path</span><span class="p">,</span>
+            <span class="s">&quot;gui&quot;</span><span class="p">,</span>
+            <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">THEME</span><span class="p">,</span>
+            <span class="s">&quot;sliderh_background.png&quot;</span><span class="p">),</span>
+            <span class="n">scale</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width_slider</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">))[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_slider</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+
+        <span class="c">#the slider center</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hover</span><span class="p">:</span>
+            <span class="n">slider_center</span> <span class="o">=</span> <span class="s">&quot;sliderh_center_hover.png&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">slider_center</span> <span class="o">=</span> <span class="s">&quot;sliderh_center.png&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">slider</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_slider</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">slider_y</span><span class="p">),</span>
+                          <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_slider</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">slider_y</span><span class="p">))</span>
+
+        <span class="c">#foreground</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">loaders</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">system_path</span><span class="p">,</span>
+            <span class="s">&quot;gui&quot;</span><span class="p">,</span>
+            <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">THEME</span><span class="p">,</span>
+            <span class="s">&quot;paragraph_foreground.png&quot;</span><span class="p">),</span>
+            <span class="n">scale</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">width_slider</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">))[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_anim</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="Paragraph.handle_mouse"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.paragraph.Paragraph.handle_mouse">[docs]</a>    <span class="k">def</span> <span class="nf">handle_mouse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&#39;pos&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&#39;pos&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c">#to disable auto scrolling</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">MOUSEMOTION</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">auto_scroll</span> <span class="o">=</span> <span class="bp">False</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span>
+            <span class="c">#relative position</span>
+            <span class="n">x</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parentpos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span>
+            <span class="n">y</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parentpos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
+
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">MOUSEBUTTONUP</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">False</span>
+
+        <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">MOUSEBUTTONDOWN</span><span class="p">:</span>
+            <span class="c">#scroll button (up)</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&#39;button&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">defil</span> <span class="o">-</span> <span class="mi">5</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">defil</span> <span class="o">-=</span> <span class="mi">5</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">defil</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="c">#scroll button (down)</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&#39;button&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+                <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">defil</span> <span class="o">+</span> <span class="mi">5</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">defil</span> <span class="o">+=</span> <span class="mi">5</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">defil</span> <span class="o">=</span> <span class="mi">100</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_defil</span><span class="p">()</span>
+
+        <span class="c">#left click or mouse hover</span>
+        <span class="k">if</span> <span class="p">(</span>
+                <span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">MOUSEBUTTONDOWN</span> <span class="ow">and</span>
+                    <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&#39;button&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span>
+                <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">MOUSEMOTION</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">pos_slider</span> <span class="o">&lt;</span> <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&#39;pos&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="ow">and</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">slider_y</span> <span class="o">&lt;</span> <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&#39;pos&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">slider_y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_slider</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">MOUSEBUTTONDOWN</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">diff_pointer_slider</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">slider_y</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">hover</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="c">#return False, self</span>
+            <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">MOUSEBUTTONDOWN</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="bp">False</span>
+                <span class="c">#self.update_defil()</span>
+                <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">False</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">hover</span> <span class="o">=</span> <span class="bp">False</span>
+
+        <span class="c">#if the mouse move the slider</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="ow">and</span> <span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">MOUSEMOTION</span> <span class="ow">or</span>
+                           <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">MOUSEBUTTONDOWN</span><span class="p">):</span>
+            <span class="n">y</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diff_pointer_slider</span>
+            <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_slider</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">defil</span> <span class="o">=</span> <span class="n">y</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">height_slider</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">defil</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">defil</span> <span class="o">=</span> <span class="mi">100</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_defil</span><span class="p">()</span>
+
+            <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">self</span>
+
+        <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">False</span>
+</div>
+<div class="viewcode-block" id="Paragraph.animation"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.paragraph.Paragraph.animation">[docs]</a>    <span class="k">def</span> <span class="nf">animation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function is used for auto scroll.</span>
+<span class="sd">        It is called by the start_anim method which is in the</span>
+<span class="sd">        Widget class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">defil</span> <span class="o">&lt;</span> <span class="mi">100</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">auto_scroll</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">defil</span> <span class="o">+=</span> <span class="mf">0.15</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_defil</span><span class="p">()</span>
+</pre></div></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">Ultimate Smash Friends 0.1.6 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Gabirel Pettier.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

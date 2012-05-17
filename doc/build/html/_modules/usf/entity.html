@@ -1,0 +1,1030 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>usf.entity &mdash; Ultimate Smash Friends 0.1.6 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.6',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Ultimate Smash Friends 0.1.6 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Ultimate Smash Friends 0.1.6 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for usf.entity</h1><div class="highlight"><pre>
+<span class="c">################################################################################</span>
+<span class="c"># copyright 2008-2011 Gabriel Pettier &lt;gabriel.pettier@gmail.com&gt;              #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># This file is part of UltimateSmashFriends                                    #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># UltimateSmashFriends is free software: you can redistribute it and/or modify #</span>
+<span class="c"># it under the terms of the GNU General Public License as published by         #</span>
+<span class="c"># the Free Software Foundation, either version 3 of the License, or            #</span>
+<span class="c"># (at your option) any later version.                                          #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># UltimateSmashFriends is distributed in the hope that it will be useful,      #</span>
+<span class="c"># but WITHOUT ANY WARRANTY; without even the implied warranty of               #</span>
+<span class="c"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                #</span>
+<span class="c"># GNU General Public License for more details.                                 #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># You should have received a copy of the GNU General Public License            #</span>
+<span class="c"># along with UltimateSmashFriends.  If not, see &lt;http://www.gnu.org/licenses/&gt;.#</span>
+<span class="c">################################################################################</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">This module provide the Entity classe, that represent any physical object in</span>
+<span class="sd">the game, character or item.</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="c"># python modules imports.</span>
+<span class="kn">import</span> <span class="nn">pygame</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="c"># my modules imports.</span>
+<span class="kn">from</span> <span class="nn">usf.entity_skin</span> <span class="kn">import</span> <span class="n">EntitySkin</span>
+<span class="kn">from</span> <span class="nn">usf</span> <span class="kn">import</span> <span class="n">loaders</span>
+<span class="kn">from</span> <span class="nn">usf.font</span> <span class="kn">import</span> <span class="n">fonts</span>
+<span class="kn">from</span> <span class="nn">usf</span> <span class="kn">import</span> <span class="n">CONFIG</span>
+<span class="kn">from</span> <span class="nn">usf.debug_utils</span> <span class="kn">import</span> <span class="n">draw_rect</span>
+
+<div class="viewcode-block" id="Actor"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Actor">[docs]</a><span class="k">class</span> <span class="nc">Actor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; An actor is the physical presence of something</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="p">(</span><span class="n">TOP_RIGHT</span><span class="p">,</span> <span class="n">UPPER_RIGHT</span><span class="p">,</span> <span class="n">LOWER_RIGHT</span><span class="p">,</span> <span class="n">BOTTOM_RIGHT</span><span class="p">,</span> <span class="n">BOTTOM_LEFT</span><span class="p">,</span> <span class="n">LOWER_LEFT</span><span class="p">,</span>
+     <span class="n">UPPER_LEFT</span><span class="p">,</span> <span class="n">TOP_LEFT</span><span class="p">)</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">game</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="c"># the &#39;center&#39; of the entity is at the bottom middle.</span>
+        <span class="c"># so this is the point that move the least beetwen two frames.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_game</span> <span class="o">=</span> <span class="n">game</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_gravity</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;gravity&#39;</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_on_ground</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_physic</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;physic&#39;</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_physics</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;physics&#39;</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_place</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;place&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">550</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_present</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;present&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reversed</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;reverse&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vector</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;vector&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_walking_vector</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">foot_rect</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_water</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">old_pos</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Actor.place"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Actor.place">[docs]</a>    <span class="k">def</span> <span class="nf">place</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        current position in level of the entity</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_place</span>
+</div>
+<div class="viewcode-block" id="Actor.set_place"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Actor.set_place">[docs]</a>    <span class="k">def</span> <span class="nf">set_place</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        move the entity to an arbitrary position</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_place</span> <span class="o">=</span> <span class="n">value</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Actor.present"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Actor.present">[docs]</a>    <span class="k">def</span> <span class="nf">present</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return True if the entity is currently in game</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_present</span>
+</div>
+<div class="viewcode-block" id="Actor.is_present"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Actor.is_present">[docs]</a>    <span class="k">def</span> <span class="nf">is_present</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        callable form of the property</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_present</span>
+</div>
+<div class="viewcode-block" id="Actor.set_present"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Actor.set_present">[docs]</a>    <span class="k">def</span> <span class="nf">set_present</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        set the entity presence in game</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_present</span> <span class="o">=</span> <span class="n">value</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Actor.vector"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Actor.vector">[docs]</a>    <span class="k">def</span> <span class="nf">vector</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        current dx/dt and dy/dt of the entity</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_vector</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Actor.set_vector"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Actor.set_vector">[docs]</a>    <span class="k">def</span> <span class="nf">set_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        set the (dx/dt, dy/dt) of the entity</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vector</span> <span class="o">=</span> <span class="n">value</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Actor.walking_vector"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Actor.walking_vector">[docs]</a>    <span class="k">def</span> <span class="nf">walking_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        current walking vector of the entity (this is different of the vector,</span>
+<span class="sd">        as it&#39;s defined only by the fact the player uses direction keys)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_walking_vector</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Actor.set_walking_vector"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Actor.set_walking_vector">[docs]</a>    <span class="k">def</span> <span class="nf">set_walking_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;</span>
+<span class="sd">        set entity walking vector</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_walking_vector</span> <span class="o">=</span> <span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_walking_vector</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_walking_vector</span> <span class="o">=</span> <span class="n">value</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Actor.gravity"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Actor.gravity">[docs]</a>    <span class="k">def</span> <span class="nf">gravity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        True if the entity should react to gravity</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gravity</span>
+</div>
+<div class="viewcode-block" id="Actor.set_gravity"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Actor.set_gravity">[docs]</a>    <span class="k">def</span> <span class="nf">set_gravity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set if the player is bound to obey gravity</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_gravity</span> <span class="o">=</span> <span class="n">value</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Actor.on_ground"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Actor.on_ground">[docs]</a>    <span class="k">def</span> <span class="nf">on_ground</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        True if the entity is currently in collision with the ground</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_ground</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Actor.physic"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Actor.physic">[docs]</a>    <span class="k">def</span> <span class="nf">physic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        True if the entity should have any physical reaction</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physic</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Actor.reversed"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Actor.reversed">[docs]</a>    <span class="k">def</span> <span class="nf">reversed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        is the entity looking left</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reversed</span>
+</div>
+<div class="viewcode-block" id="Actor.set_reversed"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Actor.set_reversed">[docs]</a>    <span class="k">def</span> <span class="nf">set_reversed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        set the direction of the entity</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reversed</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reversed</span> <span class="o">=</span> <span class="n">value</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Actor.physics"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Actor.physics">[docs]</a>    <span class="k">def</span> <span class="nf">physics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set if the player has to manage collisions properly, if not, it will be</span>
+<span class="sd">        destroyed when colliding anything</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_physics</span>
+</div>
+<div class="viewcode-block" id="Actor.dist"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Actor.dist">[docs]</a>    <span class="k">def</span> <span class="nf">dist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the distance to a Rect or to another entity.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">entity</span><span class="p">,</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">entity</span><span class="o">.</span><span class="n">centerx</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">entity</span><span class="o">.</span><span class="n">centery</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="o">.</span><span class="mi">5</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">entity</span><span class="p">,</span> <span class="n">Entity</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">entity</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">entity</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="o">.</span><span class="mi">5</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;param 1 is neither a Rect or an Entity&quot;</span><span class="p">)</span>
+</div>
+    <span class="k">def</span> <span class="nf">_get_block_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level_vector_blocs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        If the entity is in a block associated with a vector, return this</span>
+<span class="sd">        vector.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vector</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">level_vector_blocs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">foot_rect</span><span class="o">.</span><span class="n">collidelist</span><span class="p">(</span><span class="n">part</span><span class="o">.</span><span class="n">collide_rects</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">part</span><span class="o">.</span><span class="n">relative</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">reversed</span><span class="p">:</span>
+                    <span class="n">vector</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">part</span><span class="o">.</span><span class="n">vector</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="n">vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">part</span><span class="o">.</span><span class="n">vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">vector</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">part</span><span class="o">.</span><span class="n">vector</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="n">vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">part</span><span class="o">.</span><span class="n">vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="k">return</span> <span class="n">vector</span>
+
+    <span class="k">def</span> <span class="nf">_get_env_collision</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blocks</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        DEPRECATED? react to collision with some environments as water</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">foot_rect</span><span class="o">.</span><span class="n">colliderect</span><span class="p">(</span><span class="n">block</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_water</span><span class="p">:</span>
+                    <span class="n">loaders</span><span class="o">.</span><span class="n">track</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">system_path</span><span class="p">,</span>
+                        <span class="s">&quot;sounds&quot;</span><span class="p">,</span>
+                        <span class="s">&quot;splash1.wav&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">in_water</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="k">return</span> <span class="mi">5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_water</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">_update_floor_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level_moving_parts</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        When the entity is on one (or more) moving (horizontaly) floors, the</span>
+<span class="sd">        entity should move accordingly to the sum of this movements, This</span>
+<span class="sd">        method return the sum of the horizontal movement of these floors for</span>
+<span class="sd">        this frame, to add to the position of the character.  This is done by</span>
+<span class="sd">        testing collision of a small rect under the feet of the entity and each</span>
+<span class="sd">        of the moving parts of the level, passed in parameters, and asking the</span>
+<span class="sd">        ones that collides, their horizontal movement.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vector</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">level_moving_parts</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">foot_rect</span><span class="o">.</span><span class="n">collidelist</span><span class="p">(</span><span class="n">part</span><span class="o">.</span><span class="n">collide_rects</span><span class="p">)</span><span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">vector</span> <span class="o">=</span> <span class="p">[</span>
+                        <span class="n">vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">part</span><span class="o">.</span><span class="n">get_movement</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span>
+                        <span class="n">vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">part</span><span class="o">.</span><span class="n">get_movement</span><span class="p">()[</span><span class="mi">1</span><span class="p">]]</span>
+
+        <span class="k">return</span> <span class="n">vector</span>
+</div>
+<div class="viewcode-block" id="Entity"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity">[docs]</a><span class="k">class</span> <span class="nc">Entity</span><span class="p">(</span><span class="n">Actor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provide an entity object, which will take care of lifes, movements,</span>
+<span class="sd">    collisions of an Entity. Players and Items are Entities.</span>
+
+<span class="sd">    This is a big class, and it uses a few counter intuitive concepts, first,</span>
+<span class="sd">    its vectors are defined relatively, that mean moving &quot;forward/backward&quot;</span>
+<span class="sd">    instead of moving &quot;left/right&quot;, also the vector representing the walking</span>
+<span class="sd">    movement of the entity is seperated from the main vector.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c"># Precalculation of some sin-cos list to speed up collision detection.</span>
+    <span class="c"># number of points cannot be changed currently due to not adaptative</span>
+    <span class="c"># collision method.</span>
+    <span class="n">nb_points</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">ai</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">ai_</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">list_sin_cos</span> <span class="o">=</span> <span class="p">[[</span>
+                <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">i</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="p">(</span><span class="n">nb_points</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">nb_points</span><span class="p">),</span>
+                <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">i</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="p">(</span><span class="n">nb_points</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">nb_points</span><span class="p">)]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nb_points</span><span class="p">)]</span>
+
+    <span class="n">list_sin_cos_1</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span> <span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">list_sin_cos</span><span class="p">)</span>
+
+    <span class="c"># this counter will allow us to correctly update entities.</span>
+    <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Entity</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">number</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;num&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">number</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_num</span> <span class="o">=</span> <span class="n">number</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_num</span> <span class="o">=</span> <span class="n">Entity</span><span class="o">.</span><span class="n">counter</span>
+            <span class="n">Entity</span><span class="o">.</span><span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_game</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;game&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_upgraded</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;upgraded&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lighten</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_shield</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;on&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span> <span class="s">&#39;power&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s">&#39;date&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_carried_by</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;carried_by&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="c"># the entity is reversed when looking at left.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_percents</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lives</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;lives&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_invincible</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_visible</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;visible&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+
+        <span class="n">entity_skinname</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="s">&#39;entity_skinname&#39;</span><span class="p">,</span>
+                <span class="s">&#39;characters&#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s">&#39;stick&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">entity_skinname</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">animation</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;animation&#39;</span><span class="p">,</span> <span class="s">&#39;static&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">entity_skinname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">entity_skin</span> <span class="o">=</span> <span class="n">EntitySkin</span><span class="p">(</span>
+                    <span class="n">entity_skinname</span><span class="p">,</span>
+                    <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_game</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_game</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span>
+                    <span class="n">animation</span><span class="o">=</span><span class="n">animation</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_armor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity_skin</span><span class="o">.</span><span class="n">armor</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rect</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rect</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_place</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rect</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_place</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rect</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rect</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity_skin</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">rect</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">entity_skin</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span>
+                    <span class="n">server</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_game</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_game</span><span class="o">.</span><span class="n">screen</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_game</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">add_event</span><span class="p">(</span>
+                    <span class="s">&#39;ShieldUpdateEvent&#39;</span><span class="p">,</span>
+                    <span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+                    <span class="p">{</span><span class="s">&#39;world&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_game</span><span class="p">,</span> <span class="s">&#39;player&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">})</span>
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Entity.num"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.num">[docs]</a>    <span class="k">def</span> <span class="nf">num</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return entity number</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Entity.hardshape"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.hardshape">[docs]</a>    <span class="k">def</span> <span class="nf">hardshape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return current hardshape from entity_skin</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity_skin</span><span class="o">.</span><span class="n">hardshape</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Entity.name"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.name">[docs]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        name of the entity</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Entity.lives"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.lives">[docs]</a>    <span class="k">def</span> <span class="nf">lives</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return current number of lives of the entity</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lives</span>
+</div>
+<div class="viewcode-block" id="Entity.set_lives"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.set_lives">[docs]</a>    <span class="k">def</span> <span class="nf">set_lives</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        change current number of lives of the entity</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lives</span> <span class="o">=</span> <span class="n">value</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Entity.armor"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.armor">[docs]</a>    <span class="k">def</span> <span class="nf">armor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; return current armor state</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_armor</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Entity.percents"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.percents">[docs]</a>    <span class="k">def</span> <span class="nf">percents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return current percents</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_percents</span>
+</div>
+<div class="viewcode-block" id="Entity.set_percents"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.set_percents">[docs]</a>    <span class="k">def</span> <span class="nf">set_percents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        change percents value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_percents</span> <span class="o">=</span> <span class="n">value</span>
+</div>
+<div class="viewcode-block" id="Entity.add_percents"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.add_percents">[docs]</a>    <span class="k">def</span> <span class="nf">add_percents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        increment the current player percents</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_percents</span> <span class="o">+=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_percents</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">percents</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Entity.shield"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.shield">[docs]</a>    <span class="k">def</span> <span class="nf">shield</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return current state of the shield</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shield</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Entity.upgraded"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.upgraded">[docs]</a>    <span class="k">def</span> <span class="nf">upgraded</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return True if the player is currently upgraded</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_upgraded</span>
+</div>
+<div class="viewcode-block" id="Entity.set_upgraded"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.set_upgraded">[docs]</a>    <span class="k">def</span> <span class="nf">set_upgraded</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the upgraded state of the player, True or False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_upgraded</span> <span class="o">=</span> <span class="n">value</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Entity.visible"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.visible">[docs]</a>    <span class="k">def</span> <span class="nf">visible</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        set if the entity is currently visible on screen</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_visible</span>
+</div>
+<div class="viewcode-block" id="Entity.set_visible"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.set_visible">[docs]</a>    <span class="k">def</span> <span class="nf">set_visible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the visibility statue of the entity</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_visible</span> <span class="o">=</span> <span class="n">value</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Entity.invincible"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.invincible">[docs]</a>    <span class="k">def</span> <span class="nf">invincible</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        status of the entity vulnerability to hits</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_invincible</span>
+</div>
+<div class="viewcode-block" id="Entity.set_invincible"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.set_invincible">[docs]</a>    <span class="k">def</span> <span class="nf">set_invincible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        set the entity invulnerability status</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_invincible</span> <span class="o">=</span> <span class="n">value</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Entity.lighten"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.lighten">[docs]</a>    <span class="k">def</span> <span class="nf">lighten</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        True if the entity should be currently displayed lightened</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lighten</span>
+</div>
+<div class="viewcode-block" id="Entity.set_lighten"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.set_lighten">[docs]</a>    <span class="k">def</span> <span class="nf">set_lighten</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set lighten attribute of entity to value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lighten</span> <span class="o">=</span> <span class="n">value</span>
+</div>
+<div class="viewcode-block" id="Entity.backup"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.backup">[docs]</a>    <span class="k">def</span> <span class="nf">backup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        save important attributes of the state of the player, to a dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_vector</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&#39;_lives&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">lives</span><span class="p">,</span>
+            <span class="s">&#39;_place&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">place</span><span class="p">[:],</span>
+            <span class="s">&#39;_rect&#39;</span><span class="p">:</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="p">[:]),</span>
+            <span class="s">&#39;_vector&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vector</span><span class="p">[:],</span>
+            <span class="s">&#39;_walking_vector&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">walking_vector</span><span class="p">[:]}</span>
+
+        <span class="c"># would be easier with a dict comprehension, but not yet in 2.6</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;_reversed&#39;</span><span class="p">,</span> <span class="s">&#39;_percents&#39;</span><span class="p">,</span> <span class="s">&#39;_upgraded&#39;</span><span class="p">,</span> <span class="s">&#39;_present&#39;</span><span class="p">,</span>
+                <span class="s">&#39;_visible&#39;</span><span class="p">):</span>
+            <span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">d</span>
+</div>
+<div class="viewcode-block" id="Entity.restore"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.restore">[docs]</a>    <span class="k">def</span> <span class="nf">restore</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backup</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        restore the game to the state described in backup</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">backup</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_vector</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Entity.agressiv_points"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.agressiv_points">[docs]</a>    <span class="k">def</span> <span class="nf">agressiv_points</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return agressiv points of the current frame</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity_skin</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">agressivpoints</span>
+</div>
+<div class="viewcode-block" id="Entity.test_hit"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.test_hit">[docs]</a>    <span class="k">def</span> <span class="nf">test_hit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        test entity aggressive points collisions with other entity</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agressiv_points</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">entity</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">colliderect</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">3</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">3</span><span class="p">,</span>
+                    <span class="mi">6</span><span class="p">,</span>
+                    <span class="mi">6</span><span class="p">):</span>
+                <span class="n">entity</span><span class="o">.</span><span class="n">hit</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reversed</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Entity.hit"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.hit">[docs]</a>    <span class="k">def</span> <span class="nf">hit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">reverse</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        enforce the effect of a collision with an aggressive point, the</span>
+<span class="sd">        point is a list of x, y,dx, dy coords, and reverse is a flag indicating</span>
+<span class="sd">        if the attacking entity is reversed (to apply projection vectors)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shield</span><span class="p">[</span><span class="s">&#39;on&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shield</span><span class="p">[</span><span class="s">&#39;power&#39;</span><span class="p">]</span> <span class="o">-=</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+                <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+                <span class="o">/</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">SHIELD_SOLIDITY</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">shield</span><span class="p">[</span><span class="s">&#39;power&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shield</span><span class="p">[</span><span class="s">&#39;power&#39;</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_percents</span> <span class="o">+=</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+                    <span class="o">/</span> <span class="p">(</span><span class="mi">30</span> <span class="o">*</span> <span class="p">(</span><span class="mi">100</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">armor</span><span class="p">))</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">direction</span> <span class="o">=</span> <span class="n">reverse</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reversed</span> <span class="ow">and</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="mi">1</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_vector</span><span class="p">([</span><span class="n">direction</span> <span class="o">*</span> <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_percents</span><span class="p">),</span>
+                          <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_percents</span><span class="p">)])</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_percents</span> <span class="o">+=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span>
+                <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span><span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">30</span> <span class="o">*</span> <span class="p">(</span><span class="mi">100</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">armor</span><span class="p">)))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">entity_skin</span><span class="o">.</span><span class="n">change_animation</span><span class="p">(</span>
+                    <span class="s">&#39;take&#39;</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_game</span><span class="p">,</span>
+                    <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;entity&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">})</span>
+</div>
+<div class="viewcode-block" id="Entity.alive"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.alive">[docs]</a>    <span class="k">def</span> <span class="nf">alive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        True if the player still have lives left</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lives</span> <span class="o">&gt;</span> <span class="mi">0</span>
+</div>
+    <span class="k">def</span> <span class="nf">_draw_debug</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span> <span class="n">zoom</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">debug_params</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method just call all specific debug draw methods</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_draw_debug_levelmap</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="n">debug_params</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_draw_debug_hardshape</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">zoom</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">debug_params</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_draw_debug_footrect</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">zoom</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">debug_params</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_draw_debug_current_animation</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">debug_params</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_draw_debug_levelmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">debug_params</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        show the level map directly, usefull to debug</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">debug_params</span><span class="p">[</span><span class="s">&quot;levelmap&quot;</span><span class="p">]:</span>
+            <span class="n">draw_rect</span><span class="p">(</span>
+                    <span class="n">surface</span><span class="p">,</span>
+                    <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">8</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">8</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+                    <span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="s">&#39;red&#39;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_draw_debug_hardshape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span> <span class="n">zoom</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">debug_params</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        if hardshape debug is set, draw the hardshape of the player on the screen</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">visible</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">debug_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;hardshape&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
+                <span class="n">draw_rect</span><span class="p">(</span>
+                        <span class="n">surface</span><span class="p">,</span>
+                        <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span>
+                            <span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">hardshape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">zoom</span><span class="p">,</span>
+                            <span class="n">coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">hardshape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">zoom</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">hardshape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">zoom</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">hardshape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="n">zoom</span><span class="p">),</span>
+                        <span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">127</span><span class="p">))</span>
+
+                <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update_points</span><span class="p">()):</span>
+                    <span class="n">draw_rect</span><span class="p">(</span>
+                            <span class="n">surface</span><span class="p">,</span>
+                            <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">((</span>
+                                <span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span> <span class="n">zoom</span><span class="p">,</span>
+                                <span class="n">coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">*</span> <span class="n">zoom</span><span class="p">,</span>
+                                <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+                            <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="s">&#39;green&#39;</span><span class="p">)</span> <span class="ow">or</span>
+                            <span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="s">&#39;blue&#39;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_draw_debug_footrect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span> <span class="n">zoom</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">debug_params</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        if footrect debug is set, draw the footrect collision rect to the screen</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">visible</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">debug_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;footrect&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">foot_rect</span>
+                <span class="n">draw_rect</span><span class="p">(</span>
+                        <span class="n">surface</span><span class="p">,</span>
+                        <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span>
+                            <span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">zoom</span><span class="p">,</span>
+                            <span class="n">coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">zoom</span><span class="p">,</span>
+                            <span class="n">r</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">zoom</span><span class="p">,</span>
+                            <span class="n">r</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="n">zoom</span><span class="p">),</span>
+                        <span class="n">pygame</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">127</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_draw_debug_current_animation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">debug_params</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        if the current_animation debug is set, write the name of the current</span>
+<span class="sd">            animation near of the character</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">visible</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">debug_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;current_animation&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
+                <span class="n">surface</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span>
+                    <span class="n">loaders</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entity_skin</span><span class="o">.</span><span class="n">current_animation</span><span class="p">,</span>
+                    <span class="n">fonts</span><span class="p">[</span><span class="s">&#39;mono&#39;</span><span class="p">][</span><span class="s">&#39;25&#39;</span><span class="p">]),</span>
+                    <span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity_skin</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">rect</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+
+<div class="viewcode-block" id="Entity.draw"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span> <span class="n">zoom</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">debug_params</span><span class="o">=</span><span class="nb">dict</span><span class="p">()):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw the entity on the surface(i.e: the screen), applying coordinates</span>
+<span class="sd">        offsets and zoom scaling as necessary, implementation depends on the</span>
+<span class="sd">        definition of the global &quot;SIZE&quot;, as a 2 elements list of in integers,</span>
+<span class="sd">        containing respective height and width of the screen.</span>
+
+<span class="sd">        coords is a tuple containing the current position of the camera, zoom is</span>
+<span class="sd">        the current zoom of the camera.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># Draw a point on the map at the entity position.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">present</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">visible</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">reversed</span><span class="p">:</span>
+                <span class="n">place</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">hardshape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">hardshape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">place</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">hardshape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+            <span class="n">real_coords</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="nb">int</span><span class="p">(</span><span class="n">place</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">zoom</span><span class="p">)</span><span class="o">+</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="nb">int</span><span class="p">(</span><span class="n">place</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">zoom</span><span class="p">)</span><span class="o">+</span><span class="n">coords</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_draw_debug</span><span class="p">(</span><span class="n">real_coords</span><span class="p">,</span> <span class="n">zoom</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">debug_params</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity_skin</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">trails</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">old_pos</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">old_pos</span><span class="p">)):</span>
+                    <span class="n">img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity_skin</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">trails</span><span class="p">[</span>
+                            <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">old_pos</span><span class="p">)</span><span class="o">-</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+
+                    <span class="n">surface</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span>
+                          <span class="n">loaders</span><span class="o">.</span><span class="n">image</span><span class="p">(</span>
+                              <span class="n">img</span><span class="p">,</span>
+                              <span class="nb">reversed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">reversed</span><span class="p">,</span>
+                              <span class="n">zoom</span><span class="o">=</span><span class="n">zoom</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+                          <span class="p">(</span>
+                              <span class="nb">int</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">zoom</span><span class="p">)</span> <span class="o">+</span> <span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span>
+                                  <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">reversed</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">hardshape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">),</span>
+                              <span class="nb">int</span><span class="p">(</span><span class="n">y</span> <span class="o">*</span> <span class="n">zoom</span><span class="p">)</span> <span class="o">+</span> <span class="n">coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">hardshape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+            <span class="n">skin_image</span> <span class="o">=</span> <span class="n">loaders</span><span class="o">.</span><span class="n">image</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">entity_skin</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
+                    <span class="nb">reversed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">reversed</span><span class="p">,</span>
+                    <span class="n">lighten</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lighten</span><span class="p">,</span>
+                    <span class="n">zoom</span><span class="o">=</span><span class="n">zoom</span><span class="p">)</span>
+
+            <span class="n">surface</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span>
+                    <span class="n">skin_image</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="n">real_coords</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shield</span><span class="p">[</span><span class="s">&#39;on&#39;</span><span class="p">]:</span>
+                <span class="n">image</span> <span class="o">=</span> <span class="n">loaders</span><span class="o">.</span><span class="n">image</span><span class="p">(</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                            <span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">system_path</span><span class="p">,</span> <span class="s">&#39;misc&#39;</span><span class="p">,</span> <span class="s">&#39;shield.png&#39;</span><span class="p">)),</span>
+                        <span class="n">zoom</span><span class="o">=</span><span class="n">zoom</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">shield</span><span class="p">[</span><span class="s">&#39;power&#39;</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span><span class="p">)</span>
+
+                <span class="n">shield_coords</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity_skin</span><span class="o">.</span><span class="n">shield_center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="o">-</span> <span class="o">.</span><span class="mi">5</span> <span class="o">*</span> <span class="n">image</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="n">zoom</span><span class="p">,</span>
+                        <span class="n">coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity_skin</span><span class="o">.</span><span class="n">shield_center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                            <span class="o">-</span> <span class="o">.</span><span class="mi">5</span> <span class="o">*</span> <span class="n">image</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">3</span><span class="p">])</span> <span class="o">*</span> <span class="n">zoom</span><span class="p">)</span>
+                <span class="n">surface</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">image</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shield_coords</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Entity.update"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltatime</span><span class="p">,</span> <span class="n">gametime</span><span class="p">,</span> <span class="n">game</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Global function to update everything about entity, deltatime is the</span>
+<span class="sd">        time ellapsed since the precedent frame, gametime is the time since</span>
+<span class="sd">        beginning of the game</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">old_pos</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="p">[:</span><span class="mi">2</span><span class="p">],</span> <span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">old_pos</span>
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">entity_skin</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">trails</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">old_pos</span><span class="p">)</span> <span class="o">&gt;</span>
+                <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entity_skin</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">trails</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">old_pos</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">present</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">entity_skin</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">gametime</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reversed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">upgraded</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_physics</span><span class="p">(</span><span class="n">deltatime</span><span class="p">,</span> <span class="n">game</span><span class="p">)</span>
+</div>
+    <span class="k">def</span> <span class="nf">_update_rect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        update entity rect using position and harshape place/size, necessary</span>
+<span class="sd">        when entity moved or animation frame changed.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hardshape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rect</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_place</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">h</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_place</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">h</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                <span class="n">h</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                <span class="n">h</span><span class="p">[</span><span class="mi">3</span><span class="p">]]</span>
+
+    <span class="k">def</span> <span class="nf">_foot_collision_rect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return current foot collusion rect</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">hardshape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">hardshape</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">hardshape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                <span class="mi">15</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Entity.point"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.point">[docs]</a>    <span class="k">def</span> <span class="nf">point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a collision point of the entity</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hardshape</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rect</span>
+        <span class="c"># i think r[0] and r[1] should be used in this formules, but they break</span>
+        <span class="c"># it, so maybe i&#39;m wrong</span>
+        <span class="k">return</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">Entity</span><span class="o">.</span><span class="n">list_sin_cos_1</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">h</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                <span class="nb">int</span><span class="p">(</span><span class="n">Entity</span><span class="o">.</span><span class="n">list_sin_cos_1</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">h</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+</div>
+<div class="viewcode-block" id="Entity.update_points"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.update_points">[docs]</a>    <span class="k">def</span> <span class="nf">update_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Points are created as follows::</span>
+
+<span class="sd">                +-------------------+</span>
+<span class="sd">                |       7   0       |</span>
+<span class="sd">                |   6           1   |</span>
+<span class="sd">                |                   |</span>
+<span class="sd">                |   5           2   |</span>
+<span class="sd">                |       4   3       |</span>
+<span class="sd">                +-------------------+</span>
+
+<span class="sd">            As can be seen, they are oriented clock-wise, beginning in the</span>
+<span class="sd">            upper-right corner and ending in the upper-left.</span>
+<span class="sd">         &quot;&quot;&quot;</span>
+
+        <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hardshape</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rect</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">Entity</span><span class="o">.</span><span class="n">nb_points</span>
+
+        <span class="c"># reference version, non optimized and then should be easier to</span>
+        <span class="c"># understand</span>
+        <span class="c">#l = Entity.list_sin_cos</span>
+        <span class="c">#return [</span>
+        <span class="c">#        (</span>
+        <span class="c">#            int(l[i][0] * h[2] / 2 + h[2] / 2 + h[0] + r[0] + x),</span>
+        <span class="c">#            int(l[i][1] * h[3] / 2 + h[3] / 2 + h[1] + r[1] + y))</span>
+        <span class="c">#        for i in xrange(Entity.nb_points)]</span>
+
+        <span class="c"># optimised version</span>
+        <span class="n">h2_2</span> <span class="o">=</span> <span class="n">h</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">h3_2</span> <span class="o">=</span> <span class="n">h</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">hrx</span><span class="p">,</span> <span class="n">hry</span> <span class="o">=</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">,</span> <span class="n">h</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span>
+        <span class="n">l2</span> <span class="o">=</span> <span class="n">Entity</span><span class="o">.</span><span class="n">list_sin_cos_1</span>
+
+        <span class="k">return</span> <span class="p">[</span>
+                <span class="p">(</span>
+                    <span class="nb">int</span><span class="p">(</span><span class="n">l2</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">h2_2</span> <span class="o">+</span> <span class="n">hrx</span><span class="p">),</span>
+                    <span class="nb">int</span><span class="p">(</span><span class="n">l2</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">h3_2</span> <span class="o">+</span> <span class="n">hry</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
+</div>
+<div class="viewcode-block" id="Entity.collide_top"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.collide_top">[docs]</a>    <span class="k">def</span> <span class="nf">collide_top</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">game</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        if one of the two lowers points collide, the entity bounce up and it&#39;s</span>
+<span class="sd">        horizontal speed is lowered</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">collide_rect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TOP_LEFT</span><span class="p">))</span>
+                <span class="ow">or</span> <span class="n">game</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">collide_rect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TOP_RIGHT</span><span class="p">)))</span>
+</div>
+<div class="viewcode-block" id="Entity.collide_bottom"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.collide_bottom">[docs]</a>    <span class="k">def</span> <span class="nf">collide_bottom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">game</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        test of points and consequences on vectors if one of the two uppers</span>
+<span class="sd">        points collide, the entity bounce down.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">collide_rect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">BOTTOM_RIGHT</span><span class="p">))</span>
+                <span class="ow">or</span> <span class="n">game</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">collide_rect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">BOTTOM_LEFT</span><span class="p">)))</span>
+</div>
+<div class="viewcode-block" id="Entity.collide_front"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.collide_front">[docs]</a>    <span class="k">def</span> <span class="nf">collide_front</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">game</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        if one of the two left points collide and the entity is not</span>
+<span class="sd">        reversed or one of the two right points collide and the entity is</span>
+<span class="sd">        reversed and the player is pushed forward.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reversed</span> <span class="ow">and</span> <span class="p">(</span>
+            <span class="n">game</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">collide_rect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">UPPER_RIGHT</span><span class="p">))</span> <span class="ow">or</span>
+            <span class="n">game</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">collide_rect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">LOWER_RIGHT</span><span class="p">)))</span> <span class="ow">or</span>
+            <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">reversed</span> <span class="ow">and</span> <span class="p">(</span>
+                <span class="n">game</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">collide_rect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">LOWER_LEFT</span><span class="p">))</span>
+                <span class="ow">or</span> <span class="n">game</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">collide_rect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">UPPER_LEFT</span><span class="p">))))</span>
+</div>
+<div class="viewcode-block" id="Entity.collide_back"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.collide_back">[docs]</a>    <span class="k">def</span> <span class="nf">collide_back</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">game</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        if one of the two left points collide and the entity is reversed or one</span>
+<span class="sd">        of the two right points collide and the entity is not reversed and the</span>
+<span class="sd">        player bounce back.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">reversed</span> <span class="ow">and</span> <span class="p">(</span>
+            <span class="n">game</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">collide_rect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">UPPER_RIGHT</span><span class="p">))</span> <span class="ow">or</span>
+            <span class="n">game</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">collide_rect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">LOWER_RIGHT</span><span class="p">)))</span> <span class="ow">or</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reversed</span> <span class="ow">and</span> <span class="p">(</span>
+                <span class="n">game</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">collide_rect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">UPPER_LEFT</span><span class="p">))</span> <span class="ow">or</span>
+                <span class="n">game</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">collide_rect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">LOWER_LEFT</span><span class="p">))))</span>
+</div>
+    <span class="k">def</span> <span class="nf">_world_collide</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">game</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This test collision of the entity with the map (game.level.map).</span>
+
+<span class="sd">        Method:</span>
+<span class="sd">        Generation of a contact test &quot;circle&quot; (only 8 points actualy).</span>
+<span class="sd">        Then we test points of this circle and modify entity vector based on</span>
+<span class="sd">        points that gets collided, moving the entity in the right direction to</span>
+<span class="sd">        get out of each collision.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">physic</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">game</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">collide_rect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TOP_LEFT</span><span class="p">)):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set_lives</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c"># this test should optimise most situations.</span>
+        <span class="k">elif</span> <span class="n">game</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">collide_rect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="p">[:</span><span class="mi">2</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">collide_top</span><span class="p">(</span><span class="n">game</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">BOUNCE</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/=</span> <span class="mi">2</span>
+                <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">collide_top</span><span class="p">(</span><span class="n">game</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">move</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">collide_bottom</span><span class="p">(</span><span class="n">game</span><span class="p">):</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+                            <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">BOUNCE</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/=</span> <span class="mi">2</span>
+                <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">collide_bottom</span><span class="p">(</span><span class="n">game</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">move</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">collide_front</span><span class="p">(</span><span class="n">game</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vector</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="mi">2</span>
+                <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">collide_front</span><span class="p">(</span><span class="n">game</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">move</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">collide_back</span><span class="p">(</span><span class="n">game</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vector</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="mi">2</span>
+                <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">collide_back</span><span class="p">(</span><span class="n">game</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">move</span><span class="p">((</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_update_physics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltatime</span><span class="p">,</span> <span class="n">game</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function apply current movemements and various environemental</span>
+<span class="sd">        vectors to the entity, and calculate collisions.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># Move in walking direction.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">move</span><span class="p">((</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">walking_vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">deltatime</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">walking_vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">deltatime</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">foot_rect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_foot_collision_rect</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_on_ground</span> <span class="o">=</span> <span class="n">game</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">collide_rect</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">foot_rect</span><span class="p">[:</span><span class="mi">2</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">foot_rect</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
+
+        <span class="c"># follow the floor if it&#39;s moving</span>
+        <span class="n">floor_vector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_floor_vector</span><span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">moving_blocs</span><span class="p">)</span>
+
+        <span class="c"># get environemental vector if we collide some vector-block</span>
+        <span class="n">environnement_vector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_block_vector</span><span class="p">(</span>
+                <span class="n">game</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">vector_blocs</span><span class="p">)</span>
+
+        <span class="n">environnement_friction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_env_collision</span><span class="p">(</span>
+                <span class="n">game</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">water_blocs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vector</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">environnement_vector</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">environnement_vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_place</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">floor_vector</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">floor_vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+
+        <span class="c"># Gravity</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gravity</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">physic</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_ground</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="nb">float</span><span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">GRAVITY</span><span class="p">)</span> <span class="o">*</span> <span class="n">deltatime</span>
+
+        <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">physic</span><span class="p">:</span>
+            <span class="c">#FIXME : it is a bit hackish</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="o">-</span><span class="mf">0.00001</span>
+
+        <span class="c"># Application of air friction.</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">AIR_FRICTION</span> <span class="o">*</span> <span class="n">environnement_friction</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">physic</span><span class="p">:</span> <span class="c">#FIXME: and not a bullet</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-=</span> <span class="p">(</span><span class="n">f</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">deltatime</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-=</span> <span class="p">(</span><span class="n">f</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">deltatime</span><span class="p">)</span>
+
+        <span class="c"># apply the vector to entity.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">move</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">deltatime</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">deltatime</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">physics</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="c"># Avoid collisions with the map</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_world_collide</span><span class="p">(</span><span class="n">game</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Entity.rect"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.rect">[docs]</a>    <span class="k">def</span> <span class="nf">rect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return current player rect</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rect</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Entity.move"><a class="viewcode-back" href="../../api_reference/usf.html#usf.entity.Entity.move">[docs]</a>    <span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        move the entity relatively to his referencial (if he look left, moving</span>
+<span class="sd">        positively on x mean going left).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reversed</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="o">-</span><span class="n">x</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_place</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_place</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_place</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_rect</span><span class="p">()</span>
+</pre></div></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Ultimate Smash Friends 0.1.6 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Gabirel Pettier.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

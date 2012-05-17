@@ -1,0 +1,300 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>usf.widgets.checkbox_text &mdash; Ultimate Smash Friends 0.1.6 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1.6',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Ultimate Smash Friends 0.1.6 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">Ultimate Smash Friends 0.1.6 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for usf.widgets.checkbox_text</h1><div class="highlight"><pre>
+<span class="c">################################################################################</span>
+<span class="c"># copyright 2010 Lucas Baudin &lt;xapantu@gmail.com&gt;                              #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># This file is part of Ultimate Smash Friends.                                 #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># Ultimate Smash Friends is free software: you can redistribute it and/or      #</span>
+<span class="c"># modify it under the terms of the GNU General Public License as published by  #</span>
+<span class="c"># the Free Software Foundation, either version 3 of the License, or (at your   #</span>
+<span class="c"># option) any later version.                                                   #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># Ultimate Smash Friends is distributed in the hope that it will be useful, but#</span>
+<span class="c"># WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or#</span>
+<span class="c"># FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for    #</span>
+<span class="c"># more details.                                                                #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># You should have received a copy of the GNU General Public License along with #</span>
+<span class="c"># Ultimate Smash Friends.  If not, see &lt;http://www.gnu.org/licenses/&gt;.         #</span>
+<span class="c">################################################################################</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">This module provide a checkbox with a label beside it.</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="c">#standards imports</span>
+<span class="kn">import</span> <span class="nn">pygame</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span>
+
+<span class="c">#our modules</span>
+
+<span class="kn">from</span> <span class="nn">usf.widgets.box</span> <span class="kn">import</span> <span class="n">HBox</span>
+<span class="kn">from</span> <span class="nn">usf.widgets.image</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">usf.widgets.label</span> <span class="kn">import</span> <span class="n">Label</span>
+
+<span class="kn">from</span> <span class="nn">usf</span> <span class="kn">import</span> <span class="n">CONFIG</span>
+
+
+<div class="viewcode-block" id="TextCheckBox"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.checkbox_text.TextCheckBox">[docs]</a><span class="k">class</span> <span class="nc">TextCheckBox</span><span class="p">(</span><span class="n">HBox</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A checkbox widget.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TextCheckBox</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="mi">40</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">text</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">widgets</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">widgets</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">checked</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">focusable</span> <span class="o">=</span> <span class="bp">False</span>
+
+        <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">surface</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Surface</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">widgets</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c">#left radius</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">left_border</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">join</span><span class="p">(</span>
+            <span class="s">&quot;gui&quot;</span><span class="p">,</span>
+            <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">THEME</span><span class="p">,</span>
+            <span class="s">&quot;checkbox_left.png&quot;</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">left_border</span><span class="o">.</span><span class="n">set_size</span><span class="p">((</span><span class="mi">12</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left_border</span><span class="p">,</span> <span class="n">margin</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="n">Label</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">+</span> <span class="s">&quot; &quot;</span><span class="p">,</span>
+                <span class="n">background</span><span class="o">=</span><span class="n">join</span><span class="p">(</span><span class="s">&quot;gui&quot;</span><span class="p">,</span>
+                    <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">THEME</span><span class="p">,</span>
+                    <span class="s">&quot;checkbox_center.png&quot;</span><span class="p">),</span>
+                <span class="n">align</span><span class="o">=</span><span class="s">&quot;center&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="n">w</span> <span class="o">&lt;</span> <span class="mi">12</span><span class="o">+</span><span class="mi">37</span><span class="p">):</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="mi">12</span><span class="o">+</span><span class="mi">37</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="o">.</span><span class="n">width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">,</span> <span class="n">margin</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">w</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">37</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">))</span>
+        <span class="c">#print self.center.get_text()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">check</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span><span class="n">join</span><span class="p">(</span>
+            <span class="s">&quot;gui&quot;</span><span class="p">,</span>
+            <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">THEME</span><span class="p">,</span>
+            <span class="s">&quot;checkbox_empty_right.png&quot;</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">check</span><span class="p">,</span> <span class="n">margin</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">37</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_pos</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_size</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_image</span><span class="p">()</span>
+
+<div class="viewcode-block" id="TextCheckBox.set_size"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.checkbox_text.TextCheckBox.set_size">[docs]</a>    <span class="k">def</span> <span class="nf">set_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">)):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the size of the widget.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">h</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">w</span>
+</div>
+<div class="viewcode-block" id="TextCheckBox.handle_mouse"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.checkbox_text.TextCheckBox.handle_mouse">[docs]</a>    <span class="k">def</span> <span class="nf">handle_mouse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">MOUSEBUTTONUP</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checked</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">checked</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">checked</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_image</span><span class="p">()</span>
+
+            <span class="k">return</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">False</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&#39;pos&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&#39;pos&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parentpos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span>
+                <span class="n">y</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parentpos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
+
+            <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">update_image</span><span class="p">()</span>
+
+                <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">self</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_image</span><span class="p">()</span>
+
+            <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">False</span>
+</div>
+<div class="viewcode-block" id="TextCheckBox.get_value"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.checkbox_text.TextCheckBox.get_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the value of the checkbox, it returns a boolean.</span>
+<span class="sd">        (true of checked and false if unchecked)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">checked</span>
+</div>
+<div class="viewcode-block" id="TextCheckBox.set_value"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.checkbox_text.TextCheckBox.set_value">[docs]</a>    <span class="k">def</span> <span class="nf">set_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the value of the checkbox, it must be a boolean.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">checked</span> <span class="o">=</span> <span class="n">value</span>
+</div>
+<div class="viewcode-block" id="TextCheckBox.update_image"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.checkbox_text.TextCheckBox.update_image">[docs]</a>    <span class="k">def</span> <span class="nf">update_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">left_border</span><span class="o">.</span><span class="n">setImage</span><span class="p">(</span><span class="n">join</span><span class="p">(</span>
+                <span class="s">&quot;gui&quot;</span><span class="p">,</span>
+                <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">THEME</span><span class="p">,</span>
+                <span class="s">&quot;checkbox_left_hover.png&quot;</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="o">.</span><span class="n">background_path</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span>
+                    <span class="s">&quot;gui&quot;</span><span class="p">,</span>
+                    <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">THEME</span><span class="p">,</span>
+                    <span class="s">&quot;checkbox_center_hover.png&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checked</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">check</span><span class="o">.</span><span class="n">setImage</span><span class="p">(</span><span class="n">join</span><span class="p">(</span>
+                    <span class="s">&quot;gui&quot;</span><span class="p">,</span>
+                    <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">THEME</span><span class="p">,</span>
+                    <span class="s">&quot;checkbox_full_right_hover.png&quot;</span><span class="p">))</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">check</span><span class="o">.</span><span class="n">setImage</span><span class="p">(</span><span class="n">join</span><span class="p">(</span>
+                    <span class="s">&quot;gui&quot;</span><span class="p">,</span>
+                    <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">THEME</span><span class="p">,</span>
+                    <span class="s">&quot;checkbox_empty_right_hover.png&quot;</span><span class="p">))</span>
+
+            <span class="c">#self.center.init()</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">left_border</span><span class="o">.</span><span class="n">setImage</span><span class="p">(</span><span class="n">join</span><span class="p">(</span>
+                <span class="s">&quot;gui&quot;</span><span class="p">,</span>
+                <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">THEME</span><span class="p">,</span>
+                <span class="s">&quot;checkbox_left.png&quot;</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="o">.</span><span class="n">background_path</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span>
+                    <span class="s">&quot;gui&quot;</span><span class="p">,</span>
+                    <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">THEME</span><span class="p">,</span>
+                    <span class="s">&quot;checkbox_center.png&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checked</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">check</span><span class="o">.</span><span class="n">setImage</span><span class="p">(</span><span class="n">join</span><span class="p">(</span>
+                    <span class="s">&quot;gui&quot;</span><span class="p">,</span>
+                    <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">THEME</span><span class="p">,</span>
+                    <span class="s">&quot;checkbox_full_right.png&quot;</span><span class="p">))</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">check</span><span class="o">.</span><span class="n">setImage</span><span class="p">(</span><span class="n">join</span><span class="p">(</span>
+                    <span class="s">&quot;gui&quot;</span><span class="p">,</span>
+                    <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">THEME</span><span class="p">,</span>
+                    <span class="s">&quot;checkbox_empty_right.png&quot;</span><span class="p">))</span>
+
+            <span class="c">#self.center.init()</span>
+</div>
+<div class="viewcode-block" id="TextCheckBox.handle_keys"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.checkbox_text.TextCheckBox.handle_keys">[docs]</a>    <span class="k">def</span> <span class="nf">handle_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&quot;key&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_DOWN</span>
+                <span class="ow">or</span> <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&quot;key&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_UP</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_image</span><span class="p">()</span>
+            <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">self</span>
+
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&quot;key&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_RETURN</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checked</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">checked</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">checked</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_image</span><span class="p">()</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_image</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">False</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">Ultimate Smash Friends 0.1.6 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Gabirel Pettier.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

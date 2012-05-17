@@ -1,0 +1,751 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>usf.game &mdash; Ultimate Smash Friends 0.1.6 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.6',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Ultimate Smash Friends 0.1.6 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Ultimate Smash Friends 0.1.6 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for usf.game</h1><div class="highlight"><pre>
+<span class="c"># set encoding: utf-8</span>
+<span class="c">################################################################################</span>
+<span class="c"># copyright 2008-2011 Gabriel Pettier &lt;gabriel.pettier@gmail.com&gt;              #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># This file is part of UltimateSmashFriends                                    #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># UltimateSmashFriends is free software: you can redistribute it and/or modify #</span>
+<span class="c"># it under the terms of the GNU General Public License as published by         #</span>
+<span class="c"># the Free Software Foundation, either version 3 of the License, or            #</span>
+<span class="c"># (at your option) any later version.                                          #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># UltimateSmashFriends is distributed in the hope that it will be useful,      #</span>
+<span class="c"># but WITHOUT ANY WARRANTY; without even the implied warranty of               #</span>
+<span class="c"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                #</span>
+<span class="c"># GNU General Public License for more details.                                 #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># You should have received a copy of the GNU General Public License            #</span>
+<span class="c"># along with UltimateSmashFriends.  If not, see &lt;http://www.gnu.org/licenses/&gt;.#</span>
+<span class="c">################################################################################</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">The game module is centered about the core of the game, the Game class initiate</span>
+<span class="sd">and update all elements of the game, namely level, entities and events.</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="c"># standards import</span>
+<span class="kn">import</span> <span class="nn">pygame</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="c"># my modules import</span>
+<span class="kn">from</span> <span class="nn">usf.event_manager</span> <span class="kn">import</span> <span class="n">EventManager</span>
+<span class="kn">from</span> <span class="nn">usf.font</span> <span class="kn">import</span> <span class="n">fonts</span>
+<span class="kn">from</span> <span class="nn">usf.level</span> <span class="kn">import</span> <span class="n">Level</span>
+<span class="kn">from</span> <span class="nn">usf.entity</span> <span class="kn">import</span> <span class="n">Entity</span>
+<span class="kn">from</span> <span class="nn">usf.translation</span> <span class="kn">import</span> <span class="n">_</span>
+<span class="kn">from</span> <span class="nn">usf</span> <span class="kn">import</span> <span class="n">loaders</span>
+<span class="kn">from</span> <span class="nn">usf</span> <span class="kn">import</span> <span class="n">CONFIG</span> 
+<span class="n">GAME_FONT</span> <span class="o">=</span> <span class="n">fonts</span><span class="p">[</span><span class="s">&#39;sans&#39;</span><span class="p">][</span><span class="s">&#39;normal&#39;</span><span class="p">]</span>
+
+
+
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">pygame</span><span class="o">.</span><span class="n">font</span><span class="p">:</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;Warning, fonts disabled&#39;</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="p">:</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;Warning, sound disabled&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="BadPlayersNetworkParamError"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.BadPlayersNetworkParamError">[docs]</a><span class="k">class</span> <span class="nc">BadPlayersNetworkParamError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Raised when the player params of a network server game is not correct.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+
+</div>
+<div class="viewcode-block" id="Game"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game">[docs]</a><span class="k">class</span> <span class="nc">Game</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The game base object, initiate and update everything when in game (not in</span>
+<span class="sd">    menu).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">screen</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s">&quot;biglevel&quot;</span><span class="p">,</span> <span class="n">players_</span><span class="o">=</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+        <span class="bp">None</span><span class="p">)):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a game with a list of player and a level,</span>
+<span class="sd">        level is the basename of the level in levels/</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">WIDTH</span><span class="p">,</span>
+            <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">HEIGHT</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">first_frame</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notif</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s">&#39;local&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span> <span class="o">=</span> <span class="n">screen</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="n">EventManager</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gametime</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c">#we load the bool for smooth scrolling here, for a better performance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">smooth_scrolling</span> <span class="o">=</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">SMOOTH_SCROLLING</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">Level</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">screen</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="c"># loading level</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">level_place</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">icon_space</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">players_</span><span class="p">)</span>
+
+            <span class="c"># loading players</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_players</span><span class="p">(</span><span class="n">players_</span><span class="p">)</span>
+
+        <span class="c">#the optional progress bar for the players lives</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">progress_bar_size</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="mf">82.5</span><span class="o">*</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">WIDTH</span><span class="o">/</span><span class="mi">800</span><span class="p">,</span>
+                <span class="mf">12.5</span><span class="o">*</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">WIDTH</span><span class="o">/</span><span class="mi">800</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">progress_bar_x</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">HEIGHT</span> <span class="o">-</span> <span class="mi">25</span> <span class="o">*</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">WIDTH</span> <span class="o">/</span> <span class="mi">800</span><span class="p">)</span>
+
+        <span class="c"># a countdown to the game end</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ending</span> <span class="o">=</span> <span class="mf">5.0</span>
+
+<div class="viewcode-block" id="Game.add_world_event"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game.add_world_event">[docs]</a>    <span class="k">def</span> <span class="nf">add_world_event</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Insert level events into the game, those are configured in level.xml of</span>
+<span class="sd">        each levels, level-specific events can be defined in level_events.py in</span>
+<span class="sd">        the level directory.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">get_events</span><span class="p">():</span>
+            <span class="n">e</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s">&#39;world&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">})</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">add_event</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+</div>
+<div class="viewcode-block" id="Game.load_player"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game.load_player">[docs]</a>    <span class="k">def</span> <span class="nf">load_player</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">player</span><span class="p">):</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;player &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="s">&#39; loaded&#39;</span><span class="p">)</span>
+            <span class="c">#logging.debug(player)</span>
+        <span class="k">if</span> <span class="n">player</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">)[</span><span class="mi">1</span><span class="p">][:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;AI&#39;</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">ai</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">player</span><span class="p">[</span><span class="n">player</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">&#39;AI&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="p">])</span>
+                <span class="n">player</span> <span class="o">=</span> <span class="n">player</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;AI&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">ai</span><span class="p">),</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="c"># support old syntax with no number</span>
+                <span class="n">ai</span> <span class="o">=</span> <span class="mi">5</span>
+                <span class="n">player</span> <span class="o">=</span> <span class="n">player</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;AI&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ai</span> <span class="o">=</span> <span class="bp">False</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">Entity</span><span class="p">(</span>
+                    <span class="n">num</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span>
+                    <span class="n">game</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                    <span class="n">entity_skinname</span><span class="o">=</span><span class="n">player</span><span class="p">,</span>
+                    <span class="n">place</span><span class="o">=</span><span class="p">((</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">)))</span>
+
+        <span class="k">if</span> <span class="n">ai</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">ai</span> <span class="o">=</span> <span class="n">ai</span>
+</div>
+<div class="viewcode-block" id="Game.load_players"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game.load_players">[docs]</a>    <span class="k">def</span> <span class="nf">load_players</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">players_</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        this function is responsible of adding the requested players to the</span>
+<span class="sd">        game.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&#39;loading players&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">player</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">players_</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_player</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">player</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Game.add_item"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game.add_item">[docs]</a>    <span class="k">def</span> <span class="nf">add_item</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">item</span><span class="o">=</span><span class="s">&#39;heal&#39;</span><span class="p">,</span>
+        <span class="n">place</span><span class="o">=</span><span class="p">(</span><span class="mi">550</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
+        <span class="n">reverse</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+        <span class="n">upgraded</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+        <span class="n">vector</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">bullet</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+        <span class="n">physics</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">animation</span><span class="o">=</span><span class="s">&#39;static&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Insert an item into game.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">system_path</span><span class="p">,</span> <span class="s">&#39;items&#39;</span><span class="p">,</span> <span class="n">item</span><span class="p">))</span>
+            <span class="n">e</span> <span class="o">=</span> <span class="n">Entity</span><span class="p">(</span>
+                        <span class="n">num</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                        <span class="n">game</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                        <span class="n">entity_skinname</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">&#39;items&#39;</span><span class="p">,</span> <span class="n">item</span><span class="p">),</span>
+                        <span class="n">place</span><span class="o">=</span><span class="n">place</span><span class="p">,</span>
+                        <span class="n">vector</span><span class="o">=</span><span class="n">vector</span><span class="p">,</span>
+                        <span class="n">reverse</span><span class="o">=</span><span class="n">reverse</span><span class="p">,</span>
+                        <span class="n">visible</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                        <span class="n">present</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                        <span class="n">upgraded</span><span class="o">=</span><span class="n">upgraded</span><span class="p">,</span>
+                        <span class="n">gravity</span><span class="o">=</span><span class="ow">not</span> <span class="n">bullet</span><span class="p">,</span>
+                        <span class="n">physic</span><span class="o">=</span><span class="ow">not</span> <span class="n">bullet</span><span class="p">,</span>
+                        <span class="n">animation</span><span class="o">=</span><span class="n">animation</span><span class="p">,</span>
+                        <span class="n">physics</span><span class="o">=</span><span class="n">physics</span><span class="p">)</span>
+
+            <span class="n">e</span><span class="o">.</span><span class="n">entity_skin</span><span class="o">.</span><span class="n">change_animation</span><span class="p">(</span><span class="n">animation</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;entity&#39;</span><span class="p">:</span> <span class="n">e</span><span class="p">})</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">OSError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">errno</span> <span class="ow">is</span> <span class="mi">22</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">item</span><span class="o">+</span><span class="s">&#39; is not a valid item.&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span>
+        <span class="k">except</span> <span class="ne">IOError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">errno</span> <span class="ow">is</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">item</span><span class="o">+</span><span class="s">&#39; is not a valid item directory.&#39;</span><span class="p">)</span>
+                <span class="k">raise</span>
+
+        <span class="k">return</span> <span class="n">e</span>
+</div>
+<div class="viewcode-block" id="Game.draw_progress_bar_for_lives"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game.draw_progress_bar_for_lives">[docs]</a>    <span class="k">def</span> <span class="nf">draw_progress_bar_for_lives</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">player</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; heh, draw progree bar for lives of the player</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span>
+                <span class="n">loaders</span><span class="o">.</span><span class="n">image</span><span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                        <span class="n">CONFIG</span><span class="o">.</span><span class="n">system_path</span><span class="p">,</span>
+                        <span class="s">&#39;misc&#39;</span><span class="p">,</span>
+                        <span class="s">&#39;progress_bar_bg.png&#39;</span><span class="p">),</span>
+                    <span class="n">scale</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">progress_bar_size</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="p">(</span>
+                <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">icon_space</span><span class="o">+</span><span class="n">player</span><span class="o">.</span><span class="n">num</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">icon_space</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">progress_bar_x</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">progress_bar_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">progress_bar_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">player</span><span class="o">.</span><span class="n">percents</span> <span class="o">*</span> <span class="mf">0.1</span> <span class="o">+</span> <span class="mf">0.01</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span>
+                    <span class="n">loaders</span><span class="o">.</span><span class="n">image</span><span class="p">(</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                            <span class="n">CONFIG</span><span class="o">.</span><span class="n">system_path</span><span class="p">,</span>
+                            <span class="s">&#39;misc&#39;</span><span class="p">,</span>
+                            <span class="s">&#39;progress_bar.png&#39;</span><span class="p">),</span>
+                        <span class="n">scale</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">progress_bar_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">progress_bar_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span>
+                                <span class="n">player</span><span class="o">.</span><span class="n">percents</span> <span class="o">*</span> <span class="mf">0.1</span> <span class="o">+</span> <span class="mf">0.01</span><span class="p">),</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">progress_bar_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]))[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="p">(</span>
+                    <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">icon_space</span><span class="o">+</span><span class="n">player</span><span class="o">.</span><span class="n">num</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">icon_space</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">progress_bar_x</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="Game.draw_player_portrait"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game.draw_player_portrait">[docs]</a>    <span class="k">def</span> <span class="nf">draw_player_portrait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">player</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; draw, like... the player portrait? :D</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span>
+                 <span class="n">loaders</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="n">player</span><span class="o">.</span><span class="n">entity_skin</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">))[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="p">(</span>
+                    <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">icon_space</span><span class="o">+</span><span class="n">player</span><span class="o">.</span><span class="n">num</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">icon_space</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*.</span><span class="mi">9</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">loaders</span><span class="o">.</span><span class="n">get_gconfig</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;game&quot;</span><span class="p">,</span> <span class="s">&quot;displaylives&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;y&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span>
+                     <span class="n">GAME_FONT</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">player</span><span class="o">.</span><span class="n">percents</span><span class="o">*</span><span class="mi">10</span><span class="p">)[:</span><span class="mi">3</span><span class="p">]</span><span class="o">+</span><span class="s">&quot;%&quot;</span><span class="p">,</span>
+                     <span class="bp">True</span><span class="p">,</span>
+                     <span class="n">pygame</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="s">&quot;red&quot;</span><span class="p">)),</span>
+                        <span class="p">(</span>
+                        <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">icon_space</span><span class="o">+</span><span class="n">player</span><span class="o">.</span><span class="n">num</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">icon_space</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*.</span><span class="mi">9</span><span class="p">))</span>
+
+        <span class="k">elif</span> <span class="n">loaders</span><span class="o">.</span><span class="n">get_gconfig</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;game&quot;</span><span class="p">,</span>
+                <span class="s">&quot;display_progress_bar_for_lives&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;y&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_progress_bar_for_lives</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_player_lives</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Game.draw_player_lives"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game.draw_player_lives">[docs]</a>    <span class="k">def</span> <span class="nf">draw_player_lives</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">player</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; draw as much hearth as the player has lives on it&#39;s portrait</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">player</span><span class="o">.</span><span class="n">lives</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span>
+                    <span class="n">loaders</span><span class="o">.</span><span class="n">image</span><span class="p">(</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                            <span class="n">CONFIG</span><span class="o">.</span><span class="n">system_path</span><span class="p">,</span>
+                            <span class="s">&#39;misc&#39;</span><span class="p">,</span>
+                            <span class="s">&#39;heart.png&#39;</span><span class="p">))[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="p">(</span>
+                        <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">icon_space</span> <span class="o">+</span>
+                            <span class="n">player</span><span class="o">.</span><span class="n">num</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">icon_space</span> <span class="o">+</span>
+                            <span class="mi">32</span> <span class="o">+</span>
+                            <span class="n">i</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">icon_space</span> <span class="o">/</span> <span class="mi">40</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*.</span><span class="mi">9</span><span class="o">+</span><span class="mi">10</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="Game.draw_debug_player_coords"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game.draw_debug_player_coords">[docs]</a>    <span class="k">def</span> <span class="nf">draw_debug_player_coords</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">player</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; draw player coords, useful for debugging.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span>
+                <span class="n">GAME_FONT</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
+                    <span class="nb">str</span><span class="p">(</span><span class="n">player</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">+</span>
+                    <span class="s">&#39;:&#39;</span><span class="o">+</span>
+                    <span class="nb">str</span><span class="p">(</span><span class="n">player</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                    <span class="bp">True</span><span class="p">,</span>
+                    <span class="n">pygame</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="s">&#39;red&#39;</span><span class="p">)),</span>
+                <span class="p">(</span>
+                 <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span>
+                 <span class="n">num</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">4</span><span class="p">))</span>
+
+</div>
+<div class="viewcode-block" id="Game.draw_debug_player_controls"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game.draw_debug_player_controls">[docs]</a>    <span class="k">def</span> <span class="nf">draw_debug_player_controls</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">controls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; displays current key sequence of player, useful for debuging</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">controls</span><span class="o">.</span><span class="n">player_sequences</span><span class="p">[</span><span class="n">num</span><span class="p">]):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span>
+                    <span class="n">loaders</span><span class="o">.</span><span class="n">image</span><span class="p">(</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                            <span class="n">CONFIG</span><span class="o">.</span><span class="n">system_path</span><span class="p">,</span>
+                            <span class="s">&#39;misc&#39;</span><span class="p">,</span><span class="s">&#39;key_&#39;</span> <span class="o">+</span> <span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s">&#39;.png&#39;</span><span class="p">))[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="p">(</span><span class="n">num</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">4</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">0</span> <span class="o">+</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">num</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)))</span>
+</div>
+<div class="viewcode-block" id="Game.draw_debug"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game.draw_debug">[docs]</a>    <span class="k">def</span> <span class="nf">draw_debug</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">debug_params</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; manae all de debug drawings provided by the class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">num</span><span class="p">,</span> <span class="n">player</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s">&#39;coords&#39;</span> <span class="ow">in</span> <span class="n">debug_params</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">draw_debug_player_coords</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">player</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">debug_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;controls&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">draw_debug_player_controls</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">debug_params</span><span class="p">[</span><span class="s">&#39;controls&#39;</span><span class="p">])</span>
+</div>
+<div class="viewcode-block" id="Game.draw_portraits"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game.draw_portraits">[docs]</a>    <span class="k">def</span> <span class="nf">draw_portraits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw player&#39;s portraits at bottom of the screen</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c">#draw the background of the block where the lives are displayed</span>
+        <span class="n">hud_height</span> <span class="o">=</span> <span class="mi">75</span> <span class="o">*</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">WIDTH</span> <span class="o">/</span> <span class="mi">800</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">loaders</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">CONFIG</span><span class="o">.</span><span class="n">system_path</span><span class="p">,</span>
+            <span class="s">&quot;misc&quot;</span><span class="p">,</span>
+            <span class="s">&quot;hud.png&quot;</span><span class="p">),</span>
+            <span class="n">scale</span><span class="o">=</span><span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">WIDTH</span><span class="p">,</span> <span class="n">hud_height</span><span class="p">))[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">HEIGHT</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">player</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_player_portrait</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Game.draw"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">debug_params</span><span class="o">=</span><span class="nb">dict</span><span class="p">()):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw every parts of the game on the screen.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">center_zoom_camera</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">draw_before_players</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">level_place</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span><span class="p">,</span>
+            <span class="s">&#39;levelshape&#39;</span> <span class="ow">in</span> <span class="n">debug_params</span> <span class="ow">and</span> <span class="n">debug_params</span><span class="p">[</span><span class="s">&#39;levelshape&#39;</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">present</span><span class="p">:</span>
+                <span class="n">e</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">level_place</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span>
+                        <span class="n">debug_params</span><span class="o">=</span><span class="n">debug_params</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">draw_after_players</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">level_place</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span><span class="p">,</span>
+            <span class="s">&#39;levelmap&#39;</span> <span class="ow">in</span> <span class="n">debug_params</span> <span class="ow">and</span> <span class="n">debug_params</span><span class="p">[</span><span class="s">&#39;levelmap&#39;</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_portraits</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_debug</span><span class="p">(</span><span class="n">debug_params</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">display_game_state</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_notif</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="Game.display_game_state"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game.display_game_state">[docs]</a>    <span class="k">def</span> <span class="nf">display_game_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Display if the game is ended by a won, or a draw, does nothing if the</span>
+<span class="sd">        game is still running</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">alive_players</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="n">Entity</span><span class="o">.</span><span class="n">alive</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">alive_players</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span>
+                    <span class="n">loaders</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+                        <span class="n">alive_players</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="o">+</span><span class="n">_</span><span class="p">(</span><span class="s">&quot; WON!&quot;</span><span class="p">),</span>
+                        <span class="n">fonts</span><span class="p">[</span><span class="s">&quot;bold&quot;</span><span class="p">][</span><span class="mi">15</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
+
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">alive_players</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">GAME_FONT</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
+                <span class="n">_</span><span class="p">(</span><span class="s">&quot;OOPS... DRAW!!!&quot;</span><span class="p">),</span>
+                <span class="bp">True</span><span class="p">,</span>
+                <span class="n">pygame</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="s">&quot;#&quot;</span><span class="o">+</span>
+                    <span class="nb">str</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ending</span><span class="o">/</span><span class="mi">10</span><span class="p">))</span> <span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span><span class="o">+</span>
+                    <span class="s">&quot;50&quot;</span><span class="o">+</span>
+                    <span class="nb">str</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ending</span><span class="o">/</span><span class="mi">10</span><span class="p">))</span> <span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span><span class="o">+</span>
+                    <span class="s">&quot;30&quot;</span><span class="p">)),</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="Game.draw_notif"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game.draw_notif">[docs]</a>    <span class="k">def</span> <span class="nf">draw_notif</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">notif</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; drow notifications on the screen</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span>
+                <span class="n">GAME_FONT</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
+                    <span class="nb">str</span><span class="p">(</span><span class="n">notif</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                    <span class="bp">True</span><span class="p">,</span>
+                    <span class="n">pygame</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="s">&quot;black&quot;</span><span class="p">)),</span>
+                <span class="p">(</span>
+                 <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span>
+                 <span class="bp">self</span><span class="o">.</span><span class="n">notif</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">notif</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">20</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="Game.update_notif"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game.update_notif">[docs]</a>    <span class="k">def</span> <span class="nf">update_notif</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; update and draw notifs,</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">notif</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">notif</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">NOTIF_EFFECT</span> <span class="o">==</span> <span class="s">&quot;True&quot;</span><span class="p">:</span>
+                <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">notif</span><span class="p">)</span> <span class="o">&lt;</span><span class="mi">3</span><span class="p">):</span>
+                    <span class="n">notif</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">notif</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">notif</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">notif</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                    <span class="n">notif</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">notif</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">notif</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="nb">len</span><span class="p">(</span><span class="n">notif</span><span class="p">[</span><span class="mi">2</span><span class="p">])]</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">notif</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span><span class="mi">4</span> <span class="o">&gt;</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">draw_notif</span><span class="p">(</span><span class="n">notif</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">notif</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">notif</span><span class="p">)</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Game.precise_zoom"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game.precise_zoom">[docs]</a>    <span class="k">def</span> <span class="nf">precise_zoom</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the minimum scale of the level to use so every player is</span>
+<span class="sd">        visible on screen, provided there is more than one player</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">present_players</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">1</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">present_players</span><span class="p">]</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">present_players</span><span class="p">]</span>
+
+            <span class="k">return</span> <span class="nb">min</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">*</span> <span class="mf">1.25</span><span class="p">),</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">y</span><span class="p">))</span> <span class="o">*</span> <span class="mf">1.5</span><span class="p">))</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Game.players_barycenter"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game.players_barycenter">[docs]</a>    <span class="k">def</span> <span class="nf">players_barycenter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; return the barycenter of all present players, to help place the</span>
+<span class="sd">        camera</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">present_players</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">present_players</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">rect</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span>
+                    <span class="nb">sum</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">present_players</span><span class="p">)</span> <span class="o">/</span>
+                    <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">present_players</span><span class="p">),</span>
+                    <span class="nb">sum</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">place</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">present_players</span><span class="p">)</span> <span class="o">/</span>
+                    <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">present_players</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="Game.center_zoom_camera"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game.center_zoom_camera">[docs]</a>    <span class="k">def</span> <span class="nf">center_zoom_camera</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; set the camera place and zoom to display as much player as</span>
+<span class="sd">        possible, without moving the camera too fast.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">present_players</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">present</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">present_players</span><span class="p">:</span>
+            <span class="c"># there is a trade between zoom sharpness and speed so we force</span>
+            <span class="c"># the zoom level to be a limited precision value here, so the</span>
+            <span class="c"># image cache is more useful.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">precise_zoom</span> <span class="o">*</span> <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">ZOOM_SHARPNESS</span><span class="p">)</span><span class="o">/</span>
+                <span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">ZOOM_SHARPNESS</span> <span class="o">*</span> <span class="mf">1.0</span><span class="p">))</span>
+
+            <span class="n">players_barycenter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">players_barycenter</span>
+            <span class="c"># calculate coordinates of top left corner of level</span>
+            <span class="c"># rect the barycenter of players at the center of the screen</span>
+            <span class="n">level_place</span> <span class="o">=</span> <span class="p">[</span>
+                 <span class="o">-</span><span class="p">(</span><span class="n">players_barycenter</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                 <span class="o">-</span><span class="p">(</span><span class="n">players_barycenter</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">smooth_scrolling</span><span class="p">:</span>
+                <span class="c"># tends to the ideal position (nicer!)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">level_place</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="n">level_place</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">level_place</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="mi">4</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">level_place</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="n">level_place</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">level_place</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="mi">4</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c"># move immediatly to the ideal position</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">level_place</span> <span class="o">=</span> <span class="n">level_place</span>
+</div>
+<div class="viewcode-block" id="Game.update_physics"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game.update_physics">[docs]</a>    <span class="k">def</span> <span class="nf">update_physics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        all physical interaction here would probably better in a physics</span>
+<span class="sd">        engine, but lie here for now.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># agressive point collision between entities players.</span>
+        <span class="k">for</span> <span class="n">entity</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">entity</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">target</span><span class="o">.</span><span class="n">invincible</span><span class="p">:</span>
+                    <span class="n">entity</span><span class="o">.</span><span class="n">test_hit</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+
+        <span class="c"># collision between players and items -- tests and consequences</span>
+        <span class="k">for</span> <span class="n">player</span> <span class="ow">in</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s">&quot;pick&quot;</span> <span class="ow">in</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">entity_skin</span><span class="o">.</span><span class="n">current_animation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">player</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">collidelist</span><span class="p">([</span><span class="n">item</span><span class="o">.</span><span class="n">rect</span><span class="p">,</span> <span class="p">])</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="n">item</span><span class="o">.</span><span class="n">entity_skin</span><span class="o">.</span><span class="n">change_animation</span><span class="p">(</span>
+                            <span class="s">&#39;triger&#39;</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="p">,</span>
+                            <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;player&#39;</span><span class="p">:</span> <span class="n">player</span><span class="p">,</span> <span class="s">&#39;entity&#39;</span><span class="p">:</span> <span class="n">item</span><span class="p">})</span>
+</div>
+<div class="viewcode-block" id="Game.update_items"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game.update_items">[docs]</a>    <span class="k">def</span> <span class="nf">update_items</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltatime</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; trigger update on all the present items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">:</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                         <span class="n">deltatime</span><span class="p">,</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">gametime</span><span class="p">,</span>
+                         <span class="bp">self</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">item</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">colliderect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">border</span><span class="p">):</span>
+                <span class="n">item</span><span class="o">.</span><span class="n">set_lives</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">item</span><span class="o">.</span><span class="n">lives</span><span class="p">:</span>
+                <span class="k">del</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">item</span><span class="p">)])</span>
+</div>
+<div class="viewcode-block" id="Game.update_players"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game.update_players">[docs]</a>    <span class="k">def</span> <span class="nf">update_players</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltatime</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; trigger update on all the present players</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">player</span> <span class="ow">in</span> <span class="nb">filter</span><span class="p">(</span><span class="n">Entity</span><span class="o">.</span><span class="n">is_present</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">):</span>
+            <span class="n">player</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                    <span class="n">deltatime</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">gametime</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="p">)</span>
+
+            <span class="c"># if the player is out of the level zone</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">player</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">colliderect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">border</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">add_event</span><span class="p">(</span>
+                        <span class="s">&#39;PlayerOut&#39;</span><span class="p">,</span>
+                        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gametime</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                        <span class="n">params</span><span class="o">=</span><span class="p">{</span>
+                            <span class="s">&#39;entity&#39;</span><span class="p">:</span> <span class="n">player</span><span class="p">,</span>
+                            <span class="s">&#39;world&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">,</span>
+                            <span class="s">&#39;gametime&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">gametime</span><span class="p">})</span>
+
+            <span class="k">if</span> <span class="n">player</span><span class="o">.</span><span class="n">lives</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">player</span><span class="o">.</span><span class="n">set_present</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Game.backup_items"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game.backup_items">[docs]</a>    <span class="k">def</span> <span class="nf">backup_items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; return a backup of the state of the items in game</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">[:],</span> <span class="nb">tuple</span><span class="p">((</span><span class="n">i</span><span class="o">.</span><span class="n">backup</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">)))</span>
+</div>
+<div class="viewcode-block" id="Game.restore_items"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game.restore_items">[docs]</a>    <span class="k">def</span> <span class="nf">restore_items</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backup</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; restore items and their states from a known backup state in the</span>
+<span class="sd">        game</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">=</span> <span class="n">backup</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">,</span> <span class="n">backup</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="n">i</span><span class="o">.</span><span class="n">restore</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Game.backup_players"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game.backup_players">[docs]</a>    <span class="k">def</span> <span class="nf">backup_players</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; return a backup of the state of the players in game </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">((</span><span class="n">p</span><span class="o">.</span><span class="n">backup</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="Game.restore_players"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game.restore_players">[docs]</a>    <span class="k">def</span> <span class="nf">restore_players</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backup</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; restore players and their states from a known backup state in the</span>
+<span class="sd">        game</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">,</span> <span class="n">backup</span><span class="p">):</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">restore</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Game.backup_skins"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game.backup_skins">[docs]</a>    <span class="k">def</span> <span class="nf">backup_skins</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; return a backup of the entity skins current state </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">((</span><span class="n">e</span><span class="o">.</span><span class="n">entity_skin</span><span class="o">.</span><span class="n">backup</span><span class="p">()</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="Game.restore_skins"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game.restore_skins">[docs]</a>    <span class="k">def</span> <span class="nf">restore_skins</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backup</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; restore skins of entities from a known backup state</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">e</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">,</span> <span class="n">backup</span><span class="p">):</span>
+            <span class="n">e</span><span class="o">.</span><span class="n">entity_skin</span><span class="o">.</span><span class="n">restore</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Game.backup"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game.backup">[docs]</a>    <span class="k">def</span> <span class="nf">backup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        save events, items, levels, players of the game in their</span>
+<span class="sd">        current state</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+                <span class="s">&#39;ending&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ending</span><span class="p">,</span>
+                <span class="s">&#39;events&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">backup</span><span class="p">(),</span>
+                <span class="s">&#39;gametime&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">gametime</span><span class="p">,</span>
+                <span class="s">&#39;items&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">backup_items</span><span class="p">(),</span>
+                <span class="s">&#39;level&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">backup</span><span class="p">(),</span>
+                <span class="s">&#39;players&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">backup_players</span><span class="p">(),</span>
+                <span class="s">&#39;skins&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">backup_skins</span><span class="p">(),</span>
+                <span class="p">}</span>
+</div>
+<div class="viewcode-block" id="Game.restore"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game.restore">[docs]</a>    <span class="k">def</span> <span class="nf">restore</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backup</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        restore the game state from _backup</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ending</span> <span class="o">=</span> <span class="n">backup</span><span class="p">[</span><span class="s">&#39;ending&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">restore</span><span class="p">(</span><span class="n">backup</span><span class="p">[</span><span class="s">&#39;events&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gametime</span> <span class="o">=</span> <span class="n">backup</span><span class="p">[</span><span class="s">&#39;gametime&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">restore</span><span class="p">(</span><span class="n">backup</span><span class="p">[</span><span class="s">&#39;level&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">restore_items</span><span class="p">(</span><span class="n">backup</span><span class="p">[</span><span class="s">&#39;items&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">restore_players</span><span class="p">(</span><span class="n">backup</span><span class="p">[</span><span class="s">&#39;players&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">restore_skins</span><span class="p">(</span><span class="n">backup</span><span class="p">[</span><span class="s">&#39;skins&#39;</span><span class="p">])</span>
+</div>
+<div class="viewcode-block" id="Game.update"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.Game.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deltatime</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        sync everything to current time. Return &quot;game&quot; if we are still in game</span>
+<span class="sd">        mode, return &quot;menu&quot; otherwise.</span>
+
+<span class="sd">        At the beggining of the game, we add world events, and then wait for</span>
+<span class="sd">        the next frame before adding players, resolve bug 76585 on slower</span>
+<span class="sd">        machines.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gametime</span> <span class="o">+=</span> <span class="n">deltatime</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_frame</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">first_frame</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">second_frame</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="c">## adding test events.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_world_event</span><span class="p">()</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">second_frame</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">second_frame</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="c"># events to make players appear into game</span>
+            <span class="c"># logging.debug(&#39;players insertion in game&#39;)</span>
+            <span class="k">for</span> <span class="n">pl</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">add_event</span><span class="p">(</span>
+                        <span class="s">&#39;DropPlayer&#39;</span><span class="p">,</span>
+                        <span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gametime</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+                        <span class="n">params</span><span class="o">=</span><span class="p">{</span>
+                            <span class="s">&#39;world&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">,</span>
+                            <span class="s">&#39;entity&#39;</span><span class="p">:</span> <span class="n">pl</span><span class="p">,</span>
+                            <span class="s">&#39;gametime&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">gametime</span><span class="p">})</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">deltatime</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gametime</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gametime</span><span class="p">,</span> <span class="n">deltatime</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_players</span><span class="p">(</span><span class="n">deltatime</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_physics</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_items</span><span class="p">(</span><span class="n">deltatime</span><span class="p">)</span>
+
+        <span class="n">players_left</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">Entity</span><span class="o">.</span><span class="n">alive</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">players_left</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c"># there is only one player left then the game need to end after a</span>
+            <span class="c"># short animation</span>
+            <span class="c">#decount time</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ending</span> <span class="o">-=</span> <span class="n">deltatime</span>
+
+        <span class="c"># if animation time elapsed, return to menu</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ending</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">&#39;menu&#39;</span>
+
+        <span class="k">if</span> <span class="n">players_left</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">&#39;victory&#39;</span>
+
+        <span class="k">return</span> <span class="s">&#39;game&#39;</span>
+
+</div></div>
+<div class="viewcode-block" id="NetworkServerGame"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.NetworkServerGame">[docs]</a><span class="k">class</span> <span class="nc">NetworkServerGame</span><span class="p">(</span><span class="n">Game</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This class is intended for defining network server game implementation,</span>
+<span class="sd">    not yet implemented!</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">NetworkServerGame</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;NetworkServerGame is not implemented yet&quot;</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="NetworkClientGame"><a class="viewcode-back" href="../../api_reference/usf.html#usf.game.NetworkClientGame">[docs]</a><span class="k">class</span> <span class="nc">NetworkClientGame</span><span class="p">(</span><span class="n">Game</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This class is intended for defining network client game implementation,</span>
+<span class="sd">    not yet implemented!</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">NetworkClientGame</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;NetworkClientGame is not implemented yet&quot;</span><span class="p">)</span>
+</pre></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Ultimate Smash Friends 0.1.6 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Gabirel Pettier.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

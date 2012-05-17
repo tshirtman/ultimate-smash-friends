@@ -1,0 +1,469 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>usf.gui &mdash; Ultimate Smash Friends 0.1.6 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.6',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Ultimate Smash Friends 0.1.6 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Ultimate Smash Friends 0.1.6 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for usf.gui</h1><div class="highlight"><pre>
+<span class="c">################################################################################</span>
+<span class="c"># copyright 2010 Lucas Baudin &lt;xapantu@gmail.com&gt;                              #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># This file is part of Ultimate Smash Friends                                  #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># UltimateSmashFriends is free software: you can redistribute it and/or modify #</span>
+<span class="c"># it under the terms of the GNU General Public License as published by         #</span>
+<span class="c"># the Free Software Foundation, either version 3 of the License, or            #</span>
+<span class="c"># (at your option) any later version.                                          #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># UltimateSmashFriends is distributed in the hope that it will be useful,      #</span>
+<span class="c"># but WITHOUT ANY WARRANTY; without even the implied warranty of               #</span>
+<span class="c"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                #</span>
+<span class="c"># GNU General Public License for more details.                                 #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># You should have received a copy of the GNU General Public License            #</span>
+<span class="c"># along with UltimateSmashFriends.  If not, see &lt;http://www.gnu.org/licenses/&gt;.#</span>
+<span class="c">################################################################################</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">The Gui module provide interfaces to build custom screens with widgets and</span>
+<span class="sd">callback to use them.</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">pygame</span>
+<span class="kn">from</span> <span class="nn">pygame.locals</span> <span class="kn">import</span> <span class="n">QUIT</span>
+
+<span class="c"># Our modules</span>
+<span class="kn">from</span> <span class="nn">usf.font</span> <span class="kn">import</span> <span class="n">fonts</span>
+<span class="kn">from</span> <span class="nn">usf.game</span> <span class="kn">import</span> <span class="n">Game</span>
+<span class="kn">from</span> <span class="nn">usf.screens.about</span> <span class="kn">import</span> <span class="n">About</span>
+<span class="kn">from</span> <span class="nn">usf.screens.characters</span> <span class="kn">import</span> <span class="n">Characters</span>
+<span class="kn">from</span> <span class="nn">usf.screens.configure</span> <span class="kn">import</span> <span class="n">Configure</span>
+<span class="kn">from</span> <span class="nn">usf.screens.keyboard</span> <span class="kn">import</span> <span class="n">Keyboard</span>
+<span class="kn">from</span> <span class="nn">usf.screens.level</span> <span class="kn">import</span> <span class="n">Level</span>
+<span class="kn">from</span> <span class="nn">usf.screens.main_screen</span> <span class="kn">import</span> <span class="n">MainScreen</span>
+<span class="kn">from</span> <span class="nn">usf.screens.resume</span> <span class="kn">import</span> <span class="n">Resume</span>
+<span class="kn">from</span> <span class="nn">usf.screens.display</span> <span class="kn">import</span> <span class="n">Display</span>
+<span class="kn">from</span> <span class="nn">usf.screens.audio</span> <span class="kn">import</span> <span class="n">Audio</span>
+<span class="kn">from</span> <span class="nn">usf.screens.network_screen</span> <span class="kn">import</span> <span class="n">NetworkScreen</span>
+<span class="kn">from</span> <span class="nn">usf.screens.network_join_screen</span> <span class="kn">import</span> <span class="n">NetworkJoinScreen</span>
+<span class="kn">from</span> <span class="nn">usf.screens.network_game_conf_screen</span> <span class="kn">import</span> <span class="n">NetworkGameConfScreen</span>
+<span class="kn">from</span> <span class="nn">usf.skin</span> <span class="kn">import</span> <span class="n">Skin</span>
+<span class="kn">from</span> <span class="nn">usf.translation</span> <span class="kn">import</span> <span class="n">_</span>
+<span class="kn">from</span> <span class="nn">usf.widgets.widget</span> <span class="kn">import</span> <span class="n">optimize_size</span>
+<span class="kn">from</span> <span class="nn">usf</span> <span class="kn">import</span> <span class="n">loaders</span>
+<span class="kn">from</span> <span class="nn">usf</span> <span class="kn">import</span> <span class="n">CONFIG</span>
+
+<div class="viewcode-block" id="Gui"><a class="viewcode-back" href="../../api_reference/usf.html#usf.gui.Gui">[docs]</a><span class="k">class</span> <span class="nc">Gui</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Main class of the GUI. Init and maintain all menus and widgets.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">surface</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span> <span class="o">=</span> <span class="n">surface</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">game</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screens</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen_history</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="s">&#39;main_screen&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">MainScreen</span><span class="p">(</span><span class="s">&#39;main_screen&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="s">&#39;configure&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Configure</span><span class="p">(</span><span class="s">&#39;configure&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="s">&#39;about&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">About</span><span class="p">(</span><span class="s">&#39;about&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="s">&#39;resume&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Resume</span><span class="p">(</span><span class="s">&#39;resume&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="s">&#39;sound&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Audio</span><span class="p">(</span><span class="s">&#39;sound&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="s">&#39;display&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Display</span><span class="p">(</span><span class="s">&#39;display&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="s">&#39;keyboard&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Keyboard</span><span class="p">(</span><span class="s">&#39;keyboard&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="s">&#39;level&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Level</span><span class="p">(</span><span class="s">&#39;level&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="s">&#39;characters&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Characters</span><span class="p">(</span><span class="s">&#39;characters&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="s">&#39;network&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">NetworkScreen</span><span class="p">(</span><span class="s">&#39;network&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="s">&#39;network_join&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">NetworkJoinScreen</span><span class="p">(</span>
+                <span class="s">&#39;network_join&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="s">&#39;network_game_conf_screen&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">NetworkGameConfScreen</span><span class="p">(</span>
+                <span class="s">&#39;network_game_conf_screen&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_screen</span> <span class="o">=</span> <span class="s">&#39;main_screen&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">skin</span> <span class="o">=</span> <span class="n">Skin</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_event</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">focus</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s">&quot;menu&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cursor</span> <span class="o">=</span> <span class="n">loaders</span><span class="o">.</span><span class="n">image</span><span class="p">(</span>
+                <span class="n">CONFIG</span><span class="o">.</span><span class="n">system_path</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s">&#39;cursor.png&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_youhere</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Gui.update"><a class="viewcode-back" href="../../api_reference/usf.html#usf.gui.Gui.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the GUI, it draws the mouse, and the menu.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c">#draw the background</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">skin</span><span class="o">.</span><span class="n">get_background</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_screen</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+        <span class="k">while</span><span class="p">(</span><span class="bp">True</span><span class="p">):</span>
+            <span class="n">event</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">poll</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">QUIT</span><span class="p">:</span>
+                <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">Event</span><span class="p">(</span><span class="n">QUIT</span><span class="p">))</span>
+                <span class="k">break</span>
+
+            <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">NOEVENT</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">KEYDOWN</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">handle_keys</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">MOUSEBUTTONUP</span> <span class="ow">or</span>
+                    <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">MOUSEBUTTONDOWN</span> <span class="ow">or</span>
+                    <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">MOUSEMOTION</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">handle_mouse</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="c">#draw the &#39;&gt; you are here :&#39; dialog</span>
+        <span class="c">#update the mouse position</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">get_pos</span><span class="p">()</span>
+        <span class="c">#x += self.cursor.get_height()</span>
+        <span class="c">#y += self.cursor.get_width()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cursor</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+
+        <span class="c">#if we have a game instance and the state is menu...</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">!=</span> <span class="s">&quot;ingame&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s">&quot;ingame&quot;</span>
+            <span class="k">return</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">game</span>
+
+        <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">None</span>
+</div>
+<div class="viewcode-block" id="Gui.handle_mouse"><a class="viewcode-back" href="../../api_reference/usf.html#usf.gui.Gui.handle_mouse">[docs]</a>    <span class="k">def</span> <span class="nf">handle_mouse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function handles mouse event which are send from the update</span>
+<span class="sd">        function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">focus</span><span class="p">:</span>
+            <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&#39;pos&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+              <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&#39;pos&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_screen</span><span class="p">]</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+              <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&#39;pos&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_screen</span><span class="p">]</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+
+            <span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">focus</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_screen</span><span class="p">]</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">handle_mouse</span><span class="p">(</span><span class="n">event</span><span class="p">))</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">focus</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">focus</span><span class="o">.</span><span class="n">handle_mouse</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">focus</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">focus</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="k">if</span>  <span class="n">query</span><span class="p">:</span>
+            <span class="n">reply</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_screen</span><span class="p">]</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">handle_reply</span><span class="p">(</span><span class="n">reply</span><span class="p">)</span>
+        <span class="c">#remove the event for performance, maybe it is useless</span>
+        <span class="k">del</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Gui.handle_keys"><a class="viewcode-back" href="../../api_reference/usf.html#usf.gui.Gui.handle_keys">[docs]</a>    <span class="k">def</span> <span class="nf">handle_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function handles keyboard event which are send from the update</span>
+<span class="sd">        function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c">#TODO : a complete navigation system with the keyboard.</span>
+        <span class="n">reply</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="bp">False</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">focus</span><span class="p">:</span>
+            <span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">focus</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">focus</span><span class="o">.</span><span class="n">handle_keys</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">focus</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">focus</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="k">if</span> <span class="n">query</span><span class="p">:</span>
+                <span class="n">reply</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_screen</span><span class="p">]</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handle_reply</span><span class="p">(</span><span class="n">reply</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">focus</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">reply</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">query</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&#39;key&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_ESCAPE</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handle_reply</span><span class="p">({</span><span class="s">&#39;goto&#39;</span><span class="p">:</span> <span class="s">&#39;back&#39;</span><span class="p">})</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">focus</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_screen</span><span class="p">]</span><span class="o">.</span><span class="n">handle_keys</span><span class="p">(</span><span class="n">event</span><span class="p">))</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">focus</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">focus</span> <span class="o">=</span> <span class="bp">None</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">focus</span> <span class="o">=</span> <span class="n">focus</span>
+
+                <span class="k">if</span>  <span class="n">query</span><span class="p">:</span>
+                    <span class="n">reply</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_screen</span><span class="p">]</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">handle_reply</span><span class="p">(</span><span class="n">reply</span><span class="p">)</span>
+
+        <span class="c">#remove the event for performance, maybe it is useless</span>
+        <span class="k">del</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Gui.handle_reply"><a class="viewcode-back" href="../../api_reference/usf.html#usf.gui.Gui.handle_reply">[docs]</a>    <span class="k">def</span> <span class="nf">handle_reply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reply</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function handles the callback return by the screens with the</span>
+<span class="sd">        function event_callback().</span>
+<span class="sd">        This callback needs to be a dictionary, otherwise, it will be ignored.</span>
+
+<span class="sd">        The reply can be:</span>
+<span class="sd">            {&#39;goto&#39;: &#39;myscreen&#39;}</span>
+<span class="sd">                where my screen is the name of the screen loaded in __init__()</span>
+<span class="sd">            {&#39;goto&#39;: &#39;back&#39;}</span>
+<span class="sd">                go to the last menu, it is usually used for a back button</span>
+<span class="sd">            {&#39;game&#39;: &#39;new&#39;}</span>
+<span class="sd">                to start a new game</span>
+<span class="sd">            {&#39;game&#39;: &#39;new_server&#39;}</span>
+<span class="sd">                to start a new game in server mode</span>
+<span class="sd">            {&#39;game&#39;: &#39;join_server&#39;}</span>
+<span class="sd">                to join a network game</span>
+<span class="sd">            {&#39;game&#39;: &#39;continue&#39;}</span>
+<span class="sd">                to resume the game, it is used in the in-game menu</span>
+<span class="sd">            {&#39;game&#39;: &#39;stop&#39; }</span>
+<span class="sd">                to stop the game, it is used to qui the game in the</span>
+<span class="sd">                in-game menu</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">reply</span><span class="p">,</span> <span class="s">&#39;get&#39;</span><span class="p">):</span>
+            <span class="n">sound</span> <span class="o">=</span> <span class="n">loaders</span><span class="o">.</span><span class="n">track</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">system_path</span><span class="p">,</span> 
+                                  <span class="s">&quot;sounds&quot;</span><span class="p">,</span> <span class="s">&quot;mouseClick2.wav&quot;</span><span class="p">))</span>
+            <span class="n">sound</span><span class="o">.</span><span class="n">set_volume</span><span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">audio</span><span class="o">.</span><span class="n">SOUND_VOLUME</span><span class="o">/</span><span class="mf">100.0</span><span class="p">)</span>
+            <span class="n">sound</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+
+            <span class="c"># not using elifs so that replies may be complex</span>
+            <span class="k">if</span> <span class="n">reply</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;goto&#39;</span><span class="p">):</span>
+
+                <span class="k">if</span> <span class="n">reply</span><span class="p">[</span><span class="s">&#39;goto&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;back&#39;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">screen_back</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">screen_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_screen</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">current_screen</span> <span class="o">=</span> <span class="n">reply</span><span class="p">[</span><span class="s">&#39;goto&#39;</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">reply</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;game&#39;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">reply</span><span class="p">[</span><span class="s">&#39;game&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;new&#39;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">game</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">launch_game</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">current_screen</span> <span class="o">=</span> <span class="s">&#39;resume&#39;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">screen_history</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s">&quot;menu&quot;</span>
+                <span class="k">elif</span> <span class="n">reply</span><span class="p">[</span><span class="s">&#39;game&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;new_server&#39;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">game</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">launch_game</span><span class="p">(</span><span class="n">server</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">current_screen</span> <span class="o">=</span> <span class="s">&#39;resume&#39;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">screen_history</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s">&quot;menu&quot;</span>
+                <span class="k">elif</span> <span class="n">reply</span><span class="p">[</span><span class="s">&#39;game&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;join_server&#39;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">game</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">launch_game</span><span class="p">(</span>
+                            <span class="n">server</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="s">&#39;network_join&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">ip</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">current_screen</span> <span class="o">=</span> <span class="s">&#39;resume&#39;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">screen_history</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s">&quot;menu&quot;</span>
+                <span class="k">elif</span> <span class="n">reply</span><span class="p">[</span><span class="s">&#39;game&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;continue&#39;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">current_screen</span> <span class="o">=</span> <span class="s">&#39;resume&#39;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">screen_history</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s">&quot;menu&quot;</span>
+                <span class="k">elif</span> <span class="n">reply</span><span class="p">[</span><span class="s">&#39;game&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;stop&#39;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s">&quot;menu&quot;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">game</span> <span class="o">=</span> <span class="bp">None</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">current_screen</span> <span class="o">=</span> <span class="s">&#39;main_screen&#39;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">screen_history</span> <span class="o">=</span> <span class="p">[]</span>
+</div>
+<div class="viewcode-block" id="Gui.screen_back"><a class="viewcode-back" href="../../api_reference/usf.html#usf.gui.Gui.screen_back">[docs]</a>    <span class="k">def</span> <span class="nf">screen_back</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Go to the last screen.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screen_history</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_screen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen_history</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen_history</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="k">return</span> <span class="bp">True</span>
+
+        <span class="k">return</span> <span class="bp">False</span>
+</div>
+<div class="viewcode-block" id="Gui.update_youhere"><a class="viewcode-back" href="../../api_reference/usf.html#usf.gui.Gui.update_youhere">[docs]</a>    <span class="k">def</span> <span class="nf">update_youhere</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">screen_list</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">scr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">screen_history</span><span class="p">:</span>
+            <span class="n">screen_list</span> <span class="o">+=</span> <span class="n">scr</span> <span class="o">+</span> <span class="s">&quot;/&quot;</span>
+
+        <span class="n">screen_list</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_screen</span> <span class="o">+</span> <span class="s">&quot;/&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">here</span> <span class="o">=</span> <span class="n">loaders</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="s">&quot;&gt; &quot;</span> <span class="o">+</span> <span class="n">_</span><span class="p">(</span><span class="s">&quot;you are here:&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">screen_list</span><span class="p">,</span>
+            <span class="n">fonts</span><span class="p">[</span><span class="s">&#39;mono&#39;</span><span class="p">][</span><span class="s">&#39;30&#39;</span><span class="p">])</span>
+</div>
+<div class="viewcode-block" id="Gui.transition_slide"><a class="viewcode-back" href="../../api_reference/usf.html#usf.gui.Gui.transition_slide">[docs]</a>    <span class="k">def</span> <span class="nf">transition_slide</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old_screen</span><span class="p">,</span> <span class="n">old_surface</span><span class="p">,</span> <span class="n">new_screen</span><span class="p">,</span>
+            <span class="n">new_surface</span><span class="p">):</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">get_text_transparent</span><span class="p">(</span><span class="n">old_screen</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">1.00</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">MAX_FPS</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">skin</span><span class="o">.</span><span class="n">get_background</span><span class="p">()</span>
+            <span class="n">text</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">((</span><span class="n">i</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="mi">250</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">text</span><span class="p">,</span>
+                <span class="p">(</span><span class="n">old_screen</span><span class="o">.</span><span class="n">indent_title</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">old_surface</span><span class="p">,</span>
+                <span class="p">(</span><span class="n">optimize_size</span><span class="p">((</span><span class="n">i</span> <span class="o">*</span> <span class="mi">8</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">))[</span><span class="mi">0</span><span class="p">],</span> <span class="n">old_screen</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+
+            <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+        <span class="n">text</span> <span class="o">=</span> <span class="n">get_text_transparent</span><span class="p">(</span><span class="n">new_screen</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">1.00</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">MAX_FPS</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">skin</span><span class="o">.</span><span class="n">get_background</span><span class="p">()</span>
+            <span class="n">text</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="mi">250</span><span class="o">/</span><span class="mi">10</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">text</span><span class="p">,</span>
+                    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_screen</span><span class="p">]</span><span class="o">.</span><span class="n">indent_title</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">new_surface</span><span class="p">,</span>
+                <span class="p">(</span><span class="n">optimize_size</span><span class="p">((</span><span class="n">i</span><span class="o">*</span><span class="mi">8</span><span class="o">*</span><span class="mi">10</span><span class="o">-</span><span class="mi">800</span><span class="p">,</span> <span class="mi">0</span><span class="p">))[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_screen</span><span class="p">]</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+
+            <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="Gui.transition_fading"><a class="viewcode-back" href="../../api_reference/usf.html#usf.gui.Gui.transition_fading">[docs]</a>    <span class="k">def</span> <span class="nf">transition_fading</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old_screen</span><span class="p">,</span> <span class="n">old_surface</span><span class="p">,</span> <span class="n">new_screen</span><span class="p">,</span>
+            <span class="n">new_surface</span><span class="p">):</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">get_text_transparent</span><span class="p">(</span><span class="n">old_screen</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+            <span class="n">back</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">skin</span><span class="o">.</span><span class="n">get_background</span><span class="p">()</span><span class="o">.</span><span class="n">convert</span><span class="p">()</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">1.00</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">MAX_FPS</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">skin</span><span class="o">.</span><span class="n">get_background</span><span class="p">(),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+            <span class="n">text</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">((</span><span class="n">i</span><span class="o">*</span> <span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">5</span><span class="p">)</span> <span class="o">*</span> <span class="mi">250</span> <span class="o">/</span> <span class="mi">5</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="p">(</span><span class="n">old_screen</span><span class="o">.</span><span class="n">indent_title</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+
+            <span class="c">#back.set_alpha( (i*(- 1) + 5) *250/5)</span>
+            <span class="n">back</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="n">i</span> <span class="o">*</span><span class="mi">250</span><span class="o">/</span><span class="mi">5</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">old_surface</span><span class="p">,</span>
+                    <span class="p">(</span><span class="n">old_screen</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">old_screen</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">back</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+            <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+        <span class="n">text</span> <span class="o">=</span> <span class="n">get_text_transparent</span><span class="p">(</span><span class="n">new_screen</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+            <span class="n">back</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">skin</span><span class="o">.</span><span class="n">get_background</span><span class="p">()</span><span class="o">.</span><span class="n">convert</span><span class="p">()</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">1.00</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">MAX_FPS</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">skin</span><span class="o">.</span><span class="n">get_background</span><span class="p">(),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+            <span class="n">text</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="mi">250</span><span class="o">/</span><span class="mi">5</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">text</span><span class="p">,</span>
+                    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_screen</span><span class="p">]</span><span class="o">.</span><span class="n">indent_title</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+
+            <span class="c">#new_surface.set_alpha(i *250/5)</span>
+            <span class="n">back</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">((</span><span class="n">i</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">5</span><span class="p">)</span> <span class="o">*</span> <span class="mi">250</span> <span class="o">/</span> <span class="mi">5</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">new_surface</span><span class="p">,</span>
+                    <span class="p">(</span><span class="n">new_screen</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">new_screen</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">back</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+            <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="Gui.launch_game"><a class="viewcode-back" href="../../api_reference/usf.html#usf.gui.Gui.launch_game">[docs]</a>    <span class="k">def</span> <span class="nf">launch_game</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Function to launch the game, use precedant user choices to initiate the</span>
+<span class="sd">        game with level and characters selected.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">players</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="s">&quot;characters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">players</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="s">&quot;characters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">file_name</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="s">&quot;characters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">game_data</span><span class="p">[</span><span class="s">&#39;character_file&#39;</span><span class="p">]</span>
+                                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="s">&quot;characters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">players</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="s">&quot;characters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">checkboxes_ai</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get_value</span><span class="p">():</span>
+                    <span class="n">file_name</span> <span class="o">=</span> <span class="n">file_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                            <span class="s">&quot;characters/&quot;</span><span class="p">,</span> <span class="s">&quot;characters/AI&quot;</span><span class="p">)</span>
+                <span class="n">players</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">players</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">game</span> <span class="o">=</span> <span class="n">Game</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">screens</span><span class="p">[</span><span class="s">&quot;level&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get_level</span><span class="p">(),</span>
+                <span class="n">players</span><span class="p">)</span>
+
+            <span class="c">#thread.start_new_thread(self.loading, ())</span>
+            <span class="c">#self.goto_screen(&quot;ingame.usfgui&quot;, False)</span>
+            <span class="c">#self.state=&quot;game&quot;</span>
+            <span class="k">return</span> <span class="n">game</span>
+
+</div></div>
+<div class="viewcode-block" id="get_text_transparent"><a class="viewcode-back" href="../../api_reference/usf.html#usf.gui.get_text_transparent">[docs]</a><span class="k">def</span> <span class="nf">get_text_transparent</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">loaders</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">fonts</span><span class="p">[</span><span class="s">&#39;mono&#39;</span><span class="p">][</span><span class="s">&#39;15&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">convert</span><span class="p">()</span>
+    <span class="n">text</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="s">&quot;black&quot;</span><span class="p">))</span>
+    <span class="c">#TODO: the colorkey should be a property of the skin</span>
+    <span class="n">text</span><span class="o">.</span><span class="n">set_colorkey</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="s">&quot;black&quot;</span><span class="p">))</span>
+    <span class="n">text</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">loaders</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">fonts</span><span class="p">[</span><span class="s">&#39;mono&#39;</span><span class="p">][</span><span class="s">&#39;15&#39;</span><span class="p">]),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">text</span>
+</pre></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Ultimate Smash Friends 0.1.6 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Gabirel Pettier.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

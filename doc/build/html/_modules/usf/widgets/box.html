@@ -1,0 +1,271 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>usf.widgets.box &mdash; Ultimate Smash Friends 0.1.6 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1.6',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Ultimate Smash Friends 0.1.6 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">Ultimate Smash Friends 0.1.6 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for usf.widgets.box</h1><div class="highlight"><pre>
+<span class="c">################################################################################</span>
+<span class="c"># copyright 2010 Lucas Baudin &lt;xapantu@gmail.com&gt;                              #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># This file is part of Ultimate Smash Friends.                                 #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># Ultimate Smash Friends is free software: you can redistribute it and/or      #</span>
+<span class="c"># modify it under the terms of the GNU General Public License as published by  #</span>
+<span class="c"># the Free Software Foundation, either version 3 of the License, or (at your   #</span>
+<span class="c"># option) any later version.                                                   #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># Ultimate Smash Friends is distributed in the hope that it will be useful, but#</span>
+<span class="c"># WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or#</span>
+<span class="c"># FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for    #</span>
+<span class="c"># more details.                                                                #</span>
+<span class="c">#                                                                              #</span>
+<span class="c"># You should have received a copy of the GNU General Public License along with #</span>
+<span class="c"># Ultimate Smash Friends.  If not, see &lt;http://www.gnu.org/licenses/&gt;.         #</span>
+<span class="c">################################################################################</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Some Box widgets as base for the GUI classes</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">from</span> <span class="nn">usf.widgets.widget</span> <span class="kn">import</span> <span class="n">Widget</span><span class="p">,</span> <span class="n">optimize_size</span>
+<span class="kn">from</span> <span class="nn">usf.widgets.button</span> <span class="kn">import</span> <span class="n">Button</span>
+
+
+<span class="kn">from</span> <span class="nn">usf</span> <span class="kn">import</span> <span class="n">CONFIG</span>
+
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span>
+
+<div class="viewcode-block" id="Container"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.box.Container">[docs]</a><span class="k">class</span> <span class="nc">Container</span><span class="p">(</span><span class="n">Widget</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This widget is never used directly, it is used to be a base for the HBox</span>
+<span class="sd">    and VBox widget.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">focusable</span> <span class="o">=</span> <span class="bp">True</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orientation</span><span class="p">,</span> <span class="n">border</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Container</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span> <span class="o">=</span> <span class="n">orientation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">widgets</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">border</span> <span class="o">=</span> <span class="n">border</span>
+
+<div class="viewcode-block" id="Container.update_size"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.box.Container.update_size">[docs]</a>    <span class="k">def</span> <span class="nf">update_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function is used to update the container size after adding a</span>
+<span class="sd">        widget.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sizex</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">sizey</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">widget</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">widgets</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span><span class="p">:</span>
+                <span class="n">sizex</span> <span class="o">+=</span> <span class="n">widget</span><span class="o">.</span><span class="n">width</span>
+                <span class="k">if</span> <span class="n">sizey</span> <span class="o">&lt;</span> <span class="n">widget</span><span class="o">.</span><span class="n">height</span><span class="p">:</span>
+                    <span class="n">sizey</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">height</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">sizey</span> <span class="o">+=</span> <span class="n">widget</span><span class="o">.</span><span class="n">height</span>
+                <span class="k">if</span> <span class="n">sizex</span> <span class="o">&lt;</span> <span class="n">widget</span><span class="o">.</span><span class="n">width</span><span class="p">:</span>
+                    <span class="n">sizex</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">width</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span><span class="p">:</span>
+                <span class="n">sizex</span> <span class="o">+=</span> <span class="n">widget</span><span class="o">.</span><span class="n">margin</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">sizey</span> <span class="o">+=</span> <span class="n">widget</span><span class="o">.</span><span class="n">margin</span>
+            <span class="c">#widget.init() #XXX probably to replace by something :/</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">sizex</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">sizey</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">&gt;</span> <span class="mi">40</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">&gt;</span> <span class="mi">40</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">border</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">surface</span> <span class="o">=</span> <span class="n">loaders</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">system_path</span><span class="p">,</span>
+                                              <span class="s">&quot;gui&quot;</span><span class="p">,</span>
+                                              <span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">theme</span><span class="p">,</span>
+                                              <span class="s">&quot;frame1.png&quot;</span><span class="p">),</span>
+                                         <span class="n">expand</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+                                        <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</div>
+<div class="viewcode-block" id="Container.update_pos"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.box.Container.update_pos">[docs]</a>    <span class="k">def</span> <span class="nf">update_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        updating the position of all widgets in the container</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">posx</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">posy</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">widget</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">widgets</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span><span class="p">:</span>
+                <span class="n">posx</span> <span class="o">+=</span> <span class="n">widget</span><span class="o">.</span><span class="n">margin</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">posy</span> <span class="o">+=</span> <span class="n">widget</span><span class="o">.</span><span class="n">margin</span>
+            <span class="n">widget</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">posy</span>
+            <span class="n">widget</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">posx</span> <span class="o">+</span> <span class="n">widget</span><span class="o">.</span><span class="n">margin_left</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span><span class="p">:</span>
+                <span class="n">posx</span> <span class="o">+=</span> <span class="n">widget</span><span class="o">.</span><span class="n">width</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">posy</span> <span class="o">+=</span> <span class="n">widget</span><span class="o">.</span><span class="n">height</span>
+            <span class="n">widget</span><span class="o">.</span><span class="n">parentpos</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">parentpos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parentpos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+            <span class="n">widget</span><span class="o">.</span><span class="n">update_size</span><span class="p">()</span>
+            <span class="n">widget</span><span class="o">.</span><span class="n">update_pos</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="Container.draw"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.box.Container.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method draw all widgets surfaces in a surface and return it</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Container</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">widget</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">widgets</span><span class="p">:</span>
+            <span class="n">widget</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="Container.add"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.box.Container.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">widget</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function is used to add a widget in the container</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_focus</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">widgets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">widget</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s">&#39;size&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">widget</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Button</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s">&#39;size&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                <span class="n">size</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;size&#39;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">size</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s">&quot;size_request&quot;</span><span class="p">]</span>
+            <span class="n">widget</span><span class="o">.</span><span class="n">set_size</span><span class="p">((</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="s">&#39;margin&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">margin</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;margin&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">margin</span> <span class="o">=</span> <span class="n">optimize_size</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">))[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span><span class="p">:</span>
+            <span class="n">widget</span><span class="o">.</span><span class="n">margin</span> <span class="o">=</span> <span class="n">margin</span><span class="o">*</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">WIDTH</span><span class="o">/</span><span class="mi">800</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">widget</span><span class="o">.</span><span class="n">margin</span> <span class="o">=</span> <span class="n">margin</span><span class="o">*</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">HEIGHT</span><span class="o">/</span><span class="mi">480</span>
+        <span class="k">if</span> <span class="s">&#39;margin_left&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">widget</span><span class="o">.</span><span class="n">margin_left</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;margin_left&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s">&#39;align&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span> <span class="ow">and</span> <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;align&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot;center&quot;</span><span class="p">:</span>
+                <span class="n">widget</span><span class="o">.</span><span class="n">margin_left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="n">widget</span><span class="o">.</span><span class="n">width</span><span class="o">/</span><span class="mi">2</span>
+            <span class="c">#widget.set_align(kwargs[&#39;align&#39;])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_size</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_pos</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="Container.handle_mouse"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.box.Container.handle_mouse">[docs]</a>    <span class="k">def</span> <span class="nf">handle_mouse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function is used for mouse events.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c">#print event.dict[&#39;pos&#39;]</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&#39;pos&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&#39;pos&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">widget</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">widgets</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">widget</span><span class="o">.</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">widget</span><span class="o">.</span><span class="n">x</span><span class="o">+</span><span class="n">widget</span><span class="o">.</span><span class="n">width</span> <span class="ow">and</span>
+                    <span class="n">widget</span><span class="o">.</span><span class="n">y</span> <span class="o">&lt;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">widget</span><span class="o">.</span><span class="n">y</span><span class="o">+</span><span class="n">widget</span><span class="o">.</span><span class="n">height</span><span class="p">):</span>
+                <span class="n">event</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s">&#39;pos&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">widget</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">-</span><span class="n">widget</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">widget</span><span class="o">.</span><span class="n">handle_mouse</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="bp">False</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Container.handle_keys"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.box.Container.handle_keys">[docs]</a>    <span class="k">def</span> <span class="nf">handle_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function is used for keyboard events.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+</div></div>
+<div class="viewcode-block" id="HBox"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.box.HBox">[docs]</a><span class="k">class</span> <span class="nc">HBox</span><span class="p">(</span><span class="n">Container</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A widget which is able to contain others widgets and align them</span>
+<span class="sd">    horizontally.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">HBox</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">orientation</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="VBox"><a class="viewcode-back" href="../../../api_reference/usf.widgets.html#usf.widgets.box.VBox">[docs]</a><span class="k">class</span> <span class="nc">VBox</span><span class="p">(</span><span class="n">Container</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A widget which is able to contain others widgets and align them</span>
+<span class="sd">    vertically.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">VBox</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">orientation</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</pre></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">Ultimate Smash Friends 0.1.6 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Gabirel Pettier.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
