@@ -4,3 +4,5 @@
 *.swo
 *.swp
 system.cfg
+build
+.ropeproject
