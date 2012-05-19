@@ -87,10 +87,10 @@ class Main(object):
         parse command line params if any, launch the menu or the game depending
         on parameters.
 
-        The init parameter determines if the Main object should be initialized 
+        The init parameter determines if the Main object should be initialized
         once instanciated. The run parameter determines if the game should be run
         once the object is instantiated and initiated.
-        
+
         """
 
         self.lock = threading.Lock()
