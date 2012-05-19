@@ -19,4 +19,4 @@
 # along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.#
 ################################################################################
 
-python2 -m usf.main
+python2 -m usf.main "$@"

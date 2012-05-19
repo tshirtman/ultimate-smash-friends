@@ -25,13 +25,13 @@ parameters, and initiate games
 
 '''
 
-
 import logging
 import os
+import sys
 
 from pygame.locals import QUIT
 import pygame
-from optparse import OptionParser
+from argparse import ArgumentParser
 import threading
 
 from usf.game import Game, NetworkServerGame #, NetworkClientGame
@@ -49,10 +49,9 @@ from usf import loaders
 from usf import CONFIG
 
 logging.basicConfig(
-        filename=os.path.join(
-            CONFIG.user_path,
-            CONFIG.debug.LOG_FILENAME),
-        level=(CONFIG.debug.LOG_LEVEL))
+    filename=os.path.join(CONFIG.user_path, CONFIG.debug.LOG_FILENAME),
+    level=(CONFIG.debug.LOG_LEVEL)
+)
 
 logging.debug("""Paths:
         Config:
@@ -81,7 +80,7 @@ class Main(object):
     the game main loop.
     """
 
-    def __init__(self, init=True, run=True):
+    def __init__(self, players=None, level=None):
         """
         The constructor, create the render surface, set the menu initial state,
         parse command line params if any, launch the menu or the game depending
@@ -92,57 +91,30 @@ class Main(object):
         once the object is instantiated and initiated.
 
         """
-
         self.lock = threading.Lock()
         self.stop_thread = False
-        self.game_type = ''
-        self.level = None
-        self.players = []
-        self.num = None
-        self.address = None
         self.text_thread = _("Loading...")
-        self.initialized = False
 
-        self.initate_options_parser()
-        self.parse_options()
+        self.level = level
+        if players is None:
+            self.players = []
 
-        if init:
-            self.init()
-            if run:
-                self.run()
+        self.init()
+        self.run()
 
     def init(self):
+        pygame.init()
+        self.clock = pygame.time.Clock()
+        self.controls = Controls()
+        self.initialized = False
+
         try:
-            if self.game_type == 'server':
-                self.init_server()
-            elif self.game_type == 'client':
-                self.init_client()
-            else:
-                self.init_standalone()
+            self.init_standalone()
             self.initialized = True
         except:
             self.stop_thread = True
             self.initialized = False
             raise
-
-    def init_server(self):
-        '''
-        start a server to host a network game
-        '''
-
-        self.game = NetworkServerGame()
-
-    def init_client(self):
-        '''
-        connect to a server to play a network game
-        '''
-
-        self.init_screen()
-        self.init_sound()
-
-        #self.game = NetworkClientGame(level, players)
-        self.state = "game"
-        self.menu = Gui(self.screen)
 
     def init_standalone(self):
         '''
@@ -164,7 +136,6 @@ class Main(object):
             self.state = "game"
             self.menu = Gui(self.screen)
             self.menu.handle_reply({'goto': 'configure'})
-
         else:
             self.lock.acquire()
             self.text_thread = "Loading GUI..."
@@ -183,83 +154,7 @@ class Main(object):
         thread.join()
         # end of loading resources
 
-    def initate_options_parser(self):
-        """
-        Set options and usage to parse users choices
-        """
-        usage = ''.join((
-                'ultimate-smash-friends [-h] [-a][-l level-name] ',
-                '[-p player1, player2...] [-s num] [-C address] [-t',
-                'character, level]\n',
-                'If a level and at least two players are selected, a match is',
-                ' launched immediately.'))
 
-        version = '%prog 0.1.3'
-
-        self.parser = OptionParser(usage=usage, version=version)
-        self.parser.add_option('-a', '--authors',
-                          action='store_true', dest='author',
-                          help='See authors of this game.')
-        self.parser.add_option('-l', '--level',
-                          action='store', dest='level', metavar='levelname',
-                          help='select level by name')
-        self.parser.add_option('-p', '--players',
-                          action='store', dest='players', nargs=1,
-                          metavar='player1, player2..',
-                          help='select up to 4 players by name')
-        self.parser.add_option('-s', '--server',
-                          action='store', dest='server', metavar='num',
-                          help="will launch a game server accepting 'num' " \
-                               "players before launching the bame.")
-        self.parser.add_option('-C', '--client',
-                          action='store', dest='client', metavar='address',
-                          help="will attempt to connect to a game server at " \
-                               "'address'")
-        self.parser.add_option('-t', '--train',
-                          action='store', dest='train',
-                          metavar='character, level',
-                          help=''.join((
-                              "will load 4 times the character in the level,",
-                              " and use random moves from every place to ",
-                              "find path values and store them")))
-
-    def parse_options(self):
-        """ parse the command line options
-        """
-        # set up the comand line parser and its options
-        options = self.parser.parse_args()[0]
-
-        # actually parse the command line options
-        if options.author:
-            author()
-
-        if options.level:
-            self.level = options.level
-
-        if options.players:
-            self.players = map(
-                    lambda p: 'characters'+os.sep+p,
-                    options.players.split(','))
-
-        if options.server:
-            self.game_type = 'server'
-            self.num = options.server
-
-        if options.client:
-            self.game_type = 'client'
-            self.address = options.client
-
-        if options.train:
-            self.level = options.train.split(',')[1]
-            self.players = (options.train.split(',')[0], )*4
-            self.game_type = 'training'
-
-        pygame.init()
-
-        self.clock = pygame.time.Clock()
-        self.controls = Controls()
-        self.menu = None
-        self.state = ""
 
     def init_screen(self):
         """ various screen initialisations
@@ -432,4 +327,43 @@ if __name__ == '__main__':
     # Entry point of the game, if not imported from another script, launch the
     # main class with parameters (appart from program self name) if any.
 
-    m = Main()
+
+    parser = ArgumentParser(description="a smash-bros like game")
+    # Set options and usage to parse users choices
+
+    parser.add_argument(
+        '-a', '--authors',
+        action='store_true', dest='author',
+        help='See authors of this game.'
+    )
+    parser.add_argument(
+        '-v', '--version',
+        action='version', version='%(prog)s 0.1.3'
+    )
+    parser.add_argument(
+        '-l', '--level',
+        action='store', dest='level', metavar='levelname',
+        help='select level by name'
+    )
+    parser.add_argument(
+        '-p', '--players',
+        action='store', dest='players', nargs=1, metavar='player1, player2..',
+        help='select up to 4 players by name'
+    )
+
+    args = vars(parser.parse_args())
+
+    if args.get('author'):
+        author()
+        sys.exit(1)
+    else:
+        del args['author']
+
+    if args.get('player'):
+        args['players'] = map(
+            lambda p: 'characters' + os.sep + p,
+            args['players'].split(',')
+        )
+
+    # MAIN STARTS HERE
+    m = Main(**args)
