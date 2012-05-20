@@ -18,10 +18,11 @@
 ################################################################################
 
 '''
-The About/Credit screen.
+The Credit screen.
 
 '''
 
+import os
 from usf.screens import Screen
 from usf import CONFIG
 
@@ -34,13 +35,22 @@ from usf.translation import _
 class Credits(Screen):
 
     def init(self):
-        padding = CONFIG.general.HEIGHT * 0.10 # two percent of screen height
-        self.name = (_("about"))
+        padding = CONFIG.general.HEIGHT / 10   # 10 percent of screen height
+
+        self.name = (_("credit"))
         self.add(VBox())
 
+        credits_text = open(
+            os.path.join(CONFIG.system_path, 'CREDITS')
+            , 'r'
+        ).readlines()
+
         self.widget.add(
-            Paragraph('CREDITS'),
-            size=(CONFIG.general.WIDTH, CONFIG.general.HEIGHT),
+            Paragraph(credits_text),
+            size=(
+                CONFIG.general.WIDTH - padding,
+                CONFIG.general.HEIGHT - padding
+            ),
             margin=padding
         )
 
