@@ -1,22 +1,23 @@
 # set encoding: utf-8
-################################################################################
-# copyright 2008-2011 Gabriel Pettier <gabriel.pettier@gmail.com>              #
-#                                                                              #
-# This file is part of UltimateSmashFriends                                    #
-#                                                                              #
-# UltimateSmashFriends is free software: you can redistribute it and/or modify #
-# it under the terms of the GNU General Public License as published by         #
-# the Free Software Foundation, either version 3 of the License, or            #
-# (at your option) any later version.                                          #
-#                                                                              #
-# UltimateSmashFriends is distributed in the hope that it will be useful,      #
-# but WITHOUT ANY WARRANTY; without even the implied warranty of               #
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                #
-# GNU General Public License for more details.                                 #
-#                                                                              #
-# You should have received a copy of the GNU General Public License            #
-# along with UltimateSmashFriends.  If not, see <http://www.gnu.org/licenses/>.#
-################################################################################
+###############################################################################
+# copyright 2008-2011 Gabriel Pettier <gabriel.pettier@gmail.com>             #
+#                                                                             #
+# This file is part of UltimateSmashFriends                                   #
+#                                                                             #
+# UltimateSmashFriends is free software: you can redistribute it and/or modify#
+# it under the terms of the GNU General Public License as published by        #
+# the Free Software Foundation, either version 3 of the License, or           #
+# (at your option) any later version.                                         #
+#                                                                             #
+# UltimateSmashFriends is distributed in the hope that it will be useful,     #
+# but WITHOUT ANY WARRANTY; without even the implied warranty of              #
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the               #
+# GNU General Public License for more details.                                #
+#                                                                             #
+# You should have received a copy of the GNU General Public License           #
+# along with UltimateSmashFriends.  If not, see                               #
+# <http://www.gnu.org/licenses/>                                              #
+###############################################################################
 
 '''
 The game module is centered about the core of the game, the Game class initiate
@@ -38,11 +39,8 @@ from usf.level import Level
 from usf.entity import Entity
 from usf.translation import _
 from usf import loaders
-from usf import CONFIG 
+from usf import CONFIG
 GAME_FONT = fonts['sans']['normal']
-
-
-
 
 if not pygame.font:
     logging.debug('Warning, fonts disabled')
@@ -92,7 +90,7 @@ class Game(object):
             self.zoom = 1
             # loading level
             self.level_place = [0, 0]
-            self.icon_space = self.size[0]/len(players_)
+            self.icon_space = self.size[0] / len(players_)
 
             # loading players
 
@@ -100,8 +98,8 @@ class Game(object):
 
         #the optional progress bar for the players lives
         self.progress_bar_size = (
-                82.5*CONFIG.general.WIDTH/800,
-                12.5*CONFIG.general.WIDTH/800)
+                82.5 * CONFIG.general.WIDTH / 800,
+                12.5 * CONFIG.general.WIDTH / 800)
 
         self.progress_bar_x = (
                 CONFIG.general.HEIGHT - 25 * CONFIG.general.WIDTH / 800)
@@ -121,12 +119,12 @@ class Game(object):
             self.events.add_event(e[0], e[1], e[2])
 
     def load_player(self, i, player):
-        logging.debug('player '+str(i)+' loaded')
+        logging.debug('player ' + str(i) + ' loaded')
             #logging.debug(player)
         if player.split(os.sep)[1][:2] == 'AI':
             try:
                 ai = int(player[player.index('AI') + 2])
-                player = player.replace('AI'+str(ai), '')
+                player = player.replace('AI' + str(ai), '')
             except ValueError:
                 # support old syntax with no number
                 ai = 5
@@ -137,13 +135,13 @@ class Game(object):
 
         self.players.append(
                 Entity(
-                    num=i+1,
+                    num=i + 1,
                     game=self,
                     entity_skinname=player,
                     place=((i + 1) * self.size[0] / 5, 100)))
 
         if ai:
-            self.players[len(self.players)-1].ai = ai
+            self.players[len(self.players) - 1].ai = ai
 
     def load_players(self, players_):
         """
@@ -193,12 +191,12 @@ class Game(object):
 
         except OSError, e:
             if e.errno is 22:
-                logging.debug(item+' is not a valid item.')
+                logging.debug(item + ' is not a valid item.')
             else:
                 raise
         except IOError, e:
             if e.errno is 2:
-                logging.debug(item+' is not a valid item directory.')
+                logging.debug(item + ' is not a valid item directory.')
                 raise
 
         return e
@@ -214,7 +212,7 @@ class Game(object):
                         'progress_bar_bg.png'),
                     scale=self.progress_bar_size)[0],
                 (
-                -0.5*self.icon_space+player.num*self.icon_space,
+                -0.5 * self.icon_space + player.num * self.icon_space,
                 self.progress_bar_x))
 
         if (self.progress_bar_size[0] -
@@ -230,7 +228,7 @@ class Game(object):
                                 player.percents * 0.1 + 0.01),
                             self.progress_bar_size[1]))[0],
                     (
-                    -0.5*self.icon_space+player.num*self.icon_space,
+                    -0.5 * self.icon_space + player.num * self.icon_space,
                 self.progress_bar_x))
 
     def draw_player_portrait(self, player):
@@ -239,17 +237,17 @@ class Game(object):
         self.screen.blit(
                  loaders.image(player.entity_skin.image, scale=(30, 30))[0],
                     (
-                    -0.5*self.icon_space+player.num*self.icon_space,
-                    self.size[1]*.9))
+                    -0.5 * self.icon_space + player.num * self.icon_space,
+                    self.size[1] * .9))
 
         if loaders.get_gconfig().get("game", "displaylives") == "y":
             self.screen.blit(
-                     GAME_FONT.render(str(player.percents*10)[:3]+"%",
+                     GAME_FONT.render(str(player.percents * 10)[:3] + "%",
                      True,
                      pygame.color.Color("red")),
                         (
-                        -0.5*self.icon_space+player.num*self.icon_space,
-                        self.size[1]*.9))
+                        -0.5 * self.icon_space + player.num * self.icon_space,
+                        self.size[1] * .9))
 
         elif loaders.get_gconfig().get("game",
                 "display_progress_bar_for_lives") == "y":
@@ -272,22 +270,21 @@ class Game(object):
                             player.num * self.icon_space +
                             32 +
                             i * self.icon_space / 40,
-                        self.size[1]*.9+10))
+                        self.size[1] * .9 + 10))
 
     def draw_debug_player_coords(self, num, player):
         """ draw player coords, useful for debugging.
         """
         self.screen.blit(
                 GAME_FONT.render(
-                    str(player.place[0])+
-                    ':'+
+                    str(player.place[0]) +
+                    ':' +
                     str(player.place[1]),
                     True,
                     pygame.color.Color('red')),
                 (
                  self.size[0] * 3 / 4,
-                 num*self.size[1] / 4))
-
+                 num * self.size[1] / 4))
 
     def draw_debug_player_controls(self, num, controls):
         """ displays current key sequence of player, useful for debuging
@@ -297,7 +294,7 @@ class Game(object):
                     loaders.image(
                         os.path.join(
                             CONFIG.system_path,
-                            'misc','key_' + k[0].lower() + '.png'))[0],
+                            'misc', 'key_' + k[0].lower() + '.png'))[0],
                     (num * self.size[0] / 4 + i * 50, 0 + 100 * (num % 2)))
 
     def draw_debug(self, debug_params):
@@ -362,20 +359,20 @@ class Game(object):
         if len(alive_players) == 1:
             self.screen.blit(
                     loaders.text(
-                        alive_players[0].name.capitalize()+_(" WON!"),
+                        alive_players[0].name.capitalize() + _(" WON!"),
                         fonts["bold"][15], 0, 0, 0),
-                    (self.size[0]/2, self.size[1]/2))
+                    (self.size[0] / 2, self.size[1] / 2))
 
         elif len(alive_players) == 0:
             self.screen.blit(GAME_FONT.render(
                 _("OOPS... DRAW!!!"),
                 True,
-                pygame.color.Color("#"+
-                    str(math.sin(self.ending/10)) [3:5]+
-                    "50"+
-                    str(math.sin(self.ending/10)) [3:5]+
+                pygame.color.Color("#" +
+                    str(math.sin(self.ending / 10))[3:5] +
+                    "50" +
+                    str(math.sin(self.ending / 10))[3:5] +
                     "30")),
-                (self.size[0]/2, self.size[1]/2))
+                (self.size[0] / 2, self.size[1] / 2))
 
     def draw_notif(self, notif):
         """ drow notifications on the screen
@@ -386,19 +383,19 @@ class Game(object):
                     True,
                     pygame.color.Color("black")),
                 (
-                 self.size[0]/4,
-                 self.notif.index(notif)*self.size[1]/20))
+                 self.size[0] / 4,
+                 self.notif.index(notif) * self.size[1] / 20))
 
     def update_notif(self):
         """ update and draw notifs,
         """
         for notif in self.notif:
             if CONFIG.general.NOTIF_EFFECT == "True":
-                if(len(notif) <3):
+                if(len(notif) < 3):
                     notif.append(notif[1][0])
                 elif len(notif[2]) is not len(notif[1]):
                     notif[2] = notif[2] + notif[1][len(notif[2])]
-            if(notif[0] +4 > time.time()):
+            if(notif[0] + 4 > time.time()):
                 self.draw_notif(notif)
             else:
                 self.notif.remove(notif)
@@ -444,7 +441,7 @@ class Game(object):
             # the zoom level to be a limited precision value here, so the
             # image cache is more useful.
             self.zoom = (
-                int(self.precise_zoom * CONFIG.general.ZOOM_SHARPNESS)/
+                int(self.precise_zoom * CONFIG.general.ZOOM_SHARPNESS) /
                 (CONFIG.general.ZOOM_SHARPNESS * 1.0))
 
             players_barycenter = self.players_barycenter
@@ -456,8 +453,8 @@ class Game(object):
 
             if self.smooth_scrolling:
                 # tends to the ideal position (nicer!)
-                self.level_place[0] += (level_place[0] - self.level_place[0])/4
-                self.level_place[1] += (level_place[1] - self.level_place[1])/4
+                self.level_place[0] += (level_place[0] - self.level_place[0]) / 4
+                self.level_place[1] += (level_place[1] - self.level_place[1]) / 4
 
             else:
                 # move immediatly to the ideal position
@@ -536,7 +533,7 @@ class Game(object):
             i.restore(b)
 
     def backup_players(self):
-        """ return a backup of the state of the players in game 
+        """ return a backup of the state of the players in game
         """
         return tuple((p.backup() for p in self.players))
 
@@ -548,9 +545,9 @@ class Game(object):
             p.restore(b)
 
     def backup_skins(self):
-        """ return a backup of the entity skins current state 
+        """ return a backup of the entity skins current state
         """
-        return tuple((e.entity_skin.backup() for e in self.players+self.items))
+        return tuple((e.entity_skin.backup() for e in self.players + self.items))
 
     def restore_skins(self, backup):
         """ restore skins of entities from a known backup state
@@ -655,5 +652,3 @@ class NetworkClientGame(Game):
     def __init__(self):
         super(NetworkClientGame, self).__init__(self)
         raise NotImplementedError("NetworkClientGame is not implemented yet")
-
-

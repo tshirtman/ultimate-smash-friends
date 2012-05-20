@@ -27,7 +27,6 @@ import math
 import logging
 
 
-
 from usf import CONFIG
 SIZE = (CONFIG.general.WIDTH,
         CONFIG.general.HEIGHT)
@@ -127,7 +126,7 @@ class HealEvent(TimedEvent):
 
     def execute(self, deltatime):
         # at this rate it should take 5 seconds to go from 100% to 0%
-        self.params['player'].add_percents(-deltatime*2)
+        self.params['player'].add_percents(-deltatime * 2)
 
     def condition(self):
         return self.params['player'].percents > 0
@@ -141,9 +140,9 @@ class ShieldUpdateEvent(TimedEvent):
 
     def execute(self, deltatime):
         if self.params['player'].shield['on']:
-            self.params['player'].shield['power'] -= deltatime/10
+            self.params['player'].shield['power'] -= deltatime / 10
         elif self.params['player'].shield['power'] < 1:
-            self.params['player'].shield['power'] += deltatime/10
+            self.params['player'].shield['power'] += deltatime / 10
         if self.params['player'].shield['power'] <= 0:
             self.params['player'].shield['on'] = False
 
@@ -201,7 +200,7 @@ class DropRandomItem(TimedEvent):
         try:
             self.params['world'].add_item(
                     random.sample(['heal', 'bomb'], 1)[0],
-                    place=(random.random()*SIZE[0], 50))
+                    place=(random.random() * SIZE[0], 50))
 
             self.done = True
         except:
@@ -237,7 +236,7 @@ class ItemShower(TimedEvent):
                             'bomb',
                             ],
                             1)[0],
-                        place=(random.random()*SIZE[0], 50))
+                        place=(random.random() * SIZE[0], 50))
 
                 self.elapsed -= freq
             except:
@@ -274,7 +273,7 @@ class ThrowFireBall(TimedEvent):
         entity = self.params['entity']
         place = list(entity.place[0:2])
         place[0] += -100 if entity.reversed else entity.rect[2]
-        #place[1] -= entity.rect[3]/3
+        #place[1] -= entity.rect[3] / 3
         self.params['world'].add_item(
                 'fireball',
                 place=place,
@@ -338,7 +337,7 @@ class LaunchBullet(TimedEvent):
         entity = self.params['entity']
         place = entity.place[0:2]
         place[0] += entity.reversed and -entity.rect[2] or entity.rect[2]
-        place[1] += entity.rect[3]/2
+        place[1] += entity.rect[3] / 2
         self.params['world'].add_item(
                 'bullet',
                 place=place,
@@ -400,7 +399,7 @@ class VectorEvent(TimedEvent):
 
         return (self.params['entity'].entity_skin.current_animation in
                 (self.params['anim_name'],
-                    self.params['anim_name']+'_upgraded'))
+                    self.params['anim_name'] + '_upgraded'))
 
     def delete(self):
         """
@@ -462,7 +461,7 @@ class DropPlayer(TimedEvent):
         self.event_manager.add_event(
                 'InvinciblePlayer',
                 (None, self.params['gametime'] + 3),
-                params = {
+                params={
                     'player':
                     self.params['entity'],
                     'world':
@@ -482,10 +481,9 @@ class PlayerOut(TimedEvent):
             self.event_manager.add_event(
                     'DropPlayer',
                     (None, self.params['gametime'] + 1),
-                    params = self.params)
+                    params=self.params)
 
         self.coords = self.params['entity'].place
-
 
     def execute(self, deltatime):
         pass
@@ -513,7 +511,7 @@ class PlayerStaticOnGround(TimedEvent):
         # don't apply if the animation was changed meanwhile
         if (self.params['entity'].entity_skin.current_animation in
                 (self.params['anim_name'],
-                    self.params['anim_name']+'_upgraded')):
+                    self.params['anim_name'] + '_upgraded')):
 
             if tuple(self.params['entity'].walking_vector) != (0, 0):
                 anim = 'walk'
@@ -521,7 +519,7 @@ class PlayerStaticOnGround(TimedEvent):
                 anim = 'static'
 
             self.params['entity'].entity_skin.change_animation(
-                    anim+self.params['entity'].upgraded*'_upgraded',
+                    anim + self.params['entity'].upgraded * '_upgraded',
                     self.params['world'],
                     params={'entity': self.params['entity']})
 
@@ -573,7 +571,7 @@ class BlobSpecial(TimedEvent):
                     upgraded=self.entity.upgraded, physics=False,
                     reverse=self.entity.reversed)
 
-        self.angle += deltatime * 2 * 3.14159 # enought precision here
+        self.angle += deltatime * 2 * 3.14159  # enought precision here
         center = (
                 (self.entity.place[0] + self.target.place[0]) / 2,
                 (self.entity.place[1] + self.target.place[1]) / 2)

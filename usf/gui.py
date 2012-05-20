@@ -48,6 +48,7 @@ from usf.widgets.widget import optimize_size
 from usf import loaders
 from usf import CONFIG
 
+
 class Gui(object):
     """
     Main class of the GUI. Init and maintain all menus and widgets.
@@ -210,9 +211,9 @@ class Gui(object):
                 in-game menu
         """
         if hasattr(reply, 'get'):
-            sound = loaders.track(os.path.join(CONFIG.system_path, 
+            sound = loaders.track(os.path.join(CONFIG.system_path,
                                   "sounds", "mouseClick2.wav"))
-            sound.set_volume(CONFIG.audio.SOUND_VOLUME/100.0)
+            sound.set_volume(CONFIG.audio.SOUND_VOLUME / 100.0)
             sound.play()
 
             # not using elifs so that replies may be complex
@@ -276,7 +277,7 @@ class Gui(object):
         text = get_text_transparent(old_screen.name)
 
         for i in range(0, 10):
-            time.sleep(1.00/float(CONFIG.general.MAX_FPS))
+            time.sleep(1.00 / float(CONFIG.general.MAX_FPS))
             self.skin.get_background()
             text.set_alpha((i * -1 + 10) * 250 / 10)
             self.screen.blit(text,
@@ -289,13 +290,13 @@ class Gui(object):
         text = get_text_transparent(new_screen.name)
 
         for i in range(0, 10):
-            time.sleep(1.00/float(CONFIG.general.MAX_FPS))
+            time.sleep(1.00 / float(CONFIG.general.MAX_FPS))
             self.skin.get_background()
-            text.set_alpha(i*250/10)
+            text.set_alpha(i * 250 / 10)
             self.screen.blit(text,
                     (self.screens[self.current_screen].indent_title, 10))
             self.screen.blit(new_surface,
-                (optimize_size((i*8*10-800, 0))[0],
+                (optimize_size((i * 8 * 10 - 800, 0))[0],
                 self.screens[self.current_screen].widget.y))
 
             pygame.display.update()
@@ -306,13 +307,13 @@ class Gui(object):
 
         for i in range(0, 5):
             back = self.skin.get_background().convert()
-            time.sleep(1.00/float(CONFIG.general.MAX_FPS))
+            time.sleep(1.00 / float(CONFIG.general.MAX_FPS))
             self.screen.blit(self.skin.get_background(), (0, 0))
-            text.set_alpha((i* -1 + 5) * 250 / 5)
+            text.set_alpha((i * -1 + 5) * 250 / 5)
             self.screen.blit(text, (old_screen.indent_title, 10))
 
-            #back.set_alpha( (i*(- 1) + 5) *250/5)
-            back.set_alpha(i *250/5)
+            #back.set_alpha( (i * (- 1) + 5) *250 / 5)
+            back.set_alpha(i * 250 / 5)
             self.screen.blit(old_surface,
                     (old_screen.widget.x, old_screen.widget.y))
             self.screen.blit(back, (0, 0))
@@ -323,13 +324,13 @@ class Gui(object):
 
         for i in range(0, 5):
             back = self.skin.get_background().convert()
-            time.sleep(1.00/float(CONFIG.general.MAX_FPS))
+            time.sleep(1.00 / float(CONFIG.general.MAX_FPS))
             self.screen.blit(self.skin.get_background(), (0, 0))
-            text.set_alpha(i*250/5)
+            text.set_alpha(i * 250 / 5)
             self.screen.blit(text,
                     (self.screens[self.current_screen].indent_title, 10))
 
-            #new_surface.set_alpha(i *250/5)
+            #new_surface.set_alpha(i  * 250 / 5)
             back.set_alpha((i * -1 + 5) * 250 / 5)
             self.screen.blit(new_surface,
                     (new_screen.widget.x, new_screen.widget.y))
@@ -373,4 +374,3 @@ def get_text_transparent(name):
     text.set_colorkey(pygame.color.Color("black"))
     text.blit(loaders.text(name, fonts['mono']['15']), (0, 0))
     return text
-

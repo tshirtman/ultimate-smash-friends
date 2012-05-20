@@ -82,7 +82,7 @@ class Decorum(object):
                 int(self.coords[1] * zoom) + coords[1])
 
         surface.blit(
-                loaders.image('data/'+self.texture, zoom=zoom)[0],
+                loaders.image('data/' + self.texture, zoom=zoom)[0],
                 real_coords)
 
     def __cmp__(self, other):
@@ -190,8 +190,8 @@ class VectorBloc (Block):
         for i in self.rects:
             self.collide_rects.append(
                     pygame.Rect(
-                        i[0]+self.position[0],
-                        i[1]+self.position[1],
+                        i[0] + self.position[0],
+                        i[1] + self.position[1],
                         i[2], i[3]))
 
     def apply_vector(self, entity):
@@ -245,7 +245,7 @@ class MovingPart(Block):
         self.old_position = self.position[:]
         # get the precedant position of pattern we got by.
         last = (
-                self.patterns[-1:]+
+                self.patterns[-1:] +
                 filter(
                     lambda(x):
                     x['time'] <= level_time * 10000 % self.patterns[-1]['time'],
@@ -261,7 +261,7 @@ class MovingPart(Block):
         # get the proportion of travel between last and next we should have
         # done.
         percent_bettween = (
-                level_time * 10000 % self.patterns[-1]['time'] - last['time']) /(
+                level_time * 10000 % self.patterns[-1]['time'] - last['time']) / (
                         next_place['time'] - last['time'])
 
         self.position[0] = (
@@ -270,14 +270,14 @@ class MovingPart(Block):
 
         self.position[1] = (
             int(last['position'][1] * (1 - percent_bettween)
-            +next_place['position'][1] * (percent_bettween)))
+             + next_place['position'][1] * (percent_bettween)))
 
         # maybe usefull to cache thoose result too.
         self.collide_rects = map(
             lambda(rect):
                 pygame.Rect(
-                    rect[0]+self.position[0],
-                    rect[1]+self.position[1],
+                    rect[0] + self.position[0],
+                    rect[1] + self.position[1],
                     rect[2], rect[3]),
              self.rects)
 
@@ -356,7 +356,7 @@ class Level(object):
 
     def load_events(self, name, xml):
         for event in xml.findall('event'):
-            self.events.append(( event.attrib['action'], (None, None), {}))
+            self.events.append((event.attrib['action'], (None, None), {}))
 
             for p in event.attrib:
                 try:
@@ -375,6 +375,8 @@ class Level(object):
             self.levelname))
         try:
             import level_events
+            level_events.install()
+
         except ImportError:
             raise StopIteration()
 
@@ -428,7 +430,7 @@ class Level(object):
                 self.rect[3] + margins[1] + margins[3])
         else:
             self.border = pygame.Rect(self.rect).inflate(
-                    self.rect[2]/2, self.rect[3]/2)
+                    self.rect[2] / 2, self.rect[3] / 2)
 
     def load_entrypoints(self, xml):
         ''' set entry points to the level, from xml, create some if there are
@@ -443,7 +445,7 @@ class Level(object):
             logging.info('no entry point defined for this level')
             for x_coord in xrange(1, 5):
                 self.entrypoints.append(
-                        [int(x_coord * self.rect[2]/5), self.rect[3]/5])
+                        [int(x_coord * self.rect[2] / 5), self.rect[3] / 5])
 
     def load_layers(self, xml):
         ''' load and instanciate layers if any defined in xml
@@ -621,7 +623,7 @@ class Level(object):
     def draw_background(self, surface, coords=(0, 0), zoom=1):
         ''' Draw the background image of the level on the surface
         '''
-        surface.blit(loaders.image(self.background, 
+        surface.blit(loaders.image(self.background,
                      scale=self.size)[0], (0, 0))
 
         for layer in self.layers:
@@ -690,4 +692,3 @@ class Level(object):
                 if r.collidelist(i.collide_rects) != -1:
                     return True
             return False
-

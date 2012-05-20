@@ -35,6 +35,7 @@ from usf.font import fonts
 from usf import CONFIG
 from usf.debug_utils import draw_rect
 
+
 class Actor(object):
     """ An actor is the physical presence of something
     """
@@ -244,12 +245,13 @@ class Actor(object):
         """
         vector = [0, 0]
         for part in level_moving_parts:
-            if self.foot_rect.collidelist(part.collide_rects)!= -1:
+            if self.foot_rect.collidelist(part.collide_rects) != -1:
                 vector = [
                         vector[0] + part.get_movement()[0],
                         vector[1] + part.get_movement()[1]]
 
         return vector
+
 
 class Entity(Actor):
     """
@@ -270,11 +272,11 @@ class Entity(Actor):
     ai = False
     ai_ = None
     list_sin_cos = [[
-                math.sin(i * math.pi / (nb_points/2) + math.pi / nb_points),
-                math.cos(i * math.pi / (nb_points/2) + math.pi / nb_points)]
+                math.sin(i * math.pi / (nb_points / 2) + math.pi / nb_points),
+                math.cos(i * math.pi / (nb_points / 2) + math.pi / nb_points)]
             for i in range(nb_points)]
 
-    list_sin_cos_1 = map(lambda (x, y): (x+1, y+1), list_sin_cos)
+    list_sin_cos_1 = map(lambda (x, y): (x + 1, y + 1), list_sin_cos)
 
     # this counter will allow us to correctly update entities.
     counter = 0
@@ -317,7 +319,7 @@ class Entity(Actor):
             self._armor = self.entity_skin.armor
             self._rect = pygame.Rect(0, 0, 0, 0)
             self._rect[:2] = (
-                    self._place[0] - self._rect[2]/2,
+                    self._place[0] - self._rect[2] / 2,
                     self._place[1] - self._rect[3])
 
             self._rect[2:] = self.entity_skin.animation.rect[2:]
@@ -506,11 +508,11 @@ class Entity(Actor):
 
         if self.shield['on']:
             self.shield['power'] -= (math.sqrt(
-                point[1][0]**2 + point[1][1]**2)
+                point[1][0] ** 2 + point[1][1] ** 2)
                 / CONFIG.general.SHIELD_SOLIDITY)
 
             self.shield['power'] = max(0, self.shield['power'])
-            self._percents += (math.sqrt(point[1][0] ** 2 + point[1][1]**2)
+            self._percents += (math.sqrt(point[1][0] ** 2 + point[1][1] ** 2)
                     / (30 * (100 - self.armor)) / 2)
 
         else:
@@ -520,7 +522,7 @@ class Entity(Actor):
                           point[1][1] * (1 + self._percents)])
 
             self._percents += math.sqrt((
-                point[1][0] ** 2 +point[1][1] ** 2) / (30 * (100 - self.armor)))
+                point[1][0] ** 2 + point[1][1] ** 2) / (30 * (100 - self.armor)))
 
             self.entity_skin.change_animation(
                     'take',
@@ -549,7 +551,7 @@ class Entity(Actor):
         if debug_params["levelmap"]:
             draw_rect(
                     surface,
-                    pygame.Rect(self.place[0]/8, self.place[1]/8, 2, 2),
+                    pygame.Rect(self.place[0] / 8, self.place[1] / 8, 2, 2),
                     pygame.Color('red'))
 
     def _draw_debug_hardshape(self, coords, zoom, surface, debug_params):
@@ -571,8 +573,8 @@ class Entity(Actor):
                     draw_rect(
                             surface,
                             pygame.Rect((
-                                coords[0] + (i[0] - self.rect[0])* zoom,
-                                coords[1] + (i[1] - self.rect[1])* zoom,
+                                coords[0] + (i[0] - self.rect[0]) * zoom,
+                                coords[1] + (i[1] - self.rect[1]) * zoom,
                                 2, 2)),
                             n > 3 and pygame.Color('green') or
                             pygame.Color('blue'))
@@ -631,14 +633,14 @@ class Entity(Actor):
                     self.rect[1] - self.hardshape[1])
 
             real_coords = (
-                    int(place[0]*zoom)+coords[0],
-                    int(place[1]*zoom)+coords[1])
+                    int(place[0] * zoom) + coords[0],
+                    int(place[1] * zoom) + coords[1])
 
             self._draw_debug(real_coords, zoom, surface, debug_params)
             if self.entity_skin.animation.trails and self.old_pos:
                 for i, (x, y) in enumerate(reversed(self.old_pos)):
                     img = self.entity_skin.animation.trails[
-                            len(self.old_pos)-(i+1)]
+                            len(self.old_pos) - (i + 1)]
 
                     surface.blit(
                           loaders.image(
@@ -664,7 +666,7 @@ class Entity(Actor):
                 image = loaders.image(
                         os.path.sep.join(
                             (CONFIG.system_path, 'misc', 'shield.png')),
-                        zoom=zoom*self.shield['power']*3)
+                        zoom=zoom * self.shield['power'] * 3)
 
                 shield_coords = (
                         coords[0] + int(
@@ -727,7 +729,7 @@ class Entity(Actor):
         return (int(Entity.list_sin_cos_1[n][0] * h[2] / 2 + r[0]),
                 int(Entity.list_sin_cos_1[n][1] * h[3] / 2 + r[1]))
 
-    def update_points(self, x = 0, y = 0):
+    def update_points(self, x=0, y=0):
         """ Points are created as follows::
 
                 +-------------------+
@@ -850,12 +852,12 @@ class Entity(Actor):
                     self.move((0, 1))
 
             if self.collide_front(game):
-                self._vector[0] = math.fabs(self.vector[0])/2
+                self._vector[0] = math.fabs(self.vector[0]) / 2
                 while self.collide_front(game):
                     self.move((2, 0))
 
             elif self.collide_back(game):
-                self._vector[0] = -math.fabs(self.vector[0])/2
+                self._vector[0] = -math.fabs(self.vector[0]) / 2
                 while self.collide_back(game):
                     self.move((-2, 0))
 
@@ -904,7 +906,7 @@ class Entity(Actor):
         # Application of air friction.
         f = CONFIG.general.AIR_FRICTION * environnement_friction
 
-        if self.physic: #FIXME: and not a bullet
+        if self.physic:  # FIXME: and not a bullet
             self._vector[0] -= (f * self.vector[0] * deltatime)
             self._vector[1] -= (f * self.vector[1] * deltatime)
 
@@ -936,4 +938,3 @@ class Entity(Actor):
         self.set_place((self._place[0] + x, self._place[1] + y))
 
         self._update_rect()
-

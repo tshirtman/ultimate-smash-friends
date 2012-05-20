@@ -2,6 +2,7 @@
 
 from usf.timed_event import TimedEvent, EVENT_NAMES
 
+
 class test(TimedEvent):
     def __init__(self, *args, **kwargs):
         super(test, self).__init__(*args, **kwargs)
@@ -12,4 +13,6 @@ class test(TimedEvent):
     def execute(self, deltatime):
         pass
 
-EVENT_NAMES['CaveTestEvent'] = test
+
+def install():
+    EVENT_NAMES['CaveTestEvent'] = test
