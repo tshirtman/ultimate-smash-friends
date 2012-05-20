@@ -22,7 +22,7 @@ The About/Credit screen.
 
 '''
 
-from usf.screens.screen import Screen
+from usf.screen import Screen
 from usf import CONFIG
 
 from usf.widgets.box import VBox

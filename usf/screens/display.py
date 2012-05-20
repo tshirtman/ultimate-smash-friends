@@ -22,7 +22,7 @@ fullscreen, display fps...)
 
 '''
 
-from usf.screens.screen import Screen
+from usf.screens import Screen
 from usf.widgets.box import VBox
 from usf.widgets.label import Label
 from usf.widgets.checkbox_text import TextCheckBox

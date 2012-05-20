@@ -26,7 +26,7 @@ game" button (maybe with some time delay, and with possibility to cancel?).
 
 '''
 
-from usf.screens.screen import Screen
+from usf.screens import Screen
 
 from usf import CONFIG
 

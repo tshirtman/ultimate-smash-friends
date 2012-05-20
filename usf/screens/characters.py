@@ -22,7 +22,7 @@ Describe the characters choice UI (for starting a game)
 
 '''
 
-from usf.screens.screen import Screen
+from usf.screens import Screen
 
 from usf import CONFIG
 
