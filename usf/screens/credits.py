@@ -22,7 +22,7 @@ The About/Credit screen.
 
 '''
 
-from usf.screen import Screen
+from usf.screens import Screen
 from usf import CONFIG
 
 from usf.widgets.box import VBox
@@ -31,19 +31,20 @@ from usf.widgets.paragraph import Paragraph
 
 from usf.translation import _
 
-class About(Screen):
+class Credits(Screen):
 
     def init(self):
+        padding = CONFIG.general.HEIGHT * 0.10 # two percent of screen height
         self.name = (_("about"))
         self.add(VBox())
 
-        self.widget.add(Paragraph('CREDITS'),
-                size=(
-                    490*CONFIG.general.WIDTH/800,
-                    300*CONFIG.general.HEIGHT/600))
+        self.widget.add(
+            Paragraph('CREDITS'),
+            size=(CONFIG.general.WIDTH, CONFIG.general.HEIGHT),
+            margin=padding
+        )
 
-        self.widget.add(Button(_('Back')),
-                        margin=55)
+        self.widget.add(Button(_('Back')), margin=55)
 
     def callback(self, action):
         if action.text == _('Back'):

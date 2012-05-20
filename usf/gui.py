@@ -30,7 +30,7 @@ from pygame.locals import QUIT
 # Our modules
 from usf.font import fonts
 from usf.game import Game
-from usf.screens.about import About
+from usf.screens.credits import Credits
 from usf.screens.characters import Characters
 from usf.screens.configure import Configure
 from usf.screens.keyboard import Keyboard
@@ -62,7 +62,7 @@ class Gui(object):
 
         self.screens['main_screen'] = MainScreen('main_screen', self.screen)
         self.screens['configure'] = Configure('configure', self.screen)
-        self.screens['about'] = About('about', self.screen)
+        self.screens['credits'] = Credits('credits', self.screen)
         self.screens['resume'] = Resume('resume', self.screen)
         self.screens['sound'] = Audio('sound', self.screen)
         self.screens['display'] = Display('display', self.screen)
@@ -210,7 +210,7 @@ class Gui(object):
                 in-game menu
         """
         if hasattr(reply, 'get'):
-            sound = loaders.track(os.path.join(CONFIG.system_path, 
+            sound = loaders.track(os.path.join(CONFIG.system_path,
                                   "sounds", "mouseClick2.wav"))
             sound.set_volume(CONFIG.audio.SOUND_VOLUME/100.0)
             sound.play()
