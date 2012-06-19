@@ -18,7 +18,7 @@
         >
         <agressiv-point
         coords="29,6"
-        vector="10,0"
+        velocity="10,0"
         ></agressiv-point>
         </frame>
    </movement>
@@ -32,7 +32,7 @@
         >
         <agressiv-point
         coords="29,6"
-        vector="15,0"
+        velocity="15,0"
         ></agressiv-point>
         </frame>
    </movement>
@@ -46,7 +46,7 @@
         >
         <agressiv-point
         coords="29,5"
-        vector="20,0"
+        velocity="20,0"
         ></agressiv-point>
  </frame>
    </movement>
@@ -60,7 +60,7 @@
         >
         <agressiv-point
         coords="29,6"
-        vector="25,0"
+        velocity="25,0"
         ></agressiv-point>
  </frame>
    </movement>
@@ -74,7 +74,7 @@
         >
         <agressiv-point
         coords="29,6"
-        vector="30,0"
+        velocity="30,0"
         ></agressiv-point>
  </frame>
    </movement>
@@ -88,7 +88,7 @@
         >
         <agressiv-point
         coords="29,6"
-        vector="35,0"
+        velocity="35,0"
         ></agressiv-point>
  </frame>
    </movement>
@@ -102,7 +102,7 @@
         >
         <agressiv-point
         coords="27,9"
-        vector="40,0"
+        velocity="40,0"
         ></agressiv-point>
  </frame>
    </movement>
@@ -116,7 +116,7 @@
         >
         <agressiv-point
         coords="29,6"
-        vector="45,0"
+        velocity="45,0"
         ></agressiv-point>
  </frame>
    </movement>
@@ -130,7 +130,7 @@
         >
         <agressiv-point
         coords="27,9"
-        vector="50,0"
+        velocity="50,0"
         ></agressiv-point>
  </frame>
    </movement>
@@ -144,7 +144,7 @@
         >
         <agressiv-point
         coords="29,6"
-        vector="55,0"
+        velocity="55,0"
         ></agressiv-point>
  </frame>
     </movement>
@@ -158,7 +158,7 @@
         >
         <agressiv-point
         coords="29,6"
-        vector="60,0"
+        velocity="60,0"
         ></agressiv-point>
  </frame>
    </movement>
@@ -172,7 +172,7 @@
         >
         <agressiv-point
         coords="29,6"
-        vector="65,0"
+        velocity="65,0"
         ></agressiv-point>
  </frame>
     </movement>
@@ -186,7 +186,7 @@
         >
         <agressiv-point
         coords="29,6"
-        vector="70,0"
+        velocity="70,0"
         ></agressiv-point>
  </frame>
    </movement>
@@ -200,7 +200,7 @@
         >
         <agressiv-point
         coords="29,6"
-        vector="75,0"
+        velocity="75,0"
         ></agressiv-point>
  </frame>
    </movement>

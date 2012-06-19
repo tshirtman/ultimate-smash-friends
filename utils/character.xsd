@@ -24,7 +24,7 @@
         minOccurs="0"/>
         <xsd:element name="frame" type="typeFrame"
         minOccurs="1"/>
-        <xsd:element name="vector" type="typeVector"
+        <xsd:element name="velocity" type="typeVector"
         minOccurs="0"/>
         <xsd:element name="sound" type="typeSound"
         minOccurs="0"/>
@@ -46,7 +46,7 @@
 
 <xsd:complexType name="typeVector">
     <xsd:attribute name="time"/>
-    <xsd:attribute name="vector"/>
+    <xsd:attribute name="velocity"/>
 </xsd:complexType>
 
 
@@ -57,7 +57,7 @@
 
 <xsd:complexType name="typeAgressiv-point">
     <xsd:attribute name="coords"/>
-    <xsd:attribute name="vector"/>
+    <xsd:attribute name="velocity"/>
 </xsd:complexType>
 
 <xsd:complexType name="typeSound">

@@ -60,9 +60,9 @@
         time="56000"
         ></pattern>
     </moving-block>
-    <vector-block
+    <velocity-block
     texture="pod.png"
-    vector="0 -1000"
+    velocity="0 -1000"
     relative="0"
     position="1220 380"
     >
@@ -70,10 +70,10 @@
         coords="0 0 176 69"
         >
         </rect>
-    </vector-block>
-    <vector-block
+    </velocity-block>
+    <velocity-block
     texture="puddle.png"
-    vector="50 0"
+    velocity="50 0"
     relative="1"
     position="1010 476"
     >
@@ -81,6 +81,6 @@
         coords="0 0 166 25"
         >
         </rect>
-    </vector-block>
+    </velocity-block>
 </map>
 

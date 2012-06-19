@@ -12,22 +12,22 @@
     duration="5000"
     repeat="0"
     >
-        <vector
+        <velocity
         time="0"
-        vector="1000,0"
-        ></vector>
-        <vector
+        velocity="1000,0"
+        ></velocity>
+        <velocity
         time="100"
-        vector="1000,0"
-        ></vector>
-        <vector
+        velocity="1000,0"
+        ></velocity>
+        <velocity
         time="200"
-        vector="1000,0"
-        ></vector>
-        <vector
+        velocity="1000,0"
+        ></velocity>
+        <velocity
         time="300"
-        vector="1000,0"
-        ></vector>
+        velocity="1000,0"
+        ></velocity>
         <event
         action="DelItemEvent"
         period="0,1000"
@@ -38,19 +38,19 @@
         >
             <agressiv-point
             coords="5,2"
-            vector="150,-50"
+            velocity="150,-50"
             ></agressiv-point>
             <agressiv-point
             coords="9,5"
-            vector="150,-50"
+            velocity="150,-50"
             ></agressiv-point>
             <agressiv-point
             coords="5,9"
-            vector="150,-50"
+            velocity="150,-50"
             ></agressiv-point>
             <agressiv-point
             coords="2,5"
-            vector="150,-50"
+            velocity="150,-50"
             ></agressiv-point>
         </frame>
         <frame
@@ -59,19 +59,19 @@
         >
             <agressiv-point
             coords="5,2"
-            vector="150,-50"
+            velocity="150,-50"
             ></agressiv-point>
             <agressiv-point
             coords="9,5"
-            vector="150,-50"
+            velocity="150,-50"
             ></agressiv-point>
             <agressiv-point
             coords="5,9"
-            vector="150,-50"
+            velocity="150,-50"
             ></agressiv-point>
             <agressiv-point
             coords="2,5"
-            vector="150,-50"
+            velocity="150,-50"
             ></agressiv-point>
         </frame>
         <frame
@@ -80,19 +80,19 @@
         >
             <agressiv-point
             coords="5,2"
-            vector="150,-50"
+            velocity="150,-50"
             ></agressiv-point>
             <agressiv-point
             coords="9,5"
-            vector="150,-50"
+            velocity="150,-50"
             ></agressiv-point>
             <agressiv-point
             coords="5,9"
-            vector="150,-50"
+            velocity="150,-50"
             ></agressiv-point>
             <agressiv-point
             coords="2,5"
-            vector="150,-50"
+            velocity="150,-50"
             ></agressiv-point>
         </frame>
     </movement>

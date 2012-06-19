@@ -54,8 +54,8 @@ class Actor(object):
         self._place = kwargs.get('place', (550, 1))
         self._present = kwargs.get('present', False)
         self._reversed = kwargs.get('reverse', False)
-        self._vector = list(kwargs.get('vector', (0, 0)))
-        self._walking_vector = [0.0, 0.0]
+        self._velocity = list(kwargs.get('velocity', (0, 0)))
+        self._walking_velocity = [0.0, 0.0]
         self.foot_rect = None
         self.in_water = False
         self.old_pos = []
@@ -96,35 +96,35 @@ class Actor(object):
         self._present = value
 
     @property
-    def vector(self):
+    def velocity(self):
         """
         current dx/dt and dy/dt of the entity
         """
-        return tuple(self._vector)
+        return tuple(self._velocity)
 
-    def set_vector(self, value):
+    def set_velocity(self, value):
         """
         set the (dx/dt, dy/dt) of the entity
         """
         assert isinstance(value, list)
-        self._vector = value
+        self._velocity = value
 
     @property
-    def walking_vector(self):
+    def walking_velocity(self):
         """
-        current walking vector of the entity (this is different of the vector,
+        current walking velocity of the entity (this is different of the velocity,
         as it's defined only by the fact the player uses direction keys)
         """
-        return tuple(self._walking_vector)
+        return tuple(self._walking_velocity)
 
-    def set_walking_vector(self, value):
+    def set_walking_velocity(self, value):
         """"
-        set entity walking vector
+        set entity walking velocity
         """
         if value[1] is None:
-            self._walking_vector = (value[0], self._walking_vector[1])
+            self._walking_velocity = (value[0], self._walking_velocity[1])
         else:
-            self._walking_vector = value
+            self._walking_velocity = value
 
     @property
     def gravity(self):
@@ -167,7 +167,7 @@ class Actor(object):
         """
         assert value in (True, False)
         if value != self._reversed:
-            self._vector[0] *= -1
+            self._velocity[0] *= -1
             self._reversed = value
 
     @property
@@ -195,26 +195,26 @@ class Actor(object):
         else:
             raise ValueError("param 1 is neither a Rect or an Entity")
 
-    def _get_block_vector(self, level_vector_blocs):
+    def _get_block_velocity(self, level_velocity_blocs):
         """
-        If the entity is in a block associated with a vector, return this
-        vector.
+        If the entity is in a block associated with a velocity, return this
+        velocity.
 
         """
-        vector = [0, 0]
+        velocity = [0, 0]
 
-        for part in level_vector_blocs:
+        for part in level_velocity_blocs:
             if self.foot_rect.collidelist(part.collide_rects) != -1:
                 if part.relative and not self.reversed:
-                    vector = [
-                    vector[0] + part.vector[0],
-                    vector[1] + part.vector[1]]
+                    velocity = [
+                    velocity[0] + part.velocity[0],
+                    velocity[1] + part.velocity[1]]
 
                 else:
-                    vector = [
-                    vector[0] - part.vector[0],
-                    vector[1] + part.vector[1]]
-        return vector
+                    velocity = [
+                    velocity[0] - part.velocity[0],
+                    velocity[1] + part.velocity[1]]
+        return velocity
 
     def _get_env_collision(self, blocks):
         """
@@ -232,7 +232,7 @@ class Actor(object):
         self.in_water = False
         return 1
 
-    def _update_floor_vector(self, level_moving_parts):
+    def _update_floor_velocity(self, level_moving_parts):
         """
         When the entity is on one (or more) moving (horizontaly) floors, the
         entity should move accordingly to the sum of this movements, This
@@ -243,14 +243,14 @@ class Actor(object):
         ones that collides, their horizontal movement.
 
         """
-        vector = [0, 0]
+        velocity = [0, 0]
         for part in level_moving_parts:
             if self.foot_rect.collidelist(part.collide_rects) != -1:
-                vector = [
-                        vector[0] + part.get_movement()[0],
-                        vector[1] + part.get_movement()[1]]
+                velocity = [
+                        velocity[0] + part.get_movement()[0],
+                        velocity[1] + part.get_movement()[1]]
 
-        return vector
+        return velocity
 
 
 class Entity(Actor):
@@ -259,9 +259,9 @@ class Entity(Actor):
     collisions of an Entity. Players and Items are Entities.
 
     This is a big class, and it uses a few counter intuitive concepts, first,
-    its vectors are defined relatively, that mean moving "forward/backward"
-    instead of moving "left/right", also the vector representing the walking
-    movement of the entity is seperated from the main vector.
+    its velocitys are defined relatively, that mean moving "forward/backward"
+    instead of moving "left/right", also the velocity representing the walking
+    movement of the entity is seperated from the main velocity.
 
     """
 
@@ -459,13 +459,13 @@ class Entity(Actor):
         """
         save important attributes of the state of the player, to a dict
         """
-        assert isinstance(self._vector, list)
+        assert isinstance(self._velocity, list)
         d = {
             '_lives': self.lives,
             '_place': self.place[:],
             '_rect': pygame.Rect(self.rect[:]),
-            '_vector': self._vector[:],
-            '_walking_vector': self.walking_vector[:]}
+            '_velocity': self._velocity[:],
+            '_walking_velocity': self.walking_velocity[:]}
 
         # would be easier with a dict comprehension, but not yet in 2.6
         for k in ('_reversed', '_percents', '_upgraded', '_present',
@@ -478,7 +478,7 @@ class Entity(Actor):
         restore the game to the state described in backup
         """
         self.__dict__.update(backup)
-        assert isinstance(self._vector, list)
+        assert isinstance(self._velocity, list)
 
     @property
     def agressiv_points(self):
@@ -503,7 +503,7 @@ class Entity(Actor):
         """
         enforce the effect of a collision with an aggressive point, the
         point is a list of x, y,dx, dy coords, and reverse is a flag indicating
-        if the attacking entity is reversed (to apply projection vectors)
+        if the attacking entity is reversed (to apply projection velocitys)
         """
 
         if self.shield['on']:
@@ -518,7 +518,7 @@ class Entity(Actor):
         else:
             direction = reverse != self.reversed and -1 or 1
 
-            self.set_vector([direction * point[1][0] * (1 + self._percents),
+            self.set_velocity([direction * point[1][0] * (1 + self._percents),
                           point[1][1] * (1 + self._percents)])
 
             self._percents += math.sqrt((
@@ -779,7 +779,7 @@ class Entity(Actor):
 
     def collide_bottom(self, game):
         """
-        test of points and consequences on vectors if one of the two uppers
+        test of points and consequences on velocitys if one of the two uppers
         points collide, the entity bounce down.
         """
         return (game.level.collide_rect(self.point(self.BOTTOM_RIGHT))
@@ -819,7 +819,7 @@ class Entity(Actor):
 
         Method:
         Generation of a contact test "circle" (only 8 points actualy).
-        Then we test points of this circle and modify entity vector based on
+        Then we test points of this circle and modify entity velocity based on
         points that gets collided, moving the entity in the right direction to
         get out of each collision.
 
@@ -835,42 +835,42 @@ class Entity(Actor):
 
             if self.collide_top(game):
                 self._on_ground = True
-                self._vector[1] = -math.fabs(
-                    self.vector[1] * CONFIG.general.BOUNCE)
+                self._velocity[1] = -math.fabs(
+                    self.velocity[1] * CONFIG.general.BOUNCE)
 
-                self._vector[0] /= 2
+                self._velocity[0] /= 2
                 while self.collide_top(game):
                     self.move((0, -1))
 
             elif self.collide_bottom(game):
-                if self.vector[1] < 0:
-                    self._vector[1] = int(
-                            -self.vector[1] * CONFIG.general.BOUNCE)
+                if self.velocity[1] < 0:
+                    self._velocity[1] = int(
+                            -self.velocity[1] * CONFIG.general.BOUNCE)
 
-                self._vector[0] /= 2
+                self._velocity[0] /= 2
                 while self.collide_bottom(game):
                     self.move((0, 1))
 
             if self.collide_front(game):
-                self._vector[0] = math.fabs(self.vector[0]) / 2
+                self._velocity[0] = math.fabs(self.velocity[0]) / 2
                 while self.collide_front(game):
                     self.move((2, 0))
 
             elif self.collide_back(game):
-                self._vector[0] = -math.fabs(self.vector[0]) / 2
+                self._velocity[0] = -math.fabs(self.velocity[0]) / 2
                 while self.collide_back(game):
                     self.move((-2, 0))
 
     def _update_physics(self, deltatime, game):
         """
         This function apply current movemements and various environemental
-        vectors to the entity, and calculate collisions.
+        velocitys to the entity, and calculate collisions.
 
         """
         # Move in walking direction.
         self.move((
-                    self.walking_vector[0] * deltatime,
-                    self.walking_vector[1] * deltatime))
+                    self.walking_velocity[0] * deltatime,
+                    self.walking_velocity[1] * deltatime))
 
         self.foot_rect = self._foot_collision_rect()
         #self._on_ground = game.level.collide_rect(
@@ -878,40 +878,40 @@ class Entity(Actor):
                 #self.foot_rect[2:])
 
         # follow the floor if it's moving
-        floor_vector = self._update_floor_vector(game.level.moving_blocs)
+        floor_velocity = self._update_floor_velocity(game.level.moving_blocs)
 
-        # get environemental vector if we collide some vector-block
-        environnement_vector = self._get_block_vector(
-                game.level.vector_blocs)
+        # get environemental velocity if we collide some velocity-block
+        environnement_velocity = self._get_block_velocity(
+                game.level.velocity_blocs)
 
         environnement_friction = self._get_env_collision(
                 game.level.water_blocs)
 
-        self._vector = [
-                self.vector[0] + environnement_vector[0],
-                self.vector[1] + environnement_vector[1]]
+        self._velocity = [
+                self.velocity[0] + environnement_velocity[0],
+                self.velocity[1] + environnement_velocity[1]]
 
         self._place = [
-                self.place[0] + floor_vector[0],
-                self.place[1] + floor_vector[1]]
+                self.place[0] + floor_velocity[0],
+                self.place[1] + floor_velocity[1]]
 
         # Gravity
         if self.gravity and self.physic and not self.on_ground:
-            self._vector[1] += float(CONFIG.general.GRAVITY) * deltatime
+            self._velocity[1] += float(CONFIG.general.GRAVITY) * deltatime
 
         elif not self.physic:
             #FIXME : it is a bit hackish
-            self._vector[1] += -0.00001
+            self._velocity[1] += -0.00001
 
         # Application of air friction.
         f = CONFIG.general.AIR_FRICTION * environnement_friction
 
         if self.physic:  # FIXME: and not a bullet
-            self._vector[0] -= (f * self.vector[0] * deltatime)
-            self._vector[1] -= (f * self.vector[1] * deltatime)
+            self._velocity[0] -= (f * self.velocity[0] * deltatime)
+            self._velocity[1] -= (f * self.velocity[1] * deltatime)
 
-        # apply the vector to entity.
-        self.move((self.vector[0] * deltatime, self.vector[1] * deltatime))
+        # apply the velocity to entity.
+        self.move((self.velocity[0] * deltatime, self.velocity[1] * deltatime))
 
         if not self.physics:
             return

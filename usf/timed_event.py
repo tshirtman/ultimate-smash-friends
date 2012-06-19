@@ -257,7 +257,7 @@ class ThrowBomb(TimedEvent):
                 'bomb',
                 place=(self.params['entity'].rect[0:2]),
                 reverse=self.params['entity'].reversed,
-                vector=[1000, -1000])
+                velocity=[1000, -1000])
 
     def condition(self):
         return True
@@ -303,7 +303,7 @@ class Gost(TimedEvent):
                     self.target_player.dist(self.params['entity'])):
                 self.target_player = pla
 
-        self.params['entity'].set_vector([
+        self.params['entity'].set_velocity([
         (self.target_player.place[0] - self.params['entity'].place[0]) * 3,
         (self.target_player.place[1] - self.params['entity'].place[1]) * 3])
 
@@ -321,7 +321,7 @@ class ThrowMiniGost(TimedEvent):
         self.params['world'].add_item(
                 'mini_gost',
                 place=(self.params['entity'].rect[0:2]),
-                vector=[1000, 50])
+                velocity=[1000, 50])
 
     def condition(self):
         return True
@@ -381,12 +381,12 @@ class InvinciblePlayer(TimedEvent):
 
 class VectorEvent(TimedEvent):
     """
-    This event is used to assign time-based vector (accelerations) to a player.
+    This event is used to assign time-based velocity (accelerations) to a player.
     Used by animations.
     """
 
     def __init__(self, manager, period, params=dict()):
-        #logging.debug("vector Event created "+ str(self.period))
+        #logging.debug("velocity Event created "+ str(self.period))
         super(VectorEvent, self).__init__(manager, period, params)
 
     def execute(self, deltatime):
@@ -403,14 +403,14 @@ class VectorEvent(TimedEvent):
 
     def delete(self):
         """
-        Add the vector to the player vector.
+        Add the velocity to the player velocity.
         """
 
-        #logging.debug("vector Event applied")
+        #logging.debug("velocity Event applied")
         if self.condition():
-            self.params['entity'].set_vector([
-                self.params['vector'][0],
-                -self.params['vector'][1]])
+            self.params['entity'].set_velocity([
+                self.params['velocity'][0],
+                -self.params['velocity'][1]])
 
 
 class UpgradePlayer(TimedEvent):
@@ -438,8 +438,8 @@ class DropPlayer(TimedEvent):
     def __init__(self, manager, period, params=dict()):
         super(DropPlayer, self).__init__(manager, period, params)
         #logging.debug("inserting player in game")
-        self.params['entity'].set_vector([0, 0])
-        self.params['entity'].set_walking_vector([0, 0])
+        self.params['entity'].set_velocity([0, 0])
+        self.params['entity'].set_walking_velocity([0, 0])
         self.params['entity'].set_percents(0)
         self.params['entity'].set_upgraded(False)
         entry = random.choice(self.params['world'].level.entrypoints)
@@ -513,7 +513,7 @@ class PlayerStaticOnGround(TimedEvent):
                 (self.params['anim_name'],
                     self.params['anim_name'] + '_upgraded')):
 
-            if tuple(self.params['entity'].walking_vector) != (0, 0):
+            if tuple(self.params['entity'].walking_velocity) != (0, 0):
                 anim = 'walk'
             else:
                 anim = 'static'
@@ -531,7 +531,7 @@ class Bounce(TimedEvent):
 
     def execute(self, deltatime):
         if self.params['entity'].on_ground:
-            self.params['entity'].vector[1] *= -1
+            self.params['entity'].velocity[1] *= -1
 
     def condition(self):
         return True
@@ -637,7 +637,7 @@ class XeonCharge(TimedEvent):
                     reverse=self.entity.reversed,
                     place=[self.entity.place[0] + (-100 if self.entity.reversed
                         else 100), self.entity.place[1]],
-                    vector=[300, 0],
+                    velocity=[300, 0],
                     bullet=True)
 
 # This list is used to cast an event by name. This is usefull since events are

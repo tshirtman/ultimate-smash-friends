@@ -178,14 +178,14 @@ class Block (object):
 
 class VectorBloc (Block):
     """
-    This define a bloc that apply a vector to any entity falling/walking on it.
+    This define a bloc that apply a velocity to any entity falling/walking on it.
     """
 
-    def __init__(self, rects, vector, relative, *args, **kwargs):
+    def __init__(self, rects, velocity, relative, *args, **kwargs):
         super(VectorBloc, self).__init__(*args, **kwargs)
         self.rects = rects
         self.relative = relative
-        self.vector = vector
+        self.velocity = velocity
         self.collide_rects = []
         for i in self.rects:
             self.collide_rects.append(
@@ -194,13 +194,13 @@ class VectorBloc (Block):
                         i[1] + self.position[1],
                         i[2], i[3]))
 
-    def apply_vector(self, entity):
+    def apply_velocity(self, entity):
         """
-        This method simply add the bloc's vector to the passed player.
+        This method simply add the bloc's velocity to the passed player.
         """
 
-        entity.vector = [entity.vector[0] + self.vector[0],
-                entity.vector[1] + self.vector[1]]
+        entity.velocity = [entity.velocity[0] + self.velocity[0],
+                entity.velocity[1] + self.velocity[1]]
 
     @memoize
     def collide_rect(self, rect):
@@ -334,7 +334,7 @@ class Level(object):
         self.entrypoints = []
         self.water_blocs = []
         self.decorums = []
-        self.vector_blocs = []
+        self.velocity_blocs = []
         self.map = []
         self.moving_blocs = []
         self.border = []
@@ -350,7 +350,7 @@ class Level(object):
         self.load_moving_blocs(xml, server, levelname)
         self.load_particle_generators(xml)
         self.load_water_blocs(xml, server)
-        self.load_vector_blocs(xml, server, levelname)
+        self.load_velocity_blocs(xml, server, levelname)
         self.load_decorums(xml)
         self.load_events(levelname, xml)
 
@@ -500,16 +500,16 @@ class Level(object):
             nums = [int(i) for i in nums]
             self.water_blocs.append(pygame.Rect(nums))
 
-    def load_vector_blocs(self, xml, server, levelname):
-        ''' load vector blocs defined in xml
+    def load_velocity_blocs(self, xml, server, levelname):
+        ''' load velocity blocs defined in xml
         '''
-        for block in xml.findall('vector-block'):
+        for block in xml.findall('velocity-block'):
             texture = block.attrib['texture']
             position = [int(i) for i in block.attrib['position'].split(' ')]
             texture_fg = (
                     block.attrib['texture_fg'] if 'texture_fg' in block.attrib
                     else None)
-            vector = [int(i) for i in block.attrib['vector'].split(' ')]
+            velocity = [int(i) for i in block.attrib['velocity'].split(' ')]
 
             relative = int(block.attrib['relative']) and True or False
 
@@ -519,10 +519,10 @@ class Level(object):
                         pygame.Rect(
                             [int(i) for i in rect.attrib['coords'].split(' ')]))
 
-                self.vector_blocs.append(
+                self.velocity_blocs.append(
                         VectorBloc(
                             rects,
-                            vector,
+                            velocity,
                             relative,
                             position,
                             texture,
@@ -551,7 +551,7 @@ class Level(object):
         self.draw_background(surface, level_place, zoom)
         self.draw_level(surface, level_place, zoom, shapes)
 
-        for block in self.moving_blocs + self.vector_blocs:
+        for block in self.moving_blocs + self.velocity_blocs:
             block.draw(surface, level_place, zoom)
 
     def draw_after_players(self, surface, level_place, zoom, levelmap=False):
@@ -561,7 +561,7 @@ class Level(object):
         if levelmap or loaders.get_gconfig().get("game", "minimap") == "y":
             self.draw_minimap(surface)
 
-        for block in self.moving_blocs + self.vector_blocs:
+        for block in self.moving_blocs + self.velocity_blocs:
             block.draw_after(surface, level_place, zoom)
 
         for generator in self.particles_generators:
@@ -678,7 +678,7 @@ class Level(object):
     def collide_rect(self, (x, y), (h, w)=(1, 1)):
         """
         This fonction returns True if the rect at coords (x, y) collides one of
-        the rects of the level, including the moving blocks and vector blocks.
+        the rects of the level, including the moving blocks and velocity blocks.
 
         #XXX: any decent optimisation of this welcomed
         """
@@ -688,7 +688,7 @@ class Level(object):
             return True
 
         else:
-            for i in self.vector_blocs + self.moving_blocs:
+            for i in self.velocity_blocs + self.moving_blocs:
                 if r.collidelist(i.collide_rects) != -1:
                     return True
             return False

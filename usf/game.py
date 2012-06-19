@@ -160,7 +160,7 @@ class Game(object):
         place=(550, 50),
         reverse=False,
         upgraded=False,
-        vector=(0, 0),
+        velocity=(0, 0),
         bullet=False,
         physics=True,
         animation='static'):
@@ -175,7 +175,7 @@ class Game(object):
                         game=self,
                         entity_skinname=os.path.join('items', item),
                         place=place,
-                        vector=vector,
+                        velocity=velocity,
                         reverse=reverse,
                         visible=True,
                         present=True,

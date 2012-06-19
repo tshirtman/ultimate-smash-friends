@@ -77,10 +77,10 @@
         period="350,0"
         action="PlayerStaticOnGround"
         ></event>
-        <vector
+        <velocity
         time="200"
-        vector="0,1500"
-        ></vector>
+        velocity="0,1500"
+        ></velocity>
         <frame
         time="0"
         image="jump1.png"
@@ -114,10 +114,10 @@
         period="150,0"
         action="PlayerStaticOnGround"
         > </event>
-        <vector
+        <velocity
         time="100"
-        vector="0,1200"
-        ></vector>
+        velocity="0,1200"
+        ></velocity>
         <frame
         time="0"
         image="roll1.png"
@@ -149,7 +149,7 @@
         >
             <agressiv-point
             coords="59,33"
-            vector="187,-112"
+            velocity="187,-112"
             ></agressiv-point>
         </frame>
     </movement>
@@ -174,7 +174,7 @@
         >
             <agressiv-point
             coords="50,38"
-            vector="112,-10"
+            velocity="112,-10"
             ></agressiv-point>
         </frame>
         <frame
@@ -189,7 +189,7 @@
         >
             <agressiv-point
             coords="50,38"
-            vector="112,-10"
+            velocity="112,-10"
             ></agressiv-point>
         </frame>
     </movement>
@@ -201,10 +201,10 @@
         period="150,0"
         action="PlayerStaticOnGround"
         > </event>
-        <vector
+        <velocity
         time="100"
-        vector="0,1500"
-        ></vector>
+        velocity="0,1500"
+        ></velocity>
         <frame
         time="0"
         image="smash-up1.png"
@@ -214,7 +214,7 @@
         image="smash-up2.png"
         > <agressiv-point
             coords="48,20"
-            vector="37,-300"
+            velocity="37,-300"
             ></agressiv-point>
         </frame>
         <frame
@@ -235,7 +235,7 @@
         image="smash-up2.png"
         > <agressiv-point
             coords="48,20"
-            vector="37,-300"
+            velocity="37,-300"
             ></agressiv-point>
         </frame>
         <frame
@@ -269,7 +269,7 @@
         hardshape= "8 0 22 48"
         > <agressiv-point
             coords="28,41"
-            vector="112,-3"
+            velocity="112,-3"
             ></agressiv-point>
         </frame>
     </movement-->
@@ -321,13 +321,13 @@
     duration="500"
     repeat="0"
     >
-        <vector
+        <velocity
         time="200"
-        vector="50,0"
+        velocity="50,0"
         />
-        <vector
+        <velocity
         time="300"
-        vector="70,0"
+        velocity="70,0"
         />
         <frame
         time="0"
@@ -397,7 +397,7 @@
         >
             <agressiv-point
             coords="44,35"
-            vector="37,-37"
+            velocity="37,-37"
             ></agressiv-point>
         </frame>
         <frame
@@ -412,7 +412,7 @@
         >
             <agressiv-point
             coords="44,35"
-            vector="37,-37"
+            velocity="37,-37"
             ></agressiv-point>
         </frame>
     </movement>
@@ -424,14 +424,14 @@
         period="150,0"
         action="PlayerStaticOnGround"
         ></event>
-        <vector
+        <velocity
         time="100"
-        vector="0,1000"
-        ></vector>
-        <vector
+        velocity="0,1000"
+        ></velocity>
+        <velocity
         time="200"
-        vector="100,200"
-        ></vector>
+        velocity="100,200"
+        ></velocity>
         <frame
         time="0"
         image="jump1.png"
@@ -444,11 +444,11 @@
         >
             <agressiv-point
             coords="51,35"
-            vector="10,-7"
+            velocity="10,-7"
             ></agressiv-point>
             <agressiv-point
             coords="37,42"
-            vector="10,-3"
+            velocity="10,-3"
             ></agressiv-point>
         </frame>
     </movement>
@@ -519,10 +519,10 @@
         period="350,0"
         action="PlayerStaticOnGround"
         ></event>
-        <vector
+        <velocity
         time="200"
-        vector="0,1500"
-        ></vector>
+        velocity="0,1500"
+        ></velocity>
         <frame
         time="0"
         image="jump1-upgraded.png"
@@ -556,10 +556,10 @@
         period="150,0"
         action="PlayerStaticOnGround"
         > </event>
-        <vector
+        <velocity
         time="100"
-        vector="0,1200"
-        ></vector>
+        velocity="0,1200"
+        ></velocity>
         <frame
         time="0"
         image="roll1-upgraded.png"
@@ -592,7 +592,7 @@
         >
             <agressiv-point
             coords="59,33"
-            vector="187,-112"
+            velocity="187,-112"
             ></agressiv-point>
         </frame>
     </movement>
@@ -617,7 +617,7 @@
         >
             <agressiv-point
             coords="50,38"
-            vector="112,-10"
+            velocity="112,-10"
             ></agressiv-point>
         </frame>
         <frame
@@ -632,7 +632,7 @@
         >
             <agressiv-point
             coords="50,38"
-            vector="112,-10"
+            velocity="112,-10"
             ></agressiv-point>
         </frame>
     </movement>
@@ -644,22 +644,22 @@
         period="150,0"
         action="PlayerStaticOnGround"
         > </event>
-        <vector
+        <velocity
         time="100"
-        vector="0,1500"
-        ></vector>
+        velocity="0,1500"
+        ></velocity>
         <frame
         time="0"
         image="smash-up1-upgraded.png"
-        vector="0,70"
+        velocity="0,70"
         > </frame>
         <frame
         time="300"
         image="smash-up2-upgraded.png"
-        vector="0,70"
+        velocity="0,70"
         > <agressiv-point
             coords="48,20"
-            vector="37,-300"
+            velocity="37,-300"
             ></agressiv-point>
         </frame>
         <frame
@@ -680,7 +680,7 @@
         image="smash-up2-upgraded.png"
         > <agressiv-point
             coords="48,20"
-            vector="37,-300"
+            velocity="37,-300"
             ></agressiv-point>
         </frame>
         <frame
@@ -711,11 +711,11 @@
         <frame
         time="400"
         image="smash-down5-upgraded.png"
-        vector="0,-50"
+        velocity="0,-50"
         hardshape= "8 0 22 48"
         > <agressiv-point
             coords="28,41"
-            vector="112,-3"
+            velocity="112,-3"
             ></agressiv-point>
         </frame>
     </movement-->
@@ -731,7 +731,7 @@
         <frame
         time="0"
         image="special1-upgraded.png"
-        vector="10,0"
+        velocity="10,0"
         > </frame>
         <frame
         time="200"
@@ -768,14 +768,14 @@
     duration="500"
     repeat="0"
     >
-        <vector
+        <velocity
         time="200"
-        vector="50,0"
-        > </vector>
-        <vector
+        velocity="50,0"
+        > </velocity>
+        <velocity
         time="300"
-        vector="70,0"
-        > </vector>
+        velocity="70,0"
+        > </velocity>
         <frame
         time="0"
         image="roll1-upgraded.png"
@@ -839,7 +839,7 @@
         >
                 <agressiv-point
                 coords="29,52"
-                vector="19,-6"
+                velocity="19,-6"
                 ></agressiv-point>
         </frame>
         <frame
@@ -849,7 +849,7 @@
         >
             <agressiv-point
             coords="48,37"
-            vector="37,-37"
+            velocity="37,-37"
             ></agressiv-point>
         </frame>
         <frame
@@ -859,7 +859,7 @@
         >
                 <agressiv-point
                 coords="29,52"
-                vector="19,-6"
+                velocity="19,-6"
                 ></agressiv-point>
          </frame>
         <frame
@@ -869,7 +869,7 @@
         >
             <agressiv-point
             coords="48,37"
-            vector="37,-37"
+            velocity="37,-37"
             ></agressiv-point>
         </frame>
     </movement>
@@ -881,14 +881,14 @@
         period="150,0"
         action="PlayerStaticOnGround"
         ></event>
-        <vector
+        <velocity
         time="100"
-        vector="0,1000"
-        ></vector>
-        <vector
+        velocity="0,1000"
+        ></velocity>
+        <velocity
         time="200"
-        vector="100,60"
-        ></vector>
+        velocity="100,60"
+        ></velocity>
         <frame
         time="0"
         image="jump1-upgraded.png"
@@ -901,11 +901,11 @@
         >
             <agressiv-point
             coords="53,36"
-            vector="10,-7"
+            velocity="10,-7"
             ></agressiv-point>
             <agressiv-point
             coords="37,44"
-            vector="10,-3"
+            velocity="10,-3"
             ></agressiv-point>
         </frame>
     </movement>

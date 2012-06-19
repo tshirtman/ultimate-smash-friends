@@ -71,8 +71,8 @@ class Tools(object):
         self.y_entry = widget_tree.get_widget('y_position')
         self.w_entry = widget_tree.get_widget('width')
         self.h_entry = widget_tree.get_widget('height')
-        self.vec_x_entry = widget_tree.get_widget('x_vector')
-        self.vec_y_entry = widget_tree.get_widget('y_vector')
+        self.vec_x_entry = widget_tree.get_widget('x_velocity')
+        self.vec_y_entry = widget_tree.get_widget('y_velocity')
         self.tex_entry = widget_tree.get_widget('texture')
         self.rel_check = widget_tree.get_widget('relative_checkbox')
         self.patterns_treeview = \
@@ -80,7 +80,7 @@ class Tools(object):
 
         self.pos_group = widget_tree.get_widget('pos_group')
         self.size_group = widget_tree.get_widget('size_group')
-        self.vector_group = widget_tree.get_widget('vector_group')
+        self.velocity_group = widget_tree.get_widget('velocity_group')
         self.texture_group = widget_tree.get_widget('texture_group')
         self.rel_group = widget_tree.get_widget('rel_group')
         self.pattern_group = widget_tree.get_widget('pattern_group')
@@ -94,7 +94,7 @@ class Tools(object):
             'entry': self.show_entry_tool,
             'water': self.show_water_tool,
             'moving': self.show_moving_tool,
-            'vector': self.show_vector_tool,
+            'velocity': self.show_velocity_tool,
             'select': self.show_select_tool,
             'delete': self.show_delete_tool,
             }
@@ -213,15 +213,15 @@ class Tools(object):
                 self.model.append([p['position'][0], p['position'][1],
                                   p['time']])
 
-    def show_vector_tool(self, block=None):
+    def show_velocity_tool(self, block=None):
         """
-        Sets up the GUI to show vector block properties.
+        Sets up the GUI to show velocity block properties.
         """
 
         self.clear()
         self.pos_group.set_visible(True)
         self.size_group.set_visible(True)
-        self.vector_group.set_visible(True)
+        self.velocity_group.set_visible(True)
         self.rel_group.set_visible(True)
         self.texture_group.set_visible(True)
         self.button_group.set_visible(True)
@@ -232,8 +232,8 @@ class Tools(object):
             self.w_entry.set_value(block.rects[0][2])
             self.h_entry.set_value(block.rects[0][3])
             self.rel_check.set_active(block.relative)
-            self.vec_x_entry.set_value(block.vector[0])
-            self.vec_y_entry.set_value(block.vector[1])
+            self.vec_x_entry.set_value(block.velocity[0])
+            self.vec_y_entry.set_value(block.velocity[1])
             self.tex_entry.set_text(block.texture)
 
     def show_entry_tool(self, pt=None):
@@ -308,7 +308,7 @@ class PygameHandler(object):
                        )},
             'water': {'visible': True, 'colour': pygame.Color('#0000FF'
                       )},
-            'vector': {'visible': True, 'colour': pygame.Color('#00FF00'
+            'velocity': {'visible': True, 'colour': pygame.Color('#00FF00'
                        )},
             'entry': {'visible': True, 'colour': pygame.Color('#FF00FF'
                       )},
@@ -383,7 +383,7 @@ class PygameHandler(object):
             self.surface.blit(loaders.image(block.texture, 1)[0],
                               adj_up(block.patterns[0]['position']))
 
-        for block in self.level.vector_blocs:
+        for block in self.level.velocity_blocs:
             self.surface.blit(loaders.image(block.texture, 1)[0],
                               adj_up(block.position))
 
@@ -432,22 +432,22 @@ class PygameHandler(object):
                                     adj_up(moving_block.patterns[i]['position'
                                     ]))
 
-        # Draw vector blocks
+        # Draw velocity blocks
 
-        if self.parts['vector']['visible']:
-            for vector_block in self.level.vector_blocs:
-                for rect in vector_block.rects:
-                    pygame.draw.rect(overlay, self.parts['vector'
+        if self.parts['velocity']['visible']:
+            for velocity_block in self.level.velocity_blocs:
+                for rect in velocity_block.rects:
+                    pygame.draw.rect(overlay, self.parts['velocity'
                             ]['colour'],
-                            rect.move(vector_block.position).move(ORIGIN))
+                            rect.move(velocity_block.position).move(ORIGIN))
 
                 colour = tuple([max(i - 100, 0) for i in
-                               self.parts['vector']['colour']])
+                               self.parts['velocity']['colour']])
 
                 self.draw_arrow(overlay, colour,
-                                adj_up(vector_block.position),
-                                tuple([vector_block.position[i]
-                                + vector_block.vector[i] + ORIGIN[i]
+                                adj_up(velocity_block.position),
+                                tuple([velocity_block.position[i]
+                                + velocity_block.velocity[i] + ORIGIN[i]
                                 for i in range(2)]))
 
         # Draw entry points
@@ -464,18 +464,18 @@ class PygameHandler(object):
 
         if not self.secondary:
             if self.start_pt != INVALID and self.tool in ['block',
-                    'water', 'vector', 'moving']:
+                    'water', 'velocity', 'moving']:
                 pygame.draw.rect(overlay, self.parts[self.tool]['colour'
                                  ], pygame.Rect(self.start_pt,
                                  (pointer[0] - self.start_pt[0],
                                  pointer[1] - self.start_pt[1])))
 
-            if self.tool in ['vector', 'moving'] and self.start_pt \
+            if self.tool in ['velocity', 'moving'] and self.start_pt \
                 != INVALID:
                 self.surface.blit(loaders.image(self.texture, 1)[0],
                                   self.start_pt)
         else:
-            if self.tool in ['vector', 'moving']:
+            if self.tool in ['velocity', 'moving']:
                 self.draw_arrow(overlay, self.parts[self.tool]['colour'
                                 ], self.start_pt, pointer)
 
@@ -920,7 +920,7 @@ class USFLevelEditor(object):
                                  self.tools.h_entry.get_value()))],
                                  self.tools.tex_entry.get_text().split(os.sep)[-1],
                                  pat)
-        elif self.pyHandle.tool == 'vector':
+        elif self.pyHandle.tool == 'velocity':
 
             self.pyHandle.current_entity[1] = \
                 level.VectorBloc([pygame.Rect((0, 0),
@@ -1013,7 +1013,7 @@ class USFLevelEditor(object):
                 ]
 
             self.tools.show_water_tool(self.pyHandle.level.water_blocs[-1])
-        elif self.pyHandle.tool == 'vector':
+        elif self.pyHandle.tool == 'velocity':
             bloc = None
             texture = self.tools.tex_entry.get_text()
 
@@ -1025,7 +1025,7 @@ class USFLevelEditor(object):
             self.tools.tex_entry.set_text(texture)
 
             if self.pyHandle.secondary:
-                self.pyHandle.level.vector_blocs.remove(
+                self.pyHandle.level.velocity_blocs.remove(
                     self.pyHandle.current_entity[1]
                 )
 
@@ -1050,12 +1050,12 @@ class USFLevelEditor(object):
                 self.pyHandle.secondary = True
                 self.pyHandle.start_pt = adj_up(self.pyHandle.start_pt)
 
-            self.pyHandle.level.vector_blocs.append(bloc)
+            self.pyHandle.level.velocity_blocs.append(bloc)
             self.pyHandle.current_entity = [
-                self.pyHandle.level.vector_blocs,
-                self.pyHandle.level.vector_blocs[-1]
+                self.pyHandle.level.velocity_blocs,
+                self.pyHandle.level.velocity_blocs[-1]
                 ]
-            self.tools.show_vector_tool(self.pyHandle.level.vector_blocs[-1])
+            self.tools.show_velocity_tool(self.pyHandle.level.velocity_blocs[-1])
         elif self.pyHandle.tool == 'moving':
             bloc = None
             texture = self.tools.tex_entry.get_text()
@@ -1126,7 +1126,7 @@ class USFLevelEditor(object):
                 self.pyHandle.current_entity = [select[0], select[1]]
                 self.tools.mapping[select[2]](select[1])
 
-        if self.pyHandle.tool not in ['vector', 'moving']:
+        if self.pyHandle.tool not in ['velocity', 'moving']:
             self.pyHandle.start_pt = INVALID
 
     def find(self, pt):
@@ -1147,11 +1147,11 @@ class USFLevelEditor(object):
             if block.collidepoint(pt):
                 return [self.pyHandle.level.map, block, 'block']
 
-        for vector in self.pyHandle.level.vector_blocs:
-            if pygame.Rect(vector.position,
-                           vector.rects[0].size).collidepoint(pt):
-                return [self.pyHandle.level.vector_blocs, vector,
-                        'vector']
+        for velocity in self.pyHandle.level.velocity_blocs:
+            if pygame.Rect(velocity.position,
+                           velocity.rects[0].size).collidepoint(pt):
+                return [self.pyHandle.level.velocity_blocs, velocity,
+                        'velocity']
 
         for moving in self.pyHandle.level.moving_blocs:
             if pygame.Rect(moving.patterns[0]['position'],
@@ -1244,12 +1244,12 @@ class USFLevelEditor(object):
 
 ''')
 
-        for vec in self.pyHandle.level.vector_blocs:
-            f.write(TAB + '<vector-block\n' + TAB * 2 + 'texture="'
+        for vec in self.pyHandle.level.velocity_blocs:
+            f.write(TAB + '<velocity-block\n' + TAB * 2 + 'texture="'
                     + vec.texture.split(os.sep)[-1] + '"\n')
 
-            f.write(TAB * 2 + 'vector="' + str(vec.vector[0]) + ' '
-                    + str(vec.vector[1]) + '"\n')
+            f.write(TAB * 2 + 'velocity="' + str(vec.velocity[0]) + ' '
+                    + str(vec.velocity[1]) + '"\n')
 
             f.write(TAB * 2 + 'relative="' + str(vec.relative and 1
                     or 0) + '">\n')
@@ -1258,7 +1258,7 @@ class USFLevelEditor(object):
                 f.write(TAB * 2 + '<rect coords="' + str(rect[0]) + ' '
                         + str(rect[1]) + ' ' + str(rect[2]) + ' '
                         + str(rect[3]) + '"></rect>\n')
-            f.write(TAB + '</vector-block>\n')
+            f.write(TAB + '</velocity-block>\n')
         f.write('</map>\n')
         f.close()
 

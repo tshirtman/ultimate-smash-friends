@@ -88,7 +88,7 @@ def simulate(game, iam, m):
 
     entity = game.players[iam]
     entity.set_reversed(m.reverse)
-    entity.set_walking_vector([m.walk and WALKSPEED or 0, None])
+    entity.set_walking_velocity([m.walk and WALKSPEED or 0, None])
     entity.entity_skin.change_animation(
             m.movement,
             game,
@@ -240,7 +240,7 @@ def search_path(game, iam, max_depth):
 class Movement(object):
     """ A simple structure to store a planet movement, contains the planned
     time of the movement, the direction (reversed or not) of the movement, if
-    the movement is done with walking vectors activated or not, and the name of
+    the movement is done with walking velocitys activated or not, and the name of
     the movement executed.
     """
 
@@ -296,6 +296,6 @@ class AI(object):
                     game,
                     {'entity': entity})
             entity.set_reversed(m.reverse)
-            entity.set_walking_vector([m.walk and
-                WALKSPEED or 0, entity.walking_vector[1]])
+            entity.set_walking_velocity([m.walk and
+                WALKSPEED or 0, entity.walking_velocity[1]])
 
