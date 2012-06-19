@@ -109,7 +109,7 @@ Contribute
 ==========
 
 The addition of characters and levels is designed to be easy, only bitmaps and
-an xml file! Characters support velocitys in any animations, collision points
+an xml file! Characters support velocities in any animations, collision points
 in any animations, adding event to game in any animations, the
 characters behaviour is very flexible, It's also easy to code a particular
 event if you are a developper. We hope this will encourage collaborative

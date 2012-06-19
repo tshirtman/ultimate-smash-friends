@@ -76,7 +76,7 @@ class Placeholder(object):
         self.image = 'no_animation.png'
         self.time = 0
         self.agressivpoints = []
-        self.velocitys = []
+        self.velocities = []
 
 
 def create_character_xml(path):

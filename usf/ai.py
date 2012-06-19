@@ -240,7 +240,7 @@ def search_path(game, iam, max_depth):
 class Movement(object):
     """ A simple structure to store a planet movement, contains the planned
     time of the movement, the direction (reversed or not) of the movement, if
-    the movement is done with walking velocitys activated or not, and the name of
+    the movement is done with walking velocities activated or not, and the name of
     the movement executed.
     """
 

@@ -38,7 +38,7 @@ SIZE = (CONFIG.general.WIDTH,
 class EntitySkin (object):
     """
     An EntitySkin contains all information about a player or an item, which is
-    mainly animations frames, with their timings and velocitys, and less
+    mainly animations frames, with their timings and velocities, and less
     importants information as the character/item name and such details.
     """
 
@@ -90,7 +90,7 @@ class EntitySkin (object):
 
         self.action_events = {}
         self.sounds = {}
-        self.velocitys = {}
+        self.velocities = {}
 
         self.hardshape = self.load_hardshape(attribs)
         self.shield_center = self.load_shield_center(attribs)
@@ -122,18 +122,18 @@ class EntitySkin (object):
             frames = []
             events = []
             sounds = []
-            velocitys = []
+            velocities = []
             trails = []
 
             for event in movement.findall('velocity'):
                 #logging.debug('velocity found')
                 x, y = [int(n) for n in event.attrib['velocity'].split(',')]
-                velocitys.append(
+                velocities.append(
                         (
                             (x, y),
                             int(event.attrib['time'])))
 
-            self.velocitys[movement.attrib['name']] = velocitys
+            self.velocities[movement.attrib['name']] = velocities
 
             for event in movement.findall('event'):
                 events.append(
@@ -223,8 +223,8 @@ class EntitySkin (object):
             params['anim_name'] = anim_name
             self.add_events(anim_name, game, params)
 
-            #logging.debug(self.velocitys[anim_name])
-            self.add_velocitys(anim_name, game, params)
+            #logging.debug(self.velocities[anim_name])
+            self.add_velocities(anim_name, game, params)
 
             if self.sounds[anim_name] != []:
                 # XXX reactivate the try/except with the good exception when you
@@ -250,10 +250,10 @@ class EntitySkin (object):
         (self.current_animation, self.animation, self.animation.playing,
                 self.animation._start_time) = backup
 
-    def add_velocitys(self, anim_name, game, params):
-        """ add velocitys of the animation to the game as events
+    def add_velocities(self, anim_name, game, params):
+        """ add velocities of the animation to the game as events
         """
-        for velocity in self.velocitys[anim_name]:
+        for velocity in self.velocities[anim_name]:
             #logging.debug('velocity added')
             params2 = params.copy() # because we want to change some of
                                     # them for this time.

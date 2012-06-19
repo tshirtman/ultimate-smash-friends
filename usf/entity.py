@@ -259,7 +259,7 @@ class Entity(Actor):
     collisions of an Entity. Players and Items are Entities.
 
     This is a big class, and it uses a few counter intuitive concepts, first,
-    its velocitys are defined relatively, that mean moving "forward/backward"
+    its velocities are defined relatively, that mean moving "forward/backward"
     instead of moving "left/right", also the velocity representing the walking
     movement of the entity is seperated from the main velocity.
 
@@ -503,7 +503,7 @@ class Entity(Actor):
         """
         enforce the effect of a collision with an aggressive point, the
         point is a list of x, y,dx, dy coords, and reverse is a flag indicating
-        if the attacking entity is reversed (to apply projection velocitys)
+        if the attacking entity is reversed (to apply projection velocities)
         """
 
         if self.shield['on']:
@@ -779,7 +779,7 @@ class Entity(Actor):
 
     def collide_bottom(self, game):
         """
-        test of points and consequences on velocitys if one of the two uppers
+        test of points and consequences on velocities if one of the two uppers
         points collide, the entity bounce down.
         """
         return (game.level.collide_rect(self.point(self.BOTTOM_RIGHT))
@@ -864,7 +864,7 @@ class Entity(Actor):
     def _update_physics(self, deltatime, game):
         """
         This function apply current movemements and various environemental
-        velocitys to the entity, and calculate collisions.
+        velocities to the entity, and calculate collisions.
 
         """
         # Move in walking direction.
