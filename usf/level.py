@@ -253,7 +253,7 @@ class MovingPart(Block):
 
         # get the next position of pattern we will get by.
         # FIXME: maybe avoid filtering all, maybe using an itertool?
-        next_place = filter(
+        next_pos = filter(
                 lambda(x): x['time'] >= level_time * 10000 %
                 self.patterns[-1]['time'],
                 self.patterns)[0]
@@ -262,15 +262,15 @@ class MovingPart(Block):
         # done.
         percent_bettween = (
                 level_time * 10000 % self.patterns[-1]['time'] - last['time']) / (
-                        next_place['time'] - last['time'])
+                        next_pos['time'] - last['time'])
 
         self.position[0] = (
             int(last['position'][0] * (1 - percent_bettween) +
-            next_place['position'][0] * (percent_bettween)))
+            next_pos['position'][0] * (percent_bettween)))
 
         self.position[1] = (
             int(last['position'][1] * (1 - percent_bettween)
-             + next_place['position'][1] * (percent_bettween)))
+             + next_pos['position'][1] * (percent_bettween)))
 
         # maybe usefull to cache thoose result too.
         self.collide_rects = map(
@@ -545,27 +545,27 @@ class Level(object):
             self.decorums.append(Decorum(frames, coords, depth, update_fctn))
         self.decorums.sort()
 
-    def draw_before_players(self, surface, level_place, zoom, shapes=False):
+    def draw_before_players(self, surface, level_pos, zoom, shapes=False):
         ''' draw everything that need to be drawed before players
         '''
-        self.draw_background(surface, level_place, zoom)
-        self.draw_level(surface, level_place, zoom, shapes)
+        self.draw_background(surface, level_pos, zoom)
+        self.draw_level(surface, level_pos, zoom, shapes)
 
         for block in self.moving_blocs + self.velocity_blocs:
-            block.draw(surface, level_place, zoom)
+            block.draw(surface, level_pos, zoom)
 
-    def draw_after_players(self, surface, level_place, zoom, levelmap=False):
+    def draw_after_players(self, surface, level_pos, zoom, levelmap=False):
         ''' draw everything that need to be drawn after players
         '''
-        self.draw_foreground(surface, level_place, zoom)
+        self.draw_foreground(surface, level_pos, zoom)
         if levelmap or loaders.get_gconfig().get("game", "minimap") == "y":
             self.draw_minimap(surface)
 
         for block in self.moving_blocs + self.velocity_blocs:
-            block.draw_after(surface, level_place, zoom)
+            block.draw_after(surface, level_pos, zoom)
 
         for generator in self.particles_generators:
-            generator.draw(surface, level_place, zoom)
+            generator.draw(surface, level_pos, zoom)
 
     def draw_minimap(self, surface):
         ''' draw minimap in the upper/right corner of the screen, showing blocs
@@ -580,14 +580,14 @@ class Level(object):
                         rect[3] / 8),
                     pygame.Color('grey'))
 
-    def draw_debug_map(self, surface, level_place, zoom):
+    def draw_debug_map(self, surface, level_pos, zoom):
         ''' draw the map before the level, to show the real level shape
         '''
         draw_rect(
                 surface,
                 pygame.Rect(
-                level_place[0] + self.border[0] * zoom,
-                level_place[1] + self.border[1] * zoom,
+                level_pos[0] + self.border[0] * zoom,
+                level_pos[1] + self.border[1] * zoom,
                 self.border[2] * zoom,
                 self.border[3] * zoom),
                 pygame.Color('white'))
@@ -595,8 +595,8 @@ class Level(object):
         draw_rect(
                 surface,
                 pygame.Rect(
-                level_place[0],
-                level_place[1],
+                level_pos[0],
+                level_pos[1],
                 self.rect[2] * zoom,
                 self.rect[3] * zoom),
                 pygame.Color('lightblue'))
@@ -605,8 +605,8 @@ class Level(object):
             draw_rect(
                     surface,
                     pygame.Rect(
-                        int(level_place[0] + (rect[0]) * zoom),
-                        int(level_place[1] + (rect[1]) * zoom),
+                        int(level_pos[0] + (rect[0]) * zoom),
+                        int(level_pos[1] + (rect[1]) * zoom),
                         int(rect[2] * zoom),
                         int(rect[3] * zoom)),
                     pygame.Color('green'))
@@ -615,8 +615,8 @@ class Level(object):
             draw_rect(
                     surface,
                     pygame.Rect(
-                        int(level_place[0] + (rect[0]) * zoom),
-                        int(level_place[1] + (rect[1]) * zoom),
+                        int(level_pos[0] + (rect[0]) * zoom),
+                        int(level_pos[1] + (rect[1]) * zoom),
                         20, 20),
                     pygame.Color('blue'))
 

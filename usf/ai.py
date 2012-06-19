@@ -103,7 +103,7 @@ def under_lowest_plateform(game, player):
     """
 
     for p in game.level.map:
-        if p[1] > player.place[1]:
+        if p[1] > player.pos[1]:
             return False
 
     return True
@@ -115,7 +115,7 @@ def over_some_plateform(game, player):
     """
 
     for p in game.level.map:
-        if p[1] > player.place[1] and p[0] < player.place[0] < p[0] + p[2]:
+        if p[1] > player.pos[1] and p[0] < player.pos[0] < p[0] + p[2]:
             return True
 
     return False

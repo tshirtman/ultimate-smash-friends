@@ -89,7 +89,7 @@ class Game(object):
         if screen is not None:
             self.zoom = 1
             # loading level
-            self.level_place = [0, 0]
+            self.level_pos = [0, 0]
             self.icon_space = self.size[0] / len(players_)
 
             # loading players
@@ -277,9 +277,9 @@ class Game(object):
         """
         self.screen.blit(
                 GAME_FONT.render(
-                    str(player.place[0]) +
+                    str(player.pos[0]) +
                     ':' +
-                    str(player.place[1]),
+                    str(player.pos[1]),
                     True,
                     pygame.color.Color('red')),
                 (
@@ -330,16 +330,16 @@ class Game(object):
         """
         self.center_zoom_camera()
         self.level.draw_before_players(
-            self.screen, self.level_place, self.zoom,
+            self.screen, self.level_pos, self.zoom,
             'levelshape' in debug_params and debug_params['levelshape'])
 
         for e in self.players + self.items:
             if e.present:
-                e.draw(self.level_place, self.zoom, self.screen,
+                e.draw(self.level_pos, self.zoom, self.screen,
                         debug_params=debug_params)
 
         self.level.draw_after_players(
-            self.screen, self.level_place, self.zoom,
+            self.screen, self.level_pos, self.zoom,
             'levelmap' in debug_params and debug_params['levelmap'])
 
         self.draw_portraits()
@@ -410,8 +410,8 @@ class Game(object):
             return 1
 
         else:
-            x = [i.place[0] for i in self.present_players]
-            y = [i.place[1] for i in self.present_players]
+            x = [i.pos[0] for i in self.present_players]
+            y = [i.pos[1] for i in self.present_players]
 
             return min(
                     self.size[0] / max(self.size[0], (max(x) - min(x)) * 1.25),
@@ -426,9 +426,9 @@ class Game(object):
             return self.present_players[0].rect[0:2]
         else:
             return (
-                    sum(i.place[0] for i in self.present_players) /
+                    sum(i.pos[0] for i in self.present_players) /
                     len(self.present_players),
-                    sum(i.place[1] for i in self.present_players) /
+                    sum(i.pos[1] for i in self.present_players) /
                     len(self.present_players))
 
     def center_zoom_camera(self):
@@ -447,18 +447,18 @@ class Game(object):
             players_barycenter = self.players_barycenter
             # calculate coordinates of top left corner of level
             # rect the barycenter of players at the center of the screen
-            level_place = [
+            level_pos = [
                  -(players_barycenter[0]) * self.zoom + self.size[0] / 2,
                  -(players_barycenter[1]) * self.zoom + self.size[1] / 2]
 
             if self.smooth_scrolling:
                 # tends to the ideal position (nicer!)
-                self.level_place[0] += (level_place[0] - self.level_place[0]) / 4
-                self.level_place[1] += (level_place[1] - self.level_place[1]) / 4
+                self.level_pos[0] += (level_pos[0] - self.level_pos[0]) / 4
+                self.level_pos[1] += (level_pos[1] - self.level_pos[1]) / 4
 
             else:
                 # move immediatly to the ideal position
-                self.level_place = level_place
+                self.level_pos = level_pos
 
     def update_physics(self):
         """

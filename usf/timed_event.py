@@ -271,9 +271,9 @@ class ThrowFireBall(TimedEvent):
     def execute(self, deltatime):
         self.done = True
         entity = self.params['entity']
-        place = list(entity.place[0:2])
-        place[0] += -100 if entity.reversed else entity.rect[2]
-        #place[1] -= entity.rect[3] / 3
+        pos = list(entity.pos[0:2])
+        pos[0] += -100 if entity.reversed else entity.rect[2]
+        #pos[1] -= entity.rect[3] / 3
         self.params['world'].add_item(
                 'fireball',
                 place=place,
@@ -304,8 +304,8 @@ class Gost(TimedEvent):
                 self.target_player = pla
 
         self.params['entity'].set_velocity([
-        (self.target_player.place[0] - self.params['entity'].place[0]) * 3,
-        (self.target_player.place[1] - self.params['entity'].place[1]) * 3])
+        (self.target_player.pos[0] - self.params['entity'].pos[0]) * 3,
+        (self.target_player.pos[1] - self.params['entity'].pos[1]) * 3])
 
     def condition(self):
         return True
@@ -335,9 +335,9 @@ class LaunchBullet(TimedEvent):
     def execute(self, deltatime):
         self.done = True
         entity = self.params['entity']
-        place = entity.place[0:2]
-        place[0] += entity.reversed and -entity.rect[2] or entity.rect[2]
-        place[1] += entity.rect[3] / 2
+        pos = entity.pos[0:2]
+        pos[0] += entity.reversed and -entity.rect[2] or entity.rect[2]
+        pos[1] += entity.rect[3] / 2
         self.params['world'].add_item(
                 'bullet',
                 place=place,
@@ -443,7 +443,7 @@ class DropPlayer(TimedEvent):
         self.params['entity'].set_percents(0)
         self.params['entity'].set_upgraded(False)
         entry = random.choice(self.params['world'].level.entrypoints)
-        self.params['entity'].set_place(entry)
+        self.params['entity'].set_pos(entry)
 
     def execute(self, deltatime):
         pass
@@ -483,7 +483,7 @@ class PlayerOut(TimedEvent):
                     (None, self.params['gametime'] + 1),
                     params=self.params)
 
-        self.coords = self.params['entity'].place
+        self.coords = self.params['entity'].pos
 
     def execute(self, deltatime):
         pass
@@ -554,7 +554,7 @@ class BlobSpecial(TimedEvent):
             self.target = min([
                 (self.entity.dist(e), e) for e in self.params['world'].players
                 if e is not self.entity and
-                ((e.place[0] < self.entity.place[0]) ==\
+                ((e.pos[0] < self.entity.pos[0]) ==\
                         self.entity.reversed)])[1]
 
         except ValueError:
@@ -573,18 +573,18 @@ class BlobSpecial(TimedEvent):
 
         self.angle += deltatime * 2 * 3.14159  # enought precision here
         center = (
-                (self.entity.place[0] + self.target.place[0]) / 2,
-                (self.entity.place[1] + self.target.place[1]) / 2)
+                (self.entity.pos[0] + self.target.pos[0]) / 2,
+                (self.entity.pos[1] + self.target.pos[1]) / 2)
 
-        dx_ = self.target.place[0] - self.entity.place[0]
-        dy_ = self.target.place[1] - self.entity.place[1]
+        dx_ = self.target.pos[0] - self.entity.pos[0]
+        dy_ = self.target.pos[1] - self.entity.pos[1]
 
         xx_ = - math.cos(self.angle) * dx_ / 2 + center[0]
         yy_ = math.sin(self.angle) * dy_ / 2 + center[1] + dy_ * (
                 self.angle / (2 * 3.14159) * (1 if self.angle < 3.14159 else
                     -1))
 
-        self.eye.set_place((xx_, yy_))
+        self.eye.set_pos((xx_, yy_))
 
     def condition(self):
         if (self.angle <= (2 * 3.14159)
@@ -635,8 +635,8 @@ class XeonCharge(TimedEvent):
                     upgraded=self.entity.upgraded,
                     animation=str(size),
                     reverse=self.entity.reversed,
-                    place=[self.entity.place[0] + (-100 if self.entity.reversed
-                        else 100), self.entity.place[1]],
+                    place=[self.entity.pos[0] + (-100 if self.entity.reversed
+                        else 100), self.entity.pos[1]],
                     velocity=[300, 0],
                     bullet=True)
 

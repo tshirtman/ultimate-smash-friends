@@ -51,7 +51,7 @@ class Actor(object):
         self._on_ground = False
         self._physic = kwargs.get('physic', True)
         self._physics = kwargs.get('physics', True)
-        self._place = kwargs.get('place', (550, 1))
+        self._pos = kwargs.get('pos', (550, 1))
         self._present = kwargs.get('present', False)
         self._reversed = kwargs.get('reverse', False)
         self._velocity = list(kwargs.get('velocity', (0, 0)))
@@ -61,19 +61,19 @@ class Actor(object):
         self.old_pos = []
 
     @property
-    def place(self):
+    def pos(self):
         """
         current position in level of the entity
         """
 
-        return self._place
+        return self._pos
 
-    def set_place(self, value):
+    def set_pos(self, value):
         """
         move the entity to an arbitrary position
         """
 
-        self._place = value
+        self._pos = value
 
     @property
     def present(self):
@@ -185,13 +185,13 @@ class Actor(object):
         """
         if isinstance(entity, pygame.Rect):
             return (
-                (self.place[0] - entity.centerx) ** 2 +
-                (self.place[1] - entity.centery) ** 2) ** .5
+                (self.pos[0] - entity.centerx) ** 2 +
+                (self.pos[1] - entity.centery) ** 2) ** .5
 
         elif isinstance(entity, Entity):
             return (
-                (self.place[0] - entity.place[0]) ** 2 +
-                (self.place[1] - entity.place[1]) ** 2) ** .5
+                (self.pos[0] - entity.pos[0]) ** 2 +
+                (self.pos[1] - entity.pos[1]) ** 2) ** .5
         else:
             raise ValueError("param 1 is neither a Rect or an Entity")
 
@@ -319,8 +319,8 @@ class Entity(Actor):
             self._armor = self.entity_skin.armor
             self._rect = pygame.Rect(0, 0, 0, 0)
             self._rect[:2] = (
-                    self._place[0] - self._rect[2] / 2,
-                    self._place[1] - self._rect[3])
+                    self._pos[0] - self._rect[2] / 2,
+                    self._pos[1] - self._rect[3])
 
             self._rect[2:] = self.entity_skin.animation.rect[2:]
             self.entity_skin.update(0,
@@ -462,7 +462,7 @@ class Entity(Actor):
         assert isinstance(self._velocity, list)
         d = {
             '_lives': self.lives,
-            '_place': self.place[:],
+            '_pos': self.pos[:],
             '_rect': pygame.Rect(self.rect[:]),
             '_velocity': self._velocity[:],
             '_walking_velocity': self.walking_velocity[:]}
@@ -551,7 +551,7 @@ class Entity(Actor):
         if debug_params["levelmap"]:
             draw_rect(
                     surface,
-                    pygame.Rect(self.place[0] / 8, self.place[1] / 8, 2, 2),
+                    pygame.Rect(self.pos[0] / 8, self.pos[1] / 8, 2, 2),
                     pygame.Color('red'))
 
     def _draw_debug_hardshape(self, coords, zoom, surface, debug_params):
@@ -624,17 +624,17 @@ class Entity(Actor):
 
         if self.visible:
             if not self.reversed:
-                place = (
+                pos = (
                     self.rect[0] - self.hardshape[0],
                     self.rect[1] - self.hardshape[1])
             else:
-                place = (
+                pos = (
                     self.rect[0],
                     self.rect[1] - self.hardshape[1])
 
             real_coords = (
-                    int(place[0] * zoom) + coords[0],
-                    int(place[1] * zoom) + coords[1])
+                    int(pos[0] * zoom) + coords[0],
+                    int(pos[1] * zoom) + coords[1])
 
             self._draw_debug(real_coords, zoom, surface, debug_params)
             if self.entity_skin.animation.trails and self.old_pos:
@@ -703,8 +703,8 @@ class Entity(Actor):
         """
         h = self.hardshape
         self._rect = [
-                self._place[0] - h[2] / 2 - h[0],
-                self._place[1] - h[1],
+                self._pos[0] - h[2] / 2 - h[0],
+                self._pos[1] - h[1],
                 h[2],
                 h[3]]
 
@@ -891,9 +891,9 @@ class Entity(Actor):
                 self.velocity[0] + environnement_velocity[0],
                 self.velocity[1] + environnement_velocity[1]]
 
-        self._place = [
-                self.place[0] + floor_velocity[0],
-                self.place[1] + floor_velocity[1]]
+        self._pos = [
+                self.pos[0] + floor_velocity[0],
+                self.pos[1] + floor_velocity[1]]
 
         # Gravity
         if self.gravity and self.physic and not self.on_ground:
@@ -935,6 +935,6 @@ class Entity(Actor):
         if self._reversed:
             x = -x
 
-        self.set_place((self._place[0] + x, self._place[1] + y))
+        self.set_pos((self._pos[0] + x, self._pos[1] + y))
 
         self._update_rect()
