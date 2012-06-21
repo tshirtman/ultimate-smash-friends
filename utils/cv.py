@@ -76,7 +76,7 @@ class Placeholder(object):
         self.image = 'no_animation.png'
         self.time = 0
         self.agressivpoints = []
-        self.vectors = []
+        self.velocities = []
 
 
 def create_character_xml(path):
@@ -227,7 +227,7 @@ def main(charnames):
             print """
             <agressiv-point
             coords="%s,%s"
-            vector="%s,%s"
+            velocity="%s,%s"
             ></agressiv-point>
             """ % (
                 (mouse_xy[0] - image_position[0]) % 200,
@@ -237,9 +237,9 @@ def main(charnames):
                 )
 
             print """
-            <vector
+            <velocity
             time="%s"
-            vector="%s,%s"
+            velocity="%s,%s"
             ></agressiv-point>
             """ % (
                 img.time,

@@ -976,7 +976,7 @@ points</property>
 			      </child>
 
 			      <child>
-				<widget class="GtkLabel" id="label_vectors_tab">
+				<widget class="GtkLabel" id="label_velocities_tab">
 				  <property name="visible">True</property>
 				  <property name="label" translatable="yes">Vectors</property>
 				  <property name="use_underline">False</property>

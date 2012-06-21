@@ -348,7 +348,7 @@ _Block</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkRadioButton" id="vector">
+                              <widget class="GtkRadioButton" id="velocity">
                                 <property name="label" translatable="yes">_Vector
  Block</property>
                                 <property name="visible">True</property>
@@ -461,7 +461,7 @@ Point</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkCheckButton" id="vector_visible">
+                              <widget class="GtkCheckButton" id="velocity_visible">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
@@ -551,7 +551,7 @@ Point</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkColorButton" id="vector_colour">
+                              <widget class="GtkColorButton" id="velocity_colour">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
@@ -842,12 +842,12 @@ Point</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <widget class="GtkTable" id="vector_group">
+                                  <widget class="GtkTable" id="velocity_group">
                                     <property name="visible">True</property>
                                     <property name="n_rows">2</property>
                                     <property name="n_columns">2</property>
                                     <child>
-                                      <widget class="GtkSpinButton" id="y_vector">
+                                      <widget class="GtkSpinButton" id="y_velocity">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="max_length">4</property>
@@ -867,7 +867,7 @@ Point</property>
                                       </packing>
                                     </child>
                                     <child>
-                                      <widget class="GtkSpinButton" id="x_vector">
+                                      <widget class="GtkSpinButton" id="x_velocity">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="max_length">4</property>
@@ -885,7 +885,7 @@ Point</property>
                                       </packing>
                                     </child>
                                     <child>
-                                      <widget class="GtkLabel" id="y_vector_label">
+                                      <widget class="GtkLabel" id="y_velocity_label">
                                         <property name="visible">True</property>
                                         <property name="xalign">0</property>
                                         <property name="xpad">5</property>
@@ -898,7 +898,7 @@ Point</property>
                                       </packing>
                                     </child>
                                     <child>
-                                      <widget class="GtkLabel" id="x_vector_label">
+                                      <widget class="GtkLabel" id="x_velocity_label">
                                         <property name="visible">True</property>
                                         <property name="xalign">0</property>
                                         <property name="xpad">5</property>

@@ -73,7 +73,7 @@ class Frame (object):
 
     def add_agressiv_point(self, (c_x, c_y), (vect_x, vect_y)):
         """
-        add an agressive points of coords, and vector specified, to the list of
+        add an agressive points of coords, and velocity specified, to the list of
         agressivpoints of the frame
         """
         self.agressivpoints.append(((c_x, c_y), (vect_x, vect_y)))

@@ -88,27 +88,27 @@
         >
             <agressiv-point
             coords="19,26"
-            vector="-500,-50"
+            velocity="-500,-50"
             ></agressiv-point>
             <agressiv-point
             coords="24,21"
-            vector="0,-300"
+            velocity="0,-300"
             ></agressiv-point>
             <agressiv-point
             coords="32,26"
-            vector="100,-50"
+            velocity="100,-50"
             ></agressiv-point>
             <agressiv-point
             coords="18,32"
-            vector="500,-300"
+            velocity="500,-300"
             ></agressiv-point>
             <agressiv-point
             coords="33,36"
-            vector="500,-300"
+            velocity="500,-300"
             ></agressiv-point>
             <agressiv-point
             coords="25,31"
-            vector="0,-500"
+            velocity="0,-500"
             ></agressiv-point>
         </frame>
         <frame
@@ -118,40 +118,40 @@
         >
             <agressiv-point
             coords="19,26"
-            vector="-500,-50"
+            velocity="-500,-50"
             ></agressiv-point>
             <agressiv-point
             coords="24,21"
-            vector="-500,-300"
+            velocity="-500,-300"
             ></agressiv-point>
             <agressiv-point
             coords="32,26"
-            vector="-500,-50"
+            velocity="-500,-50"
             ></agressiv-point>
             <agressiv-point
             coords="18,32"
-            vector="-500,-300"
+            velocity="-500,-300"
             ></agressiv-point>
             <agressiv-point
             coords="33,36"
-            vector="500,-300"
+            velocity="500,-300"
             ></agressiv-point>
             <agressiv-point
             coords="25,31"
-            vector="0,-500"
+            velocity="0,-500"
             ></agressiv-point>
             <!-- points out of image
             <agressiv-point
             coords="-30,31"
-            vector="-100,-100"
+            velocity="-100,-100"
             ></agressiv-point>
             <agressiv-point
             coords="90,31"
-            vector="100,-100"
+            velocity="100,-100"
             ></agressiv-point>
             <agressiv-point
             coords="32,-30"
-            vector="0,-200"
+            velocity="0,-200"
             ></agressiv-point>-->
         </frame>
         <frame
@@ -161,27 +161,27 @@
         >
             <agressiv-point
             coords="19,26"
-            vector="-500,-50"
+            velocity="-500,-50"
             ></agressiv-point>
             <agressiv-point
             coords="24,21"
-            vector="-500,-300"
+            velocity="-500,-300"
             ></agressiv-point>
             <agressiv-point
             coords="32,26"
-            vector="-500,-50"
+            velocity="-500,-50"
             ></agressiv-point>
             <agressiv-point
             coords="18,32"
-            vector="-500,-300"
+            velocity="-500,-300"
             ></agressiv-point>
             <agressiv-point
             coords="33,36"
-            vector="500,-300"
+            velocity="500,-300"
             ></agressiv-point>
             <agressiv-point
             coords="25,31"
-            vector="0,-500"
+            velocity="0,-500"
             ></agressiv-point>
         </frame>
         <frame

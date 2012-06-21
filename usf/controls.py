@@ -54,7 +54,7 @@ def key_shield(the_key, player, game_instance):
             game_instance,
             params={'entity': player, 'anim_name': 'static'})
 
-        player.set_walking_vector((0, player.walking_vector[1]))
+        player.set_walking_velocity((0, player.walking_velocity[1]))
         return True
     return False
 
@@ -69,8 +69,8 @@ def key_down_left(the_key, player, game_instance):
                 game_instance,
                 params={'entity': player, 'anim_name': 'walk'})
 
-        player.set_walking_vector([CONFIG.general.WALKSPEED,
-                player.walking_vector[1]])
+        player.set_walking_velocity([CONFIG.general.WALKSPEED,
+                player.walking_velocity[1]])
         player.set_reversed(True)
         return True
     return False
@@ -86,8 +86,8 @@ def key_down_right(the_key, player, game_instance):
                     game_instance,
                     params={'entity': player, 'anim_name': 'walk'})
 
-        player.set_walking_vector([CONFIG.general.WALKSPEED,
-            player.walking_vector[1]])
+        player.set_walking_velocity([CONFIG.general.WALKSPEED,
+            player.walking_velocity[1]])
         player.set_reversed(False)
         return True
     return False
@@ -97,7 +97,7 @@ def key_up_left(player, game_instance):
     """ manage incidence on walk animation if the player release his left key
     """
     if player.reversed:
-        player.set_walking_vector([0, player.walking_vector[1]])
+        player.set_walking_velocity([0, player.walking_velocity[1]])
 
     if (player.entity_skin.current_animation in ('walk', 'walk_upgraded')):
         player.entity_skin.change_animation("static", game_instance,
@@ -108,7 +108,7 @@ def key_up_right(player, game_instance):
     """ manage incidence on walk animation if the player release his right key
     """
     if not player.reversed:
-        player.set_walking_vector([0, player.walking_vector[1]])
+        player.set_walking_velocity([0, player.walking_velocity[1]])
 
     if (player.entity_skin.current_animation in ('walk', 'walk_upgraded')):
         player.entity_skin.change_animation("static", game_instance,

@@ -38,7 +38,7 @@ SIZE = (CONFIG.general.WIDTH,
 class EntitySkin (object):
     """
     An EntitySkin contains all information about a player or an item, which is
-    mainly animations frames, with their timings and vectors, and less
+    mainly animations frames, with their timings and velocities, and less
     importants information as the character/item name and such details.
     """
 
@@ -90,7 +90,7 @@ class EntitySkin (object):
 
         self.action_events = {}
         self.sounds = {}
-        self.vectors = {}
+        self.velocities = {}
 
         self.hardshape = self.load_hardshape(attribs)
         self.shield_center = self.load_shield_center(attribs)
@@ -122,18 +122,18 @@ class EntitySkin (object):
             frames = []
             events = []
             sounds = []
-            vectors = []
+            velocities = []
             trails = []
 
-            for event in movement.findall('vector'):
-                #logging.debug('vector found')
-                x, y = [int(n) for n in event.attrib['vector'].split(',')]
-                vectors.append(
+            for event in movement.findall('velocity'):
+                #logging.debug('velocity found')
+                x, y = [int(n) for n in event.attrib['velocity'].split(',')]
+                velocities.append(
                         (
                             (x, y),
                             int(event.attrib['time'])))
 
-            self.vectors[movement.attrib['name']] = vectors
+            self.velocities[movement.attrib['name']] = velocities
 
             for event in movement.findall('event'):
                 events.append(
@@ -177,9 +177,9 @@ class EntitySkin (object):
 
                 for agressiv in frame.findall('agressiv-point'):
                     coords = agressiv.attrib['coords'].split(',')
-                    vector = agressiv.attrib['vector'].split(',')
+                    velocity = agressiv.attrib['velocity'].split(',')
                     frames[-1].add_agressiv_point([int(i) for i in coords],
-                                                [int(i) for i in vector])
+                                                [int(i) for i in velocity])
 
             self.animations[movement.attrib['name']] = PreciseTimedAnimation(
                     frames,
@@ -223,8 +223,8 @@ class EntitySkin (object):
             params['anim_name'] = anim_name
             self.add_events(anim_name, game, params)
 
-            #logging.debug(self.vectors[anim_name])
-            self.add_vectors(anim_name, game, params)
+            #logging.debug(self.velocities[anim_name])
+            self.add_velocities(anim_name, game, params)
 
             if self.sounds[anim_name] != []:
                 # XXX reactivate the try/except with the good exception when you
@@ -250,18 +250,18 @@ class EntitySkin (object):
         (self.current_animation, self.animation, self.animation.playing,
                 self.animation._start_time) = backup
 
-    def add_vectors(self, anim_name, game, params):
-        """ add vectors of the animation to the game as events
+    def add_velocities(self, anim_name, game, params):
+        """ add velocities of the animation to the game as events
         """
-        for vector in self.vectors[anim_name]:
-            #logging.debug('vector added')
+        for velocity in self.velocities[anim_name]:
+            #logging.debug('velocity added')
             params2 = params.copy() # because we want to change some of
                                     # them for this time.
-            params2['vector'] = vector[0]
+            params2['velocity'] = velocity[0]
             params2['anim_name'] = anim_name
             game.events.add_event(
                     'VectorEvent',
-                    period=(None, game.gametime+vector[1]/1000.0),
+                    period=(None, game.gametime+velocity[1]/1000.0),
                     params=params2)
 
     def add_events(self, anim_name, game, params):

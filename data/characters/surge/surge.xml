@@ -39,15 +39,15 @@ shield_center="20 40"
     duration="500"
     repeat="-1"
     >
-        <vector
+        <velocity
         time="0"
-        vector="400,2"/>
-        <vector
+        velocity="400,2"/>
+        <velocity
         time="200"
-        vector="400,2"/>
-        <vector
+        velocity="400,2"/>
+        <velocity
         time="400"
-        vector="400,2"/>
+        velocity="400,2"/>
         <frame
         time="0"
         image="walk1.png"
@@ -87,10 +87,10 @@ shield_center="20 40"
         period="350,0"
         action="PlayerStaticOnGround"
         ></event>
-        <vector
+        <velocity
         time="200"
-        vector="0,1500"
-        ></vector>
+        velocity="0,1500"
+        ></velocity>
         <frame
         time="0"
         image="jump1.png"
@@ -140,10 +140,10 @@ shield_center="20 40"
         period="350,0"
         action="PlayerStaticOnGround"
         ></event>
-        <vector
+        <velocity
         time="100"
-        vector="0,1200"
-        ></vector>
+        velocity="0,1200"
+        ></velocity>
         <frame
         time="0"
         image="jump4.png"
@@ -189,9 +189,9 @@ shield_center="20 40"
     duration="600"
     repeat="0"
     >
-        <vector
+        <velocity
         time="350"
-        vector="500,2"/>
+        velocity="500,2"/>
         <frame
         time="0"
         image="smash-straight1.png"
@@ -209,11 +209,11 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="37,44"
-            vector="40,-19"
+            velocity="40,-19"
             ></agressiv-point>
             <agressiv-point
             coords="49,26"
-            vector="76,-55"
+            velocity="76,-55"
             ></agressiv-point>
         </frame>
         <frame
@@ -223,11 +223,11 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="37,44"
-            vector="40,-19"
+            velocity="40,-19"
             ></agressiv-point>
             <agressiv-point
             coords="49,26"
-            vector="76,-55"
+            velocity="76,-55"
             ></agressiv-point>
         </frame>
     </movement>
@@ -235,12 +235,12 @@ shield_center="20 40"
     duration="450"
     repeat="0"
     >
-        <vector
+        <velocity
         time="150"
-        vector="400,2"/>
-        <vector
+        velocity="400,2"/>
+        <velocity
         time="300"
-        vector="700,2"/>
+        velocity="700,2"/>
         <frame
         time="0"
         image="special1.png"
@@ -259,19 +259,19 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="44,19"
-            vector="51,-21"
+            velocity="51,-21"
             ></agressiv-point>
             <agressiv-point
             coords="46,29"
-            vector="51,-12"
+            velocity="51,-12"
             ></agressiv-point>
             <agressiv-point
             coords="35,39"
-            vector="63,-18"
+            velocity="63,-18"
             ></agressiv-point>
             <agressiv-point
             coords="27,54"
-            vector="49,-12"
+            velocity="49,-12"
             ></agressiv-point>
 
         </frame>
@@ -280,12 +280,12 @@ shield_center="20 40"
     duration="800"
     repeat="0"
     >
-        <vector
+        <velocity
         time="400"
-        vector="500,2"/>
-        <vector
+        velocity="500,2"/>
+        <velocity
         time="650"
-        vector="500,2"/>
+        velocity="500,2"/>
         <frame
         time="0"
         image="roll1.png"
@@ -363,11 +363,11 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="37,44"
-            vector="40,-19"
+            velocity="40,-19"
             ></agressiv-point>
             <agressiv-point
             coords="49,26"
-            vector="76,-55"
+            velocity="76,-55"
             ></agressiv-point>
         </frame>
     </movement>
@@ -379,9 +379,9 @@ shield_center="20 40"
         period="350,0"
         action="PlayerStaticOnGround"
         ></event>
-        <vector
+        <velocity
         time="300"
-        vector="6,1320"
+        velocity="6,1320"
         />
         <frame
         time="0"
@@ -400,11 +400,11 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="37,44"
-            vector="40,-19"
+            velocity="40,-19"
             ></agressiv-point>
             <agressiv-point
             coords="49,26"
-            vector="76,-55"
+            velocity="76,-55"
             ></agressiv-point>
         </frame>
     </movement>
@@ -439,7 +439,7 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="53,38"
-            vector="49,-6"
+            velocity="49,-6"
             ></agressiv-point>
         </frame>
         <frame
@@ -454,7 +454,7 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="27,35"
-            vector="37,-4"
+            velocity="37,-4"
             ></agressiv-point>
         </frame>
         <frame
@@ -464,7 +464,7 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="52,35"
-            vector="69,-18"
+            velocity="69,-18"
             ></agressiv-point>
         </frame>
     </movement>
@@ -472,9 +472,9 @@ shield_center="20 40"
     duration="900"
     repeat="0"
     >
-        <vector
+        <velocity
         time="0"
-        vector="0,134"/>
+        velocity="0,134"/>
         <frame
         time="0"
         image="smash-down1.png"
@@ -482,27 +482,27 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="1,50"
-            vector="-13,12"
+            velocity="-13,12"
             ></agressiv-point>
 
             <agressiv-point
             coords="4,55"
-            vector="-4,18"
+            velocity="-4,18"
             ></agressiv-point>
 
             <agressiv-point
             coords="14,80"
-            vector="-16,43"
+            velocity="-16,43"
             ></agressiv-point>
 
             <agressiv-point
             coords="34,80"
-            vector="19,40"
+            velocity="19,40"
             ></agressiv-point>
 
             <agressiv-point
             coords="44,55"
-            vector="12,19"
+            velocity="12,19"
             ></agressiv-point>
 
 
@@ -514,27 +514,27 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="1,56"
-            vector="-13,12"
+            velocity="-13,12"
             ></agressiv-point>
 
             <agressiv-point
             coords="4,60"
-            vector="-4,18"
+            velocity="-4,18"
             ></agressiv-point>
 
             <agressiv-point
             coords="14,80"
-            vector="-16,43"
+            velocity="-16,43"
             ></agressiv-point>
 
             <agressiv-point
             coords="34,72"
-            vector="19,40"
+            velocity="19,40"
             ></agressiv-point>
 
             <agressiv-point
             coords="44,55"
-            vector="12,19"
+            velocity="12,19"
             ></agressiv-point>
 
         </frame>
@@ -545,27 +545,27 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="1,56"
-            vector="-13,12"
+            velocity="-13,12"
             ></agressiv-point>
 
             <agressiv-point
             coords="4,60"
-            vector="-4,18"
+            velocity="-4,18"
             ></agressiv-point>
 
             <agressiv-point
             coords="14,80"
-            vector="-16,43"
+            velocity="-16,43"
             ></agressiv-point>
 
             <agressiv-point
             coords="34,72"
-            vector="19,40"
+            velocity="19,40"
             ></agressiv-point>
 
             <agressiv-point
             coords="44,55"
-            vector="12,19"
+            velocity="12,19"
             ></agressiv-point>
         </frame>
         <frame
@@ -575,19 +575,19 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="62,51"
-            vector="51,19"
+            velocity="51,19"
             ></agressiv-point>
             <agressiv-point
             coords="42,51"
-            vector="36,19"
+            velocity="36,19"
             ></agressiv-point>
             <agressiv-point
             coords="1,52"
-            vector="-40,21"
+            velocity="-40,21"
             ></agressiv-point>
             <agressiv-point
             coords="21,52"
-            vector="-25,21"
+            velocity="-25,21"
             ></agressiv-point>
         </frame>
         <frame
@@ -597,19 +597,19 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="62,51"
-            vector="51,19"
+            velocity="51,19"
             ></agressiv-point>
             <agressiv-point
             coords="42,51"
-            vector="36,19"
+            velocity="36,19"
             ></agressiv-point>
             <agressiv-point
             coords="1,52"
-            vector="-40,21"
+            velocity="-40,21"
             ></agressiv-point>
             <agressiv-point
             coords="21,52"
-            vector="-25,21"
+            velocity="-25,21"
             ></agressiv-point>
         </frame>
         <frame
@@ -619,19 +619,19 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="58,51"
-            vector="51,19"
+            velocity="51,19"
             ></agressiv-point>
             <agressiv-point
             coords="42,51"
-            vector="36,19"
+            velocity="36,19"
             ></agressiv-point>
             <agressiv-point
             coords="1,52"
-            vector="-40,21"
+            velocity="-40,21"
             ></agressiv-point>
             <agressiv-point
             coords="21,52"
-            vector="-25,21"
+            velocity="-25,21"
             ></agressiv-point>
         </frame>
     </movement>
@@ -656,7 +656,7 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="36,17"
-            vector="0,-40"
+            velocity="0,-40"
             ></agressiv-point>
         </frame>
         <frame
@@ -666,7 +666,7 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="36,17"
-            vector="0,-78"
+            velocity="0,-78"
             ></agressiv-point>
         </frame>
         <frame
@@ -676,11 +676,11 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="36,17"
-            vector="0,-115"
+            velocity="0,-115"
             ></agressiv-point>
             <agressiv-point
             coords="43,34"
-            vector="16,-39"
+            velocity="16,-39"
             ></agressiv-point>
         </frame>
         <frame
@@ -690,11 +690,11 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="36,17"
-            vector="0,-153"
+            velocity="0,-153"
             ></agressiv-point>
             <agressiv-point
             coords="43,34"
-            vector="31,-51"
+            velocity="31,-51"
             ></agressiv-point>
         </frame>
     </movement>
@@ -706,10 +706,10 @@ shield_center="20 40"
         period="150,0"
         action="PlayerStaticOnGround"
         > </event>
-        <vector
+        <velocity
         time="100"
-        vector="0,1500"
-        ></vector>
+        velocity="0,1500"
+        ></velocity>
         <frame
         time="0"
         image="smash-up2.png"
@@ -727,7 +727,7 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="36,17"
-            vector="0,-40"
+            velocity="0,-40"
             ></agressiv-point>
         </frame>
         <frame
@@ -737,7 +737,7 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="36,17"
-            vector="0,-78"
+            velocity="0,-78"
             ></agressiv-point>
         </frame>
         <frame
@@ -747,11 +747,11 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="36,17"
-            vector="0,-115"
+            velocity="0,-115"
             ></agressiv-point>
             <agressiv-point
             coords="43,34"
-            vector="16,-39"
+            velocity="16,-39"
             ></agressiv-point>
         </frame>
         <frame
@@ -761,11 +761,11 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="36,17"
-            vector="0,-153"
+            velocity="0,-153"
             ></agressiv-point>
             <agressiv-point
             coords="43,34"
-            vector="31,-51"
+            velocity="31,-51"
             ></agressiv-point>
         </frame>
     </movement>
@@ -799,15 +799,15 @@ shield_center="20 40"
     duration="500"
     repeat="-1"
     >
-        <vector
+        <velocity
         time="0"
-        vector="400,2"/>
-        <vector
+        velocity="400,2"/>
+        <velocity
         time="200"
-        vector="400,2"/>
-        <vector
+        velocity="400,2"/>
+        <velocity
         time="400"
-        vector="400,2"/>
+        velocity="400,2"/>
         <frame
         time="0"
         image="walk1-upgraded.png"
@@ -847,10 +847,10 @@ shield_center="20 40"
         period="350,0"
         action="PlayerStaticOnGround"
         ></event>
-        <vector
+        <velocity
         time="200"
-        vector="0,1500"
-        ></vector>
+        velocity="0,1500"
+        ></velocity>
         <frame
         time="0"
         image="jump1-upgraded.png"
@@ -900,10 +900,10 @@ shield_center="20 40"
         period="350,0"
         action="PlayerStaticOnGround"
         ></event>
-        <vector
+        <velocity
         time="100"
-        vector="0,1200"
-        ></vector>
+        velocity="0,1200"
+        ></velocity>
         <frame
         time="0"
         image="jump4-upgraded.png"
@@ -949,9 +949,9 @@ shield_center="20 40"
     duration="600"
     repeat="0"
     >
-        <vector
+        <velocity
         time="350"
-        vector="500,2"/>
+        velocity="500,2"/>
         <frame
         time="0"
         image="smash-straight1-upgraded.png"
@@ -969,11 +969,11 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="37,44"
-            vector="40,-19"
+            velocity="40,-19"
             ></agressiv-point>
             <agressiv-point
             coords="49,26"
-            vector="76,-55"
+            velocity="76,-55"
             ></agressiv-point>
         </frame>
         <frame
@@ -983,11 +983,11 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="37,44"
-            vector="40,-19"
+            velocity="40,-19"
             ></agressiv-point>
             <agressiv-point
             coords="49,26"
-            vector="76,-55"
+            velocity="76,-55"
             ></agressiv-point>
         </frame>
     </movement>
@@ -995,12 +995,12 @@ shield_center="20 40"
     duration="450"
     repeat="0"
     >
-        <vector
+        <velocity
         time="150"
-        vector="400,2"/>
-        <vector
+        velocity="400,2"/>
+        <velocity
         time="300"
-        vector="700,2"/>
+        velocity="700,2"/>
         <frame
         time="0"
         image="special1-upgraded.png"
@@ -1019,19 +1019,19 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="44,19"
-            vector="51,-21"
+            velocity="51,-21"
             ></agressiv-point>
             <agressiv-point
             coords="46,29"
-            vector="51,-12"
+            velocity="51,-12"
             ></agressiv-point>
             <agressiv-point
             coords="35,39"
-            vector="63,-18"
+            velocity="63,-18"
             ></agressiv-point>
             <agressiv-point
             coords="27,54"
-            vector="49,-12"
+            velocity="49,-12"
             ></agressiv-point>
 
         </frame>
@@ -1040,12 +1040,12 @@ shield_center="20 40"
     duration="800"
     repeat="0"
     >
-        <vector
+        <velocity
         time="400"
-        vector="500,2"/>
-        <vector
+        velocity="500,2"/>
+        <velocity
         time="650"
-        vector="500,2"/>
+        velocity="500,2"/>
         <frame
         time="0"
         image="roll1-upgraded.png"
@@ -1123,11 +1123,11 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="37,44"
-            vector="40,-19"
+            velocity="40,-19"
             ></agressiv-point>
             <agressiv-point
             coords="49,26"
-            vector="76,-55"
+            velocity="76,-55"
             ></agressiv-point>
         </frame>
     </movement>
@@ -1139,9 +1139,9 @@ shield_center="20 40"
         period="350,0"
         action="PlayerStaticOnGround"
         ></event>
-        <vector
+        <velocity
         time="300"
-        vector="6,1320"
+        velocity="6,1320"
         />
         <frame
         time="0"
@@ -1160,11 +1160,11 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="37,44"
-            vector="40,-19"
+            velocity="40,-19"
             ></agressiv-point>
             <agressiv-point
             coords="49,26"
-            vector="76,-55"
+            velocity="76,-55"
             ></agressiv-point>
         </frame>
     </movement>
@@ -1199,7 +1199,7 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="53,38"
-            vector="49,-6"
+            velocity="49,-6"
             ></agressiv-point>
         </frame>
         <frame
@@ -1214,7 +1214,7 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="27,35"
-            vector="37,-4"
+            velocity="37,-4"
             ></agressiv-point>
         </frame>
         <frame
@@ -1224,7 +1224,7 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="52,35"
-            vector="69,-18"
+            velocity="69,-18"
             ></agressiv-point>
         </frame>
     </movement>
@@ -1232,9 +1232,9 @@ shield_center="20 40"
     duration="900"
     repeat="0"
     >
-        <vector
+        <velocity
         time="0"
-        vector="0,134"/>
+        velocity="0,134"/>
         <frame
         time="0"
         image="smash-down1-upgraded.png"
@@ -1242,27 +1242,27 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="1,50"
-            vector="-13,12"
+            velocity="-13,12"
             ></agressiv-point>
 
             <agressiv-point
             coords="4,55"
-            vector="-4,18"
+            velocity="-4,18"
             ></agressiv-point>
 
             <agressiv-point
             coords="14,80"
-            vector="-16,43"
+            velocity="-16,43"
             ></agressiv-point>
 
             <agressiv-point
             coords="34,80"
-            vector="19,40"
+            velocity="19,40"
             ></agressiv-point>
 
             <agressiv-point
             coords="44,55"
-            vector="12,19"
+            velocity="12,19"
             ></agressiv-point>
 
 
@@ -1274,27 +1274,27 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="1,56"
-            vector="-13,12"
+            velocity="-13,12"
             ></agressiv-point>
 
             <agressiv-point
             coords="4,60"
-            vector="-4,18"
+            velocity="-4,18"
             ></agressiv-point>
 
             <agressiv-point
             coords="14,80"
-            vector="-16,43"
+            velocity="-16,43"
             ></agressiv-point>
 
             <agressiv-point
             coords="34,72"
-            vector="19,40"
+            velocity="19,40"
             ></agressiv-point>
 
             <agressiv-point
             coords="44,55"
-            vector="12,19"
+            velocity="12,19"
             ></agressiv-point>
 
         </frame>
@@ -1305,27 +1305,27 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="1,56"
-            vector="-13,12"
+            velocity="-13,12"
             ></agressiv-point>
 
             <agressiv-point
             coords="4,60"
-            vector="-4,18"
+            velocity="-4,18"
             ></agressiv-point>
 
             <agressiv-point
             coords="14,80"
-            vector="-16,43"
+            velocity="-16,43"
             ></agressiv-point>
 
             <agressiv-point
             coords="34,72"
-            vector="19,40"
+            velocity="19,40"
             ></agressiv-point>
 
             <agressiv-point
             coords="44,55"
-            vector="12,19"
+            velocity="12,19"
             ></agressiv-point>
         </frame>
         <frame
@@ -1335,19 +1335,19 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="62,51"
-            vector="51,19"
+            velocity="51,19"
             ></agressiv-point>
             <agressiv-point
             coords="42,51"
-            vector="36,19"
+            velocity="36,19"
             ></agressiv-point>
             <agressiv-point
             coords="1,52"
-            vector="-40,21"
+            velocity="-40,21"
             ></agressiv-point>
             <agressiv-point
             coords="21,52"
-            vector="-25,21"
+            velocity="-25,21"
             ></agressiv-point>
         </frame>
         <frame
@@ -1357,19 +1357,19 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="62,51"
-            vector="51,19"
+            velocity="51,19"
             ></agressiv-point>
             <agressiv-point
             coords="42,51"
-            vector="36,19"
+            velocity="36,19"
             ></agressiv-point>
             <agressiv-point
             coords="1,52"
-            vector="-40,21"
+            velocity="-40,21"
             ></agressiv-point>
             <agressiv-point
             coords="21,52"
-            vector="-25,21"
+            velocity="-25,21"
             ></agressiv-point>
         </frame>
         <frame
@@ -1379,19 +1379,19 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="58,51"
-            vector="51,19"
+            velocity="51,19"
             ></agressiv-point>
             <agressiv-point
             coords="42,51"
-            vector="36,19"
+            velocity="36,19"
             ></agressiv-point>
             <agressiv-point
             coords="1,52"
-            vector="-40,21"
+            velocity="-40,21"
             ></agressiv-point>
             <agressiv-point
             coords="21,52"
-            vector="-25,21"
+            velocity="-25,21"
             ></agressiv-point>
         </frame>
     </movement>
@@ -1416,7 +1416,7 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="36,17"
-            vector="0,-40"
+            velocity="0,-40"
             ></agressiv-point>
         </frame>
         <frame
@@ -1426,7 +1426,7 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="36,17"
-            vector="0,-78"
+            velocity="0,-78"
             ></agressiv-point>
         </frame>
         <frame
@@ -1436,11 +1436,11 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="36,17"
-            vector="0,-115"
+            velocity="0,-115"
             ></agressiv-point>
             <agressiv-point
             coords="43,34"
-            vector="16,-39"
+            velocity="16,-39"
             ></agressiv-point>
         </frame>
         <frame
@@ -1450,11 +1450,11 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="36,17"
-            vector="0,-153"
+            velocity="0,-153"
             ></agressiv-point>
             <agressiv-point
             coords="43,34"
-            vector="31,-51"
+            velocity="31,-51"
             ></agressiv-point>
         </frame>
     </movement>
@@ -1466,10 +1466,10 @@ shield_center="20 40"
         period="150,0"
         action="PlayerStaticOnGround"
         > </event>
-        <vector
+        <velocity
         time="100"
-        vector="0,1500"
-        ></vector>
+        velocity="0,1500"
+        ></velocity>
         <frame
         time="0"
         image="smash-up2-upgraded.png"
@@ -1487,7 +1487,7 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="36,17"
-            vector="0,-40"
+            velocity="0,-40"
             ></agressiv-point>
         </frame>
         <frame
@@ -1497,7 +1497,7 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="36,17"
-            vector="0,-78"
+            velocity="0,-78"
             ></agressiv-point>
         </frame>
         <frame
@@ -1507,11 +1507,11 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="36,17"
-            vector="0,-115"
+            velocity="0,-115"
             ></agressiv-point>
             <agressiv-point
             coords="43,34"
-            vector="16,-39"
+            velocity="16,-39"
             ></agressiv-point>
         </frame>
         <frame
@@ -1521,11 +1521,11 @@ shield_center="20 40"
         >
             <agressiv-point
             coords="36,17"
-            vector="0,-153"
+            velocity="0,-153"
             ></agressiv-point>
             <agressiv-point
             coords="43,34"
-            vector="31,-51"
+            velocity="31,-51"
             ></agressiv-point>
         </frame>
     </movement>

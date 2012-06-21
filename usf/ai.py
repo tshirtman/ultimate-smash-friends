@@ -88,7 +88,7 @@ def simulate(game, iam, m):
 
     entity = game.players[iam]
     entity.set_reversed(m.reverse)
-    entity.set_walking_vector([m.walk and WALKSPEED or 0, None])
+    entity.set_walking_velocity([m.walk and WALKSPEED or 0, None])
     entity.entity_skin.change_animation(
             m.movement,
             game,
@@ -103,7 +103,7 @@ def under_lowest_plateform(game, player):
     """
 
     for p in game.level.map:
-        if p[1] > player.place[1]:
+        if p[1] > player.pos[1]:
             return False
 
     return True
@@ -115,7 +115,7 @@ def over_some_plateform(game, player):
     """
 
     for p in game.level.map:
-        if p[1] > player.place[1] and p[0] < player.place[0] < p[0] + p[2]:
+        if p[1] > player.pos[1] and p[0] < player.pos[0] < p[0] + p[2]:
             return True
 
     return False
@@ -240,7 +240,7 @@ def search_path(game, iam, max_depth):
 class Movement(object):
     """ A simple structure to store a planet movement, contains the planned
     time of the movement, the direction (reversed or not) of the movement, if
-    the movement is done with walking vectors activated or not, and the name of
+    the movement is done with walking velocities activated or not, and the name of
     the movement executed.
     """
 
@@ -296,6 +296,6 @@ class AI(object):
                     game,
                     {'entity': entity})
             entity.set_reversed(m.reverse)
-            entity.set_walking_vector([m.walk and
-                WALKSPEED or 0, entity.walking_vector[1]])
+            entity.set_walking_velocity([m.walk and
+                WALKSPEED or 0, entity.walking_velocity[1]])
 

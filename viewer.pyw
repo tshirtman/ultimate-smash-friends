@@ -150,14 +150,14 @@ class NotGame(Game):
             self.entity.entity_skin.update(time.time(), self.entity.reversed)
 
             self.entity.move(
-                self.entity.vector[0] * dt,
-                self.entity.vector[1] * dt
+                self.entity.velocity[0] * dt,
+                self.entity.velocity[1] * dt
                 )
-            self.entity.vector[0] -= (
-                config.general['AIR_FRICTION'] * self.entity.vector[0] * dt
+            self.entity.velocity[0] -= (
+                config.general['AIR_FRICTION'] * self.entity.velocity[0] * dt
                 )
-            self.entity.vector[1] -= (
-                config.general['AIR_FRICTION'] * self.entity.vector[1] * dt
+            self.entity.velocity[1] -= (
+                config.general['AIR_FRICTION'] * self.entity.velocity[1] * dt
                 )
             self.entity.place[0] %= 250
             self.entity.place[1] = max(
@@ -167,9 +167,9 @@ class NotGame(Game):
 
             if self.entity.place[1] > 250:
                 self.entity.place[1] = 250
-                self.entity.vector[1] *= -.5
+                self.entity.velocity[1] *= -.5
             else:
-                self.entity.vector[1] += config.general['GRAVITY']
+                self.entity.velocity[1] += config.general['GRAVITY']
 
 class usf_character_creator(object):
     """
@@ -331,13 +331,13 @@ class usf_character_creator(object):
     def update_frame_skin(self):
         pass
 
-    def add_vector(self):
+    def add_velocity(self):
         pass
 
-    def update_vector(self):
+    def update_velocity(self):
         pass
 
-    def del_vector(self):
+    def del_velocity(self):
         pass
 
     def add_aggressiv_point(self):
