@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<character
+    name="Mikos"
+    image="portrait.png"
+    hardshape="0 0 41 60"
+    creator="doudoulolita"
+    weight="1"
+    auto-reverse="True"
+    age="5 ans"
+    Description="Un panda pas toujours gentil"> 
+
+<!-- Quand on ne fait rien -->
+
+    <movement name="static"
+    duration="1"
+    repeat="-1"
+    >
+        <frame
+        time="0"
+        image="static1.png"
+        hardshape="0 0 40 63"
+        vector="(0,0)"
+        >
+        </frame>
+
+    </movement>
+
+<!-- Quand on appuie sur droite ou gauche (1er joueur), Q ou D (2ème joueur), H ou J (3ème joueur), [4] ou [6] (4ème joueur) -->
+    <movement name="walk"
+    duration="400"
+    repeat="-1"
+    >
+	<frame
+	time="0"
+	image="walk1.png"
+	hardshape="0 0 41 66"
+	> </frame>
+	<frame
+	time="100"
+	image="walk2.png"
+	hardshape="0 0 35 66"
+	> </frame>
+	<frame
+	time="200"
+	image="walk3.png"
+	hardshape="3 0 42 66"
+	> </frame>
+	<frame
+	time="300"
+	image="walk4.png"
+	hardshape="0 0 35 67"
+	> </frame>
+    </movement>
+
+<!-- Quand on appuie sur haut (1er joueur), Z (2ème joueur), U (3ème joueur) ou [8] (4ème joueur) -->
+    <movement name="jump"
+    duration="300"
+    repeat="0"
+    >
+        <event
+        period="150,0"
+        action="PlayerStaticOnGround"
+        ></event>
+        <vector
+        time="100"
+        vector="0,1500"
+        ></vector>
+        <frame
+        time="0"
+        image="jump1.png"
+        hardshape="5 0 42 64"
+        > </frame>
+        <frame
+        time="100"
+        image="jump2.png"
+        hardshape="0 0 43 68"
+        vector="(0,50)"
+        > </frame>
+        <frame
+        time="200"
+        image="jump3.png"
+        hardshape="0 0 40 63"
+        > </frame>
+    </movement>
+
+<!-- Quand on appuie sur bas (1er joueur), S (2ème joueur), N (3ème joueur) ou [5] (4ème joueur) -->
+      
+    <movement name="pick"
+    duration="200"
+    repeat="0"
+    >
+        <frame
+        time="0"
+        image="pick1.png"
+        hardshape="0 0 54 55"
+        > </frame>
+        <frame
+        time="100"
+        image="pick2.png"
+        hardshape="0 0 54 49"
+        > </frame>
+    </movement>
+
+<!-- Quand on appuie sur M (1er joueur), V (2ème joueur), T (3ème joueur) ou [1] (4ème joueur) -->
+
+    <movement name="hit"
+    duration="200"
+    repeat="0">
+	<frame
+        time="0"
+        image="hit1.png"
+        hardshape="6 0 48 59"
+        > </frame>        
+        <frame
+        time="100"
+        image="hit2.png"
+        hardshape="0 0 51 60"
+        >
+            <agressiv-point
+            coords="55,26"
+            vector="100,-30"
+            ></agressiv-point>
+        </frame>
+    </movement>
+
+<!-- Quand on appuie sur L (1er joueur), C (2ème joueur), Y (3ème joueur) ou [2] (4ème joueur) -->
+
+    <movement name="kick"
+    duration="200"
+    repeat="0">
+
+        <frame
+        time="0"
+        image="kick1.png"
+        hardshape="2 0 49 61"
+        ></frame>               
+        <frame
+        time="100"
+        image="kick2.png"
+        hardshape="1 0 39 68"
+        >
+            <agressiv-point
+            coords="41,52"
+            vector="100,-30"
+            ></agressiv-point>
+        </frame>
+    </movement>
+     
+</character>
