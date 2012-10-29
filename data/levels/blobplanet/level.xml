@@ -6,23 +6,23 @@
     middle="blobplanet-middle.png"
     margins="520,520,520,550">
 
-    <entry-point coords="127 160"></entry-point>
+    <entry-point coords="235 414"></entry-point>
     <entry-point coords="270 504"></entry-point>
-    <entry-point coords="512 160"></entry-point>
-    <entry-point coords="939 327"></entry-point>
-    <entry-point coords="1120 100"></entry-point>
+    <entry-point coords="390 624"></entry-point>
+    <entry-point coords="980 320"></entry-point>
 
-    <block coords="200 190 120 75"></block>
-    <block coords="1040 200 185 60"></block>
-    <block coords="55 435 137 80"></block>
-    <block coords="880 405 115 45"></block>
-    <block coords="350 425 95 65"></block>
-    <block coords="445 355 75 245"></block>
-    <block coords="520 375 125 60"></block>
-    <block coords="179 650 185 60"></block>
-    <block coords="755 525 98 45"></block>
-    <block coords="1014 633 146 44"></block>
-    <block coords="691 174 121 44"></block>
+    <block coords="152 414 140 60"></block>
+    <block coords="212 474 22 150"></block>
+    <block coords="234 624 320 36"></block>
+
+    <block coords="572 218 140 60"></block>
+    <block coords="514 388 120 25"></block>
+    <block coords="634 278 22 135"></block>
+    <block coords="656 388 126 25"></block>
+
+    <block coords="900 320 140 60"></block>
+    <block coords="960 380 21 148"></block>
+    <block coords="753 528 207 36"></block>
 
     <layer sizex="35" sizey="46" src="levels/blobplanet/leaf.png">
         <frame time="2" x="0" y="-70" />
