@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map
+    name="Cave"
+    background="cave-background.png"
+    foreground="cave-foreground.png"
+    middle="cave-middle.png"
+    margins="500,500,500,500">
+
+    <entry-point coords="831 214"></entry-point>
+    <entry-point coords="418 310"></entry-point>
+    <entry-point coords="596 588"></entry-point>
+    <entry-point coords="1038 514"></entry-point>
+
+    <block coords="362 310 108 98"></block>
+    <block coords="729 214 186 170"></block>
+
+    <block coords="111 598 125 134"></block>
+
+    <block coords="406 676 72 66"></block>
+    <block coords="478 699 71 310"></block>
+    <block coords="549 588 193 104"></block>
+
+    <block coords="794 754 172 89"></block>
+
+    <block coords="970 514 168 88"></block>
+
+    <particle-generator
+        position="100, 1000"
+        direction="1.5"
+        lifetime="4"
+        rate="50"
+        direction_delta=".333"
+        friction="0.5"
+        position_delta="3000, 100"/>
+    <event action="CaveTestEvent"/>
+    <event action="ItemShower"
+        freq="15"/>
+
+</map>
