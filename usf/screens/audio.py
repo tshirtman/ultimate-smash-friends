@@ -22,7 +22,7 @@ The Sound configuration screen. to manage music and SFX volume.
 
 '''
 
-from usf.screens.screen import Screen
+from usf.screens import Screen
 from usf.widgets.box import VBox
 from usf.widgets.slider import Slider
 from usf.widgets.label import Label

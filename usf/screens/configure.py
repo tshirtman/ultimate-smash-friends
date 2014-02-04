@@ -22,7 +22,7 @@ The Base Configuration screen, show buttons to other configuration screens.
 
 '''
 
-from usf.screens.screen import Screen
+from usf.screens import Screen
 
 from usf.widgets.box import VBox
 from usf.widgets.button import Button

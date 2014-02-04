@@ -53,25 +53,26 @@ logging.basicConfig(
     level=(CONFIG.debug.LOG_LEVEL)
 )
 
-logging.debug("""Paths:
-        Config:
-        System: {0}
-        User: {1}
+logging.debug("""\
+    Paths:
+    Config:
+    System: {0}
+    User: {1}
+    Filename: {2}""".format(*CONFIG.paths.keys() + [CONFIG.filename])
+)
 
-        Filename: {2}""".format(*CONFIG.paths.keys() + [CONFIG.filename]))
+def credits():
+    """ print credits in the terminal """
 
-def author():
-    """ print credits in the terminal
-    """
-    if 'CREDITS' not in os.listdir(os.path.join(CONFIG.system_path)):
+    credits_file = os.path.join(CONFIG.system_path, 'CREDITS')
+
+    try:
+        with open(credits_file, 'r') as c:
+            print ''.join(c.readlines())
+
+    except IOError:
         logging.info(CONFIG.system_path)
-        logging.info('\n'.join(os.listdir(os.path.join(CONFIG.system_path))))
-        logging.debug(CONFIG.system_path +'/CREDITS file not found')
-
-    else:
-        author_file = open(os.path.join(CONFIG.system_path, 'CREDITS'))
-        logging.info(author_file.read())
-        author_file.close()
+        logging.debug('{0} not found!'.format(credits_file))
 
 
 class Main(object):
@@ -332,9 +333,9 @@ if __name__ == '__main__':
     # Set options and usage to parse users choices
 
     parser.add_argument(
-        '-a', '--authors',
-        action='store_true', dest='author',
-        help='See authors of this game.'
+        '-c', '--credits',
+        action='store_true', dest='credits',
+        help='See credits for this game.'
     )
     parser.add_argument(
         '-v', '--version',
@@ -353,11 +354,11 @@ if __name__ == '__main__':
 
     args = vars(parser.parse_args())
 
-    if args.get('author'):
-        author()
+    if args.get('credits'):
+        credits()
         sys.exit(1)
     else:
-        del args['author']
+        del args['credits']
 
     if args.get('player'):
         args['players'] = map(

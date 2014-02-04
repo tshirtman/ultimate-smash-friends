@@ -24,7 +24,7 @@ The screen to configure the Keyboard.
 
 from os.path import join
 
-from usf.screens.screen import Screen
+from usf.screens import Screen
 from usf.widgets.box import VBox, HBox
 from usf.widgets.button import Button
 from usf.widgets.label import Label
@@ -65,7 +65,7 @@ class Keyboard(Screen):
             hbox.add(Label('Player ' + str(i + 1)), size=(80, 50))
 
             for action in actions:
-                w = KeyboardWidget(getattr(CONFIG.keyboard, 
+                w = KeyboardWidget(getattr(CONFIG.keyboard,
                                        "PL{0}_{1}".format(i, action.upper())))
                 w.set_id("PL{0}_{1}".format(i, action.upper()))
                 hbox.add(w, size=(40, 40), margin=30)

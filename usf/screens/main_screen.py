@@ -25,7 +25,7 @@ started.
 
 import pygame
 
-from usf.screens.screen import Screen
+from usf.screens import Screen
 from usf.widgets.box import VBox
 from usf.widgets.button import Button
 from usf.translation import _
@@ -49,7 +49,7 @@ class MainScreen(Screen):
         if action.text == _('Configure'):
             return {'goto': 'configure'}
         if action.text == _('Credits'):
-            return {'goto': 'about'}
+            return {'goto': 'credits'}
         if action.text == _('Quit'):
             pygame.event.post( pygame.event.Event(pygame.QUIT) )
 

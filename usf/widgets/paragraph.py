@@ -19,7 +19,7 @@
 
 #standards imports
 import pygame
-from os.path import join
+import os
 
 #our modules
 from usf.widgets.widget import Widget
@@ -38,7 +38,7 @@ class Paragraph(Widget):
     """
 
     animation_speed = 1/30.0
-    def __init__(self, path):
+    def __init__(self, text=None, width=None, height=None):
         super(Paragraph, self).__init__()
         self.defil = 0
         self.state = False
@@ -46,16 +46,16 @@ class Paragraph(Widget):
         self.hover = False
         self.auto_scroll = True
 
-        text = open(join(CONFIG.system_path, path), 'r').readlines()
         text_height = loaders.text("", fonts['mono']['normal']).get_height()
 
         #the slider (at left)
         self.width_slider = 34
         self.height_slider = 125
-        self.pos_slider = self.width / 20 * 19
+        self.pos_slider = self.width / 20 * 19 # what's the basis for this calculation?
 
         #the main surface
-        self.width = 500 #XXX hardcoded values
+        self.width = width or CONFIG.general.WIDTH
+        self.height = height or CONFIG.general.HEIGHT
         self.height = 125 #XXX hardcoded values
         self.surface = pygame.surface.Surface((self.width, self.height))
 
@@ -75,12 +75,14 @@ class Paragraph(Widget):
                     (0, text_height * i))
 
         self.slider = SubPixelSurface(loaders.image(
-            join(
+            os.path.join(
                 CONFIG.system_path,
                 "gui",
                 CONFIG.general.THEME,
-                "sliderh_center.png"),
-            scale=(self.width_slider, self.height_slider))[0], x_level=4)
+                "sliderh_center.png"
+            ),
+            scale=(self.width_slider, self.height_slider)
+        )[0], x_level=4)
 
     def update_defil(self):
         """
@@ -105,7 +107,8 @@ class Paragraph(Widget):
         del mask
 
         #the slider background
-        self.screen.blit(loaders.image(join(CONFIG.system_path,
+        self.screen.blit(loaders.image(
+            os.path.join(CONFIG.system_path,
             "gui",
             CONFIG.general.THEME,
             "sliderh_background.png"),
@@ -122,7 +125,8 @@ class Paragraph(Widget):
                           (x + self.pos_slider, y + self.slider_y))
 
         #foreground
-        self.screen.blit(loaders.image(join(CONFIG.system_path,
+        self.screen.blit(loaders.image(
+            os.path.join(CONFIG.system_path,
             "gui",
             CONFIG.general.THEME,
             "paragraph_foreground.png"),

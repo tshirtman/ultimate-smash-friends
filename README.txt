@@ -126,3 +126,12 @@ Please send reports, suggests or patchs to:
 https://bugs.launchpad.net/ultimate-smash-friends
 
 last update: Wed, 27 Apr 2011 18:45:51 +0200
+
+Credits
+=======
+For a list of contributors, read data/CREDITS. Alternatively, you may see
+the list by using the proper command line switch::
+    ./ultimate-smash-friends --credits
+
+Or, you can see the credits from within the game, by clicking "Credits" from
+the main menu.

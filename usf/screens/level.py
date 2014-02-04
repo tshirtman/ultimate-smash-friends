@@ -30,7 +30,7 @@ import os
 import logging
 
 #our modules
-from usf.screens.screen import Screen
+from usf.screens import Screen
 from usf.widgets.box import VBox
 from usf.widgets.button import Button
 from usf.widgets.coverflow import Coverflow
