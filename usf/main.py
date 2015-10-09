@@ -224,7 +224,7 @@ class Main(object):
 
     def manage_game(self, dt):
         """ call the various submethod to update the whole game and render it
-        to the screen
+	    to the screen
         """
         #d = self.game.update_clock(was_paused or self.game.first_frame)
         self.state = self.game.update(dt)
@@ -328,7 +328,7 @@ if __name__ == '__main__':
     # main class with parameters (appart from program self name) if any.
 
 
-    parser = ArgumentParser(description="a smash-bros like game")
+    parser = ArgumentParser(description="a Smash Bros-like game")
     # Set options and usage to parse users choices
 
     parser.add_argument(

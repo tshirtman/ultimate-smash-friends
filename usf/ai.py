@@ -18,7 +18,7 @@
 ################################################################################
 
 '''
-This module takes care of managing non human players
+This module takes care of managing non-human players
 
 '''
 
@@ -66,7 +66,7 @@ def possible_movements(movement='static'):
 
 @memoize
 def displacement_movement(s):
-    """ return True if a movement is considered a diplacement movement
+    """ return True if a movement is considered a displacement movement
     """
 
     return s in (
@@ -83,7 +83,7 @@ def fight_movement(s):
 
 def simulate(game, iam, m):
     """ change the player movement to movement, and jump TIMESTEP in the future.
-    if movement is none, just jump TIMESTEP in the future.
+        if movement is none, just jump TIMESTEP in the future.
     """
 
     entity = game.players[iam]
@@ -99,7 +99,7 @@ def simulate(game, iam, m):
 
 def under_lowest_plateform(game, player):
     """ return True if the caracter is currently lower than the lowest
-    plateform
+        plateform
     """
 
     for p in game.level.map:
@@ -111,7 +111,7 @@ def under_lowest_plateform(game, player):
 
 def over_some_plateform(game, player):
     """ return true if the player is currently verticaly over a plateform
-    (that's different than not being lower than the lowest plateform)
+        (that's different than not being lower than the lowest plateform)
     """
 
     for p in game.level.map:
@@ -122,10 +122,10 @@ def over_some_plateform(game, player):
 
 
 def heuristic_state(game, player, others):
-    """ return a score for the current state of the game, allow to chose a set
-    of movement to do.
+    """ return a score for the current state of the game, allow to choose a set
+        of movement to do.
 
-    value to take into account:
+    values to take into account:
         number of lives
         % of damages
         number of lives of others
@@ -143,7 +143,7 @@ def heuristic_state(game, player, others):
 
 def heuristic_distance(player, others):
     ''' this function evaluate the distance of the player to the next other
-    player
+        player
     '''
 
     return min((player.dist(p) for p in others))
@@ -265,8 +265,8 @@ class AI(object):
         self.next_update = dict()
 
     def update(self, game, iam):
-        """ iam represent the index of the player being controlled in the
-        game.players list, this method will either create a list of future
+        """ iam represents the index of the player being controlled in the
+        game.players list. this method will either create a list of future
         actions to do, or use actions that where planned before if there are
         some left to do.
         """

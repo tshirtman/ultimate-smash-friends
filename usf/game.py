@@ -50,7 +50,7 @@ if not pygame.mixer:
 
 class BadPlayersNetworkParamError(Exception):
     """
-    Raised when the player params of a network server game is not correct.
+    Raised when the player params of a network server game are not correct.
 
     """
     pass
@@ -82,7 +82,7 @@ class Game(object):
         self.events = EventManager()
         self.gametime = 0
 
-        #we load the bool for smooth scrolling here, for a better performance
+        # we load the bool for smooth scrolling here, for a better performance
         self.smooth_scrolling = CONFIG.general.SMOOTH_SCROLLING
 
         self.level = Level(level)
@@ -96,7 +96,7 @@ class Game(object):
 
         self.load_players(players_)
 
-        #the optional progress bar for the players lives
+        # the optional progress bar for the players' lives
         self.progress_bar_size = (
                 82.5 * CONFIG.general.WIDTH / 800,
                 12.5 * CONFIG.general.WIDTH / 800)
@@ -145,7 +145,7 @@ class Game(object):
 
     def load_players(self, players_):
         """
-        this function is responsible of adding the requested players to the
+        this function is responsible for adding the requested players to the
         game.
         """
 
@@ -202,7 +202,7 @@ class Game(object):
         return e
 
     def draw_progress_bar_for_lives(self, player):
-        """ heh, draw progree bar for lives of the player
+        """ heh, draw progress bar for lives of the player
         """
         self.screen.blit(
                 loaders.image(
@@ -256,7 +256,7 @@ class Game(object):
         self.draw_player_lives(player)
 
     def draw_player_lives(self, player):
-        """ draw as much hearth as the player has lives on it's portrait
+        """ draw as much hearts as the player has lives on its portrait
         """
         for i in range(player.lives):
             self.screen.blit(
@@ -298,7 +298,7 @@ class Game(object):
                     (num * self.size[0] / 4 + i * 50, 0 + 100 * (num % 2)))
 
     def draw_debug(self, debug_params):
-        """ manae all de debug drawings provided by the class
+        """ manage all the debug drawings provided by the class
         """
         for num, player in enumerate(self.players):
             if 'coords' in debug_params:
@@ -309,7 +309,7 @@ class Game(object):
 
     def draw_portraits(self):
         """
-        Draw player's portraits at bottom of the screen
+        Draw players' portraits at bottom of the screen
         """
         #draw the background of the block where the lives are displayed
         hud_height = 75 * CONFIG.general.WIDTH / 800
@@ -325,7 +325,7 @@ class Game(object):
 
     def draw(self, debug_params=dict()):
         """
-        Draw every parts of the game on the screen.
+        Draw every part of the game on the screen.
 
         """
         self.center_zoom_camera()
@@ -350,7 +350,7 @@ class Game(object):
 
     def display_game_state(self):
         """
-        Display if the game is ended by a won, or a draw, does nothing if the
+        Display whether the game is ended by a win or a draw, does nothing if the
         game is still running
         """
 
@@ -375,7 +375,7 @@ class Game(object):
                 (self.size[0] / 2, self.size[1] / 2))
 
     def draw_notif(self, notif):
-        """ drow notifications on the screen
+        """ draw notifications on the screen
         """
         self.screen.blit(
                 GAME_FONT.render(
@@ -447,6 +447,7 @@ class Game(object):
             players_barycenter = self.players_barycenter
             # calculate coordinates of top left corner of level
             # rect the barycenter of players at the center of the screen
+	    # TODO I don't actually know what "rect" is supposed to say in that comment
             level_place = [
                  -(players_barycenter[0]) * self.zoom + self.size[0] / 2,
                  -(players_barycenter[1]) * self.zoom + self.size[1] / 2]
@@ -466,7 +467,7 @@ class Game(object):
         engine, but lie here for now.
 
         """
-        # agressive point collision between entities players.
+        # agressive point collision between player entities.
         for entity in self.players + self.items:
             for target in self.players + self.items:
                 if target is not entity and not target.invincible:
@@ -545,7 +546,7 @@ class Game(object):
             p.restore(b)
 
     def backup_skins(self):
-        """ return a backup of the entity skins current state
+        """ return a backup of the entity skin's current state
         """
         return tuple((e.entity_skin.backup() for e in self.players + self.items))
 
@@ -596,7 +597,7 @@ class Game(object):
         if self.first_frame:
             self.first_frame = False
             self.second_frame = True
-            ## adding test events.
+            # adding test events.
             self.add_world_event()
 
         elif self.second_frame:
@@ -621,9 +622,9 @@ class Game(object):
         players_left = len(filter(Entity.alive, self.players))
 
         if players_left <= 1:
-            # there is only one player left then the game need to end after a
+            # if there is only one player left then the game needs to end after a
             # short animation
-            #decount time
+            # decount time
             self.ending -= deltatime
 
         # if animation time elapsed, return to menu

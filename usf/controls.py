@@ -18,8 +18,8 @@
 ################################################################################
 
 '''
-This module manage controls, mainly on the keyboard, and either trigger
-player's animations, or pass events to the menu system.
+This module manages controls, mainly on the keyboard, and either triggers
+player's animations, or passes events to the menu system.
 
 '''
 
@@ -42,7 +42,7 @@ from usf import game
 
 def key_shield(the_key, player, game_instance):
     """ activate shield if asked by the player, and if possible, return
-    True, if the shield was activated
+    True if the shield was activated
     """
     if ("_SHIELD" in the_key and
         player.entity_skin.current_animation in (
@@ -60,7 +60,7 @@ def key_shield(the_key, player, game_instance):
 
 
 def key_down_left(the_key, player, game_instance):
-    """ manage incidence on walk animation if the player push down his left key
+    """ manage incidence on walk animation if the player pushes down his left key
     """
     if "_LEFT" in the_key:
         if player.on_ground:
@@ -77,7 +77,7 @@ def key_down_left(the_key, player, game_instance):
 
 
 def key_down_right(the_key, player, game_instance):
-    """ manage incidence on walk animation if the player push down his right key
+    """ manage incidence on walk animation if the player pushes down his right key
     """
     if "_RIGHT" in the_key:
         if player.on_ground:
@@ -94,7 +94,7 @@ def key_down_right(the_key, player, game_instance):
 
 
 def key_up_left(player, game_instance):
-    """ manage incidence on walk animation if the player release his left key
+    """ manage incidence on walk animation if the player releases his left key
     """
     if player.reversed:
         player.set_walking_vector([0, player.walking_vector[1]])
@@ -105,7 +105,7 @@ def key_up_left(player, game_instance):
 
 
 def key_up_right(player, game_instance):
-    """ manage incidence on walk animation if the player release his right key
+    """ manage incidence on walk animation if the player releases his right key
     """
     if not player.reversed:
         player.set_walking_vector([0, player.walking_vector[1]])
@@ -136,7 +136,7 @@ class Sequence(object):
 
         current = player.entity_skin.current_animation.replace('_upgraded', '')
         # if conditions are matched, and the sequence tested is as least as
-        # long as our
+        # long as ours
         if ((not self.condition or current in self.condition)
                 and len(seq) - index >= len(self.keys)):
             # test keys are the same, up to length of our combination
@@ -211,7 +211,7 @@ def reverse_keymap(keycode):
 class Controls (object):
     """
     Catch pygame keyboard events and decides of the interaction with the game,
-    game menu and entity instances. Key configuration are taken from
+    game menu and entity instances. Key configurations are taken from
     sequences.cfg. This class can update and save configuration.
     """
 
@@ -336,7 +336,7 @@ class Controls (object):
                     key_up_right(player, game_instance)
 
     def handle_game_key(self, state, key, game_instance):
-        """ Call handle_game_key_down of handle_game_key_up whether if the key
+        """ Call handle_game_key_down or handle_game_key_up depending on whether the key
         event is DOWN or UP
         """
         if state is KEYDOWN:
@@ -348,8 +348,8 @@ class Controls (object):
 
     def poll(self, game_instance, state):
         """
-        This function manages key events aquiered from local keyboard or sent
-        by clients in the case of a networkk game.
+        This function manages key events acquired from local keyboard or sent
+        by clients in the case of a network game.
         """
 
         # if this is a network server game

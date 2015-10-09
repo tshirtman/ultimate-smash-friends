@@ -19,7 +19,7 @@
 
 '''
 This module provides a manager/ordonnancer for events in the game, this is a
-simple but critical part, as a lot of mecanisms in the game are implemented
+simple but critical part, as a lot of mechanisms in the game are implemented
 through events (movements/adding player to games/missiles...)
 
 '''
@@ -69,7 +69,7 @@ class EventManager(object):
         self.events.append(EVENT_NAMES[name](self, *args, **kwargs))
 
     def get_events(self, cls=None, params=dict()):
-        ''' return events filtered by name and target parameters, None mean no
+        ''' return events filtered by name and target parameters, None means no
         filter on this parameter
         '''
 

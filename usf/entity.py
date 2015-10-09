@@ -18,7 +18,7 @@
 ################################################################################
 
 '''
-This module provide the Entity classe, that represent any physical object in
+This module provides the Entity classes, which represent any physical object in
 the game, character or item.
 
 '''
@@ -112,7 +112,7 @@ class Actor(object):
     @property
     def walking_vector(self):
         """
-        current walking vector of the entity (this is different of the vector,
+        current walking vector of the entity (this is different from the vector,
         as it's defined only by the fact the player uses direction keys)
         """
         return tuple(self._walking_vector)
@@ -193,13 +193,12 @@ class Actor(object):
                 (self.place[0] - entity.place[0]) ** 2 +
                 (self.place[1] - entity.place[1]) ** 2) ** .5
         else:
-            raise ValueError("param 1 is neither a Rect or an Entity")
+            raise ValueError("param 1 is neither a Rect nor an Entity")
 
     def _get_block_vector(self, level_vector_blocs):
         """
         If the entity is in a block associated with a vector, return this
         vector.
-
         """
         vector = [0, 0]
 
@@ -235,12 +234,12 @@ class Actor(object):
     def _update_floor_vector(self, level_moving_parts):
         """
         When the entity is on one (or more) moving (horizontaly) floors, the
-        entity should move accordingly to the sum of this movements, This
-        method return the sum of the horizontal movement of these floors for
+        entity should move accordingly to the sum of this movements. This
+        method returns the sum of the horizontal movements of these floors for
         this frame, to add to the position of the character.  This is done by
         testing collision of a small rect under the feet of the entity and each
         of the moving parts of the level, passed in parameters, and asking the
-        ones that collides, their horizontal movement.
+        ones that collide, their horizontal movement.
 
         """
         vector = [0, 0]
@@ -255,12 +254,12 @@ class Actor(object):
 
 class Entity(Actor):
     """
-    Provide an entity object, which will take care of lifes, movements,
+    Provide an entity object, which will take care of lives, movements,
     collisions of an Entity. Players and Items are Entities.
 
-    This is a big class, and it uses a few counter intuitive concepts, first,
-    its vectors are defined relatively, that mean moving "forward/backward"
-    instead of moving "left/right", also the vector representing the walking
+    This is a big class, and it uses a few counterintuitive concepts. First,
+    its vectors are defined relatively, that means moving "forward/backward"
+    instead of moving "left/right." Also, the vector representing the walking
     movement of the entity is seperated from the main vector.
 
     """
@@ -298,7 +297,7 @@ class Entity(Actor):
         self._lighten = False
         self._shield = {'on': False, 'power': 1.0, 'date': 0}
         self._carried_by = kwargs.get('carried_by', None)
-        # the entity is reversed when looking at left.
+        # the entity is reversed when looking left.
         self._percents = 0
         self._lives = kwargs.get('lives', 3)
         self._invincible = False
@@ -483,7 +482,7 @@ class Entity(Actor):
     @property
     def agressiv_points(self):
         """
-        return agressiv points of the current frame
+        return agressive points of the current frame
         """
         return self.entity_skin.animation.agressivpoints
 
@@ -501,7 +500,7 @@ class Entity(Actor):
 
     def hit(self, point, reverse):
         """
-        enforce the effect of a collision with an aggressive point, the
+        enforce the effect of a collision with an aggressive point. the
         point is a list of x, y,dx, dy coords, and reverse is a flag indicating
         if the attacking entity is reversed (to apply projection vectors)
         """
@@ -531,13 +530,13 @@ class Entity(Actor):
 
     def alive(self):
         """
-        True if the player still have lives left
+        True if the player still has lives left
         """
         return self.lives > 0
 
     def _draw_debug(self, coords, zoom, surface, debug_params):
         """
-        This method just call all specific debug draw methods
+        This method just calls all specific debug draw methods
         """
         self._draw_debug_levelmap(surface, debug_params)
         self._draw_debug_hardshape(coords, zoom, surface, debug_params)
@@ -546,7 +545,7 @@ class Entity(Actor):
 
     def _draw_debug_levelmap(self, surface, debug_params):
         """
-        show the level map directly, usefull to debug
+        show the level map directly, useful to debugging
         """
         if debug_params["levelmap"]:
             draw_rect(
@@ -710,7 +709,7 @@ class Entity(Actor):
 
     def _foot_collision_rect(self):
         """
-        return current foot collusion rect
+        return current foot collision rect
         """
         return pygame.Rect(
                 self.rect[0] + self.hardshape[0],
@@ -724,7 +723,7 @@ class Entity(Actor):
         """
         h = self.hardshape
         r = self._rect
-        # i think r[0] and r[1] should be used in this formules, but they break
+        # i think r[0] and r[1] should be used in these formulas, but they break
         # it, so maybe i'm wrong
         return (int(Entity.list_sin_cos_1[n][0] * h[2] / 2 + r[0]),
                 int(Entity.list_sin_cos_1[n][1] * h[3] / 2 + r[1]))
@@ -748,7 +747,7 @@ class Entity(Actor):
         r = self._rect
         n = Entity.nb_points
 
-        # reference version, non optimized and then should be easier to
+        # reference version, non-optimized and should be easier to
         # understand
         #l = Entity.list_sin_cos
         #return [
@@ -771,7 +770,7 @@ class Entity(Actor):
 
     def collide_top(self, game):
         """
-        if one of the two lowers points collide, the entity bounce up and it's
+        if one of the two lower points collide, the entity bounces up and its
         horizontal speed is lowered
         """
         return (game.level.collide_rect(self.point(self.TOP_LEFT))
@@ -779,8 +778,8 @@ class Entity(Actor):
 
     def collide_bottom(self, game):
         """
-        test of points and consequences on vectors if one of the two uppers
-        points collide, the entity bounce down.
+        test of points and consequences on vectors if one of the two upper
+        points collide, the entity bounces down.
         """
         return (game.level.collide_rect(self.point(self.BOTTOM_RIGHT))
                 or game.level.collide_rect(self.point(self.BOTTOM_LEFT)))
@@ -863,8 +862,8 @@ class Entity(Actor):
 
     def _update_physics(self, deltatime, game):
         """
-        This function apply current movemements and various environemental
-        vectors to the entity, and calculate collisions.
+        This function applies current movemements and various environemental
+        vectors to the entity, and calculates collisions.
 
         """
         # Move in walking direction.
@@ -880,7 +879,7 @@ class Entity(Actor):
         # follow the floor if it's moving
         floor_vector = self._update_floor_vector(game.level.moving_blocs)
 
-        # get environemental vector if we collide some vector-block
+        # get environmental vector if we collide some vector-block
         environnement_vector = self._get_block_vector(
                 game.level.vector_blocs)
 
@@ -928,8 +927,8 @@ class Entity(Actor):
 
     def move(self, (x, y)):
         """
-        move the entity relatively to his referencial (if he look left, moving
-        positively on x mean going left).
+        move the entity relatively to his referencial (if he looks left, moving
+        positively on x means going left).
 
         """
         if self._reversed:

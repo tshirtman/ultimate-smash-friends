@@ -18,7 +18,7 @@
 ################################################################################
 
 '''
-This module provide animations for entities, animations are composed of frames,
+This module provides animations for entities. Animations are composed of frames,
 which are a bit more than an image...
 
 '''
@@ -37,17 +37,17 @@ class Frame (object):
     * The hardshape is an inner rectangle than delimitate the area that can
           collide the world.
 
-    * The agressiv points are the damaginds points of a player/entity when it
-      hit some other player.
+    * The agressive points are the damaging points of a player/entity when it
+      hits some other player.
 
-    * The Vector indicate the speed and direction taken by the entity when in
+    * The Vector indicates the speed and direction taken by the entity when in
       this state, this combine with the current direction/speed of the entity.
     """
 
     def __init__(self, image, gametime, hardshape, trails=None):
         """
-        Load a frame from an image, the current gametime, the deplacement/s of
-        the player in this frame, it's hardshape.
+        Load a frame from an image, the current gametime, the displacement(s) of
+        the player in this frame, its hardshape.
 
         """
         self.image = image
@@ -83,7 +83,7 @@ class Frame (object):
 
 class PreciseTimedAnimation(object):
     """
-    This object store the frames of an animation and update the image of the
+    This object stores the frames of an animation and updates the image of the
     entity skin.
     """
 
@@ -117,7 +117,7 @@ class PreciseTimedAnimation(object):
 
     def frame(self, anim_time):
         """
-        return the current frame depending on the time since the beggining of
+        return the current frame depending on the time since the beginning of
         the animation.
         """
         try:
