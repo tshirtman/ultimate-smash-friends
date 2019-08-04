@@ -38,7 +38,7 @@ players name by a comma, like this:
 ./ultimate-smash-friends --level rizland --players xeon,blob
 
 
-(--level can be abreviated as -l and --players as -p)
+(--level can be abbreviated as -l and --players as -p)
 you can add an artificial intelligence player by adding "AI" before the name of
 the character, e.g:
 
