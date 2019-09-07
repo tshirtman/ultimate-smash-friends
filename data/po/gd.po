@@ -1,0 +1,154 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-06-13 15:02+0200\n"
+"PO-Revision-Date: 2019-09-07 10:37+0100\n"
+"Last-Translator: GunChleoc <fios@foramnagaidhlig.net>\n"
+"Language: gd\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language-Team: \n"
+"X-Generator: Poedit 2.2.3\n"
+
+#: game.py:366
+msgid " WON!"
+msgstr " BUAIDH!"
+
+#: game.py:372
+msgid "OOPS... DRAW!!!"
+msgstr "GEAMA IONNANN!!!"
+
+#: gui.py:262
+msgid "you are here:"
+msgstr "tha thu an-seo:"
+
+#: main.py:63
+msgid "Bad logging level in user.cfg!"
+msgstr "Droch leibheil logaidh ann an user.cfg!"
+
+#: main.py:92
+msgid "Loading..."
+msgstr "’Ga luchdadh…"
+
+#: screen/about.py:31
+msgid "about"
+msgstr "mu dhèidhinn"
+
+#: screen/about.py:37 screen/about.py:41 screen/display.py:66
+#: screen/display.py:86 screen/characters.py:114 screen/characters.py:138
+#: screen/keyboard.py:65 screen/keyboard.py:72 screen/sound.py:43
+#: screen/sound.py:50 screen/configure.py:39 screen/configure.py:48
+#: screen/level.py:67 screen/level.py:76
+msgid "Back"
+msgstr "Air ais"
+
+#: screen/main_screen.py:33 screen/main_screen.py:39
+msgid "Local game"
+msgstr "Geama ionadail"
+
+#: screen/main_screen.py:34 screen/main_screen.py:41 screen/resume.py:29
+#: screen/resume.py:37
+msgid "Configure"
+msgstr "Rèitich"
+
+#: screen/main_screen.py:35 screen/main_screen.py:43
+msgid "Credits"
+msgstr "Urram"
+
+#: screen/main_screen.py:36 screen/main_screen.py:45
+msgid "Quit"
+msgstr "Fàg an-seo"
+
+#: screen/display.py:37
+msgid "screen configuration"
+msgstr "rèiteachadh na sgrìn"
+
+#: screen/display.py:47
+msgid "Screen resolution (requires a restart):"
+msgstr "Dùmhlachd-bhreacaidh (bidh feum air ath-thòiseachadh):"
+
+#: screen/display.py:50
+msgid "Fullscreen:"
+msgstr "Làn-sgrìn:"
+
+#: screen/display.py:55
+msgid "Zoom sharpness:"
+msgstr "Gèiread an t-sùim:"
+
+#: screen/display.py:60
+msgid "Show FPS:"
+msgstr "Seall FPS:"
+
+#. I18N: The title of the screen where players can choose their character.
+#: screen/characters.py:49
+msgid "characters"
+msgstr "pearsachan"
+
+#. I18N: in the character screen, to select no character for this player
+#. I18N: (with the [?] icon)
+#: screen/characters.py:56
+msgid "None"
+msgstr "Chan eil gin"
+
+#. I18N: Artificial Intelligence
+#: screen/characters.py:87
+msgid "AI:"
+msgstr "IF:"
+
+#. I18N: %s is the player number, it can be Player 1, Player2...
+#: screen/characters.py:93
+#, python-format
+msgid "Player %s"
+msgstr "Cluicheadair %s"
+
+#: screen/characters.py:109 screen/characters.py:130
+msgid "Next"
+msgstr "Air adhart"
+
+#: screen/keyboard.py:37
+msgid "keyboard"
+msgstr "meur-chlàr"
+
+#: screen/keyboard.py:52
+msgid "Shield"
+msgstr "Sgiath"
+
+#: screen/sound.py:34
+msgid "Sound and effects"
+msgstr "Èifeachdan fuaime"
+
+#: screen/sound.py:37
+msgid "Music"
+msgstr "Ceòl"
+
+#: screen/configure.py:30
+msgid "configure"
+msgstr "rèitich"
+
+#. I18N:option screen
+#: screen/configure.py:33 screen/configure.py:42
+msgid "Audio"
+msgstr "Fuaim"
+
+#: screen/configure.py:35 screen/configure.py:44
+msgid "Screen"
+msgstr "Sgrìn"
+
+#: screen/configure.py:37 screen/configure.py:46
+msgid "Keyboard"
+msgstr "Meur-chlàr"
+
+#: screen/level.py:66 screen/level.py:73
+msgid "Go !"
+msgstr "Siuthad!"
+
+#: translation.py:12
+msgid "translator-credits"
+msgstr "GunChleoc"
